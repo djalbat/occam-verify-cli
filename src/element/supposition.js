@@ -9,10 +9,10 @@ import { subproofAssertionFromStatement } from "../utilities/statement";
 import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default define(class Supposition {
-  constructor(context, node, string, statement, procedureCall) {
+  constructor(context, string, node, statement, procedureCall) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
     this.statement = statement;
     this.procedureCall = procedureCall;
   }
@@ -296,7 +296,7 @@ export default define(class Supposition {
 
     context = temporaryContext; ///
 
-    const supposition = new Supposition(context, node, string, statement, procedureCall);
+    const supposition = new Supposition(context, string, node, statement, procedureCall);
 
     return supposition;
   }
@@ -311,7 +311,7 @@ export default define(class Supposition {
 
     context = temporaryContext; ///
 
-    const supposition = new Supposition(context, node, string, statement, procedureCall);
+    const supposition = new Supposition(context, string, node, statement, procedureCall);
 
     return supposition
   }

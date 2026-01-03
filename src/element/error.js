@@ -3,22 +3,22 @@
 import { define } from "../elements";
 
 export default define(class Error {
-  constructor(context, node, string) {
+  constructor(context, string, node) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
   }
 
   getContext() {
     return this.context;
   }
 
-  getNode() {
-    return this.node;
-  }
-
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   verify() {
@@ -36,7 +36,7 @@ export default define(class Error {
   static fromErrorNode(errorNode, context) {
     const node = errorNode, ///
           string = context.nodeAsString(node),
-          error = new Error(context, node, string);
+          error = new Error(context, string, node);
 
     return error;
   }

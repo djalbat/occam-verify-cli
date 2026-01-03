@@ -1,13 +1,12 @@
 "use strict";
 
-import elements from "../../elements";
 import Declaration from "../declaration";
 
 import { define } from "../../elements";
 
 export default define(class VariableDeclaration extends Declaration {
-  constructor(context, node, string, variable) {
-    super(context, node, string);
+  constructor(context, string, node, variable) {
+    super(context, string, node);
 
     this.variable = variable;
   }
@@ -115,14 +114,4 @@ export default define(class VariableDeclaration extends Declaration {
   }
 
   static name = "VariableDeclaration";
-
-  static fromVariableDeclarationNode(variableDeclarationNode, context) {
-    const { Variable } = elements,
-          node = variableDeclarationNode, ///
-          string = context.nodeAsString(node),
-          variable = Variable.fromVariableDeclarationNode(variableDeclarationNode, context),
-          variableDeclaration = new VariableDeclaration(context, node, string, variable);
-
-    return variableDeclaration;
-  }
 });

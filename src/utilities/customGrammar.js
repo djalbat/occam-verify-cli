@@ -21,10 +21,10 @@ export function combinedCustomGrammarFromNothing() {
 
 export function combinedCustomGrammarFromReleaseContexts(releaseContexts) {
   const customGrammars = releaseContexts.map((releaseContext) => {
-          const customGrammar = releaseContext.getCustomGrammar();
+    const customGrammar = releaseContext.getCustomGrammar();
 
-          return customGrammar;
-        });
+    return customGrammar;
+  });
 
   customGrammars.reverse(); ///
 

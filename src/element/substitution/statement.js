@@ -7,6 +7,7 @@ import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
+import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../../utilities/json";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -205,10 +206,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     const string = stringFromStatementAndMetavariable(statement, metavariable),
           statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-          node = statementSubstitutionNode,
-          resolved = true,
-          substitution = null,
-          statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
+          statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
     return statementSubstitution;
   }
@@ -218,9 +216,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
           statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-          node = statementSubstitutionNode,
-          resolved = false,
-          statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
+          statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context);
 
     return statementSubstitution;
   }

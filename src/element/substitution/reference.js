@@ -4,6 +4,7 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
+import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 
 export default define(class ReferenceSubstitution extends Substitution {
   constructor(context, string, node, reference, metavariable) {
@@ -32,8 +33,7 @@ export default define(class ReferenceSubstitution extends Substitution {
   static fromReferenceAndMetavariable(reference, metavariable, context) {
     const string = stringFromReferenceAndMetavariable(reference, metavariable),
           referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
-          node = referenceSubstitutionNode, ///
-          referenceSubstitution = new ReferenceSubstitution(context, string, node, reference, metavariable);
+          referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
 
     return referenceSubstitution;
   }

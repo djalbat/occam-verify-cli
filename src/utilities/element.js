@@ -3,10 +3,7 @@
 import elements from "../elements";
 
 import { baseType } from "../element/type";
-import { bracketedConstructorTermString,
-         bracketedCombinatorStatementString,
-         instantiateBracketedConstructorTerm,
-         instantiateBracketedCombinatorStatement } from "../process/instantiate";
+import { subproofStringFromSubproofNode, stringFromLabelsSuppositionsAndDeduction } from "../utilities/string";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -42,14 +39,52 @@ export function termFromTermNode(termNode, context) {
   return term;
 }
 
+export function stepFromStepNode(stepNode, context) {
+  const { Step } = elements,
+        node = stepNode, ///
+        string = context.nodeAsString(node),
+        statement = statementFromStepNode(stepNode, context),
+        reference = referenceFromStepNode(stepNode, context),
+        satisfiesAssertion = satisfiesAssertionFromStepNode(stepNode, context),
+        step = new Step(context, string, node, statement, reference, satisfiesAssertion);
+
+  return step;
+}
+
 export function frameFromFrameNode(frameNode, context) {
   const { Frame } = elements,
-        node = frameNode, ///
-        string = context.nodeAsString(node),
-        assumptions = assumptionsFromFrameNode(frameNode, context),
-        frame = new Frame(string, node, assumptions);
+    node = frameNode, ///
+    string = context.nodeAsString(node),
+    assumptions = assumptionsFromFrameNode(frameNode, context),
+    frame = new Frame(string, node, assumptions);
 
   return frame;
+}
+
+export function proofFromProofNode(proofNode, context) {
+  const { Proof } = elements,
+        node = proofNode, ///
+        string = null,
+        derivation = derivationFromProofNode(proofNode, context),
+        proof = new Proof(string, node, derivation);
+
+  return proof;
+}
+
+export function axiomFromAxiomNode(axiomNode, context) {
+  const { Axiom } = elements,
+        topLevelAssertionNode = axiomNode,  ///
+        proof = proofFromTopLevelAssertionNode(topLevelAssertionNode, context),
+        labels = labelsFromTopLevelAssertionNode(topLevelAssertionNode, context),
+        deduction = deductionFromTopLevelAssertionNode(topLevelAssertionNode, context),
+        suppositions = suppositionsFromTopLevelAssertionNode(topLevelAssertionNode, context),
+        signature = signatureFromTopLevelAssertionNode(topLevelAssertionNode, context),
+        hypotheses = [],
+        node = axiomNode, ///
+        string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        axiom = new Axiom(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
+
+  return axiom;
 }
 
 export function metaTypeFromMetaTypeNode(metaTypeNode, context) {
@@ -73,6 +108,41 @@ export function propertyFromPropertyNode(propertyNode, context) {
         property = new Property(string, node, name, nominalTypeName);
 
   return property;
+}
+
+export function variableFromVariableNode(variableNode, context) {
+  const { Variable } = elements,
+        node = variableNode,  ///
+        string = context.nodeAsString(node),
+        type = null,
+        identifier = identifierFromVarialbeNode(variableNode, context),
+        propertyRelations = [],
+        variable = new Variable(string, node, type, identifier, propertyRelations);
+
+  return variable;
+}
+
+export function subproofFromSubproofNode(subproofNode, context) {
+  const { SubProof } = elements,
+        node = subproofNode, ///
+        suppositions = suppositionsFromSubproofNode(subproofNode, context),
+        subDerivation = subDerivationFromSubproofNode(subproofNode, context),
+        subproofString = subproofStringFromSubproofNode(subproofNode, context),
+        string = subproofString,  ///
+        subproof = new SubProof(string, node, suppositions, subDerivation);
+
+  return subproof;
+}
+
+export function deductionFromDeductionNode(deductionNode, context) {
+  const { Deduction } = elements,
+        node = deductionNode, ///
+        string = context.nodeAsString(node),
+        nonsense = nonsenseFromDeductionNode(deductionNode, context),
+        statement = statementFromDeductionNode(deductionNode, context),
+        deduction = new Deduction(context, string, node, statement, nonsense);
+
+  return deduction;
 }
 
 export function statementFromStatementNode(statementNode, context) {
@@ -115,6 +185,16 @@ export function assumptionFromAssumptionNode(assumptionNode, context) {
   return assumption;
 }
 
+export function derivationFromDerivationNode(derivationNode, context) {
+  const { Derivation } = elements,
+        node = derivationNode,  ///
+        string = null,
+        stepsOrSubproofs = stepsOrSubproofsFromDerivationNode(derivationNode, context),
+        derivation = new Derivation(string, node, stepsOrSubproofs);
+
+  return derivation;
+}
+
 export function typePrefixFromTypePrefixNode(typePrefixNode, context) {
   const { TypePrefix } = elements,
         node = typePrefixNode, ///
@@ -139,6 +219,17 @@ export function metavariableFromMetavariableNode(metavariableNode, context) {
   return metavariable;
 }
 
+export function subDerivationFromSubDerivationNode(subDerivationNode, context) {
+  const { SubDerivation } = elements,
+        node = subDerivationNode, ///
+        string = null,
+        stepsOrSubproofs = stepsOrSubproofsFromSubDerivationNode(subDerivationNode, context),
+        subDerivation = new SubDerivation(string, node, stepsOrSubproofs);
+
+  return subDerivation;
+
+}
+
 export function typeAssertionFromTypeAssertionNode(typeAssertionNode, context) {
   const { TypeAssertion } = elements,
         node = typeAssertionNode, ///
@@ -148,6 +239,14 @@ export function typeAssertionFromTypeAssertionNode(typeAssertionNode, context) {
         typeAssertion = new TypeAssertion(string, node, term, type);
 
   return typeAssertion;
+}
+
+export function stepsOrSubproofFromStepOrSubproofNode(stepOrSubproofNode, context) {
+  const step = stepFromStepOrSubproofNode(stepOrSubproofNode, context),
+        subproof = subproofFromStepOrSubproofNode(stepOrSubproofNode, context),
+        stepOrSubproof = (step || subproof);
+
+  return stepOrSubproof;
 }
 
 export function prefixedFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
@@ -183,6 +282,28 @@ export function propertyRelationFromPropertyRelationNode(propertyRelationNode, c
         propertyRelation = new PropertyRelation(string, node, property, term);
 
   return propertyRelation;
+}
+
+export function termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context) {
+  const { TermSubstitution } = elements,
+        node = termSubstitutionNode,  ///
+        string = context.nodeAsString(node),
+        term = termFromTermSubstitutionNode(termSubstitutionNode, context),
+        variable = variableFromTermSubstitutionNode(termSubstitutionNode, context),
+        termSubstitution = new TermSubstitution(context, string, node, term, variable);
+
+  return termSubstitution;
+}
+
+export function frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+  const { FrameSubstitution } = elements,
+        node = frameSubstitutionNode,  ///
+        string = context.nodeAsString(node),
+        frame = frameFromFrameSubstitutionNode(frameSubstitutionNode, context),
+        metavariable = metavariableFromFrameSubstitutionNode(frameSubstitutionNode, context),
+        frameSubstitution = new FrameSubstitution(context, string, node, frame, metavariable);
+
+  return frameSubstitution;
 }
 
 export function propertyAssertionFromPropertyAssertionNode(propertyAssertionNode, context) {
@@ -230,12 +351,22 @@ export function satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionN
   return satisfiesAssertion;
 }
 
+export function variableDeclarationFromVariableDeclarationNode(variableDeclarationNode, context) {
+  const { VariableDeclaration } = elements,
+        node = variableDeclarationNode,  ///
+        string = context.nodeAsString(node),
+        varialbe = variableFromVariableNode(variableDeclarationNode, context),
+        variableDeclaration = new VariableDeclaration(context, string, node, varialbe);
+
+  return variableDeclaration;
+}
+
 export function typePrefixDeclarationFromTypePrefixDeclarationNode(typePrefixDeclarationNode, context) {
   const { TypePrefixDeclaration } = elements,
         node = typePrefixDeclarationNode, ///
         string = context.nodeAsString(node),  ///
         typePrefix = typePrefixFromTypePrefixDeclarationNode(typePrefixDeclarationNode, context),
-        typePrefixDeclaration = new TypePrefixDeclaration(context, node, string, typePrefix);
+        typePrefixDeclaration = new TypePrefixDeclaration(context, string, node, typePrefix);
 
   return typePrefixDeclaration;
 }
@@ -245,7 +376,7 @@ export function combinatorDeclarationFromCombinatorDeclarationNode(combinatorDec
         node = combinatorDeclarationNode, ///
         string = context.nodeAsString(node),
         combinator = combinatorFromCombinatorDeclarationNode(combinatorDeclarationNode, context),
-        combinatorDeclaration = new CombinatorDeclaration(context, node, string, combinator);
+        combinatorDeclaration = new CombinatorDeclaration(context, string, node, combinator);
 
   return combinatorDeclaration;
 }
@@ -256,9 +387,38 @@ export function simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDec
         string = context.nodeAsString(node),
         type = typeFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
         prefixed = prefixedFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
-        simpleTypeDeclaration = new SimpleTypeDeclaration(context, node, string, type, prefixed);
+        simpleTypeDeclaration = new SimpleTypeDeclaration(context, string, node, type, prefixed);
 
   return simpleTypeDeclaration;
+}
+
+export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context) {
+  if (context === undefined) {
+    context = substitution; ///
+
+    substitution = null;
+  }
+
+  const { StatementSubstitution } = elements,
+        node = statementSubstitutionNode,  ///
+        string = context.nodeAsString(node),
+        resolved = true,
+        statement = statementFromStatementSubstitutionNode(statementSubstitutionNode, context),
+        metavariable = metavariableFromStatementSubstitutionNode(statementSubstitutionNode, context),
+        statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
+
+  return statementSubstitution;
+}
+
+export function referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+  const { ReferenceSubstitution } = elements,
+        node = referenceSubstitutionNode,  ///
+        string = context.nodeAsString(node),
+        reference = referenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
+        metavariable = metavariableFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
+        referenceSubstitution = new ReferenceSubstitution(context, string, node, reference, metavariable);
+
+  return referenceSubstitution;
 }
 
 export function constructorDeclarationFromConstructorDeclarationNode(constructorDeclarationNode, context) {
@@ -266,7 +426,7 @@ export function constructorDeclarationFromConstructorDeclarationNode(constructor
         node = constructorDeclarationNode, ///
         string = context.nodeAsString(node),
         constructor = constructorFromConstructorDeclarationNode(constructorDeclarationNode, context),
-        constructorDeclaration = new ConstructorDeclaration(context, node, string, constructor);
+        constructorDeclaration = new ConstructorDeclaration(context, string, node, constructor);
 
   return constructorDeclaration;
 }
@@ -277,7 +437,7 @@ export function complexTypeDeclarationFromComplexTypeDeclarationNode(complexType
         string = context.nodeAsString(node),
         type = typeFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
         prefixed = prefixedFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
-        complexTypeDeclaration = new ComplexTypeDeclaration(context, node, string, type, prefixed);
+        complexTypeDeclaration = new ComplexTypeDeclaration(context, string, node, type, prefixed);
 
   return complexTypeDeclaration;
 }
@@ -287,9 +447,45 @@ export function metavariableDeclarationFromMetavariableDeclarationNode(metavaria
         node = metavariableDeclarationNode,  ///
         string = context.nodeAsString(node),
         metavarialbe = metavariableFromMetavariableNode(metavariableDeclarationNode, context),
-        metavariableDeclaration = new MetavariableDeclaration(context, node, string, metavarialbe);
+        metavariableDeclaration = new MetavariableDeclaration(context, string, node, metavarialbe);
 
   return metavariableDeclaration;
+}
+
+export function statementFromStepNode(stepNode, context) {
+  let statement = null;
+
+  const statementNode = stepNode.getStatementNode();
+
+  if (statementNode !== null) {
+    statement = statementFromStatementNode(statementNode, context);
+  }
+
+  return statement;
+}
+
+export function referenceFromStepNode(stepNode, context) {
+  let reference = null;
+
+  const referenceNode = stepNode.getReferenceNode();
+
+  if (referenceNode !== null) {
+    reference = referenceFromReferenceNode(referenceNode, context);
+  }
+
+  return reference;
+}
+
+export function derivationFromProofNode(proofNode, context) {
+  let derivation = null;
+
+  const derivationNode = proofNode.getDerivationNode();
+
+  if (derivationNode !== null) {
+    derivation = derivationFromDerivationNode(derivationNode, context);
+  }
+
+  return derivation;
 }
 
 export function termFromTypeAssertionNode(typeAssertionNode, context) {
@@ -316,6 +512,29 @@ export function typeFromTypeAssertionNode(typeAssertionNode, context) {
   return type;
 }
 
+export function nonsenseFromDeductionNode(deductionNode, context)
+
+export function stepFromStepOrSubproofNode(stepOrSubproofNode, context) {
+  let step = null;
+
+  const stepOrSubproofNodeStepNode = stepOrSubproofNode.isStepNode();
+
+  if (stepOrSubproofNodeStepNode) {
+    const stepNode = stepOrSubproofNode;  ///
+
+    step = stepFromStepNode(stepNode, context);
+  }
+
+  return step;
+}
+
+export function identifierFromVarialbeNode(variableNode, context) {
+  const variableIdentifier = variableNode.getVariableIdentifier(),
+        identifier = variableIdentifier;  ///
+
+  return identifier;
+}
+
 export function statementFromAssumptionNode(assumptionNode, context) {
   let statement = null;
 
@@ -340,6 +559,18 @@ export function referenceFromAssumptionNode(assumptionNode, context) {
   return reference;
 }
 
+export function assumptionFromJudgementNode(judgementNode, context) {
+  let assumption = null;
+
+  const assumptionNode = judgementNode.getAssumptionNode();
+
+  if (assumptionNode !== null) {
+    assumption = assumptionFromAssumptionNode(assumptionNode, context);
+  }
+
+  return assumption;
+}
+
 export function termFromDefinedAssertionNode(definedAssertionNode, context) {
   let term = null;
 
@@ -362,6 +593,30 @@ export function termFromPropertyRelationNode(propertyRelationNode, context) {
   }
 
   return term;
+}
+
+export function termFromTermSubstitutionNode(termSubstitutionNode, context) {
+  let term = null;
+
+  const termNode = termSubstitutionNode.getTermNode();
+
+  if (termNode !== null) {
+    term = termFromTermNode(termNode, context);
+  }
+
+  return term;
+}
+
+export function subDerivationFromSubproofNode(subproofNode, context) {
+  let subDerviation = null;
+
+  const subDerivationNode = subproofNode.getSubDerivationNode();
+
+  if (subDerivationNode !== null) {
+    subDerviation = subDerivationFromSubDerivationNode(subDerivationNode, context);
+  }
+
+  return subDerviation;
 }
 
 export function typeAssertinFromStatementNode(statementNode, context) {
@@ -412,6 +667,18 @@ export function termFromPropertyAssertionNode(propertyAssertionNode, context) {
   return term;
 }
 
+export function frameFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+  let frame = null;
+
+  const frameNode = frameSubstitutionNode.getFrameNode();
+
+  if (frameNode !== null) {
+    frame = frameFromFrameNode(frameNode, context);
+  }
+
+  return frame;
+}
+
 export function satisfiesAssertionFromStepNode(stepNode, context) {
   let satisfiesAssertion = null;
 
@@ -424,6 +691,20 @@ export function satisfiesAssertionFromStepNode(stepNode, context) {
   return satisfiesAssertion;
 }
 
+export function subproofFromStepOrSubproofNode(subproofOrSubproofNode, context) {
+  let subproof = null;
+
+  const subproofOrSubproofNodeSubproofNode = subproofOrSubproofNode.isSubproofNode();
+
+  if (subproofOrSubproofNodeSubproofNode) {
+    const subproofNode = subproofOrSubproofNode;  ///
+
+    subproof = subproofFromSubproofNode(subproofNode, context);
+  }
+
+  return subproof;
+}
+
 export function termFromContainedAssertionNode(containedAssertionNode, context) {
   let term = null;
 
@@ -434,6 +715,18 @@ export function termFromContainedAssertionNode(containedAssertionNode, context) 
   }
 
   return term;
+}
+
+export function proofFromTopLevelAssertionNode(topLevelAssertionNode, context) {
+  let proof = null;
+
+  const proofNode = topLevelAssertionNode.getProofNode();
+
+  if (proofNode !== null) {
+    proof = proofFromProofNode(proofNode, context);
+  }
+
+  return proof;
 }
 
 export function frameFromContainedAssertionNode(containedAssertionNode, context) {
@@ -460,6 +753,18 @@ export function propertyFromPropertyRelationNode(propertyRelationNode, context) 
   return property;
 }
 
+export function variableFromTermSubstitutionNode(termSubstitutionNode, context) {
+  let variable = null;
+
+  const variableNode = termSubstitutionNode.getMetavariableNode();
+
+  if (variableNode !== null) {
+    variable = variableFromVariableNode(variableNode, context);
+  }
+
+  return variable;
+}
+
 export function definedAssertionFromStatementNode(statementNode, context) {
   let definedAssertion = null;
 
@@ -482,6 +787,41 @@ export function typeFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, con
   }
 
   return type;
+}
+
+export function termSubstitutionFromStatementNode(statementNode, context) {
+  let termSubstitution = null;
+
+  const termSubstitutionNode = statementNode.getTermSubstitutionNode();
+
+  if (termSubstitutionNode !== null) {
+    termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
+  }
+
+  return termSubstitution;
+}
+
+export function frameSubstitutionFromStatementNode(statementNode, context) {
+  let frameSubstitution = null;
+
+  const frameSubstitutionNode = statementNode.getFrameSubstitutionNode();
+
+  if (frameSubstitutionNode !== null) {
+    frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+  }
+
+  return frameSubstitution;
+}
+
+export function stepsOrSubproofsFromDerivationNode(derivationNode, context) {
+  const stepOrSubproofNodes = derivationNode.getStepOrSubproofNodes(),
+        stepsOrSubproofs = stepOrSubproofNodes.map((stepOrSubproofNode) => {
+          const stepOrSubproof = stepsOrSubproofFromStepOrSubproofNode(stepOrSubproofNode, context);
+
+          return stepOrSubproof;
+        });
+
+  return stepsOrSubproofs;
 }
 
 export function propertyAssertionFromStatementNode(statementNode, context) {
@@ -518,6 +858,30 @@ export function typeFromComplexTypeDeclarationNode(complexTypeDeclarationNode, c
   }
 
   return type;
+}
+
+export function deductionFromTopLevelAssertionNode(topLevelAssertionNode, context) {
+  let deduction = null;
+
+  const deductionNode = topLevelAssertionNode.getDeductionNode();
+
+  if (deductionNode !== null) {
+    deduction = deductionFromDeductionNode(deductionNode, context);
+  }
+
+  return deduction;
+}
+
+export function signatureFromTopLevelAssertionNode(topLevelAssertionNode, context) {
+  let signature = null;
+
+  const signatureNode = topLevelAssertionNode.getSignatureNode();
+
+  if (signatureNode !== null) {
+    signature = signatureFromSignatureNode(signatureNode, context);
+  }
+
+  return signature;
 }
 
 export function containedAssertionFromStatementNode(statementNode, context) {0
@@ -592,6 +956,72 @@ export function referenceFromSatisfiesAssertionNode(satisfiesAssertionNode, cont
   return reference;
 }
 
+export function variableFromVariableDeclarationNode(variableDeclarationNode, context) {
+  let variable = null;
+
+  const variableNode = variableDeclarationNode.getVariableNode();
+
+  if (variableNode !== null) {
+    variable = variableFromVariableNode(variableNode, context);
+  }
+
+  return variable;
+}
+
+export function stepsOrSubproofsFromSubDerivationNode(subDerivationNode, context) {
+  const stepOrSubproofNodes = subDerivationNode.getStepOrSubproofNodes(),
+        stepsOrSubproofs = stepOrSubproofNodes.map((stepOrSubproofNode) => {
+          const stepOrSubproof = stepsOrSubproofFromStepOrSubproofNode(stepOrSubproofNode, context);
+
+          return stepOrSubproof;
+        });
+
+  return stepsOrSubproofs;
+}
+
+export function suppositionsFromTopLevelAssertionNode(topLevelAssertionNode, context) {
+  const suppositionNodes = topLevelAssertionNode.getSuppositionNodes(),
+    suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context);
+
+  return suppositions;
+}
+
+export function metavariableFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+  let metavariable = null;
+
+  const metavariableNode = frameSubstitutionNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+  }
+
+  return metavariable;
+}
+
+export function statementFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  let statement = null;
+
+  const statementNode = statementSubstitutionNode.getStatementNode();
+
+  if (statementNode !== null) {
+    statement = statementFromStatementNode(statementNode, context);
+  }
+
+  return statement;
+}
+
+export function referenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+  let reference = null;
+
+  const referenceNode = referenceSubstitutionNode.getReferenceNode();
+
+  if (referenceNode !== null) {
+    reference = referenceFromReferenceNode(referenceNode, context);
+  }
+
+  return reference;
+}
+
 export function typePrefixFromTypePrefixDeclarationNode(typePrefixDeclarationNode, context) {
   let typePrefix = null;
 
@@ -658,6 +1088,30 @@ export function constructorFromConstructorDeclarationNode(constructorDeclaration
   return constructor;
 }
 
+export function metavariableFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  let metavariable = null;
+
+  const metavariableNode = statementSubstitutionNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+  }
+
+  return metavariable;
+}
+
+export function metavariableFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+  let metavariable = null;
+
+  const metavariableNode = referenceSubstitutionNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+  }
+
+  return metavariable;
+}
+
 export function metavariableFromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
   let metavariable = null;
 
@@ -670,83 +1124,38 @@ export function metavariableFromMetavariableDeclarationNode(metavariableDeclarat
   return metavariable;
 }
 
+export function termsFromTermNodes(termNodes, context) {
+  const terms = termNodes.map((termNode) => {
+    const term = termFromTermNode(termNode, context);
 
-
-
-
-export function bracketedCombinatorFromNothing() {
-  const { Statement, BracketedCombinator } = elements,
-        bracketedCombinatorStatementNode = instantiateBracketedCombinatorStatement(),
-        string = bracketedCombinatorStatementString,  ///
-        node = bracketedCombinatorStatementNode, ///
-        statement = new Statement(string, node),
-        bracketedCombinator = new BracketedCombinator(statement);
-
-  return bracketedCombinator;
-}
-
-export function bracketedConstructorFfromNothing() {
-  const { Term } = elements,
-        bracketedConstructorTermNode = instantiateBracketedConstructorTerm(),
-        string = bracketedConstructorTermString,  ///
-        node = bracketedConstructorTermNode,  ///
-        type = null,
-        term = new Term(string, node, type),
-        bracketedConstructor = new BracketedConstructor(term);
-
-  return bracketedConstructor;
-}
-
-
-
-
-export function termsFromSignatureNode(signatureNode, context) {
-  const termNodes = signatureNode.getAssumptionNodes(),
-        terms = termNodes.map((termNode) => {
-          const term = termFromTermNode(termNode, context);
-
-          return term;
-        });
+    return term;
+  });
 
   return terms;
 }
 
-export function assumptionsFromFrameNode(frameNode, context) {
-  const assumptionNodes = frameNode.getAssumptionNodes(),
-        assumptions = assumptionNodes.map((assumptionNode) => {
-          const assumption = assumptionFromAssumptionNode(assumptionNode, context);
+export function labelsFromLabelNodes(labelNodes, context) {
+  const labels = labelNodes.map((labelNode) => {
+    const label = labelFromLabelNode(labelNode, context);
 
-          return assumption;
-        });
+    return label;
+  });
 
-  return assumptions;
+  return labels;
 }
 
-export function statementsFromSubproofAssertionNode(subproofAssertionNode, context) {
-  const statementNodes = subproofAssertionNode.getStatementNodes(),
-        statements = statementNodes.map((statementNode) => {
-          const statement = statementFromStatementNode(statementNode, context);
+export function statementsFromStatementNodes(statementNodes, context) {
+  const statements = statementNodes.map((statementNode) => {
+    const statement = statementFromStatementNode(statementNode, context);
 
-          return statement;
-        });
+    return statement;
+  });
 
   return statements;
 }
 
-export function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
-  const propertyDeclarationNodes = complexTypeDeclarationNode.getPropertyDeclarationNodes(),
-        properties = propertyDeclarationNodes.map((propertyDeclarationNode) => {
-          const property = propertyFromPropertyDeclarationNode(propertyDeclarationNode, context);
-
-          return property;
-        });
-
-  return properties;
-}
-
-export function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
-  const superTypeNodes = complexTypeDeclarationNode.getSuperTypeNodes(),
-        superTypes = superTypeNodes.map((superTypeNode) => {
+export function superTypesFromSuperTypeNodes(superTypeNodes, context) {
+  const superTypes = superTypeNodes.map((superTypeNode) => {
           const typeNode = superTypeNode, ///
                 type = typeFromTypeNode(typeNode, context),
                 superType = type;  ///
@@ -760,6 +1169,85 @@ export function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationN
 
     superTypes.push(superType);
   }
+
+  return superTypes;
+}
+
+export function assumptionsFromAssumptionNodes(assumptionNodes, context) {
+  const assumptions = assumptionNodes.map((assumptionNode) => {
+    const assumption = assumptionFromAssumptionNode(assumptionNode, context);
+
+    return assumption;
+  });
+
+  return assumptions;
+}
+
+export function suppositionsFromSuppositionNodes(suppositionNodes, context) {
+  const suppositions = suppositionNodes.map((suppositionNode) => {
+    const supposition = suppositionFromSuppositionNode(suppositionNode, context);
+
+    return supposition;
+  });
+
+  return suppositions;
+}
+
+export function propertiesFromPropertyDeclarationNodes(propertyDeclarationNodes, context) {
+  const properties = propertyDeclarationNodes.map((propertyDeclarationNode) => {
+    const property = propertyFromPropertyDeclarationNode(propertyDeclarationNode, context);
+
+    return property;
+  });
+
+  return properties;
+}
+
+export function termsFromSignatureNode(signatureNode, context) {
+  const termNodes = signatureNode.getAssumptionNodes(),
+        terms = termsFromTermNodes(termNodes, context);
+
+  return terms;
+}
+
+export function assumptionsFromFrameNode(frameNode, context) {
+  const assumptionNodes = frameNode.getAssumptionNodes(),
+        assumptions = assumptionsFromAssumptionNodes(assumptionNodes, context);
+
+  return assumptions;
+}
+
+export function suppositionsFromSubproofNode(subproofNode, context) {
+  const suppositionNodes = subproofNode.getSuppositionNodes(),
+        suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context);
+
+  return suppositions;
+}
+
+export function labelsFromTopLevelAssertionNode(topLevelAssertionNode, context) {
+  const labelNodes = topLevelAssertionNode.getLabelNodes(),
+        labels = labelsFromLabelNodes(labelNodes, context);
+
+  return labels;
+}
+
+export function statementsFromSubproofAssertionNode(subproofAssertionNode, context) {
+  const statementNodes = subproofAssertionNode.getStatementNodes(),
+        statements = statementsFromStatementNodes(statementNodes, context);
+
+  return statements;
+}
+
+export function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
+  const propertyDeclarationNodes = complexTypeDeclarationNode.getPropertyDeclarationNodes(),
+        properties = propertiesFromPropertyDeclarationNodes(propertyDeclarationNodes, context);
+
+  return properties;
+}
+
+export function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
+  const superTypeNodes = complexTypeDeclarationNode.getSuperTypeNodes(),
+        superTypes = superTypesFromSuperTypeNodes(superTypeNodes, context);
 
   return superTypes;
 }

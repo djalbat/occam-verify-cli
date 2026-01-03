@@ -7,7 +7,7 @@ import verifyMixins from "../mixins/term/verify";
 
 import { define } from "../elements";
 import { instantiateTerm } from "../process/instantiate";
-import { termFromTermNode } from "../utilities/node";
+import { termFromTermNode } from "../utilities/node.old";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { filter, compress } = arrayUtilities;

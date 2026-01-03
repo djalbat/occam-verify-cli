@@ -353,28 +353,4 @@ export default define(class Assumption {
 
     return assumption;
   }
-
-  static fromJudgementNode(judgementNode, context) {
-    const assumptionNode = judgementNode.getAssumptionNode(),
-          assumption = assumptionFromAssumptionNode(assumptionNode, context);
-
-    return assumption;
-  }
-
-  static fromAssumptionNode(assumptionNode, context) {
-    const assumption = assumptionFromAssumptionNode(assumptionNode, context);
-
-    return assumption;
-  }
 });
-
-function assumptionFromAssumptionNode(assumptionNode, context) {
-  const { Reference, Assumption, Statement } = elements,
-        node = assumptionNode,  ///
-        string = context.nodeAsString(node),
-        statement = Statement.fromAssumptionNode(assumptionNode, context),
-        reference = Reference.fromAssumptionNode(assumptionNode, context),
-        assumption = new Assumption(string, node, statement, reference);
-
-  return assumption;
-}

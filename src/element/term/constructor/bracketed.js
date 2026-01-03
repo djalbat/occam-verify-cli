@@ -4,6 +4,7 @@ import elements from "../../elements";
 import Constructor from "../constructor";
 
 import { define } from "../../elements";
+import { bracketedConstructorTermString, instantiateBracketedConstructorTerm } from "../../../process/instantiate";
 
 export default define(class BracketedConstructor extends Constructor {
   unifyTerm(term, context, verifyAhead) {
@@ -52,4 +53,15 @@ export default define(class BracketedConstructor extends Constructor {
   }
 
   static name = "BracketedConstructor";
+
+  static fromNothing() {
+    const bracketedConstructorTermNode = instantiateBracketedConstructorTerm(),
+          nodeAsString = () => bracketedConstructorTermString,
+          context = {
+            nodeAsString
+          },
+          bracketedConstructorTerm = statementFromTermNode(bracketedConstructorTermNode, context);
+
+    return bracketedConstructorTerm;
+  }
 });

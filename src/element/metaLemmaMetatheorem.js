@@ -3,7 +3,7 @@
 import elements from "../elements";
 import LocalContext from "../context/local";
 
-import { proofFromProofNode, deductionFromDeductionNode, suppositionsFromSuppositionNodes } from "./topLevelAssertion";
+import { proofFromProofNode, deductionFromDeductionNode, suppositionsFromSuppositionNodes } from "./axiomLemmaTheoremConjecture";
 import { labelFromJSON,
          labelToLabelJSON,
          deductionFromJSON,
@@ -13,11 +13,11 @@ import { labelFromJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
-export default class TopLevelMetaAssertion {
-  constructor(context, node, string, label, suppositions, deduction, proof, substitutions) {
+export default class MetaLemmaMetatheorem {
+  constructor(context, string, node, label, suppositions, deduction, proof, substitutions) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
     this.label = label;
     this.suppositions = suppositions;
     this.deduction = deduction;
@@ -162,9 +162,9 @@ export default class TopLevelMetaAssertion {
           node = null,
           proof = null,
           string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
-          topLevelMetaAssertion = new Class(context, node, string, label, suppositions, deduction, proof, substitutions);
+          metaLemmaMetatheorem = new Class(context, string, node, label, suppositions, deduction, proof, substitutions);
 
-    return topLevelMetaAssertion;
+    return metaLemmaMetatheorem;
   }
 
   static fromNode(Class, node, context) {
@@ -180,9 +180,9 @@ export default class TopLevelMetaAssertion {
           suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context),
           substitutions = Substitutions.fromNothing(),
           string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
-          topLevelMetaAssertion = new Class(context, node, string, label, suppositions, deduction, proof, substitutions);
+          metaLemmaMetatheorem = new Class(context, string, node, label, suppositions, deduction, proof, substitutions);
 
-    return topLevelMetaAssertion;
+    return metaLemmaMetatheorem;
   }
 }
 

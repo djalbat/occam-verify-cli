@@ -6,8 +6,8 @@ import { define } from "../../elements";
 import { verifyStatement } from "../../process/verify";
 
 export default define(class CombinatorDeclaration extends Declaration {
-  constructor(context, node, string, combinator) {
-    super(context, node, string);
+  constructor(context, string, node, combinator) {
+    super(context, string, node);
 
     this.combinator = combinator;
   }

@@ -9,10 +9,10 @@ import { equateStatements } from "../process/equate";
 import { propertyAssertionFromStatement } from "../utilities/statement";
 
 export default define(class Step {
-  constructor(context, node, string, statement, reference, satisfiesAssertion) {
+  constructor(context, string, node, statement, reference, satisfiesAssertion) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
     this.statement = statement;
     this.reference = reference;
     this.satisfiesAssertion = satisfiesAssertion;
@@ -22,12 +22,12 @@ export default define(class Step {
     return this.context;
   }
 
-  getNode() {
-    return this.node;
-  }
-
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getStatement() {
@@ -203,38 +203,4 @@ export default define(class Step {
   }
 
   static name = "Step";
-
-  static fromStatement(statement, context) {
-    const statementString = statement.getString(),
-          string = statementString, ///
-          node = null,
-          reference = null,
-          satisfiesAssertion = null,
-          step = new Step(context, node, string, statement, reference, satisfiesAssertion);
-
-    return step;
-  }
-
-  static fromStepOrSubproofNode(stepOrSubproofNode, context) {
-    let step = null;
-
-    const stepNode = stepOrSubproofNode.isStepNode();
-
-    if (stepNode) {
-      const { Statement, Reference, SatisfiesAssertion } = elements,
-            stepNode = stepOrSubproofNode,  ///
-            node = stepNode, ///
-            string = context.nodeAsString(node),
-            statement = Statement.fromStepNode(stepNode, context),
-            reference = Reference.fromStepNode(stepNode, context),
-            satisfiesAssertion = SatisfiesAssertion.fromStepNode(stepNode, context),
-            temporaryContext = null;
-
-      context = temporaryContext; ///
-
-      step = new Step(context, node, string, statement, reference, satisfiesAssertion)
-    }
-
-    return step;
-  }
 });

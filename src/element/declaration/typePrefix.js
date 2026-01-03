@@ -1,13 +1,12 @@
 "use strict";
 
-import elements from "../../elements";
 import Declaration from "../declaration";
 
 import { define } from "../../elements";
 
 export default define(class TypePrefixDeclaration extends Declaration {
-  constructor(context, node, string, typePrefix) {
-    super(context, node, string);
+  constructor(context, string, node, typePrefix) {
+    super(context, string, node);
 
     this.typePrefix = typePrefix;
   }

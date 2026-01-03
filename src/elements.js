@@ -2,12 +2,12 @@
 
 const elements = {};
 
-export function define(Class) {
-  const { name } = Class;
+export function define(Element) {
+  const { name } = Element;
 
-  elements[name] = Class;
+  elements[name] = Element;
 
-  return Class;
+  return Element;
 }
 
 export default elements;

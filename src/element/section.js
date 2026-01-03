@@ -6,10 +6,10 @@ import LocalContext from "../context/local";
 import { define } from "../elements";
 
 export default define(class Section {
-  constructor(context, node, string, hypotheses, axiom, lemma, theorem, conjecture) {
+  constructor(context, string, node, hypotheses, axiom, lemma, theorem, conjecture) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
     this.hypotheses = hypotheses;
     this.axiom = axiom;
     this.lemma = lemma;
@@ -103,7 +103,7 @@ export default define(class Section {
           conjecture = conjectureFroSectionNode(sectionNode, context),
           node = sectionNode, ///
           string = stringFromHypothesesAxiomLemmaTheoremAndConjecture(hypotheses, axiom, lemma, theorem, conjecture, context),
-          section = new Section(context, node, string, hypotheses, axiom, lemma, theorem, conjecture);
+          section = new Section(context, string, node, hypotheses, axiom, lemma, theorem, conjecture);
 
     return section;
   }

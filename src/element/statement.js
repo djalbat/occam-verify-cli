@@ -8,7 +8,6 @@ import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
 import { instantiateStatement } from "../process/instantiate";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-import { statementFromStatementNode } from "../utilities/node";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 
 const { match, backwardsSome } = arrayUtilities;

@@ -6,7 +6,7 @@ import elements from "../elements";
 import LocalContext from "../context/local";
 
 import { define } from "../elements";
-import { labelsStringFromLabels } from "./topLevelAssertion";
+import { labelsStringFromLabels } from "./axiomLemmaTheoremConjecture";
 import { labelsFromJSON,
          premisesFromJSON,
          conclusionFromJSON,
@@ -17,10 +17,10 @@ import { labelsFromJSON,
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 export default define(class Rule {
-  constructor(context, node, string, labels, premises, conclusion, proof) {
+  constructor(context, string, node, labels, premises, conclusion, proof) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
     this.labels = labels;
     this.premises = premises;
     this.conclusion = conclusion;
@@ -261,7 +261,7 @@ export default define(class Rule {
           conclusion = conclusionFromJSON(json, context),
           string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion);
 
-    rule = new Rule(context, node, string, labels, premises, conclusion, proof);
+    rule = new Rule(context, string, node, labels, premises, conclusion, proof);
 
     return rule;
   }
@@ -273,7 +273,7 @@ export default define(class Rule {
           premises = premisesFromRuleNode(ruleNode, context),
           conclusion = conclusionFromRuleNode(ruleNode, context),
           string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion),
-          rule = new Rule(context, node, string, labels, premises, conclusion, proof);
+          rule = new Rule(context, string, node, labels, premises, conclusion, proof);
 
     return rule;
   }

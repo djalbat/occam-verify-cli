@@ -1,21 +1,21 @@
 "use strict";
 
 export default class Declaration {
-  constructor(context, node, string) {
+  constructor(context, string, node) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
   }
 
   getContext() {
     return this.context;
   }
 
-  getNode() {
-    return this.node;
-  }
-
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 }

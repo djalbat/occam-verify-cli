@@ -4,7 +4,6 @@ import elements from "../elements";
 import LocalContext from "../context/local";
 
 import { define } from "../elements";
-import { subproofStringFromSubproofNode } from "../utilities/subproof";
 
 export default define(class Subproof {
   constructor(string, node, suppositions, subDerivation) {
@@ -132,43 +131,4 @@ export default define(class Subproof {
   }
 
   static name = "Subproof";
-
-  static fromStepOrSubproofNode(sStepOrSubproofNode, context) {
-    let subproof = null;
-
-    const subproofNode = sStepOrSubproofNode.isSubproofNode();
-
-    if (subproofNode) {
-      const subproofNode = sStepOrSubproofNode, ///
-            suppositions = suppositionsFromSubproofNode(subproofNode, context),
-            subDerivation = subDerivationFromSubproofNode(subproofNode, context),
-            subproofString = subproofStringFromSubproofNode(subproofNode, context),
-            node = subproofNode,  ///
-            string = subproofString;  ///
-
-      subproof = new Subproof(string, node, suppositions, subDerivation);
-    }
-
-    return subproof;
-  }
 });
-
-function suppositionsFromSubproofNode(subproofNode, context) {
-  const { Supposition } = elements,
-        suppositionNodes = subproofNode.getSuppositionNodes(),
-        suppositions = suppositionNodes.map((suppositionNode) => {
-          const supposition = Supposition.fromSuppositionNode(suppositionNode, context);
-
-          return supposition;
-        });
-
-  return suppositions;
-}
-
-function subDerivationFromSubproofNode(subproofNode, context) {
-  const { SubDerivation } = elements,
-        subDerivationNode = subproofNode.getSubDerivationNode(),
-        subDerivation = SubDerivation.fromSubDerivationNode(subDerivationNode, context);
-
-  return subDerivation;
-}

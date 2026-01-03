@@ -7,8 +7,9 @@ import { define } from "../elements";
 import { termsFromJSON, framesFromJSON, statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
 
 export default define(class Deduction {
-  constructor(context, node, string, statement) {
+  constructor(context, string, statement) {
     this.context = context;
+    this.string = string;
     this.node = node;
     this.string = string;
     this.statement = statement;
@@ -18,12 +19,12 @@ export default define(class Deduction {
     return this.context;
   }
 
-  getNode(node) {
-    return this.node;
-  }
-
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getStatement() {
@@ -141,7 +142,7 @@ export default define(class Deduction {
 
     context = temporaryContext; ///
 
-    const deduction = new Deduction(context, node, string, statement);
+    const deduction = new Deduction(context, string, statement);
 
     return deduction;
   }
@@ -155,7 +156,7 @@ export default define(class Deduction {
 
     context = temporaryContext;  ///
 
-    const deduction = new Deduction(context, node, string, statement);
+    const deduction = new Deduction(context, string, statement);
 
     return deduction;
   }

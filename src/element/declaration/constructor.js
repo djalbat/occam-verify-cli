@@ -6,8 +6,8 @@ import { define } from "../../elements";
 import { verifyTerm } from "../../process/verify";
 
 export default define(class ConstructorDeclaration extends Declaration {
-  constructor(context, node, string, constructor) {
-    super(context, node, string);
+  constructor(context, string, node, constructor) {
+    super(context, string, node);
 
     this.constructor = constructor;
   }

@@ -5,6 +5,20 @@ import SubstitutionNode from "../../node/substitution";
 import { TERM_RULE_NAME } from "../../ruleNames";
 
 export default class TermSubstitutionNode extends SubstitutionNode {
+  getVariableNode() {
+    const lastVariableNode = this.getLastVariableNode(),
+          variableNode = lastVariableNode;  ///
+
+    return variableNode;
+  }
+
+  getTermNode() {
+    const firstTermNode = this.getFirstTermNode(),
+          termNode = firstTermNode; ///
+
+    return termNode;
+  }
+
   getLastTermNode() {
     const ruleName = TERM_RULE_NAME,
           lastTermNode = this.getLastNodeByRuleName(ruleName);
@@ -37,3 +51,4 @@ export default class TermSubstitutionNode extends SubstitutionNode {
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return SubstitutionNode.fromRuleNameChildNodesOpacityAndPrecedence(TermSubstitutionNode, ruleName, childNodes, opacity, precedence); }
 }
+

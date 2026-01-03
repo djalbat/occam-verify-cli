@@ -7,10 +7,10 @@ import { define } from "../elements";
 import { termsFromJSON, framesFromJSON, statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
 
 export  default define(class Conclusion {
-  constructor(context, node, string, statement) {
+  constructor(context, string, node, statement) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
     this.statement = statement;
   }
 
@@ -120,7 +120,7 @@ export  default define(class Conclusion {
 
     context = temporaryContext; ///
 
-    const conclusion = new Conclusion(context, node, string, statement);
+    const conclusion = new Conclusion(context, string, node, statement);
 
     return conclusion;
   }
@@ -134,7 +134,7 @@ export  default define(class Conclusion {
 
     context = temporaryContext; ///
 
-    const conclusion = new Conclusion(context, node, string, statement);
+    const conclusion = new Conclusion(context, string, node, statement);
 
     return conclusion;
   }

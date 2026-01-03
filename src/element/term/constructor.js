@@ -1,13 +1,12 @@
 "use strict";
 
-import elements from "../elements";
+import elements from "../../elements";
 
-import { define } from "../elements";
-import { baseType } from ".//type";
-import { unifyTermWithConstructor } from "../process/unify";
-import { termFromJSON, termToTermJSON } from "../utilities/json";
+import { define } from "../../elements";
+import { unifyTermWithConstructorTerm } from "../../process/unify";
+import { termFromJSON, termToTermJSON } from "../../utilities/json";
 
-export default define(class Constructor {
+export default define(class ConstructorTerm {
   constructor(term) {
     this.term = term;
   }
@@ -27,18 +26,18 @@ export default define(class Constructor {
   unifyTerm(term, context, verifyAhead) {
     let termUnifies = false;
 
-    const constructor = this, ///
-          termString = term.getString(),
-          constructorString = constructor.getString();
+    const termString = term.getString(),
+          constructorTermString = this.getString();
 
-    context.trace(`Unifying the '${termString}' term with the '${constructorString}' constructor...`);
+    context.trace(`Unifying the '${termString}' term with the '${constructorTermString}' constructor's term...`);
 
-    const termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, context);
+    const constructorTerm = this, ///
+          termUnifiesWithConstructor = unifyTermWithConstructorTerm(term, constructorTerm, context);
 
     if (termUnifiesWithConstructor) {
       let verifiesAhead;
 
-      const type = constructor.getType();
+      const type = this.getType();
 
       term.setType(type);
 
@@ -48,7 +47,7 @@ export default define(class Constructor {
     }
 
     if (termUnifies) {
-      context.debug(`...unified the '${termString}' term with the '${constructorString}' constructor.`);
+      context.debug(`...unified the '${termString}' term with the '${constructorTermString}' constructor's term.`);
     }
 
     return termUnifies;
@@ -64,11 +63,11 @@ export default define(class Constructor {
     return json;
   }
 
-  static name = "Constructor";
+  static name = "ConstructorTerm";
 
   static fromJSON(json, context) {
     const term = termFromJSON(json, context),
-          constructor = new Constructor(term);
+          constructor = new ConstructorTerm(term);
 
     return constructor;
   }
@@ -76,7 +75,7 @@ export default define(class Constructor {
   static fromConstructorDeclarationNode(constructorDeclarationNode, context) {
     const { Term } = elements,
           term = Term.fromConstructorDeclarationNode(constructorDeclarationNode, context),
-          constructor = new Constructor(term);
+          constructor = new ConstructorTerm(term);
 
     return constructor;
   }

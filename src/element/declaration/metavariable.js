@@ -5,8 +5,8 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class MetavariableDeclaration extends Declaration {
-  constructor(context, node, string, metavariable) {
-    super(context, node, string);
+  constructor(context, string, node, metavariable) {
+    super(context, string, node);
 
     this.metavariable = metavariable;
   }

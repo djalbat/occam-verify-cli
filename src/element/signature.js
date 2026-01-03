@@ -5,8 +5,8 @@ import { arrayUtilities } from "necessary";
 import elements from "../elements";
 
 import { define } from "../elements";
+import { signatureStringFromTerms } from "../utilities/string";
 import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
-import { stringFromTerms, variableFromTerm } from "../utilities/node";
 
 const { match, compare, correlate } = arrayUtilities;
 
@@ -158,7 +158,8 @@ export default define(class Signature {
 
   static fromJSON(json, context) {
     const terms = termsFromJSON(json, context),
-          string = stringFromTerms(terms),
+          signatureString = signatureStringFromTerms(terms),
+          string = signatureString, ///
           signature = new Signature(string, terms);
 
     return signature;

@@ -18,11 +18,11 @@ import { labelsFromJSON,
 
 const { extract, reverse, correlate, backwardsEvery } = arrayUtilities;
 
-export default class TopLevelAssertion {
-  constructor(context, node, string, labels, suppositions, deduction, proof, signature, hypotheses) {
+export default class AxiomLemmaTheoremConjecture {
+  constructor(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
     this.labels = labels;
     this.suppositions = suppositions;
     this.deduction = deduction;
@@ -318,9 +318,9 @@ export default class TopLevelAssertion {
           node = null,
           proof = null,
           string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          topLevelAssertion = new Class(context, node, string, labels, suppositions, deduction, proof, signature, hypotheses);
+          axiomLemmaTheoremConjecture = new Class(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
-    return topLevelAssertion;
+    return axiomLemmaTheoremConjecture;
   }
 
   static fromNode(Class, node, context) {
@@ -337,104 +337,8 @@ export default class TopLevelAssertion {
           signature = signatureFromSignatureNode(signatureNode, context),
           hypotheses = [],
           string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          topLevelAssertion = new Class(context, node, string, labels, suppositions, deduction, proof, signature, hypotheses);
+          axiomLemmaTheoremConjecture = new Class(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
-    return topLevelAssertion;
+    return axiomLemmaTheoremConjecture;
   }
-}
-
-export function proofFromProofNode(proofNode, context) {
-  const { Proof } = elements,
-        proof = Proof.fromProofNode(proofNode, context);
-
-  return proof;
-}
-
-export function labelsFromLabelNodes(labelNodes, context) {
-  const { Label } = elements,
-        labels = labelNodes.map((labelNode) => {
-          const label = Label.fromLabelNode(labelNode, context);
-
-          return label;
-        });
-
-  return labels;
-}
-
-export function signatureFromSignatureNode(signatureNode, context) {
-  let signature = null;
-
-  if (signatureNode !== null) {
-    const { Signature } = elements;
-
-    signature = Signature.fromSignatureNode(signatureNode, context);
-  }
-
-  return signature;
-}
-
-export function deductionFromDeductionNode(deductionNode, context) {
-  const { Deduction } = elements,
-        deduction = Deduction.fromDeductionNode(deductionNode, context);
-
-  return deduction;
-}
-
-export function suppositionsFromSuppositionNodes(suppositionNodes, context) {
-  const { Supposition } = elements,
-        suppositions = suppositionNodes.map((suppositionNode) => {
-          const supposition = Supposition.fromSuppositionNode(suppositionNode, context);
-
-          return supposition;
-        });
-
-    return suppositions;
-}
-
-export function labelsStringFromLabels(labels) {
-  const labelsString = labels.reduce((labelsString, label) => {
-    const labelString = label.getString();
-
-    labelsString = (labelsString === null) ?
-                      labelString: ///
-                        `${labelsString}, ${labelString}`;
-
-    return labelsString;
-  }, null);
-
-  return labelsString;
-}
-
-export function suppositionsStringFromSuppositions(suppositions) {
-  const suppositionsString = suppositions.reduce((suppositionsString, supposition) => {
-    const suppositionString = supposition.getString();
-
-    suppositionsString = (suppositionsString !== null) ?
-                           `${suppositionsString}, ${suppositionString}` :
-                             suppositionString;  ///
-
-    return suppositionsString;
-  }, null);
-
-  return suppositionsString;
-}
-
-export function stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction) {
-  let string;
-
-  const suppositionsString = suppositionsStringFromSuppositions(suppositions),
-        deductionString = deduction.getString(),
-        labelsString = labelsStringFromLabels(labels);
-
-  if (labelsString !== null) {
-    string = (suppositionsString !== null) ?
-               `${labelsString} :: [${suppositionsString}] ... ${deductionString}` :
-                 `${labelsString} :: ${deductionString}`;
-  } else {
-    string = (suppositionsString !== null) ?
-               `[${suppositionsString}] ... ${deductionString}` :
-                 deductionString;
-  }
-
-  return string;
 }

@@ -9,10 +9,10 @@ import { subproofAssertionFromStatement } from "../utilities/statement";
 import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default define(class Premise {
-  constructor(context, node, string, statement, procedureCall) {
+  constructor(context, string, node, statement, procedureCall) {
     this.context = context;
-    this.node = node;
     this.string = string;
+    this.node = node;
     this.statement = statement;
     this.procedureCall = procedureCall;
   }
@@ -21,12 +21,12 @@ export default define(class Premise {
     return this.context;
   }
 
-  getNode() {
-    return this.node;
-  }
-
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getStatement() {
@@ -273,7 +273,7 @@ export default define(class Premise {
 
     context = temporaryContext; ///
 
-    const premise = new Premise(context, node, string, statement, procedureCall);
+    const premise = new Premise(context, string, node, statement, procedureCall);
 
     return premise;
   }
@@ -288,7 +288,7 @@ export default define(class Premise {
 
     context = temporaryContext; ///
 
-    const premise = new Premise(context, node, string, statement, procedureCall);
+    const premise = new Premise(context, string, node, statement, procedureCall);
 
     return premise
   }

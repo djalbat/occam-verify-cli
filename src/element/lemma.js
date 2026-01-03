@@ -1,10 +1,10 @@
 "use strict";
 
-import TopLevelAssertion from "./topLevelAssertion";
+import AxiomLemmaTheoremConjecture from "./axiomLemmaTheoremConjecture";
 
 import { define } from "../elements";
 
-export default define(class Lemma extends TopLevelAssertion {
+export default define(class Lemma extends AxiomLemmaTheoremConjecture {
   verify() {
     let verifies;
 
@@ -36,7 +36,7 @@ export default define(class Lemma extends TopLevelAssertion {
 
   static fromLemmaNode(lemmaNode, context) {
     const node = lemmaNode, ///
-          lemma = TopLevelAssertion.fromNode(Lemma, node, context);
+          lemma = AxiomLemmaTheoremConjecture.fromNode(Lemma, node, context);
 
     return lemma;
   }

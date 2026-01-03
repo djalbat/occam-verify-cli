@@ -2,12 +2,10 @@
 
 import { arrayUtilities } from "necessary";
 
-import elements from "../elements";
-
 import { define } from "../elements";
 import { BASE_TYPE_SYMBOL } from "../constants";
-import { typeFromTypeNode } from "../utilities/node";
-import { stringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/type";
+import { typeFromTypeNode } from "../utilities/node.old";
+import { typeStringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/string";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
 const { push, first } = arrayUtilities;
@@ -311,7 +309,7 @@ class Type {
           superTypes = superTypesFromJSON(json, context),
           typeName = name,  ///
           typePrefixName = null,
-          string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
+          string = typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           type = new Type(string, node, name, prefixName, superTypes, properties, provisional);
 
     return type;
@@ -341,7 +339,7 @@ class Type {
           superTypes = [
             superType
           ],
-          string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
+          string = typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           properties = type.getProperties();
 
     type = new Type(string, node, name, prefixName, superTypes, properties, provisional);  ///
@@ -364,7 +362,7 @@ class Type {
           name = typeName,  ///
           prefixName = typePrefixName,  ///
           properties = [],
-          string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
+          string = typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           type = new Type(string, node, name, prefixName, superTypes, properties, provisional);
 
     return type;

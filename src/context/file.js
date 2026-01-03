@@ -6,7 +6,7 @@ import elements from "../elements";
 
 import { baseType } from "../element/type";
 import { verifyFile } from "../process/verify";
-import { nodeAsString, nodesAsString } from "../utilities/string";
+import { nodeAsString, nodesAsString } from "../utilities/node";
 import { typesFromJSON,
          rulesFromJSON,
          axiomsFromJSON,

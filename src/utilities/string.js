@@ -1,85 +1,159 @@
 "use strict";
 
-import { EMPTY_STRING } from "../constants";
+import { baseType } from "../element/type";
 
-export function nodeAsString(node, tokens) {
-  let string;
+export function termsStringFromTerms(terms) {
+  const termsString = terms.reduce((termsString, term) => {
+    const termString = term.getString();
 
-  tokens = nodeAsTokens(node, tokens);  ///
+    termsString = (termsString !== null) ?
+                   `${termsString}, ${termString}` :
+                      termString;
 
-  string = tokensAsString(tokens);
-
-  string = trimString(string);  ///
-
-  return string;
-}
-
-export function nodesAsString(nodes, tokens) {
-  const string = nodes.reduce((string, node) => {
-    const nodeString = nodeAsString(node, tokens);
-
-    string = (string === null) ?
-               nodeString :
-                `${string}, ${nodeString}`;
-
-    return string;
+    return termsString;
   }, null);
 
-  return string;
+  return termsString;
 }
 
-function trimString(string) {
-  string = string.replace(/\s+$/, EMPTY_STRING);  ///
+export function labelsStringFromLabels(labels) {
+  const labelsString = labels.reduce((labelsString, label) => {
+    const labelString = label.getString();
 
-  return string;
+    labelsString = (labelsString === null) ?
+                     labelString: ///
+                      `${labelsString}, ${labelString}`;
+
+    return labelsString;
+  }, null);
+
+  return labelsString;
 }
 
-function tokensAsString(tokens) {
-  const string = tokens.reduce((string, token) => {
-    const content = token.getContent();
+export function signatureStringFromTerms(terms) {
+  const termsString = termsStringFromTerms(terms),
+        signatureString = `[${termsString}]`;
 
-    string = `${string}${content}`;
-
-    return string;
-  }, EMPTY_STRING);
-
-  return string;
+  return signatureString;
 }
 
-function nodeAsTokens(node, tokens) {
-  const nodeTerminalNode = node.isTerminalNode();
+export function subproofStringFromSubproof(subproof) {
+  const suppositionStatementsOrNonsenseString = suppositionStatementOrNonsenseStringFromSubproofNode(subproofNode, context),
+        lastStatementOrNonsenseString = lastStatementOrNonsenseStringFromSubproofNode(subproofNode, context),
+        subproofString = `[${suppositionStatementsOrNonsenseString}] ... ${lastStatementOrNonsenseString}`;
 
-  if (nodeTerminalNode) {
-    const terminalNode = node;  ///
+  return subproofString;
+}
 
-    tokens = terminalNodeAsTokens(terminalNode, tokens);
-  } else {
-    const nonTerminalNode = node; ///
+export function superTypesStringFromSuperTypes(superTypes) {
+  const superTypesString = superTypes.reduce((superTypesString, superType) => {
+    if (superType !== baseType) {
+      const superTypeString = superType.getString();
 
-    tokens = nonTerminalNodeAsTokens(nonTerminalNode, tokens);
+      superTypesString = (superTypesString === null) ?
+                           `'${superTypeString}'` :
+                             `${superTypesString}, '${superTypeString}'`;
+    }
+
+    return superTypesString;
+  }, null);
+
+  return superTypesString;
+}
+
+export function suppositionsStringFromSuppositions(suppositions) {
+  const suppositionsString = suppositions.reduce((suppositionsString, supposition) => {
+    const suppositionString = supposition.getString();
+
+    suppositionsString = (suppositionsString !== null) ?
+                          `${suppositionsString}, ${suppositionString}` :
+                            suppositionString;  ///
+
+    return suppositionsString;
+  }, null);
+
+  return suppositionsString;
+}
+
+export function typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes) {
+  let typeString;
+
+  typeString = (typePrefixName !== null) ?
+                 `${typePrefixName}${typeName}`:
+                   typeName;
+
+  const superTypesString = superTypesStringFromSuperTypes(superTypes);
+
+  if (superTypesString !== null) {
+    typeString = `${typeString}:${superTypesString}`;
   }
 
-  return tokens;
+  return typeString;
 }
 
-function terminalNodeAsTokens(terminalNode, tokens) {
-  const significantToken = terminalNode.getSignificantToken(),
-        token = significantToken; ///
+export function axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction) {
+  let axiomLemmaTheoremConjectureString;
 
-  tokens = [  ///
-    token
-  ];
+  const suppositionsString = suppositionsStringFromSuppositions(suppositions),
+        deductionString = deduction.getString(),
+        labelsString = labelsStringFromLabels(labels);
 
-  return tokens;
+  if (labelsString !== null) {
+    axiomLemmaTheoremConjectureString = (suppositionsString !== null) ?
+                                          `${labelsString} :: [${suppositionsString}] ... ${deductionString}` :
+                                            `${labelsString} :: ${deductionString}`;
+  } else {
+    axiomLemmaTheoremConjectureString = (suppositionsString !== null) ?
+                                         `[${suppositionsString}] ... ${deductionString}` :
+                                            deductionString;
+  }
+
+  return axiomLemmaTheoremConjectureString;
 }
 
-function nonTerminalNodeAsTokens(nonTerminalNode, tokens) {
-  const lastSignificantTokenIndex = nonTerminalNode.getLastSignificantTokenIndex(tokens),
-        firstSignificantTokenIndex = nonTerminalNode.getFirstSignificantTokenIndex(tokens),
-        start = firstSignificantTokenIndex, ///
-        end = lastSignificantTokenIndex + 1;
+function suppositionStatementOrNonsenseStringFromSubproofNode(subproofNode, context) {
+  const suppositionNodes = subproofNode.getSuppositionNodes(),
+        suppositionStatementsOrNonsenseString = suppositionNodes.reduce((suppositionStatementsOrNonsenseString, suppositionNode) => {
+          const suppositionOrStepNode = suppositionNode,  ///
+                statementOrNonsenseString = statementOrNonsenseStringFromSuppositionOrStepNode(suppositionOrStepNode, context),
+                suppositionStatementOrNonsenseString = statementOrNonsenseString; ///
 
-  tokens = tokens.slice(start, end);  ///
+          suppositionStatementsOrNonsenseString = (suppositionStatementsOrNonsenseString !== null) ?
+                                                    `${suppositionStatementsOrNonsenseString}, ${suppositionStatementOrNonsenseString}` :
+                                                      suppositionStatementOrNonsenseString; ///
 
-  return tokens;
+          return suppositionStatementsOrNonsenseString;
+        }, null);
+
+  return suppositionStatementsOrNonsenseString;
+}
+
+function statementOrNonsenseStringFromSuppositionOrStepNode(suppositionOrStepNode, context) {
+  let statementOrNonsenseString;
+
+  const nonsenseNode = suppositionOrStepNode.getNonsenseNode(),
+        statementNode = suppositionOrStepNode.getStatementNode();
+
+  if (false) {
+    ///
+  } else if (nonsenseNode !== null) {
+    const nonsenseString = context.nodeAsString(nonsenseNode);
+
+    statementOrNonsenseString = nonsenseString; ///
+  } else if (statementNode !== null) {
+    const statementString = context.nodeAsString(statementNode);
+
+    statementOrNonsenseString = statementString;  ///
+  }
+
+  return statementOrNonsenseString;
+}
+
+function lastStatementOrNonsenseStringFromSubproofNode(subproofNode, context) {
+  const lastStepNode = subproofNode.getLastStepNode(),
+        suppositionOrStepNode = lastStepNode, ///
+        statementOrNonsenseString = statementOrNonsenseStringFromSuppositionOrStepNode(suppositionOrStepNode, context),
+        lastStatementOrNonsenseString = statementOrNonsenseString; ///
+
+  return lastStatementOrNonsenseString;
 }

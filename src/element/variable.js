@@ -4,7 +4,7 @@ import elements from "../elements";
 
 import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
-import { typeFromTypeNode } from "../utilities/node";
+import { typeFromTypeNode } from "../utilities/node.old";
 import { instantiateVariable } from "../process/instantiate";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
@@ -275,18 +275,6 @@ export default define(class Variable {
     return variable;
   }
 });
-
-function variableFromVariableNodeAndType(variableNode, type) {
-  const { Variable } = elements,
-        node = variableNode,  ///
-        variableIdentifier = variableNode.getVariableIdentifier(),
-        string = variableIdentifier,  ///,
-        identifier = variableIdentifier,  ///
-        propertyRelations = [],
-        variable = new Variable(string, node, type, identifier, propertyRelations);
-
-  return variable;
-}
 
 function stringFromNameAndPropertyRelations(identifier, propertyRelations) {
   const propertyRelationsString = propertyRelations.reduce((propertyRelationsString, propertyRelation) => {

@@ -1,10 +1,10 @@
 "use strict";
 
-import elements from "../../elements";
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
+import { frameSubstitutionFromFrameSubstitutionNode, frameSubstitutionFromStatementNode } from "../../utilities/element";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(context, string, node, frame, metavariable) {
@@ -81,24 +81,8 @@ export default define(class FrameSubstitution extends Substitution {
   static name = "FrameSubstitution";
 
   static fromStatement(statement, context) {
-    let frameSubstitution = null;
-
     const statementNode = statement.getNode(),
-          frameSubstitutionNode = statementNode.getFrameSubstitutionNode();
-
-    if (frameSubstitutionNode !== null) {
-      const { Frame, Metavariable } = elements,
-            firstFrameNode = frameSubstitutionNode.getFirstFrameNode(),
-            lastMetavariableNode = frameSubstitutionNode.getLastMetavariableNode(),
-            metavariableNode = lastMetavariableNode,  ///
-            frameNode = firstFrameNode, ///
-            node = frameSubstitutionNode,  ///
-            string = context.nodeAsString(node),
-            frame = Frame.fromFrameNode(frameNode, context),
-            metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
-
-      frameSubstitution = new FrameSubstitution(context, string, node, frame, metavariable);
-    }
+          frameSubstitution = frameSubstitutionFromStatementNode(statementNode, context);
 
     return frameSubstitution;
   }
@@ -106,8 +90,7 @@ export default define(class FrameSubstitution extends Substitution {
   static fromFrameAndMetavariable(frame, metavariable, context) {
     const string = stringFromFrameAndMetavariable(frame, metavariable),
           frameSubstitutionNode = instantiateFrameSubstitution(string, context),
-          node = frameSubstitutionNode, ///
-          frameSubstitution = new FrameSubstitution(context, string, node, frame, metavariable);
+          frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
 
     return frameSubstitution;
   }

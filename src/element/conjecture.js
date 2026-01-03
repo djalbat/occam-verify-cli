@@ -1,10 +1,10 @@
 "use strict";
 
-import TopLevelAssertion from "./topLevelAssertion";
+import AxiomLemmaTheoremConjecture from "./axiomLemmaTheoremConjecture";
 
 import { define } from "../elements";
 
-export default define(class Conjecture extends TopLevelAssertion {
+export default define(class Conjecture extends AxiomLemmaTheoremConjecture {
   verify() {
     let verifies;
 
@@ -30,11 +30,11 @@ export default define(class Conjecture extends TopLevelAssertion {
 
   static name = "Conjecture";
 
-  static fromJSON(json, context) { return TopLevelAssertion.fromJSON(Conjecture, json, context); }
+  static fromJSON(json, context) { return AxiomLemmaTheoremConjecture.fromJSON(Conjecture, json, context); }
 
   static fromConjectureNode(conjectureNode, context) {
     const node = conjectureNode,  ///
-          conjecture = TopLevelAssertion.fromNode(Conjecture, node, context);
+          conjecture = AxiomLemmaTheoremConjecture.fromNode(Conjecture, node, context);
 
     return conjecture;
   }

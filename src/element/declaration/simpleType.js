@@ -1,14 +1,12 @@
 "use strict";
 
-import elements from "../../elements";
 import Declaration from "../declaration";
 
 import { define } from "../../elements";
-import { stringFromTypeNameTypePrefixNameAndSuperTypes } from "../../utilities/type";
 
 export default define(class SimpleTypeDeclaration extends Declaration {
-  constructor(context, node, string, type, prefixed) {
-    super(context, node, string);
+  constructor(context, string, node, type, prefixed) {
+    super(context, string, node);
 
     this.type = type;
     this.prefixed = prefixed;

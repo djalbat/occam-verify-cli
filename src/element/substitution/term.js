@@ -6,6 +6,7 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
+import { termSubstitutionFromStatementNode, termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, term, variable) {
@@ -101,33 +102,16 @@ export default define(class TermSubstitution extends Substitution {
   static name = "TermSubstitution";
 
   static fromStatement(statement, context) {
-    let termSubstitution = null;
-
     const statementNode = statement.getNode(),
-          termSubstitutionNode = statementNode.getTermSubstitutionNode();
-
-    if (termSubstitutionNode !== null) {
-      const { Term, Variable } = elements,
-            firstTermNode = termSubstitutionNode.getFirstTermNode(),
-            lastVariableNode = termSubstitutionNode.getLastVariableNode(),
-            termNode = firstTermNode, ///
-            variableNode = lastVariableNode,  ///
-            term = Term.fromTermNode(termNode, context),
-            variable = Variable.fromVariableNode(variableNode, context),
-            node = termSubstitutionNode,  ///
-            string = stringFromTermAndVariable(term, variable);
-
-      termSubstitution = new TermSubstitution(context, string, node, term, variable);
-    }
+          termSubstitution = termSubstitutionFromStatementNode(statementNode, context);
 
     return termSubstitution;
   }
 
-  static fromTernAndVariable(term, variable, context) {
-    const string = stringFromTermAndVariable(term, variable),
+  static fromTermAndMetavariable(term, metavariable, context) {
+    const string = stringFromTermAndVariable(term, metavariable),
           termSubstitutionNode = instantiateTermSubstitution(string, context),
-          node = termSubstitutionNode,  ///
-          termSubstitution = new TermSubstitution(context, string, node, term, variable);
+          termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
 
     return termSubstitution;
   }

@@ -1,40 +1,85 @@
 "use strict";
 
-import elements from "../elements";
+import { EMPTY_STRING } from "../constants";
 
-import { baseType } from "../element/type";
+export function nodeAsString(node, tokens) {
+  let string;
 
-export function variableFromTerm(term, context) {
-  let variable = null;
+  tokens = nodeAsTokens(node, tokens);  ///
 
-  const termNode = term.getNode(),
-        singularVariableNode = termNode.getSingularVariableNode();
+  string = tokensAsString(tokens);
 
-  if (singularVariableNode !== null) {
-    const { Variable } = elements,
-          variableNode = singularVariableNode;  ///
-
-    variable = Variable.fromVariableNode(variableNode, context);
-
-    const type = term.getType();
-
-    variable.setType(type);
-  }
-
-  return variable;
-}
-
-export function stringFromTerms(terms) {
-  const termsString = terms.reduce((termsString, term) => {
-          const termString = term.getString();
-
-          termsString = (termsString !== null) ?
-                         `${termsString}, ${termString}` :
-                           termString;
-
-          return termsString;
-        }, null),
-        string = `[${termsString}]`;
+  string = trimString(string);  ///
 
   return string;
+}
+
+export function nodesAsString(nodes, tokens) {
+  const string = nodes.reduce((string, node) => {
+    const nodeString = nodeAsString(node, tokens);
+
+    string = (string === null) ?
+               nodeString :
+                `${string}, ${nodeString}`;
+
+    return string;
+  }, null);
+
+  return string;
+}
+
+function trimString(string) {
+  string = string.replace(/\s+$/, EMPTY_STRING);  ///
+
+  return string;
+}
+
+function tokensAsString(tokens) {
+  const string = tokens.reduce((string, token) => {
+    const content = token.getContent();
+
+    string = `${string}${content}`;
+
+    return string;
+  }, EMPTY_STRING);
+
+  return string;
+}
+
+function nodeAsTokens(node, tokens) {
+  const nodeTerminalNode = node.isTerminalNode();
+
+  if (nodeTerminalNode) {
+    const terminalNode = node;  ///
+
+    tokens = terminalNodeAsTokens(terminalNode, tokens);
+  } else {
+    const nonTerminalNode = node; ///
+
+    tokens = nonTerminalNodeAsTokens(nonTerminalNode, tokens);
+  }
+
+  return tokens;
+}
+
+function terminalNodeAsTokens(terminalNode, tokens) {
+  const significantToken = terminalNode.getSignificantToken(),
+        token = significantToken; ///
+
+  tokens = [  ///
+    token
+  ];
+
+  return tokens;
+}
+
+function nonTerminalNodeAsTokens(nonTerminalNode, tokens) {
+  const lastSignificantTokenIndex = nonTerminalNode.getLastSignificantTokenIndex(tokens),
+        firstSignificantTokenIndex = nonTerminalNode.getFirstSignificantTokenIndex(tokens),
+        start = firstSignificantTokenIndex, ///
+        end = lastSignificantTokenIndex + 1;
+
+  tokens = tokens.slice(start, end);  ///
+
+  return tokens;
 }
