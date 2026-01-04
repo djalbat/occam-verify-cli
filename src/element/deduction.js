@@ -146,18 +146,4 @@ export default define(class Deduction {
 
     return deduction;
   }
-
-  static fromDeductionNode(deductionNode, context) {
-    const { Statement } = elements,
-          node = deductionNode,  ///
-          string = context.nodeAsString(node),
-          statement = Statement.fromDeductionNode(deductionNode, context),
-          temporaryContext = null;
-
-    context = temporaryContext;  ///
-
-    const deduction = new Deduction(context, string, statement);
-
-    return deduction;
-  }
 });

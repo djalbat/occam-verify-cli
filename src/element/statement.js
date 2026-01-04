@@ -13,9 +13,14 @@ import { stripBracketsFromStatementNode } from "../utilities/brackets";
 const { match, backwardsSome } = arrayUtilities;
 
 export default define(class Statement {
-  constructor(string, node) {
+  constructor(context, string, node) {
+    this.context = context;
     this.string = string;
     this.node = node;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

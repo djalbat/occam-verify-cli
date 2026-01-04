@@ -1,9 +1,14 @@
 "use strict";
 
 export default class Assertion {
-  constructor(string, node) {
+  constructor(context, string, node) {
+    this.context = context;
     this.string = string;
     this.node = node;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

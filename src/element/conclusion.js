@@ -1,6 +1,5 @@
 "use strict";
 
-import elements from "../elements";
 import TemporaryContext from "../context/temporary";
 
 import { define } from "../elements";
@@ -117,20 +116,6 @@ export  default define(class Conclusion {
           node = null,
           string = statement.getString(),
           temporaryContext = TemporaryContext.fromTermsAndFrames(terms, frames, context);
-
-    context = temporaryContext; ///
-
-    const conclusion = new Conclusion(context, string, node, statement);
-
-    return conclusion;
-  }
-
-  static fromConclusionNode(conclusionNode, context) {
-    const { Statement } = elements,
-          node = conclusionNode,  ///
-          string = context.nodeAsString(node),
-          statement = Statement.fromConclusionNode(conclusionNode, context),
-          temporaryContext = null;
 
     context = temporaryContext; ///
 

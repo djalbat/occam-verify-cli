@@ -31,11 +31,4 @@ export default define(class Conjecture extends AxiomLemmaTheoremConjecture {
   static name = "Conjecture";
 
   static fromJSON(json, context) { return AxiomLemmaTheoremConjecture.fromJSON(Conjecture, json, context); }
-
-  static fromConjectureNode(conjectureNode, context) {
-    const node = conjectureNode,  ///
-          conjecture = AxiomLemmaTheoremConjecture.fromNode(Conjecture, node, context);
-
-    return conjecture;
-  }
 });

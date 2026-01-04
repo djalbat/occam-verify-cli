@@ -8,8 +8,23 @@ import { stripBracketsFromTermNode } from "../utilities/brackets";
 const { compress } = arrayUtilities;
 
 export default define(class Equivalence {
-  constructor(terms) {
+  constructor(context, string, node,terms) {
+    this.context = context;
+    this.string = string;
+    this.node = node;
     this.terms = terms;
+  }
+
+  getContext() {
+    return this.context;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getTerms() {

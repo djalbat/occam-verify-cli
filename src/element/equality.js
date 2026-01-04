@@ -7,14 +7,24 @@ import { equateTerms } from "../process/equate";
 import { equalityAssignmentFromEquality, variableAssignmentFromVariable } from "../process/assign";
 
 export default define(class Equality {
-  constructor(string, leftTerm, rightTerm) {
+  constructor(context, string, node, leftTerm, rightTerm) {
+    this.context = context;
     this.string = string;
+    this.node = node;
     this.leftTerm = leftTerm;
     this.rightTerm = rightTerm;
   }
 
+  getContext() {
+    return this.context;
+  }
+
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getLeftTerm() {
@@ -223,37 +233,4 @@ export default define(class Equality {
   }
 
   static name = "Equality";
-
-  static fromStatementNode(statementNode, context) {
-    let equality = null;
-
-    const equalityNode = statementNode.getEqualityNode();
-
-    if (equalityNode !== null) {
-      const node = equalityNode,  ///
-            string = context.nodeAsString(node),
-            leftTerm = leftTermFromEqualityNode(equalityNode, context),
-            rightTerm = rightTermFromEqualityNode(equalityNode, context);
-
-      equality = new Equality(string, leftTerm, rightTerm);
-    }
-
-    return equality;
-  }
 });
-
-function leftTermFromEqualityNode(equalityNode, context) {
-  const { Term } = elements,
-        leftTermNode = equalityNode.getLeftTermNode(),
-        leftTerm = Term.fromTermNode(leftTermNode, context);
-
-  return leftTerm;
-}
-
-function rightTermFromEqualityNode(equalityNode, context) {
-  const { Term } = elements,
-        rightTermNode = equalityNode.getRightTermNode(),
-        rightTerm = Term.fromTermNode(rightTermNode, context);
-
-  return rightTerm;
-}
