@@ -2,8 +2,8 @@
 
 import CombinatorStatement from "../../statement/combinator";
 
-import { define } from "../../elements";
-import { statementFromStatementNode } from "../../utilities/element";
+import { define } from "../../../elements";
+import { statementFromStatementNode } from "../../../utilities/element";
 import { bracketedCombinatorStatementString, instantiateBracketedCombinatorStatement } from "../../../process/instantiate";
 
 export default define(class BracketedCombinatorStatement extends CombinatorStatement {

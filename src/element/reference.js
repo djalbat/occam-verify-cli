@@ -8,8 +8,23 @@ import { unifyMetavariableIntrinsically } from "../process/unify";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Reference {
-  constructor(metavariable) {
+  constructor(context, string, node, metavariable) {
+    this.context = context;
+    this.string = string;
+    this.node = node;
     this.metavariable = metavariable;
+  }
+
+  getContext() {
+    return this.context;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getMetavariable() {
@@ -17,10 +32,6 @@ export default define(class Reference {
   }
 
   getName() { return this.metavariable.getName(); }
-
-  getName() { return this.metavariable.getName(); }
-
-  getString() { return this.metavariable.getString(); }
 
   getMetavariableName() {
     const metavariableName = this.metavariable.getName();
@@ -199,18 +210,6 @@ export default define(class Reference {
     return reference;
   }
 
-  static fromStepNode(stepNode, context) {
-    let reference = null;
-
-    const referenceNode = stepNode.getReferenceNode();
-
-    if (referenceNode !== null) {
-      reference = referenceFromReferenceNode(referenceNode, context);
-    }
-
-    return reference;
-  }
-
   static fromAssumptionNode(assumptionNode, context) {
     let reference = null;
 
@@ -225,18 +224,6 @@ export default define(class Reference {
 
   static fromMetavariableNode(metavariableNode, context) {
     const reference = referenceFromMetavariableNode(metavariableNode, context);
-
-    return reference;
-  }
-
-  static fromProcedureCallNode(procedureCallNode, context) {
-    let reference = null;
-
-    const referenceNode = procedureCallNode.getReferenceNode();
-
-    if (referenceNode !== null) {
-      reference = referenceFromReferenceNode(referenceNode, context);
-    }
 
     return reference;
   }

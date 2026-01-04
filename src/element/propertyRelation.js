@@ -1,15 +1,18 @@
 "use strict";
 
-import elements from "../elements";
-
 import { define } from "../elements";
 
 export default define(class PropertyRelation {
-  constructor(string, node, property, term) {
+  constructor(context, string, node, property, term) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.property = property;
     this.term = term;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -113,16 +116,4 @@ export default define(class PropertyRelation {
   }
 
   static name = "PropertyRelation";
-
-  static fromPropertyAssertionNode(propertyAssertionNode, context) {
-    const { Term, Property } = elements,
-          propertyRelationNode = propertyAssertionNode.getPropertyRelationNode(),
-          node = propertyRelationNode,  ///
-          string = context.nodeAsString(node),
-          property = Property.fromPropertyRelationNode(propertyRelationNode, context),
-          term = Term.fromPropertyRelationNode(propertyRelationNode, context),
-          propertyRelation = new PropertyRelation(string, node, property, term);
-
-    return propertyRelation;
-  }
 });

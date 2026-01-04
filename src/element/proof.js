@@ -1,13 +1,27 @@
 "use strict";
 
-import elements from "../elements";
 import LocalContext from "../context/local";
 
 import { define } from "../elements";
 
 export default define(class Proof {
-  constructor(derivation) {
+  constructor(context, string, node, derivation) {
+    this.context = context;
+    this.string = string;
+    this.node = node;
     this.derivation = derivation;
+  }
+
+  getContext() {
+    return this.context;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getDerivation() {
@@ -51,18 +65,4 @@ export default define(class Proof {
   }
 
   static name = "Proof";
-
-  static fromProofNode(proofNode, context) {
-    let proof = null;
-
-    if (proofNode !== null) {
-      const { Derivation } = elements,
-            derivationNode = proofNode.getDerivationNode(),
-            derivation = Derivation.fromDerivationNode(derivationNode, context);
-
-      proof = new Proof(derivation);
-    }
-
-    return proof;
-  }
 });

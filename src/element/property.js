@@ -3,11 +3,16 @@
 import { define } from "../elements";
 
 export default define(class Property {
-  constructor(string, node, name, nominalTypeName) {
+  constructor(context, string, node, name, nominalTypeName) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.name = name;
     this.nominalTypeName = nominalTypeName;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -54,23 +59,6 @@ export default define(class Property {
   static fromJSON(json, context) {
     const { name, nominalTypeName } = json,
           string = name, ///
-          property = new Property(string, name, nominalTypeName);
-
-    return property;
-  }
-
-  static fromPropertyRelationNode(propertyRelationNode, context) {
-    const propertyNode = propertyRelationNode.getPropertyNode(),
-          property = propertyFromPropertyNode(propertyNode, context);
-
-    return property;
-  }
-
-  static fromPropertyDeclarationNode(propertyDeclarationNode, context) {
-    const propertyName = propertyDeclarationNode.getPropertyName(),
-          nominalTypeName = propertyDeclarationNode.getNominalTypeName(),
-          name = propertyName,  ///
-          string = name,  ///
           property = new Property(string, name, nominalTypeName);
 
     return property;

@@ -2,17 +2,20 @@
 
 import { Expressions } from "occam-furtle";
 
-import elements from "../elements";
-
 import { define } from "../elements";
 import { parametersFromJSON, procedureReferenceFromJSON, parametersToParametersJSON, procedureReferenceToProcedureReferenceJSON } from "../utilities/json";
 
 export default define(class ProcedureCall {
-  constructor(string, node, parameters, procedureReference) {
+  constructor(contexct, string, node, parameters, procedureReference) {
+    this.contexct = contexct;
     this.string = string;
     this.node = node;
     this.parameters = parameters;
     this.procedureReference = procedureReference;
+  }
+
+  getContext() {
+    return this.contexct;
   }
 
   getString() {
@@ -126,51 +129,4 @@ export default define(class ProcedureCall {
 
     return procedureCall;
   }
-
-  static fromPremiseNode(premiseNode, context) {
-    let procedureCall = null;
-
-    const procedureCallNode = premiseNode.getProcedureCallNode();
-
-    if (procedureCallNode !== null) {
-      procedureCall = procedureCallFromProcedureCallNode(procedureCallNode, context);
-    }
-
-    return procedureCall;
-  }
-
-  static fromSuppositionNode(suppositionNode, context) {
-    let procedureCall = null;
-
-    const procedureCallNode = suppositionNode.getProcedureCallNode();
-
-    if (procedureCallNode !== null) {
-      procedureCall = procedureCallFromProcedureCallNode(procedureCallNode, context);
-    }
-
-    return procedureCall;
-  }
 });
-
-function procedureCallFromProcedureCallNode(procedureCallNode, context) {
-  const { ProcedureCall, ProcedureReference } = elements,
-        node = procedureCallNode, ///
-        parameters = parametersFromProcedureCallNode(procedureCallNode, context),
-        procedureReference = ProcedureReference.fromProcedureCallNode(procedureCallNode, context),
-        string = stringFromProcedureReferenceAndParameters(procedureReference, parameters),
-        procedureCall = new ProcedureCall(string, node, parameters, procedureReference);
-
-  return procedureCall;
-}
-
-function parametersFromProcedureCallNode(procedureCallNode, context) {
-  const { Parameter } = elements,
-        parameterNodes = procedureCallNode.getParameterNodes(),
-        parameters = parameterNodes.map((parameterNode) => {
-          const parameter = Parameter.fromParameterNode(parameterNode, context);
-
-          return parameter;
-        });
-
-  return parameters;
-}
