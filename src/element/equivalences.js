@@ -193,7 +193,6 @@ export default define(class Equivalences {
   }
 });
 
-
 function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, context) {
   groundedTerms.forEach((groundedTerm) => {
     const term = groundedTerm,  ///

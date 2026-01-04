@@ -3,8 +3,9 @@
 import elements from "../elements";
 
 import { baseType } from "../element/type";
-import { subproofStringFromSubproofNode, stringFromLabelsSuppositionsAndDeduction } from "../utilities/string";
-import node from "occam-parsers/lib/mixins/node";
+import { equivalenceStringFromTerms,
+         subproofStringFromSubproofNode,
+         stringFromLabelsSuppositionsAndDeduction } from "../utilities/string";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -292,6 +293,17 @@ export function typePrefixFromTypePrefixNode(typePrefixNode, context) {
         typePrefix = new TypePrefix(string, node, term, type);
 
   return typePrefix;
+}
+
+export function equivalenceFromEquivalenceNode(equivalenceNode, context) {
+  const { Equivalence } = elements,
+        node = equivalenceNode, ///
+        terms = termsFromEquivalenceNode(equivalenceNode, context),
+        equivalenceString = equivalenceStringFromTerms(terms),
+        string = equivalenceString, ///
+        equivalence = new Equivalence(context, string, node, terms);
+
+  return equivalence;
 }
 
 export function metavariableFromMetavariableNode(metavariableNode, context) {
@@ -1227,13 +1239,6 @@ export function signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremCo
   return signature;
 }
 
-export function suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context) {
-  const suppositionNodes = axiomLemmaTheoremConjectureNode.getSuppositionNodes(),
-    suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context);
-
-  return suppositions;
-}
-
 export function termsFromTermNodes(termNodes, context) {
   const terms = termNodes.map((termNode) => {
     const term = termFromTermNode(termNode, context);
@@ -1327,6 +1332,13 @@ export function assumptionsFromFrameNode(frameNode, context) {
   return assumptions;
 }
 
+export function termsFromEquivalenceNode(equivalenceNode, context) {
+  const termNodes = equivalenceNode.getTermNodes(),
+        terms = termsFromTermNodes(termNodes, context);
+
+  return terms;
+}
+
 export function suppositionsFromSubproofNode(subproofNode, context) {
   const suppositionNodes = subproofNode.getSuppositionNodes(),
         suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context);
@@ -1360,6 +1372,13 @@ export function labelsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConje
         labels = labelsFromLabelNodes(labelNodes, context);
 
   return labels;
+}
+
+export function suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context) {
+  const suppositionNodes = axiomLemmaTheoremConjectureNode.getSuppositionNodes(),
+        suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context);
+
+  return suppositions;
 }
 
 

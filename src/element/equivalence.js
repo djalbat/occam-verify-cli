@@ -3,12 +3,15 @@
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
+import { termsStringFromTerms } from "../utilities/string";
+import { instantiateEquivalence } from "../process/instantiate";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
+import { equalivanceFromEquivalenceNode } from "../utilities/element";
 
 const { compress } = arrayUtilities;
 
 export default define(class Equivalence {
-  constructor(context, string, node,terms) {
+  constructor(context, string, node, terms) {
     this.context = context;
     this.string = string;
     this.node = node;
@@ -49,6 +52,17 @@ export default define(class Equivalence {
 
     if (!termPresent) {
       this.terms.push(term);
+
+      const termsString = termsStringFromTerms(this.terms),
+            string = termsString,  ///
+            equalivanceNode = instantiateEquivalence(string, context),
+            equalivance = equalivanceFromEquivalenceNode(equalivanceNode, context);
+
+      this.node = equalivance.getNode();
+
+      this.string = equalivance.getString();
+
+      const equivalenceString = this.string; ///
 
       context.debug(`...added the '${termString}' term to the '${equivalenceString}' equivalence.`);
     }
@@ -258,27 +272,13 @@ export default define(class Equivalence {
     return implicitlyGroundedTerms;
   }
 
-  asString() {
-    const type = this.getType(),
-          typeString = type.getString(),
-          termsString = this.terms.reduce((termsString, term) => {
-            const termString = term.getString();
-
-            termsString = (termsString === null) ?
-                            termString :
-                             `${termsString} = ${termString}`;
-
-            return termsString;
-          }, null),
-          string = `${termsString}:${typeString}`;
-
-    return string;
-  }
-
-  static fromEquality(equality) {
+  static fromEquality(equality, context) {
     const terms = equality.getTerms(),
-          equivalence = new Equivalence(terms);
+          termsString = termsStringFromTerms(terms),
+          string = termsString,  ///
+          equalivanceNode = instantiateEquivalence(string, context),
+          equalivance = equalivanceFromEquivalenceNode(equalivanceNode, context);
 
-    return equivalence;
+    return equalivance;
   }
 });

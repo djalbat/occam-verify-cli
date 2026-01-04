@@ -9,6 +9,7 @@ import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
       variablePlaceholderBNF = ` _ ::= variable... <END_OF_LINE> ; `,
       statementPlaceholderBNF = ` _ ::= statement... <END_OF_LINE> ; `,
+      equivalencePlaceholderBNF = ` _ ::= equivalence... <END_OF_LINE> ; `,
       metavariablePlaceholderBNF = ` _ ::= metavariable... <END_OF_LINE> ; `,
       termSubstitutionPlaceholderBNF = ` _ ::= termSubstitution... <END_OF_LINE> ; `,
       frameSubstitutionPlaceholderBNF = ` _ ::= frameSubstitution... <END_OF_LINE> ; `,
@@ -17,6 +18,7 @@ const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
       termPlaceholderRule = ruleFromBNF(termPlaceholderBNF),
       variablePlaceholderRule = ruleFromBNF(variablePlaceholderBNF),
       statementPlaceholderRule = ruleFromBNF(statementPlaceholderBNF),
+      equivalencePlaceholderRule = ruleFromBNF(equivalencePlaceholderBNF),
       metavariablePlaceholderRule = ruleFromBNF(metavariablePlaceholderBNF),
       termSubstitutionPlaceholderRule = ruleFromBNF(termSubstitutionPlaceholderBNF),
       frameSubstitutionPlaceholderRule = ruleFromBNF(frameSubstitutionPlaceholderBNF),
@@ -34,6 +36,8 @@ export function instantiateTerm(string, context) { return instantiate(termPlaceh
 export function instantiateVariable(string, context) { return instantiate(variablePlaceholderRule, string, context); }
 
 export function instantiateStatement(string, context) { return instantiate(statementPlaceholderRule, string, context); }
+
+export function instantiateEquivalence(string, context) { return instantiate(equivalencePlaceholderRule, string, context); }
 
 export function instantiateMetavariable(string, context) { return instantiate(metavariablePlaceholderRule, string, context); }
 

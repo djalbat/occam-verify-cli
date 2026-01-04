@@ -45,6 +45,7 @@ export const TYPE_PREFIX_RULE_NAME = "typePrefix";
 export const SUPPOSITION_RULE_NAME = "supposition";
 export const CONSTRUCTOR_RULE_NAME = "constructor";
 export const METATHEOREM_RULE_NAME = "metatheorem";
+export const EQUIVALENCE_RULE_NAME = "equivalence";
 export const AXIOM_HEADER_RULE_NAME = "axiomHeader";
 export const LEMMA_HEADER_RULE_NAME = "lemmaHeader";
 export const THEOREM_BODY_RULE_NAME = "theoremBody";

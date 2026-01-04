@@ -30,21 +30,6 @@ export function labelsStringFromLabels(labels) {
   return labelsString;
 }
 
-export function signatureStringFromTerms(terms) {
-  const termsString = termsStringFromTerms(terms),
-        signatureString = `[${termsString}]`;
-
-  return signatureString;
-}
-
-export function subproofStringFromSubproof(subproof) {
-  const suppositionStatementsOrNonsenseString = suppositionStatementOrNonsenseStringFromSubproofNode(subproofNode, context),
-        lastStatementOrNonsenseString = lastStatementOrNonsenseStringFromSubproofNode(subproofNode, context),
-        subproofString = `[${suppositionStatementsOrNonsenseString}] ... ${lastStatementOrNonsenseString}`;
-
-  return subproofString;
-}
-
 export function superTypesStringFromSuperTypes(superTypes) {
   const superTypesString = superTypes.reduce((superTypesString, superType) => {
     if (superType !== baseType) {
@@ -65,14 +50,38 @@ export function suppositionsStringFromSuppositions(suppositions) {
   const suppositionsString = suppositions.reduce((suppositionsString, supposition) => {
     const suppositionString = supposition.getString();
 
-    suppositionsString = (suppositionsString !== null) ?
-                          `${suppositionsString}, ${suppositionString}` :
-                            suppositionString;  ///
+    suppositionsString = (suppositionsString === null) ?
+                           suppositionString: ///
+                            `${suppositionsString}, ${suppositionString}`;
 
     return suppositionsString;
   }, null);
 
   return suppositionsString;
+}
+
+export function signatureStringFromTerms(terms) {
+  const termsString = termsStringFromTerms(terms),
+        signatureString = `[${termsString}]`;
+
+  return signatureString;
+}
+
+export function equivalenceStringFromTerms(terms) {
+  const termsString = termsStringFromTerms(terms),
+        equivalenceString = termsString;  ///
+
+  return equivalenceString;
+}
+
+export function subproofStringFromSubproof(subproof) {
+  const lastStep = subproof.getLastStep(),
+        suppositions = subproof.getSuppositions(),
+        lastStepString = lastStep.getString(),
+        suppositionsString = suppositionsStringFromSuppositions(suppositions),
+        subproofString = `[${suppositionsString}] ... ${lastStepString}`;
+
+  return subproofString;
 }
 
 export function typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes) {
@@ -109,51 +118,4 @@ export function axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduct
   }
 
   return axiomLemmaTheoremConjectureString;
-}
-
-function suppositionStatementOrNonsenseStringFromSubproofNode(subproofNode, context) {
-  const suppositionNodes = subproofNode.getSuppositionNodes(),
-        suppositionStatementsOrNonsenseString = suppositionNodes.reduce((suppositionStatementsOrNonsenseString, suppositionNode) => {
-          const suppositionOrStepNode = suppositionNode,  ///
-                statementOrNonsenseString = statementOrNonsenseStringFromSuppositionOrStepNode(suppositionOrStepNode, context),
-                suppositionStatementOrNonsenseString = statementOrNonsenseString; ///
-
-          suppositionStatementsOrNonsenseString = (suppositionStatementsOrNonsenseString !== null) ?
-                                                    `${suppositionStatementsOrNonsenseString}, ${suppositionStatementOrNonsenseString}` :
-                                                      suppositionStatementOrNonsenseString; ///
-
-          return suppositionStatementsOrNonsenseString;
-        }, null);
-
-  return suppositionStatementsOrNonsenseString;
-}
-
-function statementOrNonsenseStringFromSuppositionOrStepNode(suppositionOrStepNode, context) {
-  let statementOrNonsenseString;
-
-  const nonsenseNode = suppositionOrStepNode.getNonsenseNode(),
-        statementNode = suppositionOrStepNode.getStatementNode();
-
-  if (false) {
-    ///
-  } else if (nonsenseNode !== null) {
-    const nonsenseString = context.nodeAsString(nonsenseNode);
-
-    statementOrNonsenseString = nonsenseString; ///
-  } else if (statementNode !== null) {
-    const statementString = context.nodeAsString(statementNode);
-
-    statementOrNonsenseString = statementString;  ///
-  }
-
-  return statementOrNonsenseString;
-}
-
-function lastStatementOrNonsenseStringFromSubproofNode(subproofNode, context) {
-  const lastStepNode = subproofNode.getLastStepNode(),
-        suppositionOrStepNode = lastStepNode, ///
-        statementOrNonsenseString = statementOrNonsenseStringFromSuppositionOrStepNode(suppositionOrStepNode, context),
-        lastStatementOrNonsenseString = statementOrNonsenseString; ///
-
-  return lastStatementOrNonsenseString;
 }

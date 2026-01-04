@@ -44,10 +44,11 @@ import RuleHeaderNode from "./node/header/rule";
 import SuppositionNode from "./node/supposition";
 import PlaceholderNode from "./node/placeholder";
 import ConstructorNode from "./node/constructor";
-import MetatheoremNode from "./node/metatheorem";
 import TheoremBodyNode from "./node/body/theorem";
 import AxiomHeaderNode from "./node/header/axiom";
 import LemmaHeaderNode from "./node/header/lemma";
+import MetatheoremNode from "./node/metatheorem";
+import EquivalenceNode from "./node/equivalence";
 import MetaArgumentNode from "./node/metaArgument";
 import MetavariableNode from "./node/metavariable";
 import QualificationNode from "./node/qualification";
@@ -128,6 +129,7 @@ import {
   RULE_HEADER_RULE_NAME,
   CONSTRUCTOR_RULE_NAME,
   METATHEOREM_RULE_NAME,
+  EQUIVALENCE_RULE_NAME,
   AXIOM_HEADER_RULE_NAME,
   LEMMA_HEADER_RULE_NAME,
   THEOREM_BODY_RULE_NAME,
@@ -211,6 +213,7 @@ const NonTerminalNodeMap = {
   [SUPPOSITION_RULE_NAME]: SuppositionNode,
   [CONSTRUCTOR_RULE_NAME]: ConstructorNode,
   [METATHEOREM_RULE_NAME]: MetatheoremNode,
+  [EQUIVALENCE_RULE_NAME]: EquivalenceNode,
   [AXIOM_HEADER_RULE_NAME]: AxiomHeaderNode,
   [LEMMA_HEADER_RULE_NAME]: LemmaHeaderNode,
   [THEOREM_BODY_RULE_NAME]: TheoremBodyNode,
