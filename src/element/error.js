@@ -32,12 +32,4 @@ export default define(class Error {
   }
 
   static name = "Error";
-
-  static fromErrorNode(errorNode, context) {
-    const node = errorNode, ///
-          string = context.nodeAsString(node),
-          error = new Error(context, string, node);
-
-    return error;
-  }
 });

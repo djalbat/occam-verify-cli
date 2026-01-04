@@ -31,11 +31,4 @@ export default define(class Metatheorem extends MetaLemmaMetatheorem {
   static name = "Metatheorem";
 
   static fromJSON(json, context) { return MetaLemmaMetatheorem.fromJSON(Metatheorem, json, context); }
-
-  static fromMetatheoremNode(metatheoremNode, context) {
-    const node = metatheoremNode, ///
-          metatheorem = MetaLemmaMetatheorem.fromNode(Metatheorem, node, context);
-
-    return metatheorem;
-  }
 });

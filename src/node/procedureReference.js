@@ -3,8 +3,8 @@
 import NonTerminalNode from "../nonTerminalNode";
 
 export default class ProcedureReferenceNode extends NonTerminalNode {
-  getProcedureName() {
-    let procedureName;
+  getName() {
+    let name;
 
     this.someChildNode((childNode) => {
       const childNodeTerminalNode = childNode.isTerminalNode();
@@ -13,13 +13,13 @@ export default class ProcedureReferenceNode extends NonTerminalNode {
         const terminalNode = childNode, ///
               content = terminalNode.getContent();
 
-        procedureName = content; ///
+        name = content; ///
 
         return true;
       }
     });
 
-    return procedureName;
+    return name;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ProcedureReferenceNode, ruleName, childNodes, opacity, precedence); }

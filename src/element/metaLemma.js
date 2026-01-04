@@ -31,11 +31,4 @@ export default define(class MetaLemma extends MetaLemmaMetatheorem {
   static name = "MetaLemma";
 
   static fromJSON(json, context) { return MetaLemmaMetatheorem.fromJSON(MetaLemma, json, context); }
-
-  static fromMetaLemmaNode(metaLemmaNode, context) {
-    const node = metaLemmaNode, ///
-          metaLemma = MetaLemmaMetatheorem.fromNode(MetaLemma, node, context);
-
-    return metaLemma;
-  }
 });

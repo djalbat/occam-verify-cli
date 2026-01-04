@@ -52,26 +52,6 @@ class MetaType {
 
     return metaType;
   }
-
-  static fromMetaTypeNode(metaTypeNode, context) {
-    const metaType = metaTypeFromMetaTypeNode(metaTypeNode, context);
-
-    return metaType;
-  }
-
-  static fromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
-    const metaTypeNode = metavariableDeclarationNode.getMetaTypeNode(),
-          metaType = metaTypeFromMetaTypeNode(metaTypeNode, context);
-
-    return metaType;
-  }
-}
-
-function metaTypeFromMetaTypeNode(metaTypeNode, context) {
-  const metaTypeName = metaTypeNode.getMetaTypeName(),
-        metaType = metaTypeFromMetaTypeName(metaTypeName);
-
-  return metaType;
 }
 
 export default define(MetaType);
@@ -104,31 +84,7 @@ class StatementMetaType extends MetaType {
 }
 
 export const frameMetaType = FrameMetaType.fromNothing();
+
 export const referenceMetaType = ReferenceMetaType.fromNothing();
+
 export const statementMetaType = StatementMetaType.fromNothing();
-
-function metaTypeFromMetaTypeName(metaTypeName) {
-  let metaType;
-
-  switch (metaTypeName) {
-    case FRAME_META_TYPE_NAME: {
-      metaType = frameMetaType; ///
-
-      break;
-    }
-
-    case REFERENCE_META_TYPE_NAME: {
-      metaType = referenceMetaType; ///
-
-      break;
-    }
-
-    case STATEMENT_META_TYPE_NAME: {
-      metaType = statementMetaType; ///
-
-      break;
-    }
-  }
-
-  return metaType;
-}

@@ -300,19 +300,4 @@ export default define(class Supposition {
 
     return supposition;
   }
-
-  static fromSuppositionNode(suppositionNode, context) {
-    const { Statement, ProcedureCall } = elements,
-          node = suppositionNode, ///
-          string = context.nodeAsString(node),
-          statement = Statement.fromSuppositionNode(suppositionNode, context),
-          procedureCall = ProcedureCall.fromSuppositionNode(suppositionNode, context),
-          temporaryContext = null;
-
-    context = temporaryContext; ///
-
-    const supposition = new Supposition(context, string, node, statement, procedureCall);
-
-    return supposition
-  }
 });

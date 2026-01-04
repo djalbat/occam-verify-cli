@@ -314,39 +314,4 @@ export default define(class Frame {
 
     return frame;
   }
-
-  static fromFrameNode(frameNode, context) { return frameFromFrameNode(frameNode, context); }
-
-  static fromJudgementNode(judgementNode, context) {
-    const frameNode = judgementNode.getFrameNode(),
-          frame = frameFromFrameNode(frameNode, context);
-
-    return frame;
-  }
-
-  static fromDefinedAssertionNode(definedAssertionNode, context) {
-    let frame = null;
-
-    const frameNode = definedAssertionNode.getFrameNode();
-
-    if (frameNode !== null) {
-      frame = frameFromFrameNode(frameNode, context);
-    }
-
-    return frame;
-  }
 });
-
-function assumptionsStringFromAssumptions(assumptions) {
-  const assumptionsString = assumptions.reduce((assumptionsString, assumption) => {
-    const assumptionString = assumption.getString();
-
-    assumptionsString = (assumptionsString === null) ?
-                           assumptionString :
-                            `${assumptionsString}, ${assumptionString}`;
-
-    return assumptionsString;
-  }, null);
-
-  return assumptionsString;
-}

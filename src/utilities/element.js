@@ -5,7 +5,9 @@ import elements from "../elements";
 import { baseType } from "../element/type";
 import { equivalenceStringFromTerms,
          subproofStringFromSubproofNode,
-         stringFromLabelsSuppositionsAndDeduction } from "../utilities/string";
+         procedureCallStringFromProcedureReferenceAndParameters,
+         metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction,
+         axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction } from "../utilities/string";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -53,7 +55,26 @@ export function stepFromStepNode(stepNode, context) {
   return step;
 }
 
-export function lemmaromAxiomNode(lemmaNode, context) {
+export function labelFromLabelNode(labelNode, context) {
+  const { Label } = elements,
+        node = labelNode, ///
+        string = context.nodeAsString(node),
+        metavariable = metavariableFromLabelNode(labelNode, context),
+        label = new Label(context, string, node, metavariable);
+
+  return label;
+}
+
+export function errorFromErrorNode(errorNode, context) {
+  const { Error } = elements,
+        node = errorNode, ///
+        string = context.nodeAsString(node),
+        error = new Error(context, string, node);
+
+  return error;
+}
+
+export function lemmaFromLemmaNode(lemmaNode, context) {
   const { Lemma } = elements,
         axiomLemmaTheoremConjectureNode = lemmaNode,  ///
         proof = proofFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
@@ -62,8 +83,9 @@ export function lemmaromAxiomNode(lemmaNode, context) {
         suppositions = suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
         signature = signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
         hypotheses = [],
+        axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = lemmaNode, ///
-        string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        string = axiomLemmaTheoremConjectureString, ///
         lemma = new Lemma(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
   return lemma;
@@ -98,14 +120,15 @@ export function axiomFromAxiomNode(axiomNode, context) {
         suppositions = suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
         signature = signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
         hypotheses = [],
+        axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = axiomNode, ///
-        string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        string = axiomLemmaTheoremConjectureString, ///
         axiom = new Axiom(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
   return axiom;
 }
 
-export function theoremromAxiomNode(theoremNode, context) {
+export function theoremFromTheoremNode(theoremNode, context) {
   const { Theorem } = elements,
         axiomLemmaTheoremConjectureNode = theoremNode,  ///
         proof = proofFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
@@ -114,27 +137,12 @@ export function theoremromAxiomNode(theoremNode, context) {
         suppositions = suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
         signature = signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
         hypotheses = [],
+        axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = theoremNode, ///
-        string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        string = axiomLemmaTheoremConjectureString, ///
         theorem = new Theorem(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
   return theorem;
-}
-
-export function conjectureromAxiomNode(conjectureNode, context) {
-  const { Conjecture } = elements,
-        axiomLemmaTheoremConjectureNode = conjectureNode,  ///
-        proof = proofFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        labels = labelsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        deduction = deductionFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        suppositions = suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        signature = signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        hypotheses = [],
-        node = conjectureNode, ///
-        string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-        conjecture = new Conjecture(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
-
-  return conjecture;
 }
 
 export function equalityFromEqualityNode(equalityNode, context) {
@@ -163,12 +171,12 @@ export function metaTypeFromMetaTypeNode(metaTypeNode, context) {
 
 export function propertyFromPropertyNode(propertyNode, context) {
   const { Property } = elements,
-        node = propertyNode, ///
-        string = context.nodeAsString(node),
-        propertyName = propertyNode.getPropertyName(),
-        nominalTypeName = null,
-        name = propertyName,  ///
-        property = new Property(string, node, name, nominalTypeName);
+    node = propertyNode, ///
+    string = context.nodeAsString(node),
+    propertyName = propertyNode.getPropertyName(),
+    nominalTypeName = null,
+    name = propertyName,  ///
+    property = new Property(string, node, name, nominalTypeName);
 
   return property;
 }
@@ -253,6 +261,75 @@ export function referenceFromReferenceNode(referenceNode, context) {
   return reference;
 }
 
+export function conjectureroConjectureNode(conjectureNode, context) {
+  const { Conjecture } = elements,
+        axiomLemmaTheoremConjectureNode = conjectureNode,  ///
+        proof = proofFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
+        labels = labelsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
+        deduction = deductionFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
+        suppositions = suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
+        signature = signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
+        hypotheses = [],
+        axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        node = conjectureNode, ///
+        string = axiomLemmaTheoremConjectureString, ///
+        conjecture = new Conjecture(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
+
+  return conjecture;
+}
+
+export function judgementFromJudgementNode(judgementNode, context) {
+  const { Judgement } = elements,
+        node = judgementNode, ///
+        string = context.nodeAsString(node),
+        frame = frameFromJudgementNode(judgementNode, context),
+        assumption = assumptionFromJudgementNode(judgementNode, context),
+        judgement = new Judgement(string, node, frame, assumption);
+
+  return judgement;
+}
+
+export function metaLemmaFromMetaLemmaNode(metaLemmaNode, context) {
+  const { MetaLemma } = elements,
+        metaLemmaMetathoremNode = metaLemmaNode,  ///
+        proof = proofFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        label = labelFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        deduction = deductionFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        suppositions = suppositionsFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        substitutions = null,
+        node = metaLemmaNode, ///
+        string = metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
+        metaLemma = new MetaLemma(context, string, node, label, suppositions, deduction, proof, substitutions);
+
+  return metaLemma;
+}
+
+export function parameterFromParameterNode(parameterNode, context) {
+  const { Parameter } = elements,
+        node = parameterNode, ///
+        string = context.nodeAsString(node),
+        parameterName = parameterNode.getParameterName(),
+        name = parameterName,  ///
+        parameter = new Parameter(context, string, node, name);
+
+  return parameter;
+}
+
+export function metatheoremFromMetaLemmaNode(metatheoremNode, context) {
+  const { Metatehorem } = elements,
+        metaLemmaMetathoremNode = metatheoremNode,  ///
+        proof = proofFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        label = labelFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        deduction = deductionFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        suppositions = suppositionsFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        substitutions = null,
+        node = metaLemmaNode, ///
+        string = metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
+        metatheorem = new Metatehorem(context, string, node, label, suppositions, deduction, proof, substitutions);
+
+  return metatheorem;
+}
+
 export function conclusinoFromConclusionNode(conclusinoNode, context) {
   const { Conclusion } = elements,
     node = conclusinoNode, ///
@@ -295,6 +372,27 @@ export function typePrefixFromTypePrefixNode(typePrefixNode, context) {
   return typePrefix;
 }
 
+export function hyppothesisFromHypothesisNode(hypothesisNode, context) {
+  const { Hypothesis } = elements,
+        node = hypothesisNode, ///
+        string = context.nodeAsString(node),
+        statement = statementFromHypothesisNode(hypothesisNode, context),
+        hypothesis = new Hypothesis(string, node, statement);
+
+  return hypothesis
+}
+
+export function suppositionFromSuppositionNode(suppositionNode, context) {
+  const { Supposition } = elements,
+        node = suppositionNode, ///
+        string = context.nodeAsString(node),
+        statement = statementFromSuppositionNode(suppositionNode, context),
+        procedureCall = procedureCallFromSuppositionNode(suppositionNode, context),
+        supposition = new Supposition(context, string, node, statement, procedureCall);
+
+  return supposition
+}
+
 export function equivalenceFromEquivalenceNode(equivalenceNode, context) {
   const { Equivalence } = elements,
         node = equivalenceNode, ///
@@ -304,6 +402,12 @@ export function equivalenceFromEquivalenceNode(equivalenceNode, context) {
         equivalence = new Equivalence(context, string, node, terms);
 
   return equivalence;
+}
+
+export function nameFromProcedureReferenceNode(procedureReferenceNode, context) {
+  const name = procedureReferenceNode.getName();
+
+  return name;
 }
 
 export function metavariableFromMetavariableNode(metavariableNode, context) {
@@ -339,6 +443,18 @@ export function typeAssertionFromTypeAssertionNode(typeAssertionNode, context) {
         typeAssertion = new TypeAssertion(string, node, term, type);
 
   return typeAssertion;
+}
+
+export function procedureCallFromProcedureCallNode(procedureCallNode, context) {
+  const { ProcedureCall } = elements,
+        parameters = parametersFromProcedureCallNode(procedureCallNode, context),
+        procedureReference = procedureReferenceFromProcedureCallNode(procedureCallNode, context),
+        procedureCallString = procedureCallStringFromProcedureReferenceAndParameters(procedureReference, parameters),
+        node = procedureCallNode, ///
+        string = procedureCallString, ///
+        procedureCall = new ProcedureCall(string, node, parameters, procedureReference);
+
+  return procedureCall;
 }
 
 export function stepsOrSubproofFromStepOrSubproofNode(stepOrSubproofNode, context) {
@@ -451,12 +567,22 @@ export function satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionN
   return satisfiesAssertion;
 }
 
+export function procedureReferenceFromProcedureReferenceNode(procedureReferenceNode, context) {
+  const { ProcedureReference } = elements,
+        node = procedureReferenceNode,  ///
+        string = context.nodeAsString(node),
+        name = nameFromProcedureReferenceNode(procedureReferenceNode, context),
+        variableDeclaration = new ProcedureReference(context, string, node, name);
+
+  return variableDeclaration;
+}
+
 export function variableDeclarationFromVariableDeclarationNode(variableDeclarationNode, context) {
   const { VariableDeclaration } = elements,
         node = variableDeclarationNode,  ///
         string = context.nodeAsString(node),
-        varialbe = variableFromVariableNode(variableDeclarationNode, context),
-        variableDeclaration = new VariableDeclaration(context, string, node, varialbe);
+        variable = variableFromVariableNode(variableDeclarationNode, context),
+        variableDeclaration = new VariableDeclaration(context, string, node, variable);
 
   return variableDeclaration;
 }
@@ -492,19 +618,14 @@ export function simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDec
   return simpleTypeDeclaration;
 }
 
-export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context) {
-  if (context === undefined) {
-    context = substitution; ///
-
-    substitution = null;
-  }
-
+export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
   const { StatementSubstitution } = elements,
         node = statementSubstitutionNode,  ///
         string = context.nodeAsString(node),
         resolved = true,
         statement = statementFromStatementSubstitutionNode(statementSubstitutionNode, context),
         metavariable = metavariableFromStatementSubstitutionNode(statementSubstitutionNode, context),
+        substitution = null,
         statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
 
   return statementSubstitution;
@@ -546,8 +667,8 @@ export function metavariableDeclarationFromMetavariableDeclarationNode(metavaria
   const { MetavariableDeclaration } = elements,
         node = metavariableDeclarationNode,  ///
         string = context.nodeAsString(node),
-        metavarialbe = metavariableFromMetavariableNode(metavariableDeclarationNode, context),
-        metavariableDeclaration = new MetavariableDeclaration(context, string, node, metavarialbe);
+        metavariable = metavariableFromMetavariableNode(metavariableDeclarationNode, context),
+        metavariableDeclaration = new MetavariableDeclaration(context, string, node, metavariable);
 
   return metavariableDeclaration;
 }
@@ -576,6 +697,18 @@ export function referenceFromStepNode(stepNode, context) {
   return reference;
 }
 
+export function frameFromJudgementNode(judgementNode, context) {
+  let frame = null;
+
+  const frameNode = judgementNode.getFrameNode();
+
+  if (frameNode !== null) {
+    frame = frameFromFrameNode(frameNode, context);
+  }
+
+  return frame;
+}
+
 export function derivationFromProofNode(proofNode, context) {
   let derivation = null;
 
@@ -586,6 +719,30 @@ export function derivationFromProofNode(proofNode, context) {
   }
 
   return derivation;
+}
+
+export function metavariableFromLabelNode(labelNode, context) {
+  let metavariable = null;
+
+  const metavariableNode = labelNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+  }
+
+  return metavariable;
+}
+
+export function judgementFomStatementNode(statementNode, context) {
+  let judgement = null;
+
+  const judgementNode = statementNode.getJudgementNode();
+
+  if (judgementNode !== null) {
+    judgement = judgementFromJudgementNode(judgementNode, context);
+  }
+
+  return judgement;
 }
 
 export function termFromTypeAssertionNode(typeAssertionNode, context) {
@@ -610,6 +767,18 @@ export function typeFromTypeAssertionNode(typeAssertionNode, context) {
   }
 
   return type;
+}
+
+export function metavariableFromFrameNode(frameNode, context) {
+  let metavariable = null;
+
+  const metavariableNode = frameNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+  }
+
+  return metavariable;
 }
 
 export function stepFromStepOrSubproofNode(stepOrSubproofNode, context) {
@@ -693,6 +862,18 @@ export function assumptionFromJudgementNode(judgementNode, context) {
   return assumption;
 }
 
+export function statementFromHypothesisNode(hypothesisNode, context) {
+  let statement = null;
+
+  const statementNode = hypothesisNode.getStatementNode();
+
+  if (statementNode !== null) {
+    statement = statementFromStatementNode(statementNode, context);
+  }
+
+  return statement;
+}
+
 export function termFromDefinedAssertionNode(definedAssertionNode, context) {
   let term = null;
 
@@ -729,6 +910,32 @@ export function termFromTermSubstitutionNode(termSubstitutionNode, context) {
   return term;
 }
 
+export function statementFromSuppositionNode(suppositionNode, context) {
+  let statement = null;
+
+  const statementNode = suppositionNode.getStatementNode();
+
+  if (statementNode !== null) {
+    statement = statementFromStatementNode(statementNode, context);
+  }
+
+  return statement; ///
+}
+
+export function metavariableFromStatementNode(statementNode, context) {
+  let metavariable = null;
+
+  const singularMetavariableNode = statementNode.getSingularMetavariableNode();
+
+  if (singularMetavariableNode !== null) {
+    const metavariableNode = singularMetavariableNode;  ///
+
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+  }
+
+  return metavariable;
+}
+
 export function subDerivationFromSubproofNode(subproofNode, context) {
   let subDerviation = null;
 
@@ -756,10 +963,10 @@ export function typeAssertinFromStatementNode(statementNode, context) {
 export function metavariableFromReferenceNode(referenceNode, context) {
   let metavariable = null;
 
-  const metavariableNode = referenceNode.getTermNode();
+  const metavariableNode = referenceNode.getMetavariableNode();
 
   if (metavariableNode !== null) {
-    metavariable = metavariableFromMetavaraibleNode(metavariableNode, context);
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
   }
 
   return metavariable;
@@ -787,6 +994,18 @@ export function termFromPropertyAssertionNode(propertyAssertionNode, context) {
   }
 
   return term;
+}
+
+export function metavariableFromAssumptionNode(assumptionNode, context) {
+  let metavariable = null;
+
+  const metavariableNode = assumptionNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+  }
+
+  return metavariable;
 }
 
 export function frameFromFrameSubstitutionNode(frameSubstitutionNode, context) {
@@ -875,6 +1094,18 @@ export function variableFromTermSubstitutionNode(termSubstitutionNode, context) 
   return variable;
 }
 
+export function procedureCallFromSuppositionNode(suppositionNode, context) {
+  let procedureCall = null;
+
+  const procedureCallNode = suppositionNode.getProcedureCallNode();
+
+  if (procedureCallNode !== null) {
+    procedureCall = procedureCallFromProcedureCallNode(procedureCallNode, context);
+  }
+
+  return procedureCall;
+}
+
 export function definedAssertionFromStatementNode(statementNode, context) {
   let definedAssertion = null;
 
@@ -909,6 +1140,30 @@ export function termSubstitutionFromStatementNode(statementNode, context) {
   }
 
   return termSubstitution;
+}
+
+export function proofFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context) {
+  let proof = null;
+
+  const proofNode = metaLemmaMetathoremNode.getProofNode();
+
+  if (proofNode !== null) {
+    proof = proofFromProofNode(proofNode, context);
+  }
+
+  return proof;
+}
+
+export function labelFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context) {
+  let label = null;
+
+  const labelNode = metaLemmaMetathoremNode.getLabelNode();
+
+  if (labelNode !== null) {
+    label = labelFromLabelNode(labelNode, context);
+  }
+
+  return label;
 }
 
 export function frameSubstitutionFromStatementNode(statementNode, context) {
@@ -1077,6 +1332,18 @@ export function metavariableFromFrameSubstitutionNode(frameSubstitutionNode, con
   return metavariable;
 }
 
+export function deductionFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context) {
+  let deduction = null;
+
+  const deductionNode = metaLemmaMetathoremNode.getDeductionNode();
+
+  if (deductionNode !== null) {
+    deduction = deductionFromDeductionNode(deductionNode, context);
+  }
+
+  return deduction;
+}
+
 export function statementFromStatementSubstitutionNode(statementSubstitutionNode, context) {
   let statement = null;
 
@@ -1138,6 +1405,18 @@ export function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationN
   }
 
   return metaType;
+}
+
+export function procedureReferenceFromProcedureCallNode(procedureCallNode, context) {
+  let procedureReference = null;
+
+  const procedureReferenceNode = procedureCallNode.getProcedureReferenceNode();
+
+  if (procedureReferenceNode !== null) {
+    procedureReference = procedureReferenceFromProcedureReferenceNode(procedureReferenceNode, context);
+  }
+
+  return procedureReference;
 }
 
 export function propertyRelationFromPropertyAssertionNode(propertyAssertionNode, context) {
@@ -1288,6 +1567,16 @@ export function superTypesFromSuperTypeNodes(superTypeNodes, context) {
   return superTypes;
 }
 
+export function parametersFromParameterNodes(parameterNodes, context) {
+  const parameters = parameterNodes.map((parameterNode) => {
+    const parameter = parameterFromParameterNode(parameterNode, context);
+
+    return parameter;
+  });
+
+  return parameters;
+}
+
 export function assumptionsFromAssumptionNodes(assumptionNodes, context) {
   const assumptions = assumptionNodes.map((assumptionNode) => {
     const assumption = assumptionFromAssumptionNode(assumptionNode, context);
@@ -1346,6 +1635,13 @@ export function suppositionsFromSubproofNode(subproofNode, context) {
   return suppositions;
 }
 
+export function parametersFromProcedureCallNode(procedureCallNode, context) {
+  const parameterNodes = procedureCallNode.getParameterNodes(),
+        parameters = parametersFromParameterNodes(parameterNodes, context);
+
+  return parameters;
+}
+
 export function statementsFromSubproofAssertionNode(subproofAssertionNode, context) {
   const statementNodes = subproofAssertionNode.getStatementNodes(),
         statements = statementsFromStatementNodes(statementNodes, context);
@@ -1365,6 +1661,13 @@ export function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationN
         superTypes = superTypesFromSuperTypeNodes(superTypeNodes, context);
 
   return superTypes;
+}
+
+export function suppositionsFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context) {
+  const suppositionNodes = metaLemmaMetathoremNode.getSuppositionNodes(),
+        suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context);
+
+  return suppositions;
 }
 
 export function labelsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context) {

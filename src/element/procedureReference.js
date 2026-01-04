@@ -3,13 +3,23 @@
 import { define } from "../elements";
 
 export default define(class ProcedureReference {
-  constructor(string, name) {
+  constructor(context, string, node, name) {
+    this.context = context;
     this.string = string;
+    this.node = node;
     this.name = name;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getName() {
@@ -29,15 +39,6 @@ export default define(class ProcedureReference {
 
   static fromJSON(json, context) {
     const { name } = json,
-          string = name,  ///
-          procedureReference = new ProcedureReference(string, name);
-
-    return procedureReference;
-  }
-
-  static fromProcedureCallNode(procedureCallNode, context) {
-    const procedureName = procedureCallNode.getProcedureName(),
-          name = procedureName, ///
           string = name,  ///
           procedureReference = new ProcedureReference(string, name);
 

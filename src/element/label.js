@@ -1,13 +1,13 @@
 "use strict";
 
-import elements from "../elements";
-
 import { define } from "../elements";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Label {
-  constructor(context, metavariable) {
+  constructor(context, string, node, metavariable) {
     this.context = context;
+    this.string = string;
+    this.node = node;
     this.metavariable = metavariable;
   }
 
@@ -15,11 +15,17 @@ export default define(class Label {
     return this.context;
   }
 
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
+  }
+
   getMetavariable() {
     return this.metavariable;
   }
-
-  getString() { return this.metavariable.getString(); }
 
   getMetavariableName() {
     const metavariableName = this.metavariable.getName();
@@ -91,14 +97,6 @@ export default define(class Label {
 
   static fromJSON(json, context) {
     const metavariable = metavariableFromJSON(json, context),
-          label = new Label(context, metavariable);
-
-    return label;
-  }
-
-  static fromLabelNode(labelNode, context) {
-    const { Metavariable } = elements,
-          metavariable = Metavariable.fromLabelNode(labelNode, context),
           label = new Label(context, metavariable);
 
     return label;

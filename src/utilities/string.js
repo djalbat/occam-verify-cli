@@ -46,6 +46,34 @@ export function superTypesStringFromSuperTypes(superTypes) {
   return superTypesString;
 }
 
+export function parametersStringFromParameters(parameters) {
+  const parametersString = parameters.reduce((parametersString, parameter) => {
+    const parameterString = parameter.getString();
+
+    parametersString = (parametersString === null) ?
+                         parameterString : ///
+                          `${parametersString}, ${parameterString}`;
+
+    return parametersString;
+  }, null);
+
+  return parametersString;
+}
+
+export function assumptionsStringFromAssumptions(assumptions) {
+  const assumptionsString = assumptions.reduce((assumptionsString, assumption) => {
+    const assumptionString = assumption.getString();
+
+    assumptionsString = (assumptionsString === null) ?
+                          assumptionString :
+                            `${assumptionsString}, ${assumptionString}`;
+
+    return assumptionsString;
+  }, null);
+
+  return assumptionsString;
+}
+
 export function suppositionsStringFromSuppositions(suppositions) {
   const suppositionsString = suppositions.reduce((suppositionsString, supposition) => {
     const suppositionString = supposition.getString();
@@ -98,6 +126,25 @@ export function typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, type
   }
 
   return typeString;
+}
+
+export function procedureCallStringFromProcedureReferenceAndParameters(procedureReference, parameters) {
+  const procedureReferenceName = procedureReference.getName(),
+        parametersString = parametersStringFromParameters(parameters),
+        procedureCallString = `${procedureReferenceName}(${parametersString})`;
+
+  return procedureCallString;
+}
+
+export function metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction) {
+  const suppositionsString = suppositionsStringFromSuppositions(suppositions),
+        deductionString = deduction.getString(),
+        labelString = label.getString(),
+        metaLemmaMetatheoremString = (suppositionsString !== null) ?
+                                       `${labelString} :: [${suppositionsString}] ... ${deductionString}` :
+                                         `${labelString} :: ${deductionString}`;
+
+  return metaLemmaMetatheoremString;
 }
 
 export function axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction) {

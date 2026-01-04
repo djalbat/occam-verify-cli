@@ -15,7 +15,6 @@ import LabelsNode from "./node/labels";
 import SectionNode from "./node/section";
 import PremiseNode from "./node/premise";
 import TheoremNode from "./node/theorem";
-import NonsenseNode from "./node/nonsense";
 import ArgumentNode from "./node/argument";
 import SubproofNode from "./node/subproof";
 import PropertyNode from "./node/property";
@@ -49,6 +48,7 @@ import AxiomHeaderNode from "./node/header/axiom";
 import LemmaHeaderNode from "./node/header/lemma";
 import MetatheoremNode from "./node/metatheorem";
 import EquivalenceNode from "./node/equivalence";
+import EquivalencesNode from "./node/equivalences";
 import MetaArgumentNode from "./node/metaArgument";
 import MetavariableNode from "./node/metavariable";
 import QualificationNode from "./node/qualification";
@@ -99,7 +99,6 @@ import {
   THEOREM_RULE_NAME,
   PREMISE_RULE_NAME,
   SECTION_RULE_NAME,
-  NONSENSE_RULE_NAME,
   ARGUMENT_RULE_NAME,
   SUBPROOF_RULE_NAME,
   PROPERTY_RULE_NAME,
@@ -130,6 +129,7 @@ import {
   CONSTRUCTOR_RULE_NAME,
   METATHEOREM_RULE_NAME,
   EQUIVALENCE_RULE_NAME,
+  EQUIVALENCES_RULE_NAME,
   AXIOM_HEADER_RULE_NAME,
   LEMMA_HEADER_RULE_NAME,
   THEOREM_BODY_RULE_NAME,
@@ -188,7 +188,6 @@ const NonTerminalNodeMap = {
   [SUBPROOF_RULE_NAME]: SubproofNode,
   [EQUALITY_RULE_NAME]: EqualityNode,
   [VARIABLE_RULE_NAME]: VariableNode,
-  [NONSENSE_RULE_NAME]: NonsenseNode,
   [DOCUMENT_RULE_NAME]: DocumentNode,
   [RULE_BODY_RULE_NAME]: RuleBodyNode,
   [META_TYPE_RULE_NAME]: MetaTypeNode,
@@ -218,6 +217,7 @@ const NonTerminalNodeMap = {
   [LEMMA_HEADER_RULE_NAME]: LemmaHeaderNode,
   [THEOREM_BODY_RULE_NAME]: TheoremBodyNode,
   [METAVARIABLE_RULE_NAME]: MetavariableNode,
+  [EQUIVALENCES_RULE_NAME]: EquivalencesNode,
   [META_ARGUMENT_RULE_NAME]: MetaArgumentNode,
   [QUALIFICATION_RULE_NAME]: QualificationNode,
   [TYPE_ASSERTION_RULE_NAME]: TypeAssertionNode,

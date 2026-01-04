@@ -277,19 +277,4 @@ export default define(class Premise {
 
     return premise;
   }
-
-  static fromPremiseNode(premiseNode, context) {
-    const { Statement, ProcedureCall } = elements,
-          node = premiseNode, ///
-          string = context.nodeAsString(node),
-          statement = Statement.fromPremiseNode(premiseNode, context),
-          procedureCall = ProcedureCall.fromPremiseNode(premiseNode, context),
-          temporaryContext = null;
-
-    context = temporaryContext; ///
-
-    const premise = new Premise(context, string, node, statement, procedureCall);
-
-    return premise
-  }
 });

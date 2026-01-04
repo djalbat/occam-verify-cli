@@ -3,18 +3,27 @@
 import { define } from "../elements";
 
 export default define(class Parameter {
-  constructor(name) {
+  constructor(context, string, node, name) {
+    this.context = context;
+    this.string = string;
+    this.node = node;
     this.name = name;
+  }
+
+  getContext() {
+    return this.context;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getName() {
     return this.name;
-  }
-
-  getString() {
-    const string = this.name; ///
-
-    return string;
   }
 
   findReplacementNode(substitutions) {
@@ -49,14 +58,6 @@ export default define(class Parameter {
 
   static fromJSON(json, context) {
     const { name } = json,
-          parameter = new Parameter(name);
-
-    return parameter;
-  }
-
-  static fromParameterNode(parameterNode, context) {
-    const parameterName = parameterNode.getParameterName(),
-          name = parameterName, ///
           parameter = new Parameter(name);
 
     return parameter;

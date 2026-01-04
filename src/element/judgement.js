@@ -149,24 +149,6 @@ export default define(class Judgement {
   }
 
   static name = "Judgement";
-
-  static fromStatementNode(statementNode, context) {
-    let judgement = null;
-
-    const judgementNode = statementNode.getJudgementNode();
-
-    if (judgementNode !== null) {
-      const { Frame, Assumption } = elements,
-            node = judgementNode, ///
-            string = context.nodeAsString(node),
-            frame = Frame.fromJudgementNode(judgementNode, context),
-            assumption = Assumption.fromJudgementNode(judgementNode, context);
-
-      judgement = new Judgement(string, node, frame, assumption);
-    }
-
-    return judgement;
-  }
 });
 
 function referenceFromMetavariable(metavariable, context) {

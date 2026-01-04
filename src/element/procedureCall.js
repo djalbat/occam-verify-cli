@@ -174,19 +174,3 @@ function parametersFromProcedureCallNode(procedureCallNode, context) {
 
   return parameters;
 }
-
-function stringFromProcedureReferenceAndParameters(procedureReference, parameters) {
-  const name = procedureReference.getName(),
-        parametersString = parameters.reduce((parametersString, parameter) => {
-          const parameterString = parameter.getString();
-
-          parametersString = (parametersString === null) ?
-                                parameterString : ///
-                                  `${parametersString}, ${parameterString}`;
-
-          return parametersString;
-        }, null),
-        string = `${name}(${parametersString})`;
-
-  return string;
-}

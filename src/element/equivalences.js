@@ -3,13 +3,29 @@
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
+import { EMPTY_STRING } from "../constants";
 import { variablesFromTerm } from "./term";
 
 const { push, separate } = arrayUtilities;
 
 export default define(class Equivalences {
-  constructor(array) {
+  constructor(context, string, node, array) {
+    this.context = context;
+    this.string = string;
+    this.node = node;
     this.array = array;
+  }
+
+  getContext() {
+    return this.context;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getArray() {
@@ -185,9 +201,11 @@ export default define(class Equivalences {
     return equivalences;
   }
 
-  static fromNothing() {
-    const array = [],
-          equivalences = new Equivalences(array);
+  static fromNothing(context) {
+    const string = EMPTY_STRING,
+          node = null,
+          array = [],
+          equivalences = new Equivalences(context, string, node, array);
 
     return equivalences;
   }

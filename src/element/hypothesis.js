@@ -111,14 +111,4 @@ export default define(class Hypothesis {
 
     return hypothesis;
   }
-
-  static fromHypothesisNode(hypothesisNode, context) {
-    const { Statement } = elements,
-          node = hypothesisNode, ///
-          string = context.nodeAsString(node),
-          statement = Statement.fromHypothesisNode(hypothesisNode, context),
-          hypothesis = new Hypothesis(string, node, statement);
-
-    return hypothesis
-  }
 });

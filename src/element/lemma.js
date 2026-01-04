@@ -33,11 +33,4 @@ export default define(class Lemma extends AxiomLemmaTheoremConjecture {
   }
 
   static name = "Lemma";
-
-  static fromLemmaNode(lemmaNode, context) {
-    const node = lemmaNode, ///
-          lemma = AxiomLemmaTheoremConjecture.fromNode(Lemma, node, context);
-
-    return lemma;
-  }
 });
