@@ -1,21 +1,9 @@
 "use strict";
 
-export default class Declaration {
+import Element from "../element";
+
+export default class Declaration extends Element {
   constructor(context, string, node) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
+    super(context, string, node);
   }
 }

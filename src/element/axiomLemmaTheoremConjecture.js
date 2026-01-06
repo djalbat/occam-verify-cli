@@ -2,6 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
 import elements from "../elements";
 import LocalContext from "../context/local";
 
@@ -18,29 +19,16 @@ import { labelsFromJSON,
 
 const { extract, reverse, correlate, backwardsEvery } = arrayUtilities;
 
-export default class AxiomLemmaTheoremConjecture {
+export default class AxiomLemmaTheoremConjecture extends Element {
   constructor(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.labels = labels;
     this.suppositions = suppositions;
     this.deduction = deduction;
     this.proof = proof;
     this.signature = signature;
     this.hypotheses = hypotheses;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getLabels() {

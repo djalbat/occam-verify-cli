@@ -1,26 +1,15 @@
 "use strict";
 
+import Element from "../element";
+
 import { define } from "../elements";
 
-export default define(class Property {
+export default define(class Property extends Element {
   constructor(context, string, node, name, nominalTypeName) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.name = name;
     this.nominalTypeName = nominalTypeName;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getName() {
@@ -59,7 +48,8 @@ export default define(class Property {
   static fromJSON(json, context) {
     const { name, nominalTypeName } = json,
           string = name, ///
-          property = new Property(string, name, nominalTypeName);
+          node = null,
+          property = new Property(context, string, node, name, nominalTypeName);
 
     return property;
   }

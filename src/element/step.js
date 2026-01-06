@@ -1,5 +1,6 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 import unifyMixins from "../mixins/step/unify";
 import TemporaryContext from "../context/temporary";
@@ -8,26 +9,13 @@ import { define } from "../elements";
 import { equateStatements } from "../process/equate";
 import { propertyAssertionFromStatement } from "../utilities/statement";
 
-export default define(class Step {
+export default define(class Step extends Element {
   constructor(context, string, node, statement, reference, satisfiesAssertion) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.statement = statement;
     this.reference = reference;
     this.satisfiesAssertion = satisfiesAssertion;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getStatement() {

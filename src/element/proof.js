@@ -1,27 +1,14 @@
 "use strict";
 
+import Element from "../element";
 import LocalContext from "../context/local";
 
 import { define } from "../elements";
 
-export default define(class Proof {
+export default define(class Proof extends Element {
   constructor(context, string, node, derivation) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
     this.derivation = derivation;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getDerivation() {

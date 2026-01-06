@@ -2,30 +2,18 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
 import assignAssignments from "../process/assign";
 
 import { define } from "../elements";
 
 const { last } = arrayUtilities;
 
-export default define(class SubDerivation {
+export default define(class SubDerivation extends Element {
   constructor(context, string, node, stepsOrSubproofs) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.stepsOrSubproofs = stepsOrSubproofs;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getStepsOrSubproofs() {

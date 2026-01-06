@@ -2,28 +2,16 @@
 
 import { Expressions } from "occam-furtle";
 
+import Element from "../element";
+
 import { define } from "../elements";
 import { parametersFromJSON, procedureReferenceFromJSON, parametersToParametersJSON, procedureReferenceToProcedureReferenceJSON } from "../utilities/json";
 
-export default define(class ProcedureCall {
+export default define(class ProcedureCall extends Element {
   constructor(context, string, node, parameters, procedureReference) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
     this.parameters = parameters;
     this.procedureReference = procedureReference;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getParameters() {
@@ -125,7 +113,7 @@ export default define(class ProcedureCall {
           parameters = parametersFromJSON(json, context),
           procedureReference = procedureReferenceFromJSON(json, context),
           string = stringFromProcedureReferenceAndParameters(procedureReference, parameters),
-          procedureCall = new ProcedureCall(string, node, parameters, procedureReference);
+          procedureCall = new ProcedureCall(context, string, node, parameters, procedureReference);
 
     return procedureCall;
   }

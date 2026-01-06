@@ -1,29 +1,17 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 import LocalContext from "../context/local";
 
 import { define } from "../elements";
 
-export default define(class Subproof {
+export default define(class Subproof extends Element {
   constructor(context, string, node, suppositions, subDerivation) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.suppositions = suppositions;
     this.subDerivation = subDerivation;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getSuppositions() {

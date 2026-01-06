@@ -1,25 +1,13 @@
 "use strict";
 
+import Element from "../element";
+
 import { define } from "../elements";
 
-export default define(class ProcedureReference {
+export default define(class ProcedureReference extends Element {
   constructor(context, string, node, name) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
     this.name = name;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getName() {
@@ -40,7 +28,8 @@ export default define(class ProcedureReference {
   static fromJSON(json, context) {
     const { name } = json,
           string = name,  ///
-          procedureReference = new ProcedureReference(string, name);
+          node = null,
+          procedureReference = new ProcedureReference(context, string, node, name);
 
     return procedureReference;
   }

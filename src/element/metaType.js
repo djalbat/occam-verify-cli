@@ -1,26 +1,15 @@
 "use strict";
 
+import Element from "../element";
+
 import { define } from "../elements";
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
-class MetaType {
+class MetaType extends Element {
   constructor(context, string, node, name) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.name = name;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getName() {
@@ -63,8 +52,11 @@ export default define(MetaType);
 
 class FrameMetaType extends MetaType {
   static fromNothing() {
-    const name = FRAME_META_TYPE_NAME,
-          frameMetaType = new FrameMetaType(name);
+    const context = null,
+          string = null,
+          node = null,
+          name = FRAME_META_TYPE_NAME,
+          frameMetaType = new FrameMetaType(context, string, node, name);
 
     return frameMetaType;
   }
@@ -72,8 +64,11 @@ class FrameMetaType extends MetaType {
 
 class ReferenceMetaType extends MetaType {
   static fromNothing() {
-    const name = REFERENCE_META_TYPE_NAME,
-          referenceMetaType = new ReferenceMetaType(name);
+    const context = null,
+          string = null,
+          node = null,
+          name = REFERENCE_META_TYPE_NAME,
+          referenceMetaType = new ReferenceMetaType(context, string, node, name);
 
     return referenceMetaType;
   }
@@ -81,8 +76,11 @@ class ReferenceMetaType extends MetaType {
 
 class StatementMetaType extends MetaType {
   static fromNothing() {
-    const name = STATEMENT_META_TYPE_NAME,
-          statementMetaType = new StatementMetaType(name);
+    const context = null,
+          string = null,
+          node = null,
+          name = STATEMENT_META_TYPE_NAME,
+          statementMetaType = new StatementMetaType(context, string, node, name);
 
     return statementMetaType;
   }

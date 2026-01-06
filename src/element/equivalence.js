@@ -2,6 +2,8 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
+
 import { define } from "../elements";
 import { termsStringFromTerms } from "../utilities/string";
 import { instantiateEquivalence } from "../process/instantiate";
@@ -10,24 +12,10 @@ import { equalivanceFromEquivalenceNode } from "../utilities/element";
 
 const { compress } = arrayUtilities;
 
-export default define(class Equivalence {
+export default define(class Equivalence extends Element {
   constructor(context, string, node, terms) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
     this.terms = terms;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getTerms() {

@@ -2,33 +2,20 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
 import { S, NOTHING } from "../constants";
-import { frameFromFrameNode } from "../utilities/element";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 
 const { first } = arrayUtilities;
 
-export default define(class Frame {
+export default define(class Frame extends Element {
   constructor(context, string, node, assumptions) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.assumptions = assumptions;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getAssumptions() {

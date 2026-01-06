@@ -1,31 +1,19 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
 import { instantiateVariable } from "../process/instantiate";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
-export default define(class Variable {
+export default define(class Variable extends Element {
   constructor(context, string, node, type, identifier, propertyRelations) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.type = type;
     this.identifier = identifier;
     this.propertyRelations = propertyRelations;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getIdentifier() {
@@ -200,7 +188,7 @@ export default define(class Variable {
           identifier = variableIdentifier,  ///
           type = typeFromJSON(json, context),
           propertyRelations = [],
-          variable = new Variable(string, node, type, identifier, propertyRelations);
+          variable = new Variable(context, string, node, type, identifier, propertyRelations);
 
     return variable;
   }

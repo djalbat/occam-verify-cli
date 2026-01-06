@@ -1,5 +1,6 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 import LocalContext from "../context/local";
 
@@ -13,28 +14,15 @@ import { labelFromJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
-export default class MetaLemmaMetatheorem {
+export default class MetaLemmaMetatheorem extends Element {
   constructor(context, string, node, label, suppositions, deduction, proof, substitutions) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.label = label;
     this.suppositions = suppositions;
     this.deduction = deduction;
     this.proof = proof;
     this.substitutions = substitutions;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getLabel() {

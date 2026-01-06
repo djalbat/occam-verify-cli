@@ -1,29 +1,18 @@
 "use strict";
 
+import Element from "../element";
+
 import { define } from "../elements";
 
-export default define(class Section {
+export default define(class Section extends Element {
   constructor(context, string, node, hypotheses, axiom, lemma, theorem, conjecture) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.hypotheses = hypotheses;
     this.axiom = axiom;
     this.lemma = lemma;
     this.theorem = theorem;
     this.conjecture = conjecture;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getHypotheses() {

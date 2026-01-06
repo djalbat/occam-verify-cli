@@ -1,26 +1,15 @@
 "use strict";
 
+import Element from "../element";
+
 import { define } from "../elements";
 
-export default define(class PropertyRelation {
+export default define(class PropertyRelation extends Element {
   constructor(context, string, node, property, term) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.property = property;
     this.term = term;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getProperty() {

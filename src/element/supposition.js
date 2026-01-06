@@ -1,5 +1,6 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 import TemporaryContext from "../context/temporary";
 import assignAssignments from "../process/assign";
@@ -8,25 +9,12 @@ import { define } from "../elements";
 import { subproofAssertionFromStatement } from "../utilities/statement";
 import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
-export default define(class Supposition {
+export default define(class Supposition extends Element {
   constructor(context, string, node, statement, procedureCall) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.statement = statement;
     this.procedureCall = procedureCall;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getStatement() {

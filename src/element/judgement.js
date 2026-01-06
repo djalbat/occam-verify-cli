@@ -1,29 +1,17 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
 import { judgementAssignmentFromJudgement } from "../process/assign";
 
-export default define(class Judgement {
+export default define(class Judgement extends Element {
   constructor(context, string, node, frame, assumption) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.frame = frame;
     this.assumption = assumption;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getFrame() {

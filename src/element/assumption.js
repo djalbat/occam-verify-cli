@@ -1,30 +1,18 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
 import { unifyStatementIntrinsically } from "../process/unify";
 import { referenceFromJSON, referenceToReferenceJSON } from "../utilities/json";
 
-export default define(class Assumption {
+export default define(class Assumption extends Element {
   constructor(context, string, node, statement, reference) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.statement = statement;
     this.reference = reference;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getStatement() {

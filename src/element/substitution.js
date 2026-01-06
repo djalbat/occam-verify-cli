@@ -1,22 +1,10 @@
 "use strict";
 
-export default class Substitution {
+import Element from "../element";
+
+export default class Substitution extends Element {
   constructor(context, string, node) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
+    super(context, string, node);
   }
 
   getTerm() {

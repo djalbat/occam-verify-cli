@@ -1,5 +1,6 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
@@ -7,24 +8,10 @@ import { referenceMetaType } from ".//metaType";
 import { unifyMetavariableIntrinsically } from "../process/unify";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
-export default define(class Reference {
+export default define(class Reference extends Element {
   constructor(context, string, node, metavariable) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
     this.metavariable = metavariable;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getMetavariable() {
@@ -205,7 +192,9 @@ export default define(class Reference {
 
   static fromJSON(json, context) {
     const metavariable = metavariableFromJSON(json, context),
-          reference = new Reference(metavariable);
+          string = metavariable.getString(),
+          node = metavariable.getNode(),
+          reference = new Reference(context, string, node, metavariable);
 
     return reference;
   }

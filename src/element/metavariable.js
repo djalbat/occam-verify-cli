@@ -1,5 +1,6 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
@@ -9,26 +10,13 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
 
-export default define(class Metavariable {
+export default define(class Metavariable extends Element {
   constructor(context, string, node, name, type, metaType) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+    
     this.name = name;
     this.type = type;
     this.metaType = metaType;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getName() {
@@ -416,7 +404,7 @@ export default define(class Metavariable {
           node = metavariableNode,  ///
           type = typeFromJSON(json, context),
           metaType = metaTypeFromJSON(json, context),
-          metavariable = new Metavariable(string, node, name, type, metaType);
+          metavariable = new Metavariable(context, string, node, name, type, metaType);
 
     return metavariable;
   }

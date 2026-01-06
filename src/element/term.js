@@ -2,6 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
 import verifyMixins from "../mixins/term/verify";
 
 import { define } from "../elements";
@@ -10,24 +11,11 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { filter, compress } = arrayUtilities;
 
-export default define(class Term {
+export default define(class Term extends Element {
   constructor(context, string, node, type) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.type = type;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getType() {
@@ -183,7 +171,7 @@ export default define(class Term {
           termNode = instantiateTerm(string, context),
           node = termNode,  ///
           type = typeFromJSON(json, context),
-          term = new Term(string, node, type);
+          term = new Term(context, string, node, type);
 
     return term;
   }

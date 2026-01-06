@@ -1,25 +1,14 @@
 "use strict";
 
+import Element from "../element";
+
 import { define } from "../elements";
 
-export default define(class TypePrefix {
+export default define(class TypePrefix extends Element {
   constructor(context, string, node, name) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.name = name;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getName() {
@@ -46,7 +35,8 @@ export default define(class TypePrefix {
   static fromJSON(json, context) {
     const { name } = json,
           string = name,  ///
-          typePrefix = new TypePrefix(string, name);
+          node = null,
+          typePrefix = new TypePrefix(context, string, node, name);
 
     return typePrefix;
   }

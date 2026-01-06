@@ -2,6 +2,8 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
+
 import { define } from "../elements";
 import { BASE_TYPE_SYMBOL } from "../constants";
 import { typeStringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/string";
@@ -9,28 +11,14 @@ import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, pro
 
 const { push, first } = arrayUtilities;
 
-class Type {
+class Type extends Element {
   constructor(context, string, node, name, prefixName, superTypes, properties, provisional) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
     this.name = name;
     this.prefixName = prefixName;
     this.superTypes = superTypes;
     this.properties = properties;
     this.provisional = provisional;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getName() {
@@ -314,7 +302,8 @@ class Type {
           typeName = name,  ///
           typePrefixName = null,
           string = typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
-          type = new Type(string, node, name, prefixName, superTypes, properties, provisional);
+          node = null,
+          type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
 
     return type;
   }
@@ -325,13 +314,14 @@ export default define(Type);
 class BaseType extends Type {
   static fromNothing() {
     const name = BASE_TYPE_SYMBOL,  ///
+          context = null,
           string = name,  ///
           node = null,
           prefixName = null,
           superTypes = [],
           properties = [],
           provisional = false,
-          baseType = new BaseType(string, node, name, prefixName, superTypes, properties, provisional);
+          baseType = new BaseType(context, string, node, name, prefixName, superTypes, properties, provisional);
 
     return baseType;
   }

@@ -1,29 +1,16 @@
 "use strict";
 
+import Element from "../element";
 import TemporaryContext from "../context/temporary";
 
 import { define } from "../elements";
 import { termsFromJSON, framesFromJSON, statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
 
-export default define(class Deduction {
+export default define(class Deduction extends Element {
   constructor(context, string, node, statement) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
-    this.string = string;
+    super(context, string, node);
+
     this.statement = statement;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getStatement() {

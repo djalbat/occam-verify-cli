@@ -1,29 +1,17 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 import assignAssignments from "../process/assign";
 
 import { define } from "../elements";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
-export default define(class Hypothesis {
+export default define(class Hypothesis extends Element {
   constructor(context, string, node, statement) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.statement = statement;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getStatement() {
@@ -112,7 +100,7 @@ export default define(class Hypothesis {
     }
 
     const node = null,
-          hypothesis = new Hypothesis(string, node, statement);
+          hypothesis = new Hypothesis(context, string, node, statement);
 
     return hypothesis;
   }

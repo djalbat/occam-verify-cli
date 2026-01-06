@@ -1,30 +1,18 @@
 "use strict";
 
+import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
 import { equateTerms } from "../process/equate";
 import { equalityAssignmentFromEquality, variableAssignmentFromVariable } from "../process/assign";
 
-export default define(class Equality {
+export default define(class Equality extends Element {
   constructor(context, string, node, leftTerm, rightTerm) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.leftTerm = leftTerm;
     this.rightTerm = rightTerm;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getLeftTerm() {

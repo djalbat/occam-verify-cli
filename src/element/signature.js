@@ -2,6 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
@@ -10,24 +11,11 @@ import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
 
 const { match, compare, correlate } = arrayUtilities;
 
-export default define(class Signature {
+export default define(class Signature extends Element {
   constructor(context, string, node, terms) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.terms = terms;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getTerms() {
@@ -165,7 +153,8 @@ export default define(class Signature {
     const terms = termsFromJSON(json, context),
           signatureString = signatureStringFromTerms(terms),
           string = signatureString, ///
-          signature = new Signature(string, terms);
+          node = null,
+          signature = new Signature(context, string, node, terms);
 
     return signature;
   }

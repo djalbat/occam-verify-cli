@@ -2,33 +2,19 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
 import verifyMixins from "../mixins/statement/verify";
 
 import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
 import { instantiateStatement } from "../process/instantiate";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-import { stripBracketsFromStatementNode } from "../utilities/brackets";
 
 const { match, backwardsSome } = arrayUtilities;
 
-export default define(class Statement {
+export default define(class Statement extends Element {
   constructor(context, string, node) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
+    super(context, string, node);
   }
 
   getMetavariableName() {

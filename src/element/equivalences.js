@@ -2,30 +2,19 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
+
 import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
 import { variablesFromTerm } from "./term";
 
 const { push, separate } = arrayUtilities;
 
-export default define(class Equivalences {
+export default define(class Equivalences extends Element {
   constructor(context, string, node, array) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.array = array;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getArray() {

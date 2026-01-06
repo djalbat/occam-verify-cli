@@ -1,27 +1,16 @@
 "use strict";
 
+import Element from "../element";
+
 import { define } from "../elements";
 
-export default define(class Parameter {
+export default define(class Parameter extends Element {
   constructor(context, string, node, name) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.name = name;
   }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
+  
   getName() {
     return this.name;
   }
@@ -58,7 +47,9 @@ export default define(class Parameter {
 
   static fromJSON(json, context) {
     const { name } = json,
-          parameter = new Parameter(name);
+          string = null,
+          node = null,
+          parameter = new Parameter(context, string, node, name);
 
     return parameter;
   }

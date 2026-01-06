@@ -2,30 +2,19 @@
 
 import { arrayUtilities } from "necessary";
 
+import Element from "../element";
+
 import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
 
 const { find, first, clear, prune, filter, compress, correlate } = arrayUtilities;
 
-export default define(class Substitutions {
+export default define(class Substitutions extends Element {
   constructor(context, string, node, array, savedArray) {
-    this.context = context;
-    this.string = string;
-    this.node = node;
+    super(context, string, node);
+
     this.array = array;
     this.savedArray = savedArray;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getArray() {
