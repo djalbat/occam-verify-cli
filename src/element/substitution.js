@@ -74,14 +74,6 @@ export default class Substitution extends Element {
     return trivial;
   }
 
-  isEqualTo(substitution) {
-    const substitutionNode = substitution.getNode(),
-          matches = this.node.match(substitutionNode),
-          equalTo = matches;  ///
-
-    return equalTo;
-  }
-
   isTermEqualToTerm(term, context) {
     const termEqualToTerm = false;
 

@@ -55,14 +55,6 @@ export default define(class Metavariable extends Element {
 
   isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
-  isEqualTo(metavariable) {
-    const metavariableNode = metavariable.getNode(),
-          matches = this.node.match(metavariableNode),
-          equalTo = matches;  ///
-
-    return equalTo;
-  }
-
   verify(context) {
     let verifies;
 

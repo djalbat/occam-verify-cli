@@ -32,14 +32,6 @@ export default define(class Reference extends Element {
     return metavariableNode;
   }
 
-  isEqualTo(refernece) {
-    const metavariable = refernece.getMetavariable(),
-          metavariableEqualToMetvariable = this.metavariable.isEqualTo(metavariable),
-          equalTo = metavariableEqualToMetvariable; ///
-
-    return equalTo;
-  }
-
   isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }

@@ -1,6 +1,6 @@
 "use strict";
 
-class Element {
+export default class Element {
   constructor(context, string, node) {
     this.context = context;
     this.string = string;

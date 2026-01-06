@@ -30,7 +30,7 @@ export function typeFromTypeNode(typeNode, context) {
           properties = null,
           provisional = null;
 
-    type = new Type(string, node, name, prefixName, superTypes, properties, provisional);
+    type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
   }
 
   return type;
@@ -41,7 +41,7 @@ export function termFromTermNode(termNode, context) {
         node = termNode,  ///
         string = context.nodeAsString(node),
         type = null,
-        term = new Term(string, node, type);
+        term = new Term(context, string, node, type);
 
   return term;
 }
@@ -112,7 +112,7 @@ export function frameFromFrameNode(frameNode, context) {
     node = frameNode, ///
     string = context.nodeAsString(node),
     assumptions = assumptionsFromFrameNode(frameNode, context),
-    frame = new Frame(string, node, assumptions);
+    frame = new Frame(context, string, node, assumptions);
 
   return frame;
 }
@@ -122,7 +122,7 @@ export function proofFromProofNode(proofNode, context) {
         node = proofNode, ///
         string = null,
         derivation = derivationFromProofNode(proofNode, context),
-        proof = new Proof(string, node, derivation);
+        proof = new Proof(context, string, node, derivation);
 
   return proof;
 }
@@ -206,7 +206,7 @@ export function metaTypeFromMetaTypeNode(metaTypeNode, context) {
         string = context.nodeAsString(node),
         metaTypeName = metaTypeNode.getMetaTypeName(),
         name = metaTypeName,  ///
-        metaType = new MetaType(string, node, name);
+        metaType = new MetaType(context, string, node, name);
 
   return metaType;
 }
@@ -218,7 +218,7 @@ export function propertyFromPropertyNode(propertyNode, context) {
     propertyName = propertyNode.getPropertyName(),
     nominalTypeName = null,
     name = propertyName,  ///
-    property = new Property(string, node, name, nominalTypeName);
+    property = new Property(context, string, node, name, nominalTypeName);
 
   return property;
 }
@@ -230,7 +230,7 @@ export function variableFromVariableNode(variableNode, context) {
         type = null,
         identifier = identifierFromVarialbeNode(variableNode, context),
         propertyRelations = [],
-        variable = new Variable(string, node, type, identifier, propertyRelations);
+        variable = new Variable(context, string, node, type, identifier, propertyRelations);
 
   return variable;
 }
@@ -242,7 +242,7 @@ export function subproofFromSubproofNode(subproofNode, context) {
         subDerivation = subDerivationFromSubproofNode(subproofNode, context),
         subproofString = subproofStringFromSubproofNode(subproofNode, context),
         string = subproofString,  ///
-        subproof = new SubProof(string, node, suppositions, subDerivation);
+        subproof = new SubProof(context, string, node, suppositions, subDerivation);
 
   return subproof;
 }
@@ -278,7 +278,7 @@ export function statementFromStatementNode(statementNode, context) {
   const { Statement } = elements,
         node = statementNode, ///
         string = context.nodeAsString(node),
-        statement = new Statement(string, node);
+        statement = new Statement(context, string, node);
 
   return statement;
 }
@@ -288,7 +288,7 @@ export function signatureFromSignatureNode(signatureNode, context) {
         node = signatureNode, ///
         string = context.nodeAsString(node),
         terms = termsFromSignatureNode(signatureNode, context),
-        signature = new Signature(string, node, terms);
+        signature = new Signature(context, string, node, terms);
 
   return signature;
 }
@@ -298,7 +298,7 @@ export function referenceFromReferenceNode(referenceNode, context) {
         node = referenceNode, ///
         string = context.nodeAsString(node),
         metavariable = metavariableFromReferenceNode(referenceNode, context),
-        reference = new Reference(string, node, metavariable);
+        reference = new Reference(context, string, node, metavariable);
 
   return reference;
 }
@@ -326,7 +326,7 @@ export function judgementFromJudgementNode(judgementNode, context) {
         string = context.nodeAsString(node),
         frame = frameFromJudgementNode(judgementNode, context),
         assumption = assumptionFromJudgementNode(judgementNode, context),
-        judgement = new Judgement(string, node, frame, assumption);
+        judgement = new Judgement(context, string, node, frame, assumption);
 
   return judgement;
 }
@@ -393,7 +393,7 @@ export function assumptionFromAssumptionNode(assumptionNode, context) {
         string = context.nodeAsString(node),
         statement = statementFromAssumptionNode(assumptionNode, context),
         reference = referenceFromAssumptionNode(assumptionNode, context),
-        assumption = new Assumption(string, node, statement, reference);
+        assumption = new Assumption(context, string, node, statement, reference);
 
   return assumption;
 }
@@ -403,7 +403,7 @@ export function derivationFromDerivationNode(derivationNode, context) {
         node = derivationNode,  ///
         string = null,
         stepsOrSubproofs = stepsOrSubproofsFromDerivationNode(derivationNode, context),
-        derivation = new Derivation(string, node, stepsOrSubproofs);
+        derivation = new Derivation(context, string, node, stepsOrSubproofs);
 
   return derivation;
 }
@@ -414,7 +414,7 @@ export function typePrefixFromTypePrefixNode(typePrefixNode, context) {
         string = context.nodeAsString(node),
         term = termFromTypePrefixNode(typePrefixNode, context),
         type = typeFromTypePrefixNode(typePrefixNode, context),
-        typePrefix = new TypePrefix(string, node, term, type);
+        typePrefix = new TypePrefix(context, string, node, term, type);
 
   return typePrefix;
 }
@@ -449,7 +449,7 @@ export function hyppothesisFromHypothesisNode(hypothesisNode, context) {
         node = hypothesisNode, ///
         string = context.nodeAsString(node),
         statement = statementFromHypothesisNode(hypothesisNode, context),
-        hypothesis = new Hypothesis(string, node, statement);
+        hypothesis = new Hypothesis(context, string, node, statement);
 
   return hypothesis
 }
@@ -490,7 +490,7 @@ export function metavariableFromMetavariableNode(metavariableNode, context) {
         name = metavariableName,  ///
         type = null,
         metaType = null,
-        metavariable = new Metavariable(string, node, name, type, metaType);
+        metavariable = new Metavariable(context, string, node, name, type, metaType);
 
   return metavariable;
 }
@@ -500,7 +500,7 @@ export function subDerivationFromSubDerivationNode(subDerivationNode, context) {
         node = subDerivationNode, ///
         string = null,
         stepsOrSubproofs = stepsOrSubproofsFromSubDerivationNode(subDerivationNode, context),
-        subDerivation = new SubDerivation(string, node, stepsOrSubproofs);
+        subDerivation = new SubDerivation(context, string, node, stepsOrSubproofs);
 
   return subDerivation;
 
@@ -512,7 +512,7 @@ export function typeAssertionFromTypeAssertionNode(typeAssertionNode, context) {
         string = context.nodeAsString(node),
         term = termFromTypeAssertionNode(typeAssertionNode, context),
         type = typeFromTypeAssertionNode(typeAssertionNode, context),
-        typeAssertion = new TypeAssertion(string, node, term, type);
+        typeAssertion = new TypeAssertion(context, string, node, term, type);
 
   return typeAssertion;
 }
@@ -524,7 +524,7 @@ export function procedureCallFromProcedureCallNode(procedureCallNode, context) {
         procedureCallString = procedureCallStringFromProcedureReferenceAndParameters(procedureReference, parameters),
         node = procedureCallNode, ///
         string = procedureCallString, ///
-        procedureCall = new ProcedureCall(string, node, parameters, procedureReference);
+        procedureCall = new ProcedureCall(context, string, node, parameters, procedureReference);
 
   return procedureCall;
 }
@@ -556,7 +556,7 @@ export function definedAssertionFromDefinedAssertionNode(definedAssertionNode, c
         negated = definedAssertionNode.isNegated(),
         term = termFromDefinedAssertionNode(definedAssertionNode, context),
         frame = frameFromDefinedAssertionNode(definedAssertionNode, context),
-        definedAssertion = new DefinedAssertion(string, node, term, frame, negated);
+        definedAssertion = new DefinedAssertion(context, string, node, term, frame, negated);
 
   return definedAssertion;
 }
@@ -567,7 +567,7 @@ export function propertyRelationFromPropertyRelationNode(propertyRelationNode, c
         string = context.nodeAsString(node),
         property = propertyFromPropertyRelationNode(propertyRelationNode, context),
         term = termFromPropertyRelationNode(propertyRelationNode, context),
-        propertyRelation = new PropertyRelation(string, node, property, term);
+        propertyRelation = new PropertyRelation(context, string, node, property, term);
 
   return propertyRelation;
 }
@@ -600,7 +600,7 @@ export function propertyAssertionFromPropertyAssertionNode(propertyAssertionNode
         string = context.nodeAsString(node),
         term = termFromPropertyAssertionNode(propertyAssertionNode, context),
         propertyRelation = propertyRelationFromPropertyAssertionNode(propertyAssertionNode, context),
-        propertyAssertion = new PropertyAssertion(string, node, term, propertyRelation);
+        propertyAssertion = new PropertyAssertion(context, string, node, term, propertyRelation);
 
   return propertyAssertion;
 }
@@ -610,7 +610,7 @@ export function subproofAssertionFromSubproofAssertionNode(subproofAssertionNode
         node = subproofAssertionNode, ///
         string = context.nodeAsString(node),
         statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),
-        subproofAssertion = new SubproofAssertion(string, node, statements);
+        subproofAssertion = new SubproofAssertion(context, string, node, statements);
 
   return subproofAssertion;
 }
@@ -623,7 +623,7 @@ export function containedAssertionFromContainedAssertionNode(containedAssertionN
         term = termFromContainedAssertionNode(containedAssertionNode, context),
         frame = frameFromContainedAssertionNode(containedAssertionNode, context),
         statement = statementFromContainedAssertionNode(containedAssertionNode, context),
-        containedAssertion = new ContainedAssertion(string, node, term, frame, negated, statement);
+        containedAssertion = new ContainedAssertion(context, string, node, term, frame, negated, statement);
 
   return containedAssertion;
 }
@@ -634,7 +634,7 @@ export function satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionN
         string = context.nodeAsString(node),
         signature = signatureFromSatisfiesAssertionNode(satisfiesAssertionNode, context),
         reference = referenceFromSatisfiesAssertionNode(satisfiesAssertionNode, context),
-        satisfiesAssertion = new SatisfiesAssertion(string, node, signature, reference);
+        satisfiesAssertion = new SatisfiesAssertion(context, string, node, signature, reference);
 
   return satisfiesAssertion;
 }
@@ -739,8 +739,12 @@ export function metavariableDeclarationFromMetavariableDeclarationNode(metavaria
   const { MetavariableDeclaration } = elements,
         node = metavariableDeclarationNode,  ///
         string = context.nodeAsString(node),
-        metavariable = metavariableFromMetavariableNode(metavariableDeclarationNode, context),
-        metavariableDeclaration = new MetavariableDeclaration(context, string, node, metavariable);
+        metaType = metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
+        metavariable = metavariableFromMetavariableDeclarationNode(metavariableDeclarationNode, context);
+
+  metavariable.setMetaType(metaType);
+
+  const metavariableDeclaration = new MetavariableDeclaration(context, string, node, metavariable);
 
   return metavariableDeclaration;
 }

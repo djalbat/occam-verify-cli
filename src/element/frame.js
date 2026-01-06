@@ -66,14 +66,6 @@ export default define(class Frame extends Element {
 
   isSingular() { return this.node.isSingular(); }
 
-  isEqualTo(frame) {
-    const frameNode = frame.getNode(),
-          matches = this.node.match(frameNode),
-          equalTo = matches;  ///
-
-    return equalTo;
-  }
-
   isMetavariableEqualToMetavariable(metavariable, context) {
     let metavariableEqualToMetavariable;
 

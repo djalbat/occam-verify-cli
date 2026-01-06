@@ -31,14 +31,6 @@ export default define(class Statement extends Element {
 
   isSingular() { return this.node.isSingular(); }
 
-  isEqualTo(statement) {
-    const statementNode = statement.getNode(),
-          matches = this.node.match(statementNode),
-          equalTo = matches;  ///
-
-    return equalTo;
-  }
-
   isTermContained(term, context) {
     let termContained;
 

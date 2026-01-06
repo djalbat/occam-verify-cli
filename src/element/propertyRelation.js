@@ -20,14 +20,6 @@ export default define(class PropertyRelation extends Element {
     return this.term;
   }
 
-  isEqualTo(propertyRelation) {
-    const propertyRelationNode = propertyRelation.getNode(),
-          matches = this.node.match(propertyRelationNode),
-          equalTo = matches;  ///
-
-    return equalTo;
-  }
-
   verify(context) {
     let verifies = false;
 

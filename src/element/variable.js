@@ -34,14 +34,6 @@ export default define(class Variable extends Element {
 
   getTypeString() { return this.type.getString(); }
 
-  isEqualTo(variable) {
-    const variableNode = variable.getNode(),
-          matches = this.node.match(variableNode),
-          equalTo = matches;  ///
-
-    return equalTo;
-  }
-
   matchParameter(parameter) {
     const parameterName = parameter.getName(),
           parameterNameMatchesIdentifier = (parameterName === this.identifier),
