@@ -1,0 +1,29 @@
+"use strict";
+
+class Element {
+  constructor(context, string, node) {
+    this.context = context;
+    this.string = string;
+    this.node = node;
+  }
+
+  getContext() {
+    return this.context;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
+  }
+
+  isEQualTo(element) {
+    const elementNode = element.getNode(),
+          matches = this.node.match(elementNode),
+          equalTo = matches;  ///
+
+    return equalTo;
+  }
+}
