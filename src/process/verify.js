@@ -1,22 +1,36 @@
 "use strict";
 
-import elements from "../elements";
-
 import { nodeQuery } from "../utilities/query";
 import { isLastRemainingArgumentFunction } from "../utilities/pass";
+import { termFromTermNode,
+         ruleFromRuleNode,
+         errorFromErrorNode,
+         axiomFromAxiomNode,
+         lemmaFromLemmaNode,
+         sectionFromSectionNode,
+         theoremFromTheoremNode,
+         metaLemmaFromMetaLemmaNode,
+         statementFromStatementNode,
+         conjectureFromConjectureNode,
+         metatheoremFromMetatheoremNode,
+         variableDeclarationFromVariableDeclarationNode,
+         simpleTypeDeclarationFromSimpleTypeDeclarationNode,
+         typePrefixDeclarationFromTypePrefixDeclarationNode,
+         combinatorDeclarationFromCombinatorDeclarationNode,
+         constructorDeclarationFromConstructorDeclarationNode,
+         complexTypeDeclarationFromComplexTypeDeclarationNode,
+         metavariableDeclarationFromMetavariableDeclarationNode } from "../utilities/element";
 
-const nonTerminalNodeQuery = nodeQuery("/*");
-
-const termNodeQuery = nodeQuery("/term"),
+const nonTerminalNodeQuery = nodeQuery("/*"),
+      termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type"),
-      statementNodeQuery = nodeQuery("/statement");
-
-const errorNodeQuery = nodeQuery("/error"),
       ruleNodeQuery = nodeQuery("/rule"),
+      errorNodeQuery = nodeQuery("/error"),
       axiomNodeQuery = nodeQuery("/axiom"),
       lemmaNodeQuery = nodeQuery("/lemma"),
       sectionNodeQuery = nodeQuery("/section"),
       theoremNodeQuery = nodeQuery("/theorem"),
+      statementNodeQuery = nodeQuery("/statement"),
       metaLemmaNodeQuery = nodeQuery("/metaLemma"),
       conjectureNodeQuery = nodeQuery("/conjecture"),
       metatheoremNodeQuery = nodeQuery("/metatheorem"),
@@ -182,8 +196,7 @@ class TopLevelPass extends Pass {
       run: (errorNode, context) => {
         let success = false;
 
-        const { Error } = elements,
-              error = Error.fromErrorNode(errorNode, context),
+        const error = errorFromErrorNode(errorNode, context),
               errorVerifies = error.verify();
 
         if (errorVerifies) {
@@ -198,8 +211,7 @@ class TopLevelPass extends Pass {
       run: (ruleNode, context) => {
         let success = false;
 
-        const { Rule } = elements,
-              rule = Rule.fromRuleNode(ruleNode, context),
+        const rule = ruleFromRuleNode(ruleNode, context),
               ruleVerifies = rule.verify();
 
         if (ruleVerifies) {
@@ -214,8 +226,7 @@ class TopLevelPass extends Pass {
       run: (axiomNode, context) => {
         let success = false;
 
-        const { Axiom } = elements,
-              axiom = Axiom.fromAxiomNode(axiomNode, context),
+        const axiom = axiomFromAxiomNode(axiomNode, context),
               axiomVerifies = axiom.verify();
 
         if (axiomVerifies) {
@@ -230,8 +241,7 @@ class TopLevelPass extends Pass {
       run: (lemmaNode, context) => {
         let success = false;
 
-        const { Lemma } = elements,
-              lemma = Lemma.fromLemmaNode(lemmaNode, context),
+        const lemma = lemmaFromLemmaNode(lemmaNode, context),
               lemmaVerifies = lemma.verify();
 
         if (lemmaVerifies) {
@@ -246,8 +256,7 @@ class TopLevelPass extends Pass {
       run: (sectionNode, context) => {
         let success = false;
 
-        const { Section } = elements,
-              section = Section.fromSectionNode(sectionNode, context),
+        const section = sectionFromSectionNode(sectionNode, context),
               sectionVerifies = section.verify();
 
         if (sectionVerifies) {
@@ -262,8 +271,7 @@ class TopLevelPass extends Pass {
       run: (theoremNode, context) => {
         let success = false;
 
-        const { Theorem } = elements,
-              theorem = Theorem.fromTheoremNode(theoremNode, context),
+        const theorem = theoremFromTheoremNode(theoremNode, context),
               theoremVerifies = theorem.verify();
 
         if (theoremVerifies) {
@@ -278,8 +286,7 @@ class TopLevelPass extends Pass {
       run: (metaLemmaNode, context) => {
         let success = false;
 
-        const { MetaLemma } = elements,
-              metaLemma = MetaLemma.fromMetaLemmaNode(metaLemmaNode, context),
+        const metaLemma = metaLemmaFromMetaLemmaNode(metaLemmaNode, context),
               metaLemmaVerifies = metaLemma.verify();
 
         if (metaLemmaVerifies) {
@@ -294,8 +301,7 @@ class TopLevelPass extends Pass {
       run: (conjectureNode, context) => {
         let success = false;
 
-        const { Conjecture } = elements,
-              conjecture = Conjecture.fromConjectureNode(conjectureNode, context),
+        const conjecture = conjectureFromConjectureNode(conjectureNode, context),
               conjectureVerifies = conjecture.verify();
 
         if (conjectureVerifies) {
@@ -310,8 +316,7 @@ class TopLevelPass extends Pass {
       run: (metatheoremNode, context) => {
         let success = false;
 
-        const { Metatheorem } = elements,
-              metatheorem = Metatheorem.fromMetatheoremNode(metatheoremNode, context),
+        const metatheorem = metatheoremFromMetatheoremNode(metatheoremNode, context),
               metatheoremVerifies = metatheorem.verify();
 
         if (metatheoremVerifies) {
@@ -326,8 +331,7 @@ class TopLevelPass extends Pass {
       run: (variableDeclarationNode, context) => {
         let success = false;
 
-        const { VariableDeclaration } = elements,
-              variableDeclaration = VariableDeclaration.fromVariableDeclarationNode(variableDeclarationNode, context),
+        const variableDeclaration = variableDeclarationFromVariableDeclarationNode(variableDeclarationNode, context),
               variableDeclarationVerifies = variableDeclaration.verify();
 
         if (variableDeclarationVerifies) {
@@ -342,8 +346,7 @@ class TopLevelPass extends Pass {
       run: (simpleTypeDeclarationNode, context) => {
         let success = false;
 
-        const { SimpleTypeDeclaration } = elements,
-              simpleTypeDeclaration = SimpleTypeDeclaration.fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
+        const simpleTypeDeclaration = simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
               simpleTypeDeclarationVerifies = simpleTypeDeclaration.verify();
 
         if (simpleTypeDeclarationVerifies) {
@@ -358,8 +361,7 @@ class TopLevelPass extends Pass {
       run: (typePrefixDeclarationNode, context) => {
         let success = false;
 
-        const { TypePrefixDeclaration } = elements,
-              typePrefixDeclaration = TypePrefixDeclaration.fromTypePrefixDeclarationNode(typePrefixDeclarationNode, context),
+        const typePrefixDeclaration = typePrefixDeclarationFromTypePrefixDeclarationNode(typePrefixDeclarationNode, context),
               typePrefixDeclarationVerifies = typePrefixDeclaration.verify();
 
         if (typePrefixDeclarationVerifies) {
@@ -374,8 +376,7 @@ class TopLevelPass extends Pass {
       run: (combinatorDeclarationNode, context) => {
         let success = false;
 
-        const { CombinatorDeclaration } = elements,
-              combinatorDeclaration = CombinatorDeclaration.fromCombinatorDeclarationNode(combinatorDeclarationNode, context),
+        const combinatorDeclaration = combinatorDeclarationFromCombinatorDeclarationNode(combinatorDeclarationNode, context),
               combinatorDeclarationVerifies = combinatorDeclaration.verify();
 
         if (combinatorDeclarationVerifies) {
@@ -390,8 +391,7 @@ class TopLevelPass extends Pass {
       run: (constructorDeclarationNode, context) => {
         let success = false;
 
-        const { ConstructorDeclaration } = elements,
-              constructorDeclaration = ConstructorDeclaration.fromConstructorDeclarationNode(constructorDeclarationNode, context),
+        const constructorDeclaration = constructorDeclarationFromConstructorDeclarationNode(constructorDeclarationNode, context),
               constructorDeclarationVerifies = constructorDeclaration.verify();
 
         if (constructorDeclarationVerifies) {
@@ -406,8 +406,7 @@ class TopLevelPass extends Pass {
       run: (complexTypeDeclarationNode, context) => {
         let success = false;
 
-        const { ComplexTypeDeclaration } = elements,
-              complexTypeDeclaration = ComplexTypeDeclaration.fromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
+        const complexTypeDeclaration = complexTypeDeclarationFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
               complexTypeDeclarationVerifies = complexTypeDeclaration.verify();
 
         if (complexTypeDeclarationVerifies) {
@@ -422,8 +421,7 @@ class TopLevelPass extends Pass {
       run: (metavariableDeclarationNode, context) => {
         let success = false;
 
-        const { MetavariableDeclaration } = elements,
-              metavariableDeclaration = MetavariableDeclaration.fromMetavariableDeclarationNode(metavariableDeclarationNode, context),
+        const metavariableDeclaration = metavariableDeclarationFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
               metavariableDeclarationVerifies = metavariableDeclaration.verify();
 
         if (metavariableDeclarationVerifies) {
@@ -457,8 +455,7 @@ class CombinatorPass extends Pass {
       run: (statementNode, context) => {
         let success = false;
 
-        const { Statement } = elements,
-              statement = Statement.fromStatementNode(statementNode, context),
+        const statement = statementFromStatementNode(statementNode, context),
               assignments = null,
               stated = false,
               statementVerifies = statement.verify(assignments, stated, context);
@@ -475,8 +472,7 @@ class CombinatorPass extends Pass {
       run: (termNode, context) => {
         let success = false;
 
-        const { Term } = elements,
-              term = Term.fromTermNode(termNode, context),
+        const term = termFromTermNode(termNode, context),
               termVerifies = term.verify(context, () => {
                 const verifiesAhead = true;
 
@@ -529,8 +525,7 @@ class ConstructorPass extends Pass {
       run: (termNode, context, verifyAhead) => {
         let success = false;
 
-        const { Term } = elements,
-              term = Term.fromTermNode(termNode, context),
+        const term = termFromTermNode(termNode, context),
               termVerifies = term.verify(context, verifyAhead);
 
         if (termVerifies) {
