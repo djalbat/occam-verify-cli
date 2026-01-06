@@ -7,11 +7,16 @@ import { unifyStatementIntrinsically } from "../process/unify";
 import { referenceFromJSON, referenceToReferenceJSON } from "../utilities/json";
 
 export default define(class Assumption {
-  constructor(string, node, statement, reference) {
+  constructor(context, string, node, statement, reference) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.statement = statement;
     this.reference = reference;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

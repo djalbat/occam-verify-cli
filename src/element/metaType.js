@@ -4,10 +4,15 @@ import { define } from "../elements";
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
 class MetaType {
-  constructor(string, node, name) {
+  constructor(context, string, node, name) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.name = name;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

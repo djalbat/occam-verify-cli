@@ -3,10 +3,15 @@
 import { define } from "../elements";
 
 export default define(class TypePrefix {
-  constructor(string, node, name) {
+  constructor(context, string, node, name) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.name = name;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

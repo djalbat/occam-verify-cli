@@ -12,10 +12,15 @@ import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 const { first } = arrayUtilities;
 
 export default define(class Frame {
-  constructor(string, node, assumptions) {
+  constructor(context, string, node, assumptions) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.assumptions = assumptions;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

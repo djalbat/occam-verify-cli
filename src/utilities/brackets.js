@@ -3,7 +3,7 @@
 import elements from "../elements";
 
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
-import { instantiateBracketedCombinatorStatement, instantiateBracketedConstructorTerm } from "../process/instantiate";
+import { bracketedConstructorTermFromNothing, bracketedCombinatorStatementFromNothing } from "../utilities/instance";
 
 export function stripBracketsFromTerm(term, context) {
   const termNode = term.getNode(),
@@ -17,6 +17,16 @@ export function stripBracketsFromTerm(term, context) {
   }
 
   return term;
+}
+
+export function stripBracketsFromTermNode(termNode) {
+  const bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);
+
+  if (bracketedTermChildNode !== null) {
+    termNode = bracketedTermChildNode;  ///
+  }
+
+  return termNode;
 }
 
 export function stripBracketsFromStatement(statement, context) {
@@ -33,16 +43,6 @@ export function stripBracketsFromStatement(statement, context) {
   return statement;
 }
 
-export function stripBracketsFromTermNode(termNode) {
-  const bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);
-
-  if (bracketedTermChildNode !== null) {
-    termNode = bracketedTermChildNode;  ///
-  }
-
-  return termNode;
-}
-
 export function stripBracketsFromStatementNode(statementNode) {
   const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
@@ -57,7 +57,7 @@ function bracketedTermChildNodeFromTermNode(termNode) {
   let bracketedTermChildNode = null;
 
   const depth = BRACKETED_TERM_DEPTH,
-        bracketedConstructorTermNode = instantiateBracketedConstructorTerm(),
+        bracketedConstructorTermNode = bracketedConstructorTermFromNothing(),
         termNodeMatchBracketedConstructorTermNode = termNode.match(bracketedConstructorTermNode, depth);
 
   if (termNodeMatchBracketedConstructorTermNode) {
@@ -73,7 +73,7 @@ function bracketedStatementChildNodeFromStatementNode(statementNode) {
   let bracketedStatementChildNode = null;
 
   const depth = BRACKETED_STATEMENT_DEPTH,
-        bracketedCombinatorStatementNode = instantiateBracketedCombinatorStatement(),
+        bracketedCombinatorStatementNode = bracketedCombinatorStatementFromNothing(),
         statementNodeMatchBracketedCombinatorStatementNode = statementNode.match(bracketedCombinatorStatementNode, depth);
 
   if (statementNodeMatchBracketedCombinatorStatementNode) {

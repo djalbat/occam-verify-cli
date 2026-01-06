@@ -3,18 +3,21 @@
 import elements from "../elements";
 
 import { define } from "../elements";
-import { EMPTY_STRING } from "../constants";
-import { typeFromTypeNode } from "../utilities/node.old";
 import { instantiateVariable } from "../process/instantiate";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 export default define(class Variable {
-  constructor(string, node, type, identifier, propertyRelations) {
+  constructor(context, string, node, type, identifier, propertyRelations) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.type = type;
     this.identifier = identifier;
     this.propertyRelations = propertyRelations;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -201,90 +204,4 @@ export default define(class Variable {
 
     return variable;
   }
-
-  static fromTermNode(termNode, context) {
-    let variable = null;
-
-    const singularVariableNode = termNode.getSingularVariableNode();
-
-    if (singularVariableNode !== null) {
-      const variableNode = singularVariableNode,  ///
-            type = null;
-
-      variable = variableFromVariableNodeAndType(variableNode, type);
-    }
-
-    return variable;
-  }
-
-  static fromVariableNode(variableNode, context) {
-    let variable = null;
-
-    if (variableNode !== null) {
-      const type = null;
-
-      variable = variableFromVariableNodeAndType(variableNode, type);
-    }
-
-    return variable;
-  }
-
-  static fromVariableNodeAndType(variableNode, type, context) {
-    const variable = variableFromVariableNodeAndType(variableNode, type);
-
-    return variable;
-  }
-
-  static fromVariableDeclarationNode(variableDeclarationNode, context) {
-    const { Variable } = elements,
-          provisional = variableDeclarationNode.isProvisional(),
-          typeNode = variableDeclarationNode.getTypeNode(),
-          type = typeFromTypeNode(typeNode, context);
-
-    type.setProvisional(provisional);
-
-    const variableNode = variableDeclarationNode.getVariableNode(),
-          variableIdentifier = variableDeclarationNode.getVariableIdentifier(),
-          node = variableNode,  ///
-          identifier = variableIdentifier,  ///
-          string = identifier,  ///
-          propertyRelations = [],
-          variable = new Variable(string, node, type, identifier, propertyRelations);
-
-    return variable;
-  }
-
-  static fromVariableAndPropertyRelation(variable, propertyRelation, context) {
-    let propertyRelations;
-
-    const node = variable.getNode(),
-          type = variable.getType(),
-          identifier = variable.getIdentifier();
-
-    propertyRelations = variable.getPropertyRelations();
-
-    propertyRelations = [
-      ...propertyRelations,
-      propertyRelation
-    ];
-
-    const string = stringFromNameAndPropertyRelations(identifier, propertyRelations);
-
-    variable = new Variable(string, node, type, identifier, propertyRelations);
-
-    return variable;
-  }
 });
-
-function stringFromNameAndPropertyRelations(identifier, propertyRelations) {
-  const propertyRelationsString = propertyRelations.reduce((propertyRelationsString, propertyRelation) => {
-          const propertyRelationString = propertyRelation.getString();
-
-          propertyRelationsString = `${propertyRelationsString}, ${propertyRelationString}`;
-
-          return propertyRelationsString;
-        }, EMPTY_STRING),
-        string = `${identifier}${propertyRelationsString}`;
-
-  return string;
-}

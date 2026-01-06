@@ -2,7 +2,6 @@
 
 import { arrayUtilities } from "necessary";
 
-import elements from "../elements";
 import assignAssignments from "../process/assign";
 
 import { define } from "../elements";
@@ -10,8 +9,23 @@ import { define } from "../elements";
 const { last } = arrayUtilities;
 
 export default define(class SubDerivation {
-  constructor(stepsOrSubproofs) {
+  constructor(context, string, node, stepsOrSubproofs) {
+    this.context = context;
+    this.string = string;
+    this.node = node;
     this.stepsOrSubproofs = stepsOrSubproofs;
+  }
+
+  getContext() {
+    return this.context;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getStepsOrSubproofs() {

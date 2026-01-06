@@ -3,8 +3,7 @@
 import CombinatorStatement from "../../statement/combinator";
 
 import { define } from "../../../elements";
-import { statementFromStatementNode } from "../../../utilities/element";
-import { bracketedCombinatorStatementString, instantiateBracketedCombinatorStatement } from "../../../process/instantiate";
+import { bracketedCombinatorStatementFromNothing } from "../../../utilities/instance";
 
 export default define(class BracketedCombinatorStatement extends CombinatorStatement {
   unifyStatement(statement, assignments, stated, context) {
@@ -26,12 +25,7 @@ export default define(class BracketedCombinatorStatement extends CombinatorState
   static name = "BracketedCombinatorStatement";
 
   static fromNothing() {
-    const bracketedCombinatorStatementNode = instantiateBracketedCombinatorStatement(),
-          nodeAsString = () => bracketedCombinatorStatementString,
-          context = {
-            nodeAsString
-          },
-          bracketedCombinatorStatement = statementFromStatementNode(bracketedCombinatorStatementNode, context);
+    const bracketedCombinatorStatement = bracketedCombinatorStatementFromNothing();
 
     return bracketedCombinatorStatement;
   }

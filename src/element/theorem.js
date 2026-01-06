@@ -30,11 +30,4 @@ export default define(class Theorem extends AxiomLemmaTheoremConjecture {
   static name = "Theorem";
 
   static fromJSON(json, context) { return AxiomLemmaTheoremConjecture.fromJSON(Theorem, json, context); }
-
-  static fromTheoremNode(theoremNode, context) {
-    const node = theoremNode, ///
-          theorem = AxiomLemmaTheoremConjecture.fromNode(Theorem, node, context);
-
-    return theorem;
-  }
 });

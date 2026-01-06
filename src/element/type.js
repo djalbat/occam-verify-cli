@@ -4,14 +4,14 @@ import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
 import { BASE_TYPE_SYMBOL } from "../constants";
-import { typeFromTypeNode } from "../utilities/node.old";
 import { typeStringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/string";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
 const { push, first } = arrayUtilities;
 
 class Type {
-  constructor(string, node, name, prefixName, superTypes, properties, provisional) {
+  constructor(context, string, node, name, prefixName, superTypes, properties, provisional) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.name = name;
@@ -19,6 +19,10 @@ class Type {
     this.superTypes = superTypes;
     this.properties = properties;
     this.provisional = provisional;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -314,98 +318,9 @@ class Type {
 
     return type;
   }
-
-  static fromTypeNode(typeNode, context) {
-    const type = typeFromTypeNode(typeNode, context);
-
-    return type;
-  }
-
-  static fromSuperTypeNode(superTypeNode, context) {
-    context = null; ///
-
-    const typeNode = superTypeNode, ///
-          type = typeFromTypeNode(typeNode, context);
-
-    return type;
-  }
-
-  static fromTypeAndProvisional(type, provisional) {
-    const name = type.getName(),
-          prefixName = type.getPrefixName(),
-          superType = type, ///
-          typeName = name,  ///
-          typePrefixName = prefixName,  ///
-          superTypes = [
-            superType
-          ],
-          string = typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
-          properties = type.getProperties();
-
-    type = new Type(string, node, name, prefixName, superTypes, properties, provisional);  ///
-
-    return type;
-  }
-
-  static fromPropertyDeclarationNode(propertyDeclarationNode, context) {
-    const typeNode = propertyDeclarationNode.getTypeNode(),
-          type = typeFromTypeNode(typeNode, context);
-
-    return type;
-  }
-
-  static fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
-    const typeName = simpleTypeDeclarationNode.getTypeName(),
-          provisional = simpleTypeDeclarationNode.isProvisional(),
-          typePrefixName = simpleTypeDeclarationNode.getTypePrefixName(),
-          superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
-          name = typeName,  ///
-          prefixName = typePrefixName,  ///
-          properties = [],
-          string = typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
-          type = new Type(string, node, name, prefixName, superTypes, properties, provisional);
-
-    return type;
-  }
-
-  static fromConstructorDeclarationNode(constructorDeclarationNode, context) {
-    let type;
-
-    const typeNode = constructorDeclarationNode.getTypeNode();
-
-    if (typeNode === null) {
-      type = baseType;
-    } else {
-      const provisional = constructorDeclarationNode.isProvisional();
-
-      type = typeFromTypeNode(typeNode, context);
-
-      type.setProvisional(provisional);
-    }
-
-    return type;
-  }
 }
 
 export default define(Type);
-
-function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
-  const superTypeNodes = simpleTypeDeclarationNode.getSuperTypeNodes(),
-        superTypes = superTypeNodes.map((superTypeNode) => {
-          const superType = Type.fromSuperTypeNode(superTypeNode, context);
-
-          return superType;
-        }),
-        superTypesLength = superTypes.length;
-
-  if (superTypesLength === 0) {
-    const superType = baseType; ///
-
-    superTypes.push(superType);
-  }
-
-  return superTypes;
-}
 
 class BaseType extends Type {
   static fromNothing() {

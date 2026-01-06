@@ -6,8 +6,8 @@ import { define } from "../elements";
 import { parametersFromJSON, procedureReferenceFromJSON, parametersToParametersJSON, procedureReferenceToProcedureReferenceJSON } from "../utilities/json";
 
 export default define(class ProcedureCall {
-  constructor(contexct, string, node, parameters, procedureReference) {
-    this.contexct = contexct;
+  constructor(context, string, node, parameters, procedureReference) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.parameters = parameters;
@@ -15,7 +15,7 @@ export default define(class ProcedureCall {
   }
 
   getContext() {
-    return this.contexct;
+    return this.context;
   }
 
   getString() {

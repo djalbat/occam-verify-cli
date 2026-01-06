@@ -209,37 +209,4 @@ export default define(class Reference {
 
     return reference;
   }
-
-  static fromAssumptionNode(assumptionNode, context) {
-    let reference = null;
-
-    const metavariableNode = assumptionNode.getMetavariableNode();
-
-    if (metavariableNode !== null) {
-      reference = referenceFromMetavariableNode(metavariableNode, context);
-    }
-
-    return reference;
-  }
-
-  static fromMetavariableNode(metavariableNode, context) {
-    const reference = referenceFromMetavariableNode(metavariableNode, context);
-
-    return reference;
-  }
-
-  static fromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
-    const metavariableNode = satisfiesAssertionNode.getMetavariableNode(),
-          reference = referenceFromMetavariableNode(metavariableNode, context);
-
-    return reference;
-  }
 });
-
-function referenceFromMetavariableNode(metavariableNode, context) {
-  const { Reference, Metavariable } = elements,
-        metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
-        reference = new Reference(metavariable);
-
-  return reference;
-}

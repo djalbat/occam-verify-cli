@@ -1,13 +1,10 @@
 "use strict";
 
-import nominalContext from "../context/nominal";
-
 import { ruleFromBNF } from "../utilities/bnf";
-import { BASE_TYPE_SYMBOL } from "../constants";
-import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
 const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
       variablePlaceholderBNF = ` _ ::= variable... <END_OF_LINE> ; `,
+      referencePlaceholderBNF = ` _ ::= reference... <END_OF_LINE> ; `,
       statementPlaceholderBNF = ` _ ::= statement... <END_OF_LINE> ; `,
       equivalencePlaceholderBNF = ` _ ::= equivalence... <END_OF_LINE> ; `,
       metavariablePlaceholderBNF = ` _ ::= metavariable... <END_OF_LINE> ; `,
@@ -17,6 +14,7 @@ const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
       referenceSubstitutionPlaceholderBNF = ` _ ::= referenceSubstitution... <END_OF_LINE> ; `,
       termPlaceholderRule = ruleFromBNF(termPlaceholderBNF),
       variablePlaceholderRule = ruleFromBNF(variablePlaceholderBNF),
+      referencePlaceholderRule = ruleFromBNF(referencePlaceholderBNF),
       statementPlaceholderRule = ruleFromBNF(statementPlaceholderBNF),
       equivalencePlaceholderRule = ruleFromBNF(equivalencePlaceholderBNF),
       metavariablePlaceholderRule = ruleFromBNF(metavariablePlaceholderBNF),
@@ -25,15 +23,11 @@ const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
       statementSubstitutionPlaceholderRule = ruleFromBNF(statementSubstitutionPlaceholderBNF),
       referenceSubstitutionPlaceholderRule = ruleFromBNF(referenceSubstitutionPlaceholderBNF);
 
-let bracketedConstructorTermNode = null,
-    bracketedCombinatorStatementNode = null;
-
-export const bracketedConstructorTermString = `(${BASE_TYPE_SYMBOL})`;
-export const bracketedCombinatorStatementString = `(${STATEMENT_META_TYPE_NAME})`;
-
 export function instantiateTerm(string, context) { return instantiate(termPlaceholderRule, string, context); }
 
 export function instantiateVariable(string, context) { return instantiate(variablePlaceholderRule, string, context); }
+
+export function instantiateReference(string, context) { return instantiate(referencePlaceholderRule, string, context); }
 
 export function instantiateStatement(string, context) { return instantiate(statementPlaceholderRule, string, context); }
 
@@ -48,32 +42,6 @@ export function instantiateFrameSubstitution(string, context) { return instantia
 export function instantiateStatementSubstitution(string, context) { return instantiate(statementSubstitutionPlaceholderRule, string, context); }
 
 export function instantiateReferenceSubstitution(string, context) { return instantiate(referenceSubstitutionPlaceholderRule, string, context); }
-
-export function instantiateBracketedConstructorTerm() {
-  if (bracketedConstructorTermNode === null) {
-    const placeholderRule = termPlaceholderRule, ///
-          string = bracketedConstructorTermString,
-          context = nominalContext, ///
-          node = instantiate(placeholderRule, string, context);
-
-    bracketedConstructorTermNode = node;  ///
-  }
-
-  return bracketedConstructorTermNode;
-}
-
-export function instantiateBracketedCombinatorStatement() {
-  if (bracketedCombinatorStatementNode === null) {
-    const placeholderRule = statementPlaceholderRule, ///
-          string = bracketedCombinatorStatementString,  ///
-          context = nominalContext, ///
-          node = instantiate(placeholderRule, string, context);
-
-    bracketedCombinatorStatementNode = node;  ///
-  }
-
-  return bracketedCombinatorStatementNode;
-}
 
 function instantiate(placeholderRule, string, context) {
   let node;

@@ -2,21 +2,24 @@
 
 import { arrayUtilities } from "necessary";
 
-import elements from "../elements";
 import verifyMixins from "../mixins/term/verify";
 
 import { define } from "../elements";
 import { instantiateTerm } from "../process/instantiate";
-import { termFromTermNode } from "../utilities/node.old";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { filter, compress } = arrayUtilities;
 
 export default define(class Term {
-  constructor(string, node, type) {
+  constructor(context, string, node, type) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.type = type;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -181,50 +184,6 @@ export default define(class Term {
           node = termNode,  ///
           type = typeFromJSON(json, context),
           term = new Term(string, node, type);
-
-    return term;
-  }
-
-  static fromTermNode(termNode, context) {
-    const term = termFromTermNode(termNode, context);
-
-    return term;
-  }
-
-  static fromTermNodeAndType(termNode, type, context) {
-    const node = termNode,  ///
-          string = context.nodeAsString(node),
-          term = new Term(string, node, type);
-
-    return term;
-  }
-
-  static fromDefinedAssertionNode(definedAssertionNode, context) {
-    let term = null;
-
-    const termNode = definedAssertionNode.getTermNode();
-
-    if (termNode !== null) {
-      term = termFromTermNode(termNode, context);
-    }
-
-    return term;
-  }
-
-  static fromPropertyRelationNode(propertyRelationNode, context) {
-    const termNode = propertyRelationNode.getTermNode(),
-          term = termFromTermNode(termNode, context);
-
-    return term;
-  }
-
-  static fromConstructorDeclarationNode(constructorDeclarationNode, context) {
-    const { Type } = elements,
-          termNode = constructorDeclarationNode.getTermNode(),
-          term = termFromTermNode(termNode, context),
-          type = Type.fromConstructorDeclarationNode(constructorDeclarationNode, context);
-
-    term.setType(type);
 
     return term;
   }

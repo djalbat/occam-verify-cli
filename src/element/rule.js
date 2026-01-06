@@ -319,27 +319,3 @@ function conclusionFromRuleNode(ruleNode, context) {
   return conclusion;
 }
 
-function premisesStringFromPremises(premises) {
-  const premisesString = premises.reduce((premisesString, premise) => {
-    const premiseString = premise.getString();
-
-    premisesString = (premisesString !== null) ?
-                       `${premisesString}, ${premiseString}` :
-                         premiseString;  ///
-
-    return premisesString;
-  }, null);
-
-  return premisesString;
-}
-
-function stringFromLabelsPremisesAndConclusion(labels, premises, conclusion) {
-  const premisesString = premisesStringFromPremises(premises),
-        conclusionString = conclusion.getString(),
-        labelsString = labelsStringFromLabels(labels),
-        string = (premisesString !== null) ?
-                    `${labelsString} :: [${premisesString}] ... ${conclusionString}` :
-                      `${labelsString} :: ${conclusionString}`;
-
-  return string;
-}

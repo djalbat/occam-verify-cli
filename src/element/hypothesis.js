@@ -7,10 +7,15 @@ import { define } from "../elements";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export default define(class Hypothesis {
-  constructor(string, node, statement) {
+  constructor(context, string, node, statement) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.statement = statement;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

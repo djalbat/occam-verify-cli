@@ -10,12 +10,17 @@ import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
 
 export default define(class Metavariable {
-  constructor(string, node, name, type, metaType) {
+  constructor(context, string, node, name, type, metaType) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.name = name;
     this.type = type;
     this.metaType = metaType;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

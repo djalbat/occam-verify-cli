@@ -11,10 +11,15 @@ import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
 const { match, compare, correlate } = arrayUtilities;
 
 export default define(class Signature {
-  constructor(string, node, terms) {
+  constructor(context, string, node, terms) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.terms = terms;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

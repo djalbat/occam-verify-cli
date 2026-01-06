@@ -6,11 +6,16 @@ import LocalContext from "../context/local";
 import { define } from "../elements";
 
 export default define(class Subproof {
-  constructor(string, node, suppositions, subDerivation) {
+  constructor(context, string, node, suppositions, subDerivation) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.suppositions = suppositions;
     this.subDerivation = subDerivation;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

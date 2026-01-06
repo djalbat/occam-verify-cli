@@ -8,9 +8,24 @@ import { EMPTY_STRING } from "../constants";
 const { find, first, clear, prune, filter, compress, correlate } = arrayUtilities;
 
 export default define(class Substitutions {
-  constructor(array, savedArray) {
+  constructor(context, string, node, array, savedArray) {
+    this.context = context;
+    this.string = string;
+    this.node = node;
     this.array = array;
     this.savedArray = savedArray;
+  }
+
+  getContext() {
+    return this.context;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getArray() {

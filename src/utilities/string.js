@@ -30,6 +30,34 @@ export function labelsStringFromLabels(labels) {
   return labelsString;
 }
 
+export function premisesStringFromPremises(premises) {
+  const premisesString = premises.reduce((premisesString, premise) => {
+    const premiseString = premise.getString();
+
+    premisesString = (premisesString !== null) ?
+                       `${premisesString}, ${premiseString}` :
+                         premiseString;  ///
+
+    return premisesString;
+  }, null);
+
+  return premisesString;
+}
+
+export function hypothesesStringFromHypotheses(hypotheses, context) {
+  const hypothesesString = hypotheses.reduce((hypothesesString, hypothesis) => {
+    const hypothesisString = hypothesis.getString();
+
+    hypothesesString = (hypothesesString !== null) ?
+                          `${hypothesesString}, ${hypothesisString}` :
+                            hypothesisString;  ///
+
+    return hypothesesString;
+  }, null);
+
+  return hypothesesString;
+}
+
 export function superTypesStringFromSuperTypes(superTypes) {
   const superTypesString = superTypes.reduce((superTypesString, superType) => {
     if (superType !== baseType) {
@@ -112,6 +140,17 @@ export function subproofStringFromSubproof(subproof) {
   return subproofString;
 }
 
+export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conclusion) {
+  const premisesString = premisesStringFromPremises(premises),
+        conclusionString = conclusion.getString(),
+        labelsString = labelsStringFromLabels(labels),
+        ruleString = (premisesString !== null) ?
+                       `${labelsString} :: [${premisesString}] ... ${conclusionString}` :
+                         `${labelsString} :: ${conclusionString}`;
+
+  return ruleString;
+}
+
 export function typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes) {
   let typeString;
 
@@ -134,6 +173,17 @@ export function procedureCallStringFromProcedureReferenceAndParameters(procedure
         procedureCallString = `${procedureReferenceName}(${parametersString})`;
 
   return procedureCallString;
+}
+
+export function sectionStringFromHypothesesAxiomLemmaTheoremAndConjecture(hypotheses, axiom, lemma, theorem, conjecture, context) {
+  const axiomLemmaTheoremOrConjecture = (axiom || lemma || theorem || conjecture),
+        axiomLemmaTheoremOrConjectureString = axiomLemmaTheoremOrConjecture.getString(),
+        hypothesesString = hypothesesStringFromHypotheses(hypotheses, context),
+        sectionString = (axiomLemmaTheoremOrConjectureString !== null) ?
+                          `[${hypothesesString}]::: ${axiomLemmaTheoremOrConjectureString}` :
+                            `[${hypothesesString}]::: `;
+
+  return sectionString;
 }
 
 export function metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction) {

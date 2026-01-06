@@ -6,11 +6,16 @@ import { define } from "../elements";
 import { judgementAssignmentFromJudgement } from "../process/assign";
 
 export default define(class Judgement {
-  constructor(string, node, frame, assumption) {
+  constructor(context, string, node, frame, assumption) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.frame = frame;
     this.assumption = assumption;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {
