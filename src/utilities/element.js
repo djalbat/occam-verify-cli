@@ -58,8 +58,9 @@ export function stepFromStepNode(stepNode, context) {
   return step;
 }
 
-export function rulfFromRuleNode(ruleNode, context) {
-  const proof = proofFromRuleNode(ruleNode, context),
+export function ruleFromRuleNode(ruleNode, context) {
+  const { Rule } = elements,
+        proof = proofFromRuleNode(ruleNode, context),
         labels = labelsFromRuleNode(ruleNode, context),
         premises = premisesFromRuleNode(ruleNode, context),
         conclusion = conclusionFromRuleNode(ruleNode, context),
@@ -752,7 +753,7 @@ export function metavariableDeclarationFromMetavariableDeclarationNode(metavaria
 export function proofFromRuleNode(ruleNode, context) {
   let proof = null;
 
-  const proofNode = ruleNode.getProofNode(node);
+  const proofNode = ruleNode.getProofNode();
 
   if (proofNode !== null) {
     proof = proofFromProofNode(proofNode, context);
@@ -819,6 +820,18 @@ export function referenceFromStepNode(stepNode, context) {
   }
 
   return reference;
+}
+
+export function conclusionFromRuleNode(ruleNode, context) {
+  let conclusion = null;
+
+  const conclusionNode = ruleNode.getConclusionNode();
+
+  if (conclusionNode !== null) {
+    conclusion = conclusionFromConclusionNode(conclusionNode, context);
+  }
+
+  return conclusion;
 }
 
 export function theoremFromSectionNode(sectionNode, context) {
@@ -1797,7 +1810,7 @@ export function premisesFromPremiseNodes(premiseNodes, context) {
     return premise;
   });
 
-  return labels;
+  return premises;
 }
 
 export function statementsFromStatementNodes(statementNodes, context) {
@@ -1881,13 +1894,13 @@ export function propertiesFromPropertyDeclarationNodes(propertyDeclarationNodes,
 
 export function labelsFromRuleNode(ruleNode, context) {
   const labelNodes = ruleNode.getLabelNodes(),
-    labels = labelsFromLabelNodes(labelNodes, context);
+        labels = labelsFromLabelNodes(labelNodes, context);
 
   return labels;
 }
 
 export function premisesFromRuleNode(ruleNode, context) {
-  const premiseNodes = ruleNode.getLabelNodes(),
+  const premiseNodes = ruleNode.getPremiseNodes(),
         premises = premisesFromPremiseNodes(premiseNodes, context);
 
   return premises;

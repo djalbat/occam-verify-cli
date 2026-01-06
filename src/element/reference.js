@@ -11,6 +11,7 @@ import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utiliti
 export default define(class Reference extends Element {
   constructor(context, string, node, metavariable) {
     super(context, string, node);
+
     this.metavariable = metavariable;
   }
 

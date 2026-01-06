@@ -8,6 +8,7 @@ import { define } from "../elements";
 export default define(class Proof extends Element {
   constructor(context, string, node, derivation) {
     super(context, string, node);
+
     this.derivation = derivation;
   }
 
