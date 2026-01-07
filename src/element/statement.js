@@ -3,7 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import Element from "../element";
-import verifyMixins from "../mixins/statement/verify";
+import validateMixins from "../mixins/statement/validate";
 
 import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
@@ -23,24 +23,32 @@ export default define(class Statement extends Element {
     const singular = this.isSingular();
 
     if (singular) {
-      metavariableName = this.node.getMetavariableName();
+      const node = this.getNode();
+
+      metavariableName = node.getMetavariableName();
     }
 
     return metavariableName;
   }
 
-  isSingular() { return this.node.isSingular(); }
+  isSingular() {
+    const node = this.getNode(),
+          singular = node.isSingular();
+
+    return singular;
+  }
 
   isTermContained(term, context) {
     let termContained;
 
-    const termString = term.getString(),
-          statementString = this.string;  ///
+    const node = this.getNode(),
+          termString = term.getString(),
+          statementString = this.getString();  ///
 
-    context.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`, this.node);
+    context.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`, node);
 
     const termNode = term.getNode(),
-          statementNode = this.node,
+          statementNode = node, ///
           statementNodeTermNodes = statementNode.getTermNodes();
 
     termContained = statementNodeTermNodes.some((statementNodeTermNode) => {  ///
@@ -52,7 +60,7 @@ export default define(class Statement extends Element {
     });
 
     if (termContained) {
-      context.debug(`...the '${termString}' term is contained in the '${statementString}' statement.`, this.node);
+      context.debug(`...the '${termString}' term is contained in the '${statementString}' statement.`, node);
     }
 
     return termContained;
@@ -61,13 +69,14 @@ export default define(class Statement extends Element {
   isFrameContained(frame, context) {
     let frameContained;
 
-    const frameString = frame.getString(),
-          statementString = this.string;  ///
+    const node = this.getNode(),
+          frameString = frame.getString(),
+          statementString = this.getString();  ///
 
-    context.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`, this.node);
+    context.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`, node);
 
     const frameNode = frame.getNode(),
-          statementNode = this.node,
+          statementNode = node,
           statementNodeFrameNodes = statementNode.getFrameNodes();
 
     frameContained = statementNodeFrameNodes.some((statementNodeFrameNode) => {  ///
@@ -79,7 +88,7 @@ export default define(class Statement extends Element {
     });
 
     if (frameContained) {
-      context.debug(`...the '${frameString}' frame is contained in the '${statementString}' statement.`, this.node);
+      context.debug(`...the '${frameString}' frame is contained in the '${statementString}' statement.`, node);
     }
 
     return frameContained;
@@ -91,8 +100,9 @@ export default define(class Statement extends Element {
     const singular = this.isSingular();
 
     if (singular) {
-      const metavariableA = metavariable, ///
-            singularMetavariableNode = this.node.getSingularMetavariableNode(),
+      const node = this.getNode(),
+            metavariableA = metavariable, ///
+            singularMetavariableNode = node.getSingularMetavariableNode(),
             metavariableName = singularMetavariableNode.getMetavariableName();
 
       metavariable = context.findMetavariableByMetavariableName(metavariableName)
@@ -106,63 +116,64 @@ export default define(class Statement extends Element {
     return metavariableEqualToMetavariable;
   }
 
-  matchStatementNode(statementNode) { return this.node.match(statementNode); }
+  validate(assignments, stated, context) {
+    let validates;
 
-  verify(assignments, stated, context) {
-    let verifies;
+    const node = this.getNode(),
+          statementString = this.getString();  ///
 
-    const statementString = this.string;  ///
+    context.trace(`Validating the '${statementString}' statement...`, node);
 
-    context.trace(`Verifying the '${statementString}' statement...`, this.node);
-
-    verifies = verifyMixins.some((verifyMixin) => {
+    validates = validateMixins.some((validateMixin) => {
       const statement = this, ///
-            verifies = verifyMixin(statement, assignments, stated, context);
+            validates = validateMixin(statement, assignments, stated, context);
 
-      if (verifies) {
+      if (validates) {
         return true;
       }
     });
 
-    if (verifies) {
+    if (validates) {
       const statement = this; ///
 
       context.addStatement(statement);
 
-      context.debug(`...verified the '${statementString}' statement.`, this.node);
+      context.debug(`...validated the '${statementString}' statement.`, node);
     }
 
-    return verifies;
+    return validates;
   }
 
-  verifyGivenMetaType(metaType, assignments, stated, context) {
-    let verifiesGivenMetaType = false;
+  validateGivenMetaType(metaType, assignments, stated, context) {
+    let validatesGivenMetaType = false;
 
-    const metaTypeString = metaType.getString(),
-          statementString = this.string;  ///
+    const node = this.getNode(),
+          metaTypeString = metaType.getString(),
+          statementString = this.getString();  ///
 
-    context.trace(`Verifying the '${statementString}' statement given the '${metaTypeString}' meta-type...`, this.node);
+    context.trace(`Validating the '${statementString}' statement given the '${metaTypeString}' meta-type...`, node);
 
     const metaTypeName = metaType.getName();
 
     if (metaTypeName === STATEMENT_META_TYPE_NAME) {
-      const verifies = this.verify(assignments, stated, context)
+      const validates = this.validate(assignments, stated, context)
 
-      verifiesGivenMetaType = verifies; ///
+      validatesGivenMetaType = validates; ///
     }
 
-    if (verifiesGivenMetaType) {
-      context.debug(`...verified the '${statementString}' statement given the '${metaTypeString}' meta-type.`, this.node);
+    if (validatesGivenMetaType) {
+      context.debug(`...validated the '${statementString}' statement given the '${metaTypeString}' meta-type.`, node);
     }
 
-    return verifiesGivenMetaType;
+    return validatesGivenMetaType;
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {
     let subproofUnifies = false;
 
-    const context = specificContext,  ///
-          statementNode = this.node,
+    const node = this.getNode(),
+          context = specificContext,  ///
+          statementNode = node,
           subproofAssertionNode = statementNode.getSubproofAssertionNode(),
           assertionNode = subproofAssertionNode;  ///
 
@@ -219,11 +230,12 @@ export default define(class Statement extends Element {
     let unifiesIndependently = false;
 
     const context = specificContext,  ///
-          statementString = this.string;  ///
+          statementString = this.getString();  ///
 
     context.trace(`Unifying the '${statementString}' statement independently...`);
 
-    const statementNode = this.node,
+    const node = this.getNode(),
+          statementNode = node, ///
           definedAssertionNode = statementNode.getDefinedAssertionNode(),
           containedAssertionNode = statementNode.getContainedAssertionNode();
 
@@ -260,7 +272,7 @@ export default define(class Statement extends Element {
   }
 
   toJSON() {
-    const string = this.string, ///
+    const string = this.getString(),
           json = {
             string
           };
@@ -273,8 +285,11 @@ export default define(class Statement extends Element {
   static fromJSON(json, context) {
     const { string } = json,
           statmentNode = instantiateStatement(string, context),
-          node = statmentNode,  ///,
-          statement = new Statement(string, node);
+          node = statmentNode;  ///,
+
+    context = null;
+
+    const statement = new Statement(context, string, node);
 
     return statement;
   }

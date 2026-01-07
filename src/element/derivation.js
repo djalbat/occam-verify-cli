@@ -32,9 +32,9 @@ export default define(class Derivation extends Element {
 
     verifies = this.stepsOrSubproofs.every((stepOrSubproof) => { ///
       const assignments = [],
-            stepOrSubproofVerifies = stepOrSubproof.verify(substitutions, assignments, context);
+            stepOrSubproofValidates = stepOrSubproof.validate(substitutions, assignments, context);
 
-      if (stepOrSubproofVerifies) {
+      if (stepOrSubproofValidates) {
         const stepOrSubproofUnifies = stepOrSubproof.unify(substitutions, context);
 
         if (stepOrSubproofUnifies) {

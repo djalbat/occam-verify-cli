@@ -25,25 +25,26 @@ export default define(class Premise extends Element {
     return this.procedureCall;
   }
 
-  verify(context) {
-    let verifies = false;
+  validate(context) {
+    let validates = false;
 
     const temporaryContext = TemporaryContext.fromNothing(context);
 
     context = temporaryContext; ///
 
-    const premiseString = this.string; ///
+    const node = this.getNode(),
+          premiseString = this.getString(); ///
 
-    context.trace(`Verifying the '${premiseString}' premise...`, this.node);
+    context.trace(`Validating the '${premiseString}' premise...`, node);
 
     if (false) {
       ///
     } else if (this.statement !== null) {
       const stated = true,
             assignments = [],
-            statementVerifies = this.statement.verify(assignments, stated, context);
+            statementValidates = this.statement.validate(assignments, stated, context);
 
-      if (statementVerifies) {
+      if (statementValidates) {
         const assignmentsAssigned = assignAssignments(assignments, context);
 
         if (assignmentsAssigned) {
@@ -53,7 +54,7 @@ export default define(class Premise extends Element {
 
           context.addStepOrSubproof(stepOrSubproof);
 
-          verifies = true;
+          validates = true;
         }
       }
     } else if (this.procedureCall !== null) {
@@ -62,29 +63,29 @@ export default define(class Premise extends Element {
             procedureCallVerifies = this.procedureCall.verify(assignments, stated, context);
 
       if (procedureCallVerifies) {
-        verifies = true;
+        validates = true;
       }
     } else {
-      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`, this.node);
+      context.debug(`Unable to validate the '${premiseString}' premise because it is nonsense.`, node);
     }
 
-    if (verifies) {
-      this.context = context;
+    if (validates) {
+      this.setContext(context);
 
-      context.debug(`...verified the '${premiseString}' premise.`, this.node);
+      context.debug(`...validated the '${premiseString}' premise.`, node);
     }
 
-    return verifies;
+    return validates;
   }
 
   unifyIndependently(substitutions, context) {
     let unifiesIndependently = false;
 
-    const premiseString = this.string,  ///
+    const premiseString = this.getString(),  ///
           generalContext = this.context,  ///
           specificContext = context;  ///
 
-    context.trace(`Unifying the '${premiseString}' premise independently...`, this.node);
+    context.trace(`Unifying the '${premiseString}' premise independently...`, node);
 
     if (this.statement !== null) {
       const statementUnifiesIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
@@ -103,7 +104,7 @@ export default define(class Premise extends Element {
     }
 
     if (unifiesIndependently) {
-      context.debug(`...unified the '${premiseString}' premise independenly.`, this.node);
+      context.debug(`...unified the '${premiseString}' premise independenly.`, node);
     }
 
     return unifiesIndependently;

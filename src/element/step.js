@@ -67,8 +67,8 @@ export default define(class Step extends Element {
     return termAndPropertyRelationMatch;
   }
 
-  verify(substitutions, assignments, context) {
-    let verifies = false;
+  validate(substitutions, assignments, context) {
+    let validates = false;
 
     const temporaryContext = TemporaryContext.fromNothing(context);
 
@@ -76,11 +76,11 @@ export default define(class Step extends Element {
 
     const stepString = this.string; ///
 
-    context.trace(`Verifying the '${stepString}' step...`, this.node);
+    context.trace(`Validating the '${stepString}' step...`, this.node);
 
     if (this.statement !== null) {
       const stated = this.isStated(),
-            statementVerifies = this.statement.verify(assignments, stated, context);
+            statementVerifies = this.statement.validate(assignments, stated, context);
 
       if (statementVerifies) {
         const qualified = this.isQualified(),
@@ -89,34 +89,34 @@ export default define(class Step extends Element {
         if (false) {
           ///
         } else if (qualified) {
-          const referenceVerifies = this.reference.verify(context);
+          const referenceVerifies = this.reference.validate(context);
 
           if (referenceVerifies) {
-            verifies = true;
+            validates = true;
           }
         } else if (satisfied) {
           const stated = true,
                 assignments = null,
-                satisfiesAssertionVerifies = this.satisfiesAssertion.verify(assignments, stated, context);
+                satisfiesAssertionVerifies = this.satisfiesAssertion.validate(assignments, stated, context);
 
           if (satisfiesAssertionVerifies) {
-            verifies = true;
+            validates = true;
           }
         } else {
-          verifies = true;
+          validates = true;
         }
       }
     } else {
-      context.debug(`Cannot verify the '${stepString}' step because it is nonsense.`, this.node);
+      context.debug(`Cannot validate the '${stepString}' step because it is nonsense.`, this.node);
     }
 
-    if (verifies) {
+    if (validates) {
       this.context = context;
 
       context.debug(`...verified the '${stepString}' step.`, this.node);
     }
 
-    return verifies;
+    return validates;
   }
 
   unify(substitutions, context) {

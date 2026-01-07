@@ -19,6 +19,18 @@ export default class Element {
     return this.node;
   }
 
+  setContext(context) {
+    this.context = context;
+  }
+
+  setString(string) {
+    this.string = string;
+  }
+
+  setNode(node) {
+    this.node = node;
+  }
+
   isEQualTo(element) {
     const elementNode = element.getNode(),
           matches = this.node.match(elementNode),

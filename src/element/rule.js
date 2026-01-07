@@ -17,13 +17,13 @@ import { labelsFromJSON,
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 export default define(class Rule extends Element {
-  constructor(context, string, node, labels, premises, conclusion, proof) {
+  constructor(context, string, node, proof, labels, premises, conclusion) {
     super(context, string, node);
 
+    this.proof = proof;
     this.labels = labels;
     this.premises = premises;
     this.conclusion = conclusion;
-    this.proof = proof;
   }
 
   getLabels() {
@@ -34,12 +34,12 @@ export default define(class Rule extends Element {
     return this.premises;
   }
 
-  getConclusion() {
-    return this.conclusion;
-  }
-
   getProof() {
     return this.proof;
+  }
+
+  getConclusion() {
+    return this.conclusion;
   }
 
   matchMetavariableName(metavariableName) {
@@ -57,18 +57,26 @@ export default define(class Rule extends Element {
   verify() {
     let verifies = false;
 
-    const ruleString = this.string; ///
+    let context;
 
-    this.context.trace(`Verifying the '${ruleString}' rule...`, this.node);
+    const node = this.getNode();
+
+    context = this.getContext();
+
+    const ruleString = this.getString(); ///
+
+    context.trace(`Verifying the '${ruleString}' rule...`, node);
 
     const labelsVerify = this.verifyLabels();
 
     if (labelsVerify) {
-      const localContext = LocalContext.fromNothing(this.context),
-            context = localContext, ///
-            premisesVerify = this.verifyPremises(context);
+      const localContext = LocalContext.fromNothing(context);
 
-      if (premisesVerify) {
+      context = localContext; ///
+
+      const premisesValidate = this.validatePremises(context);
+
+      if (premisesValidate) {
         const conclusionVerifies = this.verifyConclusion(context);
 
         if (conclusionVerifies) {
@@ -77,7 +85,7 @@ export default define(class Rule extends Element {
           if (proofVerifies) {
             const rule = this;  ///
 
-            this.context.addRule(rule);
+            context.addRule(rule);
 
             verifies = true;
           }
@@ -86,7 +94,7 @@ export default define(class Rule extends Element {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${ruleString}' rule.`, this.node);
+      context.debug(`...verified the '${ruleString}' rule.`, node);
     }
 
     return verifies;
@@ -105,22 +113,22 @@ export default define(class Rule extends Element {
     return labelsVerify;
   }
 
-  verifyPremises(context) {
-    const premisesVerify = this.premises.every((premise) => {
-      const premiseVerifies = this.verifyPremise(premise, context);
+  validatePremises(context) {
+    const premisesValidate = this.premises.every((premise) => {
+      const premiseValidates = this.validatePremise(premise, context);
 
-      if (premiseVerifies) {
+      if (premiseValidates) {
         return true;
       }
     });
 
-    return premisesVerify;
+    return premisesValidate;
   }
 
-  verifyPremise(premise, context) {
-    const premiseVerifies = premise.verify(context);
+  validatePremise(premise, context) {
+    const premiseValidates = premise.validate(context);
 
-    return premiseVerifies;
+    return premiseValidates;
   }
 
   verifyConclusion(context) {
@@ -252,57 +260,4 @@ export default define(class Rule extends Element {
 
     return rule;
   }
-
-  static fromRuleNode(ruleNode, context) {
-    const node = ruleNode,  ///
-          proof = proofFromRuleNode(ruleNode, context),
-          labels = labelsFromRuleNode(ruleNode, context),
-          premises = premisesFromRuleNode(ruleNode, context),
-          conclusion = conclusionFromRuleNode(ruleNode, context),
-          string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion),
-          rule = new Rule(context, string, node, labels, premises, conclusion, proof);
-
-    return rule;
-  }
 });
-
-function proofFromRuleNode(ruleNode, context) {
-  const { Proof } = elements,
-        proofNode = ruleNode.getProofNode(),
-        proof = Proof.fromProofNode(proofNode, context);
-
-  return proof;
-}
-
-function labelsFromRuleNode(ruleNode, context) {
-  const { Label } = elements,
-        labelNodes = ruleNode.getLabelNodes(),
-        labels = labelNodes.map((labelNode) => {
-          const label = Label.fromLabelNode(labelNode, context);
-
-          return label;
-        });
-
-  return labels;
-}
-
-function premisesFromRuleNode(ruleNode, context) {
-  const { Premise } = elements,
-        premiseNodes = ruleNode.getPremiseNodes(),
-        premises = premiseNodes.map((premiseNode) => {
-          const premise = Premise.fromPremiseNode(premiseNode, context);
-
-          return premise;
-        });
-
-  return premises;
-}
-
-function conclusionFromRuleNode(ruleNode, context) {
-  const { Conclusion } = elements,
-        conclusionNode = ruleNode.getConclusionNode(),
-        conclusion = Conclusion.fromConclusionNode(conclusionNode, context);
-
-  return conclusion;
-}
-

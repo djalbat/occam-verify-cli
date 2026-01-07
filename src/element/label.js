@@ -16,17 +16,13 @@ export default define(class Label extends Element {
     return this.metavariable;
   }
 
-  getMetavariableName() {
-    const metavariableName = this.metavariable.getName();
+  getMetavariableName() { return this.metavariable.getName(); }
 
-    return metavariableName;
-  }
+  getMetavariableNode() { return this.metavariable.getNode(); }
 
-  getMetavariableNode() {
-    const metavariableNode = this.metavariable.getNode();
+  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
-    return metavariableNode;
-  }
+  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
   matchReference(reference) {
     const metavariable = reference.getMetavariable(),
@@ -36,37 +32,34 @@ export default define(class Label extends Element {
     return referenceMatches;
   }
 
-  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
-
-  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
-
   verify(nameOnly) {
     let verifies = false;
 
-    const labelString = this.getString(); ///
+    const context = this.getContext(),
+          labelString = this.getString(); ///
 
-    this.context.trace(`Verifying the '${labelString}' label...`);
+    context.trace(`Verifying the '${labelString}' label...`);
 
     let labelPresent;
 
     if (nameOnly) {
       const metavariableName = this.getMetavariableName();
 
-      labelPresent = this.context.isLabelPresentByMetavariableName(metavariableName);
+      labelPresent = context.isLabelPresentByMetavariableName(metavariableName);
     } else {
       const metavariable = this.getMetavariable();
 
-      labelPresent = this.context.isLabelPresentByMetavariable(metavariable);
+      labelPresent = context.isLabelPresentByMetavariable(metavariable);
     }
 
     if (labelPresent) {
-      this.context.debug(`The '${labelString}' label is already present.`);
+      context.debug(`The '${labelString}' label is already present.`);
     } else {
       verifies = true;
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${labelString}' label.`);
+      context.debug(`...verified the '${labelString}' label.`);
     }
 
     return verifies;

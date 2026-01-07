@@ -40,8 +40,11 @@ export function termFromTermNode(termNode, context) {
   const { Term } = elements,
         node = termNode,  ///
         string = context.nodeAsString(node),
-        type = null,
-        term = new Term(context, string, node, type);
+        type = null;
+
+  context = null;
+
+  const term = new Term(context, string, node, type);
 
   return term;
 }
@@ -67,7 +70,7 @@ export function ruleFromRuleNode(ruleNode, context) {
         ruleString = rulsStringFromLabelsPremisesAndConclusion(labels, premises, conclusion),
         node = ruleNode,  ///
         string = ruleString,  ///
-        rule = new Rule(context, string, node, labels, premises, conclusion, proof);
+        rule = new Rule(context, string, node, proof, labels, premises, conclusion);
 
   return rule;
 }
@@ -278,8 +281,11 @@ export function deductionFromDeductionNode(deductionNode, context) {
 export function statementFromStatementNode(statementNode, context) {
   const { Statement } = elements,
         node = statementNode, ///
-        string = context.nodeAsString(node),
-        statement = new Statement(context, string, node);
+        string = context.nodeAsString(node);
+
+  context = null;
+
+  const statement = new Statement(context, string, node);
 
   return statement;
 }
@@ -1122,11 +1128,9 @@ export function termFromTermSubstitutionNode(termSubstitutionNode, context) {
 export function metavariableFromStatementNode(statementNode, context) {
   let metavariable = null;
 
-  const singularMetavariableNode = statementNode.getSingularMetavariableNode();
+  const metavariableNode = statementNode.getMetavariableNode();
 
-  if (singularMetavariableNode !== null) {
-    const metavariableNode = singularMetavariableNode;  ///
-
+  if (metavariableNode !== null) {
     metavariable = metavariableFromMetavariableNode(metavariableNode, context);
   }
 
