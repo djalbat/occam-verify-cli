@@ -49,16 +49,16 @@ function validateAsMetavariableAndSubstitution(statement, assignments, stated, c
   return validatesAsMetavariableAndSubstitution;
 }
 
-function unifyWithBracketedCombinatorStatement(statement, assignments, stated, context) {
+function unifyWithBracketedCombinator(statement, assignments, stated, context) {
   stated = true;  ///
 
   assignments = null; ///
 
-  const { BracketedCombinatorStatement } = elements,
-        bracketedCombinatorStatement = BracketedCombinatorStatement.fromNothing(),
-        unifiesWithBracketedCombinatorStatement = bracketedCombinatorStatement.unifyStatement(statement, assignments, stated, context);
+  const { BracketedCombinator } = elements,
+        bracketedCombinator = BracketedCombinator.fromNothing(),
+        unifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
 
-  return unifiesWithBracketedCombinatorStatement;
+  return unifiesWithBracketedCombinator;
 }
 
 function unifyWithCombinators(statement, assignments, stated, context) {
@@ -280,7 +280,7 @@ function validateAsSatisfiesAssertion(statement, assignments, stated, context) {
 
 const validateMixins = [
   validateAsMetavariableAndSubstitution,
-  unifyWithBracketedCombinatorStatement,
+  unifyWithBracketedCombinator,
   unifyWithCombinators,
   validateAsEquality,
   validateAsJudgement,

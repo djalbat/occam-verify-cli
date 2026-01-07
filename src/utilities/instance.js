@@ -4,50 +4,50 @@ import nominalContext from "../context/nominal";
 
 import { BASE_TYPE_SYMBOL } from "../constants";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-import { instantiateTerm, instantiateStatement } from "../process/instantiate";
-import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
+import { instantiateCombinator, instantiateConstructor } from "../process/instantiate";
+import { combinatorFromCombinatorNode, constructorFromConstructorNode } from "../utilities/element";
 
-let bracketedConstructorTerm = null,
-    bracketedCombinatorStatement = null;
+let bracketedCombinator = null,
+    bracketedConstructor = null;
 
-export function bracketedConstructorTermFromNothing() {
-  if (bracketedConstructorTerm === null) {
-    let context;
-
-    const string = `(${BASE_TYPE_SYMBOL})`;
-
-    context = nominalContext; ///
-
-    const node = instantiateTerm(string, context),
-          bracketedConstructorTermNode = node;  ///
-
-    context = {
-      nodeAsString: () => string
-    };
-
-    bracketedConstructorTerm = termFromTermNode(bracketedConstructorTermNode, context);
-  }
-
-  return bracketedConstructorTerm;
-}
-
-export function bracketedCombinatorStatementFromNothing() {
-  if (bracketedCombinatorStatement === null) {
+export function bracketedCombinatorFromNothing() {
+  if (bracketedCombinator === null) {
     let context;
 
     const string = `(${STATEMENT_META_TYPE_NAME})`;
 
     context = nominalContext; ///
 
-    const node = instantiateStatement(string, context),
-          bracketedCombinatorStatementNode = node;  ///
+    const combinatorNode = instantiateCombinator(string, context),
+          bracketedCombinatorNode = combinatorNode;  ///
 
     context = {
       nodeAsString: () => string
     };
 
-    bracketedCombinatorStatement = statementFromStatementNode(bracketedCombinatorStatementNode, context);
+    bracketedCombinator = combinatorFromCombinatorNode(bracketedCombinatorNode, context);
   }
 
-  return bracketedCombinatorStatement;
+  return bracketedCombinator;
+}
+
+export function bracketedConstructorFromNothing() {
+  if (bracketedConstructor === null) {
+    let context;
+
+    const string = `(${BASE_TYPE_SYMBOL})`;
+
+    context = nominalContext; ///
+
+    const constructorNode = instantiateConstructor(string, context),
+          bracketedConstructorNode = constructorNode;  ///
+
+    context = {
+      nodeAsString: () => string
+    };
+
+    bracketedConstructor = constructorFromConstructorNode(bracketedConstructorNode, context);
+  }
+
+  return bracketedConstructor;
 }

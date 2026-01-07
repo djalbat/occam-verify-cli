@@ -1,10 +1,10 @@
 "use strict";
 
-import elements from "../../../elements";
+import elements from "../../elements";
 import Constructor from "../constructor";
 
-import { define } from "../../../elements";
-import { bracketedConstructorTermFromNothing } from "../../../utilities/instance";
+import { define } from "../../elements";
+import { bracketedConstructorFromNothing } from "../../utilities/instance";
 
 export default define(class BracketedConstructor extends Constructor {
   unifyTerm(term, context, verifyAhead) {
@@ -55,8 +55,8 @@ export default define(class BracketedConstructor extends Constructor {
   static name = "BracketedConstructor";
 
   static fromNothing() {
-    const bracketedConstructorTerm = bracketedConstructorTermFromNothing();
+    const bracketedConstructor = bracketedConstructorFromNothing();
 
-    return bracketedConstructorTerm;
+    return bracketedConstructor;
   }
 });

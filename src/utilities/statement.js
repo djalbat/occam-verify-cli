@@ -4,7 +4,7 @@ import { equalityFromStatementNode,
          judgementFromStatementNode,
          metavariableFromStatementNode,
          typeAssertionFromStatementNode,
-         dDefinedAssertionFromStatementNode,
+         definedAssertionFromStatementNode,
          propertyAssertionFromStatementNode,
          subproofAssertionFromStatementNode,
          containedAssertionFromStatementNode,
@@ -40,7 +40,7 @@ export function typeAssertionFromStatement(statement, context) {
 
 export function definedAssertionFromStatement(statement, context) {
   const statementNode = statement.getNode(),
-        definedAssertion = dDefinedAssertionFromStatementNode(statementNode, context);
+        definedAssertion = definedAssertionFromStatementNode(statementNode, context);
 
   return definedAssertion;
 }

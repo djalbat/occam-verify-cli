@@ -3,7 +3,7 @@
 import elements from "../elements";
 
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
-import { bracketedConstructorTermFromNothing, bracketedCombinatorStatementFromNothing } from "../utilities/instance";
+import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
 
 export function stripBracketsFromTerm(term, context) {
   const termNode = term.getNode(),
@@ -57,10 +57,10 @@ function bracketedTermChildNodeFromTermNode(termNode) {
   let bracketedTermChildNode = null;
 
   const depth = BRACKETED_TERM_DEPTH,
-        bracketedConstructorTermNode = bracketedConstructorTermFromNothing(),
-        termNodeMatchBracketedConstructorTermNode = termNode.match(bracketedConstructorTermNode, depth);
+        bracketedConstructorNode = bracketedConstructorFromNothing(),
+        termNodeMatchBracketedConstructorNode = termNode.match(bracketedConstructorNode, depth);
 
-  if (termNodeMatchBracketedConstructorTermNode) {
+  if (termNodeMatchBracketedConstructorNode) {
     const singularTermNode = termNode.getSingularTermNode();
 
     bracketedTermChildNode = singularTermNode;  ///
@@ -73,10 +73,10 @@ function bracketedStatementChildNodeFromStatementNode(statementNode) {
   let bracketedStatementChildNode = null;
 
   const depth = BRACKETED_STATEMENT_DEPTH,
-        bracketedCombinatorStatementNode = bracketedCombinatorStatementFromNothing(),
-        statementNodeMatchBracketedCombinatorStatementNode = statementNode.match(bracketedCombinatorStatementNode, depth);
+        bracketedCombinatorNode = bracketedCombinatorFromNothing(),
+        statementNodeMatchBracketedCombinatorNode = statementNode.match(bracketedCombinatorNode, depth);
 
-  if (statementNodeMatchBracketedCombinatorStatementNode) {
+  if (statementNodeMatchBracketedCombinatorNode) {
     const singularStatementNode = statementNode.getSingularStatementNode();
 
     bracketedStatementChildNode = singularStatementNode;  ///

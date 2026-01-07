@@ -6,6 +6,8 @@ const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
       variablePlaceholderBNF = ` _ ::= variable... <END_OF_LINE> ; `,
       referencePlaceholderBNF = ` _ ::= reference... <END_OF_LINE> ; `,
       statementPlaceholderBNF = ` _ ::= statement... <END_OF_LINE> ; `,
+      combinatorPlaceholderBNF = ` _ ::= combinator... <END_OF_LINE> ; `,
+      constructorPlaceholderBNF = ` _ ::= constructor... <END_OF_LINE> ; `,
       equivalencePlaceholderBNF = ` _ ::= equivalence... <END_OF_LINE> ; `,
       metavariablePlaceholderBNF = ` _ ::= metavariable... <END_OF_LINE> ; `,
       termSubstitutionPlaceholderBNF = ` _ ::= termSubstitution... <END_OF_LINE> ; `,
@@ -16,6 +18,8 @@ const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
       variablePlaceholderRule = ruleFromBNF(variablePlaceholderBNF),
       referencePlaceholderRule = ruleFromBNF(referencePlaceholderBNF),
       statementPlaceholderRule = ruleFromBNF(statementPlaceholderBNF),
+      combinatorPlaceholderRule = ruleFromBNF(combinatorPlaceholderBNF),
+      constructorPlaceholderRule = ruleFromBNF(constructorPlaceholderBNF),
       equivalencePlaceholderRule = ruleFromBNF(equivalencePlaceholderBNF),
       metavariablePlaceholderRule = ruleFromBNF(metavariablePlaceholderBNF),
       termSubstitutionPlaceholderRule = ruleFromBNF(termSubstitutionPlaceholderBNF),
@@ -30,6 +34,10 @@ export function instantiateVariable(string, context) { return instantiate(variab
 export function instantiateReference(string, context) { return instantiate(referencePlaceholderRule, string, context); }
 
 export function instantiateStatement(string, context) { return instantiate(statementPlaceholderRule, string, context); }
+
+export function instantiateCombinator(string, context) { return instantiate(combinatorPlaceholderRule, string, context); }
+
+export function instantiateConstructor(string, context) { return instantiate(constructorPlaceholderRule, string, context); }
 
 export function instantiateEquivalence(string, context) { return instantiate(equivalencePlaceholderRule, string, context); }
 

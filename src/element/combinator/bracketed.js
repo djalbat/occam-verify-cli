@@ -1,11 +1,11 @@
 "use strict";
 
-import CombinatorStatement from "../../statement/combinator";
+import Combinator from "../combinator";
 
-import { define } from "../../../elements";
-import { bracketedCombinatorStatementFromNothing } from "../../../utilities/instance";
+import { define } from "../../elements";
+import { bracketedCombinatorFromNothing } from "../../utilities/instance";
 
-export default define(class BracketedCombinatorStatement extends CombinatorStatement {
+export default define(class BracketedCombinator extends Combinator {
   unifyStatement(statement, assignments, stated, context) {
     let statementUnifies;
 
@@ -22,11 +22,11 @@ export default define(class BracketedCombinatorStatement extends CombinatorState
     return statementUnifies;
   }
 
-  static name = "BracketedCombinatorStatement";
+  static name = "BracketedCombinator";
 
   static fromNothing() {
-    const bracketedCombinatorStatement = bracketedCombinatorStatementFromNothing();
+    const bracketedCombinator = bracketedCombinatorFromNothing();
 
-    return bracketedCombinatorStatement;
+    return bracketedCombinator;
   }
 });
