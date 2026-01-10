@@ -7,8 +7,8 @@ import { define } from "../../elements";
 import { variableAssignmentFromVariable } from "../../process/assign";
 
 export default define(class PropertyAssertion extends Assertion {
-  constructor(string, node, term, propertyRelation) {
-    super(string, node);
+  constructor(context, string, node, term, propertyRelation) {
+    super(context, string, node);
 
     this.term = term;
     this.propertyRelation = propertyRelation;
@@ -55,9 +55,9 @@ export default define(class PropertyAssertion extends Assertion {
 
     context.trace(`Verifying the '${propertyAssertionString}' property assertion...`);
 
-    const termVerifies = this.verifyTerm(assignments, stated, context);
+    const termValidates = this.validateTerm(assignments, stated, context);
 
-    if (termVerifies) {
+    if (termValidates) {
       const propertyRelationVerifies = this.verifyPropertyRelation(assignments, stated, context);
 
       if (propertyRelationVerifies) {
@@ -89,24 +89,24 @@ export default define(class PropertyAssertion extends Assertion {
     return verifies;
   }
 
-  verifyTerm(assignments, stated, context) {
-    let termVerifies;
+  validateTerm(assignments, stated, context) {
+    let termValidates;
 
     const termString = this.term.getString();
 
-    context.trace(`Verifying the '${termString}' term...`);
+    context.trace(`Validating the '${termString}' term...`);
 
-    termVerifies = this.term.verify(context, () => {
+    termValidates = this.term.verify(context, () => {
       const verifiesAhead = true;
 
       return verifiesAhead;
     });
 
-    if (termVerifies) {
-      context.debug(`...verified the '${termString}' term.`);
+    if (termValidates) {
+      context.debug(`...validated the '${termString}' term.`);
     }
 
-    return termVerifies;
+    return termValidates;
   }
 
   verifyPropertyRelation(assignments, stated, context) {

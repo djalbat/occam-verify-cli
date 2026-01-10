@@ -7,8 +7,8 @@ import { define } from "../../elements";
 import { variableAssignmentFromVariable } from "../../process/assign";
 
 export default define(class TypeAssertion extends Assertion {
-  constructor(string, node, term, type) {
-    super(string, node);
+  constructor(context, string, node, term, type) {
+    super(context, string, node);
 
     this.term = term;
     this.type = type;

@@ -567,12 +567,10 @@ export function unifyMetavariable(generalMetavariable, specificMetavariable, gen
   return metavariableUnifies;
 }
 
-export function unifyTermWithConstructor(term, constructor, context) {
+export function unifyTermWithConstructor(term, constructor, generalContext, specificContext) {
   let termUnifiesWithConstructor = false;
 
   const termNode = term.getNode(),
-        generalContext = context, ///
-        specificContext = context,  ///
         constructorTerm = constructor.getTerm(),
         constructorTermNode = constructorTerm.getNode(),
         success = constructorPass.run(constructorTermNode, termNode, generalContext, specificContext);
@@ -600,12 +598,10 @@ export function unifyStatementIntrinsically(generalStatement, specificStatement,
   return statementUnifiesIntrinsically;
 }
 
-export function unifyStatementWithCombinator(statement, combinator, assignments, stated, context) {
+export function unifyStatementWithCombinator(statement, combinator, assignments, stated, generalContext, specificContext) {
   let statementUnifiesWithCombinator = false;
 
   const statementNode = statement.getNode(),
-        generalContext = context, ///
-        specificContext = context,  ///
         combinatorStatement = combinator.getStatement(),
         combinatorStatementNode = combinatorStatement.getNode(),
         success = combinatorPass.run(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext);

@@ -4,12 +4,11 @@ import elements from "../../elements";
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { definedAssertionFromStatementNode } from "../../utilities/element";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
 
 export default define(class DefinedAssertion extends Assertion {
-  constructor(string, node, term, frame, negated) {
-    super(string, node);
+  constructor(context, string, node, term, frame, negated) {
+    super(context, string, node);
 
     this.term = term;
     this.frame= frame;
@@ -35,10 +34,10 @@ export default define(class DefinedAssertion extends Assertion {
 
     context.trace(`Verifying the '${definedAssertionString}' defined assertion...`);
 
-    const termVerifies = this.verifyTerm(assignments, stated, context),
+    const termValidates = this.validateTerm(assignments, stated, context),
           frameVerifies = this.verifyFrame(assignments, stated, context);
 
-    if (termVerifies || frameVerifies) {
+    if (termValidates || frameVerifies) {
       let verifiesWhenStated = false,
           verifiesWhenDerived = false;
 
@@ -60,32 +59,32 @@ export default define(class DefinedAssertion extends Assertion {
     return verifies;
   }
 
-  verifyTerm(assignments, stated, context) {
-    let termVerifies = false;
+  validateTerm(assignments, stated, context) {
+    let termValidates = false;
 
     if (this.term !== null) {
       const termString = this.term.getString(); ///
 
-      context.trace(`Verifying the '${termString}' term...`);
+      context.trace(`Validating the '${termString}' term...`);
 
       const termSingular = this.term.isSingular();
 
       if (!termSingular) {
         context.debug(`The '${termString}' term is not singular.`);
       } else {
-        termVerifies = this.term.verify(context, () => {
+        termValidates = this.term.validate(context, () => {
           const verifiesAhead = true;
 
           return verifiesAhead;
         });
 
-        if (termVerifies) {
-          context.debug(`...verified the '${termString}' term.`);
+        if (termValidates) {
+          context.debug(`...validated the '${termString}' term.`);
         }
       }
     }
 
-    return termVerifies;
+    return termValidates;
   }
 
   verifyFrame(assignments, stated, context) {

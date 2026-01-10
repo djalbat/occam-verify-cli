@@ -2,14 +2,14 @@
 
 import DeclarationNode from "../../node/declaration";
 
-import { STATEMENT_RULE_NAME } from "../../ruleNames";
+import { COMBINATOR_RULE_NAME } from "../../ruleNames";
 
 export default class ContainedDeclarationNode extends DeclarationNode {
-  getStatementNode() {
-    const ruleName = STATEMENT_RULE_NAME,
-          statementNode = this.getNodeByRuleName(ruleName);
+  getCombinatorNode() {
+    const ruleName = COMBINATOR_RULE_NAME,
+          combinatorNode = this.getNodeByRuleName(ruleName);
 
-    return statementNode;
+    return combinatorNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DeclarationNode.fromRuleNameChildNodesOpacityAndPrecedence(ContainedDeclarationNode, ruleName, childNodes, opacity, precedence); }

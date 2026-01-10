@@ -27,9 +27,9 @@ export default define(class PropertyRelation extends Element {
 
     context.trace(`Verifying the '${propertyRelationString}' property relation...`);
 
-    const termVerifies = this.verifyTerm(context);
+    const termValidates = this.validateTerm(context);
 
-    if (termVerifies) {
+    if (termValidates) {
       const propertyVerifies = this.verifyProperty(context);
 
       verifies = propertyVerifies;
@@ -42,24 +42,24 @@ export default define(class PropertyRelation extends Element {
     return verifies;
   }
 
-  verifyTerm(context) {
-    let termVerifies;
+  validateTerm(context) {
+    let termValidates;
 
     const termString = this.term.getString();
 
-    context.trace(`Verifying the '${termString}' term...`);
+    context.trace(`Validating the '${termString}' term...`);
 
-    termVerifies = this.term.verify(context, () => {
+    termValidates = this.term.validate(context, () => {
       const verifiesAhead = true;
 
       return verifiesAhead;
     });
 
-    if (termVerifies) {
-      context.debug(`...verified the '${termString}' term.`);
+    if (termValidates) {
+      context.debug(`...validated the '${termString}' term.`);
     }
 
-    return termVerifies;
+    return termValidates;
   }
 
   verifyProperty(context) {

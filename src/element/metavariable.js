@@ -55,23 +55,23 @@ export default define(class Metavariable extends Element {
 
   isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
-  verify(context) {
-    let verifies;
+  validate(context) {
+    let validates;
 
     const metavariableString = this.string; ///
 
-    context.trace(`Verifying the '${metavariableString}' metavariable...`);
+    context.trace(`Validating the '${metavariableString}' metavariable...`);
 
     const metavariable = this, ///
           metavariablePresent = context.isMetavariablePresent(metavariable);
 
-    verifies = metavariablePresent; ///
+    validates = metavariablePresent; ///
 
-    if (verifies) {
-      context.debug(`...verified the '${metavariableString}' metavariable.`);
+    if (validates) {
+      context.debug(`...va;idated the '${metavariableString}' metavariable.`);
     }
 
-    return verifies;
+    return validates;
   }
 
   verifyGivenMetaType(metaType, context) {

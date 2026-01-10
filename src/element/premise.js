@@ -81,7 +81,8 @@ export default define(class Premise extends Element {
   unifyIndependently(substitutions, context) {
     let unifiesIndependently = false;
 
-    const premiseString = this.getString(),  ///
+    const node = this.getNode(),
+          premiseString = this.getString(),  ///
           generalContext = this.context,  ///
           specificContext = context;  ///
 

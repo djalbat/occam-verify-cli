@@ -3,12 +3,11 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { containedAssertionFromStatementNode } from "../../utilities/element";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
 
 export default define(class ContainedAssertion extends Assertion {
-  constructor(string, node, term, frame, negated, statement) {
-    super(string, node);
+  constructor(cpontext, string, node, term, frame, negated, statement) {
+    super(context, string, node);
 
     this.term = term;
     this.frame = frame;
@@ -39,11 +38,11 @@ export default define(class ContainedAssertion extends Assertion {
 
     context.trace(`Verifying the '${containedAssertionString}' contained assertion...`);
 
-    const termVerifies = this.verifyTerm(assignments, stated, context),
+    const termValidates = this.validateTerm(assignments, stated, context),
           frameVerifies = this.verifyFrame(assignments, stated, context),
-          statementVerifies = this.verifyStatement(assignments, stated, context)
+          statementValidates = this.validateStatement(assignments, stated, context)
 
-    if (termVerifies || frameVerifies || statementVerifies) {
+    if (termValidates || frameVerifies || statementValidates) {
       let verifiesWhenStated = false,
           verifiesWhenDerived = false;
 
@@ -65,32 +64,32 @@ export default define(class ContainedAssertion extends Assertion {
     return verifies;
   }
 
-  verifyTerm(assignments, stated, context) {
-    let termVerifies = false;
+  validateTerm(assignments, stated, context) {
+    let termValidates = false;
 
     if (this.term !== null) {
       const termString = this.term.getString();
 
-      context.trace(`Verifying the '${termString}' term...`);
+      context.trace(`Validating the '${termString}' term...`);
 
       const termSingular = this.term.isSingular();
 
       if (!termSingular) {
         context.debug(`The '${termString}' term is not singular.`);
       } else {
-        termVerifies = this.term.verify(context, () => {
+        termValidates = this.term.validate(context, () => {
           const verifiesAhead = true;
 
           return verifiesAhead;
         });
 
-        if (termVerifies) {
-          context.debug(`...verified the '${termString}' term.`);
+        if (termValidates) {
+          context.debug(`...validated the '${termString}' term.`);
         }
       }
     }
 
-    return termVerifies;
+    return termValidates;
   }
 
   verifyFrame(assignments, stated, context) {
@@ -121,26 +120,26 @@ export default define(class ContainedAssertion extends Assertion {
     return frameVerifies;
   }
 
-  verifyStatement(assignments, stated, context) {
-    let statementVerifies = false;
+  validateStatement(assignments, stated, context) {
+    let statementValidates = false;
 
     if (this.statement !== null) {
       const statementString = this.statement.getString();
 
-      context.trace(`Verifying the '${statementString}' statement...`);
+      context.trace(`Validating the '${statementString}' statement...`);
 
       stated = true;  ///
 
       assignments = null; ///
 
-      statementVerifies = this.statement.verify(assignments, stated, context);
+      statementValidates = this.statement.verify(assignments, stated, context);
 
-      if (statementVerifies) {
-        context.debug(`...verified the '${statementString}' statement.`);
+      if (statementValidates) {
+        context.debug(`...validated the '${statementString}' statement.`);
       }
     }
 
-    return statementVerifies;
+    return statementValidates;
   }
 
   verifyWhenStated(assignments, context) {

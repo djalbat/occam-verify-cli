@@ -3,7 +3,7 @@
 import Declaration from "../declaration";
 
 import { define } from "../../elements";
-import { verifyTerm } from "../../process/verify";
+import { validateTerm } from "../../process/validate";
 
 export default define(class ConstructorDeclaration extends Declaration {
   constructor(context, string, node, constructor) {
@@ -28,9 +28,9 @@ export default define(class ConstructorDeclaration extends Declaration {
     const constructorTypeVerifies = this.verifyConstructorType();
 
     if (constructorTypeVerifies) {
-      const constructorVerifies = this.verifyConstructor();
+      const constructorValidates = this.verifyConstructor();
 
-      if (constructorVerifies) {
+      if (constructorValidates) {
         context.addConstructor(this.constructor);
 
         verifies = true;
@@ -45,7 +45,7 @@ export default define(class ConstructorDeclaration extends Declaration {
   }
 
   verifyConstructor() {
-    let constructorVerifies;
+    let constructorValidates = false;
 
     const node = this.getNode(),
           context = this.getContext(),
@@ -54,15 +54,18 @@ export default define(class ConstructorDeclaration extends Declaration {
     context.trace(`Verifying the '${constructorString}' constructor...`, node);
 
     const term = this.constructor.getTerm(),
-          termNode = term.getNode();
+          termNode = term.getNode(),
+          termValidates = validateTerm(termNode, context);
 
-    constructorVerifies = verifyTerm(termNode, context);
+    if (termValidates) {
+      constructorValidates = true;
+    }
 
-    if (constructorVerifies) {
+    if (constructorValidates) {
       context.debug(`...verified the '${constructorString}' constructor.`, node);
     }
 
-    return constructorVerifies;
+    return constructorValidates;
   }
 
   verifyConstructorType() {

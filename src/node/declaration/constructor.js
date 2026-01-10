@@ -3,7 +3,7 @@
 import DeclarationNode from "../../node/declaration";
 
 import { PROVISIONALLY } from "../../constants";
-import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../../ruleNames";
+import { CONSTRUCTOR_RULE_NAME, TYPE_RULE_NAME } from "../../ruleNames";
 
 export default class ConstructorDeclarationNode extends DeclarationNode {
   isProvisional() {
@@ -28,11 +28,11 @@ export default class ConstructorDeclarationNode extends DeclarationNode {
     return provisional;
   }
 
-  getTermNode() {
-    const ruleName = TERM_RULE_NAME,
-          termNode = this.getNodeByRuleName(ruleName);
+  getConstructorNode() {
+    const ruleName = CONSTRUCTOR_RULE_NAME,
+          constructorNode = this.getNodeByRuleName(ruleName);
 
-    return termNode;
+    return constructorNode;
   }
 
   getTypeNode() {

@@ -6,7 +6,9 @@ import unifyMixins from "../mixins/step/unify";
 import TemporaryContext from "../context/temporary";
 
 import { define } from "../elements";
+import { instantiateStep } from "../process/instantiate";
 import { equateStatements } from "../process/equate";
+import { stepFromStepNode } from "../utilities/element";
 import { propertyAssertionFromStatement } from "../utilities/statement";
 
 export default define(class Step extends Element {
@@ -191,4 +193,15 @@ export default define(class Step extends Element {
   }
 
   static name = "Step";
+
+  static fromStatement(statement, context) {
+    const statementString = statement.getString(),
+          stepString = statementString, ///
+          string = `${stepString}
+`,
+          stepNode = instantiateStep(string, context),
+          step = stepFromStepNode(stepNode, context);
+
+    return step;;
+  }
 });

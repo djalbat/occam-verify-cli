@@ -31,7 +31,7 @@ export default class Element {
     this.node = node;
   }
 
-  isEQualTo(element) {
+  isEqualTo(element) {
     const elementNode = element.getNode(),
           matches = this.node.match(elementNode),
           equalTo = matches;  ///

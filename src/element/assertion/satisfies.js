@@ -6,8 +6,8 @@ import Assertion from "../assertion";
 import { define } from "../../elements";
 
 export default define(class SatisfiesAssertion extends Assertion {
-  constructor(string, node, signature, reference) {
-    super(string, node);
+  constructor(context, string, node, signature, reference) {
+    super(context, string, node);
 
     this.signature = signature;
     this.reference = reference;

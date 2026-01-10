@@ -85,9 +85,9 @@ export default define(class Assumption extends Element {
       const referenceVerified = this.verifyReference(assignments, stated, context);
 
       if (referenceVerified) {
-        const statementVerifies = this.verifyStatement(assignments, stated, context);
+        const statementValidates = this.validateStatement(assignments, stated, context);
 
-        if (statementVerifies) {
+        if (statementValidates) {
           let verifiesWhenStated = false,
               verifiesWhenDerived = false;
 
@@ -128,28 +128,28 @@ export default define(class Assumption extends Element {
     return referenceVerified;
   }
 
-  verifyStatement(assignments, stated, context) {
-    let statementVerifies;
+  validateStatement(assignments, stated, context) {
+    let statementValidates;
 
     if (this.statement === null) {
-      statementVerifies = true;
+      statementValidates = true;
     } else {
       const statementString = this.statement.getString();
 
-      context.trace(`Verifying the '${statementString}' statement...`);
+      context.trace(`Validating the '${statementString}' statement...`);
 
       stated = true;  ///
 
       assignments = null; ///
 
-      statementVerifies = this.statement.verify(assignments, stated, context);
+      statementValidates = this.statement.verify(assignments, stated, context);
 
-      if (statementVerifies) {
-        context.debug(`...verified the '${statementString}' statement.`);
+      if (statementValidates) {
+        context.debug(`...validated the '${statementString}' statement.`);
       }
     }
 
-    return statementVerifies;
+    return statementValidates;
   }
 
   verifyReferenceAsMetavariable(assignments, stated, context) {

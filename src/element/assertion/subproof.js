@@ -10,8 +10,8 @@ import { unifyStatement } from "../../process/unify";
 const { match } = arrayUtilities;
 
 export default define(class SubproofAssertion extends Assertion {
-  constructor(string, node, statements) {
-    super(string, node);
+  constructor(context, string, node, statements) {
+    super(context, string, node);
 
     this.statements = statements;
   }
@@ -20,38 +20,40 @@ export default define(class SubproofAssertion extends Assertion {
     return this.statements;
   }
 
-  verify(assignments, stated, context) {
-    let verifies;
+  validate(assignments, stated, context) {
+    let validates = false;
 
     const subproofAssertionString = this.getString();  ///
 
-    context.trace(`Verifying the '${subproofAssertionString}' subproof assertion...`);
+    context.trace(`Validating the '${subproofAssertionString}' subproof assertion...`);
 
-    const statementsVerify = this.verifyStatements(assignments, stated, context);
+    const statementsValidate = this.validateStatements(assignments, stated, context);
 
-    verifies = statementsVerify;  ///
-
-    if (verifies) {
-      context.debug(`...verified the '${subproofAssertionString}' subproof assertion.`);
+    if (statementsValidate) {
+      validates = true;
     }
 
-    return verifies;
+    if (validates) {
+      context.debug(`...validated the '${subproofAssertionString}' subproof assertion.`);
+    }
+
+    return validates;
   }
 
-  verifyStatements(assignments, stated, context) {
+  validateStatements(assignments, stated, context) {
     stated = true;  ///
 
     assignments = null; ///
 
-    const statementsVerify = this.statements.map((statement) => {
-      const statementVerifies = statement.verify(assignments, stated, context);
+    const statementsValidate = this.statements.map((statement) => {
+      const statementValidates = statement.validate(assignments, stated, context);
 
-      if (statementVerifies) {
+      if (statementValidates) {
         return true;
       }
     });
 
-    return statementsVerify;
+    return statementsValidate;
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {

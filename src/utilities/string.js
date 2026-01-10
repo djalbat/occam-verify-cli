@@ -130,16 +130,6 @@ export function equivalenceStringFromTerms(terms) {
   return equivalenceString;
 }
 
-export function subproofStringFromSubproof(subproof) {
-  const lastStep = subproof.getLastStep(),
-        suppositions = subproof.getSuppositions(),
-        lastStepString = lastStep.getString(),
-        suppositionsString = suppositionsStringFromSuppositions(suppositions),
-        subproofString = `[${suppositionsString}] ... ${lastStepString}`;
-
-  return subproofString;
-}
-
 export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conclusion) {
   const premisesString = premisesStringFromPremises(premises),
         conclusionString = conclusion.getString(),
@@ -149,6 +139,15 @@ export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conc
                          `${labelsString} :: ${conclusionString}`;
 
   return ruleString;
+}
+
+export function subproofStringFromSuppositionsAndSubDerivation(suppositions, subDerivation) {
+  const lastStep = subDerivation.getLastStep(),
+        lastStepString = lastStep.getString(),
+        suppositionsString = suppositionsStringFromSuppositions(suppositions),
+        subproofString = `[${suppositionsString}] ... ${lastStepString}`;
+
+  return subproofString;
 }
 
 export function typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes) {

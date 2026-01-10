@@ -24,25 +24,27 @@ export  default define(class Conclusion extends Element {
 
     context = temporaryContext; ///
 
-    const conclusionString = this.string;  ///
+    const node = this.getNode(),
+          conclusionString = this.getString();  ///
 
-    context.trace(`Verifying the '${conclusionString}' conclusion...`, this.node);
+    context.trace(`Verifying the '${conclusionString}' conclusion...`, node);
 
     if (this.statement !== null) {
       const stated = true,
             assignments = null,
-            statementVerifies = this.statement.verify(assignments, stated, context);
+            statementValidates = this.statement.validate(assignments, stated, context);
 
-      verifies = statementVerifies; ///
-
+      if (statementValidates) {
+        verifies = true;
+      }
     } else {
-      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`, this.node);
+      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`, node);
     }
 
     if (verifies) {
-      this.context = context;
+      this.setContext(context);
 
-      context.debug(`...verified the '${conclusionString}' conclusion.`, this.node);
+      context.debug(`...verified the '${conclusionString}' conclusion.`, node);
     }
 
     return verifies;

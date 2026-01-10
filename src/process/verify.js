@@ -1,16 +1,13 @@
 "use strict";
 
 import { nodeQuery } from "../utilities/query";
-import { isLastRemainingArgumentFunction } from "../utilities/pass";
-import { termFromTermNode,
-         ruleFromRuleNode,
+import { ruleFromRuleNode,
          errorFromErrorNode,
          axiomFromAxiomNode,
          lemmaFromLemmaNode,
          sectionFromSectionNode,
          theoremFromTheoremNode,
          metaLemmaFromMetaLemmaNode,
-         statementFromStatementNode,
          conjectureFromConjectureNode,
          metatheoremFromMetatheoremNode,
          variableDeclarationFromVariableDeclarationNode,
@@ -22,15 +19,12 @@ import { termFromTermNode,
          metavariableDeclarationFromMetavariableDeclarationNode } from "../utilities/element";
 
 const nonTerminalNodeQuery = nodeQuery("/*"),
-      termNodeQuery = nodeQuery("/term"),
-      typeNodeQuery = nodeQuery("/type"),
       ruleNodeQuery = nodeQuery("/rule"),
       errorNodeQuery = nodeQuery("/error"),
       axiomNodeQuery = nodeQuery("/axiom"),
       lemmaNodeQuery = nodeQuery("/lemma"),
       sectionNodeQuery = nodeQuery("/section"),
       theoremNodeQuery = nodeQuery("/theorem"),
-      statementNodeQuery = nodeQuery("/statement"),
       metaLemmaNodeQuery = nodeQuery("/metaLemma"),
       conjectureNodeQuery = nodeQuery("/conjecture"),
       metatheoremNodeQuery = nodeQuery("/metatheorem"),
@@ -42,7 +36,7 @@ const nonTerminalNodeQuery = nodeQuery("/*"),
       complexTypeDeclarationNodeQuery = nodeQuery("/complexTypeDeclaration"),
       metavariableDeclarationNodeQuery = nodeQuery("/metavariableDeclaration");
 
-export default class Pass {
+class Pass {
   run(node, ...remainingArguments) {
     let success;
 
@@ -56,53 +50,17 @@ export default class Pass {
   descend(childNodes, ...remainingArguments) {
     let descendedAhead = false;
 
-    const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
-
-    if (lastRemainingArgumentFunction) {
-      const index = 0;
-
-      descendedAhead = this.descendAhead(index, childNodes, ...remainingArguments); ///
-    } else {
-      const visited = childNodes.every((childNode) => {
-        const node = childNode, ///
-              visited = this.visitNode(node, ...remainingArguments);
-
-        if (visited) {
-          return true;
-        }
-      });
+    const visited = childNodes.every((childNode) => {
+      const node = childNode, ///
+            visited = this.visitNode(node, ...remainingArguments);
 
       if (visited) {
-        descendedAhead = true;
+        return true;
       }
-    }
+    });
 
-    return descendedAhead;
-  }
-
-  descendAhead(index, childNodes, ...remainingArguments) {
-    let descendedAhead = false;
-
-    const descendAhead = remainingArguments.pop(), ///
-          childNodesLength = childNodes.length;
-
-    if (index === childNodesLength) {
-      descendedAhead = descendAhead();
-    } else {
-      const childNode = childNodes[index],
-            node = childNode, ///
-            visited = this.visitNode(node, ...remainingArguments, () => {
-              remainingArguments.push(descendAhead);
-
-              const aheadIndex = index + 1,
-                    descendedAhead = this.descendAhead(aheadIndex, childNodes, ...remainingArguments);
-
-              return descendedAhead;
-            });
-
-      if (visited) {
-        descendedAhead = true;
-      }
+    if (visited) {
+      descendedAhead = true;
     }
 
     return descendedAhead;
@@ -127,22 +85,7 @@ export default class Pass {
   }
 
   visitTerminalNode(terminalNode, ...remainingArguments) {
-    let visited = false;
-
-    const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
-
-    if (lastRemainingArgumentFunction) {
-      const descendAhead = remainingArguments.pop(), ///
-            descendedAhead = descendAhead();
-
-      if (descendedAhead) {
-        visited = true;
-      }
-
-      remainingArguments.push(descendAhead);
-    } else {
-      visited = true;
-    }
+    const visited = true;
 
     return visited;
   }
@@ -434,138 +377,7 @@ class TopLevelPass extends Pass {
   ];
 }
 
-class CombinatorPass extends Pass {
-  run(statementNode, context) {
-    let success = false;
-
-    const nonTerminalNode = statementNode,  ///
-          childNodes = nonTerminalNode.getChildNodes(), ///
-          descended = this.descend(childNodes,context);
-
-    if (descended) {
-      success = true;
-    }
-
-    return success;
-  }
-
-  static maps = [
-    {
-      nodeQuery: statementNodeQuery,
-      run: (statementNode, context) => {
-        let success = false;
-
-        const statement = statementFromStatementNode(statementNode, context),
-              assignments = null,
-              stated = false,
-              statementVerifies = statement.verify(assignments, stated, context);
-
-        if (statementVerifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      nodeQuery: termNodeQuery,
-      run: (termNode, context) => {
-        let success = false;
-
-        const term = termFromTermNode(termNode, context),
-              termVerifies = term.verify(context, () => {
-                const verifiesAhead = true;
-
-                return verifiesAhead;
-              });
-
-        if (termVerifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      nodeQuery: typeNodeQuery,
-      run: (typeNode, context) => {
-        let success = false;
-
-        const nominalTypeName = typeNode.getNominalTypeName(),
-              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
-
-        if (typePresent) {
-          success = true;
-        }
-
-        return success;
-      }
-    }
-  ];
-}
-
-class ConstructorPass extends Pass {
-  run(statementNode, context) {
-    let success = false;
-
-    const nonTerminalNode = statementNode,  ///
-          childNodes = nonTerminalNode.getChildNodes(), ///
-          descended = this.descend(childNodes,context);
-
-    if (descended) {
-      success = true;
-    }
-
-    return success;
-  }
-
-  static maps = [
-    {
-      nodeQuery: termNodeQuery,
-      run: (termNode, context, verifyAhead) => {
-        let success = false;
-
-        const term = termFromTermNode(termNode, context),
-              termVerifies = term.verify(context, verifyAhead);
-
-        if (termVerifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      nodeQuery: typeNodeQuery,
-      run: (typeNode, context, verifyAhead) => {
-        let success = false;
-
-        const nominalTypeName = typeNode.getNominalTypeName(),
-              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
-
-        if (typePresent) {
-          const verifiesAhead = verifyAhead();
-
-          if (verifiesAhead) {
-            success = true;
-          }
-        } else {
-          const typeString = nominalTypeName; ///
-
-          context.debug(`The '${typeString}' type is not present.`);
-
-          success = false;
-        }
-
-        return success;
-      }
-    }
-  ];
-}
-
-const topLevelPass = new TopLevelPass(),
-      combinatorPass = new CombinatorPass(),
-      constructorPass = new ConstructorPass();
+const topLevelPass = new TopLevelPass();
 
 export function verifyFile(fileNode, context) {
   let fileVerifies = false;
@@ -578,30 +390,4 @@ export function verifyFile(fileNode, context) {
   }
 
   return fileVerifies;
-}
-
-export function verifyTerm(termNode, context) {
-  let termVerifies = false;
-
-  const node = termNode, ///
-        sucess = constructorPass.run(node, context);
-
-  if (sucess) {
-    termVerifies = true;
-  }
-
-  return termVerifies;
-}
-
-export function verifyStatement(statementNode, context) {
-  let statementVerifies = false;
-
-  const node = statementNode, ///
-        sucess = combinatorPass.run(node, context);
-
-  if (sucess) {
-    statementVerifies = true;
-  }
-
-  return statementVerifies;
 }
