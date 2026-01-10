@@ -4,8 +4,8 @@ import { arrayUtilities } from "necessary";
 
 import elements from "../elements";
 
-import { baseType } from "../element/type";
 import { verifyFile } from "../process/verify";
+import { baseTypeFromNothing } from "../types";
 import { nodeAsString, nodesAsString } from "../utilities/node";
 import { typesFromJSON,
          rulesFromJSON,
@@ -519,6 +519,8 @@ export default class FileContext {
   findTypeByTypeName(typeName, includeRelease = true, includeDependencies = true) {
     let types = this.getTypes(includeRelease, includeDependencies);
 
+    const baseType = baseTypeFromNothing();
+
     types = [
       ...types,
       baseType
@@ -538,6 +540,8 @@ export default class FileContext {
   findTypeByNominalTypeName(nominalTypeName) {
     let types = this.getTypes();
 
+    const baseType = baseTypeFromNothing();
+
     types = [
       ...types,
       baseType
@@ -556,6 +560,8 @@ export default class FileContext {
 
   findTypeByPrefixedTypeName(prefixedTypeName) {
     let types = this.getTypes();
+
+    const baseType = baseTypeFromNothing();
 
     types = [
       ...types,

@@ -57,9 +57,9 @@ export default define(class Reference extends Element {
     context.trace(`Verifying the '${referenceString}' reference...`);
 
     if (!verifies) {
-      const metavariableVerifies = this.verifyMetavariable(context);
+      const metavariableValidates = this.validateMetavariable(context);
 
-      verifies = metavariableVerifies; ///
+      verifies = metavariableValidates; ///
     }
 
     if (!verifies) {
@@ -80,15 +80,15 @@ export default define(class Reference extends Element {
     return verifies;
   }
 
-  verifyMetavariable(context) {
-    let metavariableVerifies;
+  validateMetavariable(context) {
+    let metavariableValidates;
 
     const metaType = referenceMetaType, ///
-          metavariableVerifiesGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, context);
+          metavariableValidatesGivenMetaType = this.metavariable.validateGivenMetaType(metaType, context);
 
-    metavariableVerifies = metavariableVerifiesGivenMetaType; ///
+    metavariableValidates = metavariableValidatesGivenMetaType; ///
 
-    return metavariableVerifies;
+    return metavariableValidates;
   }
 
   unifyLabel(label, substitutions, context) {

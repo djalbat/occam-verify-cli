@@ -3,9 +3,9 @@
 import { arrayUtilities } from "necessary";
 
 import Element from "../element";
-import verifyMixins from "../mixins/term/verify";
 
 import { define } from "../elements";
+import { validateTerms } from "../utilities/validation";
 import { instantiateTerm } from "../process/instantiate";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
@@ -95,31 +95,31 @@ export default define(class Term extends Element {
     return implicitlyGrounded;
   }
 
-  verify(context, verifyAhead) {
-    let verifies;
+  validate(context, verifyAhead) {
+    let validates;
 
     const termString = this.string;  ///
 
-    context.trace(`Verifying the '${termString}' term...`);
+    context.trace(`Validating the '${termString}' term...`);
 
-    verifies = verifyMixins.some((verifyMixin) => {
+    validates = validateTerms.some((validateTerm) => {  ///
       const term = this, ///
-            verifies = verifyMixin(term, context, verifyAhead);
+            termValidates = validateTerm(term, context, verifyAhead);
 
-      if (verifies) {
+      if (termValidates) {
         return true;
       }
     });
 
-    if (verifies) {
+    if (validates) {
       const term = this;  ///
 
       context.addTerm(term);
 
-      context.debug(`...verified the '${termString}' term.`);
+      context.debug(`...validated the '${termString}' term.`);
     }
 
-    return verifies;
+    return validates;
   }
 
   verifyGivenType(type, generalContext, specificContext) {
@@ -128,10 +128,10 @@ export default define(class Term extends Element {
     const typeString = type.getString(),
           termString = this.getString();  ///
 
-    specificContext.trace(`Verifying the '${termString}' term given the '${typeString}' type...`);
+    specificContext.trace(`Validating the '${termString}' term given the '${typeString}' type...`);
 
     const context = specificContext, ///
-          verifies = this.verify(context, () => {
+          validates = this.validate(context, () => {
             let verifiesAhead;
 
             const typeEqualToOrSubTypeOfGivenTypeType = this.type.isEqualToOrSubTypeOf(type);
@@ -143,10 +143,10 @@ export default define(class Term extends Element {
             return verifiesAhead;
           });
 
-    verifiesGivenType = verifies; ///
+    verifiesGivenType = validates; ///
 
     if (verifiesGivenType) {
-      specificContext.debug(`...verified the '${termString}' term given the '${typeString}' type.`);
+      specificContext.debug(`...validated the '${termString}' term given the '${typeString}' type.`);
     }
 
     return verifiesGivenType;

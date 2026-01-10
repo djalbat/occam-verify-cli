@@ -83,7 +83,8 @@ export default define(class Rule extends Element {
           const proofVerifies = this.verifyProof(context);
 
           if (proofVerifies) {
-            const rule = this;  ///
+            const rule = this,  ///
+                  context = this.getContext();
 
             context.addRule(rule);
 

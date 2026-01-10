@@ -5,13 +5,13 @@ import { arrayUtilities } from "necessary";
 import Element from "../element";
 
 import { define } from "../elements";
-import { BASE_TYPE_SYMBOL } from "../constants";
+import { baseTypeFromNothing } from "../types";
 import { typeStringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/string";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
 const { push, first } = arrayUtilities;
 
-class Type extends Element {
+export default define(class Type extends Element {
   constructor(context, string, node, name, prefixName, superTypes, properties, provisional) {
     super(context, string, node);
     this.name = name;
@@ -129,7 +129,8 @@ class Type extends Element {
 
     if (superTypesLength === 1) {
       const firstSuperType = first(this.superTypes),
-            superType = firstSuperType; ///
+            superType = firstSuperType, ///
+            baseType = baseTypeFromNothing();
 
       if (superType === baseType) {
         basic = true;
@@ -165,6 +166,8 @@ class Type extends Element {
 
   isSubTypeOf(type) {
     let subTypeOf;
+
+    const baseType = baseTypeFromNothing();
 
     if (this === baseType) {
       subTypeOf = false;
@@ -307,24 +310,17 @@ class Type extends Element {
 
     return type;
   }
-}
 
-export default define(Type);
-
-class BaseType extends Type {
-  static fromNothing() {
-    const name = BASE_TYPE_SYMBOL,  ///
-          context = null,
+  static fromName(name) {
+    const context = null,
           string = name,  ///
           node = null,
           prefixName = null,
           superTypes = [],
           properties = [],
           provisional = false,
-          baseType = new BaseType(context, string, node, name, prefixName, superTypes, properties, provisional);
+          type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
 
-    return baseType;
+    return type;
   }
-}
-
-export const baseType = BaseType.fromNothing();
+});

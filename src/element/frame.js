@@ -241,27 +241,27 @@ export default define(class Frame extends Element {
     return assumptionsVerify;
   }
 
-  verifyGivenMetaType(metaType, assignments, stated, context) {
-    let verifiesGivenMetaType = false;
+  validateGivenMetaType(metaType, assignments, stated, context) {
+    let validatesGivenMetaType = false;
 
     const frameString = this.string,  ///
           metaTypeString = metaType.getString();
 
-    context.trace(`Verifying the '${frameString}' frame given the '${metaTypeString}' meta-type...`);
+    context.trace(`Validatin the '${frameString}' frame given the '${metaTypeString}' meta-type...`);
 
     const metaTypeName = metaType.getName();
 
     if (metaTypeName === FRAME_META_TYPE_NAME) {
-      const verifies = this.verify(assignments, stated, context)
+      const validates = this.validate(assignments, stated, context)
 
-      verifiesGivenMetaType = verifies; ///
+      validatesGivenMetaType = validates; ///
     }
 
-    if (verifiesGivenMetaType) {
-      context.debug(`...verified the '${frameString}' frame given the '${metaTypeString}' meta-type.`);
+    if (validatesGivenMetaType) {
+      context.debug(`...validated the '${frameString}' frame given the '${metaTypeString}' meta-type.`);
     }
 
-    return verifiesGivenMetaType;
+    return validatesGivenMetaType;
   }
 
   toJSON() {

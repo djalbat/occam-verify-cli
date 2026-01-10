@@ -1,6 +1,7 @@
 "use strict";
 
 import { nodeQuery } from "../utilities/query";
+import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 import { ruleFromRuleNode,
          errorFromErrorNode,
          axiomFromAxiomNode,
@@ -18,14 +19,18 @@ import { ruleFromRuleNode,
          complexTypeDeclarationFromComplexTypeDeclarationNode,
          metavariableDeclarationFromMetavariableDeclarationNode } from "../utilities/element";
 
-const nonTerminalNodeQuery = nodeQuery("/*"),
-      ruleNodeQuery = nodeQuery("/rule"),
+const nonTerminalNodeQuery = nodeQuery("/*");
+
+const ruleNodeQuery = nodeQuery("/rule"),
+      termNodeQuery = nodeQuery("/term"),
+      typeNodeQuery = nodeQuery("/type"),
       errorNodeQuery = nodeQuery("/error"),
       axiomNodeQuery = nodeQuery("/axiom"),
       lemmaNodeQuery = nodeQuery("/lemma"),
       sectionNodeQuery = nodeQuery("/section"),
       theoremNodeQuery = nodeQuery("/theorem"),
       metaLemmaNodeQuery = nodeQuery("/metaLemma"),
+      statementNodeQuery = nodeQuery("/statement"),
       conjectureNodeQuery = nodeQuery("/conjecture"),
       metatheoremNodeQuery = nodeQuery("/metatheorem"),
       variableDeclarationNodeQuery = nodeQuery("/variableDeclaration"),
@@ -48,7 +53,7 @@ class Pass {
   }
 
   descend(childNodes, ...remainingArguments) {
-    let descendedAhead = false;
+    let descended = false;
 
     const visited = childNodes.every((childNode) => {
       const node = childNode, ///
@@ -60,10 +65,10 @@ class Pass {
     });
 
     if (visited) {
-      descendedAhead = true;
+      descended = true;
     }
 
-    return descendedAhead;
+    return descended;
   }
 
   visitNode(node, ...remainingArguments) {
@@ -377,7 +382,86 @@ class TopLevelPass extends Pass {
   ];
 }
 
-const topLevelPass = new TopLevelPass();
+class ConbinatorPass extends Pass {
+  static maps = [
+    {
+      nodeQuery: statementNodeQuery,
+      verify: (statementNode, context) => {
+        const statement = statementFromStatementNode(statementNode, context),
+              assignments = null,
+              stated = false,
+              statementVerifies = statement.verify(assignments, stated, context);
+
+        return statementVerifies;
+      }
+    },
+    {
+      nodeQuery: termNodeQuery,
+      verify: (termNode, context) => {
+        const term = termFromTermNode(termNode, context),
+              termVerifies = term.verify(context, () => {
+                const verifiesAhead = true;
+
+                return verifiesAhead;
+              });
+
+        return termVerifies;
+      }
+    },
+    {
+      nodeQuery: typeNodeQuery,
+      verify: (typeNode, context) => {
+        let typeVerifies = false;
+
+        const nominalTypeName = typeNode.getNominalTypeName(),
+              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
+
+        if (typePresent) {
+          typeVerifies = true;
+        }
+
+        return typeVerifies;
+      }
+    }
+  ];
+}
+
+class ConstructorPass extends Pass {
+  static maps = [
+    {
+      nodeQuery: termNodeQuery,
+      verify: (termNode, context) => {
+        const term = termFromTermNode(termNode, context),
+              termVerifies = term.verify(context, () => {
+            const verifiesAhead = true;
+
+            return verifiesAhead;
+          });
+
+        return termVerifies;
+      }
+    },
+    {
+      nodeQuery: typeNodeQuery,
+      verify: (typeNode, context) => {
+        let typeVerifies = false;
+
+        const nominalTypeName = typeNode.getNominalTypeName(),
+              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
+
+        if (typePresent) {
+          typeVerifies = true;
+        }
+
+        return typeVerifies;
+      }
+    }
+  ];
+}
+
+const topLevelPass = new TopLevelPass(),
+      combinatorPass = new ConbinatorPass(),
+      constructorPass = new ConstructorPass();
 
 export function verifyFile(fileNode, context) {
   let fileVerifies = false;
@@ -390,4 +474,28 @@ export function verifyFile(fileNode, context) {
   }
 
   return fileVerifies;
+}
+
+export function verifyCombinator(combintot) {
+  const context = combintot.getContext(),
+        statement = combintot.getStatement(),
+        statementNode = statement.getNode(),
+        nonTerminalNode = statementNode, ///
+        childNodes = nonTerminalNode.getChildNodes(),
+        descended = combinatorPass.descend(childNodes, context),
+        combinatorVerifies = descended;  ///
+
+  return combinatorVerifies;
+}
+
+export function verifyConstrcctor(constructor) {
+  const context = constructor.getContext(),
+        term = constructor.getStatement(),
+        termNode = term.getNode(),
+        nonTerminalNode = termNode, ///
+        childNodes = nonTerminalNode.getChildNodes(),
+        descended = constructorPass.descend(childNodes, context),
+        constrcctorVerifies = descended;  ///
+
+  return constrcctorVerifies;
 }

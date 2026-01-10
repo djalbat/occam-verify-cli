@@ -1,8 +1,7 @@
 "use strict";
 
-import elements from "../elements";
-
 import { nodeQuery } from "../utilities/query";
+import { termFromTermNode, frameFromFrameNode, statementFromStatementNode } from "../utilities/element";
 import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual, isLastRemainingArgumentFunction } from "../utilities/pass";
 
 const nonTerminalNodeQuery = nodeQuery("/*");
@@ -29,7 +28,7 @@ class Pass {
   }
 
   descend(generalChildNodes, specificChildNodes, ...remainingArguments) {
-    let descendedAhead = false;
+    let descended = false;
 
     const generalChildNodesLength = generalChildNodes.length,
           specificChildNodesLength = specificChildNodes.length;
@@ -43,9 +42,12 @@ class Pass {
         const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
 
         if (lastRemainingArgumentFunction) {
-          const index = 0;
+          const index = 0,
+                descendedAhead = this.descendAhead(index, generalChildNodes, specificChildNodes,...remainingArguments);
 
-          descendedAhead = this.descendAhead(index, generalChildNodes, specificChildNodes,...remainingArguments);
+          if (descendedAhead) {
+            descended = true;
+          }
         } else {
           const visited = generalChildNodes.every((generalChildNode, index) => {
             const specificChildNode = specificChildNodes[index],
@@ -59,13 +61,13 @@ class Pass {
           });
 
           if (visited) {
-            descendedAhead = true;
+            descended = true;
           }
         }
       }
     }
 
-    return descendedAhead;
+    return descended;
   }
 
   descendAhead(index, generalChildNodes, specificChildNodes, ...remainingArguments) {
@@ -346,11 +348,10 @@ class CombinatorPass extends Pass {
 
         context = specificContext;  ///
 
-        const { Statement } = elements,
-              statement = Statement.fromStatementNode(statementNode, context),
-              statementVerifiesGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
+        const statement = statementFromStatementNode(statementNode, context),
+              statementValidatesGivenType = statement.validateGivenMetaType(metaType, assignments, stated, context);
 
-        if (statementVerifiesGivenType) {
+        if (statementValidatesGivenType) {
           success = true;
         }
 
@@ -375,11 +376,10 @@ class CombinatorPass extends Pass {
 
         context = specificContext;  ///
 
-        const { Frame } = elements,
-              frame = Frame.fromFrameNode(frameNode, context),
-              frameVerifiesGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
+        const frame = frameFromFrameNode(frameNode, context),
+              frameValidatesGivenMetaType = frame.validateGivenMetaType(metaType, assignments, stated, context);
 
-        if (frameVerifiesGivenType) {
+        if (frameValidatesGivenMetaType) {
           success = true;
         }
 
@@ -405,11 +405,10 @@ class CombinatorPass extends Pass {
         if (type !== null) {
           context = specificContext;  ///
 
-          const { Term } = elements,
-                term = Term.fromTermNode(termNode, context),
-                termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
+          const term = termFromTermNode(termNode, context),
+                termValidatesGivenType = term.validateGivenType(type, generalContext, specificContext);
 
-          if (termVerifiesGivenType) {
+          if (termValidatesGivenType) {
             success = true;
           }
         }
@@ -441,11 +440,10 @@ class ConstructorPass extends Pass {
         if (type !== null) {
           context = specificContext;  ///
 
-          const { Term } = elements,
-                term = Term.fromTermNode(termNode, context),
-                termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
+          const term = termFromTermNode(termNode, context),
+                termValidatesGivenType = term.validateGivenType(type, generalContext, specificContext);
 
-          if (termVerifiesGivenType) {
+          if (termValidatesGivenType) {
             success = true;
           }
         }
@@ -470,9 +468,9 @@ class MetavariablePass extends Pass {
               type = generalContext.findTypeByNominalTypeName(nominalTypeName),
               context = specificContext, ///
               term = context.findTermByTermNode(termNode),
-              termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
+              termValidatesGivenType = term.validateGivenType(type, generalContext, specificContext);
 
-        if (termVerifiesGivenType) {
+        if (termValidatesGivenType) {
           success = true;
         }
 

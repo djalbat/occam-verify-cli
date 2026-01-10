@@ -2,11 +2,11 @@
 
 import Element from "../element";
 import elements from "../elements";
-import unifyMixins from "../mixins/step/unify";
 import TemporaryContext from "../context/temporary";
 
 import { define } from "../elements";
 import { instantiateStep } from "../process/instantiate";
+import { unifyStatements } from "../utilities/unification";
 import { equateStatements } from "../process/equate";
 import { stepFromStepNode } from "../utilities/element";
 import { propertyAssertionFromStatement } from "../utilities/statement";
@@ -130,10 +130,10 @@ export default define(class Step extends Element {
 
     context.trace(`Unifying the '${stepString}' step...`, this.node);
 
-    unifies = unifyMixins.some((unifyMixin) => {
-      const unifies = unifyMixin(this.statement, this.reference, this.satisfiesAssertion, substitutions, context);
+    unifies = unifyStatements.some((unifyStatement) => {
+      const statementUnifies = unifyStatement(this.statement, this.reference, this.satisfiesAssertion, substitutions, context);
 
-      if (unifies) {
+      if (statementUnifies) {
         return true;
       }
     });

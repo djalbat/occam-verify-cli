@@ -74,13 +74,13 @@ export default define(class Metavariable extends Element {
     return validates;
   }
 
-  verifyGivenMetaType(metaType, context) {
-    let verifiesGivenMetaType = false;
+  validateGivenMetaType(metaType, context) {
+    let validatesGivenMetaType = false;
 
     const metavariableString = this.string,  ///
           metaTypeString = metaType.getString();
 
-    context.trace(`Verifying the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
+    context.trace(`Validating the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
 
     let metavariable = this;  ///
 
@@ -89,14 +89,14 @@ export default define(class Metavariable extends Element {
     if (metavariable !== null) {
       const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);
 
-      verifiesGivenMetaType = metavariableMetaTypeEqualToMetaType;  ///
+      validatesGivenMetaType = metavariableMetaTypeEqualToMetaType;  ///
     }
 
-    if (verifiesGivenMetaType) {
-      context.debug(`...verified the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type.`);
+    if (validatesGivenMetaType) {
+      context.debug(`...validated the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type.`);
     }
 
-    return verifiesGivenMetaType;
+    return validatesGivenMetaType;
   }
 
   unifyFrame(frame, substitutions, generalContext, specificContext) {

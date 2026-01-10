@@ -3,10 +3,10 @@
 import { arrayUtilities } from "necessary";
 
 import Element from "../element";
-import validateMixins from "../mixins/statement/validate";
 
 import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
+import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
@@ -124,11 +124,11 @@ export default define(class Statement extends Element {
 
     context.trace(`Validating the '${statementString}' statement...`, node);
 
-    validates = validateMixins.some((validateMixin) => {
+    validates = validateStatements.some((validateStatement) => {
       const statement = this, ///
-            validates = validateMixin(statement, assignments, stated, context);
+            statementValidates = validateStatement(statement, assignments, stated, context);
 
-      if (validates) {
+      if (statementValidates) {
         return true;
       }
     });

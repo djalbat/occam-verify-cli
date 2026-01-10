@@ -2,7 +2,7 @@
 
 import elements from "../elements";
 
-import { baseType } from "../element/type";
+import { baseTypeFromNothing } from "../types";
 import { instantiateReference } from "../process/instantiate";
 import { equivalenceStringFromTerms,
          rulsStringFromLabelsPremisesAndConclusion,
@@ -16,7 +16,9 @@ export function typeFromTypeNode(typeNode, context) {
   let type;
 
   if (typeNode === null) {
-    type = baseType;
+    const baseType = baseTypeFromNothing();
+
+    type = baseType;  ///
   } else {
     const { Type } = elements,
           typeName = typeNode.getTypeName(),
@@ -1520,7 +1522,9 @@ export function typeFromConstructorDeclarationNode(constructorDeclarationNode, c
   if (typeNode !== null) {
     type = typeFromTypeNode(typeNode, context);
   } else {
-    type = baseType;
+    const baseType = baseTypeFromNothing();
+
+    type = baseType;  ///
   }
 
   return type;
@@ -1876,7 +1880,8 @@ export function superTypesFromSuperTypeNodes(superTypeNodes, context) {
         superTypesLength = superTypes.length;
 
   if (superTypesLength === 0) {
-    const superType = baseType; ///
+    const baseType = baseTypeFromNothing(),
+          superType = baseType; ///
 
     superTypes.push(superType);
   }

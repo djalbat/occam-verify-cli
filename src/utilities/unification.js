@@ -2,18 +2,18 @@
 
 import { arrayUtilities } from "necessary";
 
-import elements from "../../elements";
+import elements from "../elements";
 
 import { equalityFromStatement,
          judgementFromStatement,
          typeAssertionFromStatement,
          propertyAssertionFromStatement,
-         satisfiesAssertionFromStatement } from "../../utilities/statement";
+         satisfiesAssertionFromStatement } from "../utilities/statement";
 
 const { backwardsSome } = arrayUtilities;
 
-function unifyWithRule(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesWithRule = false;
+function unifyStatementWithRule(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesWithRule = false;
 
   if (reference !== null) {
     const rule = context.findRuleByReference(reference);
@@ -28,20 +28,20 @@ function unifyWithRule(statement, reference, satisfiesAssertion, substitutions, 
             statementAndStepsUnify = rule.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
 
       if (statementAndStepsUnify) {
-        unifiesWithRule = true;
+        statementUnifiesWithRule = true;
       }
 
-      if (unifiesWithRule) {
+      if (statementUnifiesWithRule) {
         context.debug(`...unified the '${statementString}' statement with the '${ruleString}' rule.`);
       }
     }
   }
 
-  return unifiesWithRule;
+  return statementUnifiesWithRule;
 }
 
-function unifyWithReference(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesWithReference = false;
+function unifyStatementWithReference(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesWithReference = false;
 
   if (reference !== null) {
     const metavariableVerifies = reference.verifyMetavariable(context);
@@ -59,19 +59,19 @@ function unifyWithReference(statement, reference, satisfiesAssertion, substituti
 
       substitutions.addSubstitution(substitution, context);
 
-      unifiesWithReference = true;
+      statementUnifiesWithReference = true;
 
-      if (unifiesWithReference) {
+      if (statementUnifiesWithReference) {
         context.debug(`...unified the '${statementString}' statement with the '${referenceString}' reference.`);
       }
     }
   }
 
-  return unifiesWithReference;
+  return statementUnifiesWithReference;
 }
 
-function unifyAsSatisfiesAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesAsSatisfiesAssertion = false;
+function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesAsSatisfiesAssertion = false;
 
   satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
 
@@ -88,7 +88,7 @@ function unifyAsSatisfiesAssertion(statement, reference, satisfiesAssertion, sub
     if (reference === null) {
       const stepsOrSubproofs = context.getStepsOrSubproofs();
 
-      unifiesAsSatisfiesAssertion = backwardsSome(stepsOrSubproofs, (stepsOrSubproof) => {
+      statementUnifiesAsSatisfiesAssertion = backwardsSome(stepsOrSubproofs, (stepsOrSubproof) => {
         const stepOrSubProofUnifiesWIthSatisfiesAssertion = stepsOrSubproof.unifyWithSatisfiesAssertion(satisfiesAssertion, context);
 
         if (stepOrSubProofUnifiesWIthSatisfiesAssertion) {
@@ -115,7 +115,7 @@ function unifyAsSatisfiesAssertion(statement, reference, satisfiesAssertion, sub
               const substitutionsCorrelates = satisfiesAssertion.correlateSubstitutions(substitutions, context);
 
               if (substitutionsCorrelates) {
-                unifiesAsSatisfiesAssertion = true;
+                statementUnifiesAsSatisfiesAssertion = true;
               }
             }
           } else {
@@ -127,16 +127,16 @@ function unifyAsSatisfiesAssertion(statement, reference, satisfiesAssertion, sub
       }
     }
 
-    if (unifiesAsSatisfiesAssertion) {
+    if (statementUnifiesAsSatisfiesAssertion) {
       context.debug(`...unified the '${statementString}' statement as a satisfies assertion.`);
     }
   }
 
-  return unifiesAsSatisfiesAssertion;
+  return statementUnifiesAsSatisfiesAssertion;
 }
 
-function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesWithAxiomLemmaTheoremOrConjecture = false;
+function unifyStatementWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesWithAxiomLemmaTheoremOrConjecture = false;
 
   if (reference !== null) {
     const { Substitutions } = elements,
@@ -165,20 +165,20 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesA
 
         substitutions.addSubstitution(substitution, context);
 
-        unifiesWithAxiomLemmaTheoremOrConjecture = true;
+        statementUnifiesWithAxiomLemmaTheoremOrConjecture = true;
       }
 
-      if (unifiesWithAxiomLemmaTheoremOrConjecture) {
+      if (statementUnifiesWithAxiomLemmaTheoremOrConjecture) {
         context.debug(`...unified the '${statementString}' statement with the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture.`);
       }
     }
   }
 
-  return unifiesWithAxiomLemmaTheoremOrConjecture;
+  return statementUnifiesWithAxiomLemmaTheoremOrConjecture;
 }
 
-function unifyAEquality(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesAEquality = false;
+function unifyStatementAEquality(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesAEquality = false;
 
   if (reference === null) {
     const equality = equalityFromStatement(statement, context);
@@ -191,20 +191,20 @@ function unifyAEquality(statement, reference, satisfiesAssertion, substitutions,
       const equalityEqual = equality.isEqual(context);
 
       if (equalityEqual) {
-        unifiesAEquality = true;
+        statementUnifiesAEquality = true;
       }
 
-      if (unifiesAEquality) {
+      if (statementUnifiesAEquality) {
         context.debug(`...unified the '${statementString}' statement as an equality.`);
       }
     }
   }
 
-  return unifiesAEquality;
+  return statementUnifiesAEquality;
 }
 
-function unifyAsJudgement(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesAsJudgement = false;
+function unifyStatementAsJudgement(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesAsJudgement = false;
 
   if (reference === null) {
     const judgement = judgementFromStatement(statement, context);
@@ -214,19 +214,19 @@ function unifyAsJudgement(statement, reference, satisfiesAssertion, substitution
 
       context.trace(`Unifying the '${statementString}' statement as a judgement...`);
 
-      unifiesAsJudgement = true;
+      statementUnifiesAsJudgement = true;
 
-      if (unifiesAsJudgement) {
+      if (statementUnifiesAsJudgement) {
         context.debug(`...unified the '${statementString}' statement as a judgement.`);
       }
     }
   }
 
-  return unifiesAsJudgement;
+  return statementUnifiesAsJudgement;
 }
 
-function unifyAsTypeAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesAsTypeAssertion = false;
+function unifyStatementAsTypeAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesAsTypeAssertion = false;
 
   if (reference === null) {
     const typeAssertion = typeAssertionFromStatement(statement, context);
@@ -236,17 +236,17 @@ function unifyAsTypeAssertion(statement, reference, satisfiesAssertion, substitu
 
       context.trace(`Unifying the '${statementString}' statement as a type assertion...`);
 
-      unifiesAsTypeAssertion = true;
+      statementUnifiesAsTypeAssertion = true;
 
       context.debug(`...unified the '${statementString}' statement as a type assertion.`);
     }
   }
 
-  return unifiesAsTypeAssertion;
+  return statementUnifiesAsTypeAssertion;
 }
 
-function unifyAsPropertyAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesAsPropertyAssertion = false;
+function unifyStatementAsPropertyAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesAsPropertyAssertion = false;
 
   if (reference === null) {
     const propertyAssertion = propertyAssertionFromStatement(statement, context);
@@ -270,61 +270,58 @@ function unifyAsPropertyAssertion(statement, reference, satisfiesAssertion, subs
         });
 
         if (propertyAssertionMatches) {
-          unifiesAsPropertyAssertion = true;
+          statementUnifiesAsPropertyAssertion = true;
         }
       }
 
-      if (unifiesAsPropertyAssertion) {
+      if (statementUnifiesAsPropertyAssertion) {
         context.debug(`...unified the '${statementString}' statement as a property assertion.`);
       }
     }
   }
 
-  return unifiesAsPropertyAssertion;
+  return statementUnifiesAsPropertyAssertion;
 }
 
-function unifyWithSatisfiesAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesWithSatisfiesAssertion = false;
+function unifyStatementWithSatisfiesAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesWithSatisfiesAssertion = false;
 
   if (satisfiesAssertion !== null) {
     const stepsOrSubproofs = context.getStepsOrSubproofs(),
           statementUnifies = satisfiesAssertion.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
 
     if (statementUnifies) {
-      unifiesWithSatisfiesAssertion = true;
+      statementUnifiesWithSatisfiesAssertion = true;
     }
   }
 
-  return unifiesWithSatisfiesAssertion;
+  return statementUnifiesWithSatisfiesAssertion;
 }
 
-function equateWithStepsOrSubproofs(statement, reference, satisfiesAssertion, substitutions, context) {
-  let unifiesWithStepOrSubproofs = false;
+function equateStatementWithStepsOrSubproofs(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementEquatesWithStepOrSubproofs = false;
 
   if (reference === null) {
     const stepsOrSubproofs = context.getStepsOrSubproofs(),
           statementUnifiesWithSteps = statement.equateWithStepsOrSubproofs(stepsOrSubproofs, context);
 
     if (statementUnifiesWithSteps) {
-      unifiesWithStepOrSubproofs = true;
+      statementEquatesWithStepOrSubproofs = true;
     }
   }
 
-  return unifiesWithStepOrSubproofs;
+  return statementEquatesWithStepOrSubproofs;
 }
 
-const unifyMixins = [
-  unifyWithRule,
-  unifyWithReference,
-  unifyAsSatisfiesAssertion,
-  unifyWithAxiomLemmaTheoremOrConjecture,
-  unifyAEquality,
-  unifyAsJudgement,
-  unifyAsTypeAssertion,
-  unifyAsPropertyAssertion,
-  unifyWithSatisfiesAssertion,
-  equateWithStepsOrSubproofs
+export const unifyStatements = [
+  unifyStatementWithRule,
+  unifyStatementWithReference,
+  unifyStatementAsSatisfiesAssertion,
+  unifyStatementWithAxiomLemmaTheoremOrConjecture,
+  unifyStatementAEquality,
+  unifyStatementAsJudgement,
+  unifyStatementAsTypeAssertion,
+  unifyStatementAsPropertyAssertion,
+  unifyStatementWithSatisfiesAssertion,
+  equateStatementWithStepsOrSubproofs
 ];
-
-export default unifyMixins;
-

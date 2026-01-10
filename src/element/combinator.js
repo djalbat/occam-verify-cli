@@ -3,6 +3,7 @@
 import Element from "../element";
 
 import { define } from "../elements";
+import { verifyCombinator } from "../process/verify";
 import { unifyStatementWithCombinator } from "../process/unify";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
@@ -26,9 +27,10 @@ export default define(class Combinator extends Element {
 
     context.trace(`Verifying the '${combinatorString}' combinator...`, node);
 
-    const statementValidates = this.validateStatement();
+    const combinator = this,  ///
+          combinatorVerifies = verifyCombinator(combinator, context);
 
-    if (statementValidates) {
+    if (combinatorVerifies) {
       verifies = true;
     }
 
@@ -37,27 +39,6 @@ export default define(class Combinator extends Element {
     }
 
     return verifies;
-  }
-
-  validateStatement() {
-    let statementValidates;
-
-    const node = this.getNode(),
-          context = this.getContext(),
-          combinatorString = this.getString();  ///
-
-    context.trace(`Validating the '${combinatorString}' combinator's statement...`, node);
-
-    const stated = true,
-          assignments = null;
-
-    statementValidates = this.statement.validate(assignments, stated, context);
-
-    if (statementValidates) {
-      context.debug(`...validated the '${combinatorString}' combinator's statement.`, node);
-    }
-
-    return statementValidates;
   }
 
   unifyStatement(statement, assignments, stated, context) {
