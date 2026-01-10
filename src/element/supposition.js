@@ -32,46 +32,49 @@ export default define(class Supposition extends Element {
 
     context = temporaryContext; ///
 
-    const suppositionString = this.string; ///
+    const node = this.getNode(),
+          suppositionString = this.getString(); ///
 
-    context.trace(`Verifying the '${suppositionString}' supposition...`, this.node);
+    context.trace(`Verifying the '${suppositionString}' supposition...`, node);
 
-    if (false) {
-      ///
-    } else if (this.statement !== null) {
-      const stated = true,
-            assignments = [],
-            statementVerifies = this.statement.verify(assignments, stated, context);
+    if ((this.statement === null) && (this.procedureCall === null)) {
+      context.debug(`Unable to verify the '${suppositionString}' supposition because it is nonsense.`, node);
+    } else {
+      if (this.statement !== null) {
+        const stated = true,
+              assignments = [],
+              statementValidates = this.statement.validate(assignments, stated, context);
 
-      if (statementVerifies) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
+        if (statementValidates) {
+          const assignmentsAssigned = assignAssignments(assignments, context);
 
-        if (assignmentsAssigned) {
-          const { Step } = elements,
-                step = Step.fromStatement(this.statement, context),
-                stepOrSubproof = step;  ///
+          if (assignmentsAssigned) {
+            const { Step } = elements,
+                  step = Step.fromStatement(this.statement, context),
+                  stepOrSubproof = step;  ///
 
-          context.addStepOrSubproof(stepOrSubproof);
+            context.addStepOrSubproof(stepOrSubproof);
 
+            verifies = true;
+          }
+        }
+      }
+
+      if (this.procedureCall !== null) {
+        const stated = true,
+              assignments = null,
+              procedureCallVerifies = this.procedureCall.verify(assignments, stated, context);
+
+        if (procedureCallVerifies) {
           verifies = true;
         }
       }
-    } else if (this.procedureCall !== null) {
-      const stated = true,
-            assignments = null,
-            procedureCallVerifies = this.procedureCall.verify(assignments, stated, context);
-
-      if (procedureCallVerifies) {
-        verifies = true;
-      }
-    } else {
-      context.debug(`Unable to verify the '${suppositionString}' supposition because it is nonsense.`, this.node);
     }
 
     if (verifies) {
-      this.context = context;
+      this.setContext(context);
 
-      context.debug(`...verified the '${suppositionString}' supposition.`, this.node);
+      context.debug(`...verified the '${suppositionString}' supposition.`, node);
     }
 
     return verifies;
@@ -80,12 +83,13 @@ export default define(class Supposition extends Element {
   unifySupposition(supposition, substitutions, generalContext, specificContext) {
     let suppositionUnifies;
 
-    const context = specificContext,  ///
+    const node = this.getNode(),
+          context = specificContext,  ///
           specificSupposition = supposition,  ///
-          generalSuppositionString = this.string, ///
+          generalSuppositionString = this.getString(), ///
           specificSuppositionString = specificSupposition.getString();
 
-    context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition...`, this.node);
+    context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition...`, node);
 
     const statement = specificSupposition.getStatement(),
           statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
@@ -93,7 +97,7 @@ export default define(class Supposition extends Element {
     suppositionUnifies = statementUnifies;  ///
 
     if (suppositionUnifies) {
-      context.debug(`...unified the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition.`, this.node);
+      context.debug(`...unified the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition.`, node);
     }
 
     return suppositionUnifies;
@@ -102,11 +106,18 @@ export default define(class Supposition extends Element {
   unifyIndependently(substitutions, context) {
     let unifiesIndependently = false;
 
-    const suppositionString = this.string,  ///
-          generalContext = this.context,  ///
-          specificContext = context;  ///
+    const node = this.getNode(),
+          suppositionString = this.getString();
 
-    context.trace(`Unifying the '${suppositionString}' supposition independently...`, this.node);
+    context.trace(`Unifying the '${suppositionString}' supposition independently...`, node);
+
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context; ///
+
+    context = specificContext;  ///
 
     if (this.statement !== null) {
       const statementUnifiesIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
@@ -125,7 +136,7 @@ export default define(class Supposition extends Element {
     }
 
     if (unifiesIndependently) {
-      context.debug(`...unified the '${suppositionString}' supposition independenly.`, this.node);
+      context.debug(`...unified the '${suppositionString}' supposition independenly.`, node);
     }
 
     return unifiesIndependently;
@@ -190,14 +201,19 @@ export default define(class Supposition extends Element {
 
     context.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
 
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context;  ///
+
+    context = specificContext;  ///
+
     if (this.statement !== null) {
       const context = generalContext, ///
             subproofAssertion = subproofAssertionFromStatement(this.statement, context);
 
       if (subproofAssertion !== null) {
-        const generalContext = this.context,  ///
-              specificContext = context;  ///
-
         subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
       }
     }

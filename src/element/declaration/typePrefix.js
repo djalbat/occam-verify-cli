@@ -30,7 +30,7 @@ export default define(class TypePrefixDeclaration extends Declaration {
           typesLength = types.length;
 
     if (typesLength > 0) {
-      context.debug(`Cannot verify the '${typePrefixDeclarationString}' type prefix declaration because types have already been declared.`, node);
+      context.debug(`Unable to verify the '${typePrefixDeclarationString}' type prefix declaration because types have already been declared.`, node);
     } else {
       const typePrefixVerifies = this.verifyTypePrefix();
 

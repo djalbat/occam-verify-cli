@@ -121,7 +121,7 @@ function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAsser
           } else {
             const axiomString = axiom.getString();
 
-            context.debug(`Cannot unify with the '${axiomString}' because it is not satisfiable.`)
+            context.debug(`Unable to unify with the '${axiomString}' because it is not satisfiable.`)
           }
         }
       }

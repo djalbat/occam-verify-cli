@@ -24,24 +24,27 @@ export default define(class Deduction extends Element {
 
     context = temporaryContext; ///
 
-    const deductionString = this.string;  ///
+    const node = this.getNode(),
+          deductionString = this.getString();  ///
 
-    context.trace(`Verifying the '${deductionString}' deduction...`, this.node);
+    context.trace(`Verifying the '${deductionString}' deduction...`, node);
 
-    if (this.statement !== null) {
+    if (this.statement === null) {
+      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`, node);
+    } else {
       const stated = true,
             assignments = null,
-            statementVerifies = this.statement.verify(assignments, stated, context);
+            statementVealidates = this.statement.validate(assignments, stated, context);
 
-      verifies = statementVerifies; ///
-    } else {
-      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`, this.node);
+      if (statementVealidates) {
+        verifies = true;
+      }
     }
 
     if (verifies) {
-      this.context = context;
+      this.setContext(context);
 
-      context.debug(`...verified the '${deductionString}' deduction.`, this.node);
+      context.debug(`...verified the '${deductionString}' deduction.`, node);
     }
 
     return verifies;

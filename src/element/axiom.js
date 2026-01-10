@@ -93,7 +93,7 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
     const unconditional = this.isUnconditional();
 
     if (!unconditional) {
-      context.trace(`Cannot unify the '${stepString}' step with the '${axiomString}' axiom because the axiom is not unconditional.`, node);
+      context.trace(`Unable to unify the '${stepString}' step with the '${axiomString}' axiom because the axiom is not unconditional.`, node);
     } else {
       const statement = step.getStatement(),
             statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
@@ -145,7 +145,7 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
     const unconditional = this.isUnconditional();
 
     if (unconditional) {
-      context.trace(`Cannot unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`, node);
+      context.trace(`Unable to unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`, node);
     } else {
       const lastStep = subproof.getLastStep(),
             lastStepUnifies = this.unifyLastStep(lastStep, substitutions, context);

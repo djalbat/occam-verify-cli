@@ -30,9 +30,9 @@ export default define(class Hypothesis extends Element {
     } else if (this.statement !== null) {
       const stated = true,
             assignments = [],
-            statementVerifies = this.statement.verify(assignments, stated, context);
+            statementValidates = this.statement.validate(assignments, stated, context);
 
-      if (statementVerifies) {
+      if (statementValidates) {
         const assignmentsAssigned = assignAssignments(assignments, context);
 
         if (assignmentsAssigned) {

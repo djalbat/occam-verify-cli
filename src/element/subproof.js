@@ -46,16 +46,8 @@ export default define(class Subproof extends Element {
     return sStep;
   }
 
-  unify(substitutions, context) {
-    let unifies;
-
-    unifies = true; ///
-
-    return unifies;
-  }
-
   verify(substitutions, assignments, context) {
-    let subproofVerifies = false;
+    let verifies = false;
 
     const localContext = LocalContext.fromNothing(context);  ///
 
@@ -73,11 +65,11 @@ export default define(class Subproof extends Element {
       const subDerivationVerifies = this.subDerivation.verify(substitutions, context);
 
       if (subDerivationVerifies) {
-        subproofVerifies = true;
+        verifies = true;
       }
     }
 
-    return subproofVerifies;
+    return verifies;
   }
 
   equateWithStatement(statement, context) {

@@ -25,8 +25,8 @@ export default define(class Premise extends Element {
     return this.procedureCall;
   }
 
-  validate(context) {
-    let validates = false;
+  verify(context) {
+    let verifies = false;
 
     const temporaryContext = TemporaryContext.fromNothing(context);
 
@@ -35,47 +35,49 @@ export default define(class Premise extends Element {
     const node = this.getNode(),
           premiseString = this.getString(); ///
 
-    context.trace(`Validating the '${premiseString}' premise...`, node);
+    context.trace(`Verifying the '${premiseString}' premise...`, node);
 
-    if (false) {
-      ///
-    } else if (this.statement !== null) {
-      const stated = true,
-            assignments = [],
-            statementValidates = this.statement.validate(assignments, stated, context);
+    if ((this.statement === null) && (this.procedureCall === null)) {
+      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`, node);
+    } else {
+      if (this.statement !== null) {
+        const stated = true,
+              assignments = [],
+              statementValidates = this.statement.validate(assignments, stated, context);
 
-      if (statementValidates) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
+        if (statementValidates) {
+          const assignmentsAssigned = assignAssignments(assignments, context);
 
-        if (assignmentsAssigned) {
-          const { Step } = elements,
-                step = Step.fromStatement(this.statement, context),
-                stepOrSubproof = step;  ///
+          if (assignmentsAssigned) {
+            const { Step } = elements,
+                  step = Step.fromStatement(this.statement, context),
+                  stepOrSubproof = step;  ///
 
-          context.addStepOrSubproof(stepOrSubproof);
+            context.addStepOrSubproof(stepOrSubproof);
 
-          validates = true;
+            verifies = true;
+          }
         }
       }
-    } else if (this.procedureCall !== null) {
-      const stated = true,
-            assignments = null,
-            procedureCallVerifies = this.procedureCall.verify(assignments, stated, context);
 
-      if (procedureCallVerifies) {
-        validates = true;
+      if (this.procedureCall !== null) {
+        const stated = true,
+              assignments = null,
+              procedureCallVerifies = this.procedureCall.verify(assignments, stated, context);
+
+        if (procedureCallVerifies) {
+          verifies = true;
+        }
       }
-    } else {
-      context.debug(`Unable to validate the '${premiseString}' premise because it is nonsense.`, node);
     }
 
-    if (validates) {
+    if (verifies) {
       this.setContext(context);
 
-      context.debug(`...validated the '${premiseString}' premise.`, node);
+      context.debug(`...verified the '${premiseString}' premise.`, node);
     }
 
-    return validates;
+    return verifies;
   }
 
   unifyIndependently(substitutions, context) {
@@ -186,29 +188,6 @@ export default define(class Premise extends Element {
     }
 
     return subproofUnifies;
-  }
-
-  unifyStatement(statement, substitutions, context) {
-    let statementUnifies;
-
-    const premise = this, ///
-          premiseString = premise.getString(),
-          statementString = statement.getString();
-
-    context.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`);
-
-    if (this.statement !== null) {
-      const generalContext = this.context,  ///
-            specificContext = context;  ///
-
-      statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
-    }
-
-    if (statementUnifies) {
-      context.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`);
-    }
-
-    return statementUnifies;
   }
 
   toJSON() {

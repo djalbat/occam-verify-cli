@@ -386,41 +386,53 @@ class ConbinatorPass extends Pass {
   static maps = [
     {
       nodeQuery: statementNodeQuery,
-      verify: (statementNode, context) => {
+      run: (statementNode, context) => {
+        let success = false;
+
         const statement = statementFromStatementNode(statementNode, context),
               assignments = null,
               stated = false,
-              statementVerifies = statement.verify(assignments, stated, context);
+              statementValidates = statement.validate(assignments, stated, context);
 
-        return statementVerifies;
+        if (statementValidates) {
+          success = true;
+        }
+
+        return success;
       }
     },
     {
       nodeQuery: termNodeQuery,
-      verify: (termNode, context) => {
+      run: (termNode, context) => {
+        let success = false;
+
         const term = termFromTermNode(termNode, context),
-              termVerifies = term.verify(context, () => {
+              termValidates = term.validate(context, () => {
                 const verifiesAhead = true;
 
                 return verifiesAhead;
               });
 
-        return termVerifies;
+        if (termValidates) {
+          success = true;
+        }
+
+        return success;
       }
     },
     {
       nodeQuery: typeNodeQuery,
-      verify: (typeNode, context) => {
-        let typeVerifies = false;
+      run: (typeNode, context) => {
+        let success = false;
 
         const nominalTypeName = typeNode.getNominalTypeName(),
               typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
         if (typePresent) {
-          typeVerifies = true;
+          success = true;
         }
 
-        return typeVerifies;
+        return success;
       }
     }
   ];
@@ -430,30 +442,36 @@ class ConstructorPass extends Pass {
   static maps = [
     {
       nodeQuery: termNodeQuery,
-      verify: (termNode, context) => {
+      run: (termNode, context) => {
+        let success = false;
+
         const term = termFromTermNode(termNode, context),
-              termVerifies = term.verify(context, () => {
-            const verifiesAhead = true;
+              termValidates = term.validate(context, () => {
+                const verifiesAhead = true;
 
-            return verifiesAhead;
-          });
+                return verifiesAhead;
+              });
 
-        return termVerifies;
+        if (termValidates) {
+          success = true;
+        }
+
+        return success;
       }
     },
     {
       nodeQuery: typeNodeQuery,
-      verify: (typeNode, context) => {
-        let typeVerifies = false;
+      run: (typeNode, context) => {
+        let success = false;
 
         const nominalTypeName = typeNode.getNominalTypeName(),
               typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
         if (typePresent) {
-          typeVerifies = true;
+          success = true;
         }
 
-        return typeVerifies;
+        return success;
       }
     }
   ];

@@ -32,19 +32,15 @@ export default define(class SubDerivation extends Element {
 
     verifies = this.stepsOrSubproofs.every((stepOrSubproof) => { ///
       const assignments = [],
-            stepOrSubproofValidates = stepOrSubproof.validate(substitutions, assignments, context);
+            stepOrSubproofVarifies = stepOrSubproof.verify(substitutions, assignments, context);
 
-      if (stepOrSubproofValidates) {
-        const stepOrSubproofUnifies = stepOrSubproof.unify(substitutions, context);
+      if (stepOrSubproofVarifies) {
+        const assignmentsAssigned = assignAssignments(assignments, context);
 
-        if (stepOrSubproofUnifies) {
-          const assignmentsAssigned = assignAssignments(assignments, context);
+        if (assignmentsAssigned) {
+          context.addStepOrSubproof(stepOrSubproof);
 
-          if (assignmentsAssigned) {
-            context.addStepOrSubproof(stepOrSubproof);
-
-            return true;
-          }
+          return true;
         }
       }
     });

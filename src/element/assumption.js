@@ -142,7 +142,7 @@ export default define(class Assumption extends Element {
 
       assignments = null; ///
 
-      statementValidates = this.statement.verify(assignments, stated, context);
+      statementValidates = this.statement.validate(assignments, stated, context);
 
       if (statementValidates) {
         context.debug(`...validated the '${statementString}' statement.`);

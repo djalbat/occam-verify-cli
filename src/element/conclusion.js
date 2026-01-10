@@ -29,7 +29,9 @@ export  default define(class Conclusion extends Element {
 
     context.trace(`Verifying the '${conclusionString}' conclusion...`, node);
 
-    if (this.statement !== null) {
+    if (this.statement === null) {
+      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`, node);
+    } else {
       const stated = true,
             assignments = null,
             statementValidates = this.statement.validate(assignments, stated, context);
@@ -37,8 +39,6 @@ export  default define(class Conclusion extends Element {
       if (statementValidates) {
         verifies = true;
       }
-    } else {
-      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`, node);
     }
 
     if (verifies) {

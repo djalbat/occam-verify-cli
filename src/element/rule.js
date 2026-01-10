@@ -74,9 +74,9 @@ export default define(class Rule extends Element {
 
       context = localContext; ///
 
-      const premisesValidate = this.validatePremises(context);
+      const premisesVerify = this.verifyPremises(context);
 
-      if (premisesValidate) {
+      if (premisesVerify) {
         const conclusionVerifies = this.verifyConclusion(context);
 
         if (conclusionVerifies) {
@@ -114,22 +114,22 @@ export default define(class Rule extends Element {
     return labelsVerify;
   }
 
-  validatePremises(context) {
-    const premisesValidate = this.premises.every((premise) => {
-      const premiseValidates = this.validatePremise(premise, context);
+  verifyPremises(context) {
+    const premisesVerify = this.premises.every((premise) => {
+      const premiseVerifies = this.verifyPremise(premise, context);
 
-      if (premiseValidates) {
+      if (premiseVerifies) {
         return true;
       }
     });
 
-    return premisesValidate;
+    return premisesVerify;
   }
 
-  validatePremise(premise, context) {
-    const premiseValidates = premise.validate(context);
+  verifyPremise(premise, context) {
+    const premiseVerifies = premise.verify(context);
 
-    return premiseValidates;
+    return premiseVerifies;
   }
 
   verifyConclusion(context) {

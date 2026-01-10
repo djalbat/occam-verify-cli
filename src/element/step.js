@@ -69,80 +69,105 @@ export default define(class Step extends Element {
     return termAndPropertyRelationMatch;
   }
 
-  validate(substitutions, assignments, context) {
-    let validates = false;
+  verify(substitutions, assignments, context) {
+    let verifies = false;
 
     const temporaryContext = TemporaryContext.fromNothing(context);
 
     context = temporaryContext; ///
 
-    const stepString = this.string; ///
+    const node = this.getNode(),
+          stepString = this.getString(); ///
 
-    context.trace(`Validating the '${stepString}' step...`, this.node);
+    context.trace(`Verifying the '${stepString}' step...`, node);
 
-    if (this.statement !== null) {
-      const stated = this.isStated(),
-            statementVerifies = this.statement.validate(assignments, stated, context);
+    if (this.statement === null) {
+      context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`, node);
+    } else {
+      const referenceVerifies = this.verifyReference(context);
 
-      if (statementVerifies) {
-        const qualified = this.isQualified(),
-              satisfied = this.isSatisfied();
+      if (referenceVerifies) {
+        const satisfiesAssertioVeriries = this.verifySatisfiesAssertion(context);
 
-        if (false) {
-          ///
-        } else if (qualified) {
-          const referenceVerifies = this.reference.validate(context);
+        if (satisfiesAssertioVeriries) {
+          const stated = this.isStated(),
+                statementValidates = this.statement.validate(assignments, stated, context);
 
-          if (referenceVerifies) {
-            validates = true;
+          if (statementValidates) {
+            const statementUnifies = unifyStatements.some((unifyStatement) => {
+              const statementUnifies = unifyStatement(this.statement, this.reference, this.satisfiesAssertion, substitutions, context);
+
+              if (statementUnifies) {
+                return true;
+              }
+            });
+
+            if (statementUnifies) {
+              const { Step } = elements,
+                    step = Step.fromStatement(this.statement, context),
+                    stepOrSubproof = step;  ///
+
+              context.addStepOrSubproof(stepOrSubproof);
+
+              this.setContext(context);
+
+              verifies = true;
+            }
           }
-        } else if (satisfied) {
-          const stated = true,
-                assignments = null,
-                satisfiesAssertionVerifies = this.satisfiesAssertion.validate(assignments, stated, context);
-
-          if (satisfiesAssertionVerifies) {
-            validates = true;
-          }
-        } else {
-          validates = true;
         }
       }
-    } else {
-      context.debug(`Cannot validate the '${stepString}' step because it is nonsense.`, this.node);
     }
 
-    if (validates) {
-      this.context = context;
-
-      context.debug(`...verified the '${stepString}' step.`, this.node);
+    if (verifies) {
+      context.debug(`...verified the '${stepString}' step.`, node);
     }
 
-    return validates;
+    return verifies;
   }
 
-  unify(substitutions, context) {
-    let unifies;
+  verifyReference(context) {
+    let referenceVeriries;
 
-    context = this.context;
+    const node = this.getNode(),
+          stepString = this.getString();  ///
 
-    const stepString = this.string;  ///
+    context.trace(`Verifying the '${stepString}' step's reference... `, node);
 
-    context.trace(`Unifying the '${stepString}' step...`, this.node);
-
-    unifies = unifyStatements.some((unifyStatement) => {
-      const statementUnifies = unifyStatement(this.statement, this.reference, this.satisfiesAssertion, substitutions, context);
-
-      if (statementUnifies) {
-        return true;
-      }
-    });
-
-    if (unifies) {
-      context.debug(`...unified the '${stepString}' step.`, this.node);
+    if (this.reference !== null) {
+      referenceVeriries = this.reference.verify(context);
+    } else {
+      referenceVeriries = true;
     }
 
-    return unifies;
+    if (referenceVeriries) {
+      context.debug(`...verified the '${stepString}' step's reference. `, node);
+    }
+
+    return referenceVeriries;
+  }
+
+  verifySatisfiesAssertion(context) {
+    let satisfiesAssertionVerifies;
+
+    const node = this.getNode(),
+          stepString = this.getString();  ///
+
+    context.trace(`Verifying the '${stepString}' step's satisfies assertion... `, node);
+
+    if (this.satisfiesAssertion !== null) {
+      const stated = true,
+            assignments = null;
+
+      satisfiesAssertionVerifies = this.satisfiesAssertion.validate(assignments, stated, context);
+    } else {
+      satisfiesAssertionVerifies = true;
+    }
+
+    if (satisfiesAssertionVerifies) {
+      context.debug(`...verified the '${stepString}' step's satisfies assertion. `, node);
+    }
+
+    return satisfiesAssertionVerifies;
   }
 
   equateWithStatement(statement, context) {
