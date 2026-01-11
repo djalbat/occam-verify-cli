@@ -1,10 +1,8 @@
 "use strict";
 
 import Element from "../element";
-import elements from "../elements";
 import LocalContext from "../context/local";
 
-import { proofFromProofNode, deductionFromDeductionNode, suppositionsFromSuppositionNodes } from "./axiomLemmaTheoremConjecture";
 import { labelFromJSON,
          labelToLabelJSON,
          deductionFromJSON,
@@ -150,72 +148,9 @@ export default class MetaLemmaMetatheorem extends Element {
           substitutions = substitutionsFromJSON(json, context),
           node = null,
           proof = null,
-          string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
+          string = metaLemmaMetatheoremStringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
           metaLemmaMetatheorem = new Class(context, string, node, label, suppositions, deduction, proof, substitutions);
 
     return metaLemmaMetatheorem;
   }
-
-  static fromNode(Class, node, context) {
-    const { Substitutions } = elements,
-          topLevelAssertionNode = node, ///
-          proofNode = topLevelAssertionNode.getProofNode(),
-          labelNode = topLevelAssertionNode.getLabelNode(),
-          deductionNode = topLevelAssertionNode.getDeductionNode(),
-          suppositionNodes = topLevelAssertionNode.getSuppositionNodes(),
-          proof = proofFromProofNode(proofNode, context),
-          label = labelFromLabelNode(labelNode, context),
-          deduction = deductionFromDeductionNode(deductionNode, context),
-          suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context),
-          substitutions = Substitutions.fromNothing(),
-          string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
-          metaLemmaMetatheorem = new Class(context, string, node, label, suppositions, deduction, proof, substitutions);
-
-    return metaLemmaMetatheorem;
-  }
-}
-
-function labelFromLabelNode(labelNode, context) {
-  let label = null;
-
-  const { Label } = elements;
-
-  if (labelNode !== null) {
-    label = Label.fromLabelNode(labelNode, context);
-  }
-
-  return label;
-}
-
-function labelStringFromLabel(label) {
-  const labelsString = (label !== null) ?
-                          label.getString() :
-                            null;
-
-  return labelsString;
-}
-
-function suppositionsStringFromSuppositions(suppositions) {
-  const suppositionsString = suppositions.reduce((suppositionsString, supposition) => {
-    const suppositionString = supposition.getString();
-
-    suppositionsString = (suppositionsString !== null) ?
-                          `${suppositionsString}, ${suppositionString}` :
-                            suppositionString;  ///
-
-    return suppositionsString;
-  }, null);
-
-  return suppositionsString;
-}
-
-function stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction) {
-  const suppositionsString = suppositionsStringFromSuppositions(suppositions),
-        deductionString = deduction.getString(),
-        labelString = labelStringFromLabel(label),
-        string = (labelString === null) ?
-                    deductionString : ///
-                     `${labelString} :: [${suppositionsString}] ... ${deductionString}`;
-
-  return string;
 }

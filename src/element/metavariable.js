@@ -46,7 +46,8 @@ export default define(class Metavariable extends Element {
   }
 
   compareMetavariableName(metavariableName) {
-    const comparesToMetavariableName = (metavariableName === this.name);
+    const nameMetavariableName = (this.name === metavariableName),
+          comparesToMetavariableName = nameMetavariableName;  ///
 
     return comparesToMetavariableName;
   }
@@ -54,7 +55,7 @@ export default define(class Metavariable extends Element {
   isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
   validate(context) {
-    let validates;
+    let validates = false;
 
     const metavariableString = this.getString(); ///
 
@@ -63,7 +64,9 @@ export default define(class Metavariable extends Element {
     const metavariable = this, ///
           metavariablePresent = context.isMetavariablePresent(metavariable);
 
-    validates = metavariablePresent; ///
+    if (metavariablePresent) {
+      validates = true;
+    }
 
     if (validates) {
       context.debug(`...va;idated the '${metavariableString}' metavariable.`);
@@ -87,7 +90,9 @@ export default define(class Metavariable extends Element {
     if (metavariable !== null) {
       const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);
 
-      validatesGivenMetaType = metavariableMetaTypeEqualToMetaType;  ///
+      if (metavariableMetaTypeEqualToMetaType) {
+        validatesGivenMetaType = true;
+      }
     }
 
     if (validatesGivenMetaType) {

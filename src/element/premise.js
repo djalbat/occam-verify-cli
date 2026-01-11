@@ -125,16 +125,20 @@ export default define(class Premise extends Element {
 
     substitutions.snapshot();
 
+    if (step !== null) {
+      const stepUnifies = this.unifyStep(step, substitutions, context);
+
+      if (stepUnifies) {
+        stepOrSubproofUnifies = true;
+      }
+    }
+
     if (subproof !== null) {
       const subproofUnifies = this.unifySubproof(subproof, substitutions, context);
 
-      stepOrSubproofUnifies = subproofUnifies; ///
-    }
-
-    if (step !== null) {
-      const statementUnifies = this.unifyStep(step, substitutions, context);
-
-      stepOrSubproofUnifies = statementUnifies;  ///
+      if (subproofUnifies) {
+        stepOrSubproofUnifies = true;
+      }
     }
 
     if (stepOrSubproofUnifies) {
@@ -156,7 +160,7 @@ export default define(class Premise extends Element {
           premiseStatement = premise.getStatement(),
           premiseStatementString = premiseStatement.getString();
 
-    context.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
+    context.trace(`Unifying the '${subproofString}' subproof with the '${premiseStatementString}' premise...`);
 
     const specificContext = context;  ///
 
@@ -167,16 +171,24 @@ export default define(class Premise extends Element {
     context = specificContext;  ///
 
     if (this.statement !== null) {
-      const context = generalContext, ///
-            subproofAssertion = subproofAssertionFromStatement(this.statement, context);
+      const statementNode = this.statement.getNode(),
+            subproofAssertionNode = statementNode.getSubproofAssertionNode();
 
-      if (subproofAssertion !== null) {
-        subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
+      if (subproofAssertionNode !== null) {
+        const context = generalContext, ///
+              assertionNode = subproofAssertionNode,  ///
+              assertion = context.findAssertionByAssertionNode(assertionNode)
+
+        if (assertion !== null) {
+          const subproofAssertion = assertion;  ///
+
+          subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
+        }
       }
     }
 
     if (subproofUnifies) {
-      context.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
+      context.debug(`...unified the '${subproofString}' subproof with the '${premiseStatementString}' premise.`);
     }
 
     return subproofUnifies;

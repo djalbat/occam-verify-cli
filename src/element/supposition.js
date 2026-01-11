@@ -162,7 +162,7 @@ export default define(class Supposition extends Element {
           suppositionStatement = supposition.getStatement(),
           suppositionStatementString = suppositionStatement.getString();
 
-    context.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
+    context.trace(`Unifying the '${subproofString}' subproof with the '${suppositionStatementString}' supposition...`);
 
     const specificContext = context;  ///
 
@@ -173,19 +173,24 @@ export default define(class Supposition extends Element {
     context = specificContext;  ///
 
     if (this.statement !== null) {
-      const node = this.getNode(),
-            assertionNode = node, /// 
-            assertion = context.findAssertionByAssertionNode(assertionNode);
+      const statementNode = this.statement.getNode(),
+            subproofAssertionNode = statementNode.getSubproofAssertionNode();
 
-      if (assertion !== null) {}
+      if (subproofAssertionNode !== null) {
+        const context = generalContext, ///
+              assertionNode = subproofAssertionNode,  ///
+              assertion = context.findAssertionByAssertionNode(assertionNode)
 
-      if (subproofAssertion !== null) {
-        subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
+        if (assertion !== null) {
+          const subproofAssertion = assertion;  ///
+
+          subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
+        }
       }
     }
 
     if (subproofUnifies) {
-      context.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
+      context.debug(`...unified the '${subproofString}' subproof with the '${suppositionStatementString}' supposition.`);
     }
 
     return subproofUnifies;

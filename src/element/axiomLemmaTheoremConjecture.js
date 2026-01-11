@@ -310,23 +310,4 @@ export default class AxiomLemmaTheoremConjecture extends Element {
 
     return axiomLemmaTheoremConjecture;
   }
-
-  static fromNode(Class, node, context) {
-    const topLevelAssertionNode = node, ///
-          proofNode = topLevelAssertionNode.getProofNode(),
-          labelNodes = topLevelAssertionNode.getLabelNodes(),
-          deductionNode = topLevelAssertionNode.getDeductionNode(),
-          suppositionNodes = topLevelAssertionNode.getSuppositionNodes(),
-          signatureNode = topLevelAssertionNode.getSignatureNode(),
-          proof = proofFromProofNode(proofNode, context),
-          labels = labelsFromLabelNodes(labelNodes, context),
-          deduction = deductionFromDeductionNode(deductionNode, context),
-          suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context),
-          signature = signatureFromSignatureNode(signatureNode, context),
-          hypotheses = [],
-          string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          axiomLemmaTheoremConjecture = new Class(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
-
-    return axiomLemmaTheoremConjecture;
-  }
 }

@@ -170,7 +170,7 @@ export default define(class Step extends Element {
     return satisfiesAssertionVerifies;
   }
 
-  compareStatment(statement, context) {
+  compareStatement(statement, context) {
     let comparesToStatement;
 
     const leftStatement = statement,  ///
@@ -220,13 +220,21 @@ export default define(class Step extends Element {
   static name = "Step";
 
   static fromStatement(statement, context) {
-    const statementString = statement.getString(),
-          stepString = statementString, ///
-          string = `${stepString}
-`,
-          stepNode = instantiateStep(string, context),
-          step = stepFromStepNode(stepNode, context);
+    let string;
 
-    return step;;
+    const statementString = statement.getString();
+
+    string = `${statementString}
+`;
+    const stepNode = instantiateStep(string, context);
+
+    string = statementString;  ///
+
+    const node = stepNode,  ///
+          reference = null,
+          satisfiesAssertion = null,
+          step = new Step(context, string, node, statement, reference, satisfiesAssertion);
+
+    return step;
   }
 });

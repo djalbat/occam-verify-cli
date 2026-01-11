@@ -71,13 +71,15 @@ export default define(class Reference extends Element {
   }
 
   validateMetavariable(context) {
-    let metavariableValidates;
+    let metavariableValidates = false;
 
     const referenceMetaType = referenceMetaTypeFromNothing(),
           metaType = referenceMetaType, ///
           metavariableValidatesGivenMetaType = this.metavariable.validateGivenMetaType(metaType, context);
 
-    metavariableValidates = metavariableValidatesGivenMetaType; ///
+    if (metavariableValidatesGivenMetaType) {
+      metavariableValidates = true;
+    }
 
     return metavariableValidates;
   }

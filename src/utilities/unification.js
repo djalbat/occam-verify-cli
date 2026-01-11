@@ -44,14 +44,14 @@ function unifyStatementWithReference(statement, reference, satisfiesAssertion, s
   let statementUnifiesWithReference = false;
 
   if (reference !== null) {
-    const metavariableVerifies = reference.verifyMetavariable(context);
+    const statementString = statement.getString(),
+          referenceString = reference.getString();
 
-    if (metavariableVerifies) {
-      const statementString = statement.getString(),
-            referenceString = reference.getString();
+    context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
 
-      context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
+    const metavariableValidates = reference.validateMetavariable(context);
 
+    if (metavariableValidates) {
       const { StatementSubstitution } = elements,
             metavariable = reference.getMetavariable(),
             statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
@@ -60,10 +60,10 @@ function unifyStatementWithReference(statement, reference, satisfiesAssertion, s
       substitutions.addSubstitution(substitution, context);
 
       statementUnifiesWithReference = true;
+    }
 
-      if (statementUnifiesWithReference) {
-        context.debug(`...unified the '${statementString}' statement with the '${referenceString}' reference.`);
-      }
+    if (statementUnifiesWithReference) {
+      context.debug(`...unified the '${statementString}' statement with the '${referenceString}' reference.`);
     }
   }
 

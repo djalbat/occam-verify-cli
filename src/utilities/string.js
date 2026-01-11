@@ -150,7 +150,7 @@ export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conc
         conclusionString = conclusion.getString(),
         labelsString = labelsStringFromLabels(labels),
         ruleString = (premisesString !== null) ?
-                       `${labelsString} :: [${premisesString}] ... ${conclusionString}` :
+                       `${labelsString} :: [${premisesString}]...${conclusionString}` :
                          `${labelsString} :: ${conclusionString}`;
 
   return ruleString;
@@ -160,7 +160,7 @@ export function subproofStringFromSuppositionsAndSubDerivation(suppositions, sub
   const lastStep = subDerivation.getLastStep(),
         lastStepString = lastStep.getString(),
         suppositionsString = suppositionsStringFromSuppositions(suppositions),
-        subproofString = `[${suppositionsString}] ... ${lastStepString}`;
+        subproofString = `[${suppositionsString}]...${lastStepString}`;
 
   return subproofString;
 }
@@ -205,7 +205,7 @@ export function metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction(labe
         deductionString = deduction.getString(),
         labelString = label.getString(),
         metaLemmaMetatheoremString = (suppositionsString !== null) ?
-                                       `${labelString} :: [${suppositionsString}] ... ${deductionString}` :
+                                       `${labelString} :: [${suppositionsString}]...${deductionString}` :
                                          `${labelString} :: ${deductionString}`;
 
   return metaLemmaMetatheoremString;
@@ -220,11 +220,11 @@ export function axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduct
 
   if (labelsString !== null) {
     axiomLemmaTheoremConjectureString = (suppositionsString !== null) ?
-                                          `${labelsString} :: [${suppositionsString}] ... ${deductionString}` :
+                                          `${labelsString} :: [${suppositionsString}]...${deductionString}` :
                                             `${labelsString} :: ${deductionString}`;
   } else {
     axiomLemmaTheoremConjectureString = (suppositionsString !== null) ?
-                                         `[${suppositionsString}] ... ${deductionString}` :
+                                         `[${suppositionsString}]...${deductionString}` :
                                             deductionString;
   }
 
