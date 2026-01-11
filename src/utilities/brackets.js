@@ -1,7 +1,6 @@
 "use strict";
 
-import elements from "../elements";
-
+import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
 import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
 
@@ -10,10 +9,9 @@ export function stripBracketsFromTerm(term, context) {
         bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);
 
   if (bracketedTermChildNode !== null) {
-    const { Term } = elements,
-          termNode = bracketedTermChildNode;  ///
+    const termNode = bracketedTermChildNode;  ///
 
-    term = Term.fromTermNode(termNode, context);
+    term = termFromTermNode(termNode, context);
   }
 
   return term;
@@ -34,10 +32,9 @@ export function stripBracketsFromStatement(statement, context) {
         bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
   if (bracketedStatementChildNode !== null) {
-    const { Statement } = elements,
-          statementNode = bracketedStatementChildNode;  ///
+    const statementNode = bracketedStatementChildNode;  ///
 
-    statement = Statement.fromStatementNode(statementNode, context);
+    statement = statementFromStatementNode(statementNode, context);
   }
 
   return statement;

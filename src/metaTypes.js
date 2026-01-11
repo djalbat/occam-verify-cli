@@ -8,6 +8,19 @@ let frameMetaType = null,
     referenceMetaType = null,
     statementMetaType = null;
 
+export function getMetaTypes() {
+  const frameMetaType = frameMetaTypeFromNothing(),
+        referenceMetaType = referenceMetaTypeFromNothing(),
+        statementMetaType = statementMetaTypeFromNothing(),
+        metaTypes = [
+          frameMetaType,
+          referenceMetaType,
+          statementMetaType
+        ];
+
+  return metaTypes;
+}
+
 export function frameMetaTypeFromNothing() {
   if (frameMetaType === null) {
     const { MetaType } = elements,
@@ -19,17 +32,6 @@ export function frameMetaTypeFromNothing() {
   return frameMetaType;
 }
 
-export function referenceMetaTypeFromNothing() {
-  if (referenceMetaType === null) {
-    const { MetaType } = elements,
-          name = REFERENCE_META_TYPE_NAME;  ///
-
-    referenceMetaType = MetaType.fromName(name);
-  }
-
-  return referenceMetaType;
-}
-
 export function statementMetaTypeFromNothing() {
   if (statementMetaType === null) {
     const { MetaType } = elements,
@@ -39,4 +41,15 @@ export function statementMetaTypeFromNothing() {
   }
 
   return statementMetaType;
+}
+
+export function referenceMetaTypeFromNothing() {
+  if (referenceMetaType === null) {
+    const { MetaType } = elements,
+          name = REFERENCE_META_TYPE_NAME;  ///
+
+    referenceMetaType = MetaType.fromName(name);
+  }
+
+  return referenceMetaType;
 }

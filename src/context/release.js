@@ -10,8 +10,8 @@ import FileContext from "../context/file";
 import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
 
+import { getMetaTypes } from "../metaTypes";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
-import { frameMetaTypeFromNothing, referenceMetaTypeFromNothing, statementMetaTypeFromNothing } from "../metaTypes";
 
 const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities,
@@ -58,14 +58,7 @@ export default class ReleaseContext {
   }
 
   getMetaTypes() {
-    const frameMetaType = frameMetaTypeFromNothing(),
-          referenceMetaType = referenceMetaTypeFromNothing(),
-          statementMetaType = statementMetaTypeFromNothing(),
-          metaTypes = [
-            frameMetaType,
-            referenceMetaType,
-            statementMetaType
-          ];
+    const metaTypes = getMetaTypes();
 
     return metaTypes;
   }

@@ -2,6 +2,7 @@
 
 import nominalContext from "../context/nominal";
 
+import { getMetaTypes } from "../metaTypes";
 import { BASE_TYPE_SYMBOL } from "../constants";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { instantiateCombinator, instantiateConstructor } from "../process/instantiate";
@@ -21,9 +22,7 @@ export function bracketedCombinatorFromNothing() {
     const combinatorNode = instantiateCombinator(string, context),
           bracketedCombinatorNode = combinatorNode;  ///
 
-    context = {
-      nodeAsString: () => string
-    };
+    context = contextFromString(string);
 
     bracketedCombinator = combinatorFromCombinatorNode(bracketedCombinatorNode, context);
   }
@@ -42,12 +41,31 @@ export function bracketedConstructorFromNothing() {
     const constructorNode = instantiateConstructor(string, context),
           bracketedConstructorNode = constructorNode;  ///
 
-    context = {
-      nodeAsString: () => string
-    };
+    context = contextFromString(string);
 
     bracketedConstructor = constructorFromConstructorNode(bracketedConstructorNode, context);
   }
 
   return bracketedConstructor;
+}
+
+function contextFromString(string) {
+  const context = {
+    nodeAsString: () => string,
+    getMetaTypes: () => getMetaTypes(),
+    findMetaTypeByMetaTypeName(metaTypeName) {
+      const metaTypes = this.getMetaTypes(),
+            metaType = metaTypes.find((metaType) => {
+              const metaTypeComparesToMetaTypeName = metaType.compareMetaTypeName(metaTypeName);
+
+              if (metaTypeComparesToMetaTypeName) {
+                return true;
+              }
+            }) || null;
+
+      return metaType;
+    }
+  };
+
+  return context;
 }
