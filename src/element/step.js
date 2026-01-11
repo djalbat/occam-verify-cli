@@ -57,16 +57,16 @@ export default define(class Step extends Element {
     return step;
   }
 
-  matchTermAndPropertyRelation(term, propertyRelation, context) {
-    let termAndPropertyRelationMatch = false;
+  compareTermAndPropertyRelation(term, propertyRelation, context) {
+    let comparesToTermAndPropertyRelation = false;
 
     const propertyAssertion = propertyAssertionFromStatement(this.statement, context);
 
     if (propertyAssertion !== null) {
-      termAndPropertyRelationMatch = propertyAssertion.matchTermAndPropertyRelation(term, propertyRelation, context);
+      comparesToTermAndPropertyRelation = propertyAssertion.compareTermAndPropertyRelation(term, propertyRelation, context);
     }
 
-    return termAndPropertyRelationMatch;
+    return comparesToTermAndPropertyRelation;
   }
 
   verify(substitutions, assignments, context) {
@@ -170,8 +170,8 @@ export default define(class Step extends Element {
     return satisfiesAssertionVerifies;
   }
 
-  equateWithStatement(statement, context) {
-    let statementEquates;
+  compareStatment(statement, context) {
+    let comparesToStatement;
 
     const leftStatement = statement,  ///
           rightStatement = this.statement,  ///
@@ -179,9 +179,9 @@ export default define(class Step extends Element {
           rightStatementNode = rightStatement.getNode(),
           statementsEquate = equateStatements(leftStatementNode, rightStatementNode, context);
 
-    statementEquates = statementsEquate;  ///
+    comparesToStatement = statementsEquate;  ///
 
-    return statementEquates;
+    return comparesToStatement;
   }
 
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {

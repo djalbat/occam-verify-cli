@@ -19,6 +19,18 @@ import { TERM_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
 export default class StatementNode extends NonTerminalNode {
+  isSingular() {
+    let singular = false;
+
+    const singularMetavariableNode = this.getSingularMetavariableNode();
+
+    if (singularMetavariableNode !== null) {
+      singular = true;
+    }
+
+    return singular;
+  }
+
   getMetavariableName() {
     let metavariableName = null;
 
@@ -44,18 +56,6 @@ export default class StatementNode extends NonTerminalNode {
           substitutionNode = (frameSubstitutionNode || termSubstitutionNode);
 
     return substitutionNode;
-  }
-
-  isSingular() {
-    let singular = false;
-
-    const singularMetavariableNode = this.getSingularMetavariableNode();
-
-    if (singularMetavariableNode !== null) {
-      singular = true;
-    }
-
-    return singular;
   }
 
   getTermNodes() {

@@ -56,7 +56,7 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
     return signatureVerifies;
   }
 
-  matchSignature(signature, substitutions, context) {
+  compareSignature(signature, substitutions, context) {
     let signatureMatches = false;
 
     const satisfiable = this.isSatisfiable();
@@ -73,7 +73,7 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
 
       const generalContext = context;  ///
 
-      signatureMatches = signatureA.match(signatureB, substitutions, generalContext, specificContext);
+      signatureMatches = signatureA.compare(signatureB, substitutions, generalContext, specificContext);
     }
 
     return signatureMatches;

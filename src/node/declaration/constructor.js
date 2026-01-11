@@ -28,18 +28,18 @@ export default class ConstructorDeclarationNode extends DeclarationNode {
     return provisional;
   }
 
-  getConstructorNode() {
-    const ruleName = CONSTRUCTOR_RULE_NAME,
-          constructorNode = this.getNodeByRuleName(ruleName);
-
-    return constructorNode;
-  }
-
   getTypeNode() {
     const ruleName = TYPE_RULE_NAME,
           typeNode = this.getNodeByRuleName(ruleName);
 
     return typeNode;
+  }
+
+  getConstructorNode() {
+    const ruleName = CONSTRUCTOR_RULE_NAME,
+          constructorNode = this.getNodeByRuleName(ruleName);
+
+    return constructorNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DeclarationNode.fromRuleNameChildNodesOpacityAndPrecedence(ConstructorDeclarationNode, ruleName, childNodes, opacity, precedence); }

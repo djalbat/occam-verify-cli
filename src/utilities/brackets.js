@@ -57,8 +57,10 @@ function bracketedTermChildNodeFromTermNode(termNode) {
   let bracketedTermChildNode = null;
 
   const depth = BRACKETED_TERM_DEPTH,
-        bracketedConstructorNode = bracketedConstructorFromNothing(),
-        termNodeMatchBracketedConstructorNode = termNode.match(bracketedConstructorNode, depth);
+        bracketedConstructor = bracketedConstructorFromNothing(),
+        bracketedConstructorTerm = bracketedConstructor.getTerm(),
+        bracketedConstructorTermNode = bracketedConstructorTerm.getNode(),
+        termNodeMatchBracketedConstructorNode = termNode.match(bracketedConstructorTermNode, depth);
 
   if (termNodeMatchBracketedConstructorNode) {
     const singularTermNode = termNode.getSingularTermNode();
@@ -73,10 +75,12 @@ function bracketedStatementChildNodeFromStatementNode(statementNode) {
   let bracketedStatementChildNode = null;
 
   const depth = BRACKETED_STATEMENT_DEPTH,
-        bracketedCombinatorNode = bracketedCombinatorFromNothing(),
-        statementNodeMatchBracketedCombinatorNode = statementNode.match(bracketedCombinatorNode, depth);
+        bracketedCombinator = bracketedCombinatorFromNothing(),
+        bracketedCombinatorStatement = bracketedCombinator.getStatement(),
+        bracketedCombinatorStatementnNode = bracketedCombinatorStatement.getNode(),
+        statementNodeMatchBracketedCombinatorStatementNode = statementNode.match(bracketedCombinatorStatementnNode, depth);
 
-  if (statementNodeMatchBracketedCombinatorNode) {
+  if (statementNodeMatchBracketedCombinatorStatementNode) {
     const singularStatementNode = statementNode.getSingularStatementNode();
 
     bracketedStatementChildNode = singularStatementNode;  ///

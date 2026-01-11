@@ -28,6 +28,13 @@ export default class VariableDeclarationNode extends DeclarationNode {
     return provisional;
   }
 
+  getVariableIdentifier() {
+    const variableNode = this.getVariableNode(),
+          variableIdentifier = variableNode.getVariableIdentifier();
+
+    return variableIdentifier;
+  }
+
   getTypeNode() {
     const ruleName = TYPE_RULE_NAME,
           typeNode = this.getNodeByRuleName(ruleName);
@@ -40,13 +47,6 @@ export default class VariableDeclarationNode extends DeclarationNode {
           variableNode = this.getNodeByRuleName(ruleName);
 
     return variableNode;
-  }
-
-  getVariableIdentifier() {
-    const variableNode = this.getVariableNode(),
-          variableIdentifier = variableNode.getVariableIdentifier();
-
-    return variableIdentifier;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DeclarationNode.fromRuleNameChildNodesOpacityAndPrecedence(VariableDeclarationNode, ruleName, childNodes, opacity, precedence); }

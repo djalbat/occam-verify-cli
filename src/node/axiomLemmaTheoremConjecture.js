@@ -33,11 +33,11 @@ export default class AxiomLemmaTheoremConjectureNode extends NonTerminalNode {
     return labelNodes;
   }
 
-  getSuppositionNodes() {
+  getProofNode() {
     const bodyNode = this.getBodyNode(),
-          suppositionNodes = bodyNode.getSuppositionNodes();
+          proofNode = bodyNode.getProofNode();
 
-    return suppositionNodes;
+    return proofNode;
   }
 
   getDeductionNode() {
@@ -47,11 +47,11 @@ export default class AxiomLemmaTheoremConjectureNode extends NonTerminalNode {
     return deductionNode;
   }
 
-  getProofNode() {
+  getSuppositionNodes() {
     const bodyNode = this.getBodyNode(),
-          proofNode = bodyNode.getProofNode();
+          suppositionNodes = bodyNode.getSuppositionNodes();
 
-    return proofNode;
+    return suppositionNodes;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence); }

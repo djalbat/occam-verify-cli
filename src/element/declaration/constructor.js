@@ -93,9 +93,9 @@ export default define(class ConstructorDeclaration extends Declaration {
     } else {
       const includeSupertypes = false,
             provisional = type.isProvisional(includeSupertypes),
-            provisionalMatches = type.matchProvisional(provisional);
+            typeComparesToProvisional = type.compareProvisional(provisional);
 
-      if (!provisionalMatches) {
+      if (!typeComparesToProvisional) {
         provisional ?
           context.debug(`The '${typeString}' type is present but not provisional.`, node) :
             context.debug(`The '${typeString}' type is present but provisional.`, node);

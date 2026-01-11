@@ -5,13 +5,6 @@ import SubstitutionNode from "../../node/substitution";
 import { TERM_RULE_NAME } from "../../ruleNames";
 
 export default class TermSubstitutionNode extends SubstitutionNode {
-  getVariableNode() {
-    const lastVariableNode = this.getLastVariableNode(),
-          variableNode = lastVariableNode;  ///
-
-    return variableNode;
-  }
-
   getTermNode() {
     const firstTermNode = this.getFirstTermNode(),
           termNode = firstTermNode; ///
@@ -19,18 +12,11 @@ export default class TermSubstitutionNode extends SubstitutionNode {
     return termNode;
   }
 
-  getLastTermNode() {
-    const ruleName = TERM_RULE_NAME,
-          lastTermNode = this.getLastNodeByRuleName(ruleName);
+  getVariableNode() {
+    const lastVariableNode = this.getLastVariableNode(),
+          variableNode = lastVariableNode;  ///
 
-    return lastTermNode;
-  }
-
-  getFirstTermNode() {
-    const ruleName = TERM_RULE_NAME,
-          firstTermNode = this.getFirstNodeByRuleName(ruleName);
-
-    return firstTermNode;
+    return variableNode;
   }
 
   getLastVariableNode() {
@@ -47,6 +33,20 @@ export default class TermSubstitutionNode extends SubstitutionNode {
           firstVariableNode = singularVariableNode;  ///
 
     return firstVariableNode;
+  }
+
+  getLastTermNode() {
+    const ruleName = TERM_RULE_NAME,
+          lastTermNode = this.getLastNodeByRuleName(ruleName);
+
+    return lastTermNode;
+  }
+
+  getFirstTermNode() {
+    const ruleName = TERM_RULE_NAME,
+          firstTermNode = this.getFirstNodeByRuleName(ruleName);
+
+    return firstTermNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return SubstitutionNode.fromRuleNameChildNodesOpacityAndPrecedence(TermSubstitutionNode, ruleName, childNodes, opacity, precedence); }

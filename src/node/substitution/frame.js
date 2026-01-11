@@ -5,13 +5,6 @@ import SubstitutionNode from "../../node/substitution";
 import { FRAME_RULE_NAME } from "../../ruleNames";
 
 export default class FrameSubstitutionNode extends SubstitutionNode {
-  getMetavariableNode() {
-    const lastMetavariableNode = this.getLastMetavariableNode(),
-          metavariableNode = lastMetavariableNode;  ///
-
-    return metavariableNode;
-  }
-
   getFrameNode() {
     const firstFrameNode = this.getFirstFrameNode(),
           frameNode = firstFrameNode; ///
@@ -19,18 +12,11 @@ export default class FrameSubstitutionNode extends SubstitutionNode {
     return frameNode;
   }
 
-  getLastFrameNode() {
-    const ruleName = FRAME_RULE_NAME,
-          lastFrameNode = this.getLastNodeByRuleName(ruleName);
+  getMetavariableNode() {
+    const lastMetavariableNode = this.getLastMetavariableNode(),
+          metavariableNode = lastMetavariableNode;  ///
 
-    return lastFrameNode;
-  }
-
-  getFirstFrameNode() {
-    const ruleName = FRAME_RULE_NAME,
-          firstFrameNode = this.getFirstNodeByRuleName(ruleName);
-
-    return firstFrameNode;
+    return metavariableNode;
   }
 
   getLastMetavariableNode() {
@@ -57,6 +43,20 @@ export default class FrameSubstitutionNode extends SubstitutionNode {
     }
 
     return firstMetavariableNode;
+  }
+
+  getLastFrameNode() {
+    const ruleName = FRAME_RULE_NAME,
+          lastFrameNode = this.getLastNodeByRuleName(ruleName);
+
+    return lastFrameNode;
+  }
+
+  getFirstFrameNode() {
+    const ruleName = FRAME_RULE_NAME,
+          firstFrameNode = this.getFirstNodeByRuleName(ruleName);
+
+    return firstFrameNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return SubstitutionNode.fromRuleNameChildNodesOpacityAndPrecedence(FrameSubstitutionNode, ruleName, childNodes, opacity, precedence); }

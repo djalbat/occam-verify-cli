@@ -81,16 +81,45 @@ export default class AxiomLemmaTheoremConjecture extends Element {
     return supposition;
   }
 
-  matchMetavariableName(metavariableName) {
-    const metavariableNameMatches = this.labels.some((label) => {
-      const metavariableNameMatches = label.matchMetavariableName(metavariableName);
+  compareMetavariableName(metavariableName) {
+    const comparesToMetavariableName = this.labels.some((label) => {
+      const labelComparesToMetavariableName = label.compareMetavariableName(metavariableName);
 
-      if (metavariableNameMatches) {
+      if (labelComparesToMetavariableName) {
         return true;
       }
     });
 
-    return metavariableNameMatches;
+    return comparesToMetavariableName;
+  }
+
+  correlateHypotheses(context) {
+    let correlatesToHypotheses;
+
+    const hypothetical = this.isHypothetical();
+
+    if (hypothetical) {
+      const steps = context.getSteps(),
+            topLevelAssertionString = this.getString();  ///
+
+      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture...`, this.node);
+
+      correlatesToHypotheses = correlate(this.hypotheses, steps, (hypothesis, step) => {
+        const hypothesesEqualToStep = hypothesis.isEqualToStep(step, context);
+
+        if (hypothesesEqualToStep) {
+          return true;
+        }
+      });
+
+      if (correlatesToHypotheses) {
+        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture.`, this.node);
+      }
+    } else {
+      correlatesToHypotheses = true
+    }
+
+    return correlatesToHypotheses;
   }
 
   verify() {
@@ -171,35 +200,6 @@ export default class AxiomLemmaTheoremConjecture extends Element {
     return proofVerifies;
   }
 
-  correlateHypotheses(context) {
-    let hypothesesCorrelate;
-
-    const hypothetical = this.isHypothetical();
-
-    if (hypothetical) {
-      const steps = context.getSteps(),
-            topLevelAssertionString = this.string;  ///
-
-      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture...`, this.node);
-
-      hypothesesCorrelate = correlate(this.hypotheses, steps, (hypothesis, step) => {
-        const hypothesesEqualToStep = hypothesis.isEqualToStep(step, context);
-
-        if (hypothesesEqualToStep) {
-          return true;
-        }
-      });
-
-      if (hypothesesCorrelate) {
-        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture.`, this.node);
-      }
-    } else {
-      hypothesesCorrelate = true
-    }
-
-    return hypothesesCorrelate;
-  }
-
   unifyStatementWithDeduction(statement, substitutions, context) {
     let statementUnifiesWithDeduction = false;
 
@@ -215,9 +215,9 @@ export default class AxiomLemmaTheoremConjecture extends Element {
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
     let statementAndStepsOrSubproofsUnifies = false;
 
-    const hypothesesCorrelate = this.correlateHypotheses(context);
+    const correlatesToHypotheses = this.correlateHypotheses(context);
 
-    if (hypothesesCorrelate) {
+    if (correlatesToHypotheses) {
       const statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
 
       if (statementUnifiesWithDeduction) {

@@ -76,9 +76,9 @@ export default define(class Equivalence extends Element {
     return type;
   }
 
-  equateTerm(term) {
+  compareTerm(term) {
     const termA = term, ///
-          termEquates = this.someTerm((term) => {
+          comparesToTerm = this.someTerm((term) => {
             const termB = term, ///
                   termAEqualToTermB = termA.isEqualTo(termB);
 
@@ -87,7 +87,7 @@ export default define(class Equivalence extends Element {
             }
           });
 
-    return termEquates;
+    return comparesToTerm;
   }
 
   matchTermNode(termNode) {
@@ -137,9 +137,9 @@ export default define(class Equivalence extends Element {
 
   isDisjointFrom(equivalence) {
     const disjointFrom = equivalence.everyTerm((term) => {
-      const termEquates = this.equateTerm(term);
+      const comparesToTerm = this.compareTerm(term);
 
-      if (!termEquates) {
+      if (!comparesToTerm) {
         return true;
       }
     });

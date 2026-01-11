@@ -724,8 +724,8 @@ export function statementSubstitutionFromStatementSubstitutionNode(statementSubs
         node = statementSubstitutionNode,  ///
         string = context.nodeAsString(node),
         resolved = true,
-        statement = statementFromStatementSubstitutionNode(statementSubstitutionNode, context),
-        metavariable = metavariableFromStatementSubstitutionNode(statementSubstitutionNode, context),
+        statement = null,
+        metavariable = null,
         substitution = null,
         statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
 

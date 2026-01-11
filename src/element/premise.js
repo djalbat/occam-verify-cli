@@ -6,7 +6,6 @@ import TemporaryContext from "../context/temporary";
 import assignAssignments from "../process/assign";
 
 import { define } from "../elements";
-import { subproofAssertionFromStatement } from "../utilities/statement";
 import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default define(class Premise extends Element {
@@ -149,22 +148,7 @@ export default define(class Premise extends Element {
     return stepOrSubproofUnifies;
   }
 
-  unifyStep(step, substitutions, context) {
-    let stepUnifies = false;
-
-    context = step.getContext();
-
-    const statement = step.getStatement(),
-          statementUnifies = this.unifyStatement(statement, substitutions, context);
-
-    if (statementUnifies) {
-      stepUnifies = true;
-    }
-
-    return stepUnifies;
-  }
-
-  unifySubproof(subproof, substitutions, generalContext, specificContext) {
+  unifySubproof(subproof, substitutions, context) {
     let subproofUnifies = false;
 
     const premise = this, ///
@@ -172,10 +156,18 @@ export default define(class Premise extends Element {
           premiseStatement = premise.getStatement(),
           premiseStatementString = premiseStatement.getString();
 
-    specificContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
+    context.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
+
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context; ///
+
+    context = specificContext;  ///
 
     if (this.statement !== null) {
-      const context = generalContext,
+      const context = generalContext, ///
             subproofAssertion = subproofAssertionFromStatement(this.statement, context);
 
       if (subproofAssertion !== null) {
@@ -184,10 +176,31 @@ export default define(class Premise extends Element {
     }
 
     if (subproofUnifies) {
-      specificContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
+      context.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
     }
 
     return subproofUnifies;
+  }
+
+  unifyStep(step, substitutions, context) {
+    let stepUnifies = false;
+
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context; ///
+
+    context = specificContext;  ///
+
+    const statement = step.getStatement(),
+          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    if (statementUnifies) {
+      stepUnifies = true;
+    }
+
+    return stepUnifies;
   }
 
   toJSON() {

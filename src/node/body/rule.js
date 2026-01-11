@@ -26,5 +26,17 @@ export default class RuleBodyNode extends BodyNode {
     return conclusionNode;
   }
 
+  getDeductionNode() {
+    const deductionNode = null;
+
+    return deductionNode;
+  }
+
+  getSuppositionNodes() {
+    const suppositionNodes = null;
+
+    return suppositionNodes;
+  }
+
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return BodyNode.fromRuleNameChildNodesOpacityAndPrecedence(RuleBodyNode, ruleName, childNodes, opacity, precedence); }
 }

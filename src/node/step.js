@@ -17,27 +17,6 @@ export default class StepNode extends NonTerminalNode {
     return subproofNode;
   }
 
-  getNonsenseNode() {
-    const ruleName = NONSENSE_RULE_NAME,
-          nonsenseNode = this.getNodeByRuleName(ruleName);
-
-    return nonsenseNode;
-  }
-
-  getStatementNode() {
-    const ruleName = STATEMENT_RULE_NAME,
-          statementNode = this.getNodeByRuleName(ruleName);
-
-    return statementNode;
-  }
-
-  getQualificationNode() {
-    const ruleName = QUALIFICATION_RULE_NAME,
-          qualificationNode = this.getNodeByRuleName(ruleName);
-
-    return qualificationNode;
-  }
-
   getReferenceNode() {
     let referenceNode = null;
 
@@ -60,6 +39,27 @@ export default class StepNode extends NonTerminalNode {
     }
 
     return satisfiedAssertionNode;
+  }
+
+  getNonsenseNode() {
+    const ruleName = NONSENSE_RULE_NAME,
+          nonsenseNode = this.getNodeByRuleName(ruleName);
+
+    return nonsenseNode;
+  }
+
+  getStatementNode() {
+    const ruleName = STATEMENT_RULE_NAME,
+          statementNode = this.getNodeByRuleName(ruleName);
+
+    return statementNode;
+  }
+
+  getQualificationNode() {
+    const ruleName = QUALIFICATION_RULE_NAME,
+          qualificationNode = this.getNodeByRuleName(ruleName);
+
+    return qualificationNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(StepNode, ruleName, childNodes, opacity, precedence); }

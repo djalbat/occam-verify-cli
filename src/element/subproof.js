@@ -72,7 +72,7 @@ export default define(class Subproof extends Element {
     return verifies;
   }
 
-  equateWithStatement(statement, context) {
+  compareStatement(statement, context) {
     const statementUnifies = false;
 
     return statementUnifies;

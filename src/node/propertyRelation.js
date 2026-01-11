@@ -5,6 +5,13 @@ import NonTerminalNode from "../nonTerminalNode";
 import { TERM_RULE_NAME, PROPERTY_RULE_NAME } from "../ruleNames";
 
 export default class PropertyRelationNode extends NonTerminalNode {
+  getPropertyName() {
+    const propertyNode = this.getPropertyNode(),
+          propertyName = propertyNode.getPropertyName();
+
+    return propertyName;
+  }
+
   getTermNode() {
     const ruleName = TERM_RULE_NAME,
           termNode = this.getNodeByRuleName(ruleName);
@@ -17,13 +24,6 @@ export default class PropertyRelationNode extends NonTerminalNode {
           propertyNode = this.getNodeByRuleName(ruleName);
 
     return propertyNode;
-  }
-
-  getPropertyName() {
-    const propertyNode = this.getPropertyNode(),
-          propertyName = propertyNode.getPropertyName();
-
-    return propertyName;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyRelationNode, ruleName, childNodes, opacity, precedence); }

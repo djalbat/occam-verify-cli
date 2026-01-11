@@ -20,9 +20,9 @@ export default define(class Parameter extends Element {
 
     const parameter = this, ///
           substitution = substitutions.findSubstitution((substitution) => {
-            const nameMatches = substitution.matchParameter(parameter);
+            const substitutionComparesToParamter = substitution.compareParameter(parameter);
 
-            if (nameMatches) {
+            if (substitutionComparesToParamter) {
               return true;
             }
           });

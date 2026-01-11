@@ -4,7 +4,7 @@ import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { referenceMetaType } from ".//metaType";
+import { referenceMetaTypeFromNothing } from "../metaTypes";
 import { unifyMetavariableIntrinsically } from "../process/unify";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
@@ -35,7 +35,7 @@ export default define(class Reference extends Element {
 
   isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
-  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
+  compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
 
   matchMetavariableNode(metavariableNode) {
     const metavariableNodeA = metavariableNode; ///
@@ -83,7 +83,8 @@ export default define(class Reference extends Element {
   validateMetavariable(context) {
     let metavariableValidates;
 
-    const metaType = referenceMetaType, ///
+    const referenceMetaType = referenceMetaTypeFromNothing(),
+          metaType = referenceMetaType, ///
           metavariableValidatesGivenMetaType = this.metavariable.validateGivenMetaType(metaType, context);
 
     metavariableValidates = metavariableValidatesGivenMetaType; ///

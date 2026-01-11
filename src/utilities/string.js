@@ -117,6 +117,20 @@ export function suppositionsStringFromSuppositions(suppositions) {
   return suppositionsString;
 }
 
+export function substitutionsStringFromSubstitutions(substitutions) {
+  const substitutionsString = substitutions.reduce((substitutionsString, substitution) => {
+    const substitutionString = substitution.getString();
+
+    substitutionsString = (substitutionsString === null) ?
+                             substitutionString : ///
+                              `${substitutionsString}, ${substitutionString}`;
+
+    return substitutionsString;
+  }, null);
+
+  return substitutionsString;
+}
+
 export function signatureStringFromTerms(terms) {
   const termsString = termsStringFromTerms(terms),
         signatureString = `[${termsString}]`;

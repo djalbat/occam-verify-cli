@@ -24,18 +24,18 @@ export default class SubproofNode extends NonTerminalNode {
     return lastStepNode;
   }
 
-  getSubDerivationNode() {
-    const ruleName = SUB_DERIVATION_RULE_NAME,
-          subDerivationNode = this.getNodeByRuleName(ruleName);
-
-    return subDerivationNode;
-  }
-
   getSuppositionNodes() {
     const ruleName = SUPPOSITION_RULE_NAME,
           suppositionNodes = this.getNodesByRuleName(ruleName);
 
     return suppositionNodes;
+  }
+
+  getSubDerivationNode() {
+    const ruleName = SUB_DERIVATION_RULE_NAME,
+          subDerivationNode = this.getNodeByRuleName(ruleName);
+
+    return subDerivationNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(SubproofNode, ruleName, childNodes, opacity, precedence); }

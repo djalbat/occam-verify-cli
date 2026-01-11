@@ -6,7 +6,6 @@ import TemporaryContext from "../context/temporary";
 import assignAssignments from "../process/assign";
 
 import { define } from "../elements";
-import { subproofAssertionFromStatement } from "../utilities/statement";
 import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default define(class Supposition extends Element {
@@ -78,29 +77,6 @@ export default define(class Supposition extends Element {
     }
 
     return verifies;
-  }
-
-  unifySupposition(supposition, substitutions, generalContext, specificContext) {
-    let suppositionUnifies;
-
-    const node = this.getNode(),
-          context = specificContext,  ///
-          specificSupposition = supposition,  ///
-          generalSuppositionString = this.getString(), ///
-          specificSuppositionString = specificSupposition.getString();
-
-    context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition...`, node);
-
-    const statement = specificSupposition.getStatement(),
-          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    suppositionUnifies = statementUnifies;  ///
-
-    if (suppositionUnifies) {
-      context.debug(`...unified the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition.`, node);
-    }
-
-    return suppositionUnifies;
   }
 
   unifyIndependently(substitutions, context) {
@@ -178,19 +154,6 @@ export default define(class Supposition extends Element {
     return stepOrSubproofUnifies;
   }
 
-  unifyStep(step, substitutions, context) {
-    let stepUnifies;
-
-    context = step.getContext();
-
-    const statement = step.getStatement(),
-          statementUnifies = this.unifyStatement(statement, substitutions, context);
-
-    stepUnifies = statementUnifies;  ///
-
-    return stepUnifies;
-  }
-
   unifySubproof(subproof, substitutions, context) {
     let subproofUnifies = false;
 
@@ -210,8 +173,11 @@ export default define(class Supposition extends Element {
     context = specificContext;  ///
 
     if (this.statement !== null) {
-      const context = generalContext, ///
-            subproofAssertion = subproofAssertionFromStatement(this.statement, context);
+      const node = this.getNode(),
+            assertionNode = node, /// 
+            assertion = context.findAssertionByAssertionNode(assertionNode);
+
+      if (assertion !== null) {}
 
       if (subproofAssertion !== null) {
         subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
@@ -223,6 +189,19 @@ export default define(class Supposition extends Element {
     }
 
     return subproofUnifies;
+  }
+
+  unifyStep(step, substitutions, context) {
+    let stepUnifies;
+
+    context = step.getContext();
+
+    const statement = step.getStatement(),
+          statementUnifies = this.unifyStatement(statement, substitutions, context);
+
+    stepUnifies = statementUnifies;  ///
+
+    return stepUnifies;
   }
 
   unifyStatement(statement, substitutions, context) {
@@ -246,6 +225,29 @@ export default define(class Supposition extends Element {
     }
 
     return statementUnifies;
+  }
+
+  unifySupposition(supposition, substitutions, generalContext, specificContext) {
+    let suppositionUnifies;
+
+    const node = this.getNode(),
+          context = specificContext,  ///
+          specificSupposition = supposition,  ///
+          generalSuppositionString = this.getString(), ///
+          specificSuppositionString = specificSupposition.getString();
+
+    context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition...`, node);
+
+    const statement = specificSupposition.getStatement(),
+          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    suppositionUnifies = statementUnifies;  ///
+
+    if (suppositionUnifies) {
+      context.debug(`...unified the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition.`, node);
+    }
+
+    return suppositionUnifies;
   }
 
   toJSON() {

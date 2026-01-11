@@ -22,11 +22,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     return this.metavariable;
   }
 
-  isReferenceEqualToReference(reference) {
-    const referenceEqualToReference = this.reference.isEqualTo(reference);
-
-    return referenceEqualToReference;
-  }
+  isReferenceEqualToReference(reference) { return this.reference.isEqualTo(reference); }
 
   static name = "ReferenceSubstitution";
 

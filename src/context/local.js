@@ -344,18 +344,18 @@ class LocalContext {
     return metavariableDefined
   }
 
-  matchTermAndPropertyRelation(term, propertyRelation) {
+  compareTermAndPropertyRelation(term, propertyRelation) {
     const context = this, ///
           steps = this.getSteps(),
-          termAndPropertyRelationMatches = steps.some((step) => {
-            const termAndPropertyRelationMatches = step.matchTermAndPropertyRelation(term, propertyRelation, context);
+          comparesToTermAndPropertyRelation = steps.some((step) => {
+            const comparesToTermAndPropertyRelation = step.compareTermAndPropertyRelation(term, propertyRelation, context);
 
-            if (termAndPropertyRelationMatches) {
+            if (comparesToTermAndPropertyRelation) {
               return true;
             }
           });
 
-    return termAndPropertyRelationMatches;
+    return comparesToTermAndPropertyRelation;
   }
 
   nodeAsString(node) { return this.context.nodeAsString(node); }

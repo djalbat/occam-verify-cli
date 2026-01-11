@@ -110,10 +110,10 @@ export default class Substitution extends Element {
     return substitutionEqualToSubstitution;
   }
 
-  matchParameter(parameter) {
-    const parameterMatches = false;
+  compareParameter(parameter) {
+    const comparesToParameter = false;
 
-    return parameterMatches;
+    return comparesToParameter;
   }
 
   matchSubstitutionNode(substitutionNode) { return this.node.match(substitutionNode); }

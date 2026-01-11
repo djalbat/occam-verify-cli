@@ -31,6 +31,14 @@ export default define(class Statement extends Element {
     return metavariableName;
   }
 
+  matchStatementNode(statementNode) {
+    const node = this.getNode(),
+          nodeMatchesStatementNode = node.match(statementNode),
+          statementNodeMatches = nodeMatchesStatementNode;  ///
+
+    return statementNodeMatches;
+  }
+
   isSingular() {
     const node = this.getNode(),
           singular = node.isSingular();
@@ -261,9 +269,9 @@ export default define(class Statement extends Element {
 
     equatesWithStepsOrSubproofs = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
       const statement = this, ///
-            statementUnifies = stepOrSubproof.equateWithStatement(statement, context);
+            stepOrSubproofComparesToStatement = stepOrSubproof.compareStatement(statement, context);
 
-      if (statementUnifies) {
+      if (stepOrSubproofComparesToStatement) {
         return true;
       }
     });

@@ -38,4 +38,6 @@ export default class Element {
 
     return equalTo;
   }
+
+  matchNode(node) { return this.node.match(node); }
 }

@@ -32,8 +32,8 @@ export default define(class Term extends Element {
 
   matchTermNode(termNode) { return this.node.match(termNode); }
 
-  isEqualToVariable(variable) {
-    let variableNodeMathces = false;
+  compareVariable(variable) {
+    let comparesToVaraible = false;
 
     const singular = this.isSingular();
 
@@ -45,11 +45,11 @@ export default define(class Term extends Element {
             matches = variableNodeA.match(variableNodeB);
 
       if (matches) {
-        variableNodeMathces = true;
+        comparesToVaraible = true;
       }
     }
 
-    return variableNodeMathces;
+    return comparesToVaraible;
   }
 
   isEqualTo(term) {

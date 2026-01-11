@@ -5,27 +5,6 @@ import NonTerminalNode from "../nonTerminalNode";
 import { ARGUMENT_RULE_NAME, VARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class TermNode extends NonTerminalNode {
-  getVariableIdentifier() {
-    let variableIdentifier = null;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const singularVariableNode = this.getSingularVariableNode();
-
-      variableIdentifier = singularVariableNode.getVariableIdentifier();
-    }
-
-    return variableIdentifier;
-  }
-
-  getVariableNode() {
-    const singularVariableNode = this.getSingularVariableNode(),
-          variableNode = singularVariableNode;  //
-
-    return variableNode;
-  }
-
   isSingular() {
     let singular = false;
 
@@ -38,11 +17,11 @@ export default class TermNode extends NonTerminalNode {
     return singular;
   }
 
-  getVariableNodes() {
-    const ruleName = VARIABLE_RULE_NAME,
-          variableNodes = this.getNodesByRuleName(ruleName);
+  getVariableNode() {
+    const singularVariableNode = this.getSingularVariableNode(),
+          variableNode = singularVariableNode;  //
 
-    return variableNodes;
+    return variableNode;
   }
 
   getSingularTermNode() {
@@ -57,18 +36,18 @@ export default class TermNode extends NonTerminalNode {
     return singularTermNode;
   }
 
-  getSingularArgumentNode() {
-    const ruleName = ARGUMENT_RULE_NAME,
-          singularArgumentNode = this.getSingularNodeByRuleName(ruleName);
+  getVariableIdentifier() {
+    let variableIdentifier = null;
 
-    return singularArgumentNode;
-  }
+    const singular = this.isSingular();
 
-  getSingularVariableNode() {
-    const ruleName = VARIABLE_RULE_NAME,
-          singularVariableNode = this.getSingularNodeByRuleName(ruleName);
+    if (singular) {
+      const singularVariableNode = this.getSingularVariableNode();
 
-    return singularVariableNode;
+      variableIdentifier = singularVariableNode.getVariableIdentifier();
+    }
+
+    return variableIdentifier;
   }
 
   getSingularVariableIdentifier() {
@@ -83,6 +62,27 @@ export default class TermNode extends NonTerminalNode {
     }
 
     return singularVariableIdentifier;
+  }
+
+  getVariableNodes() {
+    const ruleName = VARIABLE_RULE_NAME,
+          variableNodes = this.getNodesByRuleName(ruleName);
+
+    return variableNodes;
+  }
+
+  getSingularArgumentNode() {
+    const ruleName = ARGUMENT_RULE_NAME,
+          singularArgumentNode = this.getSingularNodeByRuleName(ruleName);
+
+    return singularArgumentNode;
+  }
+
+  getSingularVariableNode() {
+    const ruleName = VARIABLE_RULE_NAME,
+          singularVariableNode = this.getSingularNodeByRuleName(ruleName);
+
+    return singularVariableNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TermNode, ruleName, childNodes, opacity, precedence); }

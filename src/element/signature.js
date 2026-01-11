@@ -27,7 +27,7 @@ export default define(class Signature extends Element {
 
     const signatureString = this.string;  ///
 
-    context.trace(`Verifying the ${signatureString} signature...`);
+    context.trace(`Verifying the '${signatureString}' signature...`);
 
     verifies = this.terms.every((term) => {
       const termVerifies = term.verify(context, () => {
@@ -42,13 +42,13 @@ export default define(class Signature extends Element {
     });
 
     if (verifies) {
-      context.debug(`...verified the ${signatureString} signature.`);
+      context.debug(`...verified the '${signatureString}' signature.`);
     }
 
     return verifies;
   }
 
-  match(signature, substitutions, generalContext, specificContext) {
+  compare(signature, substitutions, generalContext, specificContext) {
     const terms = signature.getTerms(),
           termsA = this.terms,  ///
           termsB = terms, ///
@@ -74,9 +74,10 @@ export default define(class Signature extends Element {
                 return true;
               }
             }
-          });
+          }),
+          compares = matches; ///
 
-    return matches;
+    return compares;
   }
 
   compareSubstitutions(substitutions, context) {
@@ -85,7 +86,7 @@ export default define(class Signature extends Element {
     const signatureString = this.string,  ///
           substitutionsString = substitutions.asString();
 
-    context.trace(`Comparing the '${substitutionsString}' substitutions against the ${signatureString} signature...`);
+    context.trace(`Comparing the '${substitutionsString}' substitutions against the '${signatureString}' signature...`);
 
     const array = substitutions.getArray(),
           compares = compare(this.terms, array, (term, substitution) => {
@@ -102,7 +103,7 @@ export default define(class Signature extends Element {
     }
 
     if (substitutionsCompares) {
-      context.debug(`...compared the '${substitutionsString}' substitutions against the ${signatureString} signature.`);
+      context.debug(`...compared the '${substitutionsString}' substitutions against the '${signatureString}' signature.`);
     }
 
     return substitutionsCompares;
@@ -114,7 +115,7 @@ export default define(class Signature extends Element {
     const signatureString = this.string,  ///
           substitutionsString = substitutions.asString();
 
-    context.trace(`Correlating the '${substitutionsString}' substitutions against the ${signatureString} signature...`);
+    context.trace(`Correlating the '${substitutionsString}' substitutions against the '${signatureString}' signature...`);
 
     const array = substitutions.getArray(),
           correlates = correlate(this.terms, array, (term, substitution) => {
@@ -131,7 +132,7 @@ export default define(class Signature extends Element {
     }
 
     if (substitutionsCorrelates) {
-      context.debug(`...correlated the '${substitutionsString}' substitutions against the ${signatureString} signature.`);
+      context.debug(`...correlated the '${substitutionsString}' substitutions against the '${signatureString}' signature.`);
     }
 
     return substitutionsCorrelates;

@@ -47,11 +47,12 @@ export default class MetaLemmaMetatheorem extends Element {
 
   getStatement() { return this.deduction.getStatement(); }
 
-  matchReference(reference) {
+  compareReference(reference) {
     const label = this.getLabel(),
-          referenceMatches = label.matchReference(reference);
+          labelComparesToRefference = label.compareReference(reference),
+          comparesToReference = labelComparesToRefference;  ///
 
-    return referenceMatches;
+    return comparesToReference;
   }
 
   verify() {

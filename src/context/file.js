@@ -329,9 +329,9 @@ export default class FileContext {
   findMetaLemmaByReference(reference) {
     const metaLemmas = this.getMetaLemmas(),
           metaLemma = metaLemmas.find((metaLemma) => {
-            const referenceMatches = metaLemma.matchReference(reference);
+            const metaLemmaComparesToReference = metaLemma.compareReference(reference);
 
-            if (referenceMatches) {
+            if (metaLemmaComparesToReference) {
               return true;
             }
           }) || null;
@@ -342,9 +342,9 @@ export default class FileContext {
   findMetatheoremByReference(reference) {
     const metatheorems = this.getMetatheorems(),
           metatheorem = metatheorems.find((metatheorem) => {
-            const referenceMatches = metatheorem.matchReference(reference);
+            const metatheoremComparesToReference = metatheorem.compareReference(reference);
 
-            if (referenceMatches) {
+            if (metatheoremComparesToReference) {
               return true;
             }
           }) || null;
@@ -356,9 +356,9 @@ export default class FileContext {
     const rules = this.getRules(),
           metavariableName = reference.getMetavariableName(),
           rule = rules.find((rule) => {
-            const metavariableNameMatches = rule.matchMetavariableName(metavariableName);
+            const ruleComparesToMetavariableName = rule.compareMetavariableName(metavariableName);
 
-            if (metavariableNameMatches) {
+            if (ruleComparesToMetavariableName) {
               return true;
             }
           }) || null;
@@ -370,9 +370,9 @@ export default class FileContext {
     const axioms = this.getAxioms(),
           metavariableName = reference.getMetavariableName(),
           axiom = axioms.find((axiom) => {
-            const metavariableNameMatches = axiom.matchMetavariableName(metavariableName);
+            const axiomComparesToMetavariableName = axiom.compareMetavariableName(metavariableName);
 
-            if (metavariableNameMatches) {
+            if (axiomComparesToMetavariableName) {
               return true;
             }
           }) || null;
@@ -384,9 +384,9 @@ export default class FileContext {
     const lemmas = this.getLemmas(),
           metavariableName = reference.getMetavariableName(),
           lemma = lemmas.find((lemma) => {
-            const metavariableNameMatches = lemma.matchMetavariableName(metavariableName);
+            const lemmaComparesToMetavariableName = lemma.compareMetavariableName(metavariableName);
 
-            if (metavariableNameMatches) {
+            if (lemmaComparesToMetavariableName) {
               return true;
             }
           }) || null;
@@ -398,9 +398,9 @@ export default class FileContext {
     const theorems = this.getTheorems(),
           metavariableName = reference.getMetavariableName(),
           theorem = theorems.find((theorem) => {
-            const metavariableNameMatches = theorem.matchMetavariableName(metavariableName);
+            const theoremComparesToMetavariableName = theorem.compareMetavariableName(metavariableName);
 
-            if (metavariableNameMatches) {
+            if (theoremComparesToMetavariableName) {
               return true;
             }
           }) || null;
@@ -425,9 +425,9 @@ export default class FileContext {
     const conjectures = this.getConjectures(),
           metavariableName = reference.getMetavariableName(),
           conjecture = conjectures.find((conjecture) => {
-            const metavariableNameMatches = conjecture.matchMetavariableName(metavariableName);
+            const conjectureComparesToMetavariableName = conjecture.compareMetavariableName(metavariableName);
 
-            if (metavariableNameMatches) {
+            if (conjectureComparesToMetavariableName) {
               return true;
             }
           }) || null;
@@ -527,9 +527,9 @@ export default class FileContext {
     ];
 
     const type = types.find((type) => {
-      const typeNameMatches = type.matchTypeName(typeName);
+      const typeComparesToTypeName = type.compareTypeName(typeName);
 
-      if (typeNameMatches) {
+      if (typeComparesToTypeName) {
         return true;
       }
     }) || null;
@@ -548,9 +548,9 @@ export default class FileContext {
     ];
 
     const type = types.find((type) => {
-      const typeNameMatches = type.matchNominalTypeName(nominalTypeName);
+      const typeComparesToNominalTypeName = type.compareNominalTypeName(nominalTypeName);
 
-      if (typeNameMatches) {
+      if (typeComparesToNominalTypeName) {
         return true;
       }
     }) || null;
@@ -569,9 +569,9 @@ export default class FileContext {
     ];
 
     const type = types.find((type) => {
-      const typeNameMatches = type.matchPrefixedTypeName(prefixedTypeName);
+      const typeComparesToPrefixedTypeName = type.comparePrefixedTypeName(prefixedTypeName);
 
-      if (typeNameMatches) {
+      if (typeComparesToPrefixedTypeName) {
         return true;
       }
     }) || null;
@@ -595,9 +595,9 @@ export default class FileContext {
   findTypePrefixByTypePrefixName(typePrefixName) {
     const typePrefixes = this.getTypePrefixes(),
           typePrefix = typePrefixes.find((typePrefix) => {
-            const typePrefixNameMatches = typePrefix.matchTypePrefixName(typePrefixName);
+            const typePrefixComparesToTypePrefixName = typePrefix.compareTypePrefixName(typePrefixName);
 
-            if (typePrefixNameMatches) {
+            if (typePrefixComparesToTypePrefixName) {
               return true;
             }
           }) || null;
@@ -621,9 +621,9 @@ export default class FileContext {
   findLabelByMetavariableName(metavariableName) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
-            const metavariableNameMatches = label.matchMetavariableName(metavariableName);
+            const labelComparesToMetavariableName = label.compareMetavariableName(metavariableName);
 
-            if (metavariableNameMatches) {
+            if (labelComparesToMetavariableName) {
               return true;
             }
           }) || null;
@@ -665,9 +665,9 @@ export default class FileContext {
   findMetavariableByMetavariableName(metavariableName) {
     const metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const metavariableNameMatches = metavariable.matchMetavariableName(metavariableName);
+            const metavariableComparesToMetavariableName = metavariable.compareMetavariableName(metavariableName);
 
-            if (metavariableNameMatches) {
+            if (metavariableComparesToMetavariableName) {
               return true;
             }
           }) || null;

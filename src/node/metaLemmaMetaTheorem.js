@@ -11,14 +11,6 @@ export default class MetaLemmaMetaTheoremNode extends NonTerminalNode {
     return axiomBodyNode;
   }
 
-  getHeaderNode() {
-    const { headerRuleName } = this.constructor,
-          ruleName = headerRuleName,  ///
-          headerNode = this.getNodeByRuleName(ruleName);
-
-    return headerNode;
-  }
-
   getLabelNode() {
     const headerNode = this.getHeaderNode(),
           labelNode = headerNode.getLabelNode();
@@ -26,11 +18,19 @@ export default class MetaLemmaMetaTheoremNode extends NonTerminalNode {
     return labelNode;
   }
 
-  getSuppositionNodes() {
+  getProofNode() {
     const bodyNode = this.getBodyNode(),
-          suppositionNodes = bodyNode.getSuppositionNodes();
+          proofNode = bodyNode.getProofNode();
 
-    return suppositionNodes;
+    return proofNode;
+  }
+
+  getHeaderNode() {
+    const { headerRuleName } = this.constructor,
+          ruleName = headerRuleName,  ///
+          headerNode = this.getNodeByRuleName(ruleName);
+
+    return headerNode;
   }
 
   getDeductionNode() {
@@ -40,11 +40,11 @@ export default class MetaLemmaMetaTheoremNode extends NonTerminalNode {
     return deductionNode;
   }
 
-  getProofNode() {
+  getSuppositionNodes() {
     const bodyNode = this.getBodyNode(),
-          proofNode = bodyNode.getProofNode();
+          suppositionNodes = bodyNode.getSuppositionNodes();
 
-    return proofNode;
+    return suppositionNodes;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence); }

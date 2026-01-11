@@ -349,7 +349,7 @@ export default class TemporaryContext {
 
   isMetavariableDefined(metavariable) { return this.context.isMetavariableDefined(metavariable); }
 
-  matchTermAndPropertyRelation(term, propertyRelation) { return this.context.matchTermAndPropertyRelation(term, propertyRelation); }
+  compareTermAndPropertyRelation(term, propertyRelation) { return this.context.compareTermAndPropertyRelation(term, propertyRelation); }
 
   nodeAsString(node) { return this.context.nodeAsString(node); }
 

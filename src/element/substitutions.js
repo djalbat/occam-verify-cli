@@ -6,6 +6,7 @@ import Element from "../element";
 
 import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
+import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
 const { find, first, clear, prune, filter, compress, correlate } = arrayUtilities;
 
@@ -24,8 +25,6 @@ export default define(class Substitutions extends Element {
   getSavedArray() {
     return this.savedArray;
   }
-
-  getLength() { return this.array.length; }
 
   getMetavariables() {
     const metavariables = [];
@@ -74,6 +73,8 @@ export default define(class Substitutions extends Element {
 
     return firstSubstitution;
   }
+
+  getLength() { return this.array.length; }
 
   mapSubstitution(callback) { return this.array.map(callback); }
 
@@ -200,9 +201,13 @@ export default define(class Substitutions extends Element {
   addSubstitution(substitution, context) {
     this.array.push(substitution);
 
-    const substitutionString = substitution.getString();
+    const string = this.asString(),
+          substitutionString = substitution.getString(),
+          substitutionsString = string; ///
 
-    context.trace(`Added the '${substitutionString}' substitution.`);
+    this.setString(string);
+
+    context.trace(`Added the '${substitutionString}' substitution to the '${substitutionsString}' substitutions.`);
   }
 
   removeSubstitution(substitution, context) {
@@ -216,9 +221,13 @@ export default define(class Substitutions extends Element {
       }
     });
 
-    const substitutionString = substitution.getString();
+    const string = this.asString(),
+          substitutionString = substitution.getString(),
+          substitutionsString = string; ///
 
-    context.trace(`Removed the '${substitutionString}' substitution.`);
+    this.setString(string);
+
+    context.trace(`Removed the '${substitutionString}' substitution from the '${substitutionsString}' substitutions.`);
   }
 
   correlateSubstitutions(substitutions) {
@@ -234,16 +243,6 @@ export default define(class Substitutions extends Element {
           });
 
     return correlates;
-  }
-
-  removeTrivialSubstitutions()  {
-    filter(this.array, (substitution) => {
-      const trivial = substitution.isTrivial();
-
-      if (!trivial) {
-        return true;
-      }
-    });
   }
 
   clear() {
@@ -318,6 +317,10 @@ export default define(class Substitutions extends Element {
     ];
 
     this.savedArray = null;
+
+    const string = this.asString();
+
+    this.setString(string);
   }
 
   continue() {
@@ -332,15 +335,8 @@ export default define(class Substitutions extends Element {
     if (length === 0) {
       string = EMPTY_STRING;
     } else {
-      const substitutionsString = this.array.reduce((substitutionsString, substitution) => {
-        const substitutionString = substitution.getString();
-
-        substitutionsString = (substitutionsString === null) ?
-                                 substitutionString :
-                                  `${substitutionsString}, ${substitutionString}`;
-
-        return substitutionsString;
-      }, null);
+      const substitutions = this.array, ///
+            substitutionsString = substitutionsStringFromSubstitutions(substitutions);
 
       string = substitutionsString; ///
     }
@@ -349,16 +345,38 @@ export default define(class Substitutions extends Element {
   }
 
   static fromArray(array) {
-    const savedArray = [],
-          substitutions = new Substitutions(array, savedArray);
+    let string;
+
+    const context = null;
+
+    string = null;
+
+    const node = null,
+          savedArray = [],
+          substitutions = new Substitutions(context, string, node, array, savedArray);
+
+    string = substitutions.asString();
+
+    substitutions.setString(string);
 
     return substitutions;
   }
 
   static fromNothing() {
-    const array = [],
-          savedArray = null,
-          substitutions = new Substitutions(array, savedArray);
+    let string;
+
+    const context = null;
+
+    string = null;
+
+    const node = null,
+          array = [],
+          savedArray = [],
+          substitutions = new Substitutions(context, string, node, array, savedArray);
+
+    string = substitutions.asString();
+
+    substitutions.setString(string);
 
     return substitutions;
   }

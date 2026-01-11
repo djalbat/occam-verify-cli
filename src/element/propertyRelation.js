@@ -73,9 +73,9 @@ export default define(class PropertyRelation extends Element {
           propertyName = this.property.getName(),
           termTypeProperties = termType.getProperties(),
           variableTypeProperty = termTypeProperties.find((termTypeProperty) => {
-            const propertyNameMatches = termTypeProperty.matchPropertyName(propertyName);
+            const termTypePropertyComparesToPropertyName = termTypeProperty.comparePropertyName(propertyName);
 
-            if (propertyNameMatches) {
+            if (termTypePropertyComparesToPropertyName) {
               return true;
             }
           }) || null;

@@ -262,9 +262,9 @@ function unifyStatementAsPropertyAssertion(statement, reference, satisfiesAssert
       if (equivalence !== null) {
         const propertyAssertionMatches = equivalence.someOtherTerm(term, (term) => {  ///
           const propertyRelation = propertyAssertion.getPropertyRelation(),
-                propertyAssertionMatches = context.matchTermAndPropertyRelation(term, propertyRelation);
+                comparesToTermAndPropertyRelation = context.compareTermAndPropertyRelation(term, propertyRelation);
 
-          if (propertyAssertionMatches) {
+          if (comparesToTermAndPropertyRelation) {
             return true;
           }
         });

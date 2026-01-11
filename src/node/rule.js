@@ -5,18 +5,11 @@ import NonTerminalNode from "../nonTerminalNode";
 import { RULE_BODY_RULE_NAME, RULE_HEADER_RULE_NAME } from "../ruleNames";
 
 export default class RuleNode extends NonTerminalNode {
-  getRuleBodyNode() {
-    const ruleName = RULE_BODY_RULE_NAME,
-          ruleBodyNode = this.getNodeByRuleName(ruleName);
+  getProofNode() {
+    const ruleBodyNode = this.getRuleBodyNode(),
+          proofNode = ruleBodyNode.getProofNode();
 
-    return ruleBodyNode;
-  }
-
-  getRuleHeaderNode() {
-    const ruleName = RULE_HEADER_RULE_NAME,
-          ruleHeaderNode = this.getNodeByRuleName(ruleName);
-
-    return ruleHeaderNode;
+    return proofNode;
   }
 
   getLabelNodes() {
@@ -40,11 +33,18 @@ export default class RuleNode extends NonTerminalNode {
     return conclusionNode;
   }
 
-  getProofNode() {
-    const ruleBodyNode = this.getRuleBodyNode(),
-          proofNode = ruleBodyNode.getProofNode();
+  getRuleBodyNode() {
+    const ruleName = RULE_BODY_RULE_NAME,
+          ruleBodyNode = this.getNodeByRuleName(ruleName);
 
-    return proofNode;
+    return ruleBodyNode;
+  }
+
+  getRuleHeaderNode() {
+    const ruleName = RULE_HEADER_RULE_NAME,
+          ruleHeaderNode = this.getNodeByRuleName(ruleName);
+
+    return ruleHeaderNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(RuleNode, ruleName, childNodes, opacity, precedence); }

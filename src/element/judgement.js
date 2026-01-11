@@ -108,7 +108,7 @@ export default define(class Judgement extends Element {
   }
 
   verifyWhenDerived(context) {
-    let verifiesWhenDerived;
+    let verifiesWhenDerived = false;
 
     const judgementString = this.string;  ///
 
@@ -118,9 +118,12 @@ export default define(class Judgement extends Element {
           reference = referenceFromMetavariable(metavariable, context),
           metaLemmaMetatheorem = context.findMetaLemmaMetatheoremByReference(reference),
           substitutions = metaLemmaMetatheorem.getSubstitutions(),
-          substitutionsMatch = this.frame.matchSubstitutions(substitutions, context);
+          frameComparesToSubstitutions = this.frame.matchSubstitutions(substitutions, context);
 
-    verifiesWhenDerived = substitutionsMatch;
+    if (frameComparesToSubstitutions) {
+      verifiesWhenDerived = true;
+
+    }
 
     if (verifiesWhenDerived) {
       context.debug(`...verified the '${judgementString}' derived judgement.`);

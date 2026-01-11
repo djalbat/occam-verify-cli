@@ -15,10 +15,10 @@ export default define(class TypePrefix extends Element {
     return this.name;
   }
 
-  matchTypePrefixName(typePrefixName) {
-    const typePrefixNameMatches = (this.name === typePrefixName);
+  compareTypePrefixName(typePrefixName) {
+    const comparesToTypePrefixName = (this.name === typePrefixName);
 
-    return typePrefixNameMatches;
+    return comparesToTypePrefixName;
   }
 
   toJSON() {

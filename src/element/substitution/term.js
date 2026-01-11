@@ -1,6 +1,5 @@
 "use strict";
 
-import elements from "../../elements";
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
@@ -31,18 +30,6 @@ export default define(class TermSubstitution extends Substitution {
     return replacementNode;
   }
 
-  isTrivial() {
-    let trivial = false;
-
-    const termEqualToVariable = this.term.isEqualToVariable(this.variable);
-
-    if (termEqualToVariable) {
-      trivial = true;
-    }
-
-    return trivial;
-  }
-
   isTermEqualToTerm(term, context) {
     term = stripBracketsFromTerm(term, context); ///
 
@@ -51,7 +38,17 @@ export default define(class TermSubstitution extends Substitution {
     return termEqualToTerm;
   }
 
-  matchParameter(parameter) { return this.variable.matchParameter(parameter); }
+  isTrivial() {
+    let trivial = false;
+
+    const termComparesToVaraible = this.term.compareVariable(this.variable);
+
+    if (termComparesToVaraible) {
+      trivial = true;
+    }
+
+    return trivial;
+  }
 
   verify(context) {
     let verifies = false;

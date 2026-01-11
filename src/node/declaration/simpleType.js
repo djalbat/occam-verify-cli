@@ -6,6 +6,13 @@ import { PROVISIONAL } from "../../constants";
 import { TYPE_RULE_NAME, TYPES_RULE_NAME } from "../../ruleNames";
 
 export default class SimpleTypeDeclarationNode extends DeclarationNode {
+  isPrefixed() {
+    const typeNode = this.getTypeNode(),
+          prefixed = typeNode.isPrefixed();
+
+    return prefixed;
+  }
+
   isProvisional() {
     let provisional = false;
 
@@ -26,39 +33,6 @@ export default class SimpleTypeDeclarationNode extends DeclarationNode {
     });
 
     return provisional;
-  }
-
-  isPrefixed() {
-    const typeNode = this.getTypeNode(),
-          prefixed = typeNode.isPrefixed();
-
-    return prefixed;
-  }
-
-  getTypeName() {
-    let typeName = null;
-
-    const typeNode = this.getTypeNode();
-
-    if (typeNode !== null) {
-      typeName = typeNode.getTypeName();
-    }
-
-    return typeName;
-  }
-
-  getTypeNode() {
-    const ruleName = TYPE_RULE_NAME,
-          typeNode = this.getNodeByRuleName(ruleName);
-
-    return typeNode;
-  }
-
-  getTypesNode() {
-    const ruleName = TYPES_RULE_NAME,
-          typesNode = this.getNodeByRuleName(ruleName);
-
-    return typesNode;
   }
 
   getTypePrefixName() {
@@ -87,6 +61,32 @@ export default class SimpleTypeDeclarationNode extends DeclarationNode {
           nominalTypeName = typeNode.getNominalTypeName();
 
     return nominalTypeName;
+  }
+
+  getTypeName() {
+    let typeName = null;
+
+    const typeNode = this.getTypeNode();
+
+    if (typeNode !== null) {
+      typeName = typeNode.getTypeName();
+    }
+
+    return typeName;
+  }
+
+  getTypeNode() {
+    const ruleName = TYPE_RULE_NAME,
+          typeNode = this.getNodeByRuleName(ruleName);
+
+    return typeNode;
+  }
+
+  getTypesNode() {
+    const ruleName = TYPES_RULE_NAME,
+          typesNode = this.getNodeByRuleName(ruleName);
+
+    return typesNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DeclarationNode.fromRuleNameChildNodesOpacityAndPrecedence(SimpleTypeDeclarationNode, ruleName, childNodes, opacity, precedence); }

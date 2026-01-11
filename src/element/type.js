@@ -220,15 +220,16 @@ export default define(class Type extends Element {
     return equalToOrSuperTypeOf;
   }
 
-  matchTypeName(typeName) {
+  compareTypeName(typeName) {
     const name = this.getName(),
-          typeNameMatches = (name === typeName);
+          nameTypeName = (name === typeName),
+          comparesToTypeName = nameTypeName;  ///
 
-    return typeNameMatches;
+    return comparesToTypeName;
   }
 
-  matchProvisional(provisional) {
-    let provisionalMatches;
+  compareProvisional(provisional) {
+    let comparesToProvisional;
 
     const provisionalA = provisional; ///
 
@@ -236,45 +237,54 @@ export default define(class Type extends Element {
 
     const provisionalB = provisional; ///
 
-    provisionalMatches = (provisionalA === provisionalB);
+    comparesToProvisional = (provisionalA === provisionalB);
 
-    return provisionalMatches;
+    return comparesToProvisional;
   }
 
-  matchPrefixedTypeName(prefixedTypeName) {
-    let prefixedTypeNameMatches = false;
+  comparePrefixedTypeName(prefixedTypeName) {
+    let comparesToPrefixedTypeName = false;
 
     const prefixed = this.isPrefixed();
 
     if (prefixed) {
-      const prefixedName = this.getPrefixedName();
+      const prefixedName = this.getPrefixedName(),
+            prefixedTypeNamePrefixedName = (prefixedTypeName === prefixedName);
 
-      prefixedTypeNameMatches = (prefixedTypeName === prefixedName);
-    }
-
-    return prefixedTypeNameMatches;
-  }
-
-  matchNominalTypeName(nominalTypeName) {
-    let nominalTypeNameMatches = false;
-
-    if (!nominalTypeNameMatches) {
-      const name = this.getName();
-
-      nominalTypeNameMatches = (nominalTypeName === name);
-    }
-
-    if (!nominalTypeNameMatches) {
-      const prefixed = this.isPrefixed();
-
-      if (prefixed) {
-        const prefixedName = this.getPrefixedName();
-
-        nominalTypeNameMatches = (nominalTypeName === prefixedName);
+      if (prefixedTypeNamePrefixedName) {
+        comparesToPrefixedTypeName = true;
       }
     }
 
-    return nominalTypeNameMatches;
+    return comparesToPrefixedTypeName;
+  }
+
+  compareNominalTypeName(nominalTypeName) {
+    let comparesToNominalTypeName = false;
+
+    if (!comparesToNominalTypeName) {
+      const name = this.getName(),
+            nominalTypeNameName = (nominalTypeName === name);
+
+      if (nominalTypeNameName) {
+        comparesToNominalTypeName = true;
+      }
+    }
+
+    if (!comparesToNominalTypeName) {
+      const prefixed = this.isPrefixed();
+
+      if (prefixed) {
+        const prefixedName = this.getPrefixedName(),
+              nominalTypeNamePrefixedName = (nominalTypeName === prefixedName);
+
+        if (nominalTypeNamePrefixedName) {
+          comparesToNominalTypeName = true;
+        }
+      }
+    }
+
+    return comparesToNominalTypeName;
   }
 
   toJSON() {

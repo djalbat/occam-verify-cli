@@ -34,12 +34,12 @@ export default define(class Variable extends Element {
 
   getTypeString() { return this.type.getString(); }
 
-  matchParameter(parameter) {
+  compareParameter(parameter) {
     const parameterName = parameter.getName(),
           parameterNameMatchesIdentifier = (parameterName === this.identifier),
-          parameterMatches = parameterNameMatchesIdentifier;  ///
+          comparesToParamter = parameterNameMatchesIdentifier;  ///
 
-    return parameterMatches;
+    return comparesToParamter;
   }
 
   matchVariableIdentifier(variableIdentifier) {

@@ -89,29 +89,29 @@ export default define(class Frame extends Element {
 
   matchFrameNode(frameNode) { return this.node.match(frameNode); }
 
-  matchSubstitution(substitution, context) {
-    let substitutionMatches = false;
+  compareSubstitution(substitution, context) {
+    let comparesToSubstitution = false;
 
-    const frameString = this.string,  ///
+    const frameString = this.getString(),  ///
           substitutionString = substitution.getString();
 
-    context.trace(`Matching the '${substitutionString}' substitution against the '${frameString}' frame...`);
+    context.trace(`Comparing the '${frameString}' frame to the '${substitutionString}' substitution...`);
 
-    if (!substitutionMatches) {
-      substitutionMatches = this.assumptions.some((assumption) => {
-        const substitutionMatchesAssumption = assumption.matchSubstitution(substitution, context);
+    if (!comparesToSubstitution) {
+      comparesToSubstitution = this.assumptions.some((assumption) => {
+        const assumptionComparesToSubstitution = assumption.compareSubstitution(substitution, context);
 
-        if (substitutionMatchesAssumption) {
+        if (assumptionComparesToSubstitution) {
           return true;
         }
       });
     }
 
-    if (substitutionMatches) {
-      context.debug(`...matched the '${substitutionString}' substitutions against the '${frameString}' frame.`);
+    if (comparesToSubstitution) {
+      context.debug(`...compared the the '${frameString}' frame to the '${substitutionString}' substitutions.`);
     }
 
-    return substitutionMatches;
+    return comparesToSubstitution;
   }
 
   matchSubstitutions(substitutions, context) {
@@ -123,9 +123,9 @@ export default define(class Frame extends Element {
     context.trace(`Matching the '${substitutionsString}' substitutions against the '${frameString}' frame...`);
 
     substitutionsMatch = substitutions.everySubstitution((substitution) => {
-      const substitutionMatches = this.matchSubstitution(substitution, context);
+      const compaaresToSubstitution = this.compareSubstitution(substitution, context);
 
-      if (substitutionMatches) {
+      if (compaaresToSubstitution) {
         return true;
       }
     });

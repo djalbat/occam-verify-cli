@@ -97,9 +97,9 @@ export default define(class SatisfiesAssertion extends Assertion {
 
       substitutions = Substitutions.fromNothing();
 
-      const signatureMatches = axiom.matchSignature(this.signature, substitutions, context);
+      const axiomComparesToSignature = axiom.compareSignature(this.signature, substitutions, context);
 
-      if (signatureMatches) {
+      if (axiomComparesToSignature) {
         const substitutionsB = substitutions; ///
 
         substitutions = Substitutions.fromNothing();

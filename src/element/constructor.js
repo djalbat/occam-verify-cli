@@ -17,9 +17,9 @@ export default define(class Constructor extends Element {
     return this.term;
   }
 
-  getType() { return this.term.getType(); }
-
   isProvisional() { return this.term.isProvisional(); }
+
+  getType() { return this.term.getType(); }
 
   setType(type) { this.term.setType(type); }
 

@@ -33,8 +33,6 @@ export default define(class FrameSubstitution extends Substitution {
 
   isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
-  matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
-
   verify(context) {
     let verifies = false;
 

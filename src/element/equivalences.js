@@ -51,9 +51,9 @@ export default define(class Equivalences extends Element {
 
   findEquivalenceByTerm(term) {
     const equivalence = this.array.find((equivalence) => {
-      const termEquates = equivalence.equateTerm(term);
+      const equivalenceComparesToTerm = equivalence.compareTerm(term);
 
-      if (termEquates) {
+      if (equivalenceComparesToTerm) {
         return true;
       }
     }) || null;

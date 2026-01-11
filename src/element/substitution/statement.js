@@ -43,18 +43,16 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementNode;
   }
 
-  isSimple() {
-    const simple = (this.substitution === null);
-
-    return simple;
+  setStatement(statement) {
+    this.statement = statement;
   }
 
-  isStatementEqualToStatement(statement, context) {
-    statement = stripBracketsFromStatement(statement, context); ///
+  setMetavariable(metavariable) {
+    this.metavariable = metavariable;
+  }
 
-    const statementEqualToStatement = this.statement.isEqualTo(statement);
-
-    return statementEqualToStatement;
+  setSubstitution(substitution) {
+    this.substitution = substitution;
   }
 
   isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
@@ -75,7 +73,19 @@ export default define(class StatementSubstitution extends Substitution {
     return substitutionEqualToSubstitution;
   }
 
-  matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
+  isStatementEqualToStatement(statement, context) {
+    statement = stripBracketsFromStatement(statement, context); ///
+
+    const statementEqualToStatement = this.statement.isEqualTo(statement);
+
+    return statementEqualToStatement;
+  }
+
+  isSimple() {
+    const simple = (this.substitution === null);
+
+    return simple;
+  }
 
   unifyStatement(statement, context) {
     let substitution = null;
@@ -205,8 +215,17 @@ export default define(class StatementSubstitution extends Substitution {
     statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementAndMetavariable(statement, metavariable),
-          statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-          statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
+          statementSubstitutionNode = instantiateStatementSubstitution(string, context);
+
+    context = {
+      nodeAsString: () => string
+    };
+
+    const statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
+
+    statementSubstitution.setStatement(statement);
+
+    statementSubstitution.setMetavariable(metavariable);
 
     return statementSubstitution;
   }
@@ -215,8 +234,19 @@ export default define(class StatementSubstitution extends Substitution {
     statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
-          statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-          statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context);
+          statementSubstitutionNode = instantiateStatementSubstitution(string, context);
+
+    context = {
+      nodeAsString: () => string
+    };
+
+    const statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
+
+    statementSubstitution.setStatement(statement);
+
+    statementSubstitution.setMetavariable(metavariable);
+
+    statementSubstitution.setSubstitution(substitution);
 
     return statementSubstitution;
   }

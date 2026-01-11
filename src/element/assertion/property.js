@@ -22,14 +22,14 @@ export default define(class PropertyAssertion extends Assertion {
     return this.propertyRelation;
   }
 
-  matchTermAndPropertyRelation(term, propertyRelation, context) {
-    let propertyMatchesTermAndPropertyRelation = false;
+  compareTermAndPropertyRelation(term, propertyRelation, context) {
+    let comparesToTermAndPropertyRelation = false;
 
     const termString = term.getString(),
           propertyRelationString = propertyRelation.getString(),
-          propertyAssertionString = this.getString();
+          propertyAssertionString = this.getString(); ///
 
-    context.trace(`Matching the '${termString}' term and '${propertyRelationString}' property relation against the '${propertyAssertionString}' property assertion...`);
+    context.trace(`Comparing the '${propertyAssertionString}' property assertion to the '${termString}' term and '${propertyRelationString}' property relation...`);
 
     const termA = term,
           termB = this.term, ///
@@ -38,14 +38,14 @@ export default define(class PropertyAssertion extends Assertion {
     if (termAEqualToTermB) {
       const propertyRelationEqualToPropertyRelation = this.propertyRelation.isEqualTo(propertyRelation);
 
-      propertyMatchesTermAndPropertyRelation = propertyRelationEqualToPropertyRelation;  ///
+      comparesToTermAndPropertyRelation = propertyRelationEqualToPropertyRelation;  ///
     }
 
-    if (propertyMatchesTermAndPropertyRelation) {
-      context.debug(`...matched the '${termString}' term and '${propertyRelationString}' property relation against the '${propertyAssertionString}' property assertion.`);
+    if (comparesToTermAndPropertyRelation) {
+      context.debug(`...compared the '${propertyAssertionString}' property assertion to the '${termString}' term and '${propertyRelationString}' property relation.`);
     }
 
-    return propertyMatchesTermAndPropertyRelation;
+    return comparesToTermAndPropertyRelation;
   }
 
   verify(assignments, stated, context) {
@@ -126,7 +126,7 @@ export default define(class PropertyAssertion extends Assertion {
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiesWhenStated = false;
+    let verifiesWhenStated;
 
     const propertyAssertionString = this.getString(); ///
 

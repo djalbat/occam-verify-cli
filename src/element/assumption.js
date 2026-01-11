@@ -31,13 +31,13 @@ export default define(class Assumption extends Element {
     return simple;
   }
 
-  matchSubstitution(substitution, context) {
-    let substitutionMatches = false;
+  compareSubstitution(substitution, context) {
+    let comparesToSubstituion = false;
 
     const assumptionString = this.string,  ///
           substitutionString = substitution.getString();
 
-    context.trace(`Matching the '${substitutionString}' substitution against the '${assumptionString}' assumption...`);
+    context.trace(`Comparing the '${assumptionString}' assumption to the '${substitutionString}' substitution...`);
 
     const simple = this.isSimple();
 
@@ -46,9 +46,12 @@ export default define(class Assumption extends Element {
             judgement = context.findJudgementByMetavariable(metavariable);
 
       if (judgement !== null) {
-        const assumption = judgement.getDeclaration();
+        const assumption = judgement.getDeclaration(),
+              assumptionComaresToSubstitution = assumption.compareSubstitution(substitution, context);
 
-        substitutionMatches = assumption.matchSubstitution(substitution, context);
+        if (assumptionComaresToSubstitution) {
+          comparesToSubstituion = true;
+        }
       }
     } else {
       const statement = substitution.getStatement(),
@@ -57,15 +60,15 @@ export default define(class Assumption extends Element {
             referenceMetavariableEqualToMetavariable = this.reference.isMetavariableEqualToMetavariable(metavariable);
 
       if (statementEqualToStatement && referenceMetavariableEqualToMetavariable) {
-        substitutionMatches = true;
+        comparesToSubstituion = true;
       }
     }
 
-    if (substitutionMatches) {
-      context.debug(`...matches the '${assumptionString}' substitution against the '${substitutionString}' assumption.`);
+    if (comparesToSubstituion) {
+      context.debug(`...compared the '${substitutionString}' assumption to the '${assumptionString}' substitution.`);
     }
 
-    return substitutionMatches;
+    return comparesToSubstituion;
   }
 
   verify(assignments, stated, context) {

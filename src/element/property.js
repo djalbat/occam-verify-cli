@@ -20,16 +20,16 @@ export default define(class Property extends Element {
     return this.nominalTypeName;
   }
 
-  matchPropertyName(propertyName) {
-    const propertyNameMatches = (this.name === propertyName);
+  comparePropertyName(propertyName) {
+    const comparesToPropertyName = (this.name === propertyName);
 
-    return propertyNameMatches;
+    return comparesToPropertyName;
   }
 
-  matchNominalTypeName(nominalTypeName) {
-    const nominalTypeNameMatches = (this.nominalTypeName === nominalTypeName);
+  compareNominalTypeName(nominalTypeName) {
+    const comparesToNominalTypeName = (this.nominalTypeName === nominalTypeName);
 
-    return nominalTypeNameMatches;
+    return comparesToNominalTypeName;
   }
 
   toJSON() {

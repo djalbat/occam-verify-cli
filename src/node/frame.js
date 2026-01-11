@@ -17,13 +17,6 @@ export default class FrameNode extends NonTerminalNode {
     return singular;
   }
 
-  getAssumptionNodes() {
-    const ruleName = ASSUMPTION_RULE_NAME,
-          declarationNodes = this.getNodesByRuleName(ruleName);
-
-    return declarationNodes;
-  }
-
   getMetavariableName() {
     let metavariableName = null;
 
@@ -43,20 +36,6 @@ export default class FrameNode extends NonTerminalNode {
     return metavariableNode;
   }
 
-  getMetavariableNodes() {
-    const ruleName = METAVARIABLE_RULE_NAME,
-          metavariableNodes = this.getNodesByRuleName(ruleName);
-
-    return metavariableNodes;
-  }
-
-  getSingularAssumptionNode() {
-    const ruleName = ASSUMPTION_RULE_NAME,
-          singularAssumptionNode = this.getSingularNodeByRuleName(ruleName);
-
-    return singularAssumptionNode;
-  }
-
   getSingularMetavariableNode() {
     let singularMetavariableNode = null;
 
@@ -69,6 +48,27 @@ export default class FrameNode extends NonTerminalNode {
     }
 
     return singularMetavariableNode;
+  }
+
+  getAssumptionNodes() {
+    const ruleName = ASSUMPTION_RULE_NAME,
+          declarationNodes = this.getNodesByRuleName(ruleName);
+
+    return declarationNodes;
+  }
+
+  getMetavariableNodes() {
+    const ruleName = METAVARIABLE_RULE_NAME,
+          metavariableNodes = this.getNodesByRuleName(ruleName);
+
+    return metavariableNodes;
+  }
+
+  getSingularAssumptionNode() {
+    const ruleName = ASSUMPTION_RULE_NAME,
+          singularAssumptionNode = this.getSingularNodeByRuleName(ruleName);
+
+    return singularAssumptionNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(FrameNode, ruleName, childNodes, opacity, precedence); }

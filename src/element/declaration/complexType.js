@@ -112,9 +112,9 @@ export default define(class ComplexTypeDeclaration extends Declaration {
 
     const nominalTypeName = superType.getNominalTypeName(),
           typeName = nominalTypeName, ///
-          typeNameMatches = this.type.matchTypeName(typeName);
+          typeComparesToTypeName = this.type.compareTypeName(typeName);
 
-    if (typeNameMatches) {
+    if (typeComparesToTypeName) {
       context.trace(`The super-type's name matches the ${typeName}' complex type's name.`, node);
     } else {
       const oldSuperType = superType;
@@ -237,9 +237,9 @@ export default define(class ComplexTypeDeclaration extends Declaration {
 
     const propertyName = property.getName(),
           count = properties.reduce((count, property) => {
-            const propertyNameMatches = property.matchPropertyName(propertyName);
+            const propertyComparesToPropertyName = property.comparePropertyName(propertyName);
 
-            if (propertyNameMatches) {
+            if (propertyComparesToPropertyName) {
               count++;
             }
 
@@ -253,9 +253,9 @@ export default define(class ComplexTypeDeclaration extends Declaration {
             superType = superTypes.find((superType) => {
               const superTypeProperties = superType.getProperties(),
                     propertyNameMatches = superTypeProperties.some((superTypeProperty) => {
-                      const propertyNameMatches = superTypeProperty.matchPropertyName(propertyName);
+                      const superTypePropertyComparesToPropertyName = superTypeProperty.comparePropertyName(propertyName);
 
-                      if (propertyNameMatches) {
+                      if (superTypePropertyComparesToPropertyName) {
                         return true;
                       }
                     });
@@ -291,9 +291,9 @@ export default define(class ComplexTypeDeclaration extends Declaration {
 
     context.trace(`Verifying the '${propertyString}' property's '${nominalTypeName}' nominal type name...`, node);
 
-    const nominalTypeNameMatches = this.type.matchNominalTypeName(nominalTypeName);
+    const typeComparesToNominalTypeName = this.type.compareNominalTypeName(nominalTypeName);
 
-    if (nominalTypeNameMatches) {
+    if (typeComparesToNominalTypeName) {
       propertyNominalTypeNameVerifies = true;
     } else {
       const typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
