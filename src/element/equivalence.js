@@ -26,7 +26,7 @@ export default define(class Equivalence extends Element {
     const termString = term.getString(),
           equivalenceString = this.asString(); ///
 
-    context.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence....`);
+    context.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence...`);
 
     const termA = term, ///
           termPresent = this.someTerm((term) => {

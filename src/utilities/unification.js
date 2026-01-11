@@ -287,26 +287,43 @@ function unifyStatementWithSatisfiesAssertion(statement, reference, satisfiesAss
   let statementUnifiesWithSatisfiesAssertion = false;
 
   if (satisfiesAssertion !== null) {
+    const statementString = statement.getString(),
+          satisfiesAssertionString = satisfiesAssertion.getString();
+
+    context.trace(`Unifying the '${statementString}' statememnt with the '${satisfiesAssertionString}' satisfies assertion...`);
+
     const stepsOrSubproofs = context.getStepsOrSubproofs(),
           statementUnifies = satisfiesAssertion.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
 
     if (statementUnifies) {
       statementUnifiesWithSatisfiesAssertion = true;
     }
+
+    if (statementUnifiesWithSatisfiesAssertion) {
+      context.debug(`...unified the '${statementString}' statememnt with the '${satisfiesAssertionString}' satisfies assertion.`);
+    }
   }
 
   return statementUnifiesWithSatisfiesAssertion;
 }
 
-function equateStatementWithStepsOrSubproofs(statement, reference, satisfiesAssertion, substitutions, context) {
+function compareStatementWithStepsOrSubproofs(statement, reference, satisfiesAssertion, substitutions, context) {
   let statementEquatesWithStepOrSubproofs = false;
 
   if (reference === null) {
+    const statementString = statement.getString();
+
+    context.trace(`Comparing the '${statementString}' statement with the steps or subproofs...`);
+
     const stepsOrSubproofs = context.getStepsOrSubproofs(),
-          statementUnifiesWithSteps = statement.equateWithStepsOrSubproofs(stepsOrSubproofs, context);
+          statementUnifiesWithSteps = statement.compareStepsOrSubproofs(stepsOrSubproofs, context);
 
     if (statementUnifiesWithSteps) {
       statementEquatesWithStepOrSubproofs = true;
+    }
+
+    if (statementEquatesWithStepOrSubproofs) {
+      context.debug(`...compared the '${statementString}' statement with the steps or subproofs.`);
     }
   }
 
@@ -323,5 +340,5 @@ export const unifyStatements = [
   unifyStatementAsTypeAssertion,
   unifyStatementAsPropertyAssertion,
   unifyStatementWithSatisfiesAssertion,
-  equateStatementWithStepsOrSubproofs
+  compareStatementWithStepsOrSubproofs
 ];

@@ -254,10 +254,10 @@ export default define(class Statement extends Element {
     return unifiesIndependently;
   }
 
-  equateWithStepsOrSubproofs(stepsOrSubproofs, context) {
-    let equatesWithStepsOrSubproofs;
+  compareStepsOrSubproofs(stepsOrSubproofs, context) {
+    let comparesToStepsOrSubproofs;
 
-    equatesWithStepsOrSubproofs = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
+    comparesToStepsOrSubproofs = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
       const statement = this, ///
             stepOrSubproofComparesToStatement = stepOrSubproof.compareStatement(statement, context);
 
@@ -266,7 +266,7 @@ export default define(class Statement extends Element {
       }
     });
 
-    return equatesWithStepsOrSubproofs;
+    return comparesToStepsOrSubproofs;
   }
 
   toJSON() {

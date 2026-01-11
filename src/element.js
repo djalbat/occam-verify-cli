@@ -31,6 +31,8 @@ export default class Element {
     this.node = node;
   }
 
+  matchNode(node) { return this.node.match(node); }
+
   isEqualTo(element) {
     const elementNode = element.getNode(),
           matches = this.node.match(elementNode),
@@ -38,6 +40,4 @@ export default class Element {
 
     return equalTo;
   }
-
-  matchNode(node) { return this.node.match(node); }
 }
