@@ -94,7 +94,7 @@ export default define(class Equivalence extends Element {
     termNode = stripBracketsFromTermNode(termNode); ///
 
     const termNodeMatches = this.someTerm((term) => {
-      const termNodeMatches = term.matchTermNode(termNode);
+      const termNodeMatches = term.matchNode(termNode);
 
       if (termNodeMatches) {
         return true;
@@ -196,7 +196,7 @@ export default define(class Equivalence extends Element {
       if (termGrounded) {
         const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
           const groundedTermNode = groundedTerm.getNode(),
-                groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
+                groundedTermNodeMatches = term.matchNode(groundedTermNode);
 
           if (groundedTermNodeMatches) {
             return true;

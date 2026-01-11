@@ -216,9 +216,9 @@ class LocalContext {
   findVariableByVariableIdentifier(variableIdentifier, nested = true) {
     const variables = this.getVariables(nested),
           variable = variables.find((variable) => {
-            const variableIdentifierMatches = variable.matchVariableIdentifier(variableIdentifier);
+            const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
 
-            if (variableIdentifierMatches) {
+            if (variableComparesToVariableIdentifier) {
               return true;
             }
           }) || null;
@@ -306,7 +306,7 @@ class LocalContext {
 
     const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
         const groundedTermNode = groundedTerm.getNode(),
-              groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
+              groundedTermNodeMatches = term.matchNode(groundedTermNode);
 
             if (groundedTermNodeMatches) {
               return true;

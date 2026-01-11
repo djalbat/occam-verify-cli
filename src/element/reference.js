@@ -37,17 +37,7 @@ export default define(class Reference extends Element {
 
   compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
 
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeA = metavariableNode; ///
-
-    metavariableNode = this.metavariable.getNode();
-
-    const metavariableNodeB = metavariableNode, ///
-          matches = metavariableNodeA.match(metavariableNodeB),
-          metavariableNodeMatches = matches;  ///
-
-    return metavariableNodeMatches; ///
-  }
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchNode(metavariableNode); }
 
   verify(context) {
     let verifies = false;

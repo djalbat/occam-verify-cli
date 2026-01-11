@@ -57,7 +57,7 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
   }
 
   compareSignature(signature, substitutions, context) {
-    let signatureMatches = false;
+    let comparesToSignature = false;
 
     const satisfiable = this.isSatisfiable();
 
@@ -73,10 +73,10 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
 
       const generalContext = context;  ///
 
-      signatureMatches = signatureA.compare(signatureB, substitutions, generalContext, specificContext);
+      comparesToSignature = signatureA.compare(signatureB, substitutions, generalContext, specificContext);
     }
 
-    return signatureMatches;
+    return comparesToSignature;
   }
 
   unifyStep(step, substitutions, context) {
@@ -213,17 +213,13 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
     if (generalSuppositionsLength === specificSuppositionsLength) {
       suppositions = specificSuppositions;  ///
 
-      const suppositionsMatch = suppositions.every((supposition, index) => {
+      suppositionsUnify = suppositions.every((supposition, index) => {
         const suppositionUnifies = this.unifySupposition(supposition, index, substitutions, generalContext, specificContext);
 
         if (suppositionUnifies) {
           return true;
         }
       });
-
-      if (suppositionsMatch) {
-        suppositionsUnify = true;
-      }
     }
 
     return suppositionsUnify;

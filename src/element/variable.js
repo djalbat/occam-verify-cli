@@ -36,16 +36,16 @@ export default define(class Variable extends Element {
 
   compareParameter(parameter) {
     const parameterName = parameter.getName(),
-          parameterNameMatchesIdentifier = (parameterName === this.identifier),
-          comparesToParamter = parameterNameMatchesIdentifier;  ///
+          identifierParamterName = (this.identifier === parameterName),
+          comparesToParamter = identifierParamterName;  ///
 
     return comparesToParamter;
   }
 
-  matchVariableIdentifier(variableIdentifier) {
-    const variableIdentifierMatches = (variableIdentifier === this.identifier);
+  compareVariableIdentifier(variableIdentifier) {
+    const comparesToVariablbeIdentifier = (this.identifier === variableIdentifier);
 
-    return variableIdentifierMatches;
+    return comparesToVariablbeIdentifier;
   }
 
   verify(context) {

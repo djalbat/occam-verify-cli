@@ -116,8 +116,6 @@ export default class Substitution extends Element {
     return comparesToParameter;
   }
 
-  matchSubstitutionNode(substitutionNode) { return this.node.match(substitutionNode); }
-
   resolve(substitutions, context) {
     const resolved = true;
 

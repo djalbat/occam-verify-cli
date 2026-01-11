@@ -31,14 +31,6 @@ export default define(class Statement extends Element {
     return metavariableName;
   }
 
-  matchStatementNode(statementNode) {
-    const node = this.getNode(),
-          nodeMatchesStatementNode = node.match(statementNode),
-          statementNodeMatches = nodeMatchesStatementNode;  ///
-
-    return statementNodeMatches;
-  }
-
   isSingular() {
     const node = this.getNode(),
           singular = node.isSingular();
@@ -55,14 +47,13 @@ export default define(class Statement extends Element {
 
     context.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`, node);
 
-    const termNode = term.getNode(),
-          statementNode = node, ///
+    const statementNode = node, ///
           statementNodeTermNodes = statementNode.getTermNodes();
 
     termContained = statementNodeTermNodes.some((statementNodeTermNode) => {  ///
-      const termNodeMatchesStatementNodeTermNode = termNode.match(statementNodeTermNode);
+      const statementNodeTermNodeMatches = term.matchNode(statementNodeTermNode);
 
-      if (termNodeMatchesStatementNodeTermNode) {
+      if (statementNodeTermNodeMatches) {
         return true;
       }
     });
@@ -83,14 +74,13 @@ export default define(class Statement extends Element {
 
     context.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`, node);
 
-    const frameNode = frame.getNode(),
-          statementNode = node,
+    const statementNode = node,
           statementNodeFrameNodes = statementNode.getFrameNodes();
 
     frameContained = statementNodeFrameNodes.some((statementNodeFrameNode) => {  ///
-      const frameNodeMatchesStatementNodeFrameNode = frameNode.match(statementNodeFrameNode);
+      const statementNodeFrameNodeMatches = frame.matchNode(statementNodeFrameNode);
 
-      if (frameNodeMatchesStatementNodeFrameNode) {
+      if (statementNodeFrameNodeMatches) {
         return true;
       }
     });

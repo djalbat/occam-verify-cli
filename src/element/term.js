@@ -30,8 +30,6 @@ export default define(class Term extends Element {
 
   isProvisional() { return this.type.isProvisional(); }
 
-  matchTermNode(termNode) { return this.node.match(termNode); }
-
   compareVariable(variable) {
     let comparesToVaraible = false;
 
@@ -50,14 +48,6 @@ export default define(class Term extends Element {
     }
 
     return comparesToVaraible;
-  }
-
-  isEqualTo(term) {
-    const termNode = term.getNode(),
-          matches = this.node.match(termNode),
-          equalTo = matches;  ///
-
-    return equalTo;
   }
 
   isGrounded(definedVariables, context) {

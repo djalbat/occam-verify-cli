@@ -6,6 +6,4 @@ export default class Assertion extends Element {
   constructor(context, string, node) {
     super(context, string, node);
   }
-
-  matchAssertionNode(assertionNode) { return this.node.match(assertionNode); }
 }

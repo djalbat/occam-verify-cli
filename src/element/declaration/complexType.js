@@ -115,7 +115,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
           typeComparesToTypeName = this.type.compareTypeName(typeName);
 
     if (typeComparesToTypeName) {
-      context.trace(`The super-type's name matches the ${typeName}' complex type's name.`, node);
+      context.trace(`The super-type's name compares to the ${typeName}' complex type's name.`, node);
     } else {
       const oldSuperType = superType;
 
@@ -252,7 +252,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
       const superTypes = this.type.getSuperTypes(),
             superType = superTypes.find((superType) => {
               const superTypeProperties = superType.getProperties(),
-                    propertyNameMatches = superTypeProperties.some((superTypeProperty) => {
+                    superTypePropertyComparesToPropertyName = superTypeProperties.some((superTypeProperty) => {
                       const superTypePropertyComparesToPropertyName = superTypeProperty.comparePropertyName(propertyName);
 
                       if (superTypePropertyComparesToPropertyName) {
@@ -260,7 +260,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
                       }
                     });
 
-              if (propertyNameMatches) {
+              if (superTypePropertyComparesToPropertyName) {
                 return true;
               }
             }) || null;

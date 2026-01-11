@@ -111,7 +111,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
           typeComparesToTypeName = this.type.compareTypeName(typeName);
 
     if (typeComparesToTypeName) {
-      context.trace(`The super-type's name matches the ${typeName}' simple type's name.`, node);
+      context.trace(`The super-type's name compares to the ${typeName}' simple type's name.`, node);
     } else {
       const oldSuperType = superType;
 

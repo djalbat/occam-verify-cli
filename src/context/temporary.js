@@ -159,9 +159,9 @@ export default class TemporaryContext {
 
   findTermByTermNode(termNode) {
     const term = this.terms.find((term) => {
-      const termMatchesTermNode = term.matchTermNode(termNode);
+      const termNodeMatches = term.matchNode(termNode);
 
-      if (termMatchesTermNode) {
+      if (termNodeMatches) {
         return true;
       }
     }) || null;
@@ -171,9 +171,9 @@ export default class TemporaryContext {
 
   findFrameByFrameNode(frameNode) {
     const frame = this.frames.find((frame) => {
-      const frameMatchesFrameNode = frame.matchFrameNode(frameNode);
+      const frameNodeMatches = frame.matchNode(frameNode);
 
-      if (frameMatchesFrameNode) {
+      if (frameNodeMatches) {
         return true;
       }
     }) || null;
@@ -183,9 +183,9 @@ export default class TemporaryContext {
 
   findStatementByStatementNode(statementNode) {
     const statement = this.statements.find((statement) => {
-      const statementMatchesStatementNode = statement.matchStatementNode(statementNode);
+      const statementNodeMatches = statement.matchNode(statementNode);
 
-      if (statementMatchesStatementNode) {
+      if (statementNodeMatches) {
         return true;
       }
     }) || null;
@@ -195,9 +195,9 @@ export default class TemporaryContext {
 
   findAssertionByAssertionNode(assertionNode) {
     const assertion = this.assertions.find((assertion) => {
-      const assertionMatchesAssertionNode = assertion.matchAssertionNode(assertionNode);
+      const assertionNodeMatches = assertion.matchNode(assertionNode);
 
-      if (assertionMatchesAssertionNode) {
+      if (assertionNodeMatches) {
         return true;
       }
     }) || null;
@@ -219,9 +219,9 @@ export default class TemporaryContext {
 
   findSubstitutionBySubstitutionNode(substitutionNode) {
     const substitution = this.substitutions.find((substitution) => {
-      const substitutionMatchesSubtitutionNode = substitution.matchSubstitutionNode(substitutionNode);
+      const substitutionNodeMatches = substitution.matchNode(substitutionNode);
 
-      if (substitutionMatchesSubtitutionNode) {
+      if (substitutionNodeMatches) {
         return true;
       }
     }) || null;

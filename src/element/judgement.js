@@ -118,7 +118,7 @@ export default define(class Judgement extends Element {
           reference = referenceFromMetavariable(metavariable, context),
           metaLemmaMetatheorem = context.findMetaLemmaMetatheoremByReference(reference),
           substitutions = metaLemmaMetatheorem.getSubstitutions(),
-          frameComparesToSubstitutions = this.frame.matchSubstitutions(substitutions, context);
+          frameComparesToSubstitutions = this.frame.compareSubstitutions(substitutions, context);
 
     if (frameComparesToSubstitutions) {
       verifiesWhenDerived = true;

@@ -108,9 +108,9 @@ export default define(class SatisfiesAssertion extends Assertion {
 
         if (statementUnifies) {
           const substitutionsA = substitutions, ///
-                substitutionsMatch = substitutionsA.correlateSubstitutions(substitutionsB);
+                substitutionsCorrelate = substitutionsA.correlateSubstitutions(substitutionsB);
 
-          if (!substitutionsMatch) {
+          if (!substitutionsCorrelate) {
             const substitutionsAString = substitutionsA.asString(),
                   substitutionsBString = substitutionsB.asString();
 

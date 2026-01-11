@@ -87,8 +87,6 @@ export default define(class Frame extends Element {
     return metavariableEqualToMetavariable;
   }
 
-  matchFrameNode(frameNode) { return this.node.match(frameNode); }
-
   compareSubstitution(substitution, context) {
     let comparesToSubstitution = false;
 
@@ -114,15 +112,15 @@ export default define(class Frame extends Element {
     return comparesToSubstitution;
   }
 
-  matchSubstitutions(substitutions, context) {
-    let substitutionsMatch;
+  compareSubstitutions(substitutions, context) {
+    let comparesToSubstitutions;
 
     const frameString = this.string,  ///
           substitutionsString = substitutions.asString();
 
-    context.trace(`Matching the '${substitutionsString}' substitutions against the '${frameString}' frame...`);
+    context.trace(`Comparing the '${frameString}' frame to the '${substitutionsString}' substitutions...`);
 
-    substitutionsMatch = substitutions.everySubstitution((substitution) => {
+    comparesToSubstitutions = substitutions.everySubstitution((substitution) => {
       const compaaresToSubstitution = this.compareSubstitution(substitution, context);
 
       if (compaaresToSubstitution) {
@@ -130,11 +128,11 @@ export default define(class Frame extends Element {
       }
     });
 
-    if (substitutionsMatch) {
-      context.debug(`...matched the '${substitutionsString}' substitutions against the '${frameString}' frame.`);
+    if (comparesToSubstitutions) {
+      context.debug(`...compared the '${frameString}' frame to the '${substitutionsString}' substitutions.`);
     }
 
-    return substitutionsMatch;
+    return comparesToSubstitutions;
   }
 
   verify(assignments, stated, context) {

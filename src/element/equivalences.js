@@ -63,9 +63,9 @@ export default define(class Equivalences extends Element {
 
   findEquivalenceByTermNodes(termNodes) {
     const equivalence = this.array.find((equivalence) => {
-      const equivalenceMatchesTerms = equivalence.matchTermNodes(termNodes);
+      const termNodeMatches = equivalence.matchTermNodes(termNodes);
 
-      if (equivalenceMatchesTerms) {
+      if (termNodeMatches) {
         return true;
       }
     }) || null;

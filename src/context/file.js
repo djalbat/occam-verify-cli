@@ -582,9 +582,9 @@ export default class FileContext {
   findMetaTypeByMetaTypeName(metaTypeName) {
     const metaTypes = this.getMetaTypes(),
           metaType = metaTypes.find((metaType) => {
-            const metaTypeNameMatches = metaType.matchMetaTypeName(metaTypeName);
+            const metaTypeComparesToMetaTypeName = metaType.compareMetaTypeName(metaTypeName);
 
-            if (metaTypeNameMatches) {
+            if (metaTypeComparesToMetaTypeName) {
               return true;
             }
           }) || null;
@@ -608,9 +608,9 @@ export default class FileContext {
   findVariableByVariableIdentifier(variableIdentifier) {
     const variables = this.getVariables(),
           variable = variables.find((variable) => {
-            const variableIdentifierMatches = variable.matchVariableIdentifier(variableIdentifier);
+            const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
 
-            if (variableIdentifierMatches) {
+            if (variableComparesToVariableIdentifier) {
               return true;
             }
           }) || null;

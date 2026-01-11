@@ -21,10 +21,10 @@ export default define(class MetaType extends Element {
     return equalTo;
   }
 
-  matchMetaTypeName(metaTypeName) {
-    const metaTypeNameMatches = (metaTypeName === this.name);
+  compareMetaTypeName(metaTypeName) {
+    const comparesToMetaTypeName = (metaTypeName === this.name);
 
-    return metaTypeNameMatches;
+    return comparesToMetaTypeName;
   }
 
   toJSON() {
