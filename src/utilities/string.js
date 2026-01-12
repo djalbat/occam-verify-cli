@@ -157,10 +157,10 @@ export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conc
 }
 
 export function subproofStringFromSuppositionsAndSubDerivation(suppositions, subDerivation) {
-  const lastStep = subDerivation.getLastStep(),
-        lastStepString = lastStep.getString(),
+  const lastProofAssertion = subDerivation.getLastProofAssertion(),
         suppositionsString = suppositionsStringFromSuppositions(suppositions),
-        subproofString = `[${suppositionsString}]...${lastStepString}`;
+        lastProofAssertionString = lastProofAssertion.getString(),
+        subproofString = `[${suppositionsString}]...${lastProofAssertionString}`;
 
   return subproofString;
 }

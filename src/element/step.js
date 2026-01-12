@@ -1,27 +1,19 @@
 "use strict";
 
-import Element from "../element";
 import elements from "../elements";
+import ProofAssertion from "./proofAssertion";
 import TemporaryContext from "../context/temporary";
 
 import { define } from "../elements";
-import { instantiateStep } from "../process/instantiate";
 import { unifyStatements } from "../utilities/unification";
-import { equateStatements } from "../process/equate";
-import { stepFromStepNode } from "../utilities/element";
 import { propertyAssertionFromStatement } from "../utilities/statement";
 
-export default define(class Step extends Element {
+export default define(class Step extends ProofAssertion {
   constructor(context, string, node, statement, reference, satisfiesAssertion) {
-    super(context, string, node);
+    super(context, string, node, statement);
 
-    this.statement = statement;
     this.reference = reference;
     this.satisfiesAssertion = satisfiesAssertion;
-  }
-
-  getStatement() {
-    return this.statement;
   }
 
   getReference() {
@@ -51,16 +43,11 @@ export default define(class Step extends Element {
     return stated;
   }
 
-  isStep() {
-    const step = true;
-
-    return step;
-  }
-
   compareTermAndPropertyRelation(term, propertyRelation, context) {
     let comparesToTermAndPropertyRelation = false;
 
-    const propertyAssertion = propertyAssertionFromStatement(this.statement, context);
+    const statement = this.getStatement(),
+          propertyAssertion = propertyAssertionFromStatement(statement, context);
 
     if (propertyAssertion !== null) {
       comparesToTermAndPropertyRelation = propertyAssertion.compareTermAndPropertyRelation(term, propertyRelation, context);
@@ -81,7 +68,9 @@ export default define(class Step extends Element {
 
     context.trace(`Verifying the '${stepString}' step...`, node);
 
-    if (this.statement === null) {
+    const statement = this.getStatement();
+
+    if (statement === null) {
       context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`, node);
     } else {
       const referenceVerifies = this.verifyReference(context);
@@ -91,11 +80,11 @@ export default define(class Step extends Element {
 
         if (satisfiesAssertioVeriries) {
           const stated = this.isStated(),
-                statementValidates = this.statement.validate(assignments, stated, context);
+                statementValidates = statement.validate(assignments, stated, context);
 
           if (statementValidates) {
             const statementUnifies = unifyStatements.some((unifyStatement) => {
-              const statementUnifies = unifyStatement(this.statement, this.reference, this.satisfiesAssertion, substitutions, context);
+              const statementUnifies = unifyStatement(statement, this.reference, this.satisfiesAssertion, substitutions, context);
 
               if (statementUnifies) {
                 return true;
@@ -103,11 +92,9 @@ export default define(class Step extends Element {
             });
 
             if (statementUnifies) {
-              const { Step } = elements,
-                    step = Step.fromStatement(this.statement, context),
-                    stepOrSubproof = step;  ///
+              const subproofOrProofAssertion = this;  ///
 
-              context.addStepOrSubproof(stepOrSubproof);
+              context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 
               this.setContext(context);
 
@@ -170,20 +157,6 @@ export default define(class Step extends Element {
     return satisfiesAssertionVerifies;
   }
 
-  compareStatement(statement, context) {
-    let comparesToStatement;
-
-    const leftStatement = statement,  ///
-          rightStatement = this.statement,  ///
-          leftStatementNode = leftStatement.getNode(),
-          rightStatementNode = rightStatement.getNode(),
-          statementsEquate = equateStatements(leftStatementNode, rightStatementNode, context);
-
-    comparesToStatement = statementsEquate;  ///
-
-    return comparesToStatement;
-  }
-
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
     let unifiesWithSatisfiesAssertion = false;
 
@@ -218,23 +191,4 @@ export default define(class Step extends Element {
   }
 
   static name = "Step";
-
-  static fromStatement(statement, context) {
-    let string;
-
-    const statementString = statement.getString();
-
-    string = `${statementString}
-`;
-    const stepNode = instantiateStep(string, context);
-
-    string = statementString;  ///
-
-    const node = stepNode,  ///
-          reference = null,
-          satisfiesAssertion = null,
-          step = new Step(context, string, node, statement, reference, satisfiesAssertion);
-
-    return step;
-  }
 });

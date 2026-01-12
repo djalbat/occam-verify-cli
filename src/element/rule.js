@@ -165,68 +165,68 @@ export default define(class Rule extends Element {
     return statementUnifiesWithConclusion;
   }
 
-  unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
-    let statementAndStepsOrSubproofsUnify = false;
+  unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context) {
+    let statementAndSubproofOrProofAssertionsUnify = false;
 
     const { Substitutions } = elements,
           substitutions = Substitutions.fromNothing(),
           statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, context);
 
     if (statementUnifiesWithConclusion) {
-      const stepsOrSubproofsUnifiesWithPremises = this.unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, context);
+      const subproofOrProofAssertionsUnifiesWithPremises = this.unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, substitutions, context);
 
-      if (stepsOrSubproofsUnifiesWithPremises) {
+      if (subproofOrProofAssertionsUnifiesWithPremises) {
         const substitutionsResolved = substitutions.areResolved();
 
         if (substitutionsResolved) {
-          statementAndStepsOrSubproofsUnify = true;
+          statementAndSubproofOrProofAssertionsUnify = true;
         }
       }
     }
 
-    return statementAndStepsOrSubproofsUnify;
+    return statementAndSubproofOrProofAssertionsUnify;
   }
 
-  unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context) {
-    let stepsOrSubproofsUnifiesWithPremise = false;
+  unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, substitutions, context) {
+    let subproofOrProofAssertionsUnifiesWithPremise = false;
 
-    if (!stepsOrSubproofsUnifiesWithPremise) {
+    if (!subproofOrProofAssertionsUnifiesWithPremise) {
       const premiseUnifiesIndependently = premise.unifyIndependently(substitutions, context);
 
       if (premiseUnifiesIndependently) {
-        stepsOrSubproofsUnifiesWithPremise = true;
+        subproofOrProofAssertionsUnifiesWithPremise = true;
       }
     }
 
-    if (!stepsOrSubproofsUnifiesWithPremise) {
-      const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
-        const stepOrSubproofUnifies = premise.unifyStepOrSubproof(stepOrSubproof, substitutions, context);
+    if (!subproofOrProofAssertionsUnifiesWithPremise) {
+      const subproofOrProofAssertion = extract(subproofOrProofAssertions, (subproofOrProofAssertion) => {
+        const subproofOrProofAssertionUnifies = premise.unifySubproofOrProofAssertion(subproofOrProofAssertion, substitutions, context);
 
-        if (stepOrSubproofUnifies) {
+        if (subproofOrProofAssertionUnifies) {
           return true;
         }
       }) || null;
 
-      if (stepOrSubproof !== null) {
-        stepsOrSubproofsUnifiesWithPremise = true;
+      if (subproofOrProofAssertion !== null) {
+        subproofOrProofAssertionsUnifiesWithPremise = true;
       }
     }
 
-    return stepsOrSubproofsUnifiesWithPremise;
+    return subproofOrProofAssertionsUnifiesWithPremise;
   }
 
-  unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, context) {
-    stepsOrSubproofs = reverse(stepsOrSubproofs); ///
+  unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, substitutions, context) {
+    subproofOrProofAssertions = reverse(subproofOrProofAssertions); ///
 
-    const stepsOrSubproofsUnifiesWithPremises = backwardsEvery(this.premises, (premise) => {
-      const stepUnifiesWithPremise = this.unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context);
+    const subproofOrProofAssertionsUnifiesWithPremises = backwardsEvery(this.premises, (premise) => {
+      const stepUnifiesWithPremise = this.unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, substitutions, context);
 
       if (stepUnifiesWithPremise) {
         return true;
       }
     });
 
-    return stepsOrSubproofsUnifiesWithPremises;
+    return subproofOrProofAssertionsUnifiesWithPremises;
   }
 
   toJSON() {

@@ -1,23 +1,24 @@
 "use strict";
 
-import Element from "../element";
-import elements from "../elements";
+import ProofAssertion from "./proofAssertion";
 import TemporaryContext from "../context/temporary";
 import assignAssignments from "../process/assign";
 
 import { define } from "../elements";
-import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
+import { termsFromJSON,
+         framesFromJSON,
+         termsToTermsJSON,
+         statementFromJSON,
+         framesToFramesJSON,
+         procedureCallFromJSON,
+         statementToStatementJSON,
+         procedureCallToProcedureCallJSON } from "../utilities/json";
 
-export default define(class Premise extends Element {
+export default define(class Premise extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
-    super(context, string, node);
+    super(context, string, node, statement);
 
-    this.statement = statement;
     this.procedureCall = procedureCall;
-  }
-
-  getStatement() {
-    return this.statement;
   }
 
   getProcedureCall() {
@@ -36,23 +37,23 @@ export default define(class Premise extends Element {
 
     context.trace(`Verifying the '${premiseString}' premise...`, node);
 
-    if ((this.statement === null) && (this.procedureCall === null)) {
+    const statement = this.getStatement();
+
+    if ((statement === null) && (this.procedureCall === null)) {
       context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`, node);
     } else {
-      if (this.statement !== null) {
+      if (statement !== null) {
         const stated = true,
               assignments = [],
-              statementValidates = this.statement.validate(assignments, stated, context);
+              statementValidates = statement.validate(assignments, stated, context);
 
         if (statementValidates) {
           const assignmentsAssigned = assignAssignments(assignments, context);
 
           if (assignmentsAssigned) {
-            const { Step } = elements,
-                  step = Step.fromStatement(this.statement, context),
-                  stepOrSubproof = step;  ///
+            const subproofOrProofAssertion = this;  ///
 
-            context.addStepOrSubproof(stepOrSubproof);
+            context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 
             verifies = true;
           }
@@ -83,14 +84,22 @@ export default define(class Premise extends Element {
     let unifiesIndependently = false;
 
     const node = this.getNode(),
-          premiseString = this.getString(),  ///
-          generalContext = this.context,  ///
-          specificContext = context;  ///
+          premiseString = this.getString(); ///
 
     context.trace(`Unifying the '${premiseString}' premise independently...`, node);
 
-    if (this.statement !== null) {
-      const statementUnifiesIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
+    const generalContext = context; ///
+
+    context = this.getContext();
+
+    const specificContext = context;  ///
+
+    context = specificContext;  ///
+
+    const statement = this.getStatement();
+
+    if (statement !== null) {
+      const statementUnifiesIndependently = statement.unifyIndependently(substitutions, generalContext, specificContext);
 
       if (statementUnifiesIndependently) {
         unifiesIndependently = true;
@@ -112,55 +121,54 @@ export default define(class Premise extends Element {
     return unifiesIndependently;
   }
 
-  unifyStepOrSubproof(stepOrSubproof, substitutions, context) {
-    let stepOrSubproofUnifies = false;
+  unifySubproofOrProofAssertion(subproofOrProofAssertion, substitutions, context) {
+    let subproofOrProofAssertionUnifies = false;
 
-    const stepOrSubProofStep = stepOrSubproof.isStep(),
-          subproof = stepOrSubProofStep ?
-                       null :
-                         stepOrSubproof,
-          step = stepOrSubProofStep ?
-                        stepOrSubproof :
-                          null;
+    const subproofOrProofAssertionProofAssertion = subproofOrProofAssertion.isProofAssertion(),
+          proofAssertion = subproofOrProofAssertionProofAssertion ?
+                        subproofOrProofAssertion :
+                          null,
+          subproof = subproofOrProofAssertionProofAssertion ?
+                        null :
+                          subproofOrProofAssertion;
 
     substitutions.snapshot();
-
-    if (step !== null) {
-      const stepUnifies = this.unifyStep(step, substitutions, context);
-
-      if (stepUnifies) {
-        stepOrSubproofUnifies = true;
-      }
-    }
 
     if (subproof !== null) {
       const subproofUnifies = this.unifySubproof(subproof, substitutions, context);
 
       if (subproofUnifies) {
-        stepOrSubproofUnifies = true;
+        subproofOrProofAssertionUnifies = true;
       }
     }
 
-    if (stepOrSubproofUnifies) {
+    if (proofAssertion !== null) {
+      const proofAssertionUnifies = this.unifyProofAssertion(proofAssertion, substitutions, context);
+
+      if (proofAssertionUnifies) {
+        subproofOrProofAssertionUnifies = true;
+      }
+    }
+
+    if (subproofOrProofAssertionUnifies) {
       substitutions.resolve(context);
     }
 
-    stepOrSubproofUnifies ?
+    subproofOrProofAssertionUnifies ?
       substitutions.continue() :
         substitutions.rollback(context);
 
-    return stepOrSubproofUnifies;
+    return subproofOrProofAssertionUnifies;
   }
 
-  unifySubproof(subproof, substitutions, context) {
-    let subproofUnifies = false;
+  unifyProofAssertion(proofAssertion, substitutions, context) {
+    let proofAssertionUnifies = false;
 
-    const premise = this, ///
-          subproofString = subproof.getString(),
-          premiseStatement = premise.getStatement(),
-          premiseStatementString = premiseStatement.getString();
+    const node = this.getNode(),
+          premiseString = this.getString(),
+          proofAssertionString = proofAssertion.getString();
 
-    context.trace(`Unifying the '${subproofString}' subproof with the '${premiseStatementString}' premise...`);
+    context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${premiseString}' premise...`, node);
 
     const specificContext = context;  ///
 
@@ -170,8 +178,41 @@ export default define(class Premise extends Element {
 
     context = specificContext;  ///
 
-    if (this.statement !== null) {
-      const statementNode = this.statement.getNode(),
+    const statement = proofAssertion.getStatement(),
+          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    if (statementUnifies) {
+      proofAssertionUnifies = true;
+    }
+
+    if (proofAssertionUnifies) {
+      context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${premiseString}' premise.`, node);
+    }
+
+    return proofAssertionUnifies;
+  }
+
+  unifySubproof(subproof, substitutions, context) {
+    let subproofUnifies = false;
+
+    const node = this.getNode(),
+          premiseString = this.getString(),
+          subproofString = subproof.getString();
+
+    context.trace(`Unifying the '${subproofString}' subproof with the '${premiseString}' premise...`, node);
+
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context; ///
+
+    context = specificContext;  ///
+
+    const statement = this.getStatement();
+
+    if (statement !== null) {
+      const statementNode = statement.getNode(),
             subproofAssertionNode = statementNode.getSubproofAssertionNode();
 
       if (subproofAssertionNode !== null) {
@@ -188,31 +229,10 @@ export default define(class Premise extends Element {
     }
 
     if (subproofUnifies) {
-      context.debug(`...unified the '${subproofString}' subproof with the '${premiseStatementString}' premise.`);
+      context.debug(`...unified the '${subproofString}' subproof with the '${premiseString}' premise.`, node);
     }
 
     return subproofUnifies;
-  }
-
-  unifyStep(step, substitutions, context) {
-    let stepUnifies = false;
-
-    const specificContext = context;  ///
-
-    context = this.getContext();
-
-    const generalContext = context; ///
-
-    context = specificContext;  ///
-
-    const statement = step.getStatement(),
-          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    if (statementUnifies) {
-      stepUnifies = true;
-    }
-
-    return stepUnifies;
   }
 
   toJSON() {

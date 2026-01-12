@@ -22,28 +22,28 @@ export default define(class Subproof extends Element {
     return this.subDerivation;
   }
 
-  getLastStep() { return this.subDerivation.getLastStep(); }
+  getLastProofAssertion() { return this.subDerivation.getLastProofAssertion(); }
 
   getStatements() {
-    const lastStep = this.getLastStep(),
+    const lastProofAssertion = this.getLastProofAssertion(),
           suppositionStatements = this.suppositions.map((supposition) => {
             const suppositionStatement = supposition.getStatement();
 
             return suppositionStatement;
           }),
-          lastStepStatement = lastStep.getStatement(),
+          lastProofAssertionStatement = lastProofAssertion.getStatement(),
           statements = [
             ...suppositionStatements,
-            lastStepStatement
+            lastProofAssertionStatement
           ];
 
     return statements;
   }
 
-  isStep() {
-    const sStep = false;
+  isProofAssertion() {
+    const proofAssertion = false;
 
-    return sStep;
+    return proofAssertion;
   }
 
   verify(substitutions, assignments, context) {

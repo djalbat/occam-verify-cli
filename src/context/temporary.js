@@ -235,11 +235,11 @@ export default class TemporaryContext {
 
   getEquivalences() { return this.context.getEquivalences(); }
 
-  getSteps() { return this.context.getSteps(); }
+  getProofAssertions() { return this.context.getProofAssertions(); }
 
-  getLastStep() { return this.context.getLastStep(); }
+  getLastProofAssertion() { return this.context.getLastProofAssertion(); }
 
-  getStepsOrSubproofs() { return this.context.getStepsOrSubproofs(); }
+  getSubproofOrProofAssertions() { return this.context.getSubproofOrProofAssertions(); }
 
   getFilePath() { return this.context.getFilePath(); }
 
@@ -273,7 +273,7 @@ export default class TemporaryContext {
 
   addJudgement(judgement) { return this.context.addJudgement(judgement); }
 
-  addStepOrSubproof(stepOrSubproof) { this.context.addStepOrSubproof(stepOrSubproof); }
+  addSubproofOrProofAssertion(subproofOrProofAssertion) { this.context.addSubproofOrProofAssertion(subproofOrProofAssertion); }
 
   findProcedureByName(name) { return this.context.findProcedureByName(name); }
 

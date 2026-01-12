@@ -16,12 +16,12 @@ export default define(class Proof extends Element {
     return this.derivation;
   }
 
-  getLastStep() { return this.derivation.getLastStep(); }
+  getLastProofAssertion() { return this.derivation.getLastProofAssertion(); }
 
   getStatement() {
-    const lastStep = this.getLastStep(),
-          lastStepStatement = lastStep.getStatement(),
-          statement = lastStepStatement; ///
+    const lastProofAssertion = this.getLastProofAssertion(),
+          lastProofAssertionStatement = lastProofAssertion.getStatement(),
+          statement = lastProofAssertionStatement; ///
 
     return statement;
   }
@@ -36,9 +36,9 @@ export default define(class Proof extends Element {
     const derivationVerifies = this.derivation.verify(substitutions, context);
 
     if (derivationVerifies) {
-      const lastStep = context.getLastStep();
+      const lastProofAssertion = context.getLastProofAssertion();
 
-      if (lastStep !== null) {
+      if (lastProofAssertion !== null) {
         const statement = this.getStatement(),
               conclusionStatement = conclusion.getStatement(),
               conclusionStatementEqualToStatement = conclusionStatement.isEqualTo(statement);

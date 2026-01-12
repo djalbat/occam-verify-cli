@@ -99,21 +99,21 @@ export default class AxiomLemmaTheoremConjecture extends Element {
     const hypothetical = this.isHypothetical();
 
     if (hypothetical) {
-      const steps = context.getSteps(),
-            topLevelAssertionString = this.getString();  ///
+      const proofAssertions = context.getProofAssertions(),
+            axiomLemmaTheoremConjectureString = this.getString();  ///
 
-      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture...`, this.node);
+      context.trace(`Correlating the hypotheses of the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`, this.node);
 
-      correlatesToHypotheses = correlate(this.hypotheses, steps, (hypothesis, step) => {
-        const hypothesesEqualToStep = hypothesis.isEqualToStep(step, context);
+      correlatesToHypotheses = correlate(this.hypotheses, proofAssertions, (hypothesis, proofAssertion) => {
+        const hypothesesComparesToStep = hypothesis.compareProofAssertion(proofAssertion, context);
 
-        if (hypothesesEqualToStep) {
+        if (hypothesesComparesToStep) {
           return true;
         }
       });
 
       if (correlatesToHypotheses) {
-        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture.`, this.node);
+        context.debug(`...correlated the hypotheses of the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture.`, this.node);
       }
     } else {
       correlatesToHypotheses = true
@@ -212,7 +212,7 @@ export default class AxiomLemmaTheoremConjecture extends Element {
     return statementUnifiesWithDeduction;
   }
 
-  unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
+  unifyStatementAndStepsOrSubproofs(statement, subproofOrProofAssertions, substitutions, context) {
     let statementAndStepsOrSubproofsUnifies = false;
 
     const correlatesToHypotheses = this.correlateHypotheses(context);
@@ -221,9 +221,9 @@ export default class AxiomLemmaTheoremConjecture extends Element {
       const statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
 
       if (statementUnifiesWithDeduction) {
-        const stepsOrSubproofsUnifyWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, context);
+        const subproofOrProofAssertionsUnifyWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(subproofOrProofAssertions, substitutions, context);
 
-        if (stepsOrSubproofsUnifyWithSuppositions) {
+        if (subproofOrProofAssertionsUnifyWithSuppositions) {
           const substitutionsResolved = substitutions.areResolved();
 
           if (substitutionsResolved) {
@@ -236,43 +236,43 @@ export default class AxiomLemmaTheoremConjecture extends Element {
     return statementAndStepsOrSubproofsUnifies;
   }
 
-  unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext) {
-    let stepsOrSubproofsUnifiesWithSupposition = false;
+  unifyStepsOrSubproofsWithSupposition(subproofOrProofAssertions, supposition, substitutions, generalContext, specificContext) {
+    let subproofOrProofAssertionsUnifiesWithSupposition = false;
 
     const context = specificContext,  ///
           suppositionUnifiesIndependently = supposition.unifyIndependently(substitutions, context);
 
     if (suppositionUnifiesIndependently) {
-      stepsOrSubproofsUnifiesWithSupposition = true;
+      subproofOrProofAssertionsUnifiesWithSupposition = true;
     } else {
-      const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
-        const stepOrSubproofUnifies = supposition.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
+      const subproofOrProofAssertion = extract(subproofOrProofAssertions, (subproofOrProofAssertion) => {
+        const subproofOrProofAssertionUnifies = supposition.unifySubproofOrProofAssertion(subproofOrProofAssertion, substitutions, generalContext, specificContext);
 
-        if (stepOrSubproofUnifies) {
+        if (subproofOrProofAssertionUnifies) {
           return true;
         }
       }) || null;
 
-      if (stepOrSubproof !== null) {
-        stepsOrSubproofsUnifiesWithSupposition = true;
+      if (subproofOrProofAssertion !== null) {
+        subproofOrProofAssertionsUnifiesWithSupposition = true;
       }
     }
 
-    return stepsOrSubproofsUnifiesWithSupposition;
+    return subproofOrProofAssertionsUnifiesWithSupposition;
   }
 
-  unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext) {
-    stepsOrSubproofs = reverse(stepsOrSubproofs); ///
+  unifyStepsOrSubproofsWithSuppositions(subproofOrProofAssertions, substitutions, generalContext, specificContext) {
+    subproofOrProofAssertions = reverse(subproofOrProofAssertions); ///
 
-    const stepsOrSubproofsUnifyWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
-      const stepsOrSubproofsUnifiesWithSupposition = this.unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext);
+    const subproofOrProofAssertionsUnifyWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
+      const subproofOrProofAssertionsUnifiesWithSupposition = this.unifyStepsOrSubproofsWithSupposition(subproofOrProofAssertions, supposition, substitutions, generalContext, specificContext);
 
-      if (stepsOrSubproofsUnifiesWithSupposition) {
+      if (subproofOrProofAssertionsUnifiesWithSupposition) {
         return true;
       }
     });
 
-    return stepsOrSubproofsUnifyWithSuppositions;
+    return subproofOrProofAssertionsUnifyWithSuppositions;
   }
 
   toJSON() {

@@ -10,35 +10,35 @@ import { define } from "../elements";
 const { last } = arrayUtilities;
 
 export default define(class SubDerivation extends Element {
-  constructor(context, string, node, stepsOrSubproofs) {
+  constructor(context, string, node, subproofOrProofAssertions) {
     super(context, string, node);
 
-    this.stepsOrSubproofs = stepsOrSubproofs;
+    this.subproofOrProofAssertions = subproofOrProofAssertions;
   }
 
-  getStepsOrSubproofs() {
-    return this.stepsOrSubproofs;
+  getSubproofOrProofAssertions() {
+    return this.subproofOrProofAssertions;
   }
 
-  getLastStep() {
-    const lastStepOrSubproof = last(this.stepsOrSubproofs),
-          lastStep = lastStepOrSubproof;  ///
+  getLastProofAssertion() {
+    const lastSubproofOrProofAssertion = last(this.subproofOrProofAssertions),
+          lastProofAssertion = lastSubproofOrProofAssertion;  ///
 
-    return lastStep;
+    return lastProofAssertion;
   }
 
   verify(substitutions, context) {
     let verifies;
 
-    verifies = this.stepsOrSubproofs.every((stepOrSubproof) => { ///
+    verifies = this.subproofOrProofAssertions.every((subproofOrProofAssertion) => { ///
       const assignments = [],
-            stepOrSubproofVarifies = stepOrSubproof.verify(substitutions, assignments, context);
+            subproofOrProofAssertionVarifies = subproofOrProofAssertion.verify(substitutions, assignments, context);
 
-      if (stepOrSubproofVarifies) {
+      if (subproofOrProofAssertionVarifies) {
         const assignmentsAssigned = assignAssignments(assignments, context);
 
         if (assignmentsAssigned) {
-          context.addStepOrSubproof(stepOrSubproof);
+          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 
           return true;
         }

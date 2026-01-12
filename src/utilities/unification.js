@@ -24,10 +24,10 @@ function unifyStatementWithRule(statement, reference, satisfiesAssertion, substi
 
       context.trace(`Unifying the '${statementString}' statement with the '${ruleString}' rule...`);
 
-      const stepsOrSubproofs = context.getStepsOrSubproofs(),
-            statementAndStepsUnify = rule.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
+      const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
+            statementAndSubproofOrProofAssertionsUnify = rule.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
 
-      if (statementAndStepsUnify) {
+      if (statementAndSubproofOrProofAssertionsUnify) {
         statementUnifiesWithRule = true;
       }
 
@@ -86,9 +86,9 @@ function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAsser
     satisfiesAssertion.verifySignature(assignments, stated, context);
 
     if (reference === null) {
-      const stepsOrSubproofs = context.getStepsOrSubproofs();
+      const subproofOrProofAssertions = context.getSubproofOrProofAssertions();
 
-      statementUnifiesAsSatisfiesAssertion = backwardsSome(stepsOrSubproofs, (stepsOrSubproof) => {
+      statementUnifiesAsSatisfiesAssertion = backwardsSome(subproofOrProofAssertions, (stepsOrSubproof) => {
         const stepOrSubProofUnifiesWIthSatisfiesAssertion = stepsOrSubproof.unifyWithSatisfiesAssertion(satisfiesAssertion, context);
 
         if (stepOrSubProofUnifiesWIthSatisfiesAssertion) {
@@ -149,13 +149,13 @@ function unifyStatementWithAxiomLemmaTheoremOrConjecture(statement, reference, s
 
       context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture...`);
 
-      const stepsOrSubproofs = context.getStepsOrSubproofs();
+      const subproofOrProofAssertions = context.getSubproofOrProofAssertions();
 
       substitutions = Substitutions.fromNothing();
 
-      const statementAndStepsUnify = axiomLemmaTheoremOrConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
+      const statementAndSubproofOrProofAssertionsUnify = axiomLemmaTheoremOrConjecture.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, substitutions, context);
 
-      if (statementAndStepsUnify) {
+      if (statementAndSubproofOrProofAssertionsUnify) {
         const { StatementSubstitution } = elements,
               metavariable = reference.getMetavariable(),
               statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
@@ -292,8 +292,8 @@ function unifyStatementWithSatisfiesAssertion(statement, reference, satisfiesAss
 
     context.trace(`Unifying the '${statementString}' statememnt with the '${satisfiesAssertionString}' satisfies assertion...`);
 
-    const stepsOrSubproofs = context.getStepsOrSubproofs(),
-          statementUnifies = satisfiesAssertion.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
+    const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
+          statementUnifies = satisfiesAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
 
     if (statementUnifies) {
       statementUnifiesWithSatisfiesAssertion = true;
@@ -307,23 +307,23 @@ function unifyStatementWithSatisfiesAssertion(statement, reference, satisfiesAss
   return statementUnifiesWithSatisfiesAssertion;
 }
 
-function compareStatementWithStepsOrSubproofs(statement, reference, satisfiesAssertion, substitutions, context) {
+function compareStatementWithSubproofOrProofAssertions(statement, reference, satisfiesAssertion, substitutions, context) {
   let statementEquatesWithStepOrSubproofs = false;
 
   if (reference === null) {
     const statementString = statement.getString();
 
-    context.trace(`Comparing the '${statementString}' statement with the steps or subproofs...`);
+    context.trace(`Comparing the '${statementString}' statement with the subproofs or proof asssertions...`);
 
-    const stepsOrSubproofs = context.getStepsOrSubproofs(),
-          statementUnifiesWithSteps = statement.compareStepsOrSubproofs(stepsOrSubproofs, context);
+    const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
+          statementUnifiesWithSteps = statement.compareSubproofOrProofAssertions(subproofOrProofAssertions, context);
 
     if (statementUnifiesWithSteps) {
       statementEquatesWithStepOrSubproofs = true;
     }
 
     if (statementEquatesWithStepOrSubproofs) {
-      context.debug(`...compared the '${statementString}' statement with the steps or subproofs.`);
+      context.debug(`...compared the '${statementString}' statement with the subproofs or proof asssertions.`);
     }
   }
 
@@ -340,5 +340,5 @@ export const unifyStatements = [
   unifyStatementAsTypeAssertion,
   unifyStatementAsPropertyAssertion,
   unifyStatementWithSatisfiesAssertion,
-  compareStatementWithStepsOrSubproofs
+  compareStatementWithSubproofOrProofAssertions
 ];

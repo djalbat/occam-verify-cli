@@ -110,29 +110,6 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
     return stepUnifies;
   }
 
-  unifyLastStep(lastStep, substitutions, context) {
-    let lastStepUnifies = false;
-
-    const node = this.getNode(),
-          axiomString = this.getString(),
-          lastStepString = lastStep.getString();
-
-    context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`, node)
-
-    const statement = lastStep.getStatement(),
-          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
-
-    if (statementUnifiesWithDeduction) {
-      lastStepUnifies = true;
-    }
-
-    if (lastStepUnifies) {
-      context.debug(`...unified the '${lastStepString}' last step with the '${axiomString}' axiom.`, node)
-    }
-
-    return lastStepUnifies;
-  }
-
   unifySubproof(subproof, substitutions, context) {
     let subproofUnifies = false;
 
@@ -147,10 +124,10 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
     if (unconditional) {
       context.trace(`Unable to unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`, node);
     } else {
-      const lastStep = subproof.getLastStep(),
-            lastStepUnifies = this.unifyLastStep(lastStep, substitutions, context);
+      const lastProofAssertion = subproof.getLastProofAssertion(),
+            lastProofAssertionUnifies = this.unifyLastProofAssertion(lastProofAssertion, substitutions, context);
 
-      if (lastStepUnifies) {
+      if (lastProofAssertionUnifies) {
         const suppositions = subproof.getSuppositions(),
               suppositionsUnify = this.unifySuppositions(suppositions, substitutions, context);
 
@@ -223,6 +200,29 @@ export default define(class Axiom extends AxiomLemmaTheoremConjecture {
     }
 
     return suppositionsUnify;
+  }
+
+  unifyLastProofAssertion(lastProofAssertion, substitutions, context) {
+    let lastProofAssertionUnifies = false;
+
+    const node = this.getNode(),
+          axiomString = this.getString(),
+          lastProofAssertionString = lastProofAssertion.getString();
+
+    context.trace(`Unifying the '${lastProofAssertionString}' last proof assertion with the '${axiomString}' axiom...`, node)
+
+    const statement = lastProofAssertion.getStatement(),
+          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
+
+    if (statementUnifiesWithDeduction) {
+      lastProofAssertionUnifies = true;
+    }
+
+    if (lastProofAssertionUnifies) {
+      context.debug(`...unified the '${lastProofAssertionString}' last proof assertion with the '${axiomString}' axiom.`, node)
+    }
+
+    return lastProofAssertionUnifies;
   }
 
   unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context) {

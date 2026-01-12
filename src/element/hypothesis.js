@@ -1,7 +1,6 @@
 "use strict";
 
 import Element from "../element";
-import elements from "../elements";
 import assignAssignments from "../process/assign";
 
 import { define } from "../elements";
@@ -36,11 +35,9 @@ export default define(class Hypothesis extends Element {
         const assignmentsAssigned = assignAssignments(assignments, context);
 
         if (assignmentsAssigned) {
-          const { Step } = elements,
-                step = Step.fromStatement(this.statement, context),
-                stepOrSubproof = step;  ///
+          const subproofOrProofAssertion = this;  ///
 
-          context.addStepOrSubproof(stepOrSubproof);
+          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 
           verifies = true;
         }
@@ -56,26 +53,27 @@ export default define(class Hypothesis extends Element {
     return verifies;
   }
 
-  isEqualToStep(step, context) {
-    let equalToStep = false;
+  compareProofAssertion(proofAssertion, context) {
+    let comparesToProofAssertion = false;
 
-    const stepString = step.getString(),
-          hypothesisString = this.string; ///
+    const node = this.getNode(),
+          hypothesisString = this.getString(), ///
+          proofAssertionString = proofAssertion.getString();
 
-    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${stepString}' step...`, this.node);
+    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${proofAssertionString}' proof assertion...`, node);
 
-    const stepStatement = step.getStatement(),
-          statementEqualToStepStatement = this.statement.isEqualTo(stepStatement);
+    const proofAssertionStatement = proofAssertion.getStatement(),
+          statementEqualToStepStatement = this.statement.isEqualTo(proofAssertionStatement);
 
     if (statementEqualToStepStatement) {
-      equalToStep = true;
+      comparesToProofAssertion = true;
     }
 
-    if (equalToStep) {
-      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${stepString}' step.`, this.node);
+    if (comparesToProofAssertion) {
+      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${proofAssertionString}' proof assertion.`, node);
     }
 
-    return equalToStep;
+    return comparesToProofAssertion;
   }
 
   toJSON() {

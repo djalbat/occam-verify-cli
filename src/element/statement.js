@@ -254,19 +254,19 @@ export default define(class Statement extends Element {
     return unifiesIndependently;
   }
 
-  compareStepsOrSubproofs(stepsOrSubproofs, context) {
-    let comparesToStepsOrSubproofs;
+  compareSubproofOrProofAssertions(subproofOrProofAssertions, context) {
+    let comparesToSubproofOrProofAssertions;
 
-    comparesToStepsOrSubproofs = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
+    comparesToSubproofOrProofAssertions = backwardsSome(subproofOrProofAssertions, (subproofOrProofAssertion) => {
       const statement = this, ///
-            stepOrSubproofComparesToStatement = stepOrSubproof.compareStatement(statement, context);
+            subproofOrProofAssertionComparesToStatement = subproofOrProofAssertion.compareStatement(statement, context);
 
-      if (stepOrSubproofComparesToStatement) {
+      if (subproofOrProofAssertionComparesToStatement) {
         return true;
       }
     });
 
-    return comparesToStepsOrSubproofs;
+    return comparesToSubproofOrProofAssertions;
   }
 
   toJSON() {
