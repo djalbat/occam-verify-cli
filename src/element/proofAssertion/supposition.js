@@ -9,7 +9,7 @@ import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON
 
 export default define(class Supposition extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
-    super(context, string, node);
+    super(context, string, node, statement);
 
     this.procedureCall = procedureCall;
   }

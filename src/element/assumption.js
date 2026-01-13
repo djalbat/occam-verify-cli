@@ -190,16 +190,16 @@ export default define(class Assumption extends Element {
     if (metavariablePresent) {
       verifiesWhenStated = true;
     } else {
-      const metaLemmaMetatheorems = context.findMetaLemmaMetatheoremsByReference(this.reference),
-            metaLemmaMetatheoremsUnify = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
-              const metaLemmaMetatheoremUnifies = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+      const topLevelMetaAssertions = context.findTopLevelMetaAssertionsByReference(this.reference),
+            topLevelMetaAssertionsUnify = topLevelMetaAssertions.every((topLevelMetaAssertion) => {
+              const topLevelMetaAssertionUnifies = this.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-              if (metaLemmaMetatheoremUnifies) {
+              if (topLevelMetaAssertionUnifies) {
                 return true;
               }
             });
 
-      verifiesWhenStated = metaLemmaMetatheoremsUnify; ///
+      verifiesWhenStated = topLevelMetaAssertionsUnify; ///
     }
 
     if (verifiesWhenStated) {
@@ -216,9 +216,9 @@ export default define(class Assumption extends Element {
 
     context.trace(`Verifying the '${assumptionString}' derived assumption...`);
 
-    const metaLemmaMetatheoremPresent = context.isMetaLemmaMetatheoremPresentByReference(this.reference);
+    const topLevelMetaAssertionPresent = context.isTopLevelMetaAssertionPresentByReference(this.reference);
 
-    verifiesWhenDerived = metaLemmaMetatheoremPresent; ///
+    verifiesWhenDerived = topLevelMetaAssertionPresent; ///
 
     if (verifiesWhenDerived) {
       context.debug(`...verified the '${assumptionString}' derived assumption.`);
@@ -275,28 +275,28 @@ export default define(class Assumption extends Element {
     return labelUnifiesWithReference;
   }
 
-  unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context) {
-    let metaLemmaMetatheoremUnifies = false;
+  unifyTopLevelMetaAssertion(topLevelMetaAssertion, context) {
+    let topLevelMetaAssertionUnifies = false;
 
     const assumptionString = this.string,  ///
-          metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
+          topLevelMetaAssertionString = topLevelMetaAssertion.getString();
 
-    context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${assumptionString}' assumption...`);
+    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);
 
     const generalContext = context; ///
 
-    context = metaLemmaMetatheorem.getContext();  ///
+    context = topLevelMetaAssertion.getContext();  ///
 
     const { Substitutions } = elements,
           specificContext = context,  ///
           labelSubstitutions = Substitutions.fromNothing(),
-          label = metaLemmaMetatheorem.getLabel(),
+          label = topLevelMetaAssertion.getLabel(),
           substitutions = labelSubstitutions, ///
           labelUnifies = this.unifyLabel(label, substitutions, generalContext, specificContext);
 
     if (labelUnifies) {
       const statementSubstitutions = Substitutions.fromNothing(),
-            statement = metaLemmaMetatheorem.getStatement(),
+            statement = topLevelMetaAssertion.getStatement(),
             substitutions = statementSubstitutions, ///
             statementUUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
@@ -304,18 +304,18 @@ export default define(class Assumption extends Element {
         const labelSubstitutionsCorrelateStatementSubstitutions = labelSubstitutions.correlateSubstitutions(statementSubstitutions);
 
         if (labelSubstitutionsCorrelateStatementSubstitutions) {
-          metaLemmaMetatheoremUnifies = true; ///
+          topLevelMetaAssertionUnifies = true; ///
         }
       }
     }
 
-    if (metaLemmaMetatheoremUnifies) {
+    if (topLevelMetaAssertionUnifies) {
       context = generalContext; ///
 
-      context.trace(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${assumptionString}' assumption...`);
+      context.trace(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);
     }
 
-    return metaLemmaMetatheoremUnifies;
+    return topLevelMetaAssertionUnifies;
   }
 
   toJSON() {

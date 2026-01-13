@@ -293,9 +293,9 @@ export default class TemporaryContext {
 
   findMetatheoremsByReference(reference) { return this.context.findMetatheoremsByReference(reference); }
 
-  findMetaLemmaMetatheoremByReference(reference) { return this.context.findMetaLemmaMetatheoremByReference(reference); }
+  findTopLevelMetaAssertionByReference(reference) { return this.context.findTopLevelMetaAssertionByReference(reference); }
 
-  findMetaLemmaMetatheoremsByReference(reference) { return this.context.findMetaLemmaMetatheoremsByReference(reference); }
+  findTopLevelMetaAssertionsByReference(reference) { return this.context.findTopLevelMetaAssertionsByReference(reference); }
 
   findVariableByVariableIdentifier(variableIdentifier, nested = true) { return this.context.findVariableByVariableIdentifier(variableIdentifier, nested); }
 
@@ -319,9 +319,9 @@ export default class TemporaryContext {
 
   isMetavariablePresentByReference(reference) { return this.context.isMetavariablePresentByReference(reference); }
 
-  isMetaLemmaMetatheoremPresentByReference(reference) { return this.context.isMetaLemmaMetatheoremPresentByReference(reference); }
+  isTopLevelMetaAssertionPresentByReference(reference) { return this.context.isTopLevelMetaAssertionPresentByReference(reference); }
 
-  findAxiomLemmaTheoremOrConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremOrConjectureByReference(reference); }
+  findTopLevelAssertionByReference(reference) { return this.context.findTopLevelAssertionByReference(reference); }
 
   isMetavariablePresent(metavariable) { return this.context.isMetavariablePresent(metavariable); }
 

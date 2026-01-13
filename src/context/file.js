@@ -440,10 +440,10 @@ export default class FileContext {
 
     filter(metaLemmas, (metaLemma) => {
       const context = this, ///
-            metaLemmaMetaTheorem = metaLemma, ///
-            metaLemmaMetatheoremUnifies = reference.unifyMetaLemmaMetatheorem(metaLemmaMetaTheorem, context);
+            topLevelMetaAssertion = metaLemma, ///
+            topLevelMetaAssertionUnifies = reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-      if (metaLemmaMetatheoremUnifies) {
+      if (topLevelMetaAssertionUnifies) {
         return true;
       }
     });
@@ -456,10 +456,10 @@ export default class FileContext {
 
     filter(metatheorems, (metatheorem) => {
       const context = this, ///
-            metaLemmaMetaTheorem = metatheorem, ///
-            metaLemmaMetatheoremUnifies = reference.unifyMetaLemmaMetatheorem(metaLemmaMetaTheorem, context);
+            topLevelMetaAssertion = metatheorem, ///
+            topLevelMetaAssertionUnifies = reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-      if (metaLemmaMetatheoremUnifies) {
+      if (topLevelMetaAssertionUnifies) {
         return true;
       }
     });
@@ -467,33 +467,33 @@ export default class FileContext {
     return metatheorems;
   }
 
-  findMetaLemmaMetatheoremByReference(reference) {
+  findTopLevelMetaAssertionByReference(reference) {
     const metaLemma = this.findMetaLemmaByReference(reference),
           metatheorem = this.findMetatheoremByReference(reference),
-          metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
+          topLevelMetaAssertion = (metaLemma || metatheorem);  ///
 
-    return metaLemmaMetatheorem;
+    return topLevelMetaAssertion;
   }
 
-  findMetaLemmaMetatheoremsByReference(reference) {
+  findTopLevelMetaAssertionsByReference(reference) {
     const metaLemmas = this.findMetaLemmasByReference(reference),
           metatheorems = this.findMetatheoremsByReference(reference),
-          metaLemmaMetatheorems = [
+          topLevelMetaAssertions = [
             ...metaLemmas,
             ...metatheorems
           ];
 
-    return metaLemmaMetatheorems;
+    return topLevelMetaAssertions;
   }
 
-  findAxiomLemmaTheoremOrConjectureByReference(reference) {
+  findTopLevelAssertionByReference(reference) {
     const axiom = this.findAxiomByReference(reference),
           lemma = this.findLemmaByReference(reference),
           theorem = this.findTheoremByReference(reference),
           conjecture = this.findConjectureByReference(reference),
-          axiomLemmaTheoremOrConjecture = (axiom || lemma || theorem || conjecture);
+          topLevelAssertion = (axiom || lemma || theorem || conjecture);
 
-    return axiomLemmaTheoremOrConjecture;
+    return topLevelAssertion;
   }
 
   findMetavariable(metavariable) {
@@ -776,11 +776,11 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isMetaLemmaMetatheoremPresentByReference(reference) {
-    const metaLemmaMetatheorem = this.findMetaLemmaMetatheoremByReference(reference),
-          metaLemmaMetatheoremPresent = (metaLemmaMetatheorem !== null);
+  isTopLevelMetaAssertionPresentByReference(reference) {
+    const topLevelMetaAssertion = this.findTopLevelMetaAssertionByReference(reference),
+          topLevelMetaAssertionPresent = (topLevelMetaAssertion !== null);
 
-    return metaLemmaMetatheoremPresent;
+    return topLevelMetaAssertionPresent;
   }
 
   nodeAsString(node) {

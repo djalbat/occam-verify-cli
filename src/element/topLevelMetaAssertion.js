@@ -12,7 +12,7 @@ import { labelFromJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
-export default class MetaLemmaMetatheorem extends Element {
+export default class TopLevelMetaAssertion extends Element {
   constructor(context, string, node, label, suppositions, deduction, proof, substitutions) {
     super(context, string, node);
 
@@ -148,9 +148,9 @@ export default class MetaLemmaMetatheorem extends Element {
           substitutions = substitutionsFromJSON(json, context),
           node = null,
           proof = null,
-          string = metaLemmaMetatheoremStringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
-          metaLemmaMetatheorem = new Class(context, string, node, label, suppositions, deduction, proof, substitutions);
+          string = topLevelMetaAssertionStringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
+          topLevelMetaAssertion = new Class(context, string, node, label, suppositions, deduction, proof, substitutions);
 
-    return metaLemmaMetatheorem;
+    return topLevelMetaAssertion;
   }
 }

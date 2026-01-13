@@ -100,9 +100,9 @@ export default class TopLevelAssertion extends Element {
 
     if (hypothetical) {
       const proofAssertions = context.getProofAssertions(),
-            axiomLemmaTheoremConjectureString = this.getString();  ///
+            topLevelAssertionString = this.getString();  ///
 
-      context.trace(`Correlating the hypotheses of the '${axiomLemmaTheoremConjectureString}' top level assertion...`, this.node);
+      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' top level assertion...`, this.node);
 
       correlatesToHypotheses = correlate(this.hypotheses, proofAssertions, (hypothesis, proofAssertion) => {
         const hypothesesComparesToStep = hypothesis.compareProofAssertion(proofAssertion, context);
@@ -113,7 +113,7 @@ export default class TopLevelAssertion extends Element {
       });
 
       if (correlatesToHypotheses) {
-        context.debug(`...correlated the hypotheses of the '${axiomLemmaTheoremConjectureString}' top level assertion.`, this.node);
+        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' top level assertion.`, this.node);
       }
     } else {
       correlatesToHypotheses = true
@@ -306,8 +306,8 @@ export default class TopLevelAssertion extends Element {
           node = null,
           proof = null,
           string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          axiomLemmaTheoremConjecture = new Class(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
+          topLevelAssertion = new Class(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
-    return axiomLemmaTheoremConjecture;
+    return topLevelAssertion;
   }
 }

@@ -88,11 +88,11 @@ export default define(class Premise extends ProofAssertion {
 
     context.trace(`Unifying the '${premiseString}' premise independently...`, node);
 
-    const generalContext = context; ///
+    const specificContext = context; ///
 
     context = this.getContext();
 
-    const specificContext = context;  ///
+    const generalContext = context;  ///
 
     context = specificContext;  ///
 

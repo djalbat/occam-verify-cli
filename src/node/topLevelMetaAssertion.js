@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../nonTerminalNode";
 
-export default class MetaLemmaMetaTheoremNode extends NonTerminalNode {
+export default class TopLevelMetaAssertionNode extends NonTerminalNode {
   getBodyNode() {
     const { bodyRuleName } = this.constructor,
           ruleName = bodyRuleName,  ///

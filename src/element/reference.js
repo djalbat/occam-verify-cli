@@ -141,27 +141,27 @@ export default define(class Reference extends Element {
     return metavariableUnifies;
   }
 
-  unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context) {
-    let metaLemmaMetatheoremUnifies;
+  unifyTopLevelMetaAssertion(topLevelMetaAssertion, context) {
+    let topLevelMetaAssertionUnifies;
 
     const reference = this, ///
           referenceString = reference.getString(),
-          metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
+          topLevelMetaAssertionString = topLevelMetaAssertion.getString();
 
-    context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${referenceString}' reference...`);
+    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference...`);
 
     const { Substitutions } = elements,
-          label = metaLemmaMetatheorem.getLabel(),
+          label = topLevelMetaAssertion.getLabel(),
           substitutions = Substitutions.fromNothing(),
           labelUnifies = this.unifyLabel(label, substitutions, context);
 
-    metaLemmaMetatheoremUnifies = labelUnifies;  ///
+    topLevelMetaAssertionUnifies = labelUnifies;  ///
 
-    if (metaLemmaMetatheoremUnifies) {
-      context.trace(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${referenceString}' reference.`);
+    if (topLevelMetaAssertionUnifies) {
+      context.trace(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference.`);
     }
 
-    return metaLemmaMetatheoremUnifies;
+    return topLevelMetaAssertionUnifies;
   }
 
   toJSON() {

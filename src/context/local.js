@@ -209,9 +209,9 @@ class LocalContext {
 
   findMetatheoremsByReference(reference) { return this.context.findMetatheoremsByReference(reference); }
 
-  findMetaLemmaMetatheoremByReference(reference) { return this.context.findMetaLemmaMetatheoremByReference(reference); }
+  findTopLevelMetaAssertionByReference(reference) { return this.context.findTopLevelMetaAssertionByReference(reference); }
 
-  findMetaLemmaMetatheoremsByReference(reference) { return this.context.findMetaLemmaMetatheoremsByReference(reference); }
+  findTopLevelMetaAssertionsByReference(reference) { return this.context.findTopLevelMetaAssertionsByReference(reference); }
 
   findVariableByVariableIdentifier(variableIdentifier, nested = true) {
     const variables = this.getVariables(nested),
@@ -262,9 +262,9 @@ class LocalContext {
 
   isMetavariablePresentByReference(reference) { return this.context.isMetavariablePresentByReference(reference); }
 
-  isMetaLemmaMetatheoremPresentByReference(reference) { return this.context.isMetaLemmaMetatheoremPresentByReference(reference); }
+  findTopLevelAssertionByReference(reference) { return this.context.findTopLevelAssertionByReference(reference); }
 
-  findAxiomLemmaTheoremOrConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremOrConjectureByReference(reference); }
+  isTopLevelMetaAssertionPresentByReference(reference) { return this.context.isTopLevelMetaAssertionPresentByReference(reference); }
 
   isMetavariablePresent(metavariable) { return this.context.isMetavariablePresent(metavariable); }
 

@@ -156,6 +156,17 @@ export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conc
   return ruleString;
 }
 
+export function sectionStringFromHypothesesTopLevelAssertion(hypotheses, axiom, lemma, theorem, conjecture, context) {
+  const topLevelAssertion = (axiom || lemma || theorem || conjecture),
+        topLevelAssertionString = topLevelAssertion.getString(),
+        hypothesesString = hypothesesStringFromHypotheses(hypotheses, context),
+        sectionString = (topLevelAssertionString !== null) ?
+                          `[${hypothesesString}]::: ${topLevelAssertionString}` :
+                            `[${hypothesesString}]::: `;
+
+  return sectionString;
+}
+
 export function subproofStringFromSuppositionsAndSubDerivation(suppositions, subDerivation) {
   const lastProofAssertion = subDerivation.getLastProofAssertion(),
         suppositionsString = suppositionsStringFromSuppositions(suppositions),
@@ -189,44 +200,33 @@ export function procedureCallStringFromProcedureReferenceAndParameters(procedure
   return procedureCallString;
 }
 
-export function sectionStringFromHypothesesAxiomLemmaTheoremAndConjecture(hypotheses, axiom, lemma, theorem, conjecture, context) {
-  const axiomLemmaTheoremOrConjecture = (axiom || lemma || theorem || conjecture),
-        axiomLemmaTheoremOrConjectureString = axiomLemmaTheoremOrConjecture.getString(),
-        hypothesesString = hypothesesStringFromHypotheses(hypotheses, context),
-        sectionString = (axiomLemmaTheoremOrConjectureString !== null) ?
-                          `[${hypothesesString}]::: ${axiomLemmaTheoremOrConjectureString}` :
-                            `[${hypothesesString}]::: `;
-
-  return sectionString;
-}
-
-export function metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction) {
-  const suppositionsString = suppositionsStringFromSuppositions(suppositions),
-        deductionString = deduction.getString(),
-        labelString = label.getString(),
-        metaLemmaMetatheoremString = (suppositionsString !== null) ?
-                                       `${labelString} :: [${suppositionsString}]...${deductionString}` :
-                                         `${labelString} :: ${deductionString}`;
-
-  return metaLemmaMetatheoremString;
-}
-
-export function axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction) {
-  let axiomLemmaTheoremConjectureString;
+export function topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction) {
+  let topLevelAssertionString;
 
   const suppositionsString = suppositionsStringFromSuppositions(suppositions),
         deductionString = deduction.getString(),
         labelsString = labelsStringFromLabels(labels);
 
   if (labelsString !== null) {
-    axiomLemmaTheoremConjectureString = (suppositionsString !== null) ?
-                                          `${labelsString} :: [${suppositionsString}]...${deductionString}` :
-                                            `${labelsString} :: ${deductionString}`;
+    topLevelAssertionString = (suppositionsString !== null) ?
+                               `${labelsString} :: [${suppositionsString}]...${deductionString}` :
+                                 `${labelsString} :: ${deductionString}`;
   } else {
-    axiomLemmaTheoremConjectureString = (suppositionsString !== null) ?
-                                         `[${suppositionsString}]...${deductionString}` :
-                                            deductionString;
+    topLevelAssertionString = (suppositionsString !== null) ?
+                               `[${suppositionsString}]...${deductionString}` :
+                                  deductionString;
   }
 
-  return axiomLemmaTheoremConjectureString;
+  return topLevelAssertionString;
+}
+
+export function topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction) {
+  const suppositionsString = suppositionsStringFromSuppositions(suppositions),
+        deductionString = deduction.getString(),
+        labelString = label.getString(),
+        topLevelMetaAssertionString = (suppositionsString !== null) ?
+                                       `${labelString} :: [${suppositionsString}]...${deductionString}` :
+                                         `${labelString} :: ${deductionString}`;
+
+  return topLevelMetaAssertionString;
 }

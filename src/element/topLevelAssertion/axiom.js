@@ -225,19 +225,19 @@ export default define(class Axiom extends TopLevelAssertion {
     return lastProofAssertionUnifies;
   }
 
-  unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context) {
-    let axiomLemmaTheoremOrConjectureUnifies = false;
+  unifyTopLevelAssertion(topLevelAssertion, substitutions, context) {
+    let topLevelAssertionUnifies = false;
 
     const node = this.getNode(),
           axiomString = this.getString(),
-          axiomLemmaTheoremOrConjectureString = axiomLemmaTheoremOrConjecture.getString();
+          topLevelAssertionString = topLevelAssertion.getString();
 
-    context.trace(`Unifying the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom...`, node);
+    context.trace(`Unifying the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom...`, node);
 
-    const hypothesesCorrelate = axiomLemmaTheoremOrConjecture.correlateHypotheses(context);
+    const hypothesesCorrelate = topLevelAssertion.correlateHypotheses(context);
 
     if (hypothesesCorrelate) {
-      const deduction = axiomLemmaTheoremOrConjecture.getDeduction(),  ///
+      const deduction = topLevelAssertion.getDeduction(),  ///
             specificContext = context;  ///
 
       context = this.getContext();
@@ -246,18 +246,18 @@ export default define(class Axiom extends TopLevelAssertion {
             deductionUnifies = this.unifyDeduction(deduction, substitutions, generalContext, specificContext);
 
       if (deductionUnifies) {
-        const suppositions = axiomLemmaTheoremOrConjecture.getSuppositions(),
+        const suppositions = topLevelAssertion.getSuppositions(),
               suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
 
-        axiomLemmaTheoremOrConjectureUnifies = suppositionsUnify; ///
+        topLevelAssertionUnifies = suppositionsUnify; ///
       }
     }
 
-    if (axiomLemmaTheoremOrConjectureUnifies) {
-      context.debug(`...unified the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom.`, node);
+    if (topLevelAssertionUnifies) {
+      context.debug(`...unified the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom.`, node);
     }
 
-    return axiomLemmaTheoremOrConjectureUnifies;
+    return topLevelAssertionUnifies;
   }
 
   static name = "Axiom";

@@ -96,9 +96,9 @@ function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAsser
         }
       });
     } else {
-      const axiomLemmaTheoremOrConjecture = context.findAxiomLemmaTheoremOrConjectureByReference(reference);
+      const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
-      if (axiomLemmaTheoremOrConjecture !== null) {
+      if (topLevelAssertion !== null) {
         reference = satisfiesAssertion.getReference();
 
         const axiom = context.findAxiomByReference(reference);
@@ -109,9 +109,9 @@ function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAsser
           if (satisfiable) {
             const { Substitutions } = elements,
                   substitutions = Substitutions.fromNothing(),
-                  axiomLemmaTheoremOrConjectureUnifies = axiom.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context);
+                  topLevelAssertionUnifies = axiom.unifyTopLevelAssertion(topLevelAssertion, substitutions, context);
 
-            if (axiomLemmaTheoremOrConjectureUnifies) {
+            if (topLevelAssertionUnifies) {
               const substitutionsCorrelates = satisfiesAssertion.correlateSubstitutions(substitutions, context);
 
               if (substitutionsCorrelates) {
@@ -135,25 +135,25 @@ function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAsser
   return statementUnifiesAsSatisfiesAssertion;
 }
 
-function unifyStatementWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesAssertion, substitutions, context) {
-  let statementUnifiesWithAxiomLemmaTheoremOrConjecture = false;
+function unifyStatementWithTopLevelAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+  let statementUnifiesWithTopLevelAssertion = false;
 
   if (reference !== null) {
     const { Substitutions } = elements,
-          axiomLemmaTheoremOrConjecture = context.findAxiomLemmaTheoremOrConjectureByReference(reference),
+          topLevelAssertion = context.findTopLevelAssertionByReference(reference),
           generalSubstitutions = substitutions; ///
 
-    if (axiomLemmaTheoremOrConjecture !== null) {
+    if (topLevelAssertion !== null) {
       const statementString = statement.getString(),
-            axiomLemmaTheoremOrConjectureString = reference.getString();
+            topLevelAssertionString = reference.getString();
 
-      context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture...`);
+      context.trace(`Unifying the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion...`);
 
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions();
 
       substitutions = Substitutions.fromNothing();
 
-      const statementAndSubproofOrProofAssertionsUnify = axiomLemmaTheoremOrConjecture.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, substitutions, context);
+      const statementAndSubproofOrProofAssertionsUnify = topLevelAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, substitutions, context);
 
       if (statementAndSubproofOrProofAssertionsUnify) {
         const { StatementSubstitution } = elements,
@@ -165,16 +165,16 @@ function unifyStatementWithAxiomLemmaTheoremOrConjecture(statement, reference, s
 
         substitutions.addSubstitution(substitution, context);
 
-        statementUnifiesWithAxiomLemmaTheoremOrConjecture = true;
+        statementUnifiesWithTopLevelAssertion = true;
       }
 
-      if (statementUnifiesWithAxiomLemmaTheoremOrConjecture) {
-        context.debug(`...unified the '${statementString}' statement with the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture.`);
+      if (statementUnifiesWithTopLevelAssertion) {
+        context.debug(`...unified the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion.`);
       }
     }
   }
 
-  return statementUnifiesWithAxiomLemmaTheoremOrConjecture;
+  return statementUnifiesWithTopLevelAssertion;
 }
 
 function unifyStatementAEquality(statement, reference, satisfiesAssertion, substitutions, context) {
@@ -334,7 +334,7 @@ export const unifyStatements = [
   unifyStatementWithRule,
   unifyStatementWithReference,
   unifyStatementAsSatisfiesAssertion,
-  unifyStatementWithAxiomLemmaTheoremOrConjecture,
+  unifyStatementWithTopLevelAssertion,
   unifyStatementAEquality,
   unifyStatementAsJudgement,
   unifyStatementAsTypeAssertion,

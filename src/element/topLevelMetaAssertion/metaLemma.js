@@ -1,10 +1,10 @@
 "use strict";
 
-import MetaLemmaMetatheorem from "./metaLemmaMetatheorem";
+import TopLevelMetaAssertion from "./../topLevelMetaAssertion";
 
-import { define } from "../elements";
+import { define } from "../../elements";
 
-export default define(class MetaLemma extends MetaLemmaMetatheorem {
+export default define(class MetaLemma extends TopLevelMetaAssertion {
   verify() {
     let verifies;
 
@@ -30,5 +30,5 @@ export default define(class MetaLemma extends MetaLemmaMetatheorem {
 
   static name = "MetaLemma";
 
-  static fromJSON(json, context) { return MetaLemmaMetatheorem.fromJSON(MetaLemma, json, context); }
+  static fromJSON(json, context) { return TopLevelMetaAssertion.fromJSON(MetaLemma, json, context); }
 });

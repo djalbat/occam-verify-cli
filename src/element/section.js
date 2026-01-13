@@ -45,11 +45,11 @@ export default define(class Section extends Element {
     const hypothesesVerify = this.verifyHypotheses();
 
     if (hypothesesVerify) {
-      const axiomLemmaTheoremOrConjecture = (this.axiom || this.lemma || this.theorem || this.conjecture),
-            axiomLemmaTheoremOrConjectureVerifies = axiomLemmaTheoremOrConjecture.verify(this.context);
+      const topLevelAssertion = (this.axiom || this.lemma || this.theorem || this.conjecture),
+            topLevelAssertionVerifies = topLevelAssertion.verify(this.context);
 
-      if (axiomLemmaTheoremOrConjectureVerifies) {
-        axiomLemmaTheoremOrConjecture.setHypotheses(this.hypotheses);
+      if (topLevelAssertionVerifies) {
+        topLevelAssertion.setHypotheses(this.hypotheses);
 
         verifies = true;
       }

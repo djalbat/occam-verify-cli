@@ -116,8 +116,8 @@ export default define(class Judgement extends Element {
 
     const metavariable = this.assumption.getMetavariable(),
           reference = referenceFromMetavariable(metavariable, context),
-          metaLemmaMetatheorem = context.findMetaLemmaMetatheoremByReference(reference),
-          substitutions = metaLemmaMetatheorem.getSubstitutions(),
+          topLevelMetaAssertion = context.findTopLevelMetaAssertionByReference(reference),
+          substitutions = topLevelMetaAssertion.getSubstitutions(),
           frameComparesToSubstitutions = this.frame.compareSubstitutions(substitutions, context);
 
     if (frameComparesToSubstitutions) {

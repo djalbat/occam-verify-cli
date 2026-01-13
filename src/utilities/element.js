@@ -6,11 +6,11 @@ import { baseTypeFromNothing } from "../types";
 import { instantiateReference } from "../process/instantiate";
 import { equivalenceStringFromTerms,
          rulsStringFromLabelsPremisesAndConclusion,
+         sectionStringFromHypothesesTopLevelAssertion,
          subproofStringFromSuppositionsAndSubDerivation,
          procedureCallStringFromProcedureReferenceAndParameters,
-         sectionStringFromHypothesesAxiomLemmaTheoremAndConjecture,
-         metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction,
-         axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction } from "../utilities/string";
+         topLevelAsssertionStringFromLabelsSuppositionsAndDeduction,
+         topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -98,16 +98,16 @@ export function errorFromErrorNode(errorNode, context) {
 
 export function lemmaFromLemmaNode(lemmaNode, context) {
   const { Lemma } = elements,
-        axiomLemmaTheoremConjectureNode = lemmaNode,  ///
-        proof = proofFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        labels = labelsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        deduction = deductionFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        suppositions = suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        signature = signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
+        topLevelAsssertionNode = lemmaNode,  ///
+        proof = proofFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        labels = labelsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        deduction = deductionFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         hypotheses = [],
-        axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        topLevelAsssertionString = topLevelAsssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = lemmaNode, ///
-        string = axiomLemmaTheoremConjectureString, ///
+        string = topLevelAsssertionString, ///
         lemma = new Lemma(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
   return lemma;
@@ -135,16 +135,16 @@ export function proofFromProofNode(proofNode, context) {
 
 export function axiomFromAxiomNode(axiomNode, context) {
   const { Axiom } = elements,
-        axiomLemmaTheoremConjectureNode = axiomNode,  ///
+        topLevelAsssertionNode = axiomNode,  ///
         proof = null,
-        labels = labelsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        deduction = deductionFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        suppositions = suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        signature = signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
+        labels = labelsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        deduction = deductionFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         hypotheses = [],
-        axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        topLevelAsssertionString = topLevelAsssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = axiomNode, ///
-        string = axiomLemmaTheoremConjectureString, ///
+        string = topLevelAsssertionString, ///
         axiom = new Axiom(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
   return axiom;
@@ -157,7 +157,7 @@ export function sectionFromSectionNode(sectionNode, context) {
         lemma = lemmaFromSectionNode(sectionNode, context),
         theorem = theoremFromSectionNode(sectionNode, context),
         conjecture = conjectureFromSectionNode(sectionNode, context),
-        sectionString = sectionStringFromHypothesesAxiomLemmaTheoremAndConjecture(hypotheses, axiom, lemma, theorem, conjecture, context),
+        sectionString = sectionStringFromHypothesesTopLevelAssertion(hypotheses, axiom, lemma, theorem, conjecture, context),
         node = sectionNode, ///
         string = sectionString, ///
         section = new Section(context, string, node, hypotheses, axiom, lemma, theorem, conjecture);
@@ -178,16 +178,16 @@ export function premiseFromPremiseNode(premiseNode, context) {
 
 export function theoremFromTheoremNode(theoremNode, context) {
   const { Theorem } = elements,
-        axiomLemmaTheoremConjectureNode = theoremNode,  ///
-        proof = proofFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        labels = labelsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        deduction = deductionFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        suppositions = suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        signature = signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
+        topLevelAsssertionNode = theoremNode,  ///
+        proof = proofFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        labels = labelsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        deduction = deductionFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         hypotheses = [],
-        axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        topLevelAsssertionString = topLevelAsssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = theoremNode, ///
-        string = axiomLemmaTheoremConjectureString, ///
+        string = topLevelAsssertionString, ///
         theorem = new Theorem(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
   return theorem;
@@ -326,13 +326,13 @@ export function judgementFromJudgementNode(judgementNode, context) {
 export function metaLemmaFromMetaLemmaNode(metaLemmaNode, context) {
   const { MetaLemma } = elements,
         metaLemmaMetathoremNode = metaLemmaNode,  ///
-        proof = proofFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
-        label = labelFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
-        deduction = deductionFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
-        suppositions = suppositionsFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        proof = proofFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        label = labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         substitutions = null,
         node = metaLemmaNode, ///
-        string = metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
+        string = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
         metaLemma = new MetaLemma(context, string, node, label, suppositions, deduction, proof, substitutions);
 
   return metaLemma;
@@ -361,16 +361,16 @@ export function hypothesisFromHypothesisNode(hypotheseNode, context) {
 
 export function conjectureFromConjectureNode(conjectureNode, context) {
   const { Conjecture } = elements,
-        axiomLemmaTheoremConjectureNode = conjectureNode,  ///
-        proof = proofFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        labels = labelsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        deduction = deductionFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        suppositions = suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
-        signature = signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context),
+        topLevelAsssertionNode = conjectureNode,  ///
+        proof = proofFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        labels = labelsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        deduction = deductionFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
+        signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         hypotheses = [],
-        axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjectureStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        topLevelAsssertionString = topLevelAsssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = conjectureNode, ///
-        string = axiomLemmaTheoremConjectureString, ///
+        string = topLevelAsssertionString, ///
         conjecture = new Conjecture(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
 
   return conjecture;
@@ -441,13 +441,13 @@ export function typePrefixFromTypePrefixNode(typePrefixNode, context) {
 export function metatheoremFromMetaLemmaNode(metatheoremNode, context) {
   const { Metatehorem } = elements,
         metaLemmaMetathoremNode = metatheoremNode,  ///
-        proof = proofFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
-        label = labelFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
-        deduction = deductionFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
-        suppositions = suppositionsFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context),
+        proof = proofFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        label = labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         substitutions = null,
         node = metaLemmaNode, ///
-        string = metaLemmaMetatheoremStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
+        string = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
         metatheorem = new Metatehorem(context, string, node, label, suppositions, deduction, proof, substitutions);
 
   return metatheorem;
@@ -1407,7 +1407,7 @@ export function termSubstitutionFromStatementNode(statementNode, context) {
   return termSubstitution;
 }
 
-export function proofFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context) {
+export function proofFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
   let proof = null;
 
   const proofNode = metaLemmaMetathoremNode.getProofNode();
@@ -1419,7 +1419,7 @@ export function proofFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, conte
   return proof;
 }
 
-export function labelFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context) {
+export function labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
   let label = null;
 
   const labelNode = metaLemmaMetathoremNode.getLabelNode();
@@ -1637,7 +1637,7 @@ export function metavariableFromFrameSubstitutionNode(frameSubstitutionNode, con
   return metavariable;
 }
 
-export function deductionFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context) {
+export function deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
   let deduction = null;
 
   const deductionNode = metaLemmaMetathoremNode.getDeductionNode();
@@ -1733,10 +1733,10 @@ export function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationN
   return metaType;
 }
 
-export function proofFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context) {
+export function proofFromTopLevelAssertionNode(topLevelAsssertionNode, context) {
   let proof = null;
 
-  const proofNode = axiomLemmaTheoremConjectureNode.getProofNode();
+  const proofNode = topLevelAsssertionNode.getProofNode();
 
   if (proofNode !== null) {
     proof = proofFromProofNode(proofNode, context);
@@ -1805,10 +1805,10 @@ export function metavariableFromMetavariableDeclarationNode(metavariableDeclarat
   return metavariable;
 }
 
-export function deductionFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context) {
+export function deductionFromTopLevelAssertionNode(topLevelAsssertionNode, context) {
   let deduction = null;
 
-  const deductionNode = axiomLemmaTheoremConjectureNode.getDeductionNode();
+  const deductionNode = topLevelAsssertionNode.getDeductionNode();
 
   if (deductionNode !== null) {
     deduction = deductionFromDeductionNode(deductionNode, context);
@@ -1817,10 +1817,10 @@ export function deductionFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremCo
   return deduction;
 }
 
-export function signatureFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context) {
+export function signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context) {
   let signature = null;
 
-  const signatureNode = axiomLemmaTheoremConjectureNode.getSignatureNode();
+  const signatureNode = topLevelAsssertionNode.getSignatureNode();
 
   if (signatureNode !== null) {
     signature = signatureFromSignatureNode(signatureNode, context);
@@ -1995,7 +1995,7 @@ export function statementsFromSubproofAssertionNode(subproofAssertionNode, conte
   return statements;
 }
 
-export function suppositionsFromMetaLemmaMetatheoremNode(metaLemmaMetathoremNode, context) {
+export function suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
   const suppositionNodes = metaLemmaMetathoremNode.getSuppositionNodes(),
         suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context);
 
@@ -2016,15 +2016,15 @@ export function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationN
   return superTypes;
 }
 
-export function labelsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context) {
-  const labelNodes = axiomLemmaTheoremConjectureNode.getLabelNodes(),
+export function labelsFromTopLevelAssertionNode(topLevelAsssertionNode, context) {
+  const labelNodes = topLevelAsssertionNode.getLabelNodes(),
         labels = labelsFromLabelNodes(labelNodes, context);
 
   return labels;
 }
 
-export function suppositionsFromAxiomLemmaTheoremConjectureNode(axiomLemmaTheoremConjectureNode, context) {
-  const suppositionNodes = axiomLemmaTheoremConjectureNode.getSuppositionNodes(),
+export function suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context) {
+  const suppositionNodes = topLevelAsssertionNode.getSuppositionNodes(),
         suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context);
 
   return suppositions;
