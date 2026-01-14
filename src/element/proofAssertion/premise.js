@@ -83,10 +83,9 @@ export default define(class Premise extends ProofAssertion {
   unifyIndependently(substitutions, context) {
     let unifiesIndependently = false;
 
-    const node = this.getNode(),
-          premiseString = this.getString(); ///
+    const premiseString = this.getString(); ///
 
-    context.trace(`Unifying the '${premiseString}' premise independently...`, node);
+    context.trace(`Unifying the '${premiseString}' premise independently...`);
 
     const specificContext = context; ///
 
@@ -115,7 +114,7 @@ export default define(class Premise extends ProofAssertion {
     }
 
     if (unifiesIndependently) {
-      context.debug(`...unified the '${premiseString}' premise independenly.`, node);
+      context.debug(`...unified the '${premiseString}' premise independenly.`);
     }
 
     return unifiesIndependently;
@@ -126,8 +125,8 @@ export default define(class Premise extends ProofAssertion {
 
     const subproofOrProofAssertionProofAssertion = subproofOrProofAssertion.isProofAssertion(),
           proofAssertion = subproofOrProofAssertionProofAssertion ?
-                        subproofOrProofAssertion :
-                          null,
+                             subproofOrProofAssertion :
+                               null,
           subproof = subproofOrProofAssertionProofAssertion ?
                         null :
                           subproofOrProofAssertion;
@@ -164,17 +163,18 @@ export default define(class Premise extends ProofAssertion {
   unifyProofAssertion(proofAssertion, substitutions, context) {
     let proofAssertionUnifies = false;
 
-    const node = this.getNode(),
-          premiseString = this.getString(),
+    const premiseString = this.getString(),
           proofAssertionString = proofAssertion.getString();
 
-    context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${premiseString}' premise...`, node);
-
-    const specificContext = context;  ///
+    context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${premiseString}' premise...`);
 
     context = this.getContext();
 
     const generalContext = context; ///
+
+    context = proofAssertion.getContext();
+
+    const specificContext = context;  ///
 
     context = specificContext;  ///
 
@@ -186,7 +186,7 @@ export default define(class Premise extends ProofAssertion {
     }
 
     if (proofAssertionUnifies) {
-      context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${premiseString}' premise.`, node);
+      context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${premiseString}' premise.`);
     }
 
     return proofAssertionUnifies;

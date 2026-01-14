@@ -112,8 +112,8 @@ export default define(class Term extends Element {
     return validates;
   }
 
-  verifyGivenType(type, generalContext, specificContext) {
-    let verifiesGivenType;
+  validateGivenType(type, generalContext, specificContext) {
+    let validatesGivenType;
 
     const typeString = type.getString(),
           termString = this.getString();  ///
@@ -133,13 +133,13 @@ export default define(class Term extends Element {
             return verifiesAhead;
           });
 
-    verifiesGivenType = validates; ///
+    validatesGivenType = validates; ///
 
-    if (verifiesGivenType) {
+    if (validatesGivenType) {
       specificContext.debug(`...validated the '${termString}' term given the '${typeString}' type.`);
     }
 
-    return verifiesGivenType;
+    return validatesGivenType;
   }
 
   toJSON() {

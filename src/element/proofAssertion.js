@@ -46,28 +46,21 @@ export default class ProofAssertion extends Element {
     return comparesToStatement;
   }
 
-  unifyStatement(statement, substitutions, context) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnifies = false;
 
     if (this.statement !== null) {
       const node = this.getNode(),
+            context = specificContext,  ///
             premiseString = this.getString(), ///
             statementString = statement.getString();
 
-      context.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`, node);
-
-      const specificContext = context;  ///
-
-      context = this.getContext();  ///
-
-      const generalContext = context; ///
-
-      context = specificContext;  ///
+      context.trace(`Unifying the '${statementString}' statement with the '${premiseString}' proof assertion...`, node);
 
       statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
       if (statementUnifies) {
-        context.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`, node);
+        context.debug(`...unified the '${statementString}' statement with the '${premiseString}' proof assertion.`, node);
       }
     }
 

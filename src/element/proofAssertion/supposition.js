@@ -76,10 +76,9 @@ export default define(class Supposition extends ProofAssertion {
   unifyIndependently(substitutions, context) {
     let unifiesIndependently = false;
 
-    const node = this.getNode(),
-          suppositionString = this.getString();
+    const suppositionString = this.getString();
 
-    context.trace(`Unifying the '${suppositionString}' supposition independently...`, node);
+    context.trace(`Unifying the '${suppositionString}' supposition independently...`);
 
     const specificContext = context;  ///
 
@@ -108,7 +107,7 @@ export default define(class Supposition extends ProofAssertion {
     }
 
     if (unifiesIndependently) {
-      context.debug(`...unified the '${suppositionString}' supposition independenly.`, node);
+      context.debug(`...unified the '${suppositionString}' supposition independenly.`);
     }
 
     return unifiesIndependently;
@@ -155,19 +154,20 @@ export default define(class Supposition extends ProofAssertion {
   }
 
   unifyProofAssertion(proofAssertion, substitutions, context) {
-    let stepUnifies = false;
+    let proofAssertionUnifies = false;
 
-    const node = this.getNode(),
-          suppositionString = this.getString(),
+    const suppositionString = this.getString(),
           proofAssertionString = proofAssertion.getString();
 
-    context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition...`, node);
-
-    const specificContext = context;  ///
+    context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition...`);
 
     context = this.getContext();
 
     const generalContext = context; ///
+
+    context = proofAssertion.getContext();
+
+    const specificContext = context;  ///
 
     context = specificContext;  ///
 
@@ -175,14 +175,14 @@ export default define(class Supposition extends ProofAssertion {
           statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      stepUnifies = true;
+      proofAssertionUnifies = true;
     }
 
-    if (stepUnifies) {
-      context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition.`, node);
+    if (proofAssertionUnifies) {
+      context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition.`);
     }
 
-    return stepUnifies;
+    return proofAssertionUnifies;
   }
 
   unifySubproof(subproof, substitutions, context) {

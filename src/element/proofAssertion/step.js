@@ -92,12 +92,6 @@ export default define(class Step extends ProofAssertion {
             });
 
             if (statementUnifies) {
-              const subproofOrProofAssertion = this;  ///
-
-              context.addSubproofOrProofAssertion(subproofOrProofAssertion);
-
-              this.setContext(context);
-
               verifies = true;
             }
           }
@@ -106,6 +100,8 @@ export default define(class Step extends ProofAssertion {
     }
 
     if (verifies) {
+      this.setContext(context);
+
       context.debug(`...verified the '${stepString}' step.`, node);
     }
 
@@ -134,24 +130,22 @@ export default define(class Step extends ProofAssertion {
   }
 
   verifySatisfiesAssertion(context) {
-    let satisfiesAssertionVerifies;
-
-    const node = this.getNode(),
-          stepString = this.getString();  ///
-
-    context.trace(`Verifying the '${stepString}' step's satisfies assertion... `, node);
+    let satisfiesAssertionVerifies = true;  ///
 
     if (this.satisfiesAssertion !== null) {
+      const node = this.getNode(),
+            stepString = this.getString();  ///
+
+      context.trace(`Verifying the '${stepString}' step's satisfies assertion... `, node);
+
       const stated = true,
             assignments = null;
 
       satisfiesAssertionVerifies = this.satisfiesAssertion.validate(assignments, stated, context);
-    } else {
-      satisfiesAssertionVerifies = true;
-    }
 
-    if (satisfiesAssertionVerifies) {
-      context.debug(`...verified the '${stepString}' step's satisfies assertion. `, node);
+      if (satisfiesAssertionVerifies) {
+        context.debug(`...verified the '${stepString}' step's satisfies assertion. `, node);
+      }
     }
 
     return satisfiesAssertionVerifies;
@@ -160,7 +154,7 @@ export default define(class Step extends ProofAssertion {
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
     let unifiesWithSatisfiesAssertion = false;
 
-    const stepString = this.string, ///
+    const stepString = this.getString(), ///
           satisfiesAssertionString = satisfiesAssertion.getString();
 
     context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`, this.node);
