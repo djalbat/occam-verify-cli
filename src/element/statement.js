@@ -18,15 +18,8 @@ export default define(class Statement extends Element {
   }
 
   getMetavariableName() {
-    let metavariableName = null;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const node = this.getNode();
-
-      metavariableName = node.getMetavariableName();
-    }
+    const node = this.getNode(),
+          metavariableName = node.getMetavariableName();
 
     return metavariableName;
   }

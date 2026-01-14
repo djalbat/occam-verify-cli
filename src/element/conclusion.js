@@ -53,14 +53,18 @@ export  default define(class Conclusion extends Element {
   unifyStatement(statement, substitutions, context) {
     let statementUnifies;
 
-    const conclusion = this,  ///
-          statementString = statement.getString(),
-          conclusionString = conclusion.getString();
+    const statementString = statement.getString(),
+          conclusionString = this.getString();  ///
 
     context.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
 
-    const generalContext = this.context,  ///
-          specificContext = context;  ///
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context;  ///
+
+    context = specificContext;  ///
 
     statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 

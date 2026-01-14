@@ -308,7 +308,7 @@ export default define(class Metavariable extends Element {
 
     if (generalContextFilePath === specificContextFilePath) {
       const metavariable = this,  ///
-            metavariableString = this.getString(), ///
+            metavariableString = metavariable.getString(),
             statementMetavariableEqualToMetvariable = statement.isMetavariableEqualToMetavariable(metavariable, context);
 
       if (statementMetavariableEqualToMetvariable) {

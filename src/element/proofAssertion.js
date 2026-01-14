@@ -51,16 +51,16 @@ export default class ProofAssertion extends Element {
 
     if (this.statement !== null) {
       const node = this.getNode(),
-            context = specificContext,  ///
-            premiseString = this.getString(), ///
-            statementString = statement.getString();
+            context = specificContext, ///
+            statementString = statement.getString(),
+            proorAssertionString = this.getString();  ///
 
-      context.trace(`Unifying the '${statementString}' statement with the '${premiseString}' proof assertion...`, node);
+      context.trace(`Unifying the '${statementString}' statement with the '${proorAssertionString}' proof assertion...`, node);
 
       statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
       if (statementUnifies) {
-        context.debug(`...unified the '${statementString}' statement with the '${premiseString}' proof assertion.`, node);
+        context.debug(`...unified the '${statementString}' statement with the '${proorAssertionString}' proof assertion.`, node);
       }
     }
 

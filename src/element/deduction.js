@@ -53,14 +53,18 @@ export default define(class Deduction extends Element {
   unifyStatement(statement, substitutions, context) {
     let statementUnifies;
 
-    const deduction = this,  ///
-          statementString = statement.getString(),
-          deductionString = deduction.getString();
+    const statementString = statement.getString(),
+          deductionString = this.getString();  ///
 
     context.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`);
 
-    const generalContext = this.context,  ///
-          specificContext = context;  ///
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context;  ///
+
+    context = specificContext;  ///
 
     statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
@@ -72,22 +76,25 @@ export default define(class Deduction extends Element {
   }
 
   unifyDeduction(deduction, substitutions, generalContext, specificContext) {
-    let deductionUnifies;
+    let deductionUnifies = false;
 
     const context = specificContext,  ///
+          generalDeduction = this,  ///
           specificDeduction = deduction,  ///
-          generalDeductionString = this.string, ///
+          generalDeductionString = generalDeduction.getString(),
           specificDeductionString = specificDeduction.getString();
 
-    context.trace(`Unifying the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction...`, this.node);
+    context.trace(`Unifying the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction...`);
 
     const statement = specificDeduction.getStatement(),
           statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    deductionUnifies = statementUnifies;  ///
+    if (statementUnifies) {
+      deductionUnifies = true;
+    }
 
     if (deductionUnifies) {
-      context.debug(`...unified the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction.`, this.node);
+      context.debug(`...unified the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction.`);
     }
 
     return deductionUnifies;
