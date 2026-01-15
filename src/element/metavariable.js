@@ -78,8 +78,8 @@ export default define(class Metavariable extends Element {
   validateGivenMetaType(metaType, context) {
     let validatesGivenMetaType = false;
 
-    const metavariableString = this.getString(),  ///
-          metaTypeString = metaType.getString();
+    const metaTypeString = metaType.getString(),
+          metavariableString = this.getString();  ///
 
     context.trace(`Validating the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
 

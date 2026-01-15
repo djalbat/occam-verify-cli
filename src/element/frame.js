@@ -6,7 +6,6 @@ import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { S, NOTHING } from "../constants";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 
 const { first } = arrayUtilities;
@@ -115,7 +114,7 @@ export default define(class Frame extends Element {
   compareSubstitutions(substitutions, context) {
     let comparesToSubstitutions;
 
-    const frameString = this.string,  ///
+    const frameString = this.getString(),  ///
           substitutionsString = substitutions.asString();
 
     context.trace(`Comparing the '${frameString}' frame to the '${substitutionsString}' substitutions...`);
@@ -135,114 +134,103 @@ export default define(class Frame extends Element {
     return comparesToSubstitutions;
   }
 
-  verify(assignments, stated, context) {
-    let verifies = false;
+  validate(assignments, stated, context) {
+    let validates = false;
 
-    const frameString = this.string;  ///
+    const frameString = this.getString();  ///
 
-    context.trace(`Verifying the '${frameString}' frame...`);
+    context.trace(`Validating the '${frameString}' frame...`);
 
-    const assumptionsVerify = this.verifyAssumptions(assignments, stated, context);
+    const assumptionsValidate = this.validateAssumptions(assignments, stated, context);
 
-    if (assumptionsVerify) {
-      let verifiesWhenStated = false,
-          verifiesWhenDerived = false;
+    if (assumptionsValidate) {
+      let validatesWhenStated = false,
+          validatesWhenDerived = false;
 
       if (stated) {
-        verifiesWhenStated = this.verifyWhenStated(assignments, context);
+        validatesWhenStated = this.validateWhenStated(assignments, context);
       } else {
-        verifiesWhenDerived = this.verifyWhenDerived(context);
+        validatesWhenDerived = this.validateWhenDerived(context);
       }
 
-      if (verifiesWhenStated || verifiesWhenDerived) {
-        verifies = true;
+      if (validatesWhenStated || validatesWhenDerived) {
+        validates = true;
       }
     }
 
-    if (verifies) {
+    if (validates) {
       const frame = this; ///
 
       context.addFrame(frame);
 
-      context.debug(`...verified the '${frameString}' frame.`);
+      context.debug(`...validated the '${frameString}' frame.`);
     }
 
-    return verifies;
+    return validates;
   }
 
-  verifyWhenStated(assignments, context) {
-    let verifiesWhenStated = false;
+  validateWhenStated(assignments, context) {
+    let validatesWhenStated = false;
 
-    const frameString = this.string;  ///
+    const frameString = this.getString();  ///
 
-    context.trace(`Verifying the '${frameString}' stated frame...`);
+    context.trace(`Validating the '${frameString}' stated frame...`);
 
     const singular = this.isSingular();
 
     if (!singular) {
       context.trace(`The '${frameString}' stated frame must be singular.`);
     } else {
-      verifiesWhenStated = true;
+      validatesWhenStated = true;
     }
 
-    if (verifiesWhenStated) {
-      context.debug(`...verified the '${frameString}' stated frame.`);
+    if (validatesWhenStated) {
+      context.debug(`...validated the '${frameString}' stated frame.`);
     }
 
-    return verifiesWhenStated;
+    return validatesWhenStated;
   }
 
-  verifyWhenDerived(context) {
-    let verifiesWhenDerived;
+  validateWhenDerived(context) {
+    let validatesWhenDerived;
 
-    const frameString = this.string;  ///
+    const frameString = this.getString();  ///
 
     context.trace(`Verifying the '${frameString}' derived frame...`);
 
-    verifiesWhenDerived = true;
+    validatesWhenDerived = true;
 
-    if (verifiesWhenDerived) {
+    if (validatesWhenDerived) {
       context.debug(`...verified the '${frameString}' derived frame.`);
     }
 
-    return verifiesWhenDerived;
+    return validatesWhenDerived;
   }
 
-  verifyAssumptions(assignments, stated, context) {
-    let assumptionsVerify = true;  ///
+  validateAssumptions(assignments, stated, context) {
+    let assumptionsValidate = true;  ///
 
     const length = this.getLength();
 
     if (length > 0) {
-      const sOrNothing = (length > 1) ?
-                           S :
-                             NOTHING,
-            assumptionsString = assumptionsStringFromAssumptions(this.assumptions);
-
-      context.trace(`Verifying the '${assumptionsString}' assumption${sOrNothing}...`);
-
       stated = true;  ///
 
       assignments = null; ///
 
-      assumptionsVerify = this.assumptions.every((assumption) => {
-        const assumptionVerifies = assumption.verify(assignments, stated, context);
+      assumptionsValidate = this.assumptions.every((assumption) => {
+        const assumptionVerifies = assumption.validate(assignments, stated, context);
 
         return assumptionVerifies;
       });
-
-      if (assumptionsVerify) {
-        context.debug(`...verified the '${assumptionsString}' assumption${sOrNothing}.`);
-      }
     }
 
-    return assumptionsVerify;
+    return assumptionsValidate;
   }
 
   validateGivenMetaType(metaType, assignments, stated, context) {
     let validatesGivenMetaType = false;
 
-    const frameString = this.string,  ///
+    const frameString = this.getString(),  ///
           metaTypeString = metaType.getString();
 
     context.trace(`Validatin the '${frameString}' frame given the '${metaTypeString}' meta-type...`);

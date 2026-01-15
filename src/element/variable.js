@@ -48,12 +48,12 @@ export default define(class Variable extends Element {
     return comparesToVariablbeIdentifier;
   }
 
-  verify(context) {
-    let verifies;
+  validate(context) {
+    let validates;
 
-    const variableString = this.string; ///
+    const variableString = this.getString(); ///
 
-    context.trace(`Verifying the '${variableString}' variable...`);
+    context.trace(`Validating the '${variableString}' variable...`);
 
     const variableIdentifier = this.identifier,
           variable = context.findVariableByVariableIdentifier(variableIdentifier);
@@ -63,24 +63,24 @@ export default define(class Variable extends Element {
 
       this.type = type;
 
-      verifies = true;
+      validates = true;
     } else {
       context.debug(`The '${variableString}' variable is not present.`);
     }
 
-    if (verifies) {
-      context.debug(`...verified the '${variableString}' variable.`);
+    if (validates) {
+      context.debug(`...validated the '${variableString}' variable.`);
     }
 
-    return verifies;
+    return validates;
   }
 
-  verifyType(context) {
-    let typeVerifies = false;
+  validateType(context) {
+    let typeValidates = false;
 
     const typeString = this.type.getString();
 
-    context.trace(`Verifying the '${typeString}' type...`);
+    context.trace(`Validating the '${typeString}' type...`);
 
     const prefixedTypeName = this.type.getPrefixedName(),
           type = context.findTypeByPrefixedTypeName(prefixedTypeName);
@@ -90,21 +90,21 @@ export default define(class Variable extends Element {
     } else {
       this.type = type; ///
 
-      typeVerifies = true;
+      typeValidates = true;
     }
 
-    if (typeVerifies) {
-      context.debug(`...verified the '${typeString}' type.`);
+    if (typeValidates) {
+      context.debug(`...validated the '${typeString}' type.`);
     }
 
-    return typeVerifies;
+    return typeValidates;
   }
 
   unifyTerm(term, substitutions, generalContext, specificContext) {
     let termUnifies = false;
 
     const termString = term.getString(),
-          variableString = this.string; ///
+          variableString = this.getString(); ///
 
     specificContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
@@ -160,7 +160,7 @@ export default define(class Variable extends Element {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          string = this.string, ///
+          string = this.getString(), ///
           type = typeJSON,  ///
           json = {
             type,

@@ -3,7 +3,6 @@
 import Declaration from "../declaration";
 
 import { define } from "../../elements";
-import { verifyStatement } from "../../process/verify";
 
 export default define(class CombinatorDeclaration extends Declaration {
   constructor(context, string, node, combinator) {

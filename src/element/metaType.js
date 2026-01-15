@@ -46,9 +46,8 @@ export default define(class MetaType extends Element {
     return metaType;
   }
 
-  static fromName(name) {
-    const context = null,
-          string = name,
+  static fromName(name, context) {
+    const string = name,
           node = null,
           metaType = new MetaType(context, string, node, name);
 

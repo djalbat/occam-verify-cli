@@ -76,7 +76,7 @@ export default define(class MetavariableDeclaration extends Declaration {
           context = this.getContext(),
           metavariableString = metavariable.getString();
 
-    context.trace(`Verifying the '${metavariableString}' metavariable when declared...`, node);
+    context.trace(`Verifying the '${metavariableString}' metavariable...`, node);
 
     const metavariableNode = metavariable.getNode(), ///
           termNode = metavariableNode.getTermNode();
@@ -98,7 +98,7 @@ export default define(class MetavariableDeclaration extends Declaration {
     }
 
     if (metavariableVerifies) {
-      context.debug(`...verified the '${metavariableString}' metavariable when declared.`, node);
+      context.debug(`...verified the '${metavariableString}' metavariable.`, node);
     }
 
     return metavariableVerifies;

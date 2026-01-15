@@ -65,7 +65,7 @@ export default define(class VariableDeclaration extends Declaration {
       context.debug(`...verified the '${variableString}' variable.`, node);
     }
 
-    return  variableVerifies;
+    return variableVerifies;
   }
 
   verifyVariableType() {
@@ -82,7 +82,9 @@ export default define(class VariableDeclaration extends Declaration {
 
     context.trace(`Verifying the '${typeString}' type...`, node);
 
-    const nominalTypeName = type.getNominalTypeName();
+    const includeSupertypes = false,
+          provisional = type.isProvisional(includeSupertypes),
+          nominalTypeName = type.getNominalTypeName();
 
     type = context.findTypeByNominalTypeName(nominalTypeName);
 
@@ -91,9 +93,7 @@ export default define(class VariableDeclaration extends Declaration {
     if (!typePresent) {
       context.debug(`The '${typeString}' type is not present.`, node);
     } else {
-      const includeSupertypes = false,
-            provisional = type.isProvisional(includeSupertypes),
-            typeComparesToProvisional = type.compareProvisional(provisional);
+      const typeComparesToProvisional = type.compareProvisional(provisional);
 
       if (!typeComparesToProvisional) {
         provisional ?

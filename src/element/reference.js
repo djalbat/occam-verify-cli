@@ -4,7 +4,8 @@ import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { referenceMetaTypeFromNothing } from "../metaTypes";
+import { metaTypeFromMetaTypeName } from "../metaTypes";
+import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { unifyMetavariableIntrinsically } from "../process/unify";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
@@ -39,41 +40,42 @@ export default define(class Reference extends Element {
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchNode(metavariableNode); }
 
-  verify(context) {
-    let verifies = false;
+  validate(context) {
+    let validate = false;
 
     const referenceString = this.getString(); ///
 
-    context.trace(`Verifying the '${referenceString}' reference...`);
+    context.trace(`Validating the '${referenceString}' reference...`);
 
-    if (!verifies) {
+    if (!validate) {
       const metavariableValidates = this.validateMetavariable(context);
 
-      verifies = metavariableValidates; ///
+      validate = metavariableValidates; ///
     }
 
-    if (!verifies) {
+    if (!validate) {
       const reference = this, ///
             labelPresent = context.isLabelPresentByReference(reference);
 
-      verifies = labelPresent;  ///
+      validate = labelPresent;  ///
     }
 
-    if (verifies) {
+    if (validate) {
       const reference = this; ///
 
       context.addReference(reference);
 
-      context.debug(`...verified the '${referenceString}' reference.`);
+      context.debug(`...validated the '${referenceString}' reference.`);
     }
 
-    return verifies;
+    return validate;
   }
 
   validateMetavariable(context) {
     let metavariableValidates = false;
 
-    const referenceMetaType = referenceMetaTypeFromNothing(),
+    const metaTypeName = REFERENCE_META_TYPE_NAME,
+          referenceMetaType = metaTypeFromMetaTypeName(metaTypeName),
           metaType = referenceMetaType, ///
           metavariableValidatesGivenMetaType = this.metavariable.validateGivenMetaType(metaType, context);
 

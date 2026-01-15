@@ -26,93 +26,69 @@ export default define(class Judgement extends Element {
 
   getMetavariable() { return this.frame.getMetavariable(); }
 
-  verify(assignments, stated, context) {
-    let verifies = false;
+  validate(assignments, stated, context) {
+    let validates = false;
 
     const judgementString = this.string;  ///
 
-    context.trace(`Verifying the '${judgementString}' judgement...`);
+    context.trace(`Validating the '${judgementString}' judgement...`);
 
-    const frameVerifies = this.verifyFrame(assignments, stated, context);
+    const frameValidates = this.frame.validate(assignments, stated, context);
 
-    if (frameVerifies) {
-      const declarationVerifies = this.verifyDeclaration(assignments, stated, context);
+    if (frameValidates) {
+      const assumptionValidates = this.assumption.validate(assignments, stated, context);
 
-      if (declarationVerifies) {
-        let verifiesWhenStated = false,
-            verifiesWhenDerived = false;
+      if (assumptionValidates) {
+        let validatesWhenStated = false,
+            validatesWhenDerived = false;
 
         if (stated) {
-          verifiesWhenStated = this.verifyWhenStated(assignments, context);
+          validatesWhenStated = this.validateWhenStated(assignments, context);
         } else {
-          verifiesWhenDerived = this.verifyWhenDerived(context);
+          validatesWhenDerived = this.validateWhenDerived(context);
         }
 
-        if (verifiesWhenStated || verifiesWhenDerived) {
-          verifies = true;
+        if (validatesWhenStated || validatesWhenDerived) {
+          validates = true;
         }
       }
     }
 
-    if (verifies) {
+    if (validates) {
       if (stated) {
         this.assign(assignments, context);
       }
     }
 
-    if (verifies) {
-      context.debug(`...verified the '${judgementString}' judgement.`);
+    if (validates) {
+      context.debug(`...validated the '${judgementString}' judgement.`);
     }
 
-    return verifies;
+    return validates;
   }
 
-  verifyFrame(assignments, stated, context) {
-    let frameVerifies;
-
-    const frameString = this.frame.getString();
-
-    context.trace(`Verifying the '${frameString}' frame...`);
-
-    frameVerifies = this.frame.verify(assignments, stated, context);
-
-    if (frameVerifies) {
-      context.debug(`...verified the '${frameString}' frame.`);
-    }
-
-    return frameVerifies;
-  }
-
-  verifyDeclaration(assignments, stated, context) {
-    let declarationVerifies;
-
-    declarationVerifies = this.assumption.verify(assignments, stated, context);
-
-    return declarationVerifies;
-  }
-
-  verifyWhenStated(assignments, context) {
-    let verifiesWhenStated;
+  validateWhenStated(assignments, context) {
+    let validatesWhenStated;
 
     const judgementString = this.string;  ///
 
-    context.trace(`Verifying the '${judgementString}' stated judgement...`);
+    context.trace(`Validating the '${judgementString}' stated judgement...`);
 
-    verifiesWhenStated = true;
+    validatesWhenStated = true;
 
-    if (verifiesWhenStated) {
-      context.debug(`...verified the '${judgementString}' stated judgement.`);
+    if (validatesWhenStated) {
+      context.debug(`...validated the '${judgementString}' stated judgement.`);
     }
 
-    return verifiesWhenStated;
+    return validatesWhenStated;
   }
 
-  verifyWhenDerived(context) {
-    let verifiesWhenDerived = false;
+  validateWhenDerived(context) {
+    let validatesWhenDerived = false;
 
     const judgementString = this.string;  ///
 
-    context.trace(`Verifying the '${judgementString}' derived judgement...`);
+    context.trace(`Validating the '${judgementString}' derived judgement...`);
 
     const metavariable = this.assumption.getMetavariable(),
           reference = referenceFromMetavariable(metavariable, context),
@@ -121,15 +97,14 @@ export default define(class Judgement extends Element {
           frameComparesToSubstitutions = this.frame.compareSubstitutions(substitutions, context);
 
     if (frameComparesToSubstitutions) {
-      verifiesWhenDerived = true;
-
+      validatesWhenDerived = true;
     }
 
-    if (verifiesWhenDerived) {
-      context.debug(`...verified the '${judgementString}' derived judgement.`);
+    if (validatesWhenDerived) {
+      context.debug(`...validated the '${judgementString}' derived judgement.`);
     }
 
-    return verifiesWhenDerived;
+    return validatesWhenDerived;
   }
 
   assign(assignments, context) {

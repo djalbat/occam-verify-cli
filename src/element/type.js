@@ -321,14 +321,12 @@ export default define(class Type extends Element {
     return type;
   }
 
-  static fromName(name) {
-    const context = null,
-          string = name,  ///
+  static fromNameAndProvisional(name, provisional, context) {
+    const string = name,  ///
           node = null,
           prefixName = null,
           superTypes = [],
           properties = [],
-          provisional = false,
           type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
 
     return type;

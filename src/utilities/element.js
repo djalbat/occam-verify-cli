@@ -2,8 +2,10 @@
 
 import elements from "../elements";
 
+import { contextFromString } from "../utilities/context";
 import { baseTypeFromNothing } from "../types";
 import { instantiateReference } from "../process/instantiate";
+import { metaTypeFromMetaTypeName } from "../metaTypes";
 import { equivalenceStringFromTerms,
          rulsStringFromLabelsPremisesAndConclusion,
          sectionStringFromHypothesesTopLevelAssertion,
@@ -207,12 +209,8 @@ export function equalityFromEqualityNode(equalityNode, context) {
 }
 
 export function metaTypeFromMetaTypeNode(metaTypeNode, context) {
-  const { MetaType } = elements,
-        node = metaTypeNode,  ///
-        string = context.nodeAsString(node),
-        metaTypeName = metaTypeNode.getMetaTypeName(),
-        name = metaTypeName,  ///
-        metaType = new MetaType(context, string, node, name);
+  const metaTypeName = metaTypeNode.getMetaTypeName(),
+        metaType = metaTypeFromMetaTypeName(metaTypeName);
 
   return metaType;
 }
@@ -459,8 +457,11 @@ export function referenceFromMetavariableNode(metavariableNode, context) {
   const metavariableString = context.nodeAsString(metavariableNode),
         referenceString = metavariableString, ///
         string = referenceString,  ///
-        referenceNode = instantiateReference(string, context),
-        reference = referenceFromReferenceNode(referenceNode, context);
+        referenceNode = instantiateReference(string, context);
+
+  context = contextFromString(string);
+
+  const reference = referenceFromReferenceNode(referenceNode, context);
 
   return reference;
 }
@@ -675,17 +676,26 @@ export function procedureReferenceFromProcedureReferenceNode(procedureReferenceN
         node = procedureReferenceNode,  ///
         string = context.nodeAsString(node),
         name = nameFromProcedureReferenceNode(procedureReferenceNode, context),
-        variableDeclaration = new ProcedureReference(context, string, node, name);
+        procedureDeclaration = new ProcedureReference(context, string, node, name);
 
-  return variableDeclaration;
+  return procedureDeclaration;
 }
 
 export function variableDeclarationFromVariableDeclarationNode(variableDeclarationNode, context) {
   const { VariableDeclaration } = elements,
         node = variableDeclarationNode,  ///
         string = context.nodeAsString(node),
-        variable = variableFromVariableNode(variableDeclarationNode, context),
-        variableDeclaration = new VariableDeclaration(context, string, node, variable);
+        typeNode = variableDeclarationNode.getTypeNode(),
+        provisional = variableDeclarationNode.isProvisional(),
+        variableNode = variableDeclarationNode.getVariableNode(),
+        type = typeFromTypeNode(typeNode, context),
+        variable = variableFromVariableNode(variableNode, context);
+
+  type.setProvisional(provisional);
+
+  variable.setType(type);
+
+  const variableDeclaration = new VariableDeclaration(context, string, node, variable);
 
   return variableDeclaration;
 }
