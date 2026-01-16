@@ -73,9 +73,9 @@ export default define(class Step extends ProofAssertion {
     if (statement === null) {
       context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`, node);
     } else {
-      const referenceVerifies = this.verifyReference(context);
+      const referenceValidates = this.validateReference(context);
 
-      if (referenceVerifies) {
+      if (referenceValidates) {
         const satisfiesAssertioVeriries = this.verifySatisfiesAssertion(context);
 
         if (satisfiesAssertioVeriries) {
@@ -108,25 +108,23 @@ export default define(class Step extends ProofAssertion {
     return verifies;
   }
 
-  verifyReference(context) {
-    let referenceVeriries;
-
-    const node = this.getNode(),
-          stepString = this.getString();  ///
-
-    context.trace(`Verifying the '${stepString}' step's reference... `, node);
+  validateReference(context) {
+    let referenceValidates = true;
 
     if (this.reference !== null) {
-      referenceVeriries = this.reference.verify(context);
-    } else {
-      referenceVeriries = true;
+      const node = this.getNode(),
+            stepString = this.getString();
+
+      context.trace(`Validating the '${stepString}' step's reference... `, node);
+
+      referenceValidates = this.reference.validate(context);
+
+      if (referenceValidates) {
+        context.debug(`...validating the '${stepString}' step's reference. `, node);
+      }
     }
 
-    if (referenceVeriries) {
-      context.debug(`...verified the '${stepString}' step's reference. `, node);
-    }
-
-    return referenceVeriries;
+    return referenceValidates;
   }
 
   verifySatisfiesAssertion(context) {

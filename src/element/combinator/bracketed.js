@@ -3,7 +3,6 @@
 import Combinator from "../combinator";
 
 import { define } from "../../elements";
-import { bracketedCombinatorFromNothing } from "../../utilities/instance";
 
 export default define(class BracketedCombinator extends Combinator {
   unifyStatement(statement, assignments, stated, context) {
@@ -23,10 +22,4 @@ export default define(class BracketedCombinator extends Combinator {
   }
 
   static name = "BracketedCombinator";
-
-  static fromNothing() {
-    const bracketedCombinator = bracketedCombinatorFromNothing();
-
-    return bracketedCombinator;
-  }
 });

@@ -112,16 +112,15 @@ export default define(class Term extends Element {
     return validates;
   }
 
-  validateGivenType(type, generalContext, specificContext) {
-    let validatesGivenType;
+  validateGivenType(type, context) {
+    let validatesGivenType = false;
 
     const typeString = type.getString(),
           termString = this.getString();  ///
 
-    specificContext.trace(`Validating the '${termString}' term given the '${typeString}' type...`);
+    context.trace(`Validating the '${termString}' term given the '${typeString}' type...`);
 
-    const context = specificContext, ///
-          validates = this.validate(context, () => {
+    const validates = this.validate(context, () => {
             let verifiesAhead;
 
             const typeEqualToOrSubTypeOfGivenTypeType = this.type.isEqualToOrSubTypeOf(type);
@@ -133,10 +132,12 @@ export default define(class Term extends Element {
             return verifiesAhead;
           });
 
-    validatesGivenType = validates; ///
+    if (validates) {
+      validatesGivenType = true;
+    }
 
     if (validatesGivenType) {
-      specificContext.debug(`...validated the '${termString}' term given the '${typeString}' type.`);
+      context.debug(`...validated the '${termString}' term given the '${typeString}' type.`);
     }
 
     return validatesGivenType;

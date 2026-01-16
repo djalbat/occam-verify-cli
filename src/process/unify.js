@@ -406,7 +406,7 @@ class CombinatorPass extends Pass {
           context = specificContext;  ///
 
           const term = termFromTermNode(termNode, context),
-                termValidatesGivenType = term.validateGivenType(type, generalContext, specificContext);
+                termValidatesGivenType = term.validateGivenType(type, context);
 
           if (termValidatesGivenType) {
             success = true;
@@ -441,7 +441,7 @@ class ConstructorPass extends Pass {
           context = specificContext;  ///
 
           const term = termFromTermNode(termNode, context),
-                termValidatesGivenType = term.validateGivenType(type, generalContext, specificContext);
+                termValidatesGivenType = term.validateGivenType(type, context);
 
           if (termValidatesGivenType) {
             success = true;
@@ -468,7 +468,7 @@ class MetavariablePass extends Pass {
               type = generalContext.findTypeByNominalTypeName(nominalTypeName),
               context = specificContext, ///
               term = context.findTermByTermNode(termNode),
-              termValidatesGivenType = term.validateGivenType(type, generalContext, specificContext);
+              termValidatesGivenType = term.validateGivenType(type, context);
 
         if (termValidatesGivenType) {
           success = true;

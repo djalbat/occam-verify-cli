@@ -2,9 +2,9 @@
 
 import elements from "../elements";
 
+import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
 import { equalityFromStatement,
          judgementFromStatement,
-         metavariableFromStatement,
          typeAssertionFromStatement,
          definedAssertionFromStatement,
          propertyAssertionFromStatement,
@@ -15,8 +15,7 @@ import { equalityFromStatement,
 function unifyTermWithBracketedConstructor(term, context, validateAhead) {
   let termUnifiesWithBracketedConstructor;
 
-  const { BracketedConstructor } = elements,
-    bracketedConstructor = BracketedConstructor.fromNothing();
+  const bracketedConstructor = bracketedConstructorFromNothing();
 
   termUnifiesWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, validateAhead);
 
@@ -42,40 +41,31 @@ function unifyTermWithConstructors(term, context, validateAhead) {
 function validateTermAsVariable(term, context, validateAhead) {
   let termValidatesAsVariable = false;
 
-  const { Variable } = elements,
-    termNode = term.getNode(),
-    singularVariableNode = termNode.getSingularVariableNode();
+  const termNode = term.getNode(),
+        variableNode = termNode.getVariableNode();
 
-  if (singularVariableNode !== null) {
-    let variable;
+  if (variableNode !== null) {
+    const termString = term.getString();
 
-    const termString = term.getString(),
-      variableNode = singularVariableNode;  ///
+    context.trace(`Validating the '${termString}' term as a variable...`);
 
-    variable = Variable.fromVariableNode(variableNode, context);
+    const variableIdentifier = variableNode.getVariableIdentifier(),
+          variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
-    context.trace(`Verifying the '${termString}' term as a variable...`);
-
-    const variableValidates = variable.validate(context);
-
-    if (variableValidates) {
-      let verifiesAhead;
-
-      const variableIdentifier = variable.getIdentifier();
-
-      variable = context.findVariableByVariableIdentifier(variableIdentifier);
-
+    if (variable !== null) {
       const type = variable.getType();
 
       term.setType(type);
 
-      verifiesAhead = validateAhead();
+      const verifiesAhead = validateAhead();
 
-      termValidatesAsVariable = verifiesAhead; ///
+      if (verifiesAhead) {
+        termValidatesAsVariable = true;
+      }
     }
 
     if (termValidatesAsVariable) {
-      context.debug(`...verified the '${termString}' term as a variable.`);
+      context.debug(`...validated the '${termString}' term as a variable.`);
     }
   }
 
@@ -85,16 +75,20 @@ function validateTermAsVariable(term, context, validateAhead) {
 function validateStatementAsMetavariableAndSubstitution(statement, assignments, stated, context) {
   let statementValidatesAsMetavariableAndSubstitution = false;
 
-  const metavariable = metavariableFromStatement(statement, context);
+  const statementNode = statement.getNode(),
+        metavariableNode = statementNode.getMetavariableNode();
 
-  if (metavariable !== null) {
+  if (metavariableNode !== null) {
     const statementString = statement.getString();
 
     context.trace(`Validating the '${statementString}' statement as a metavariable and substitution...`);
 
-    const metavariableValidates = metavariable.validate(context);
+    const metavariableName = metavariableNode.getMetavariableName(),
+          metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
-    if (metavariableValidates) {
+    if (metavariable !== null) {
+      statementValidatesAsMetavariableAndSubstitution = true;
+
       const { TermSubstitution, FrameSubstitution } = elements,
             frameSubstitution = FrameSubstitution.fromStatement(statement, context),
             termSubstitution = TermSubstitution.fromStatement(statement, context),
@@ -103,11 +97,9 @@ function validateStatementAsMetavariableAndSubstitution(statement, assignments, 
       if (substitution !== null) {
         const substitutionValidates = substitution.validate(context);
 
-        if (substitutionValidates) {
-          statementValidatesAsMetavariableAndSubstitution = true;
+        if (!substitutionValidates) {
+          statementValidatesAsMetavariableAndSubstitution = false;
         }
-      } else {
-        statementValidatesAsMetavariableAndSubstitution = true;
       }
     }
 
@@ -124,8 +116,7 @@ function unifyStatementWithBracketedCombinator(statement, assignments, stated, c
 
   assignments = null; ///
 
-  const { BracketedCombinator } = elements,
-        bracketedCombinator = BracketedCombinator.fromNothing(),
+  const bracketedCombinator = bracketedCombinatorFromNothing(),
         statementUnifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
 
   return statementUnifiesWithBracketedCombinator;
