@@ -5,6 +5,7 @@ import { arrayUtilities } from "necessary";
 import elements from "../elements";
 
 import { verifyFile } from "../process/verify";
+import { chainContext } from "../utilities/context";
 import { baseTypeFromNothing } from "../types";
 import { nodeAsString, nodesAsString } from "../utilities/node";
 import { typesFromJSON,
@@ -35,8 +36,8 @@ import { typesFromJSON,
 const { push, filter } = arrayUtilities;
 
 export default class FileContext {
-  constructor(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
-    this.releaseContext = releaseContext;
+  constructor(context, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
+    this.context = context;
     this.filePath = filePath;
     this.lineIndex = lineIndex;
     this.tokens = tokens;
@@ -54,10 +55,12 @@ export default class FileContext {
     this.constructors = constructors;
     this.metatheorems = metatheorems;
     this.metavariables = metavariables;
+
+    return chainContext(this);
   }
 
-  getReleaseContext() {
-    return this.releaseContext;
+  getContext() {
+    return this.context;
   }
 
   getFilePath() {
@@ -75,14 +78,6 @@ export default class FileContext {
   getNode() {
     return this.node;
   }
-
-  getLexer() { return this.releaseContext.getLexer(); }
-
-  getParser() { return this.releaseContext.getParser(); }
-
-  getMetaTypes() { return this.releaseContext.getMetaTypes(); }
-
-  getTypePrefix() { return this.releaseContext.getTypePrefix(); }
 
   getJudgements() {
     const judgements = [];
@@ -107,7 +102,7 @@ export default class FileContext {
     const labels = [];
 
     if (includeRelease) {
-      const releaseContextLabels = this.releaseContext.getLabels();
+      const releaseContextLabels = this.context.getLabels();
 
       push(labels, releaseContextLabels);
     } else {
@@ -153,7 +148,7 @@ export default class FileContext {
 
   getTypes(includeRelease = true, includeDependencies = true) {
     const types = includeRelease ?
-                    this.releaseContext.getTypes(includeDependencies) :
+                    this.context.getTypes(includeDependencies) :
                       this.types;
 
     return types;
@@ -161,7 +156,7 @@ export default class FileContext {
 
   getRules(includeRelease = true) {
     const rules = includeRelease ?
-                    this.releaseContext.getRules() :
+                    this.context.getRules() :
                       this.rules;
 
     return rules;
@@ -169,7 +164,7 @@ export default class FileContext {
 
   getAxioms(includeRelease = true) {
     const axioms = includeRelease ?
-                     this.releaseContext.getAxioms() :
+                     this.context.getAxioms() :
                        this.axioms;
 
     return axioms;
@@ -177,7 +172,7 @@ export default class FileContext {
 
   getLemmas(includeRelease = true) {
     const lemmas = includeRelease ?
-                     this.releaseContext.getLemmas() :
+                     this.context.getLemmas() :
                        this.lemmas;
 
     return lemmas;
@@ -185,7 +180,7 @@ export default class FileContext {
 
   getTheorems(includeRelease = true) {
     const theorems = includeRelease ?
-                       this.releaseContext.getTheorems() :
+                       this.context.getTheorems() :
                          this.theorems;
 
     return theorems;
@@ -197,7 +192,7 @@ export default class FileContext {
 
   getProcedures(includeRelease = true) {
     const procedures = includeRelease ?
-                         this.releaseContext.getProcedures() :
+                         this.context.getProcedures() :
                            null;  ///
 
     return procedures;
@@ -205,7 +200,7 @@ export default class FileContext {
 
   getMetaLemmas(includeRelease = true) {
     const metaLemmas = includeRelease ?
-                         this.releaseContext.getMetaLemmas() :
+                         this.context.getMetaLemmas() :
                            this.metaLemmas;
 
     return metaLemmas;
@@ -213,7 +208,7 @@ export default class FileContext {
 
   getConjectures(includeRelease = true) {
     const conjectures = includeRelease ?
-                          this.releaseContext.getConjectures() :
+                          this.context.getConjectures() :
                             this.conjectures;
 
     return conjectures;
@@ -221,7 +216,7 @@ export default class FileContext {
 
   getCombinators(includeRelease = true) {
     const combinators = includeRelease ?
-                          this.releaseContext.getCombinators() :
+                          this.context.getCombinators() :
                             this.combinators;
 
     return combinators;
@@ -229,7 +224,7 @@ export default class FileContext {
 
   getTypePrefixes(includeRelease = true) {
     const typePrefixes = includeRelease ?
-                           this.releaseContext.getTypePrefixes() :
+                           this.context.getTypePrefixes() :
                              this.typePrefixes;
 
     return typePrefixes;
@@ -237,7 +232,7 @@ export default class FileContext {
 
   getConstructors(includeRelease = true) {
     const constructors = includeRelease ?
-                           this.releaseContext.getConstructors() :
+                           this.context.getConstructors() :
                              this.constructors;
 
     return constructors;
@@ -245,7 +240,7 @@ export default class FileContext {
 
   getMetatheorems(includeRelease = true) {
     const metatheorems = includeRelease ?
-                           this.releaseContext.getMetatheorems() :
+                           this.context.getMetatheorems() :
                              this.metatheorems;
 
     return metatheorems;
@@ -795,36 +790,34 @@ export default class FileContext {
     return string;
   }
 
-  findFile(filePath) { return this.releaseContext.findFile(filePath); }
-
   trace(message, node = null) {
     this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
-    this.releaseContext.trace(message, this.filePath, this.lineIndex);
+    this.context.trace(message, this.filePath, this.lineIndex);
   }
 
   debug(message, node = null) {
     this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
-    this.releaseContext.debug(message, this.filePath, this.lineIndex);
+    this.context.debug(message, this.filePath, this.lineIndex);
   }
 
   info(message, node = null) {
     this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
-    this.releaseContext.info(message, this.filePath, this.lineIndex);
+    this.context.info(message, this.filePath, this.lineIndex);
   }
 
   warning(message, node = null) {
     this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
-    this.releaseContext.warning(message, this.filePath, this.lineIndex);
+    this.context.warning(message, this.filePath, this.lineIndex);
   }
 
   error(message, node = null) {
     this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
-    this.releaseContext.error(message, this.filePath, this.lineIndex);
+    this.context.error(message, this.filePath, this.lineIndex);
   }
 
   verify() {
@@ -961,7 +954,7 @@ export default class FileContext {
     return json;
   }
 
-  static fromFile(file, releaseContext) {
+  static fromFile(file, context) {
     const filePath = file.getPath(),
           lineIndex = null,
           tokens = null,
@@ -979,12 +972,12 @@ export default class FileContext {
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(context, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables);
 
     return fileContext;
   }
 
-  static fromFilePath(filePath, releaseContext) {
+  static fromFilePath(filePath, context) {
     const lineIndex = null,
           tokens = null,
           node = null,
@@ -1001,7 +994,7 @@ export default class FileContext {
           constructors = null,
           metatheorems = null,
           metavariables = null,
-          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(context, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables);
 
     return fileContext;
   }

@@ -5,7 +5,7 @@ import elements from "../elements";
 import { contextFromString } from "../utilities/context";
 import { baseTypeFromNothing } from "../types";
 import { instantiateReference } from "../process/instantiate";
-import { metaTypeFromMetaTypeName } from "../metaTypes";
+import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { equivalenceStringFromTerms,
          rulsStringFromLabelsPremisesAndConclusion,
          sectionStringFromHypothesesTopLevelAssertion,
@@ -210,7 +210,7 @@ export function equalityFromEqualityNode(equalityNode, context) {
 
 export function metaTypeFromMetaTypeNode(metaTypeNode, context) {
   const metaTypeName = metaTypeNode.getMetaTypeName(),
-        metaType = metaTypeFromMetaTypeName(metaTypeName);
+        metaType = findMetaTypeByMetaTypeName(metaTypeName);
 
   return metaType;
 }

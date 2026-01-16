@@ -21,7 +21,7 @@ export function getMetaTypes() {
   return metaTypes;
 }
 
-export function metaTypeFromMetaTypeName(metaTypeName) {
+export function findMetaTypeByMetaTypeName(metaTypeName) {
   const metaTypes = getMetaTypes(),
         metaType = metaTypes.find((metaType) => {
           const metaTypeComparesToMetaTypeName = metaType.compareMetaTypeName(metaTypeName);

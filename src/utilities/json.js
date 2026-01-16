@@ -2,6 +2,8 @@
 
 import elements from "../elements";
 
+import { findMetaTypeByMetaTypeName } from "../metaTypes";
+
 export function termFromJSON(json, context) {
   let { term } = json;
 
@@ -42,7 +44,7 @@ export function metaTypeFromJSON(json, context) {
     const { name } = json,
           metaTypeName = name;  ///
 
-    metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
+    metaType = findMetaTypeByMetaTypeName(metaTypeName);
   }
 
   return metaType;

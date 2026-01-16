@@ -3,6 +3,7 @@
 import Element from "../element";
 
 import { define } from "../elements";
+import { findMetaTypeFromTypeName } from "../metaTypes";
 
 export default define(class MetaType extends Element {
   constructor(context, string, node, name) {
@@ -41,7 +42,7 @@ export default define(class MetaType extends Element {
   static fromJSON(json, context) {
     const { name } = json,
           metaTypeName = name,  ///
-          metaType = metaTypeFromMetaTypeName(metaTypeName);
+          metaType = findMetaTypeByMetaTypeName(metaTypeName);
 
     return metaType;
   }

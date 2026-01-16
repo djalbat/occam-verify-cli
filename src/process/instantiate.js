@@ -3,7 +3,6 @@
 import { ruleFromBNF } from "../utilities/bnf";
 
 const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
-      stepPlaceholderBNF = ` _ ::= step... <END_OF_LINE> ; `,
       variablePlaceholderBNF = ` _ ::= variable... <END_OF_LINE> ; `,
       referencePlaceholderBNF = ` _ ::= reference... <END_OF_LINE> ; `,
       statementPlaceholderBNF = ` _ ::= statement... <END_OF_LINE> ; `,
@@ -16,7 +15,6 @@ const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
       statementSubstitutionPlaceholderBNF = ` _ ::= statementSubstitution... <END_OF_LINE> ; `,
       referenceSubstitutionPlaceholderBNF = ` _ ::= referenceSubstitution... <END_OF_LINE> ; `,
       termPlaceholderRule = ruleFromBNF(termPlaceholderBNF),
-      stepPlaceholderRule = ruleFromBNF(stepPlaceholderBNF),
       variablePlaceholderRule = ruleFromBNF(variablePlaceholderBNF),
       referencePlaceholderRule = ruleFromBNF(referencePlaceholderBNF),
       statementPlaceholderRule = ruleFromBNF(statementPlaceholderBNF),
@@ -30,8 +28,6 @@ const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
       referenceSubstitutionPlaceholderRule = ruleFromBNF(referenceSubstitutionPlaceholderBNF);
 
 export function instantiateTerm(string, context) { return instantiate(termPlaceholderRule, string, context); }
-
-export function instantiateStep(string, context) { return instantiate(stepPlaceholderRule, string, context); }
 
 export function instantiateVariable(string, context) { return instantiate(variablePlaceholderRule, string, context); }
 

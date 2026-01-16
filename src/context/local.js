@@ -4,6 +4,8 @@ import { arrayUtilities } from "necessary";
 
 import elements from "../elements";
 
+import { chainContext } from "../utilities/context";
+
 const { last } = arrayUtilities;
 
 class LocalContext {
@@ -13,6 +15,8 @@ class LocalContext {
     this.judgements = judgements;
     this.equivalences = equivalences;
     this.subproofOrProofAssertions = subproofOrProofAssertions;
+
+    return chainContext(this);
   }
 
   getContext() {
@@ -92,32 +96,6 @@ class LocalContext {
     return subproofOrProofAssertions;
   }
 
-  getFilePath() { return this.context.getFilePath(); }
-
-  getLexer() { return this.context.getLexer(); }
-
-  getParser() { return this.context.getParser(); }
-
-  getAxioms() { return this.context.getAxioms(); }
-
-  getLemmas() { return this.context.getLemmas(); }
-
-  getTheorems() { return this.context.getTheorems(); }
-
-  getConjectures() { return this.context.getConjectures(); }
-
-  getCombinators() { return this.context.getCombinators(); }
-
-  getConstructors() { return this.context.getConstructors(); }
-
-  getTypePrefix() { return this.context.getTypePrefix(); }
-
-  addAxiom(axiom) { this.context.addAxiom(axiom); }
-
-  addLemma(lemma) { this.context.addLemma(lemma); }
-
-  addTheorem(theorem) { this.context.addTheorem(theorem); }
-
   addEquality(equality) {
     let equalityAdded;
 
@@ -191,28 +169,6 @@ class LocalContext {
     this.subproofOrProofAssertions.push(subproofOrProofAssertion);
   }
 
-  findProcedureByName(name) { return this.context.findProcedureByName(name); }
-
-  findLabelByReference(reference, context) { return this.context.findLabelByReference(reference, context); }
-
-  findRuleByReference(reference) { return this.context.findRuleByReference(reference); }
-
-  findAxiomByReference(reference) { return this.context.findAxiomByReference(reference); }
-
-  findLemmaByReference(reference) { return this.context.findLemmaByReference(reference); }
-
-  findTheoremByReference(reference) { return this.context.findTheoremByReference(reference); }
-
-  findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
-
-  findMetaLemmasByReference(reference) { return this.context.findMetaLemmasByReference(reference); }
-
-  findMetatheoremsByReference(reference) { return this.context.findMetatheoremsByReference(reference); }
-
-  findTopLevelMetaAssertionByReference(reference) { return this.context.findTopLevelMetaAssertionByReference(reference); }
-
-  findTopLevelMetaAssertionsByReference(reference) { return this.context.findTopLevelMetaAssertionsByReference(reference); }
-
   findVariableByVariableIdentifier(variableIdentifier, nested = true) {
     const variables = this.getVariables(nested),
           variable = variables.find((variable) => {
@@ -246,35 +202,7 @@ class LocalContext {
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
 
-  findMetavariable(metavariable) { return this.context.findMetavariable(metavariable); }
-
-  findLabelByMetavariable(metavariable) { return this.context.findLabelByMetavariable(metavariable); }
-
-  findTypeByNominalTypeName(nominalTypeName) { return this.context.findTypeByNominalTypeName(nominalTypeName); }
-
-  findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
-
-  findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
-
-  isProcedurePresentByName(name) { return this.context.isProcedurePresentByName(name); }
-
-  isLabelPresentByReference(reference) { return this.context.isLabelPresentByReference(reference); }
-
-  isMetavariablePresentByReference(reference) { return this.context.isMetavariablePresentByReference(reference); }
-
-  findTopLevelAssertionByReference(reference) { return this.context.findTopLevelAssertionByReference(reference); }
-
-  isTopLevelMetaAssertionPresentByReference(reference) { return this.context.isTopLevelMetaAssertionPresentByReference(reference); }
-
-  isMetavariablePresent(metavariable) { return this.context.isMetavariablePresent(metavariable); }
-
   isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) { return this.context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies); }
-
-  isTypePresentByNominalTypeName(nominalTypeName) { return this.context.isTypePresentByNominalTypeName(nominalTypeName); }
-
-  isTypePresentByPrefixedTypeName(prefixedTypeName) { return this.context.isTypePresentByPrefixedTypeName(prefixedTypeName); }
-
-  isTypePrefixPresentByTypePrefixName(typePrefixName) { return this.context.isTypePrefixPresentByTypePrefixName(typePrefixName); }
 
   isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) {
     const variable = this.findVariableByVariableIdentifier(variableIdentifier, nested),
@@ -282,12 +210,6 @@ class LocalContext {
 
     return variablePresent;
   }
-
-  isLabelPresentByMetavariableName(metavariableName) { return this.context.isLabelPresentByMetavariableName(metavariableName); }
-
-  isLabelPresentByMetavariable(metavariable) { return this.context.isLabelPresentByMetavariable(metavariable); }
-
-  isMetavariablePresentByMetavariableName(metavariableNode) { return this.context.isMetavariablePresentByMetavariableName(metavariableNode); }
 
   isJudgementPresentByMetavariable(metavariable) {
     const judgement = this.findJudgementByMetavariable(metavariable),
@@ -357,20 +279,6 @@ class LocalContext {
 
     return comparesToTermAndPropertyRelation;
   }
-
-  nodeAsString(node) { return this.context.nodeAsString(node); }
-
-  nodesAsString(node) { return this.context.nodesAsString(node); }
-
-  trace(message, node = null) { this.context.trace(message, node); }
-
-  debug(message, node = null) { this.context.debug(message, node); }
-
-  info(message, node = null) { this.context.info(message, node); }
-
-  warning(message, node = null) { this.context.warning(message, node); }
-
-  error(message, node = null) { this.context.error(message, node); }
 
   static fromNothing(context) {
     const { Equivalences } = elements,

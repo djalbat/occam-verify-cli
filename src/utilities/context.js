@@ -1,23 +1,27 @@
 "use strict";
 
-import { getMetaTypes } from "../metaTypes";
+import { FUNCTION } from "../constants";
+
+export function chainContext(context) {
+  return new Proxy(context, {
+    get: (instance, name, receiver) => {
+      if (name in instance) {
+        return Reflect.get(instance, name, receiver);
+      }
+
+      const context = instance.context,
+            value = context[name];
+
+      return (typeof value === FUNCTION) ?
+               value.bind(context) :
+                 value;
+    }
+  });
+}
 
 export function contextFromString(string) {
   const context = {
-    nodeAsString: () => string,
-    getMetaTypes: () => getMetaTypes(),
-    findMetaTypeByMetaTypeName(metaTypeName) {
-      const metaTypes = this.getMetaTypes(),
-            metaType = metaTypes.find((metaType) => {
-              const metaTypeComparesToMetaTypeName = metaType.compareMetaTypeName(metaTypeName);
-
-              if (metaTypeComparesToMetaTypeName) {
-                return true;
-              }
-            }) || null;
-
-      return metaType;
-    }
+    nodeAsString: () => string
   };
 
   return context;

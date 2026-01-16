@@ -1,6 +1,7 @@
 "use strict";
 
 import { nodeQuery } from "../utilities/query";
+import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { termFromTermNode, frameFromFrameNode, statementFromStatementNode } from "../utilities/element";
 import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual, isLastRemainingArgumentFunction } from "../utilities/pass";
 
@@ -344,7 +345,7 @@ class CombinatorPass extends Pass {
         context = generalContext; ///
 
         const metaTypeName = metaTypeNode.getMetaTypeName(),
-              metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
+              metaType = findMetaTypeByMetaTypeName(metaTypeName);
 
         context = specificContext;  ///
 
@@ -372,7 +373,7 @@ class CombinatorPass extends Pass {
         context = generalContext; ///
 
         const metaTypeName = metaTypeNode.getMetaTypeName(),
-              metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
+              metaType = findMetaTypeByMetaTypeName(metaTypeName);
 
         context = specificContext;  ///
 

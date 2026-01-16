@@ -4,8 +4,8 @@ import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { metaTypeFromMetaTypeName } from "../metaTypes";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
+import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { unifyMetavariableIntrinsically } from "../process/unify";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
@@ -75,7 +75,7 @@ export default define(class Reference extends Element {
     let metavariableValidates = false;
 
     const metaTypeName = REFERENCE_META_TYPE_NAME,
-          referenceMetaType = metaTypeFromMetaTypeName(metaTypeName),
+          referenceMetaType = findMetaTypeByMetaTypeName(metaTypeName),
           metaType = referenceMetaType, ///
           metavariableValidatesGivenMetaType = this.metavariable.validateGivenMetaType(metaType, context);
 

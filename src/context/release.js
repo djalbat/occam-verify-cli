@@ -582,7 +582,8 @@ function fileContextsFromJSON(json,fileContexts, releaseContext) {
     }
 
     if (filePathNominalFilePath) {
-      const fileContext = FileContext.fromFilePath(filePath, releaseContext);
+      const context = releaseContext, ///
+            fileContext = FileContext.fromFilePath(filePath, context);
 
       fileContexts.push(fileContext);
 
@@ -605,7 +606,8 @@ function fileContextsFromEntries(entries, fileContexts, releaseContext) {
     }
 
     if (filePathNominalFilePath) {
-      const fileContext = FileContext.fromFile(file, releaseContext);
+      const context = releaseContext, ///
+            fileContext = FileContext.fromFile(file, context);
 
       fileContexts.push(fileContext);
     }
