@@ -111,27 +111,27 @@ export default define(class Variable extends Element {
   unifyTerm(term, substitutions, generalContext, specificContext) {
     let termUnifies = false;
 
-    const termString = term.getString(),
+    const context = specificContext,  ///
+          termString = term.getString(),
           variableString = this.getString(); ///
 
-    specificContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
+    context.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
-    let context,
-        variable;
+    let variable;
 
     variable = this; ///
 
     const substitution = substitutions.findSubstitutionByVariable(variable);
 
     if (substitution !== null) {
-      context = specificContext;  ///
+      const substitutionComparesToTerm = substitution.compareTerm(term, context);
 
-      const substitutionTermEqualToTerm = substitution.isTermEqualToTerm(term, context);
-
-      if (substitutionTermEqualToTerm) {
+      if (substitutionComparesToTerm) {
         termUnifies = true;
       }
     } else {
+      let context;
+
       context = generalContext;  ///
 
       const variableIdentifier = variable.getIdentifier();
@@ -150,7 +150,7 @@ export default define(class Variable extends Element {
 
       if (termTypeEqualToOrSubTypeOfVariableType) {
         const { TermSubstitution } = elements,
-              termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
+              termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, context),
               substitution = termSubstitution;  ///
 
         substitutions.addSubstitution(substitution, context);
@@ -160,7 +160,7 @@ export default define(class Variable extends Element {
     }
 
     if (termUnifies) {
-      specificContext.debug(`...unified the '${termString}' term with the '${variableString}' variable.`);
+      context.debug(`...unified the '${termString}' term with the '${variableString}' variable.`);
     }
 
     return termUnifies;

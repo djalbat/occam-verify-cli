@@ -3,8 +3,10 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
+import { withinFragment } from "../../utilities/fragment";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
+import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
 import { termSubstitutionFromStatementNode, termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 
 export default define(class TermSubstitution extends Substitution {
@@ -24,8 +26,8 @@ export default define(class TermSubstitution extends Substitution {
   }
 
   getTargetNode() {
-    const metavariableNode = this.metavariable.getNode(),
-          tergetNode = metavariableNode; ///
+    const variableNode = this.variable.getNode(),
+          tergetNode = variableNode; ///
 
     return tergetNode;
   }
@@ -120,19 +122,14 @@ export default define(class TermSubstitution extends Substitution {
     return termSubstitution;
   }
 
-  static fromTermAndMetavariable(term, metavariable, context) {
-    const string = stringFromTermAndVariable(term, metavariable),
-          termSubstitutionNode = instantiateTermSubstitution(string, context),
-          termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
+  static fromTermAndVariable(term, variable, context) {
+    return withinFragment((context) => {
+      const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
+            string = termSubstitutionString,  ///
+            termSubstitutionNode = instantiateTermSubstitution(string, context),
+            termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
 
-    return termSubstitution;
+      return termSubstitution;
+    }, context);
   }
 });
-
-function stringFromTermAndVariable(term, variable) {
-  const termString = term.getString(),
-        variableString = variable.getString(),
-        string = `[${termString} for ${variableString}]`;
-
-  return string;
-}

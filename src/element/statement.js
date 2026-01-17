@@ -201,17 +201,18 @@ export default define(class Statement extends Element {
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnifies;
 
-    const generalStatement = this,  ///
+    const context = specificContext,  ///
+          generalStatement = this,  ///
           specificStatement = statement, ///
           generalStatementString = generalStatement.getString(),
           specificStatementString = specificStatement.getString();
 
-    specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
+    context.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
 
     statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`);
+      context.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`);
     }
 
     return statementUnifies;

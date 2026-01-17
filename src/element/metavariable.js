@@ -45,6 +45,8 @@ export default define(class Metavariable extends Element {
     return nameEqualTo;
   }
 
+  isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
+
   compareParameter(parameter) {
     const name = parameter.getName(),
           nameEqualTo = this.isNameEqualTo(name),
@@ -59,8 +61,6 @@ export default define(class Metavariable extends Element {
 
     return comparesToMetavariableName;
   }
-
-  isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
   validate(context) {
     let validates = false;
@@ -113,10 +113,11 @@ export default define(class Metavariable extends Element {
   unifyFrame(frame, substitutions, generalContext, specificContext) {
     let frameUnifies = false;
 
-    const frameString = frame.getString(),
+    const context = specificContext,  ///
+          frameString = frame.getString(),
           metavariableString = this.getString(); ///
 
-    specificContext.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
+    context.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
     const frameMetavariableUnifies = this.unifyFrameMetavariable(frame, substitutions, generalContext, specificContext);
 
@@ -148,7 +149,7 @@ export default define(class Metavariable extends Element {
     }
 
     if (frameUnifies) {
-      specificContext.debug(`...unified the '${frameString}' frame with the '${metavariableString}' metavariable.`);
+      context.debug(`...unified the '${frameString}' frame with the '${metavariableString}' metavariable.`);
     }
 
     return frameUnifies;
@@ -157,13 +158,14 @@ export default define(class Metavariable extends Element {
   unifyStatement(statement, substitution, substitutions, generalContext, specificContext) {
     let statementUnifies = false;
 
-    const statementString = statement.getString(),
+    const context = specificContext,  ///
+          statementString = statement.getString(),
           metavariableString = this.getString(), ///
           substitutionString = (substitution !== null) ?
                                   substitution.getString() :
                                     EMPTY_STRING;
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
     const statementMetavariableUnifies = this.unifyStatementMetavariable(statement, substitutions, generalContext, specificContext);
 
@@ -198,7 +200,7 @@ export default define(class Metavariable extends Element {
     }
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable.`);
+      context.debug(`...unified the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable.`);
     }
 
     return statementUnifies;
@@ -207,10 +209,11 @@ export default define(class Metavariable extends Element {
   unifyReference(reference, substitutions, generalContext, specificContext) {
     let referenceUnifies = false;
 
-    const referenceString = reference.getString(),
+    const context = specificContext,  ///
+          referenceString = reference.getString(),
           metavariableString = this.getString(); ///
 
-    specificContext.trace(`Unifying the '${referenceString}' reference with the '${metavariableString}' metavariable...`);
+    context.trace(`Unifying the '${referenceString}' reference with the '${metavariableString}' metavariable...`);
 
     const referenceMetavariableUnifies = this.unifyReferenceMetavariable(reference, substitutions, generalContext, specificContext);
 
@@ -242,7 +245,7 @@ export default define(class Metavariable extends Element {
     }
 
     if (referenceUnifies) {
-      specificContext.debug(`...unified the '${referenceString}' reference with the '${metavariableString}' metavariable.`);
+      context.debug(`...unified the '${referenceString}' reference with the '${metavariableString}' metavariable.`);
     }
 
     return referenceUnifies;
@@ -251,19 +254,20 @@ export default define(class Metavariable extends Element {
   unifyMetavariable(metavariable, context) {
     let metavariableUnifies;
 
-    const generalContext = context, ///
-          specificContext = context,  ///
-          generalMetavariable = this, ///
+    const generalMetavariable = this, ///
           specificMetavariable = metavariable,  ///
           generalMetavariableString = generalMetavariable.getString(),
           specificMetavariableString = specificMetavariable.getString();
 
-    specificContext.trace(`Unifying the '${specificMetavariableString}' metavariable with the '${generalMetavariableString}' metavariable...`);
+    context.trace(`Unifying the '${specificMetavariableString}' metavariable with the '${generalMetavariableString}' metavariable...`);
+
+    const generalContext = context, ///
+          specificContext = context;  ///
 
     metavariableUnifies = unifyMetavariable(generalMetavariable, specificMetavariable, generalContext, specificContext);
 
     if (metavariableUnifies) {
-      specificContext.debug(`...unified the '${specificMetavariableString}' metavariable with the '${generalMetavariableString}' metavariable.`);
+      context.debug(`...unified the '${specificMetavariableString}' metavariable with the '${generalMetavariableString}' metavariable.`);
     }
 
     return metavariableUnifies;
@@ -277,8 +281,8 @@ export default define(class Metavariable extends Element {
           specificContextFilePath = specificContext.getFilePath();
 
     if (generalContextFilePath === specificContextFilePath) {
-      const metavariable = this,
-            metavariableString = this.getString(), ///
+      const metavariable = this,  ///
+            metavariableString = metavariable.getString(),
             frameMetavariableEqualToMetvariable = frame.isMetavariableEqualToMetavariable(metavariable, context);
 
       if (frameMetavariableEqualToMetvariable) {
@@ -358,7 +362,7 @@ export default define(class Metavariable extends Element {
 
     if (generalContextFilePath === specificContextFilePath) {
       const metavariable = this,  ///
-            metavariableString = this.getString(), ///
+            metavariableString = metavariable.getString(),
             referenceMetavariableEqualToMetvariable = reference.isMetavariableEqualToMetavariable(metavariable);
 
       if (referenceMetavariableEqualToMetvariable) {

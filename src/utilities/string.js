@@ -145,6 +145,14 @@ export function equivalenceStringFromTerms(terms) {
   return equivalenceString;
 }
 
+export function termSubstitutionStringFromTermAndVariable(term, variable) {
+  const termString = term.getString(),
+        variableString = variable.getString(),
+        termSubstitutionString = `[${termString} for ${variableString}]`;
+
+  return termSubstitutionString;
+}
+
 export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conclusion) {
   const premisesString = premisesStringFromPremises(premises),
         conclusionString = conclusion.getString(),
@@ -214,6 +222,14 @@ export function statementSubstitutionStringFromStatementAndMetavariable(statemen
         statementSubstitutionString = `[${statementString} for ${metavariableString}]`;
 
   return statementSubstitutionString;
+}
+
+export function referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable) {
+  const referenceString = reference.getString(),
+        metavariableString = metavariable.getString(),
+        referenceSubstitutionString = `[${referenceString} for ${metavariableString}]`;
+
+  return referenceSubstitutionString;
 }
 
 export function topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction) {

@@ -496,12 +496,9 @@ export default class FileContext {
           specificMetavariable = metavariable;  ///
 
     metavariable = metavariables.find((metavariable) => {
-      const generalMetavariable = metavariable; ///
-
-      metavariable = specificMetavariable;  ///
-
       const context = this, ///
-            metavariableUnifies = generalMetavariable.unifyMetavariable(metavariable, context);
+            generalMetavariable = metavariable, ///
+            metavariableUnifies = generalMetavariable.unifyMetavariable(specificMetavariable, context);
 
       if (metavariableUnifies) {
         return true;
