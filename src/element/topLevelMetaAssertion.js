@@ -1,7 +1,7 @@
 "use strict";
 
 import Element from "../element";
-import LocalContext from "../context/local";
+import ScopedContext from "../context/scoped";
 
 import { labelFromJSON,
          labelToLabelJSON,
@@ -59,8 +59,8 @@ export default class TopLevelMetaAssertion extends Element {
     const labelVerifies = this.verifyLabel();
 
     if (labelVerifies) {
-      const localContext = LocalContext.fromNothing(this.context),
-            context = localContext, ///
+      const scopedContext = ScopedContext.fromNothing(this.context),
+            context = scopedContext, ///
             suppositionsVerify = this.verifySuppositions(context);
 
       if (suppositionsVerify) {

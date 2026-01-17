@@ -6,7 +6,7 @@ import { chainContext } from "../utilities/context";
 
 const { extract, compress } = arrayUtilities;
 
-export default class TemporaryContext {
+export default class TransientContext {
   constructor(context, terms, frames, statements, assertions, references, substitutions) {
     this.context = context;
     this.terms = terms;
@@ -337,9 +337,9 @@ export default class TemporaryContext {
           assertions = [],
           references = [],
           substitutions = [],
-          temporaryContext = new TemporaryContext(context, terms, frames, statements, assertions, references, substitutions);
+          transientContext = new TransientContext(context, terms, frames, statements, assertions, references, substitutions);
 
-    return temporaryContext;
+    return transientContext;
   }
 
   static fromTermsAndFrames(terms, frames, context) {
@@ -347,8 +347,8 @@ export default class TemporaryContext {
           assertions = [],
           references = [],
           substitutions = [],
-          temporaryContext = new TemporaryContext(context, terms, frames, statements, assertions, references, substitutions);
+          transientContext = new TransientContext(context, terms, frames, statements, assertions, references, substitutions);
 
-    return temporaryContext;
+    return transientContext;
   }
 }

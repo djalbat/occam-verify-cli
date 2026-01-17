@@ -8,7 +8,7 @@ import { chainContext } from "../utilities/context";
 
 const { last } = arrayUtilities;
 
-class LocalContext {
+class ScopedContext {
   constructor(context, variables, judgements, equivalences, subproofOrProofAssertions) {
     this.context = context;
     this.variables = variables;
@@ -286,10 +286,10 @@ class LocalContext {
           judgements = [],
           equivalences = Equivalences.fromNothing(),
           subproofOrProofAssertions = [],
-          localContext = new LocalContext(context, variables, judgements, equivalences, subproofOrProofAssertions);
+          scopedContext = new ScopedContext(context, variables, judgements, equivalences, subproofOrProofAssertions);
 
-    return localContext;
+    return scopedContext;
   }
 }
 
-export default LocalContext;
+export default ScopedContext;

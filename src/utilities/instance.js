@@ -2,8 +2,8 @@
 
 import nominalContext from "../context/nominal";
 
+import { withinFragment } from "../utilities/fragment";
 import { BASE_TYPE_SYMBOL } from "../constants";
-import { contextFromString } from "../utilities/context";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { instantiateCombinator, instantiateConstructor } from "../process/instantiate";
 import { combinatorFromCombinatorNode, constructorFromConstructorNode } from "../utilities/element";
@@ -13,18 +13,17 @@ let bracketedCombinator = null,
 
 export function bracketedCombinatorFromNothing() {
   if (bracketedCombinator === null) {
-    let context;
+    const context = nominalContext; ///
 
-    const string = `(${STATEMENT_META_TYPE_NAME})`;
+    bracketedCombinator = withinFragment((context) => {
+      const bracketedCombinatorString = `(${STATEMENT_META_TYPE_NAME})`,
+            string = bracketedCombinatorString, ///
+            combinatorNode = instantiateCombinator(string, context),
+            bracketedCombinatorNode = combinatorNode,  ///
+            bracketedCombinator = combinatorFromCombinatorNode(bracketedCombinatorNode, context);
 
-    context = nominalContext; ///
-
-    const combinatorNode = instantiateCombinator(string, context),
-          bracketedCombinatorNode = combinatorNode;  ///
-
-    context = contextFromString(string);
-
-    bracketedCombinator = combinatorFromCombinatorNode(bracketedCombinatorNode, context);
+      return bracketedCombinator;
+    }, context);
   }
 
   return bracketedCombinator;
@@ -32,18 +31,17 @@ export function bracketedCombinatorFromNothing() {
 
 export function bracketedConstructorFromNothing() {
   if (bracketedConstructor === null) {
-    let context;
+    const context = nominalContext; ///
 
-    const string = `(${BASE_TYPE_SYMBOL})`;
+    bracketedConstructor = withinFragment((context) => {
+      const bracketedConstructorString = `(${BASE_TYPE_SYMBOL})`,
+            string = bracketedConstructorString,  ///
+            constructorNode = instantiateConstructor(string, context),
+            bracketedConstructorNode = constructorNode, ///
+            bracketedConstructor = constructorFromConstructorNode(bracketedConstructorNode, context);
 
-    context = nominalContext; ///
-
-    const constructorNode = instantiateConstructor(string, context),
-          bracketedConstructorNode = constructorNode;  ///
-
-    context = contextFromString(string);
-
-    bracketedConstructor = constructorFromConstructorNode(bracketedConstructorNode, context);
+      return bracketedConstructor;
+    }, context);
   }
 
   return bracketedConstructor;

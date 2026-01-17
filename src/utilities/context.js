@@ -18,11 +18,3 @@ export function chainContext(context) {
     }
   });
 }
-
-export function contextFromString(string) {
-  const context = {
-    nodeAsString: () => string
-  };
-
-  return context;
-}

@@ -169,15 +169,17 @@ export default define(class Metavariable extends Element {
       if (substitutionPresent) {
         substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
 
-        const substitutionStatementEqualToStatement = substitution.isStatementEqualToStatement(statement, context);
+        const substitutionComparesToStatement = substitution.compareStatement(statement, context);
 
-        if (substitutionStatementEqualToStatement) {
+        if (substitutionComparesToStatement) {
           statementUnifies = true;
         }
       } else {
         const { StatementSubstitution } = elements,
               metavariable = this,
-              statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
+              statementSubstitution = (substitution !== null ) ?
+                                        StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
+                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
 
         substitution = statementSubstitution;  ///
 

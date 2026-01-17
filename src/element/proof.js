@@ -1,7 +1,7 @@
 "use strict";
 
 import Element from "../element";
-import LocalContext from "../context/local";
+import ScopedContext from "../context/scoped";
 
 import { define } from "../elements";
 
@@ -29,9 +29,9 @@ export default define(class Proof extends Element {
   verify(substitutions, conclusion, context) {
     let verifies = false;
 
-    const localContext = LocalContext.fromNothing(context); ///
+    const scopedContext = ScopedContext.fromNothing(context); ///
 
-    context = localContext; ///
+    context = scopedContext; ///
 
     const derivationVerifies = this.derivation.verify(substitutions, context);
 

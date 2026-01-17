@@ -1,31 +1,31 @@
 "use strict";
 
-import { ruleFromBNF } from "../utilities/bnf";
+import { ruleFromRuleName } from "../utilities/bnf";
+import { TERM_RULE_NAME,
+         VARIABLE_RULE_NAME,
+         REFERENCE_RULE_NAME,
+         STATEMENT_RULE_NAME,
+         COMBINATOR_RULE_NAME,
+         CONSTRUCTOR_RULE_NAME,
+         EQUIVALENCE_RULE_NAME,
+         METAVARIABLE_RULE_NAME,
+         TERM_SUBSTITUTION_RULE_NAME,
+         FRAME_SUBSTITUTION_RULE_NAME,
+         STATEMENT_SUBSTITUTION_RULE_NAME,
+         REFERENCE_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
-const termPlaceholderBNF = ` _ ::= term... <END_OF_LINE> ; `,
-      variablePlaceholderBNF = ` _ ::= variable... <END_OF_LINE> ; `,
-      referencePlaceholderBNF = ` _ ::= reference... <END_OF_LINE> ; `,
-      statementPlaceholderBNF = ` _ ::= statement... <END_OF_LINE> ; `,
-      combinatorPlaceholderBNF = ` _ ::= combinator... <END_OF_LINE> ; `,
-      constructorPlaceholderBNF = ` _ ::= constructor... <END_OF_LINE> ; `,
-      equivalencePlaceholderBNF = ` _ ::= equivalence... <END_OF_LINE> ; `,
-      metavariablePlaceholderBNF = ` _ ::= metavariable... <END_OF_LINE> ; `,
-      termSubstitutionPlaceholderBNF = ` _ ::= termSubstitution... <END_OF_LINE> ; `,
-      frameSubstitutionPlaceholderBNF = ` _ ::= frameSubstitution... <END_OF_LINE> ; `,
-      statementSubstitutionPlaceholderBNF = ` _ ::= statementSubstitution... <END_OF_LINE> ; `,
-      referenceSubstitutionPlaceholderBNF = ` _ ::= referenceSubstitution... <END_OF_LINE> ; `,
-      termPlaceholderRule = ruleFromBNF(termPlaceholderBNF),
-      variablePlaceholderRule = ruleFromBNF(variablePlaceholderBNF),
-      referencePlaceholderRule = ruleFromBNF(referencePlaceholderBNF),
-      statementPlaceholderRule = ruleFromBNF(statementPlaceholderBNF),
-      combinatorPlaceholderRule = ruleFromBNF(combinatorPlaceholderBNF),
-      constructorPlaceholderRule = ruleFromBNF(constructorPlaceholderBNF),
-      equivalencePlaceholderRule = ruleFromBNF(equivalencePlaceholderBNF),
-      metavariablePlaceholderRule = ruleFromBNF(metavariablePlaceholderBNF),
-      termSubstitutionPlaceholderRule = ruleFromBNF(termSubstitutionPlaceholderBNF),
-      frameSubstitutionPlaceholderRule = ruleFromBNF(frameSubstitutionPlaceholderBNF),
-      statementSubstitutionPlaceholderRule = ruleFromBNF(statementSubstitutionPlaceholderBNF),
-      referenceSubstitutionPlaceholderRule = ruleFromBNF(referenceSubstitutionPlaceholderBNF);
+const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
+      variablePlaceholderRule = ruleFromRuleName(VARIABLE_RULE_NAME),
+      referencePlaceholderRule = ruleFromRuleName(REFERENCE_RULE_NAME),
+      statementPlaceholderRule = ruleFromRuleName(STATEMENT_RULE_NAME),
+      combinatorPlaceholderRule = ruleFromRuleName(COMBINATOR_RULE_NAME),
+      constructorPlaceholderRule = ruleFromRuleName(CONSTRUCTOR_RULE_NAME),
+      equivalencePlaceholderRule = ruleFromRuleName(EQUIVALENCE_RULE_NAME),
+      metavariablePlaceholderRule = ruleFromRuleName(METAVARIABLE_RULE_NAME),
+      termSubstitutionPlaceholderRule = ruleFromRuleName(TERM_SUBSTITUTION_RULE_NAME),
+      frameSubstitutionPlaceholderRule = ruleFromRuleName(FRAME_SUBSTITUTION_RULE_NAME),
+      statementSubstitutionPlaceholderRule = ruleFromRuleName(STATEMENT_SUBSTITUTION_RULE_NAME),
+      referenceSubstitutionPlaceholderRule = ruleFromRuleName(REFERENCE_SUBSTITUTION_RULE_NAME);
 
 export function instantiateTerm(string, context) { return instantiate(termPlaceholderRule, string, context); }
 
@@ -58,8 +58,11 @@ function instantiate(placeholderRule, string, context) {
         parser = context.getParser(),
         content = `${string}
 `,
-        tokens = lexer.tokenise(content),
-        startRule = placeholderRule;  ///
+        tokens = lexer.tokenise(content);
+
+  context.setTokens(tokens);
+
+  const startRule = placeholderRule;  ///
 
   node = parser.parse(tokens, startRule);
 

@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import Element from "../element";
 import elements from "../elements";
-import LocalContext from "../context/local";
+import ScopedContext from "../context/scoped";
 
 import { labelsFromJSON,
          deductionFromJSON,
@@ -128,8 +128,8 @@ export default class TopLevelAssertion extends Element {
     const labelsVerify = this.verifyLabels();
 
     if (labelsVerify) {
-      const localContext = LocalContext.fromNothing(this.context),
-            context = localContext, ///
+      const scopedContext = ScopedContext.fromNothing(this.context),
+            context = scopedContext, ///
             suppositionsVerify = this.verifySuppositions(context);
 
       if (suppositionsVerify) {

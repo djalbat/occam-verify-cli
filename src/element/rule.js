@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import Element from "../element";
 import elements from "../elements";
-import LocalContext from "../context/local";
+import ScopedContext from "../context/scoped";
 
 import { define } from "../elements";
 import { labelsFromJSON,
@@ -70,9 +70,9 @@ export default define(class Rule extends Element {
     const labelsVerify = this.verifyLabels();
 
     if (labelsVerify) {
-      const localContext = LocalContext.fromNothing(context);
+      const scopedContext = ScopedContext.fromNothing(context);
 
-      context = localContext; ///
+      context = scopedContext; ///
 
       const premisesVerify = this.verifyPremises(context);
 

@@ -13,7 +13,7 @@ export default class StatementSubstitutionNode extends SubstitutionNode {
   }
 
   getMetavariableNode() {
-    const lastMetavariableNode = this.getLastVariableNode(),
+    const lastMetavariableNode = this.getLastMetavariableNode(),
           metavariableNode = lastMetavariableNode;  ///
 
     return metavariableNode;

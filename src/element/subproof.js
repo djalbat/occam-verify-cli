@@ -2,7 +2,7 @@
 
 import Element from "../element";
 import elements from "../elements";
-import LocalContext from "../context/local";
+import ScopedContext from "../context/scoped";
 
 import { define } from "../elements";
 
@@ -49,9 +49,9 @@ export default define(class Subproof extends Element {
   verify(substitutions, assignments, context) {
     let verifies = false;
 
-    const localContext = LocalContext.fromNothing(context);  ///
+    const scopedContext = ScopedContext.fromNothing(context);  ///
 
-    context = localContext; ///
+    context = scopedContext; ///
 
     const suppositionsVerify = this.suppositions.every((supposition) => {
       const suppositionVerifies = supposition.verify(context);

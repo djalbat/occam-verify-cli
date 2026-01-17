@@ -1,7 +1,7 @@
 "use strict";
 
 import Element from "../element";
-import TemporaryContext from "../context/temporary";
+import TransientContext from "../context/transient";
 
 import { define } from "../elements";
 import { termsFromJSON, framesFromJSON, statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
@@ -20,9 +20,9 @@ export default define(class Deduction extends Element {
   verify(context) {
     let verifies = false;
 
-    const temporaryContext = TemporaryContext.fromNothing(context);
+    const transientContext = TransientContext.fromNothing(context);
 
-    context = temporaryContext; ///
+    context = transientContext; ///
 
     const node = this.getNode(),
           deductionString = this.getString();  ///
@@ -134,9 +134,9 @@ export default define(class Deduction extends Element {
           statement = statementFromJSON(json, context),
           node = null,
           string = statement.getString(),
-          temporaryContext = TemporaryContext.fromTermsAndFrames(terms, frames, context);
+          transientContext = TransientContext.fromTermsAndFrames(terms, frames, context);
 
-    context = temporaryContext; ///
+    context = transientContext; ///
 
     const deduction = new Deduction(context, string, statement);
 

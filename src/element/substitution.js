@@ -92,10 +92,10 @@ export default class Substitution extends Element {
     return referenceEqualToReference;
   }
 
-  isStatementEqualToStatement(statement, context) {
-    const statementEqualToStatement = false;
+  compareStatement(statement, context) {
+    const comparesToStatement = false;
 
-    return statementEqualToStatement;
+    return comparesToStatement;
   }
 
   isMetavariableEqualToMetavariable(metavariable) {

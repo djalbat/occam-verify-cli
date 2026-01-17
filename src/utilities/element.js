@@ -1,8 +1,8 @@
 "use strict";
 
 import elements from "../elements";
+import FragmentContext from "../context/fragment";
 
-import { contextFromString } from "../utilities/context";
 import { baseTypeFromNothing } from "../types";
 import { instantiateReference } from "../process/instantiate";
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
@@ -339,11 +339,11 @@ export function metaLemmaFromMetaLemmaNode(metaLemmaNode, context) {
 
 export function parameterFromParameterNode(parameterNode, context) {
   const { Parameter } = elements,
-        node = parameterNode, ///
-        string = context.nodeAsString(node),
-        parameterName = parameterNode.getParameterName(),
-        name = parameterName,  ///
-        parameter = new Parameter(context, string, node, name);
+    node = parameterNode, ///
+    string = context.nodeAsString(node),
+    parameterName = parameterNode.getParameterName(),
+    name = parameterName,  ///
+    parameter = new Parameter(context, string, node, name);
 
   return parameter;
 }
@@ -437,31 +437,16 @@ export function typePrefixFromTypePrefixNode(typePrefixNode, context) {
   return typePrefix;
 }
 
-export function metatheoremFromMetaLemmaNode(metatheoremNode, context) {
-  const { Metatehorem } = elements,
-        metaLemmaMetathoremNode = metatheoremNode,  ///
-        proof = proofFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
-        label = labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
-        deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
-        suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
-        topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
-        substitutions = null,
-        node = metaLemmaNode, ///
-        string = topLevelMetaAssertionString, ///
-        metatheorem = new Metatehorem(context, string, node, label, suppositions, deduction, proof, substitutions);
-
-  return metatheorem;
-}
-
 export function referenceFromMetavariableNode(metavariableNode, context) {
   const metavariableString = context.nodeAsString(metavariableNode),
         referenceString = metavariableString, ///
         string = referenceString,  ///
-        referenceNode = instantiateReference(string, context);
+        fragmentContext = FragmentContext.fromNothing(context);
 
-  context = contextFromString(string);
+  context = fragmentContext;  ///
 
-  const reference = referenceFromReferenceNode(referenceNode, context);
+  const referenceNode = instantiateReference(string, context),
+        reference = referenceFromReferenceNode(referenceNode, context);
 
   return reference;
 }
@@ -474,6 +459,17 @@ export function hyppothesisFromHypothesisNode(hypothesisNode, context) {
         hypothesis = new Hypothesis(context, string, node, statement);
 
   return hypothesis
+}
+
+export function substitutionFromParameterNode(substitutionNode, context) {
+  const { Substitution } = elements,
+    node = substitutionNode, ///
+    string = context.nodeAsString(node),
+    substitutionName = substitutionNode.getSubstitutionName(),
+    name = substitutionName,  ///
+    substitution = new Substitution(context, string, node, name);
+
+  return substitution;
 }
 
 export function constructorFromConstructorNode(constructorNode, context) {
@@ -506,6 +502,22 @@ export function equivalenceFromEquivalenceNode(equivalenceNode, context) {
         equivalence = new Equivalence(context, string, node, terms);
 
   return equivalence;
+}
+
+export function metatheoremFromMetatheoremNode(metatheoremNode, context) {
+  const { Metatehorem } = elements,
+        metaLemmaMetathoremNode = metatheoremNode,  ///
+        proof = proofFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        label = labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
+        substitutions = null,
+        node = metaLemmaNode, ///
+        string = topLevelMetaAssertionString, ///
+        metatheorem = new Metatehorem(context, string, node, label, suppositions, deduction, proof, substitutions);
+
+  return metatheorem;
 }
 
 export function nameFromProcedureReferenceNode(procedureReferenceNode, context) {
@@ -736,8 +748,8 @@ export function statementSubstitutionFromStatementSubstitutionNode(statementSubs
         node = statementSubstitutionNode,  ///
         string = context.nodeAsString(node),
         resolved = true,
-        statement = null,
-        metavariable = null,
+        statement = statementFromStatementSubstitutionNode(statementSubstitutionNode, context),
+        metavariable = metavariableFromStatementSubstitutionNode(statementSubstitutionNode, context),
         substitution = null,
         statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
 

@@ -3,7 +3,9 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
+import { withinFragment } from "../../utilities/fragment";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
+import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
 import { frameSubstitutionFromFrameSubstitutionNode, frameSubstitutionFromStatementNode } from "../../utilities/element";
 
 export default define(class FrameSubstitution extends Substitution {
@@ -86,18 +88,13 @@ export default define(class FrameSubstitution extends Substitution {
   }
 
   static fromFrameAndMetavariable(frame, metavariable, context) {
-    const string = stringFromFrameAndMetavariable(frame, metavariable),
-          frameSubstitutionNode = instantiateFrameSubstitution(string, context),
-          frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+    return withinFragment((context) => {
+      const frameAndMetavariableString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
+            string = frameAndMetavariableString,  ///
+            frameSubstitutionNode = instantiateFrameSubstitution(string, context),
+            frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
 
-    return frameSubstitution;
+      return frameSubstitution;
+    }, context);
   }
 });
-
-function stringFromFrameAndMetavariable(frame, metavariable) {
-  const frameString = frame.getString(),
-        metavariableString = metavariable.getString(),
-        string = `[${frameString} for [${metavariableString}]]`;
-
-  return string;
-}

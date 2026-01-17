@@ -176,6 +176,14 @@ export function subproofStringFromSuppositionsAndSubDerivation(suppositions, sub
   return subproofString;
 }
 
+export function frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable) {
+  const frameString = frame.getString(),
+        metavariableString = metavariable.getString(),
+        string = `[${frameString} for [${metavariableString}]]`;
+
+  return string;
+}
+
 export function typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes) {
   let typeString;
 
@@ -198,6 +206,14 @@ export function procedureCallStringFromProcedureReferenceAndParameters(procedure
         procedureCallString = `${procedureReferenceName}(${parametersString})`;
 
   return procedureCallString;
+}
+
+export function statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable) {
+  const statementString = statement.getString(),
+        metavariableString = metavariable.getString(),
+        statementSubstitutionString = `[${statementString} for ${metavariableString}]`;
+
+  return statementSubstitutionString;
 }
 
 export function topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction) {
@@ -229,4 +245,13 @@ export function topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(lab
                                          `${labelString} :: ${deductionString}`;
 
   return topLevelMetaAssertionString;
+}
+
+export function statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution) {
+  const statementString = statement.getString(),
+        metavariableString = metavariable.getString(),
+        substitutionString = substitution.getString(),
+        statementSubstitutionString = `[${statementString} for ${metavariableString}${substitutionString}]`;
+
+  return statementSubstitutionString;
 }
