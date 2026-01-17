@@ -25,40 +25,41 @@ export default define(class SatisfiesAssertion extends Assertion {
 
   correlateSubstitutions(substitutions, context) { return this.signature.correlateSubstitutions(substitutions, context); }
 
-  verify(assignments, stated, context) {
-    let verifies = false;
+  validate(assignments, stated, context) {
+    let validates = false;
 
     const satisfiesAssertionString = this.getString(); ///
 
-    context.trace(`Verifying the '${satisfiesAssertionString}' satisfies assertion...`);
+    context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertion...`);
 
-    const signatureVerifies = this.verifySignature(assignments, stated, context);
+    const signatureVerifies = this.validateSignature(assignments, stated, context);
 
     if (signatureVerifies) {
-      const referenceVerifies = this.verifyReference(assignments, stated, context);
+      const referenceVerifies = this.validateReference(assignments, stated, context);
 
-      verifies = referenceVerifies; ///
+      validates = referenceVerifies; ///
     }
 
-    if (verifies) {
-      context.debug(`...verified the '${satisfiesAssertionString}' satisfies assertion.`);
+    if (validates) {
+      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertion.`);
     }
 
-    return verifies;
+    return validates;
   }
 
-  verifySignature(assignments, stated, context) {
-    const signatureVerifies = this.signature.verify(context);
+  validateSignature(assignments, stated, context) {
+    const signatureVerifies = this.signature.validate(context);
 
     return signatureVerifies;
   }
 
-  verifyReference(assignments, stated, context) {
+  validateReference(assignments, stated, context) {
     let referenceVerifies = false;
 
-    const referenceString = this.reference.getString();
+    const referenceString = this.reference.getString(),
+          satisfiesAssertionString = this.getString();  ///
 
-    context.trace(`Verifying the '${referenceString}' reference...`);
+    context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertino's '${referenceString}' reference...`);
 
     const axiom = context.findAxiomByReference(this.reference, context);
 
@@ -71,7 +72,7 @@ export default define(class SatisfiesAssertion extends Assertion {
     }
 
     if (referenceVerifies) {
-      context.debug(`...verified the '${referenceString}' reference.`);
+      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertino's '${referenceString}' reference.`);
     }
 
     return referenceVerifies;
@@ -85,7 +86,7 @@ export default define(class SatisfiesAssertion extends Assertion {
 
     context.trace(`Unifying the '${statementString}' statement with the '${satisfiesAssertionString}' satisfies assertion...`);
 
-    this.signature.verify(context);
+    this.signature.validate(context);
 
     const axiom = context.findAxiomByReference(this.reference),
           satisfiable = axiom.isSatisfiable();

@@ -7,52 +7,10 @@ export default class Substitution extends Element {
     super(context, string, node);
   }
 
-  getTerm() {
-    const term = null;
-
-    return term;
-  }
-
-  getFrame() {
-    const frame = null;
-
-    return frame;
-  }
-
-  getVariable() {
-    const variable = null;
-
-    return variable;
-  }
-
-  getReference() {
-    const reference = null;
-
-    return reference;
-  }
-
-  getStatement() {
-    const statement = null;
-
-    return statement;
-  }
-
-  getMetavariable() {
-    const metavariableNode = null;
-
-    return metavariableNode;
-  }
-
   getSubstitution() {
     const substitution = null;
 
     return substitution;
-  }
-
-  getReplacementNode() {
-    const replacementNode = null;
-
-    return replacementNode;
   }
 
   isSimple() {

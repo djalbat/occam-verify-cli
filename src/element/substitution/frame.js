@@ -24,11 +24,18 @@ export default define(class FrameSubstitution extends Substitution {
     return this.metavariable;
   }
 
+  getTargetNode() {
+    const metavariableNode = this.metavariable.getNode(),
+          targetNode = metavariableNode; ///
+
+    return targetNode;
+  }
+
   getReplacementNode() {
     const frameNode = this.frame.getNode(),
-          replacementNode = frameNode; ///
+          replacementnode = frameNode; ///
 
-    return replacementNode;
+    return replacementnode;
   }
 
   isFrameEqualToFrame(frame) { return this.frame.isEqualTo(frame); }
@@ -42,10 +49,10 @@ export default define(class FrameSubstitution extends Substitution {
     return comparesToParameter;
   }
 
-  verify(context) {
-    let verifies = false;
+  validate(context) {
+    let validates = false;
 
-    const frameSubstitutionString = this.string;  ///
+    const frameSubstitutionString = this.getString();  ///
 
     context.trace(`Verifiying the '${frameSubstitutionString}' frame substitution...`);
 
@@ -60,7 +67,7 @@ export default define(class FrameSubstitution extends Substitution {
                 frameMetavariablePresent = context.isMetavariablePresent(frameMetavariable);
 
           if (frameMetavariablePresent) {
-            verifies = true;
+            validates = true;
           } else {
             context.debug(`The '${frameSubstitutionString}' frame substitution's general frame's metavariable is not present.`);
           }
@@ -74,7 +81,7 @@ export default define(class FrameSubstitution extends Substitution {
       context.debug(`The '${frameSubstitutionString}' frame substitution's specific frame is not singular.`);
     }
 
-    if (verifies) {
+    if (validates) {
       const substititoin = this;  ///
 
       context.addSubstitution(substititoin);
@@ -82,7 +89,7 @@ export default define(class FrameSubstitution extends Substitution {
       context.debug(`...verified the '${frameSubstitutionString}' frame substitution.`);
     }
 
-    return verifies;
+    return validates;
   }
 
   static name = "FrameSubstitution";

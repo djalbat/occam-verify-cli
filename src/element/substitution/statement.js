@@ -38,6 +38,13 @@ export default define(class StatementSubstitution extends Substitution {
     return this.substitution;
   }
 
+  getTargetNode() {
+    const metavariableNode = this.metavariable.getNode(),
+          targetNode = metavariableNode; ///
+
+    return targetNode;
+  }
+
   getReplacementNode() {
     const statementNode = this.statement.getNode(),
           replacementNode = statementNode; ///

@@ -88,7 +88,7 @@ export default define(class Term extends Element {
   validate(context, verifyAhead) {
     let validates;
 
-    const termString = this.string;  ///
+    const termString = this.getString();  ///
 
     context.trace(`Validating the '${termString}' term...`);
 
@@ -145,7 +145,7 @@ export default define(class Term extends Element {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          string = this.string, ///
+          string = this.getString(), ///
           type = typeJSON,  ///
           json = {
             type,

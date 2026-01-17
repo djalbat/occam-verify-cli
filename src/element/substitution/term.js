@@ -23,6 +23,13 @@ export default define(class TermSubstitution extends Substitution {
     return this.variable;
   }
 
+  getTargetNode() {
+    const metavariableNode = this.metavariable.getNode(),
+          tergetNode = metavariableNode; ///
+
+    return tergetNode;
+  }
+
   getReplacementNode() {
     const termNode = this.term.getNode(),
           replacementNode = termNode; ///
@@ -58,12 +65,12 @@ export default define(class TermSubstitution extends Substitution {
     return comparesToParameter;
   }
 
-  verify(context) {
-    let verifies = false;
+  validate(context) {
+    let validates = false;
 
-    const termSubstitutionString = this.string;  ///
+    const termSubstitutionString = this.getString();  ///
 
-    context.trace(`Verifiying the '${termSubstitutionString}' term substitution...`);
+    context.trace(`Validating the '${termSubstitutionString}' term substitution...`);
 
     const termSingular = this.term.isSingular();
 
@@ -79,7 +86,7 @@ export default define(class TermSubstitution extends Substitution {
                 termVariablePresent = context.isVariablePresentByVariableIdentifier(termVariableIdentifier);
 
           if (termVariablePresent) {
-            verifies = true;
+            validates = true;
           } else {
             context.debug(`The '${termSubstitutionString}' term substitution's general term's variable is not present.`);
           }
@@ -93,15 +100,15 @@ export default define(class TermSubstitution extends Substitution {
       context.debug(`The '${termSubstitutionString}' term substitution's specific term is not singular.`);
     }
 
-    if (verifies) {
+    if (validates) {
       const substititoin = this;  ///
 
       context.addSubstitution(substititoin);
 
-      context.debug(`...verified the '${termSubstitutionString}' term substitution.`);
+      context.debug(`...validated the '${termSubstitutionString}' term substitution.`);
     }
 
-    return verifies;
+    return validates;
   }
 
   static name = "TermSubstitution";
