@@ -30,14 +30,6 @@ export default define(class TermSubstitution extends Substitution {
     return replacementNode;
   }
 
-  isTermEqualToTerm(term, context) {
-    term = stripBracketsFromTerm(term, context); ///
-
-    const termEqualToTerm = this.term.isEqualTo(term);
-
-    return termEqualToTerm;
-  }
-
   isTrivial() {
     let trivial = false;
 
@@ -48,6 +40,22 @@ export default define(class TermSubstitution extends Substitution {
     }
 
     return trivial;
+  }
+
+  compareTerm(term, context) {
+    term = stripBracketsFromTerm(term, context); ///
+
+    const termEqualToTerm = this.term.isEqualTo(term),
+          comparedToTerm = termEqualToTerm; ///
+
+    return comparedToTerm;
+  }
+
+  compareParameter(parameter) {
+    const variableComparesToParameter = this.variable.compareParameter(parameter),
+          comparesToParameter = variableComparesToParameter;  ///
+
+    return comparesToParameter;
   }
 
   verify(context) {

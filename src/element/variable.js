@@ -34,18 +34,26 @@ export default define(class Variable extends Element {
 
   getTypeString() { return this.type.getString(); }
 
-  compareParameter(parameter) {
-    const parameterName = parameter.getName(),
-          identifierParamterName = (this.identifier === parameterName),
-          comparesToParamter = identifierParamterName;  ///
+  isIdentifierEqualTo(identifier) {
+    const identifierEqualTo = (this.identifier === identifier);
+
+    return identifierEqualTo;
+  }
+
+  compareParamter(parameter) {
+    const identifier = parameter.getIdentifier(),
+          identifierEqualTo = this.isIdentifierEqualTo(identifier),
+          comparesToParamter = identifierEqualTo; ///
 
     return comparesToParamter;
   }
 
   compareVariableIdentifier(variableIdentifier) {
-    const comparesToVariablbeIdentifier = (this.identifier === variableIdentifier);
+    const identifier = variableIdentifier, ///
+          identifierEqualTo = this.isIdentifierEqualTo(identifier),
+          comparesToVariableIdentifier = identifierEqualTo; ///
 
-    return comparesToVariablbeIdentifier;
+    return comparesToVariableIdentifier;
   }
 
   validate(context) {

@@ -45,6 +45,14 @@ export default define(class Metavariable extends Element {
     return nameEqualTo;
   }
 
+  compareParameter(parameter) {
+    const name = parameter.getName(),
+          nameEqualTo = this.isNameEqualTo(name),
+          comparesToParameter = nameEqualTo;  ///
+
+    return comparesToParameter;
+  }
+
   compareMetavariableName(metavariableName) {
     const nameMetavariableName = (this.name === metavariableName),
           comparesToMetavariableName = nameMetavariableName;  ///
@@ -216,7 +224,7 @@ export default define(class Metavariable extends Element {
       if (simpleSubstitutionPresent) {
         const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable), ///
               substitution = simpleSubstitution,  ///
-              substitutionReferenceEqualToReference = substitution.isReferenceEqualToReference(reference, context);
+              substitutionReferenceEqualToReference = substitution.isReferenceEqualToReference(reference);
 
         if (substitutionReferenceEqualToReference) {
           referenceUnifies = true;

@@ -165,9 +165,9 @@ export default define(class Substitutions extends Element {
 
       if (substitutionMetavariableEqualToMetavariable) {
         const substitutionB = substitution, ///
-              substitutionBSubstitutionEqualToSubstitutionA = substitutionB.isSubstitutionEqualToSubstitution(substitutionA);
+              substitutionBSubstitutionComparesToSubstitutionA = substitutionB.compareSubstitution(substitutionA);
 
-        if (substitutionBSubstitutionEqualToSubstitutionA) {
+        if (substitutionBSubstitutionComparesToSubstitutionA) {
           return true;
         }
       }

@@ -10,6 +10,7 @@ import { parametersFromJSON, procedureReferenceFromJSON, parametersToParametersJ
 export default define(class ProcedureCall extends Element {
   constructor(context, string, node, parameters, procedureReference) {
     super(context, string, node);
+
     this.parameters = parameters;
     this.procedureReference = procedureReference;
   }
@@ -38,9 +39,9 @@ export default define(class ProcedureCall extends Element {
   verify(assignments, stated, context) {
     let verifies = false;
 
-    const procedureCallString = this.string; ///
+    const procedureCallString = this.getString(); ///
 
-    context.trace(`Verifying the '${procedureCallString}' procedure call...`, this.node);
+    context.trace(`Verifying the '${procedureCallString}' procedure call...`);
 
     const name = this.getName(),
           procedure = context.findProcedureByName(name);
@@ -51,14 +52,14 @@ export default define(class ProcedureCall extends Element {
       if (procedureBoolean) {
         verifies = true;
       } else {
-        context.trace(`The '${procedureCallString}' procedure is not boolean.`, this.node);
+        context.trace(`The '${procedureCallString}' procedure is not boolean.`);
       }
     } else {
-      context.trace(`The '${procedureCallString}' procedure is not present.`, this.node);
+      context.trace(`The '${procedureCallString}' procedure is not present.`);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${procedureCallString}' procedure call.`, this.node);
+      context.debug(`...verified the '${procedureCallString}' procedure call.`);
     }
 
     return verifies;
@@ -67,7 +68,7 @@ export default define(class ProcedureCall extends Element {
   unifyIndependently(substitutions, context) {
     let unifiesIndependently = false;
 
-    const procedureCallString = this.string; ///
+    const procedureCallString = this.getString(); ///
 
     context.trace(`Unifying the '${procedureCallString}' procedure call independently...`);
 

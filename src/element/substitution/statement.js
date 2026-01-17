@@ -45,34 +45,19 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementNode;
   }
 
-  setStatement(statement) {
-    this.statement = statement;
-  }
+  isSimple() {
+    const simple = (this.substitution === null);
 
-  setMetavariable(metavariable) {
-    this.metavariable = metavariable;
-  }
-
-  setSubstitution(substitution) {
-    this.substitution = substitution;
+    return simple;
   }
 
   isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
-  isSubstitutionEqualToSubstitution(substitution) {
-    let substitutionEqualToSubstitution;
+  compareParameter(parameter) {
+    const metavariableComparesToParameter = this.metavariable.compareParameter(parameter),
+          comparesToParameter = metavariableComparesToParameter;  ///
 
-    if (this.substitution === null) {
-      substitutionEqualToSubstitution = (substitution === null);
-    } else {
-      if (substitution === null) {
-        substitutionEqualToSubstitution = false;
-      } else {
-        substitutionEqualToSubstitution = this.substitution.isEqualTo(substitution);
-      }
-    }
-
-    return substitutionEqualToSubstitution;
+    return comparesToParameter;
   }
 
   compareStatesment(statement, context) {
@@ -84,10 +69,22 @@ export default define(class StatementSubstitution extends Substitution {
     return comparesToStatement;
   }
 
-  isSimple() {
-    const simple = (this.substitution === null);
+  compareSubstitution(substitution) {
+    let comparesToSubstitution = false;
 
-    return simple;
+    if (false) {
+      ///
+    } else if ((this.substitution === null) && (substitution === null)){
+      comparesToSubstitution = true;
+    } else if ((this.substitution !== null) && (substitution !== null)){
+      const substitutionEqualToSubstituion = this.substitution.isEqualTo(substitution);
+
+      if (substitutionEqualToSubstituion) {
+        comparesToSubstitution = true;
+      }
+    }
+
+    return comparesToSubstitution;
   }
 
   unifyStatement(statement, context) {

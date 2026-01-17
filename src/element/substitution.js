@@ -74,28 +74,16 @@ export default class Substitution extends Element {
     return trivial;
   }
 
-  isTermEqualToTerm(term, context) {
-    const termEqualToTerm = false;
-
-    return termEqualToTerm;
-  }
-
   isFrameEqualToFrame(frame) {
     const frameEqualToFrame = false;
 
     return frameEqualToFrame;
   }
 
-  isReferenceEqualToReference(reference, context) {
+  isReferenceEqualToReference(reference) {
     const referenceEqualToReference = false;
 
     return referenceEqualToReference;
-  }
-
-  compareStatement(statement, context) {
-    const comparesToStatement = false;
-
-    return comparesToStatement;
   }
 
   isMetavariableEqualToMetavariable(metavariable) {
@@ -104,16 +92,28 @@ export default class Substitution extends Element {
     return metavariableEqualToMetavariable;
   }
 
-  isSubstitutionEqualToSubstitution(substitution) {
-    const substitutionEqualToSubstitution = (substitution === null);
+  compareTerm(term, context) {
+    const comparesToTerm = false;
 
-    return substitutionEqualToSubstitution;
+    return comparesToTerm;
+  }
+
+  compareStatement(statement, context) {
+    const comparesToStatement = false;
+
+    return comparesToStatement;
   }
 
   compareParameter(parameter) {
     const comparesToParameter = false;
 
     return comparesToParameter;
+  }
+
+  compareSubstitution(substitution) {
+    const comparesToSubstitution = false;
+
+    return comparesToSubstitution;
   }
 
   resolve(substitutions, context) {

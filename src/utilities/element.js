@@ -339,11 +339,11 @@ export function metaLemmaFromMetaLemmaNode(metaLemmaNode, context) {
 
 export function parameterFromParameterNode(parameterNode, context) {
   const { Parameter } = elements,
-    node = parameterNode, ///
-    string = context.nodeAsString(node),
-    parameterName = parameterNode.getParameterName(),
-    name = parameterName,  ///
-    parameter = new Parameter(context, string, node, name);
+        node = parameterNode, ///
+        string = context.nodeAsString(node),
+        name = parameterNode.getName(),
+        identifier = parameterNode.getIdentifier(),
+        parameter = new Parameter(context, string, node, name, identifier);
 
   return parameter;
 }
@@ -1265,12 +1265,6 @@ export function satisfiesAssertionFromStepNode(stepNode, context) {
   }
 
   return satisfiesAssertion;
-}
-
-export function parameterNameFromParameterNode(parameterNode, context) {
-  const parameterName = parameterNode.getParameterName();
-
-  return parameterName;
 }
 
 export function typeAssertionFromStatementNode(statementNode, context) {

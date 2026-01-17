@@ -35,6 +35,13 @@ export default define(class FrameSubstitution extends Substitution {
 
   isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
+  compareParameter(parameter) {
+    const metavariableComparesToParameter = this.metavariable.compareParameter(parameter),
+          comparesToParameter = metavariableComparesToParameter;  ///
+
+    return comparesToParameter;
+  }
+
   verify(context) {
     let verifies = false;
 

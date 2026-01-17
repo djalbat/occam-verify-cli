@@ -24,6 +24,8 @@ export default define(class ReferenceSubstitution extends Substitution {
 
   isReferenceEqualToReference(reference) { return this.reference.isEqualTo(reference); }
 
+  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
+
   static name = "ReferenceSubstitution";
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {
