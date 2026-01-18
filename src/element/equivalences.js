@@ -73,17 +73,17 @@ export default define(class Equivalences extends Element {
     return equivalence;
   }
 
-  mergedWith(equivalences) {
+  mergedWith(equivalences, context) {
     let  mergedEquivalences = this.clone(); ///
 
     equivalences.forEachEquivalence((equivalence) => {
-      mergedEquivalences = mergedEquivalences.mergedWithEquivalence(equivalence);
+      mergedEquivalences = mergedEquivalences.mergedWithEquivalence(equivalence, context);
     });
 
     return mergedEquivalences;
   }
 
-  mergedWithEquivalence(equivalence) {
+  mergedWithEquivalence(equivalence, context) {
     const equivalences = Equivalences.fromNothing(context);
 
     let mergedEquivalence = equivalence; ///
@@ -94,7 +94,7 @@ export default define(class Equivalences extends Element {
       if (mergedEquivalenceDisjointFromEquivalence) {
         equivalences.addEquivalence(equivalence);
       } else {
-        mergedEquivalence = mergedEquivalence.mergedWith(equivalence);
+        mergedEquivalence = mergedEquivalence.mergedWith(equivalence, context);
       }
     });
 

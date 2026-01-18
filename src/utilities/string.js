@@ -44,7 +44,7 @@ export function premisesStringFromPremises(premises) {
   return premisesString;
 }
 
-export function hypothesesStringFromHypotheses(hypotheses, context) {
+export function hypothesesStringFromHypotheses(hypotheses) {
   const hypothesesString = hypotheses.reduce((hypothesesString, hypothesis) => {
     const hypothesisString = hypothesis.getString();
 
@@ -87,20 +87,6 @@ export function parametersStringFromParameters(parameters) {
   }, null);
 
   return parametersString;
-}
-
-export function assumptionsStringFromAssumptions(assumptions) {
-  const assumptionsString = assumptions.reduce((assumptionsString, assumption) => {
-    const assumptionString = assumption.getString();
-
-    assumptionsString = (assumptionsString === null) ?
-                          assumptionString :
-                            `${assumptionsString}, ${assumptionString}`;
-
-    return assumptionsString;
-  }, null);
-
-  return assumptionsString;
 }
 
 export function suppositionsStringFromSuppositions(suppositions) {
@@ -164,10 +150,10 @@ export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conc
   return ruleString;
 }
 
-export function sectionStringFromHypothesesTopLevelAssertion(hypotheses, axiom, lemma, theorem, conjecture, context) {
+export function sectionStringFromHypothesesTopLevelAssertion(hypotheses, axiom, lemma, theorem, conjecture) {
   const topLevelAssertion = (axiom || lemma || theorem || conjecture),
         topLevelAssertionString = topLevelAssertion.getString(),
-        hypothesesString = hypothesesStringFromHypotheses(hypotheses, context),
+        hypothesesString = hypothesesStringFromHypotheses(hypotheses),
         sectionString = (topLevelAssertionString !== null) ?
                           `[${hypothesesString}]::: ${topLevelAssertionString}` :
                             `[${hypothesesString}]::: `;

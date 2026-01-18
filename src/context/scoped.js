@@ -54,7 +54,9 @@ class ScopedContext {
   getEquivalences() {
     let equivalences = this.context.getEquivalences();
 
-    equivalences = this.equivalences.mergedWith(equivalences);  ///
+    const context = this; ///
+
+    equivalences = this.equivalences.mergedWith(equivalences, context);  ///
 
     return equivalences;
   }

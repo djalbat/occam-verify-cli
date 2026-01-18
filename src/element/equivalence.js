@@ -9,7 +9,7 @@ import { withinFragment } from "../utilities/fragment";
 import { termsStringFromTerms } from "../utilities/string";
 import { instantiateEquivalence } from "../process/instantiate";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
-import { equalivanceFromEquivalenceNode } from "../utilities/element";
+import { equivalenceFromEquivalenceNode } from "../utilities/element";
 
 const { compress } = arrayUtilities;
 
@@ -21,40 +21,6 @@ export default define(class Equivalence extends Element {
 
   getTerms() {
     return this.terms;
-  }
-
-  addTerm(term, context) {
-    const termString = term.getString(),
-          equivalenceString = this.asString(); ///
-
-    context.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence...`);
-
-    const termA = term, ///
-          termPresent = this.someTerm((term) => {
-            const termB = term, ///
-                  termAEqualToTermB = termA.isEqualTo(termB);
-
-            if (termAEqualToTermB) {
-              return true;
-            }
-          });
-
-    if (!termPresent) {
-      this.terms.push(term);
-
-      const termsString = termsStringFromTerms(this.terms),
-            string = termsString,  ///
-            equalivanceNode = instantiateEquivalence(string, context),
-            equalivance = equalivanceFromEquivalenceNode(equalivanceNode, context);
-
-      this.node = equalivance.getNode();
-
-      this.string = equalivance.getString();
-
-      const equivalenceString = this.string; ///
-
-      context.debug(`...added the '${termString}' term to the '${equivalenceString}' equivalence.`);
-    }
   }
 
   getType() {
@@ -75,6 +41,89 @@ export default define(class Equivalence extends Element {
     }, null);
 
     return type;
+  }
+
+  getGroundedTerms(definedVariables, groundedTerms, context) {
+    this.terms.forEach((term) => {
+      const termGrounded = term.isGrounded(definedVariables, context);
+
+      if (termGrounded) {
+        const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
+          const groundedTermNode = groundedTerm.getNode(),
+                groundedTermNodeMatches = term.matchNode(groundedTermNode);
+
+          if (groundedTermNodeMatches) {
+            return true;
+          }
+        })
+
+        if (!termMatchesGroundedTerm) {
+          const groundedTerm = term;
+
+          groundedTerms.push(groundedTerm);
+        }
+      }
+    });
+  }
+
+  getInitiallyGroundedTerms(context) {
+    const initiallyGroundedTerms = this.terms.reduce((initiallyGroundedTerms, term) => {
+      const termInitiallyGrounded = term.isInitiallyGrounded(context);
+
+      if (termInitiallyGrounded) {
+        const initiallyGroundedTerm = term; ///
+
+        initiallyGroundedTerms.push(initiallyGroundedTerm);
+      }
+
+      return initiallyGroundedTerms;
+    }, []);
+
+    return initiallyGroundedTerms;
+  }
+
+  getImplicitlyGroundedTerms(definedVariables, context) {
+    const implicitlyGroundedTerms = this.terms.reduce((implicitlyGroundedTerms, term) => {
+      const termImplicitlyGrounded = term.isImplicitlyGrounded(definedVariables, context);
+
+      if (termImplicitlyGrounded) {
+        const implicitlyGroundedTerm = term; ///
+
+        implicitlyGroundedTerms.push(implicitlyGroundedTerm);
+      }
+
+      return implicitlyGroundedTerms;
+    }, []);
+
+    return implicitlyGroundedTerms;
+  }
+
+  isDisjointFrom(equivalence) {
+    const disjointFrom = equivalence.everyTerm((term) => {
+      const comparesToTerm = this.compareTerm(term);
+
+      if (!comparesToTerm) {
+        return true;
+      }
+    });
+
+    return disjointFrom;
+  }
+
+  isInitiallyGrounded(context) {
+    const initiallyGroundedTerms = this.getInitiallyGroundedTerms(context),
+          initiallyGroundedTermsLength = initiallyGroundedTerms.length,
+          initiallyGrounded = (initiallyGroundedTermsLength > 0);
+
+    return initiallyGrounded;
+  }
+
+  isImplicitlyGrounded(definedVariables, context) {
+    const implicitlyGroundedTerms = this.getImplicitlyGroundedTerms(definedVariables, context),
+          implicitlyGroundedTermsLength = implicitlyGroundedTerms.length,
+          implicitlyGrounded = (implicitlyGroundedTermsLength > 0);
+
+    return implicitlyGrounded;
   }
 
   compareTerm(term) {
@@ -136,41 +185,6 @@ export default define(class Equivalence extends Element {
     return variableNodeMatches;
   }
 
-  isDisjointFrom(equivalence) {
-    const disjointFrom = equivalence.everyTerm((term) => {
-      const comparesToTerm = this.compareTerm(term);
-
-      if (!comparesToTerm) {
-        return true;
-      }
-    });
-
-    return disjointFrom;
-  }
-
-  mergedWith(equivalence) {
-    const equivalenceA = this,  ///
-          equivalenceB = equivalence, ///
-          equivalenceATerms = equivalenceA.getTerms(),
-          equivalenceTermsB = equivalenceB.getTerms(),
-          terms = [
-            ...equivalenceATerms,
-            ...equivalenceTermsB
-          ];
-
-    compress(terms, (termA, termB) => {
-      const termAEqualToTermB = termA.isEqualTo(termB);
-
-      if (!termAEqualToTermB) {
-        return true;
-      }
-    });
-
-    equivalence = new Equivalence(terms);
-
-    return equivalence;
-  }
-
   someTerm(callback) { return this.terms.some(callback); }
 
   everyTerm(callback) { return this.terms.every(callback); }
@@ -190,75 +204,36 @@ export default define(class Equivalence extends Element {
     return result;
   }
 
-  getGroundedTerms(definedVariables, groundedTerms, context) {
-    this.terms.forEach((term) => {
-      const termGrounded = term.isGrounded(definedVariables, context);
+  combineTerms(terms) {
+    const combinedTerms = [
+      ...this.terms,
+      ...terms
+    ];
 
-      if (termGrounded) {
-        const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
-          const groundedTermNode = groundedTerm.getNode(),
-                groundedTermNodeMatches = term.matchNode(groundedTermNode);
+    compress(combinedTerms, (combinedTermA, combinedTermB) => {
+      const combinedTermAEqualToCombinedTermB = combinedTermA.isEqualTo(combinedTermB);
 
-          if (groundedTermNodeMatches) {
-            return true;
-          }
-        })
-
-        if (!termMatchesGroundedTerm) {
-          const groundedTerm = term;
-
-          groundedTerms.push(groundedTerm);
-        }
+      if (!combinedTermAEqualToCombinedTermB) {
+        return true;
       }
     });
+
+    return combinedTerms;
   }
 
-  isInitiallyGrounded(context) {
-    const initiallyGroundedTerms = this.getInitiallyGroundedTerms(context),
-          initiallyGroundedTermsLength = initiallyGroundedTerms.length,
-          initiallyGrounded = (initiallyGroundedTermsLength > 0);
+  mergedWith(equivalence, context) {
+    const terms = equivalence.getTerms(),
+          combinedTerms = this.combineTerms(terms);
 
-    return initiallyGrounded;
-  }
+    return withinFragment((context) => {
+      const terms = combinedTerms,  ///
+            termsString = termsStringFromTerms(terms),
+            string = termsString,  ///
+            equivalenceNode = instantiateEquivalence(string, context),
+            equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
 
-  isImplicitlyGrounded(definedVariables, context) {
-    const implicitlyGroundedTerms = this.getImplicitlyGroundedTerms(definedVariables, context),
-          implicitlyGroundedTermsLength = implicitlyGroundedTerms.length,
-          implicitlyGrounded = (implicitlyGroundedTermsLength > 0);
-
-    return implicitlyGrounded;
-  }
-
-  getInitiallyGroundedTerms(context) {
-    const initiallyGroundedTerms = this.terms.reduce((initiallyGroundedTerms, term) => {
-      const termInitiallyGrounded = term.isInitiallyGrounded(context);
-
-      if (termInitiallyGrounded) {
-        const initiallyGroundedTerm = term; ///
-
-        initiallyGroundedTerms.push(initiallyGroundedTerm);
-      }
-
-      return initiallyGroundedTerms;
-    }, []);
-
-    return initiallyGroundedTerms;
-  }
-
-  getImplicitlyGroundedTerms(definedVariables, context) {
-    const implicitlyGroundedTerms = this.terms.reduce((implicitlyGroundedTerms, term) => {
-      const termImplicitlyGrounded = term.isImplicitlyGrounded(definedVariables, context);
-
-      if (termImplicitlyGrounded) {
-        const implicitlyGroundedTerm = term; ///
-
-        implicitlyGroundedTerms.push(implicitlyGroundedTerm);
-      }
-
-      return implicitlyGroundedTerms;
-    }, []);
-
-    return implicitlyGroundedTerms;
+      return equivalence;
+    }, context);
   }
 
   static name = "Equivalence";
@@ -266,12 +241,12 @@ export default define(class Equivalence extends Element {
   static fromEquality(equality, context) {
     return withinFragment((context) => {
       const terms = equality.getTerms(),
-        termsString = termsStringFromTerms(terms),
-        string = termsString,  ///
-        equalivanceNode = instantiateEquivalence(string, context),
-        equalivance = equalivanceFromEquivalenceNode(equalivanceNode, context);
+            termsString = termsStringFromTerms(terms),
+            string = termsString,  ///
+            equivalenceNode = instantiateEquivalence(string, context),
+            equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
 
-      return equalivance;
+      return equivalence;
     }, context);
   }
 });

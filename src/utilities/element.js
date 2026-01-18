@@ -156,7 +156,7 @@ export function sectionFromSectionNode(sectionNode, context) {
         lemma = lemmaFromSectionNode(sectionNode, context),
         theorem = theoremFromSectionNode(sectionNode, context),
         conjecture = conjectureFromSectionNode(sectionNode, context),
-        sectionString = sectionStringFromHypothesesTopLevelAssertion(hypotheses, axiom, lemma, theorem, conjecture, context),
+        sectionString = sectionStringFromHypothesesTopLevelAssertion(hypotheses, axiom, lemma, theorem, conjecture),
         node = sectionNode, ///
         string = sectionString, ///
         section = new Section(context, string, node, hypotheses, axiom, lemma, theorem, conjecture);
