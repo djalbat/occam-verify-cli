@@ -181,15 +181,6 @@ export default define(class Variable extends Element {
   static name = "Variable";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          variableNode = instantiateVariable(string, context),
-          variableIdentifier = variableNode.getVariableIdentifier(),
-          node = variableNode,
-          identifier = variableIdentifier,  ///
-          type = typeFromJSON(json, context),
-          propertyRelations = [],
-          variable = new Variable(context, string, node, type, identifier, propertyRelations);
-
-    return variable;
+    ///
   }
 });

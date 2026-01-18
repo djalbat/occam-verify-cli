@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import { chainContext } from "../utilities/context";
 
-const { extract, compress } = arrayUtilities;
+const { extract } = arrayUtilities;
 
 export default class TransientContext {
   constructor(context, terms, frames, statements, assertions, references, substitutions) {
@@ -242,93 +242,6 @@ export default class TransientContext {
   isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) { return this.context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies); }
 
   isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) { return this.context.findVariableByVariableIdentifier(variableIdentifier, nested); }
-
-  merge(context) {
-    const terms = context.getTerms(),
-          frames = context.getFrames(),
-          statements = context.getStatements(),
-          assertions = context.getAssertions(),
-          references = context.getReferences(),
-          substitutions = context.getSubstitutions();
-
-    this.terms = [
-      ...this.terms,
-      ...terms
-    ];
-
-    this.frames = [
-      ...this.frames,
-      ...frames
-    ];
-
-    this.statements = [
-      ...this.statements,
-      ...statements
-    ];
-
-    this.assertions = [
-      ...this.assertions,
-      ...assertions
-    ];
-
-    this.references = [
-      ...this.references,
-      ...references
-    ];
-
-    this.substitutions = [
-      ...this.substitutions,
-      ...substitutions
-    ];
-
-    compress(this.terms, (termA, termB) => {
-      const termAEqualToTermB = termA.isEqualTo(termB);
-
-      if (!termAEqualToTermB) {
-        return true;
-      }
-    });
-
-    compress(this.frames, (frameA, frameB) => {
-      const frameAEqualToFrameB = frameA.isEqualTo(frameB);
-
-      if (!frameAEqualToFrameB) {
-        return true;
-      }
-    });
-
-    compress(this.statements, (statementA, statementB) => {
-      const statementAEqualToStatementB = statementA.isEqualTo(statementB);
-
-      if (!statementAEqualToStatementB) {
-        return true;
-      }
-    });
-
-    compress(this.assertions, (assertionA, assertionB) => {
-      const assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
-
-      if (!assertionAEqualToAssertionB) {
-        return true;
-      }
-    });
-
-    compress(this.references, (referenceA, referenceB) => {
-      const referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);
-
-      if (!referenceAEqualToReferenceB) {
-        return true;
-      }
-    });
-
-    compress(this.substitutions, (substitutionA, substitutionB) => {
-      const substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
-
-      if (!substitutionAEqualToSubstitutionB) {
-        return true;
-      }
-    });
-  }
 
   static fromNothing(context) {
     const terms = [],

@@ -87,7 +87,7 @@ export default class FileContext {
 
   getEquivalences() {
     const { Equivalences } = elements,
-          equivalences = Equivalences.fromNothing();
+          equivalences = Equivalences.fromNothing(context);
 
     return equivalences;
   }
@@ -736,7 +736,7 @@ export default class FileContext {
           labelPresent = labels.some((label) => {
             const { Substitutions } = elements,
                   context = this, ///
-                  substitutions = Substitutions.fromNothing(),
+                  substitutions = Substitutions.fromNothing(context),
                   labelUnifies = reference.unifyLabel(label, substitutions, context);
 
             if (labelUnifies) {

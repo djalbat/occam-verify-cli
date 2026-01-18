@@ -237,12 +237,15 @@ export default define(class Axiom extends TopLevelAssertion {
     const hypothesesCorrelate = topLevelAssertion.correlateHypotheses(context);
 
     if (hypothesesCorrelate) {
-      const deduction = topLevelAssertion.getDeduction(),  ///
-            specificContext = context;  ///
+      const specificContext = context;  ///
 
       context = this.getContext();
 
-      const generalContext = context, ///
+      const generalContext = context; ///
+
+      context = specificContext;  ///
+
+      const deduction = topLevelAssertion.getDeduction(),
             deductionUnifies = this.unifyDeduction(deduction, substitutions, generalContext, specificContext);
 
       if (deductionUnifies) {

@@ -56,7 +56,7 @@ export default class Substitution extends Element {
     return comparesToTerm;
   }
 
-  compareStatement(statement, context) {
+  compareStatement(statement) {
     const comparesToStatement = false;
 
     return comparesToStatement;

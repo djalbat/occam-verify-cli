@@ -145,7 +145,7 @@ export default define(class Rule extends Element {
       proofVerifies = true;
     } else {
       const { Substitutions } = elements,
-            substitutions = Substitutions.fromNothing();
+            substitutions = Substitutions.fromNothing(context);
 
       proofVerifies = this.proof.verify(substitutions, this.conclusion, context);
     }
@@ -169,7 +169,7 @@ export default define(class Rule extends Element {
     let statementAndSubproofOrProofAssertionsUnify = false;
 
     const { Substitutions } = elements,
-          substitutions = Substitutions.fromNothing(),
+          substitutions = Substitutions.fromNothing(context),
           statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, context);
 
     if (statementUnifiesWithConclusion) {

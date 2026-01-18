@@ -273,13 +273,13 @@ export default define(class Assumption extends Element {
 
     const { Substitutions } = elements,
           specificContext = context,  ///
-          labelSubstitutions = Substitutions.fromNothing(),
+          labelSubstitutions = Substitutions.fromNothing(context),
           label = topLevelMetaAssertion.getLabel(),
           substitutions = labelSubstitutions, ///
           labelUnifies = this.unifyLabel(label, substitutions, generalContext, specificContext);
 
     if (labelUnifies) {
-      const statementSubstitutions = Substitutions.fromNothing(),
+      const statementSubstitutions = Substitutions.fromNothing(context),
             statement = topLevelMetaAssertion.getStatement(),
             substitutions = statementSubstitutions, ///
             statementUUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);

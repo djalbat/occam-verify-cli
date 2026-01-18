@@ -5,6 +5,7 @@ import { arrayUtilities } from "necessary";
 import Element from "../element";
 
 import { define } from "../elements";
+import { withinFragment } from "../utilities/fragment";
 import { termsStringFromTerms } from "../utilities/string";
 import { instantiateEquivalence } from "../process/instantiate";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
@@ -148,7 +149,7 @@ export default define(class Equivalence extends Element {
   }
 
   mergedWith(equivalence) {
-    const equivalenceA = this,
+    const equivalenceA = this,  ///
           equivalenceB = equivalence, ///
           equivalenceATerms = equivalenceA.getTerms(),
           equivalenceTermsB = equivalenceB.getTerms(),
@@ -260,13 +261,17 @@ export default define(class Equivalence extends Element {
     return implicitlyGroundedTerms;
   }
 
-  static fromEquality(equality, context) {
-    const terms = equality.getTerms(),
-          termsString = termsStringFromTerms(terms),
-          string = termsString,  ///
-          equalivanceNode = instantiateEquivalence(string, context),
-          equalivance = equalivanceFromEquivalenceNode(equalivanceNode, context);
+  static name = "Equivalence";
 
-    return equalivance;
+  static fromEquality(equality, context) {
+    return withinFragment((context) => {
+      const terms = equality.getTerms(),
+        termsString = termsStringFromTerms(terms),
+        string = termsString,  ///
+        equalivanceNode = instantiateEquivalence(string, context),
+        equalivance = equalivanceFromEquivalenceNode(equalivanceNode, context);
+
+      return equalivance;
+    }, context);
   }
 });

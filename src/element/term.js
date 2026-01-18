@@ -158,13 +158,7 @@ export default define(class Term extends Element {
   static name = "Term";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          termNode = instantiateTerm(string, context),
-          node = termNode,  ///
-          type = typeFromJSON(json, context),
-          term = new Term(context, string, node, type);
-
-    return term;
+    ///
   }
 });
 

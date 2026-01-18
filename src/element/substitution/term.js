@@ -123,6 +123,8 @@ export default define(class TermSubstitution extends Substitution {
   }
 
   static fromTermAndVariable(term, variable, context) {
+    term = stripBracketsFromTerm(term, context); ///
+
     return withinFragment((context) => {
       const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
             string = termSubstitutionString,  ///

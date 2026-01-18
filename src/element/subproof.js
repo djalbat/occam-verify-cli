@@ -95,7 +95,7 @@ export default define(class Subproof extends Element {
       if (axiomSatisfiable) {
         const { Substitutions } = elements,
               subproof = this,  ///
-              substitutions = Substitutions.fromNothing(),
+              substitutions = Substitutions.fromNothing(context),
               statementUnifies = axiom.unifySubproof(subproof, substitutions, context);
 
         if (statementUnifies) {

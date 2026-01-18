@@ -344,6 +344,8 @@ export default define(class Substitutions extends Element {
     return string;
   }
 
+  static name = "Substitutions";
+
   static fromArray(array) {
     let string;
 
@@ -362,21 +364,12 @@ export default define(class Substitutions extends Element {
     return substitutions;
   }
 
-  static fromNothing() {
-    let string;
-
-    const context = null;
-
-    string = null;
-
+  static fromNothing(context) {
     const node = null,
+          string = EMPTY_STRING,
           array = [],
           savedArray = [],
           substitutions = new Substitutions(context, string, node, array, savedArray);
-
-    string = substitutions.asString();
-
-    substitutions.setString(string);
 
     return substitutions;
   }

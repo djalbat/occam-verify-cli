@@ -192,7 +192,7 @@ export default class TopLevelAssertion extends Element {
       proofVerifies = true;
     } else {
       const { Substitutions } = elements,
-            substitutions = Substitutions.fromNothing();
+            substitutions = Substitutions.fromNothing(context);
 
       proofVerifies = this.proof.verify(substitutions, this.deduction, context);
     }

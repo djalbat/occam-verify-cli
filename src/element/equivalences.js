@@ -84,7 +84,7 @@ export default define(class Equivalences extends Element {
   }
 
   mergedWithEquivalence(equivalence) {
-    const equivalences = Equivalences.fromNothing();
+    const equivalences = Equivalences.fromNothing(context);
 
     let mergedEquivalence = equivalence; ///
 
@@ -139,9 +139,9 @@ export default define(class Equivalences extends Element {
         initiallyGroundedEquivalences,
         implicitlyGroundedEquivalences;
 
-    remainingEquivalences =Equivalences.fromNothing();
+    remainingEquivalences =Equivalences.fromNothing(context);
 
-    initiallyGroundedEquivalences = Equivalences.fromNothing();
+    initiallyGroundedEquivalences = Equivalences.fromNothing(context);
 
     equivalences.separateInitiallyGroundedEquivalences(remainingEquivalences, initiallyGroundedEquivalences, context);
 
@@ -189,6 +189,8 @@ export default define(class Equivalences extends Element {
 
     return equivalences;
   }
+
+  static name = "Equivalences";
 
   static fromNothing(context) {
     const string = EMPTY_STRING,

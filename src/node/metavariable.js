@@ -6,7 +6,7 @@ import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../ruleNames";
 
 export default class MetavariableNode extends NonTerminalNode {
   getMetavariableName() {
-    let metaVariableName;
+    let metavariableName;
 
     this.someChildNode((childNode) => {
       const childNodeTerminalNode = childNode.isTerminalNode();
@@ -15,13 +15,13 @@ export default class MetavariableNode extends NonTerminalNode {
         const terminalNode = childNode, ///
               content = terminalNode.getContent();
 
-        metaVariableName = content; ///
+        metavariableName = content; ///
 
         return true;
       }
     });
 
-    return metaVariableName;
+    return metavariableName;
   }
 
   getTermNode() {

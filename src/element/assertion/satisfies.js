@@ -96,14 +96,14 @@ export default define(class SatisfiesAssertion extends Assertion {
 
       const { Substitutions } = elements;
 
-      substitutions = Substitutions.fromNothing();
+      substitutions = Substitutions.fromNothing(context);
 
       const axiomComparesToSignature = axiom.compareSignature(this.signature, substitutions, context);
 
       if (axiomComparesToSignature) {
         const substitutionsB = substitutions; ///
 
-        substitutions = Substitutions.fromNothing();
+        substitutions = Substitutions.fromNothing(context);
 
         statementUnifies = axiom.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 

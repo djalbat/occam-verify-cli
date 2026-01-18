@@ -3,7 +3,6 @@
 import Element from "../element";
 
 import { define } from "../elements";
-import { findMetaTypeFromTypeName } from "../metaTypes";
 
 export default define(class MetaType extends Element {
   constructor(context, string, node, name) {

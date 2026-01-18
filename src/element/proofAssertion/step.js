@@ -163,7 +163,7 @@ export default define(class Step extends ProofAssertion {
     if (axiom !== null) {
       const { Substitutions } = elements,
             step = this,  ///
-            substitutions = Substitutions.fromNothing(),
+            substitutions = Substitutions.fromNothing(context),
             stepUnifies = axiom.unifyStep(step, substitutions, context);
 
       if (stepUnifies) {

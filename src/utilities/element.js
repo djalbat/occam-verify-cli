@@ -1,8 +1,8 @@
 "use strict";
 
 import elements from "../elements";
-import FragmentContext from "../context/fragment";
 
+import { withinFragment } from "./fragment";
 import { baseTypeFromNothing } from "../types";
 import { instantiateReference } from "../process/instantiate";
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
@@ -44,11 +44,8 @@ export function termFromTermNode(termNode, context) {
   const { Term } = elements,
         node = termNode,  ///
         string = context.nodeAsString(node),
-        type = null;
-
-  context = null;
-
-  const term = new Term(context, string, node, type);
+        type = null,
+        term = new Term(context, string, node, type);
 
   return term;
 }
@@ -281,11 +278,8 @@ export function deductionFromDeductionNode(deductionNode, context) {
 export function statementFromStatementNode(statementNode, context) {
   const { Statement } = elements,
         node = statementNode, ///
-        string = context.nodeAsString(node);
-
-  context = null;
-
-  const statement = new Statement(context, string, node);
+        string = context.nodeAsString(node),
+        statement = new Statement(context, string, node);
 
   return statement;
 }
@@ -711,14 +705,19 @@ export function simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDec
   return simpleTypeDeclaration;
 }
 
-export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context) {
+  if (context === undefined) {
+    context = substitution; ///
+
+    substitution = null;
+  }
+
   const { StatementSubstitution } = elements,
         node = statementSubstitutionNode,  ///
         string = context.nodeAsString(node),
-        resolved = true,
+        resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context),
         statement = statementFromStatementSubstitutionNode(statementSubstitutionNode, context),
         metavariable = metavariableFromStatementSubstitutionNode(statementSubstitutionNode, context),
-        substitution = null,
         statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
 
   return statementSubstitution;
@@ -914,6 +913,18 @@ export function statementFromPremiseNode(premiseNode, context) {
   return statement;
 }
 
+export function metavariableFromFrameNode(frameNode, context) {
+  let metavariable = null;
+
+  const metavariableNode = frameNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+  }
+
+  return metavariable;
+}
+
 export function metavariableFromLabelNode(labelNode, context) {
   let metavariable = null;
 
@@ -972,18 +983,6 @@ export function typeFromTypeAssertionNode(typeAssertionNode, context) {
   }
 
   return type;
-}
-
-export function metavariableFromFrameNode(frameNode, context) {
-  let metavariable = null;
-
-  const metavariableNode = frameNode.getMetavariableNode();
-
-  if (metavariableNode !== null) {
-    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
-  }
-
-  return metavariable;
 }
 
 export function identifierFromVarialbeNode(variableNode, context) {
@@ -1200,17 +1199,16 @@ export function metavariableFromReferenceNode(referenceNode, context) {
 }
 
 export function referenceFromMetavariableNode(metavariableNode, context) {
-  const metavariableString = context.nodeAsString(metavariableNode),
-        referenceString = metavariableString, ///
-        string = referenceString,  ///
-        fragmentContext = FragmentContext.fromNothing(context);
+  const metavariableString = context.nodeAsString(metavariableNode);
 
-  context = fragmentContext;  ///
+  return withinFragment((context) => {
+    const referenceString = metavariableString, ///
+          string = referenceString,  ///
+          referenceNode = instantiateReference(string, context),
+          reference = referenceFromReferenceNode(referenceNode, context);
 
-  const referenceNode = instantiateReference(string, context),
-        reference = referenceFromReferenceNode(referenceNode, context);
-
-  return reference;
+    return reference;
+  }, context);
 }
 
 export function frameFromDefinedAssertionNode(definedAssertionNode, context) {
@@ -1683,6 +1681,12 @@ export function prefixedFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode,
   const prefixed = simpleTypeDeclarationNode.isPrefixed();
 
   return prefixed;
+}
+
+export function resolvedFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context) {
+  const resolved = (substitution === null);
+
+  return resolved;
 }
 
 export function prefixedFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {

@@ -127,7 +127,7 @@ export default define(class Reference extends Element {
     context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
 
     const { Substitutions } = elements,
-          substitutions = Substitutions.fromNothing(),
+          substitutions = Substitutions.fromNothing(context),
           generalContext = context, ///
           specificContext = context,  ///
           generalMetavariable = this.metavariable,  ///
@@ -154,7 +154,7 @@ export default define(class Reference extends Element {
 
     const { Substitutions } = elements,
           label = topLevelMetaAssertion.getLabel(),
-          substitutions = Substitutions.fromNothing(),
+          substitutions = Substitutions.fromNothing(context),
           labelUnifies = this.unifyLabel(label, substitutions, context);
 
     topLevelMetaAssertionUnifies = labelUnifies;  ///

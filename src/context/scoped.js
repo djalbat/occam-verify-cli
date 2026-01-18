@@ -284,7 +284,7 @@ class ScopedContext {
     const { Equivalences } = elements,
           variables = [],
           judgements = [],
-          equivalences = Equivalences.fromNothing(),
+          equivalences = Equivalences.fromNothing(context),
           subproofOrProofAssertions = [],
           scopedContext = new ScopedContext(context, variables, judgements, equivalences, subproofOrProofAssertions);
 

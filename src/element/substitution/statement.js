@@ -9,7 +9,7 @@ import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../../utilities/json";
+import { statementToStatementJSON, metavariableToMetavariableJSON } from "../../utilities/json";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -67,7 +67,7 @@ export default define(class StatementSubstitution extends Substitution {
     return comparesToParameter;
   }
 
-  compareStatesment(statement, context) {
+  compareStatement(statement, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
     const statementEqualToStatement = this.statement.isEqualTo(statement),
@@ -95,16 +95,27 @@ export default define(class StatementSubstitution extends Substitution {
   }
 
   unifyStatement(statement, context) {
-    let substitution = null;
+    let statementUnifies = false;
 
-    const { Substitutions } = elements,
-          substitutions = Substitutions.fromNothing(),
-          specificContext = context; ///
+    const statementString = statement.getString(),
+          statementSubstitutionString = this.getString();
+
+    context.trace(`Unifying the '${statementString}' statement with the '${statementSubstitutionString}' statement substiution's statement...`);
+
+    const specificContext = context; ///
 
     context = this.getContext();
 
-    const generalContext = context, ///
-          statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    const generalContext = context; ///
+
+    context = specificContext;  ///
+
+    const { Substitutions } = elements,
+          substitutions = Substitutions.fromNothing(context);
+
+    statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    let substitution = null;
 
     if (statementUnifies) {
       const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
@@ -113,7 +124,13 @@ export default define(class StatementSubstitution extends Substitution {
         const firstSubstitution = substitutions.getFirstSubstitution();
 
         substitution = firstSubstitution; ///
+      } else {
+        statementUnifies = false;
       }
+    }
+
+    if (statementUnifies) {
+      context.trace(`...unified the '${statementString}' statement with the '${statementSubstitutionString}' statement substiution's statement.`);
     }
 
     return substitution;
@@ -146,36 +163,23 @@ export default define(class StatementSubstitution extends Substitution {
   }
 
   resolve(substitutions, context) {
-    const substitutionString = this.string; ///
+    context = this.getContext();
+
+    const substitutionString = this.getString(); ///
 
     context.trace(`Resolving the ${substitutionString} substitution...`);
 
     substitutions.snapshot();
 
     const metavariable = this.getMetavariable(),
-          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable);
+          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable),
+          substitution = simpleSubstitution.unifyStatement(this.statement, context);
 
-    if (simpleSubstitution !== null) {
-      let context;
+    if (substitution !== null) {
+      const substitutionUnifies = this.unifySubstitution(substitution, substitutions, context);
 
-      context = this.getContext();
-
-      const substitution = simpleSubstitution.unifyStatement(this.statement, context);
-
-      if (substitution !== null) {
-        context = simpleSubstitution.getContext();
-
-        const simpleContext = context;  ///
-
-        context = substitution.getContext();
-
-        context.merge(simpleContext);
-
-        const substitutionUnifies = this.unifySubstitution(substitution, substitutions, context);
-
-        if (substitutionUnifies) {
-          this.resolved = true;
-        }
+      if (substitutionUnifies) {
+        this.resolved = true;
       }
     }
 
@@ -206,45 +210,32 @@ export default define(class StatementSubstitution extends Substitution {
   static name = "StatementSubstitution";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-          node = statementSubstitutionNode,
-          resolved = true,
-          statement = statementFromJSON(json, context),
-          metavariable = metavariableFromJSON(json, context),
-          substitution = null,  ///
-          statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
-
-    return statementSubstitution;
+    ///
   }
 
   static fromStatementAndMetavariable(statement, metavariable, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    const statementSubstitution = withinFragment((context) => {
+    return withinFragment((context) => {
       const statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable, context),
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-            statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context)
+            statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
       return statementSubstitution;
     }, context);
-
-    return statementSubstitution;
   }
 
   static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    const statementSubstitution = withinFragment((context) => {
+    return withinFragment((context) => {
       const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-            statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context)
+            statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context);
 
       return statementSubstitution;
     }, context);
-
-    return statementSubstitution;
   }
 });

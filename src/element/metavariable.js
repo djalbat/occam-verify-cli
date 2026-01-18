@@ -187,7 +187,7 @@ export default define(class Metavariable extends Element {
       } else {
         const { StatementSubstitution } = elements,
               metavariable = this,
-              statementSubstitution = (substitution !== null ) ?
+              statementSubstitution = (substitution !== null) ?
                                         StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
                                           StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
 
@@ -406,15 +406,6 @@ export default define(class Metavariable extends Element {
   static name = "Metavariable";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          metavariableNode = instantiateMetavariable(string, context),
-          metavariableName = metavariableNode.getMetavariableName(),
-          name = metavariableName,  ///
-          node = metavariableNode,  ///
-          type = typeFromJSON(json, context),
-          metaType = metaTypeFromJSON(json, context),
-          metavariable = new Metavariable(context, string, node, name, type, metaType);
-
-    return metavariable;
+    ///
   }
 });

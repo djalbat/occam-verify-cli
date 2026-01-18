@@ -108,7 +108,7 @@ function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAsser
 
           if (satisfiable) {
             const { Substitutions } = elements,
-                  substitutions = Substitutions.fromNothing(),
+                  substitutions = Substitutions.fromNothing(context),
                   topLevelAssertionUnifies = axiom.unifyTopLevelAssertion(topLevelAssertion, substitutions, context);
 
             if (topLevelAssertionUnifies) {
@@ -151,7 +151,7 @@ function unifyStatementWithTopLevelAssertion(statement, reference, satisfiesAsse
 
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions();
 
-      substitutions = Substitutions.fromNothing();
+      substitutions = Substitutions.fromNothing(context);
 
       const statementAndSubproofOrProofAssertionsUnify = topLevelAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, substitutions, context);
 
