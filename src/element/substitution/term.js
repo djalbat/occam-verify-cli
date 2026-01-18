@@ -4,6 +4,7 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { withinFragment } from "../../utilities/fragment";
+import { unchainVariable } from "../../utilities/context";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
@@ -130,6 +131,10 @@ export default define(class TermSubstitution extends Substitution {
             string = termSubstitutionString,  ///
             termSubstitutionNode = instantiateTermSubstitution(string, context),
             termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
+
+      variable = unchainVariable(variable);
+
+      context.addVariable(variable);
 
       return termSubstitution;
     }, context);

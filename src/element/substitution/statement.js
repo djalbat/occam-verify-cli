@@ -6,6 +6,7 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { withinFragment } from "../../utilities/fragment";
 import { unifySubstitution } from "../../process/unify";
+import { unchainMetavariable } from "../../utilities/context";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
@@ -222,6 +223,10 @@ export default define(class StatementSubstitution extends Substitution {
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
             statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
+      metavariable = unchainMetavariable(metavariable);
+
+      context.addMetavariable(metavariable);
+
       return statementSubstitution;
     }, context);
   }
@@ -234,6 +239,10 @@ export default define(class StatementSubstitution extends Substitution {
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
             statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context);
+
+      metavariable = unchainMetavariable(metavariable);
+
+      context.addMetavariable(metavariable);
 
       return statementSubstitution;
     }, context);

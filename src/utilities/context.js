@@ -18,3 +18,21 @@ export function chainContext(context) {
     }
   });
 }
+
+export function unchainVariable(variable) {
+  const context = variable.getContext(),
+        variableIdentifier = variable.getIdentifier();
+
+  variable = context.findVariableByVariableIdentifier(variableIdentifier);
+
+  return variable;
+}
+
+export function unchainMetavariable(metavariable) {
+  const context = metavariable.getContext(),
+        metavariableName = metavariable.getName();
+
+  metavariable = context.findMetavariableByMetavariableName(metavariableName);
+
+  return metavariable;
+}

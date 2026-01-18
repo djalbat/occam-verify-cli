@@ -4,6 +4,7 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { withinFragment } from "../../utilities/fragment";
+import { unchainMetavariable } from "../../utilities/context";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
 import { frameSubstitutionFromFrameSubstitutionNode, frameSubstitutionFromStatementNode } from "../../utilities/element";
@@ -107,6 +108,10 @@ export default define(class FrameSubstitution extends Substitution {
             string = frameAndMetavariableString,  ///
             frameSubstitutionNode = instantiateFrameSubstitution(string, context),
             frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+
+      metavariable = unchainMetavariable(metavariable);
+
+      context.addMetavariable(metavariable);
 
       return frameSubstitution;
     }, context);
