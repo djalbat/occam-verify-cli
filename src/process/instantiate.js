@@ -2,6 +2,7 @@
 
 import { ruleFromRuleName } from "../utilities/bnf";
 import { TERM_RULE_NAME,
+         FRAME_RULE_NAME,
          VARIABLE_RULE_NAME,
          REFERENCE_RULE_NAME,
          STATEMENT_RULE_NAME,
@@ -15,6 +16,7 @@ import { TERM_RULE_NAME,
          REFERENCE_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
 const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
+      framePlaceholderRule = ruleFromRuleName(FRAME_RULE_NAME),
       variablePlaceholderRule = ruleFromRuleName(VARIABLE_RULE_NAME),
       referencePlaceholderRule = ruleFromRuleName(REFERENCE_RULE_NAME),
       statementPlaceholderRule = ruleFromRuleName(STATEMENT_RULE_NAME),
@@ -28,6 +30,8 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       referenceSubstitutionPlaceholderRule = ruleFromRuleName(REFERENCE_SUBSTITUTION_RULE_NAME);
 
 export function instantiateTerm(string, context) { return instantiate(termPlaceholderRule, string, context); }
+
+export function instantiateFrame(string, context) { return instantiate(framePlaceholderRule, string, context); }
 
 export function instantiateVariable(string, context) { return instantiate(variablePlaceholderRule, string, context); }
 

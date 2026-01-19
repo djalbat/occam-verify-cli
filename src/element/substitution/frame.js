@@ -3,11 +3,10 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { withinFragment } from "../../utilities/fragment";
-import { unchainMetavariable } from "../../utilities/context";
+import { literally } from "../../utilities/context";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { frameSubstitutionFromFrameSubstitutionNode, frameSubstitutionFromStatementNode } from "../../utilities/element";
+import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(context, string, node, frame, metavariable) {
@@ -103,15 +102,11 @@ export default define(class FrameSubstitution extends Substitution {
   }
 
   static fromFrameAndMetavariable(frame, metavariable, context) {
-    return withinFragment((context) => {
+    return literally((context) => {
       const frameAndMetavariableString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
             string = frameAndMetavariableString,  ///
             frameSubstitutionNode = instantiateFrameSubstitution(string, context),
             frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
-
-      metavariable = unchainMetavariable(metavariable);
-
-      context.addMetavariable(metavariable);
 
       return frameSubstitution;
     }, context);

@@ -5,7 +5,7 @@ import { arrayUtilities } from "necessary";
 import Element from "../element";
 
 import { define } from "../elements";
-import { withinFragment } from "../utilities/fragment";
+import { literally } from "../utilities/context";
 import { termsStringFromTerms } from "../utilities/string";
 import { instantiateEquivalence } from "../process/instantiate";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
@@ -225,7 +225,7 @@ export default define(class Equivalence extends Element {
     const terms = equivalence.getTerms(),
           combinedTerms = this.combineTerms(terms);
 
-    return withinFragment((context) => {
+    return literally((context) => {
       const terms = combinedTerms,  ///
             termsString = termsStringFromTerms(terms),
             string = termsString,  ///
@@ -239,7 +239,7 @@ export default define(class Equivalence extends Element {
   static name = "Equivalence";
 
   static fromEquality(equality, context) {
-    return withinFragment((context) => {
+    return literally((context) => {
       const terms = equality.getTerms(),
             termsString = termsStringFromTerms(terms),
             string = termsString,  ///

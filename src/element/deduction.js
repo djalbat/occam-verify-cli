@@ -1,7 +1,7 @@
 "use strict";
 
 import Element from "../element";
-import TransientContext from "../context/transient";
+import EphemeralContext from "../context/ephemeral";
 
 import { define } from "../elements";
 import { termsFromJSON, framesFromJSON, statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
@@ -20,9 +20,9 @@ export default define(class Deduction extends Element {
   verify(context) {
     let verifies = false;
 
-    const transientContext = TransientContext.fromNothing(context);
+    const ephemeralContext = EphemeralContext.fromNothing(context);
 
-    context = transientContext; ///
+    context = ephemeralContext; ///
 
     const node = this.getNode(),
           deductionString = this.getString();  ///
@@ -132,11 +132,10 @@ export default define(class Deduction extends Element {
     const terms = termsFromJSON(json, context),
           frames = framesFromJSON(json, context),
           statement = statementFromJSON(json, context),
-          node = null,
           string = statement.getString(),
-          transientContext = TransientContext.fromTermsAndFrames(terms, frames, context);
+          ephemeralContext = EphemeralContext.fromTermsAndFrames(terms, frames, context);
 
-    context = transientContext; ///
+    context = ephemeralContext; ///
 
     const deduction = new Deduction(context, string, statement);
 

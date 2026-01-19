@@ -1,5 +1,9 @@
 "use strict";
 
+import ScopedContext from "../context/scoped";
+import LiteralContext from "../context/literal";
+import SyntheticContext from "../context/synthetic";
+
 import { FUNCTION } from "../constants";
 
 export function chainContext(context) {
@@ -19,20 +23,25 @@ export function chainContext(context) {
   });
 }
 
-export function unchainVariable(variable) {
-  const context = variable.getContext(),
-        variableIdentifier = variable.getIdentifier();
+export function scope(innerFunction, context) {
+  const scopedContext = ScopedContext.fromNothing(context);
 
-  variable = context.findVariableByVariableIdentifier(variableIdentifier);
+  context = scopedContext;  ///
 
-  return variable;
+  return innerFunction(context);
 }
 
-export function unchainMetavariable(metavariable) {
-  const context = metavariable.getContext(),
-        metavariableName = metavariable.getName();
+export function literally(innerFunction, context) {
+  const literalContext = LiteralContext.fromNothing(context);
 
-  metavariable = context.findMetavariableByMetavariableName(metavariableName);
+  context = literalContext;  ///
 
-  return metavariable;
+  return innerFunction(context);
+}
+
+export function synthetically(innerFunction, generalContext, specificContext) {
+  const syntheticContext = SyntheticContext.fromNothing(generalContext, specificContext),
+        context = syntheticContext;  ///
+
+  return innerFunction(context);
 }

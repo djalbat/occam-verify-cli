@@ -4,8 +4,8 @@ import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { instantiateVariable } from "../process/instantiate";
-import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { synthetically } from "../utilities/context";
+import { typeToTypeJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {
   constructor(context, string, node, type, identifier, propertyRelations) {
@@ -149,9 +149,13 @@ export default define(class Variable extends Element {
             termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
 
       if (termTypeEqualToOrSubTypeOfVariableType) {
-        const { TermSubstitution } = elements,
-              termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, context),
-              substitution = termSubstitution;  ///
+        const substitution = synthetically((context) => {
+          const { TermSubstitution } = elements,
+                termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, context),
+                substitution = termSubstitution;  ///
+
+          return substitution;
+        });
 
         substitutions.addSubstitution(substitution, context);
 

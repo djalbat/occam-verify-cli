@@ -3,8 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { withinFragment } from "../../utilities/fragment";
-import { unchainMetavariable } from "../../utilities/context";
+import { literally } from "../../utilities/context";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
@@ -32,15 +31,11 @@ export default define(class ReferenceSubstitution extends Substitution {
   static name = "ReferenceSubstitution";
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {
-    return withinFragment((context) => {
+    return literally((context) => {
       const referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
             string = referenceSubstitutionString, ///
             referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
             referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
-
-      metavariable = unchainMetavariable(metavariable);
-
-      context.addMetavariable(metavariable);
 
       return referenceSubstitution;
     }, context);

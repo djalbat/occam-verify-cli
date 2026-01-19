@@ -6,6 +6,7 @@ import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
+import { synthetically } from "../utilities/context";
 import { signatureStringFromTerms } from "../utilities/string";
 import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
 
@@ -64,10 +65,13 @@ export default define(class Signature extends Element {
                     termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
 
               if (termTypeEqualToOrSubTypeOfVariableType) {
-                const { TermSubstitution } = elements,
-                      context = specificContext,  ///
-                      termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
-                      substitution = termSubstitution;  ///
+                const substitution = synthetically((context) => {
+                  const { TermSubstitution } = elements,
+                        termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, context),
+                        substitution = termSubstitution;  ///
+
+                  return substitution;
+                });
 
                 substitutions.addSubstitution(substitution, context);
 

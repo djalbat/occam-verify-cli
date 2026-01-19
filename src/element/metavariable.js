@@ -5,9 +5,9 @@ import elements from "../elements";
 
 import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
-import { instantiateMetavariable } from "../process/instantiate";
-import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
-import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
+import { synthetically } from "../utilities/context";
+import { typeToTypeJSON } from "../utilities/json";
+import { metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
 
 export default define(class Metavariable extends Element {
@@ -136,11 +136,15 @@ export default define(class Metavariable extends Element {
           frameUnifies = true;
         }
       } else {
-        const { FrameSubstitution } = elements,
-              context = specificContext,  ///
+        const context = specificContext,  ///
               metavariable = this,  ///
-              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
-              substitution = frameSubstitution;  ///
+              substitution = synthetically((context) => {
+                const { FrameSubstitution } = elements,
+                      frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
+                      substitution = frameSubstitution;  ///
+
+                return substitution;
+              }, generalContext, specificContext);
 
         substitutions.addSubstitution(substitution, context);
 
@@ -220,8 +224,7 @@ export default define(class Metavariable extends Element {
     if (referenceMetavariableUnifies) {
       referenceUnifies = true;
     } else {
-      const context = specificContext,  ///
-            metavariable = this, ///
+      const metavariable = this, ///
             simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariable(metavariable);
 
       if (simpleSubstitutionPresent) {
@@ -233,10 +236,15 @@ export default define(class Metavariable extends Element {
           referenceUnifies = true;
         }
       } else {
-        const { ReferenceSubstitution } = elements,
-              metavariable = this,
-              referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
-              substitution = referenceSubstitution;  ///
+        const context = specificContext,  ///
+              metavariable = this,  ///
+              substitution = synthetically((context) => {
+                const { ReferenceSubstitution } = elements,
+                      referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
+                      substitution = referenceSubstitution;  ///
+
+                return substitution;
+              }, generalContext, specificContext);
 
         substitutions.addSubstitution(substitution, context);
 

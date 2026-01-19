@@ -2,7 +2,7 @@
 
 import nominalContext from "../context/nominal";
 
-import { withinFragment } from "../utilities/fragment";
+import { literally } from "../utilities/context";
 import { BASE_TYPE_SYMBOL } from "../constants";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { instantiateCombinator, instantiateConstructor } from "../process/instantiate";
@@ -15,7 +15,7 @@ export function bracketedCombinatorFromNothing() {
   if (bracketedCombinator === null) {
     const context = nominalContext; ///
 
-    bracketedCombinator = withinFragment((context) => {
+    bracketedCombinator = literally((context) => {
       const bracketedCombinatorString = `(${STATEMENT_META_TYPE_NAME})`,
             string = bracketedCombinatorString, ///
             combinatorNode = instantiateCombinator(string, context),
@@ -33,7 +33,7 @@ export function bracketedConstructorFromNothing() {
   if (bracketedConstructor === null) {
     const context = nominalContext; ///
 
-    bracketedConstructor = withinFragment((context) => {
+    bracketedConstructor = literally((context) => {
       const bracketedConstructorString = `(${BASE_TYPE_SYMBOL})`,
             string = bracketedConstructorString,  ///
             constructorNode = instantiateConstructor(string, context),

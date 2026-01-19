@@ -1,7 +1,7 @@
 "use strict";
 
 import ProofAssertion from "../proofAssertion";
-import TransientContext from "../../context/transient";
+import EphemeralContext from "../../context/ephemeral";
 import assignAssignments from "../../process/assign";
 
 import { define } from "../../elements";
@@ -21,9 +21,9 @@ export default define(class Supposition extends ProofAssertion {
   verify(context) {
     let verifies = false;
 
-    const transientContext = TransientContext.fromNothing(context);
+    const ephemeralContext = EphemeralContext.fromNothing(context);
 
-    context = transientContext; ///
+    context = ephemeralContext; ///
 
     const node = this.getNode(),
           suppositionString = this.getString(); ///
@@ -287,7 +287,7 @@ export default define(class Supposition extends ProofAssertion {
           frames = framesFromJSON(json, context),
           statement = statementFromJSON(json, context),
           procedureCall = procedureCallFromJSON(json, context),
-          transientContext = TransientContext.fromTermsAndFrames(terms, frames, context);
+          ephemeralContext = EphemeralContext.fromTermsAndFrames(terms, frames, context);
 
     let string;
 
@@ -301,7 +301,7 @@ export default define(class Supposition extends ProofAssertion {
 
     const node = null;
 
-    context = transientContext; ///
+    context = ephemeralContext; ///
 
     const supposition = new Supposition(context, string, node, statement, procedureCall);
 

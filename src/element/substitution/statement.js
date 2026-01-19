@@ -4,9 +4,8 @@ import elements from "../../elements";
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { withinFragment } from "../../utilities/fragment";
+import { literally } from "../../utilities/context";
 import { unifySubstitution } from "../../process/unify";
-import { unchainMetavariable } from "../../utilities/context";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
@@ -217,15 +216,11 @@ export default define(class StatementSubstitution extends Substitution {
   static fromStatementAndMetavariable(statement, metavariable, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    return withinFragment((context) => {
+    return literally((context) => {
       const statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable, context),
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
             statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
-
-      metavariable = unchainMetavariable(metavariable);
-
-      context.addMetavariable(metavariable);
 
       return statementSubstitution;
     }, context);
@@ -234,15 +229,11 @@ export default define(class StatementSubstitution extends Substitution {
   static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    return withinFragment((context) => {
+    return literally((context) => {
       const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
             statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context);
-
-      metavariable = unchainMetavariable(metavariable);
-
-      context.addMetavariable(metavariable);
 
       return statementSubstitution;
     }, context);

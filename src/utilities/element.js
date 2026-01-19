@@ -2,7 +2,7 @@
 
 import elements from "../elements";
 
-import { withinFragment } from "./fragment";
+import { literally } from "../utilities/context";
 import { baseTypeFromNothing } from "../types";
 import { instantiateReference } from "../process/instantiate";
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
@@ -1201,7 +1201,7 @@ export function metavariableFromReferenceNode(referenceNode, context) {
 export function referenceFromMetavariableNode(metavariableNode, context) {
   const metavariableString = context.nodeAsString(metavariableNode);
 
-  return withinFragment((context) => {
+  return literally((context) => {
     const referenceString = metavariableString, ///
           string = referenceString,  ///
           referenceNode = instantiateReference(string, context),

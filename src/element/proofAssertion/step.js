@@ -2,7 +2,7 @@
 
 import elements from "../../elements";
 import ProofAssertion from "../proofAssertion";
-import TransientContext from "../../context/transient";
+import EphemeralContext from "../../context/ephemeral";
 
 import { define } from "../../elements";
 import { unifyStatements } from "../../utilities/unification";
@@ -59,9 +59,9 @@ export default define(class Step extends ProofAssertion {
   verify(substitutions, assignments, context) {
     let verifies = false;
 
-    const transientContext = TransientContext.fromNothing(context);
+    const ephemeralContext = EphemeralContext.fromNothing(context);
 
-    context = transientContext; ///
+    context = ephemeralContext; ///
 
     const node = this.getNode(),
           stepString = this.getString(); ///
