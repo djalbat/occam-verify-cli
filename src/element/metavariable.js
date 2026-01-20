@@ -136,17 +136,13 @@ export default define(class Metavariable extends Element {
           frameUnifies = true;
         }
       } else {
-        const context = specificContext,  ///
-              metavariable = this,  ///
-              substitution = synthetically((context) => {
-                const { FrameSubstitution } = elements,
-                      frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
-                      substitution = frameSubstitution;  ///
+        const metavariable = this;  ///
 
-                return substitution;
-              }, generalContext, specificContext);
+        synthetically((context) => {
+          const { FrameSubstitution } = elements;
 
-        substitutions.addSubstitution(substitution, context);
+          FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
+        }, generalContext, specificContext);
 
         frameUnifies = true;
       }
@@ -190,14 +186,11 @@ export default define(class Metavariable extends Element {
         }
       } else {
         const { StatementSubstitution } = elements,
-              metavariable = this,
-              statementSubstitution = (substitution !== null) ?
-                                        StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
-                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+              metavariable = this;  ///
 
-        substitution = statementSubstitution;  ///
-
-        substitutions.addSubstitution(substitution, context);
+        (substitution !== null) ?
+          StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
+            StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
 
         statementUnifies = true;
       }
@@ -236,17 +229,13 @@ export default define(class Metavariable extends Element {
           referenceUnifies = true;
         }
       } else {
-        const context = specificContext,  ///
-              metavariable = this,  ///
-              substitution = synthetically((context) => {
-                const { ReferenceSubstitution } = elements,
-                      referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
-                      substitution = referenceSubstitution;  ///
+        const metavariable = this;  ///
 
-                return substitution;
-              }, generalContext, specificContext);
+        synthetically((context) => {
+          const { ReferenceSubstitution } = elements;
 
-        substitutions.addSubstitution(substitution, context);
+          ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
+        }, generalContext, specificContext);
 
         referenceUnifies = true;
       }

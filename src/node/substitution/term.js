@@ -5,34 +5,18 @@ import SubstitutionNode from "../../node/substitution";
 import { TERM_RULE_NAME } from "../../ruleNames";
 
 export default class TermSubstitutionNode extends SubstitutionNode {
-  getTermNode() {
-    const firstTermNode = this.getFirstTermNode(),
-          termNode = firstTermNode; ///
-
-    return termNode;
-  }
-
-  getVariableNode() {
-    const lastVariableNode = this.getLastVariableNode(),
-          variableNode = lastVariableNode;  ///
-
-    return variableNode;
-  }
-
-  getLastVariableNode() {
+  getTargetTermNode() {
     const lastTermNode = this.getLastTermNode(),
-          singularVariableNode = lastTermNode.getSingularVariableNode(),
-          lastVariableNode = singularVariableNode;  ///
+          targetTermNode = lastTermNode; ///
 
-    return lastVariableNode;
+    return targetTermNode;
   }
 
-  getFirstVariableNode() {
+  getReplacementTermNode() {
     const firstTermNode = this.getFirstTermNode(),
-          singularVariableNode = firstTermNode.getSingularVariableNode(),
-          firstVariableNode = singularVariableNode;  ///
+          replacementTermNode = firstTermNode; ///
 
-    return firstVariableNode;
+    return replacementTermNode;
   }
 
   getLastTermNode() {

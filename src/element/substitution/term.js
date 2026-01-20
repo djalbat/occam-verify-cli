@@ -10,43 +10,38 @@ import { termSubstitutionStringFromTermAndVariable } from "../../utilities/strin
 import { termSubstitutionFromStatementNode, termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 
 export default define(class TermSubstitution extends Substitution {
-  constructor(context, string, node, term, variable) {
+  constructor(context, string, node, targetTerm, replacementTerm) {
     super(context, string, node);
 
-    this.term = term;
-    this.variable = variable;
+    this.targetTerm = targetTerm;
+    this.replacementTerm = replacementTerm;
   }
 
-  getTerm() {
-    return this.term;
+  getTargetTerm() {
+    return this.targetTerm;
   }
 
-  getVariable() {
-    return this.variable;
+  getReplacementTerm() {
+    return this.replacementTerm;
   }
 
   getTargetNode() {
-    const variableNode = this.variable.getNode(),
-          tergetNode = variableNode; ///
+    const targetTermNode = this.targetTerm.getNode(),
+          tergetNode = targetTermNode; ///
 
     return tergetNode;
   }
 
   getReplacementNode() {
-    const termNode = this.term.getNode(),
-          replacementNode = termNode; ///
+    const replacementTermNode = this.replacementTerm.getNode(),
+          replacementNode = replacementTermNode; ///
 
     return replacementNode;
   }
 
   isTrivial() {
-    let trivial = false;
-
-    const termComparesToVaraible = this.term.compareVariable(this.variable);
-
-    if (termComparesToVaraible) {
-      trivial = true;
-    }
+    const targetTermEqualToReplacementTerm = this.targetTerm.isEqualTo(this.replacementTerm),
+          trivial = targetTermEqualToReplacementTerm; ///
 
     return trivial;
   }
@@ -54,15 +49,15 @@ export default define(class TermSubstitution extends Substitution {
   compareTerm(term, context) {
     term = stripBracketsFromTerm(term, context); ///
 
-    const termEqualToTerm = this.term.isEqualTo(term),
-          comparedToTerm = termEqualToTerm; ///
+    const termEqualToReplacementTerm = this.replacementTerm.isEqualTo(term),
+          comparedToTerm = termEqualToReplacementTerm; ///
 
     return comparedToTerm;
   }
 
   compareParameter(parameter) {
-    const variableComparesToParameter = this.variable.compareParameter(parameter),
-          comparesToParameter = variableComparesToParameter;  ///
+    const targetTermComparesToParameter = this.targetTerm.compareParameter(parameter),
+          comparesToParameter = targetTermComparesToParameter;  ///
 
     return comparesToParameter;
   }
@@ -74,32 +69,14 @@ export default define(class TermSubstitution extends Substitution {
 
     context.trace(`Validating the '${termSubstitutionString}' term substitution...`);
 
-    const termSingular = this.term.isSingular();
+    const targetTermValidates = this.validateTargetTerm(context);
 
-    if (termSingular) {
-      if (this.variable !== null) {
-        const variableIdentifier = this.variable.getIdentifier(),
-              variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentifier);
+    if (targetTermValidates) {
+      const replacementTermValidates = this.validateReplacementTerm(context);
 
-        if (variablePresent) {
-          const termNode = this.term.getNode(),
-                variableIdentifier = termNode.getVariableIdentifier(),
-                termVariableIdentifier = variableIdentifier,  ///
-                termVariablePresent = context.isVariablePresentByVariableIdentifier(termVariableIdentifier);
-
-          if (termVariablePresent) {
-            validates = true;
-          } else {
-            context.debug(`The '${termSubstitutionString}' term substitution's general term's variable is not present.`);
-          }
-        } else {
-          context.debug(`The '${termSubstitutionString}' term substitution's specific term's variable is not present.`);
-        }
-      } else {
-        context.debug(`The '${termSubstitutionString}' term substitution's general term is not singular.`);
+      if (replacementTermValidates) {
+        validates = true;
       }
-    } else {
-      context.debug(`The '${termSubstitutionString}' term substitution's specific term is not singular.`);
     }
 
     if (validates) {
@@ -113,11 +90,63 @@ export default define(class TermSubstitution extends Substitution {
     return validates;
   }
 
+  validateTargetTerm(context) {
+    let targetTermValidates = false;
+
+    const targetTermString = this.targetTerm.getString(),
+          termSubstitutionString = this.getString();  ///
+
+    context.trace(`Valiidating the '${termSubstitutionString}' term subtitution's '${targetTermString}' target term...`);
+
+    const targetTermSingular = this.targetTerm.isSingular();
+
+    if (targetTermSingular) {
+      targetTermValidates = this.targetTerm.validate(context, () => {
+        const verifiesAhead = true;
+
+        return verifiesAhead;
+      });
+    } else {
+      context.debug(`The '${termSubstitutionString}' term subtitution's '${targetTermString}' target term is not singular.`);
+    }
+
+    if (targetTermValidates) {
+      context.debug(`...validated the '${termSubstitutionString}' term subtitution's '${targetTermString}' target term...`);
+    }
+
+    return targetTermValidates;
+  }
+
+  validateReplacementTerm(context) {
+    let replacementTermValidates;
+
+    const replacementTermString = this.replacementTerm.getString(),
+          termSubstitutionString = this.getString();  ///
+
+    context.trace(`Valiidating the '${termSubstitutionString}' term subtitution's '${replacementTermString}' replacement term...`);
+
+    replacementTermValidates = this.replacementTerm.validate(context, () => {
+      const validatesAhead = true;
+
+      return validatesAhead;
+    });
+
+    if (replacementTermValidates) {
+      context.debug(`...validated the '${termSubstitutionString}' term subtitution's '${replacementTermString}' replacement term...`);
+    }
+
+    return replacementTermValidates;
+  }
+
   static name = "TermSubstitution";
 
   static fromStatement(statement, context) {
     const statementNode = statement.getNode(),
           termSubstitution = termSubstitutionFromStatementNode(statementNode, context);
+
+    if (termSubstitution !== null) {
+      termSubstitution.validate(context);
+    }
 
     return termSubstitution;
   }
@@ -130,6 +159,8 @@ export default define(class TermSubstitution extends Substitution {
             string = termSubstitutionString,  ///
             termSubstitutionNode = instantiateTermSubstitution(string, context),
             termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
+
+      termSubstitution.validate(context);
 
       return termSubstitution;
     }, context);

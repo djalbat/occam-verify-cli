@@ -13,41 +13,41 @@ import { statementToStatementJSON, metavariableToMetavariableJSON } from "../../
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
-  constructor(context, string, node, resolved, statement, metavariable, substitution) {
+  constructor(context, string, node, resolved, substitution, targetStatement, replacementStatement) {
     super(context, string, node);
 
     this.resolved = resolved;
-    this.statement = statement;
-    this.metavariable = metavariable;
     this.substitution = substitution;
+    this.targetStatement = targetStatement;
+    this.replacementStatement = replacementStatement;
   }
 
   isResolved() {
     return this.resolved;
   }
 
-  getStatement() {
-    return this.statement;
-  }
-
-  getMetavariable() {
-    return this.metavariable;
-  }
-
   getSubstitution() {
     return this.substitution;
   }
 
+  getTargetStatement() {
+    return this.targetStatement;
+  }
+
+  getReplacementStatement() {
+    return this.replacementStatement;
+  }
+
   getTargetNode() {
-    const metavariableNode = this.metavariable.getNode(),
-          targetNode = metavariableNode; ///
+    const targetStatementNode = this.targetStatement.getNode(),
+          targetNode = targetStatementNode; ///
 
     return targetNode;
   }
 
   getReplacementNode() {
-    const statementNode = this.statement.getNode(),
-          replacementNode = statementNode; ///
+    const replacementStatementNode = this.replacementStatement.getNode(),
+          replacementNode = replacementStatementNode; ///
 
     return replacementNode;
   }
@@ -58,22 +58,20 @@ export default define(class StatementSubstitution extends Substitution {
     return simple;
   }
 
-  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
-
-  compareParameter(parameter) {
-    const metavariableComparesToParameter = this.metavariable.compareParameter(parameter),
-          comparesToParameter = metavariableComparesToParameter;  ///
-
-    return comparesToParameter;
-  }
-
   compareStatement(statement, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    const statementEqualToStatement = this.statement.isEqualTo(statement),
-          comparesToStatement = statementEqualToStatement;  ///
+    const replacementStatementEqualToStatement = this.replacementStatement.isEqualTo(statement),
+          comparesToStatement = replacementStatementEqualToStatement;  ///
 
     return comparesToStatement;
+  }
+
+  compareParameter(parameter) {
+    const targetStatementComparesToParameter = this.targetStatement.compareParameter(parameter),
+          comparesToParameter = targetStatementComparesToParameter;  ///
+
+    return comparesToParameter;
   }
 
   compareSubstitution(substitution) {
@@ -92,6 +90,74 @@ export default define(class StatementSubstitution extends Substitution {
     }
 
     return comparesToSubstitution;
+  }
+
+  validate(context) {
+    let validates = false;
+
+    const statementSubstitutionString = this.getString();  ///
+
+    context.trace(`Validating the '${statementSubstitutionString}' statement substitution...`);
+
+    const targetStatementValidates = this.validateTargetStatement(context);
+
+    if (targetStatementValidates) {
+      const replacementStatementValidates = this.validateReplacementStatement(context);
+
+      if (replacementStatementValidates) {
+        validates = true;
+      }
+    }
+
+    if (validates) {
+      const substititoin = this;  ///
+
+      context.addSubstitution(substititoin);
+
+      context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
+    }
+
+    return validates;
+  }
+
+  validateTargetStatement(context) {
+    let targetStatementValidates = false;
+
+    const targetStatementString = this.targetStatement.getString(),
+          statementSubstitutionString = this.getString();  ///
+
+    context.trace(`Valiidating the '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement...`);
+
+    const targetStatementSingular = this.targetStatement.isSingular();
+
+    if (targetStatementSingular) {
+      targetStatementValidates = this.targetStatement.validate(context);
+    } else {
+      context.debug(`The '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement is not singular.`);
+    }
+
+    if (targetStatementValidates) {
+      context.debug(`...validated the '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement...`);
+    }
+
+    return targetStatementValidates;
+  }
+
+  validateReplacementStatement(context) {
+    let replacementStatementValidates;
+
+    const replacementStatementString = this.replacementStatement.getString(),
+          statementSubstitutionString = this.getString();  ///
+
+    context.trace(`Valiidating the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement...`);
+
+    replacementStatementValidates = this.replacementStatement.validate(context);
+
+    if (replacementStatementValidates) {
+      context.debug(`...validated the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement...`);
+    }
+
+    return replacementStatementValidates;
   }
 
   unifyStatement(statement, context) {
@@ -113,7 +179,7 @@ export default define(class StatementSubstitution extends Substitution {
     const { Substitutions } = elements,
           substitutions = Substitutions.fromNothing(context);
 
-    statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    statementUnifies = this.replacementStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     let substitution = null;
 
@@ -173,7 +239,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     const metavariable = this.getMetavariable(),
           simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable),
-          substitution = simpleSubstitution.unifyStatement(this.statement, context);
+          substitution = simpleSubstitution.unifyStatement(this.replacementStatement, context);
 
     if (substitution !== null) {
       const substitutionUnifies = this.unifySubstitution(substitution, substitutions, context);
@@ -193,8 +259,8 @@ export default define(class StatementSubstitution extends Substitution {
   }
 
   toJSON() {
-    const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
-          statementJSON = statementToStatementJSON(this.statement),
+    const metavariableJSON = metavariableToMetavariableJSON(this.targetStatement),
+          statementJSON = statementToStatementJSON(this.replacementStatement),
           metavariable = metavariableJSON,  ///
           statement = statementJSON,  ///
           string = this.string, ///
@@ -222,6 +288,8 @@ export default define(class StatementSubstitution extends Substitution {
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
             statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
+      statementSubstitution.validate(context);
+
       return statementSubstitution;
     }, context);
   }
@@ -234,6 +302,8 @@ export default define(class StatementSubstitution extends Substitution {
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
             statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context);
+
+      statementSubstitution.validate(context);
 
       return statementSubstitution;
     }, context);

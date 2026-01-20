@@ -5,44 +5,18 @@ import SubstitutionNode from "../../node/substitution";
 import { STATEMENT_RULE_NAME } from "../../ruleNames";
 
 export default class StatementSubstitutionNode extends SubstitutionNode {
-  getStatementNode() {
-    const firstStatementNode = this.getFirstStatementNode(),
-          statementNode = firstStatementNode; ///
-
-    return statementNode;
-  }
-
-  getMetavariableNode() {
-    const lastMetavariableNode = this.getLastMetavariableNode(),
-          metavariableNode = lastMetavariableNode;  ///
-
-    return metavariableNode;
-  }
-
-  getLastMetavariableNode() {
-    let lastMetavariableNode = null;
-
+  getTargetStatementNode() {
     const lastStatementNode = this.getLastStatementNode(),
-          singularMetavariableNode = lastStatementNode.getSingularMetavariableNode();
+          targetStatementNode = lastStatementNode; ///
 
-    if (singularMetavariableNode !== null) {
-      lastMetavariableNode = singularMetavariableNode;  ///
-    }
-
-    return lastMetavariableNode;
+    return targetStatementNode;
   }
 
-  getFirstMetavariableNode() {
-    let firstMetavariableNode = null;
-
+  getReplacementStatementNode() {
     const firstStatementNode = this.getFirstStatementNode(),
-          singularMetavariableNode = firstStatementNode.getSingularMetavariableNode();
+          replacementStatementNode = firstStatementNode; ///
 
-    if (singularMetavariableNode !== null) {
-      firstMetavariableNode = singularMetavariableNode;  ///
-    }
-
-    return firstMetavariableNode;
+    return replacementStatementNode;
   }
 
   getLastStatementNode() {

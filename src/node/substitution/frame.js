@@ -5,44 +5,18 @@ import SubstitutionNode from "../../node/substitution";
 import { FRAME_RULE_NAME } from "../../ruleNames";
 
 export default class FrameSubstitutionNode extends SubstitutionNode {
-  getFrameNode() {
-    const firstFrameNode = this.getFirstFrameNode(),
-          frameNode = firstFrameNode; ///
-
-    return frameNode;
-  }
-
-  getMetavariableNode() {
-    const lastMetavariableNode = this.getLastMetavariableNode(),
-          metavariableNode = lastMetavariableNode;  ///
-
-    return metavariableNode;
-  }
-
-  getLastMetavariableNode() {
-    let lastMetavariableNode = null;
-
+  getTargetFrameNode() {
     const lastFrameNode = this.getLastFrameNode(),
-          singularMetavariableNode = lastFrameNode.getSingularMetavariableNode();
+          targetFrameNode = lastFrameNode; ///
 
-    if (singularMetavariableNode !== null) {
-      lastMetavariableNode = singularMetavariableNode;  ///
-    }
-
-    return lastMetavariableNode;
+    return targetFrameNode;
   }
 
-  getFirstMetavariableNode() {
-    let firstMetavariableNode = null;
-
+  getReplacementFrameNode() {
     const firstFrameNode = this.getFirstFrameNode(),
-          singularMetavariableNode = firstFrameNode.getSingularMetavariableNode();
+          replacementFrameNode = firstFrameNode; ///
 
-    if (singularMetavariableNode !== null) {
-      firstMetavariableNode = singularMetavariableNode;  ///
-    }
-
-    return firstMetavariableNode;
+    return replacementFrameNode;
   }
 
   getLastFrameNode() {

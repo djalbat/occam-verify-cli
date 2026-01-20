@@ -53,11 +53,9 @@ function unifyStatementWithReference(statement, reference, satisfiesAssertion, s
 
     if (metavariableValidates) {
       const { StatementSubstitution } = elements,
-            metavariable = reference.getMetavariable(),
-            statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
-            substitution = statementSubstitution; ///
+            metavariable = reference.getMetavariable();
 
-      substitutions.addSubstitution(substitution, context);
+      StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
 
       statementUnifiesWithReference = true;
     }
@@ -157,13 +155,9 @@ function unifyStatementWithTopLevelAssertion(statement, reference, satisfiesAsse
 
       if (statementAndSubproofOrProofAssertionsUnify) {
         const { StatementSubstitution } = elements,
-              metavariable = reference.getMetavariable(),
-              statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
-              substitution = statementSubstitution;  ///
+              metavariable = reference.getMetavariable();
 
-        substitutions = generalSubstitutions; ///
-
-        substitutions.addSubstitution(substitution, context);
+        StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
 
         statementUnifiesWithTopLevelAssertion = true;
       }

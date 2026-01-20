@@ -9,42 +9,52 @@ import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities
 import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 
 export default define(class FrameSubstitution extends Substitution {
-  constructor(context, string, node, frame, metavariable) {
+  constructor(context, string, node, targetFrame, replacementFrame) {
     super(context, string, node);
 
-    this.frame = frame;
-    this.metavariable = metavariable;
+    this.targetFrame = targetFrame;
+    this.replacementFrame = replacementFrame;
   }
 
-  getFrame() {
-    return this.frame;
+  getTargetFrame() {
+    return this.targetFrame;
   }
 
-  getMetavariable() {
-    return this.metavariable;
+  getReplacementFrame() {
+    return this.replacementFrame;
   }
 
   getTargetNode() {
-    const metavariableNode = this.metavariable.getNode(),
-          targetNode = metavariableNode; ///
+    const targetFrameNode = this.targetFrame.getNode(),
+          tergetNode = targetFrameNode; ///
 
-    return targetNode;
+    return tergetNode;
   }
 
   getReplacementNode() {
-    const frameNode = this.frame.getNode(),
-          replacementnode = frameNode; ///
+    const replacementFrameNode = this.replacementFrame.getNode(),
+          replacementNode = replacementFrameNode; ///
 
-    return replacementnode;
+    return replacementNode;
   }
 
-  isFrameEqualToFrame(frame) { return this.frame.isEqualTo(frame); }
+  isTrivial() {
+    const targetFrameEqualToReplacementFrame = this.targetFrame.isEqualTo(this.replacementFrame),
+          trivial = targetFrameEqualToReplacementFrame; ///
 
-  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
+    return trivial;
+  }
+
+  compareFrame(frame, context) {
+    const frameEqualToReplacementFrame = this.replacementFrame.isEqualTo(frame),
+          comparedToFrame = frameEqualToReplacementFrame; ///
+
+    return comparedToFrame;
+  }
 
   compareParameter(parameter) {
-    const metavariableComparesToParameter = this.metavariable.compareParameter(parameter),
-          comparesToParameter = metavariableComparesToParameter;  ///
+    const targetFrameComparesToParameter = this.targetFrame.compareParameter(parameter),
+          comparesToParameter = targetFrameComparesToParameter;  ///
 
     return comparesToParameter;
   }
@@ -54,31 +64,16 @@ export default define(class FrameSubstitution extends Substitution {
 
     const frameSubstitutionString = this.getString();  ///
 
-    context.trace(`Verifiying the '${frameSubstitutionString}' frame substitution...`);
+    context.trace(`Validating the '${frameSubstitutionString}' frame substitution...`);
 
-    const frameSingular = this.frame.isSingular();
+    const targetFrameValidates = this.validateTargetFrame(context);
 
-    if (frameSingular) {
-      if (this.metavariable !== null) {
-        const metavariablePresent = context.isMetavariablePresent(this.metavariable);
+    if (targetFrameValidates) {
+      const replacementFrameValidates = this.validateReplacementFrame(context);
 
-        if (metavariablePresent) {
-          const frameMetavariable = this.frame.getMetavariable(),
-                frameMetavariablePresent = context.isMetavariablePresent(frameMetavariable);
-
-          if (frameMetavariablePresent) {
-            validates = true;
-          } else {
-            context.debug(`The '${frameSubstitutionString}' frame substitution's general frame's metavariable is not present.`);
-          }
-        } else {
-          context.debug(`The '${frameSubstitutionString}' frame substitution's specific frame's metavariable is not present.`);
-        }
-      } else {
-        context.debug(`The '${frameSubstitutionString}' frame substitution's general frame is not singular.`);
+      if (replacementFrameValidates) {
+        validates = true;
       }
-    } else {
-      context.debug(`The '${frameSubstitutionString}' frame substitution's specific frame is not singular.`);
     }
 
     if (validates) {
@@ -86,10 +81,56 @@ export default define(class FrameSubstitution extends Substitution {
 
       context.addSubstitution(substititoin);
 
-      context.debug(`...verified the '${frameSubstitutionString}' frame substitution.`);
+      context.debug(`...validated the '${frameSubstitutionString}' frame substitution.`);
     }
 
     return validates;
+  }
+
+  validateTargetFrame(context) {
+    let targetFrameValidates = false;
+
+    const targetFrameString = this.targetFrame.getString(),
+          frameSubstitutionString = this.getString();  ///
+
+    context.trace(`Valiidating the '${frameSubstitutionString}' frame subtitution's '${targetFrameString}' target frame...`);
+
+    const targetFrameSingular = this.targetFrame.isSingular();
+
+    if (targetFrameSingular) {
+      const stated = true,
+            assignments = null;
+
+      targetFrameValidates = this.targetFrame.validate(assignments, stated, context);
+    } else {
+      context.debug(`The '${frameSubstitutionString}' frame subtitution's '${targetFrameString}' target frame is not singular.`);
+    }
+
+    if (targetFrameValidates) {
+      context.debug(`...validated the '${frameSubstitutionString}' frame subtitution's '${targetFrameString}' target frame...`);
+    }
+
+    return targetFrameValidates;
+  }
+
+  validateReplacementFrame(context) {
+    let replacementFrameValidates;
+
+    const replacementFrameString = this.replacementFrame.getString(),
+          frameSubstitutionString = this.getString();  ///
+
+    context.trace(`Valiidating the '${frameSubstitutionString}' frame subtitution's '${replacementFrameString}' replacement frame...`);
+
+    const stated = true,
+          assignments = null;
+
+    replacementFrameValidates = this.replacementFrame.validate(assignments, stated, context);
+
+    if (replacementFrameValidates) {
+      context.debug(`...validated the '${frameSubstitutionString}' frame subtitution's '${replacementFrameString}' replacement frame...`);
+    }
+
+    return replacementFrameValidates;
   }
 
   static name = "FrameSubstitution";
@@ -98,15 +139,21 @@ export default define(class FrameSubstitution extends Substitution {
     const statementNode = statement.getNode(),
           frameSubstitution = frameSubstitutionFromStatementNode(statementNode, context);
 
+    if (frameSubstitution !== null) {
+      frameSubstitution.validate(context);
+    }
+
     return frameSubstitution;
   }
 
   static fromFrameAndMetavariable(frame, metavariable, context) {
     return literally((context) => {
-      const frameAndMetavariableString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
-            string = frameAndMetavariableString,  ///
+      const frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
+            string = frameSubstitutionString,  ///
             frameSubstitutionNode = instantiateFrameSubstitution(string, context),
             frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+
+      frameSubstitution.validate(context);
 
       return frameSubstitution;
     }, context);

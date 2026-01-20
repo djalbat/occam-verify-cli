@@ -65,15 +65,11 @@ export default define(class Signature extends Element {
                     termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
 
               if (termTypeEqualToOrSubTypeOfVariableType) {
-                const substitution = synthetically((context) => {
-                  const { TermSubstitution } = elements,
-                        termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, context),
-                        substitution = termSubstitution;  ///
+                synthetically((context) => {
+                  const { TermSubstitution } = elements;
 
-                  return substitution;
+                  TermSubstitution.fromTermAndVariable(term, variable, context);
                 });
-
-                substitutions.addSubstitution(substitution, context);
 
                 return true;
               }
