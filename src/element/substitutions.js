@@ -8,7 +8,7 @@ import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
 import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
-const { find, first, clear, prune, filter, compress, correlate } = arrayUtilities;
+const { find, first, clear, prune, filter, extract, compress, correlate } = arrayUtilities;
 
 export default define(class Substitutions extends Element {
   constructor(context, string, node, array, savedArray) {
@@ -78,7 +78,7 @@ export default define(class Substitutions extends Element {
 
   mapSubstitution(callback) { return this.array.map(callback); }
 
-  findSubstitution(callback) { return this.array.find(callback) || null; }  ///
+  findSubstitution(callback) { return this.array.find(callback) }
 
   someSubstitution(callback) { return this.array.some(callback); }
 
@@ -87,6 +87,8 @@ export default define(class Substitutions extends Element {
   reduceSubstitution(callback, initialValue) { return this.array.reduce(callback, initialValue); }
 
   forEachSubstitution(callback) { this.array.forEach(callback); }
+
+  extractSubstitution(callbcak) { return extract(this.array, callbcak); }
 
   findSubstitutions(callback) {
     const array = find(this.array, callback),
@@ -106,7 +108,7 @@ export default define(class Substitutions extends Element {
           return true;
         }
       }
-    });
+    }) || null;
 
     return substitution;
   }
@@ -135,7 +137,7 @@ export default define(class Substitutions extends Element {
           return true;
         }
       }
-    });
+    }) || null;
 
     return simpleSubstitution;
   }
@@ -171,7 +173,7 @@ export default define(class Substitutions extends Element {
           return true;
         }
       }
-    });
+    }) || null;
 
     return substitution;
   }

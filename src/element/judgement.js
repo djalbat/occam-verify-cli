@@ -22,7 +22,12 @@ export default define(class Judgement extends Element {
     return this.assumption;
   }
 
-  isSingular() { return this.node.isSingular(); }
+  isSingular() {
+    const node = this.getNode(),
+          singular = node.isSingular();
+
+    return singular;
+  }
 
   getMetavariable() { return this.frame.getMetavariable(); }
 

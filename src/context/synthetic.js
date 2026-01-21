@@ -33,6 +33,12 @@ export default class SyntheticContext {
 
   findMetavariableByMetavariableName(metavariableName) { return this.specificContext.findMetavariableByMetavariableName(metavariableName) || this.generalContext.findMetavariableByMetavariableName(metavariableName); }
 
+  isTypePresentByNominalTypeName(nominalTypeName) { return this.specificContext.isTypePresentByNominalTypeName(nominalTypeName) || this.generalContext.isTypePresentByNominalTypeName(nominalTypeName); }
+
+  isVariablePresentByVariableIdentifier(variableIdentifier) { return this.specificContext.isVariablePresentByVariableIdentifier(variableIdentifier) || this.generalContext.isVariablePresentByVariableIdentifier(variableIdentifier); }
+
+  isMetavariablePresentByMetavariableName(metavariableName) { return this.specificContext.isMetavariablePresentByMetavariableName(metavariableName) || this.generalContext.isMetavariablePresentByMetavariableName(metavariableName); }
+
   static fromNothing(generalContext, specificContext) {
     const context = specificContext,  ///
           syntheticContext = new SyntheticContext(context, generalContext, specificContext);

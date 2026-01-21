@@ -93,7 +93,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     const targetReferenceString = this.targetReference.getString(),
           referenceSubstitutionString = this.getString();  ///
 
-    context.trace(`Valiidating the '${referenceSubstitutionString}' reference subtitution's '${targetReferenceString}' target reference...`);
+    context.trace(`Validating the '${referenceSubstitutionString}' reference subtitution's '${targetReferenceString}' target reference...`);
 
     const targetReferenceSingular = this.targetReference.isSingular();
 
@@ -116,7 +116,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     const replacementReferenceString = this.replacementReference.getString(),
           referenceSubstitutionString = this.getString();  ///
 
-    context.trace(`Valiidating the '${referenceSubstitutionString}' reference subtitution's '${replacementReferenceString}' replacement reference...`);
+    context.trace(`Validating the '${referenceSubstitutionString}' reference subtitution's '${replacementReferenceString}' replacement reference...`);
 
     replacementReferenceValidates = this.replacementReference.validate(context);
 

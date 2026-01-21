@@ -61,11 +61,9 @@ export default define(class Premise extends ProofAssertion {
       }
 
       if (this.procedureCall !== null) {
-        const stated = true,
-              assignments = null,
-              procedureCallVerifies = this.procedureCall.verify(assignments, stated, context);
+        const procedureCallValidates = this.procedureCall.validate(context);
 
-        if (procedureCallVerifies) {
+        if (procedureCallValidates) {
           verifies = true;
         }
       }

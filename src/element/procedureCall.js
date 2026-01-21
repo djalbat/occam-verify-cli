@@ -25,23 +25,24 @@ export default define(class ProcedureCall extends Element {
 
   getName() { return this.procedureReference.getName(); }
 
-  findNodes(substitutions) {
-    const nodes = this.parameters.map((parameter) => {
-      const replacementNode = parameter.findReplacementNode(substitutions),
-            node = replacementNode;  ///
+  findNodes(context) {
+    const substitutions = context.getSubstitutions(),
+          nodes = this.parameters.map((parameter) => {
+            const replacementNode = parameter.findReplacementNode(substitutions),
+                  node = replacementNode;  ///
 
-      return node;
-    });
+            return node;
+          });
 
     return nodes;
   }
 
-  verify(assignments, stated, context) {
-    let verifies = false;
+  validate(context) {
+    let validates = false;
 
     const procedureCallString = this.getString(); ///
 
-    context.trace(`Verifying the '${procedureCallString}' procedure call...`);
+    context.trace(`Validating the '${procedureCallString}' procedure call...`);
 
     const name = this.getName(),
           procedure = context.findProcedureByName(name);
@@ -50,7 +51,7 @@ export default define(class ProcedureCall extends Element {
       const procedureBoolean = procedure.isBoolean();
 
       if (procedureBoolean) {
-        verifies = true;
+        validates = true;
       } else {
         context.trace(`The '${procedureCallString}' procedure is not boolean.`);
       }
@@ -58,11 +59,11 @@ export default define(class ProcedureCall extends Element {
       context.trace(`The '${procedureCallString}' procedure is not present.`);
     }
 
-    if (verifies) {
-      context.debug(`...verified the '${procedureCallString}' procedure call.`);
+    if (validates) {
+      context.debug(`...validated the '${procedureCallString}' procedure call.`);
     }
 
-    return verifies;
+    return validates;
   }
 
   unifyIndependently(substitutions, context) {
@@ -73,7 +74,7 @@ export default define(class ProcedureCall extends Element {
     context.trace(`Unifying the '${procedureCallString}' procedure call independently...`);
 
     const name = this.getName(),
-          nodes = this.findNodes(substitutions),
+          nodes = this.findNodes(context),
           procedure = context.findProcedureByName(name),
           expressions = Expressions.fromNodes(nodes, context);
 

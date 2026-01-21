@@ -47,14 +47,6 @@ export default define(class Metavariable extends Element {
 
   isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
-  compareParameter(parameter) {
-    const name = parameter.getName(),
-          nameEqualTo = this.isNameEqualTo(name),
-          comparesToParameter = nameEqualTo;  ///
-
-    return comparesToParameter;
-  }
-
   compareMetavariableName(metavariableName) {
     const nameMetavariableName = (this.name === metavariableName),
           comparesToMetavariableName = nameMetavariableName;  ///
@@ -185,12 +177,16 @@ export default define(class Metavariable extends Element {
           statementUnifies = true;
         }
       } else {
-        const { StatementSubstitution } = elements,
-              metavariable = this;  ///
+        const metavariable = this;  ///
 
-        (substitution !== null) ?
-          StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
-            StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+        synthetically((context) => {
+          const { StatementSubstitution } = elements;
+
+          (substitution !== null) ?
+            StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
+              StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+
+        }, generalContext, specificContext);
 
         statementUnifies = true;
       }

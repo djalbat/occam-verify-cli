@@ -93,7 +93,7 @@ export default define(class FrameSubstitution extends Substitution {
     const targetFrameString = this.targetFrame.getString(),
           frameSubstitutionString = this.getString();  ///
 
-    context.trace(`Valiidating the '${frameSubstitutionString}' frame subtitution's '${targetFrameString}' target frame...`);
+    context.trace(`Validating the '${frameSubstitutionString}' frame subtitution's '${targetFrameString}' target frame...`);
 
     const targetFrameSingular = this.targetFrame.isSingular();
 
@@ -119,7 +119,7 @@ export default define(class FrameSubstitution extends Substitution {
     const replacementFrameString = this.replacementFrame.getString(),
           frameSubstitutionString = this.getString();  ///
 
-    context.trace(`Valiidating the '${frameSubstitutionString}' frame subtitution's '${replacementFrameString}' replacement frame...`);
+    context.trace(`Validating the '${frameSubstitutionString}' frame subtitution's '${replacementFrameString}' replacement frame...`);
 
     const stated = true,
           assignments = null;
@@ -138,10 +138,6 @@ export default define(class FrameSubstitution extends Substitution {
   static fromStatement(statement, context) {
     const statementNode = statement.getNode(),
           frameSubstitution = frameSubstitutionFromStatementNode(statementNode, context);
-
-    if (frameSubstitution !== null) {
-      frameSubstitution.validate(context);
-    }
 
     return frameSubstitution;
   }

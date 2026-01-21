@@ -22,7 +22,7 @@ export default class FrameNode extends NonTerminalNode {
 
     const metavariableNode = this.getMetavariableNode();
 
-    if (metavariableName !== null) {
+    if (metavariableNode !== null) {
       metavariableName = metavariableNode.getMetavariableName();
     }
 

@@ -7,6 +7,7 @@ import elements from "../elements";
 
 import { define } from "../elements";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
+import { assumptionsStringFromAssumptions } from "../utilities/string";
 
 const { first } = arrayUtilities;
 
@@ -52,18 +53,18 @@ export default define(class Frame extends Element {
   }
 
   getMetavariableName() {
-    let metavariableName = null;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      metavariableName = this.node.getMetavariableName();
-    }
+    const node = this.getNode(),
+          metavariableName = node.getMetavariableName();
 
     return metavariableName;
   }
 
-  isSingular() { return this.node.isSingular(); }
+  isSingular() {
+    const node = this.getNode(),
+          singular = node.isSingular();
+
+    return singular;
+  }
 
   isMetavariableEqualToMetavariable(metavariable, context) {
     let metavariableEqualToMetavariable;
@@ -71,8 +72,9 @@ export default define(class Frame extends Element {
     const singular = this.isSingular();
 
     if (singular) {
-      const metavariableA = metavariable, ///
-            singularMetavariableNode = this.node.getSingularMetavariableNode(),
+      const node = this.getNode(),
+            metavariableA = metavariable, ///
+            singularMetavariableNode = node.getSingularMetavariableNode(),
             metavariableName = singularMetavariableNode.getMetavariableName();
 
       metavariable = context.findMetavariableByMetavariableName(metavariableName)
@@ -84,6 +86,26 @@ export default define(class Frame extends Element {
     }
 
     return metavariableEqualToMetavariable;
+  }
+
+  compareParameter(parameter) {
+    let comparesToParamter = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const parameterName = parameter.getName();
+
+      if (parameterName !== null) {
+        const metavariableName = this.getMetavariableName();
+
+        if (parameterName === metavariableName) {
+          comparesToParamter = true;
+        }
+      }
+    }
+
+    return comparesToParamter;
   }
 
   compareSubstitution(substitution, context) {
@@ -178,10 +200,10 @@ export default define(class Frame extends Element {
 
     const singular = this.isSingular();
 
-    if (!singular) {
-      context.trace(`The '${frameString}' stated frame must be singular.`);
-    } else {
+    if (singular) {
       validatesWhenStated = true;
+    } else {
+      context.trace(`The '${frameString}' stated frame must be singular.`);
     }
 
     if (validatesWhenStated) {
@@ -208,20 +230,25 @@ export default define(class Frame extends Element {
   }
 
   validateAssumptions(assignments, stated, context) {
-    let assumptionsValidate = true;  ///
+    let assumptionsValidate;
 
-    const length = this.getLength();
+    const frameString = this.getString(),
+          assumptionsString = assumptionsStringFromAssumptions(this.assumptions);
 
-    if (length > 0) {
-      stated = true;  ///
+    context.trace(`Validating the '${assumptionsString}' assumptions of the '${frameString}' frame...`);
 
-      assignments = null; ///
+    stated = true;  ///
 
-      assumptionsValidate = this.assumptions.every((assumption) => {
-        const assumptionVerifies = assumption.validate(assignments, stated, context);
+    assignments = null; ///
 
-        return assumptionVerifies;
-      });
+    assumptionsValidate = this.assumptions.every((assumption) => {
+      const assumptionVerifies = assumption.validate(assignments, stated, context);
+
+      return assumptionVerifies;
+    });
+
+    if (assumptionsValidate) {
+      context.debug(`...validated the '${assumptionsString}' assumptions of the '${frameString}' frame.`);
     }
 
     return assumptionsValidate;
@@ -233,7 +260,7 @@ export default define(class Frame extends Element {
     const frameString = this.getString(),  ///
           metaTypeString = metaType.getString();
 
-    context.trace(`Validatin the '${frameString}' frame given the '${metaTypeString}' meta-type...`);
+    context.trace(`Validating the '${frameString}' frame given the '${metaTypeString}' meta-type...`);
 
     const metaTypeName = metaType.getName();
 

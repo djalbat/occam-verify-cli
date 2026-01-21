@@ -126,12 +126,15 @@ export default define(class StatementSubstitution extends Substitution {
     const targetStatementString = this.targetStatement.getString(),
           statementSubstitutionString = this.getString();  ///
 
-    context.trace(`Valiidating the '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement...`);
+    context.trace(`Validating the '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement...`);
 
     const targetStatementSingular = this.targetStatement.isSingular();
 
     if (targetStatementSingular) {
-      targetStatementValidates = this.targetStatement.validate(context);
+      const stated = true,
+            assignments = null;
+
+      targetStatementValidates = this.targetStatement.validate(assignments, stated, context);
     } else {
       context.debug(`The '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement is not singular.`);
     }
@@ -149,9 +152,12 @@ export default define(class StatementSubstitution extends Substitution {
     const replacementStatementString = this.replacementStatement.getString(),
           statementSubstitutionString = this.getString();  ///
 
-    context.trace(`Valiidating the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement...`);
+    context.trace(`Validating the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement...`);
 
-    replacementStatementValidates = this.replacementStatement.validate(context);
+    const stated = true,
+          assignments = null;
+
+    replacementStatementValidates = this.replacementStatement.validate(assignments, stated, context);
 
     if (replacementStatementValidates) {
       context.debug(`...validated the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement...`);

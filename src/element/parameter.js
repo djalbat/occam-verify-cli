@@ -30,7 +30,7 @@ export default define(class Parameter extends Element {
             if (substitutionComparesToParamter) {
               return true;
             }
-          });
+          }) || null;
 
     if (substitution !== null) {
       replacementNode = substitution.getReplacementNode();

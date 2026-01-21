@@ -96,7 +96,7 @@ export default define(class TermSubstitution extends Substitution {
     const targetTermString = this.targetTerm.getString(),
           termSubstitutionString = this.getString();  ///
 
-    context.trace(`Valiidating the '${termSubstitutionString}' term subtitution's '${targetTermString}' target term...`);
+    context.trace(`Validating the '${termSubstitutionString}' term subtitution's '${targetTermString}' target term...`);
 
     const targetTermSingular = this.targetTerm.isSingular();
 
@@ -123,7 +123,7 @@ export default define(class TermSubstitution extends Substitution {
     const replacementTermString = this.replacementTerm.getString(),
           termSubstitutionString = this.getString();  ///
 
-    context.trace(`Valiidating the '${termSubstitutionString}' term subtitution's '${replacementTermString}' replacement term...`);
+    context.trace(`Validating the '${termSubstitutionString}' term subtitution's '${replacementTermString}' replacement term...`);
 
     replacementTermValidates = this.replacementTerm.validate(context, () => {
       const validatesAhead = true;
@@ -143,10 +143,6 @@ export default define(class TermSubstitution extends Substitution {
   static fromStatement(statement, context) {
     const statementNode = statement.getNode(),
           termSubstitution = termSubstitutionFromStatementNode(statementNode, context);
-
-    if (termSubstitution !== null) {
-      termSubstitution.validate(context);
-    }
 
     return termSubstitution;
   }

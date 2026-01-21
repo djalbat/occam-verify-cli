@@ -6,8 +6,7 @@ import Element from "../element";
 
 import { define } from "../elements";
 import { validateTerms } from "../utilities/validation";
-import { instantiateTerm } from "../process/instantiate";
-import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { typeToTypeJSON } from "../utilities/json";
 
 const { filter, compress } = arrayUtilities;
 
@@ -26,29 +25,14 @@ export default define(class Term extends Element {
     this.type = type;
   }
 
-  isSingular() { return this.node.isSingular(); }
+  isSingular() {
+    const node = this.getNode(),
+          singular = node.isSingular();
+
+    return singular;
+  }
 
   isProvisional() { return this.type.isProvisional(); }
-
-  compareVariable(variable) {
-    let comparesToVaraible = false;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const variableNode = variable.getNode(),
-            singularVariableNode = this.node.getSingularVariableNode(),
-            variableNodeA = variableNode, ///
-            variableNodeB = singularVariableNode, ///
-            matches = variableNodeA.match(variableNodeB);
-
-      if (matches) {
-        comparesToVaraible = true;
-      }
-    }
-
-    return comparesToVaraible;
-  }
 
   isGrounded(definedVariables, context) {
     const term  = this, ///
@@ -83,6 +67,57 @@ export default define(class Term extends Element {
           implicitlyGrounded = grounded;  ///
 
     return implicitlyGrounded;
+  }
+
+  getVariableIdentifier() {
+    const node = this.getNode(),
+          variableIdentifier = node.getVariableIdentifier();
+
+    return variableIdentifier;
+  }
+
+  compareVariable(variable) {
+    let comparesToVaraible = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      let variableIdentifier;
+
+      variableIdentifier = this.getVariableIdentifier();
+
+      const varialbeIdentifierA = variableIdentifier; ///
+
+      variableIdentifier = variable.getIdentifier();
+
+      const variableIdnetifierB = variableIdentifier; ///
+
+      if (varialbeIdentifierA === variableIdnetifierB) {
+        comparesToVaraible = true;
+      }
+    }
+
+    return comparesToVaraible;
+  }
+
+  compareParameter(parameter) {
+    let comparesToParamter = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const parameterIdentifier = parameter.getIdentifier();
+
+      if (parameterIdentifier !== null) {
+        const variableIdentifier = this.getVariableIdentifier();
+
+        if (parameterIdentifier === variableIdentifier) {
+          comparesToParamter = true;
+        }
+      }
+    }
+
+    return comparesToParamter;
   }
 
   validate(context, verifyAhead) {

@@ -2,6 +2,8 @@
 
 import { arrayUtilities } from "necessary";
 
+import elements from "../elements";
+
 import { chainContext } from "../utilities/context";
 
 const { extract } = arrayUtilities;
@@ -147,7 +149,7 @@ export default class EphemeralContext {
           substitutionA = substitution, ///
           substitutionString = substitution.getString();
 
-    extract(this.substitutions, (substitution) => {
+    this.substitutions.extractSubstitution((substitution) => {
       const substitutionB = substitution, ///
             substituionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
 
@@ -158,7 +160,7 @@ export default class EphemeralContext {
 
     context.trace(`Added the '${substitutionString}' substitution to the context.`);
 
-    this.substitutions.push(substitution);
+    this.substitutions.addSubstitution(substitution, context);
   }
 
   findTermByTermNode(termNode) {
@@ -222,7 +224,7 @@ export default class EphemeralContext {
   }
 
   findSubstitutionBySubstitutionNode(substitutionNode) {
-    const substitution = this.substitutions.find((substitution) => {
+    const substitution = this.substitutions.findSubstitution((substitution) => {
       const substitutionNodeMatches = substitution.matchNode(substitutionNode);
 
       if (substitutionNodeMatches) {
@@ -244,22 +246,24 @@ export default class EphemeralContext {
   isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) { return this.context.findVariableByVariableIdentifier(variableIdentifier, nested); }
 
   static fromNothing(context) {
-    const terms = [],
+    const { Substitutions } = elements,
+          terms = [],
           frames = [],
           statements = [],
           assertions = [],
           references = [],
-          substitutions = [],
+          substitutions = Substitutions.fromNothing(context),
           emphemeralContext = new EphemeralContext(context, terms, frames, statements, assertions, references, substitutions);
 
     return emphemeralContext;
   }
 
   static fromTermsAndFrames(terms, frames, context) {
-    const statements = [],
+    const { Substitutions } = elements,
+          statements = [],
           assertions = [],
           references = [],
-          substitutions = [],
+          substitutions = Substitutions.fromNothing(context),
           emphemeralContext = new EphemeralContext(context, terms, frames, statements, assertions, references, substitutions);
 
     return emphemeralContext;

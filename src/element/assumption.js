@@ -140,20 +140,14 @@ export default define(class Assumption extends Element {
   }
 
   validateReferenceAsMetavariable(assignments, stated, context) {
-    let referenceValidatesAsMetavariable = false;
+    let referenceValidatesAsMetavariable;
 
     const referenceString = this.reference.getString(),
           assumptionString = this.getString(); ///
 
     context.trace(`Validating the '${assumptionString}' assumption's '${referenceString}' reference as s metavariable...`);
 
-    const metavariable = this.reference.getMetavariable(),
-          metavariableName = metavariable.getName(),
-          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
-
-    if (metavariablePresent) {
-      referenceValidatesAsMetavariable = true;
-    }
+    referenceValidatesAsMetavariable = this.reference.validateAsMetavariable(context);
 
     if (referenceValidatesAsMetavariable) {
       context.debug(`...validated the '${assumptionString}' assumption's '${referenceString}' reference as a metavariable.`);

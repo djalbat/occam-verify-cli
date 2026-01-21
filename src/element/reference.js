@@ -36,6 +36,22 @@ export default define(class Reference extends Element {
 
   isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
+  compareParameter(parameter) {
+    let comparesToParamter = false;
+
+    const parameterName = parameter.getName();
+
+    if (parameterName !== null) {
+      const metavariableName = this.getMetavariableName();
+
+      if (parameterName === metavariableName) {
+        comparesToParamter = true;
+      }
+    }
+
+    return comparesToParamter;
+  }
+
   compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchNode(metavariableNode); }
@@ -84,6 +100,28 @@ export default define(class Reference extends Element {
     }
 
     return metavariableValidates;
+  }
+
+  validateAsMetavariable(context) {
+    let validatesAsMetavariable = false;
+
+    const referenceString = this.getString();
+
+    context.trace(`Validating the '${referenceString}' reference as a metavaraible...`);
+
+    const metavariable = this.getMetavariable(),
+          metavariableName = metavariable.getName(),
+          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
+
+    if (metavariablePresent) {
+      validatesAsMetavariable = true;
+    }
+
+    if (validatesAsMetavariable) {
+      context.debug(`...validated the '${referenceString}' reference as a metavaraible.`);
+    }
+
+    return validatesAsMetavariable;
   }
 
   unifyLabel(label, substitutions, context) {

@@ -120,7 +120,7 @@ export default define(class Step extends ProofAssertion {
       referenceValidates = this.reference.validate(context);
 
       if (referenceValidates) {
-        context.debug(`...validating the '${stepString}' step's reference. `, node);
+        context.debug(`...validated the '${stepString}' step's reference. `, node);
       }
     }
 
