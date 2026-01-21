@@ -76,30 +76,6 @@ export default define(class Term extends Element {
     return variableIdentifier;
   }
 
-  compareVariable(variable) {
-    let comparesToVaraible = false;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      let variableIdentifier;
-
-      variableIdentifier = this.getVariableIdentifier();
-
-      const varialbeIdentifierA = variableIdentifier; ///
-
-      variableIdentifier = variable.getIdentifier();
-
-      const variableIdnetifierB = variableIdentifier; ///
-
-      if (varialbeIdentifierA === variableIdnetifierB) {
-        comparesToVaraible = true;
-      }
-    }
-
-    return comparesToVaraible;
-  }
-
   compareParameter(parameter) {
     let comparesToParamter = false;
 
