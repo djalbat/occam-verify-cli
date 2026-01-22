@@ -12,32 +12,6 @@ import { equalityFromStatement,
          containedAssertionFromStatement,
          satisfiesAssertionFromStatement } from "../utilities/statement";
 
-function unifyTermWithBracketedConstructor(term, context, validateAhead) {
-  let termUnifiesWithBracketedConstructor;
-
-  const bracketedConstructor = bracketedConstructorFromNothing();
-
-  termUnifiesWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, validateAhead);
-
-  return termUnifiesWithBracketedConstructor;
-}
-
-function unifyTermWithConstructors(term, context, validateAhead) {
-  let termUnifiesWithConstructors;
-
-  const constructors = context.getConstructors();
-
-  termUnifiesWithConstructors = constructors.some((constructor) => {
-    const unifiesWithConstructor = constructor.unifyTerm(term, context, validateAhead);
-
-    if (unifiesWithConstructor) {
-      return true;
-    }
-  });
-
-  return termUnifiesWithConstructors;
-}
-
 function validateTermAsVariable(term, context, validateAhead) {
   let termValidatesAsVariable = false;
 
@@ -72,32 +46,30 @@ function validateTermAsVariable(term, context, validateAhead) {
   return termValidatesAsVariable;
 }
 
-function unifyStatementWithBracketedCombinator(statement, assignments, stated, context) {
-  stated = true;  ///
+function unifyTermWithConstructors(term, context, validateAhead) {
+  let termUnifiesWithConstructors;
 
-  assignments = null; ///
+  const constructors = context.getConstructors();
 
-  const bracketedCombinator = bracketedCombinatorFromNothing(),
-        statementUnifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
+  termUnifiesWithConstructors = constructors.some((constructor) => {
+    const unifiesWithConstructor = constructor.unifyTerm(term, context, validateAhead);
 
-  return statementUnifiesWithBracketedCombinator;
+    if (unifiesWithConstructor) {
+      return true;
+    }
+  });
+
+  return termUnifiesWithConstructors;
 }
 
-function unifyStatementWithCombinators(statement, assignments, stated, context) {
-  stated = true;  ///
+function unifyTermWithBracketedConstructor(term, context, validateAhead) {
+  let termUnifiesWithBracketedConstructor;
 
-  assignments = null; ///
+  const bracketedConstructor = bracketedConstructorFromNothing();
 
-  const combinators = context.getCombinators(),
-        statementUnifiesWithCombinators = combinators.some((combinator) => {
-          const unifiesWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
+  termUnifiesWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, validateAhead);
 
-          if (unifiesWithCombinator) {
-            return true;
-          }
-        });
-
-  return statementUnifiesWithCombinators;
+  return termUnifiesWithBracketedConstructor;
 }
 
 function validateStatementAsMetavariable(statement, assignments, stated, context) {
@@ -137,6 +109,34 @@ function validateStatementAsMetavariable(statement, assignments, stated, context
   }
 
   return statementValidatesAsMetavariableAndSubstitution;
+}
+
+function unifyStatementWithCombinators(statement, assignments, stated, context) {
+  stated = true;  ///
+
+  assignments = null; ///
+
+  const combinators = context.getCombinators(),
+    statementUnifiesWithCombinators = combinators.some((combinator) => {
+      const unifiesWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
+
+      if (unifiesWithCombinator) {
+        return true;
+      }
+    });
+
+  return statementUnifiesWithCombinators;
+}
+
+function unifyStatementWithBracketedCombinator(statement, assignments, stated, context) {
+  stated = true;  ///
+
+  assignments = null; ///
+
+  const bracketedCombinator = bracketedCombinatorFromNothing(),
+        statementUnifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
+
+  return statementUnifiesWithBracketedCombinator;
 }
 
 function validateStatementAsEquality(statement, assignments, stated, context) {
@@ -340,15 +340,15 @@ function validateStatementAsSatisfiesAssertion(statement, assignments, stated, c
 }
 
 export const validateTerms = [
-  unifyTermWithBracketedConstructor,
+  validateTermAsVariable,
   unifyTermWithConstructors,
-  validateTermAsVariable
+  unifyTermWithBracketedConstructor
 ];
 
 export const validateStatements = [
-  unifyStatementWithBracketedCombinator,
-  unifyStatementWithCombinators,
   validateStatementAsMetavariable,
+  unifyStatementWithCombinators,
+  unifyStatementWithBracketedCombinator,
   validateStatementAsEquality,
   validateStatementAsJudgement,
   validateStatementAsTypeAssertion,

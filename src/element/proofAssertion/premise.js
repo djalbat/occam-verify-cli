@@ -5,6 +5,7 @@ import EphemeralContext from "../../context/ephemeral";
 import assignAssignments from "../../process/assign";
 
 import { define } from "../../elements";
+import { synthetically } from "../../utilities/context";
 import { termsFromJSON,
          framesFromJSON,
          termsToTermsJSON,
@@ -166,18 +167,21 @@ export default define(class Premise extends ProofAssertion {
 
     context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${premiseString}' premise...`);
 
+    const specificContext = context;  ///
+
     context = this.getContext();
 
     const generalContext = context; ///
 
-    context = proofAssertion.getContext();
-
-    const specificContext = context;  ///
-
     context = specificContext;  ///
 
-    const statement = proofAssertion.getStatement(),
-          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+    const proofAssertionContext = proofAssertion.getContext(),
+          statementUnifies = synthetically((specificContext) => {
+            const statement = proofAssertion.getStatement(),
+                  statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+            return statementUnifies;
+          }, specificContext, proofAssertionContext);
 
     if (statementUnifies) {
       proofAssertionUnifies = true;

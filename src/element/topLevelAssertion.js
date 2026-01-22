@@ -239,12 +239,7 @@ export default class TopLevelAssertion extends Element {
   unifyStepsOrSubproofsWithSupposition(subproofOrProofAssertions, supposition, substitutions, generalContext, specificContext) {
     let subproofOrProofAssertionsUnifiesWithSupposition = false;
 
-    const context = specificContext,  ///
-          suppositionUnifiesIndependently = supposition.unifyIndependently(substitutions, context);
-
-    if (suppositionUnifiesIndependently) {
-      subproofOrProofAssertionsUnifiesWithSupposition = true;
-    } else {
+    if (!subproofOrProofAssertionsUnifiesWithSupposition) {
       const subproofOrProofAssertion = extract(subproofOrProofAssertions, (subproofOrProofAssertion) => {
         const subproofOrProofAssertionUnifies = supposition.unifySubproofOrProofAssertion(subproofOrProofAssertion, substitutions, generalContext, specificContext);
 
@@ -254,6 +249,15 @@ export default class TopLevelAssertion extends Element {
       }) || null;
 
       if (subproofOrProofAssertion !== null) {
+        subproofOrProofAssertionsUnifiesWithSupposition = true;
+      }
+    }
+
+    if (!subproofOrProofAssertionsUnifiesWithSupposition) {
+      const context = specificContext,  ///
+            suppositionUnifiesIndependently = supposition.unifyIndependently(substitutions, context);
+
+      if (suppositionUnifiesIndependently) {
         subproofOrProofAssertionsUnifiesWithSupposition = true;
       }
     }

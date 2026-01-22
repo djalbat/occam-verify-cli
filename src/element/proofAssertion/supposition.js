@@ -5,7 +5,15 @@ import EphemeralContext from "../../context/ephemeral";
 import assignAssignments from "../../process/assign";
 
 import { define } from "../../elements";
-import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
+import { synthetically } from "../../utilities/context";
+import { termsFromJSON,
+         framesFromJSON,
+         termsToTermsJSON,
+         statementFromJSON,
+         framesToFramesJSON,
+         procedureCallFromJSON,
+         statementToStatementJSON,
+         procedureCallToProcedureCallJSON } from "../../utilities/json";
 
 export default define(class Supposition extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -159,18 +167,21 @@ export default define(class Supposition extends ProofAssertion {
 
     context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition...`);
 
+    const specificContext = context;  ///
+
     context = this.getContext();
 
     const generalContext = context; ///
 
-    context = proofAssertion.getContext();
-
-    const specificContext = context;  ///
-
     context = specificContext;  ///
 
-    const statement = proofAssertion.getStatement(),
-          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+    const proofAssertionContext = proofAssertion.getContext(),
+          statementUnifies = synthetically((specificContext) => {
+            const statement = proofAssertion.getStatement(),
+                  statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+            return statementUnifies;
+          }, specificContext, proofAssertionContext);
 
     if (statementUnifies) {
       proofAssertionUnifies = true;

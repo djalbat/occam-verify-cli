@@ -191,14 +191,6 @@ export default define(class Rule extends Element {
     let subproofOrProofAssertionsUnifiesWithPremise = false;
 
     if (!subproofOrProofAssertionsUnifiesWithPremise) {
-      const premiseUnifiesIndependently = premise.unifyIndependently(substitutions, context);
-
-      if (premiseUnifiesIndependently) {
-        subproofOrProofAssertionsUnifiesWithPremise = true;
-      }
-    }
-
-    if (!subproofOrProofAssertionsUnifiesWithPremise) {
       const subproofOrProofAssertion = extract(subproofOrProofAssertions, (subproofOrProofAssertion) => {
         const subproofOrProofAssertionUnifies = premise.unifySubproofOrProofAssertion(subproofOrProofAssertion, substitutions, context);
 
@@ -208,6 +200,14 @@ export default define(class Rule extends Element {
       }) || null;
 
       if (subproofOrProofAssertion !== null) {
+        subproofOrProofAssertionsUnifiesWithPremise = true;
+      }
+    }
+
+    if (!subproofOrProofAssertionsUnifiesWithPremise) {
+      const premiseUnifiesIndependently = premise.unifyIndependently(substitutions, context);
+
+      if (premiseUnifiesIndependently) {
         subproofOrProofAssertionsUnifiesWithPremise = true;
       }
     }

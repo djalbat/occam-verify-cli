@@ -201,11 +201,12 @@ export default define(class Substitutions extends Element {
   }
 
   addSubstitution(substitution, context) {
+    const substitutionString = substitution.getString(),
+          substitutionsString = this.asString();  ///
+
     this.array.push(substitution);
 
-    const string = this.asString(),
-          substitutionString = substitution.getString(),
-          substitutionsString = string; ///
+    const string = this.asString();
 
     this.setString(string);
 
