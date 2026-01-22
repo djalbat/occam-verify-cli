@@ -1,8 +1,8 @@
 "use strict";
 
 import Element from "../element";
-import ScopedContext from "../context/scoped";
 
+import { scope } from "../utilities/context";
 import { labelFromJSON,
          labelToLabelJSON,
          deductionFromJSON,
@@ -56,25 +56,27 @@ export default class TopLevelMetaAssertion extends Element {
   verify() {
     let verifies = false;
 
-    const labelVerifies = this.verifyLabel();
+    const context = this.getContext();
 
-    if (labelVerifies) {
-      const scopedContext = ScopedContext.fromNothing(this.context),
-            context = scopedContext, ///
-            suppositionsVerify = this.verifySuppositions(context);
+    scope((context) => {
+      const labelVerifies = this.verifyLabel();
 
-      if (suppositionsVerify) {
-        const deductionVerifies = this.verifyDeduction(context);
+      if (labelVerifies) {
+        const suppositionsVerify = this.verifySuppositions(context);
 
-        if (deductionVerifies) {
-          const proofVerifies = this.verifyProof(context);
+        if (suppositionsVerify) {
+          const deductionVerifies = this.verifyDeduction(context);
 
-          if (proofVerifies) {
-            verifies = true;
+          if (deductionVerifies) {
+            const proofVerifies = this.verifyProof(context);
+
+            if (proofVerifies) {
+              verifies = true;
+            }
           }
         }
       }
-    }
+    }, context);
 
     return verifies;
   }

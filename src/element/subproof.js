@@ -2,8 +2,8 @@
 
 import Element from "../element";
 import elements from "../elements";
-import ScopedContext from "../context/scoped";
 
+import { scope } from "../utilities/context";
 import { define } from "../elements";
 
 export default define(class Subproof extends Element {
@@ -49,25 +49,23 @@ export default define(class Subproof extends Element {
   verify(substitutions, assignments, context) {
     let verifies = false;
 
-    const scopedContext = ScopedContext.fromNothing(context);  ///
+    scope(() => {
+      const suppositionsVerify = this.suppositions.every((supposition) => {
+        const suppositionVerifies = supposition.verify(context);
 
-    context = scopedContext; ///
+        if (suppositionVerifies) {
+          return true;
+        }
+      });
 
-    const suppositionsVerify = this.suppositions.every((supposition) => {
-      const suppositionVerifies = supposition.verify(context);
+      if (suppositionsVerify) {
+        const subDerivationVerifies = this.subDerivation.verify(substitutions, context);
 
-      if (suppositionVerifies) {
-        return true;
+        if (subDerivationVerifies) {
+          verifies = true;
+        }
       }
-    });
-
-    if (suppositionsVerify) {
-      const subDerivationVerifies = this.subDerivation.verify(substitutions, context);
-
-      if (subDerivationVerifies) {
-        verifies = true;
-      }
-    }
+    }, context);
 
     return verifies;
   }

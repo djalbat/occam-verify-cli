@@ -10,8 +10,7 @@ export default define(class Conjecture extends TopLevelAssertion {
 
     const node = this.getNode(),
           context = this.getContext(),
-          conjecture = this,  ///
-          conjectureString = conjecture.getString();
+          conjectureString = this.getString();  ///
 
     context.trace(`Verifying the '${conjectureString}' conjecture...`, node);
 

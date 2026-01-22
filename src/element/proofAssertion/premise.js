@@ -1,11 +1,10 @@
 "use strict";
 
 import ProofAssertion from "../proofAssertion";
-import EphemeralContext from "../../context/ephemeral";
 import assignAssignments from "../../process/assign";
 
 import { define } from "../../elements";
-import { synthetically } from "../../utilities/context";
+import { attempt, synthetically } from "../../utilities/context";
 import { termsFromJSON,
          framesFromJSON,
          termsToTermsJSON,
@@ -29,50 +28,51 @@ export default define(class Premise extends ProofAssertion {
   verify(context) {
     let verifies = false;
 
-    const ephemeralContext = EphemeralContext.fromNothing(context);
-
-    context = ephemeralContext; ///
-
     const node = this.getNode(),
           premiseString = this.getString(); ///
 
     context.trace(`Verifying the '${premiseString}' premise...`, node);
 
-    const statement = this.getStatement();
+    const statement = this.getStatement(),
+          procedureCall = this.getProcedureCall();
 
-    if ((statement === null) && (this.procedureCall === null)) {
-      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`, node);
-    } else {
-      if (statement !== null) {
-        const stated = true,
-              assignments = [],
-              statementValidates = statement.validate(assignments, stated, context);
+    if ((statement !== null) || (procedureCall !== null)) {
+      attempt((context) => {
+        if (statement !== null) {
+          const stated = true,
+                assignments = [],
+                statementValidates = statement.validate(assignments, stated, context);
 
-        if (statementValidates) {
-          const assignmentsAssigned = assignAssignments(assignments, context);
+          if (statementValidates) {
+            const assignmentsAssigned = assignAssignments(assignments, context);
 
-          if (assignmentsAssigned) {
-            const subproofOrProofAssertion = this;  ///
+            if (assignmentsAssigned) {
+              const subproofOrProofAssertion = this;  ///
 
-            context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+              context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+
+              this.setContext(context);
+
+              verifies = true;
+            }
+          }
+        }
+
+        if (procedureCall !== null) {
+          const procedureCallValidates = this.procedureCall.validate(context);
+
+          if (procedureCallValidates) {
+            this.setContext(context);
 
             verifies = true;
           }
         }
-      }
-
-      if (this.procedureCall !== null) {
-        const procedureCallValidates = this.procedureCall.validate(context);
-
-        if (procedureCallValidates) {
-          verifies = true;
-        }
-      }
+      }, context);
+    } else {
+      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`, node);
     }
 
     if (verifies) {
-      this.setContext(context);
-
       context.debug(`...verified the '${premiseString}' premise.`, node);
     }
 
@@ -130,7 +130,7 @@ export default define(class Premise extends ProofAssertion {
                         null :
                           subproofOrProofAssertion;
 
-    substitutions.snapshot();
+    substitutions.snapshot(context);
 
     if (subproof !== null) {
       const subproofUnifies = this.unifySubproof(subproof, substitutions, context);
@@ -153,7 +153,7 @@ export default define(class Premise extends ProofAssertion {
     }
 
     subproofOrProofAssertionUnifies ?
-      substitutions.continue() :
+      substitutions.continue(context) :
         substitutions.rollback(context);
 
     return subproofOrProofAssertionUnifies;
@@ -272,8 +272,7 @@ export default define(class Premise extends ProofAssertion {
     const terms = termsFromJSON(json, context),
           frames = framesFromJSON(json, context),
           statement = statementFromJSON(json, context),
-          procedureCall = procedureCallFromJSON(json, context),
-          ephemeralContext = EphemeralContext.fromTermsAndFrames(terms, frames, context);
+          procedureCall = procedureCallFromJSON(json, context);
 
     let string;
 
@@ -286,8 +285,6 @@ export default define(class Premise extends ProofAssertion {
     }
 
     const node = null;
-
-    context = ephemeralContext; ///
 
     const premise = new Premise(context, string, node, statement, procedureCall);
 

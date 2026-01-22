@@ -10,8 +10,7 @@ export default define(class Metatheorem extends TopLevelMetaAssertion {
 
     const node = this.getNode(),
           context = this.getContext(),
-          metaLemma = this, ///
-          metaLemmaString = metaLemma.getString();
+          metaLemmaString = this.getString(); ///
 
     context.trace(`Verifying the '${metaLemmaString}' metatheorem...`, node);
 

@@ -4,6 +4,7 @@ import Element from "../element";
 import EphemeralContext from "../context/ephemeral";
 
 import { define } from "../elements";
+import { attempt } from "../utilities/context";
 import { termsFromJSON, framesFromJSON, statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
 
 export default define(class Deduction extends Element {
@@ -20,30 +21,28 @@ export default define(class Deduction extends Element {
   verify(context) {
     let verifies = false;
 
-    const ephemeralContext = EphemeralContext.fromNothing(context);
-
-    context = ephemeralContext; ///
-
     const node = this.getNode(),
           deductionString = this.getString();  ///
 
     context.trace(`Verifying the '${deductionString}' deduction...`, node);
 
-    if (this.statement === null) {
-      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`, node);
-    } else {
-      const stated = true,
-            assignments = null,
-            statementVealidates = this.statement.validate(assignments, stated, context);
+    if (this.statement !== null) {
+      attempt((context) => {
+        const stated = true,
+              assignments = null,
+              statementValidates = this.statement.validate(assignments, stated, context);
 
-      if (statementVealidates) {
-        verifies = true;
-      }
+        if (statementValidates) {
+          this.setContext(context);
+
+          verifies = true;
+        }
+      }, context);
+    } else {
+      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`, node);
     }
 
     if (verifies) {
-      this.setContext(context);
-
       context.debug(`...verified the '${deductionString}' deduction.`, node);
     }
 
@@ -132,10 +131,7 @@ export default define(class Deduction extends Element {
     const terms = termsFromJSON(json, context),
           frames = framesFromJSON(json, context),
           statement = statementFromJSON(json, context),
-          string = statement.getString(),
-          ephemeralContext = EphemeralContext.fromTermsAndFrames(terms, frames, context);
-
-    context = ephemeralContext; ///
+          string = statement.getString();
 
     const deduction = new Deduction(context, string, statement);
 

@@ -204,8 +204,6 @@ class ScopedContext {
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
 
-  isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) { return this.context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies); }
-
   isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) {
     const variable = this.findVariableByVariableIdentifier(variableIdentifier, nested),
           variablePresent = (variable !== null);

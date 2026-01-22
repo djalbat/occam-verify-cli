@@ -8,10 +8,9 @@ export default define(class Lemma extends TopLevelAssertion {
   verify() {
     let verifies;
 
-    const lemma = this, ///
-          node = this.getNode(),
+    const node = this.getNode(),
           context = this.getContext(),
-          lemmaString = lemma.getString();
+          lemmaString = this.getString(); ///
 
     (lemmaString === null) ?
       context.trace(`Verifying a lemma...`, node) :

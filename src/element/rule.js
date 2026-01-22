@@ -4,8 +4,8 @@ import { arrayUtilities } from "necessary";
 
 import Element from "../element";
 import elements from "../elements";
-import ScopedContext from "../context/scoped";
 
+import { scope } from "../utilities/context";
 import { define } from "../elements";
 import { labelsFromJSON,
          premisesFromJSON,
@@ -57,44 +57,38 @@ export default define(class Rule extends Element {
   verify() {
     let verifies = false;
 
-    let context;
-
-    const node = this.getNode();
-
-    context = this.getContext();
-
-    const ruleString = this.getString(); ///
+    const node = this.getNode(),
+          context = this.getContext(),
+          ruleString = this.getString(); ///
 
     context.trace(`Verifying the '${ruleString}' rule...`, node);
 
-    const labelsVerify = this.verifyLabels();
+    scope((context) => {
+      const labelsVerify = this.verifyLabels();
 
-    if (labelsVerify) {
-      const scopedContext = ScopedContext.fromNothing(context);
+      if (labelsVerify) {
+        const premisesVerify = this.verifyPremises(context);
 
-      context = scopedContext; ///
+        if (premisesVerify) {
+          const conclusionVerifies = this.verifyConclusion(context);
 
-      const premisesVerify = this.verifyPremises(context);
+          if (conclusionVerifies) {
+            const proofVerifies = this.verifyProof(context);
 
-      if (premisesVerify) {
-        const conclusionVerifies = this.verifyConclusion(context);
-
-        if (conclusionVerifies) {
-          const proofVerifies = this.verifyProof(context);
-
-          if (proofVerifies) {
-            const rule = this,  ///
-                  context = this.getContext();
-
-            context.addRule(rule);
-
-            verifies = true;
+            if (proofVerifies) {
+              verifies = true;
+            }
           }
         }
       }
-    }
+
+    }, context);
 
     if (verifies) {
+      const rule = this;  ///
+
+      context.addRule(rule);
+
       context.debug(`...verified the '${ruleString}' rule.`, node);
     }
 

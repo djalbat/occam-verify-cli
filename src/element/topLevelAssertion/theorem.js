@@ -10,7 +10,7 @@ export default define(class Theorem extends TopLevelAssertion {
 
     const node = this.getNode(),
           context = this.getContext(),
-          theoremString = this.string;  ///
+          theoremString = this.getString();  ///
 
     context.trace(`Verifying the '${theoremString}' theorem...`, node);
 

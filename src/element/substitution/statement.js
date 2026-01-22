@@ -241,7 +241,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Resolving the ${substitutionString} substitution...`);
 
-    substitutions.snapshot();
+    substitutions.snapshot(context);
 
     const metavariable = this.getMetavariable(),
           simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable),
@@ -256,7 +256,7 @@ export default define(class StatementSubstitution extends Substitution {
     }
 
     this.resolved ?
-      substitutions.continue() :
+      substitutions.continue(context) :
         substitutions.rollback(context);
 
     if (this.resolved) {

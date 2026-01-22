@@ -15,10 +15,9 @@ export default define(class Axiom extends TopLevelAssertion {
   verify() {
     let verifies;
 
-    const axiom = this, ///
-          node = this.getNode(),
+    const node = this.getNode(),
           context = this.getContext(),
-          axiomString = axiom.getString();
+          axiomString = this.getString(); ///
 
     context.trace(`Verifying the '${axiomString}' axiom...`, node);
 

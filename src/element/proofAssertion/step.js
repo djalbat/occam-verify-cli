@@ -2,9 +2,9 @@
 
 import elements from "../../elements";
 import ProofAssertion from "../proofAssertion";
-import EphemeralContext from "../../context/ephemeral";
 
 import { define } from "../../elements";
+import { attempt } from "../../utilities/context";
 import { unifyStatements } from "../../utilities/unification";
 import { propertyAssertionFromStatement } from "../../utilities/statement";
 
@@ -59,10 +59,6 @@ export default define(class Step extends ProofAssertion {
   verify(substitutions, assignments, context) {
     let verifies = false;
 
-    const ephemeralContext = EphemeralContext.fromNothing(context);
-
-    context = ephemeralContext; ///
-
     const node = this.getNode(),
           stepString = this.getString(); ///
 
@@ -70,38 +66,42 @@ export default define(class Step extends ProofAssertion {
 
     const statement = this.getStatement();
 
-    if (statement === null) {
-      context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`, node);
-    } else {
-      const referenceValidates = this.validateReference(context);
+    if (statement !== null) {
+      attempt((context) => {
+        const referenceValidates = this.validateReference(context);
 
-      if (referenceValidates) {
-        const satisfiesAssertioVeriries = this.verifySatisfiesAssertion(context);
+        if (referenceValidates) {
+          const satisfiesAssertioValidates = this.validateSatisfiesAssertion(context);
 
-        if (satisfiesAssertioVeriries) {
-          const stated = this.isStated(),
-                statementValidates = statement.validate(assignments, stated, context);
+          if (satisfiesAssertioValidates) {
+            const stated = this.isStated(),
+                  statementValidates = statement.validate(assignments, stated, context);
 
-          if (statementValidates) {
-            const statementUnifies = unifyStatements.some((unifyStatement) => {
-              const statementUnifies = unifyStatement(statement, this.reference, this.satisfiesAssertion, substitutions, context);
+            if (statementValidates) {
+              const reference = this.getReference(),
+                    satisfiesAssertion = this.getSatisfiesAssertion(),
+                    statementUnifies = unifyStatements.some((unifyStatement) => {
+                      const statementUnifies = unifyStatement(statement, reference, satisfiesAssertion, substitutions, context);
+
+                      if (statementUnifies) {
+                        return true;
+                      }
+                    });
 
               if (statementUnifies) {
-                return true;
-              }
-            });
+                this.setContext(context);
 
-            if (statementUnifies) {
-              verifies = true;
+                verifies = true;
+              }
             }
           }
         }
-      }
+      }, context);
+    } else {
+      context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`, node);
     }
 
     if (verifies) {
-      this.setContext(context);
-
       context.debug(`...verified the '${stepString}' step.`, node);
     }
 
@@ -112,41 +112,41 @@ export default define(class Step extends ProofAssertion {
     let referenceValidates = true;
 
     if (this.reference !== null) {
-      const node = this.getNode(),
-            stepString = this.getString();
+      const stepString = this.getString(),
+            referenceString = this.reference.getString();
 
-      context.trace(`Validating the '${stepString}' step's reference... `, node);
+      context.trace(`Validating the '${stepString}' step's '${referenceString}' reference... `);
 
       referenceValidates = this.reference.validate(context);
 
       if (referenceValidates) {
-        context.debug(`...validated the '${stepString}' step's reference. `, node);
+        context.debug(`...validated the '${stepString}' step's '${referenceString}' reference. `);
       }
     }
 
     return referenceValidates;
   }
 
-  verifySatisfiesAssertion(context) {
-    let satisfiesAssertionVerifies = true;  ///
+  validateSatisfiesAssertion(context) {
+    let satisfiesAssertionValidates = true;  ///
 
     if (this.satisfiesAssertion !== null) {
-      const node = this.getNode(),
-            stepString = this.getString();  ///
+      const stepString = this.getString(),  ///
+            satisfiesAssertion = this.satisfiesAssertion.getString();
 
-      context.trace(`Verifying the '${stepString}' step's satisfies assertion... `, node);
+      context.trace(`Validating the '${stepString}' step's '${satisfiesAssertion}' satisfies assertion... `);
 
       const stated = true,
             assignments = null;
 
-      satisfiesAssertionVerifies = this.satisfiesAssertion.validate(assignments, stated, context);
+      satisfiesAssertionValidates = this.satisfiesAssertion.validate(assignments, stated, context);
 
-      if (satisfiesAssertionVerifies) {
-        context.debug(`...verified the '${stepString}' step's satisfies assertion. `, node);
+      if (satisfiesAssertionValidates) {
+        context.debug(`...validating the '${stepString}' step's '${satisfiesAssertion}' satisfies assertion. `);
       }
     }
 
-    return satisfiesAssertionVerifies;
+    return satisfiesAssertionValidates;
   }
 
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {

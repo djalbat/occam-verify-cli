@@ -1,9 +1,9 @@
 "use strict";
 
 import Element from "../element";
-import EphemeralContext from "../context/ephemeral";
 
 import { define } from "../elements";
+import { attempt } from "../utilities/context";
 import { termsFromJSON, framesFromJSON, statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
 
 export  default define(class Conclusion extends Element {
@@ -20,30 +20,28 @@ export  default define(class Conclusion extends Element {
   verify(context) {
     let verifies = false;
 
-    const ephemeralContext = EphemeralContext.fromNothing(context);
-
-    context = ephemeralContext; ///
-
     const node = this.getNode(),
           conclusionString = this.getString();  ///
 
     context.trace(`Verifying the '${conclusionString}' conclusion...`, node);
 
-    if (this.statement === null) {
-      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`, node);
-    } else {
-      const stated = true,
-            assignments = null,
-            statementValidates = this.statement.validate(assignments, stated, context);
+    if (this.statement !== null) {
+      attempt((context) => {
+        const stated = true,
+              assignments = null,
+              statementValidates = this.statement.validate(assignments, stated, context);
 
-      if (statementValidates) {
-        verifies = true;
-      }
+        if (statementValidates) {
+          this.setContext(context);
+
+          verifies = true;
+        }
+      }, context);
+    } else {
+      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`, node);
     }
 
     if (verifies) {
-      this.setContext(context);
-
       context.debug(`...verified the '${conclusionString}' conclusion.`, node);
     }
 
@@ -108,8 +106,7 @@ export  default define(class Conclusion extends Element {
           frames = framesFromJSON(json, context),
           statement = statementFromJSON(json, context),
           node = null,
-          string = statement.getString(),
-          ephemeralContext = EphemeralContext.fromTermsAndFrames(terms, frames, context);
+          string = statement.getString();
 
     context = ephemeralContext; ///
 

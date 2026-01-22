@@ -734,10 +734,8 @@ export default class FileContext {
   isLabelPresentByReference(reference) {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
-            const { Substitutions } = elements,
-                  context = this, ///
-                  substitutions = Substitutions.fromNothing(context),
-                  labelUnifies = reference.unifyLabel(label, substitutions, context);
+            const context = this, ///
+                  labelUnifies = reference.unifyLabel(label, context);
 
             if (labelUnifies) {
               return true;

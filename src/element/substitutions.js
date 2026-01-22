@@ -91,8 +91,20 @@ export default define(class Substitutions extends Element {
   extractSubstitution(callbcak) { return extract(this.array, callbcak); }
 
   findSubstitutions(callback) {
+    let string;
+
     const array = find(this.array, callback),
-          substitutions = Substitutions.fromArray(array);
+          context = null;
+
+    string = null;
+
+    const node = null,
+          savedArray = [],
+          substitutions = new Substitutions(context, string, node, array, savedArray);
+
+    string = substitutions.asString();
+
+    substitutions.setString(string);
 
     return substitutions;
   }
@@ -298,13 +310,21 @@ export default define(class Substitutions extends Element {
     return resolved;
   }
 
-  snapshot() {
+  snapshot(context) {
+    const substitutionsString = this.getString();
+
+    context.trace(`Taking a snapshot of the '${substitutionsString}' substitutions.`);
+
     this.savedArray = [
       ...this.array
     ];
   }
 
   rollback(context) {
+    const substitutionsString = this.getString();
+
+    context.trace(`Rolling back the '${substitutionsString}' substitutions.`);
+
     const array = [
       ...this.array
     ];
@@ -326,7 +346,11 @@ export default define(class Substitutions extends Element {
     this.setString(string);
   }
 
-  continue() {
+  continue(context) {
+    const substitutionsString = this.getString();
+
+    context.trace(`Continuing with the '${substitutionsString}' substitutions.`);
+
     this.savedArray = null;
   }
 
@@ -348,24 +372,6 @@ export default define(class Substitutions extends Element {
   }
 
   static name = "Substitutions";
-
-  static fromArray(array) {
-    let string;
-
-    const context = null;
-
-    string = null;
-
-    const node = null,
-          savedArray = [],
-          substitutions = new Substitutions(context, string, node, array, savedArray);
-
-    string = substitutions.asString();
-
-    substitutions.setString(string);
-
-    return substitutions;
-  }
 
   static fromNothing(context) {
     const node = null,

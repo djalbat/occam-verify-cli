@@ -1,8 +1,8 @@
 "use strict";
 
 import Element from "../element";
-import ScopedContext from "../context/scoped";
 
+import { scope } from "../utilities/context";
 import { define } from "../elements";
 
 export default define(class Proof extends Element {
@@ -29,25 +29,23 @@ export default define(class Proof extends Element {
   verify(substitutions, conclusion, context) {
     let verifies = false;
 
-    const scopedContext = ScopedContext.fromNothing(context); ///
+    scope((context) => {
+      const derivationVerifies = this.derivation.verify(substitutions, context);
 
-    context = scopedContext; ///
+      if (derivationVerifies) {
+        const lastProofAssertion = context.getLastProofAssertion();
 
-    const derivationVerifies = this.derivation.verify(substitutions, context);
+        if (lastProofAssertion !== null) {
+          const statement = this.getStatement(),
+                conclusionStatement = conclusion.getStatement(),
+                conclusionStatementEqualToStatement = conclusionStatement.isEqualTo(statement);
 
-    if (derivationVerifies) {
-      const lastProofAssertion = context.getLastProofAssertion();
-
-      if (lastProofAssertion !== null) {
-        const statement = this.getStatement(),
-              conclusionStatement = conclusion.getStatement(),
-              conclusionStatementEqualToStatement = conclusionStatement.isEqualTo(statement);
-
-        if (conclusionStatementEqualToStatement) {
-          verifies = true;
+          if (conclusionStatementEqualToStatement) {
+            verifies = true;
+          }
         }
       }
-    }
+    }, context);
 
     return verifies;
   }

@@ -4,8 +4,8 @@ import { arrayUtilities } from "necessary";
 
 import Element from "../element";
 import elements from "../elements";
-import ScopedContext from "../context/scoped";
 
+import { scope } from "../utilities/context";
 import { labelsFromJSON,
          deductionFromJSON,
          signatureFromJSON,
@@ -125,25 +125,27 @@ export default class TopLevelAssertion extends Element {
   verify() {
     let verifies = false;
 
-    const labelsVerify = this.verifyLabels();
+    const context = this.getContext();
 
-    if (labelsVerify) {
-      const scopedContext = ScopedContext.fromNothing(this.context),
-            context = scopedContext, ///
-            suppositionsVerify = this.verifySuppositions(context);
+    scope((context) => {
+      const labelsVerify = this.verifyLabels();
 
-      if (suppositionsVerify) {
-        const deductionVerifies = this.verifyDeduction(context);
+      if (labelsVerify) {
+        const suppositionsVerify = this.verifySuppositions(context);
 
-        if (deductionVerifies) {
-          const proofVerifies = this.verifyProof(context);
+        if (suppositionsVerify) {
+          const deductionVerifies = this.verifyDeduction(context);
 
-          if (proofVerifies) {
-            verifies = true;
+          if (deductionVerifies) {
+            const proofVerifies = this.verifyProof(context);
+
+            if (proofVerifies) {
+              verifies = true;
+            }
           }
         }
       }
-    }
+    }, context);
 
     return verifies;
   }

@@ -81,7 +81,7 @@ function validateStatementAsMetavariable(statement, assignments, stated, context
   if (metavariableNode !== null) {
     const statementString = statement.getString();
 
-    context.trace(`Validating the '${statementString}' statement as a metavariable and substitution...`);
+    context.trace(`Validating the '${statementString}' statement as a metavariable...`);
 
     const metavariableName = metavariableNode.getMetavariableName(),
           metavariable = context.findMetavariableByMetavariableName(metavariableName);
@@ -104,7 +104,7 @@ function validateStatementAsMetavariable(statement, assignments, stated, context
     }
 
     if (statementValidatesAsMetavariableAndSubstitution) {
-      context.debug(`...validated the '${statementString}' statement as a metavariable and substitution.`);
+      context.debug(`...validated the '${statementString}' statement as a metavariable.`);
     }
   }
 
