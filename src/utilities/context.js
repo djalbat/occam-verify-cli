@@ -1,6 +1,7 @@
 "use strict";
 
 import ScopedContext from "../context/scoped";
+import LiminalContext from "../context/liminal";
 import LiteralContext from "../context/literal";
 import EphemeralContext from "../context/ephemeral";
 import SyntheticContext from "../context/synthetic";
@@ -36,6 +37,14 @@ export function attempt(innerFunction, context) {
   const ephemeralContext = EphemeralContext.fromNothing(context);
 
   context = ephemeralContext;  ///
+
+  return innerFunction(context);
+}
+
+export function liminally(innerFunction, context) {
+  const liminalContext = LiminalContext.fromNothing(context);
+
+  context = liminalContext;  ///
 
   return innerFunction(context);
 }

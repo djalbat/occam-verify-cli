@@ -2,21 +2,18 @@
 
 import { arrayUtilities } from "necessary";
 
-import elements from "../elements";
-
 import { chainContext } from "../utilities/context";
 
 const { extract } = arrayUtilities;
 
 export default class EphemeralContext {
-  constructor(context, terms, frames, statements, references, assertions, substitutions) {
+  constructor(context, terms, frames, statements, references, assertions) {
     this.context = context;
     this.terms = terms;
     this.frames = frames;
     this.statements = statements;
     this.references = references;
     this.assertions = assertions;
-    this.substitutions = substitutions;
 
     return chainContext(this);
   }
@@ -43,10 +40,6 @@ export default class EphemeralContext {
 
   getAssertions() {
     return this.assertions;
-  }
-
-  getSubstitutions() {
-    return this.substitutions;
   }
 
   addTerm(term) {
@@ -144,36 +137,6 @@ export default class EphemeralContext {
     this.assertions.push(assertion);
   }
 
-  addSubstitution(substitution) {
-    const context = this; ///
-
-    this.substitutions.addSubstitution(substitution, context);
-  }
-
-  removeSubstitution(substitution) {
-    const context = this; ///
-
-    this.substitutions.removeSubstitution(substitution, context);
-  }
-
-  snapshotSubstitutions() {
-    const context = this; ///
-
-    this.substitutions.snapshot(context);
-  }
-
-  rollbackSubstitutions() {
-    const context = this; ///
-
-    this.substitutions.rollback(context);
-  }
-
-  continueSubstitutions() {
-    const context = this; ///
-
-    this.substitutions.continue(context);
-  }
-
   findTermByTermNode(termNode) {
     const term = this.terms.find((term) => {
       const termNodeMatches = term.matchNode(termNode);
@@ -235,14 +198,12 @@ export default class EphemeralContext {
   }
 
   static fromNothing(context) {
-    const { Substitutions } = elements,
-          terms = [],
+    const terms = [],
           frames = [],
           statements = [],
           references = [],
           assertions = [],
-          substitutions = Substitutions.fromNothing(context),
-          emphemeralContext = new EphemeralContext(context, terms, frames, statements, references, assertions, substitutions);
+          emphemeralContext = new EphemeralContext(context, terms, frames, statements, references, assertions);
 
     return emphemeralContext;
   }

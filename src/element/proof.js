@@ -26,11 +26,11 @@ export default define(class Proof extends Element {
     return statement;
   }
 
-  verify(substitutions, conclusion, context) {
+  verify(conclusion, context) {
     let verifies = false;
 
     scope((context) => {
-      const derivationVerifies = this.derivation.verify(substitutions, context);
+      const derivationVerifies = this.derivation.verify(context);
 
       if (derivationVerifies) {
         const lastProofAssertion = context.getLastProofAssertion();

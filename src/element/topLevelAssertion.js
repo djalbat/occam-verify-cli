@@ -3,9 +3,8 @@
 import { arrayUtilities } from "necessary";
 
 import Element from "../element";
-import elements from "../elements";
 
-import { scope } from "../utilities/context";
+import { scope, attempt } from "../utilities/context";
 import { labelsFromJSON,
          deductionFromJSON,
          signatureFromJSON,
@@ -188,15 +187,14 @@ export default class TopLevelAssertion extends Element {
   }
 
   verifyProof(context) {
-    let proofVerifies;
+    let proofVerifies = true; ///
 
-    if (this.proof === null) {
-      proofVerifies = true;
-    } else {
-      const { Substitutions } = elements,
-            substitutions = Substitutions.fromNothing(context);
+    if (this.proof !== null) {
+      proofVerifies = attempt((context) => {
+        const proofVerifies = this.proof.verify(this.deduction, context);
 
-      proofVerifies = this.proof.verify(substitutions, this.deduction, context);
+        return proofVerifies;
+      }, context);
     }
 
     return proofVerifies;

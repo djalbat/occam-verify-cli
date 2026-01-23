@@ -23,21 +23,21 @@ export default class SyntheticContext {
     return this.specificContext;
   }
 
-  findTermByTermNode(termNode) { return this.specificContext.findTermByTermNode(termNode) || this.generalContext.findTermByTermNode(termNode); }
+  findTermByTermNode(termNode) { return this.specificContext.findTermByTermNode(termNode); }
 
-  findFrameByFrameNode(frameNode) { return this.specificContext.findFrameByFrameNode(frameNode) || this.generalContext.findFrameByFrameNode(frameNode); }
+  findFrameByFrameNode(frameNode) { return this.specificContext.findFrameByFrameNode(frameNode); }
 
-  findTypeByNominalTypeName(nominalTypeName) { return this.specificContext.findTypeByNominalTypeName(nominalTypeName) || this.generalContext.findTypeByNominalTypeName(nominalTypeName); }
+  findTypeByNominalTypeName(nominalTypeName) { return this.specificContext.findTypeByNominalTypeName(nominalTypeName); }
 
-  findVariableByVariableIdentifier(variableIdentifier) { return this.specificContext.findVariableByVariableIdentifier(variableIdentifier) || this.generalContext.findVariableByVariableIdentifier(variableIdentifier); }
+  isTypePresentByNominalTypeName(nominalTypeName) { return this.specificContext.isTypePresentByNominalTypeName(nominalTypeName); }
 
-  findMetavariableByMetavariableName(metavariableName) { return this.specificContext.findMetavariableByMetavariableName(metavariableName) || this.generalContext.findMetavariableByMetavariableName(metavariableName); }
+  findVariableByVariableIdentifier(variableIdentifier) { return this.generalContext.findVariableByVariableIdentifier(variableIdentifier); }
 
-  isTypePresentByNominalTypeName(nominalTypeName) { return this.specificContext.isTypePresentByNominalTypeName(nominalTypeName) || this.generalContext.isTypePresentByNominalTypeName(nominalTypeName); }
+  findMetavariableByMetavariableName(metavariableName) { return this.generalContext.findMetavariableByMetavariableName(metavariableName); }
 
-  isVariablePresentByVariableIdentifier(variableIdentifier) { return this.specificContext.isVariablePresentByVariableIdentifier(variableIdentifier) || this.generalContext.isVariablePresentByVariableIdentifier(variableIdentifier); }
+  isVariablePresentByVariableIdentifier(variableIdentifier) { this.generalContext.isVariablePresentByVariableIdentifier(variableIdentifier); }
 
-  isMetavariablePresentByMetavariableName(metavariableName) { return this.specificContext.isMetavariablePresentByMetavariableName(metavariableName) || this.generalContext.isMetavariablePresentByMetavariableName(metavariableName); }
+  isMetavariablePresentByMetavariableName(metavariableName) { this.generalContext.isMetavariablePresentByMetavariableName(metavariableName); }
 
   static fromNothing(generalContext, specificContext) {
     const context = specificContext,  ///

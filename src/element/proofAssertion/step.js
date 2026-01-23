@@ -4,8 +4,8 @@ import elements from "../../elements";
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
-import { attempt } from "../../utilities/context";
 import { unifyStatements } from "../../utilities/unification";
+import { attempt, liminally } from "../../utilities/context";
 import { propertyAssertionFromStatement } from "../../utilities/statement";
 
 export default define(class Step extends ProofAssertion {
@@ -56,7 +56,7 @@ export default define(class Step extends ProofAssertion {
     return comparesToTermAndPropertyRelation;
   }
 
-  verify(substitutions, assignments, context) {
+  verify(assignments, context) {
     let verifies = false;
 
     const node = this.getNode(),
@@ -80,22 +80,28 @@ export default define(class Step extends ProofAssertion {
             if (statementValidates) {
               const reference = this.getReference(),
                     satisfiesAssertion = this.getSatisfiesAssertion(),
-                    statementUnifies = unifyStatements.some((unifyStatement) => {
-                      const statementUnifies = unifyStatement(statement, reference, satisfiesAssertion, substitutions, context);
+                    statementUnifies = liminally((context) => {
+                      const statementUnifies = unifyStatements.some((unifyStatement) => {
+                        const statementUnifies = unifyStatement(statement, reference, satisfiesAssertion, context);
 
-                      if (statementUnifies) {
-                        return true;
-                      }
-                    });
+                        if (statementUnifies) {
+                          this.setContext(context);
+
+                          return true;
+                        }
+                      });
+
+                      return statementUnifies;
+                    }, context);
 
               if (statementUnifies) {
-                this.setContext(context);
-
                 verifies = true;
               }
             }
           }
         }
+
+        return verifies;
       }, context);
     } else {
       context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`, node);

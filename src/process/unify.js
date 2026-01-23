@@ -486,7 +486,7 @@ class IntrinsicLevelPass extends Pass {
     {
       generalNodeQuery: termVariableNodeQuery,
       specificNodeQuery: termNodeQuery,
-      run: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
+      run: (generalTermVariableNode, specificTermNode, generalContext, specificContext) => {
         let success = false;
 
         const termNode = specificTermNode, ///
@@ -502,7 +502,7 @@ class IntrinsicLevelPass extends Pass {
         context = specificContext;  ///
 
         const term = context.findTermByTermNode(termNode),
-              termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
+              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
 
         if (termUnifies) {
           success = true;
@@ -612,14 +612,14 @@ export function unifyStatementWithCombinator(statement, combinator, assignments,
   return statementUnifiesWithCombinator;
 }
 
-export function unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext) {
+export function unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext) {
   let metavariableUnifiesIntrinsically = false;
 
   const generalMetavariableNode = generalMetavariable.getNode(),
         specificMetavariableNode = specificMetavariable.getNode(),
         generalNode = generalMetavariableNode, ///
         specificNode = specificMetavariableNode, ///
-        success = intrinsicLevelPass.run(generalNode, specificNode, substitutions, generalContext, specificContext);
+        success = intrinsicLevelPass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     metavariableUnifiesIntrinsically = true;

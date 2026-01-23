@@ -247,15 +247,20 @@ export default define(class Metavariable extends Element {
   unifyMetavariable(metavariable, context) {
     let metavariableUnifies;
 
+    const specificContext = context; ///
+
+    context = this.getContext();
+
+    const generalContext = context;  ///
+
+    context = specificContext;  ///
+
     const generalMetavariable = this, ///
           specificMetavariable = metavariable,  ///
           generalMetavariableString = generalMetavariable.getString(),
           specificMetavariableString = specificMetavariable.getString();
 
     context.trace(`Unifying the '${specificMetavariableString}' metavariable with the '${generalMetavariableString}' metavariable...`);
-
-    const generalContext = context, ///
-          specificContext = context;  ///
 
     metavariableUnifies = unifyMetavariable(generalMetavariable, specificMetavariable, generalContext, specificContext);
 

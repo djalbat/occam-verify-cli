@@ -27,12 +27,12 @@ export default define(class Derivation extends Element {
     return lastProofAssertion;
   }
 
-  verify(substitutions, context) {
+  verify(context) {
     let verifies;
 
     verifies = this.subproofOrProofAssertions.every((subproofOrProofAssertion) => { ///
       const assignments = [],
-            subproofOrProofAssertionVerifies = subproofOrProofAssertion.verify(substitutions, assignments, context);
+            subproofOrProofAssertionVerifies = subproofOrProofAssertion.verify(assignments, context);
 
       if (subproofOrProofAssertionVerifies) {
         const assignmentsAssigned = assignAssignments(assignments, context);

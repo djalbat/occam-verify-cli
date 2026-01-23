@@ -13,7 +13,7 @@ import { equalityFromStatement,
 
 const { backwardsSome } = arrayUtilities;
 
-function unifyStatementWithRule(statement, reference, satisfiesAssertion, substitutions, context) {
+function unifyStatementWithRule(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesWithRule = false;
 
   if (reference !== null) {
@@ -41,7 +41,7 @@ function unifyStatementWithRule(statement, reference, satisfiesAssertion, substi
   return statementUnifiesWithRule;
 }
 
-function unifyStatementWithReference(statement, reference, satisfiesAssertion, substitutions, context) {
+function unifyStatementWithReference(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesWithReference = false;
 
   if (reference !== null) {
@@ -73,7 +73,7 @@ function unifyStatementWithReference(statement, reference, satisfiesAssertion, s
   return statementUnifiesWithReference;
 }
 
-function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesAsSatisfiesAssertion = false;
 
   satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
@@ -138,7 +138,7 @@ function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAsser
   return statementUnifiesAsSatisfiesAssertion;
 }
 
-function unifyStatementWithTopLevelAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+function unifyStatementWithTopLevelAssertion(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesWithTopLevelAssertion = false;
 
   if (reference !== null) {
@@ -180,7 +180,7 @@ function unifyStatementWithTopLevelAssertion(statement, reference, satisfiesAsse
   return statementUnifiesWithTopLevelAssertion;
 }
 
-function unifyStatementAEquality(statement, reference, satisfiesAssertion, substitutions, context) {
+function unifyStatementAEquality(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesAEquality = false;
 
   if (reference === null) {
@@ -206,7 +206,7 @@ function unifyStatementAEquality(statement, reference, satisfiesAssertion, subst
   return statementUnifiesAEquality;
 }
 
-function unifyStatementAsJudgement(statement, reference, satisfiesAssertion, substitutions, context) {
+function unifyStatementAsJudgement(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesAsJudgement = false;
 
   if (reference === null) {
@@ -228,7 +228,7 @@ function unifyStatementAsJudgement(statement, reference, satisfiesAssertion, sub
   return statementUnifiesAsJudgement;
 }
 
-function unifyStatementAsTypeAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+function unifyStatementAsTypeAssertion(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesAsTypeAssertion = false;
 
   if (reference === null) {
@@ -248,7 +248,7 @@ function unifyStatementAsTypeAssertion(statement, reference, satisfiesAssertion,
   return statementUnifiesAsTypeAssertion;
 }
 
-function unifyStatementAsPropertyAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+function unifyStatementAsPropertyAssertion(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesAsPropertyAssertion = false;
 
   if (reference === null) {
@@ -286,7 +286,7 @@ function unifyStatementAsPropertyAssertion(statement, reference, satisfiesAssert
   return statementUnifiesAsPropertyAssertion;
 }
 
-function unifyStatementWithSatisfiesAssertion(statement, reference, satisfiesAssertion, substitutions, context) {
+function unifyStatementWithSatisfiesAssertion(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesWithSatisfiesAssertion = false;
 
   if (satisfiesAssertion !== null) {
@@ -310,7 +310,7 @@ function unifyStatementWithSatisfiesAssertion(statement, reference, satisfiesAss
   return statementUnifiesWithSatisfiesAssertion;
 }
 
-function compareStatementWithSubproofOrProofAssertions(statement, reference, satisfiesAssertion, substitutions, context) {
+function compareStatementWithSubproofOrProofAssertions(statement, reference, satisfiesAssertion, context) {
   let statementEquatesWithStepOrSubproofs = false;
 
   if (reference === null) {

@@ -4,6 +4,7 @@ import Element from "../element";
 import elements from "../elements";
 
 import { define } from "../elements";
+import { attempt } from "../utilities/context";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { unifyMetavariableIntrinsically } from "../process/unify";
@@ -124,12 +125,12 @@ export default define(class Reference extends Element {
     return validatesAsMetavariable;
   }
 
-  unifyLabel(label, substitutions, context) {
+  unifyLabel(label, context) {
     let labelUnifies;
 
     const specificContext = context; ///
 
-    context = label.getContext();
+    context = this.getContext();
 
     const generalContext = context;  ///
 
@@ -144,7 +145,7 @@ export default define(class Reference extends Element {
     const labelMetavariable = label.getMetavariable(),
           generalMetavariable = this.metavariable,  ///
           specificMetavariable = labelMetavariable, ///
-          metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
+          metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
 
     labelUnifies = metavariableUnifiesIntrinsically; ///
 
@@ -156,23 +157,32 @@ export default define(class Reference extends Element {
   }
 
   unifyMetavariable(metavariable, context) {
-    let metavariableUnifies;
+    let metavariableUnifies = false;
 
-    const reference = this, ///
-          metavariableString = metavariable.getString(),
-          referenceString = reference.getString();
+    const specificContext = context; ///
+
+    context = this.getContext();
+
+    const generalContext = context;  ///
+
+    context = specificContext;  ///
+
+    const referenceString = this.getString(), ///
+          metavariableString = metavariable.getString();
 
     context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
 
-    const { Substitutions } = elements,
-          substitutions = Substitutions.fromNothing(context),
-          generalContext = context, ///
-          specificContext = context,  ///
-          generalMetavariable = this.metavariable,  ///
-          specificMetavariable = metavariable, ///
-          metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
+    const metavariableUnifiesIntrinsically = attempt((specificContext) => {
+      const generalMetavariable = this.metavariable,  ///
+            specificMetavariable = metavariable, ///
+            metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
 
-    metavariableUnifies = metavariableUnifiesIntrinsically; ///
+      return metavariableUnifiesIntrinsically;
+    }, specificContext);
+
+    if (metavariableUnifiesIntrinsically) {
+      metavariableUnifies = true;
+    }
 
     if (metavariableUnifies) {
       context.debug(`...unified the '${metavariableString}' metavariable with the '${referenceString}' reference.`);
