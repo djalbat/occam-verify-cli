@@ -79,7 +79,7 @@ export default define(class Subproof extends Element {
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
     let unifiesWithSatisfiesAssertion = false;
 
-    const subproofString = this.string, ///
+    const subproofString = this.getString(), ///
           satisfiesAssertionString = satisfiesAssertion.getString();
 
     context.trace(`Unifying the '${subproofString}' subproof with the '${satisfiesAssertionString}' satisfies assertion...`)

@@ -23,7 +23,7 @@ export default define(class PropertyRelation extends Element {
   verify(context) {
     let verifies = false;
 
-    const propertyRelationString = this.string; ///
+    const propertyRelationString = this.getString(); ///
 
     context.trace(`Verifying the '${propertyRelationString}' property relation...`);
 

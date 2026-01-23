@@ -282,7 +282,7 @@ export default define(class Statement extends Element {
   }
 
   toJSON() {
-    const string = this.getString(),
+    const string = this.getString(),  ///
           json = {
             string
           };

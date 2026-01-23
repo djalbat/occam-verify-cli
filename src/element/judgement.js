@@ -34,7 +34,7 @@ export default define(class Judgement extends Element {
   validate(assignments, stated, context) {
     let validates = false;
 
-    const judgementString = this.string;  ///
+    const judgementString = this.getString();  ///
 
     context.trace(`Validating the '${judgementString}' judgement...`);
 
@@ -75,7 +75,7 @@ export default define(class Judgement extends Element {
   validateWhenStated(assignments, context) {
     let validatesWhenStated;
 
-    const judgementString = this.string;  ///
+    const judgementString = this.getString();  ///
 
     context.trace(`Validating the '${judgementString}' stated judgement...`);
 
@@ -91,7 +91,7 @@ export default define(class Judgement extends Element {
   validateWhenDerived(context) {
     let validatesWhenDerived = false;
 
-    const judgementString = this.string;  ///
+    const judgementString = this.getString();  ///
 
     context.trace(`Validating the '${judgementString}' derived judgement...`);
 

@@ -311,7 +311,7 @@ export default define(class Substitutions extends Element {
   }
 
   snapshot(context) {
-    const substitutionsString = this.getString();
+    const substitutionsString = this.getString(); ///
 
     context.trace(`Taking a snapshot of the '${substitutionsString}' substitutions.`);
 
@@ -321,7 +321,7 @@ export default define(class Substitutions extends Element {
   }
 
   rollback(context) {
-    const substitutionsString = this.getString();
+    const substitutionsString = this.getString(); ///
 
     context.trace(`Rolling back the '${substitutionsString}' substitutions.`);
 
@@ -347,7 +347,7 @@ export default define(class Substitutions extends Element {
   }
 
   continue(context) {
-    const substitutionsString = this.getString();
+    const substitutionsString = this.getString(); ///
 
     context.trace(`Continuing with the '${substitutionsString}' substitutions.`);
 

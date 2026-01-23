@@ -232,7 +232,7 @@ export default define(class Frame extends Element {
   validateAssumptions(assignments, stated, context) {
     let assumptionsValidate;
 
-    const frameString = this.getString(),
+    const frameString = this.getString(), ///
           assumptionsString = assumptionsStringFromAssumptions(this.assumptions);
 
     context.trace(`Validating the '${assumptionsString}' assumptions of the '${frameString}' frame...`);

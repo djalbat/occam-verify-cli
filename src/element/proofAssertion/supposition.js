@@ -82,7 +82,7 @@ export default define(class Supposition extends ProofAssertion {
   unifyIndependently(substitutions, context) {
     let unifiesIndependently = false;
 
-    const suppositionString = this.getString();
+    const suppositionString = this.getString(); ///
 
     context.trace(`Unifying the '${suppositionString}' supposition independently...`);
 
@@ -162,7 +162,7 @@ export default define(class Supposition extends ProofAssertion {
   unifyProofAssertion(proofAssertion, substitutions, context) {
     let proofAssertionUnifies = false;
 
-    const suppositionString = this.getString(),
+    const suppositionString = this.getString(), ///
           proofAssertionString = proofAssertion.getString();
 
     context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition...`);
@@ -199,7 +199,7 @@ export default define(class Supposition extends ProofAssertion {
 
     const node = this.getNode(),
           subproofString = subproof.getString(),
-          suppositionString = this.getString();
+          suppositionString = this.getString(); ///
 
     context.trace(`Unifying the '${subproofString}' subproof with the '${suppositionString}' supposition...`, node);
 

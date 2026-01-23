@@ -162,7 +162,7 @@ export default define(class Premise extends ProofAssertion {
   unifyProofAssertion(proofAssertion, substitutions, context) {
     let proofAssertionUnifies = false;
 
-    const premiseString = this.getString(),
+    const premiseString = this.getString(), ///
           proofAssertionString = proofAssertion.getString();
 
     context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${premiseString}' premise...`);

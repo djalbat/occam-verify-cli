@@ -114,11 +114,13 @@ export default define(class Step extends ProofAssertion {
     return verifies;
   }
 
+  validateStatement(context) {}
+
   validateReference(context) {
     let referenceValidates = true;
 
     if (this.reference !== null) {
-      const stepString = this.getString(),
+      const stepString = this.getString(),  ///
             referenceString = this.reference.getString();
 
       context.trace(`Validating the '${stepString}' step's '${referenceString}' reference... `);

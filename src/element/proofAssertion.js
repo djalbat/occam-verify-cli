@@ -25,7 +25,7 @@ export default class ProofAssertion extends Element {
     let comparesToStatement = false;
 
     const statementString = statement.getString(),
-          proofAssertionString = this.getString();
+          proofAssertionString = this.getString();  ///
 
     context.trace(`Comparing the '${statementString}' statement to the '${proofAssertionString}' proof assertion...`);
 

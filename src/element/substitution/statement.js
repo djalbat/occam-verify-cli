@@ -269,7 +269,7 @@ export default define(class StatementSubstitution extends Substitution {
           statementJSON = statementToStatementJSON(this.replacementStatement),
           metavariable = metavariableJSON,  ///
           statement = statementJSON,  ///
-          string = this.string, ///
+          string = this.getString(), ///
           json = {
             string,
             statement,

@@ -38,7 +38,7 @@ export default define(class Section extends Element {
   verify() {
     let verifies = false;
 
-    const sectionString = this.string;  ///
+    const sectionString = this.getString();  ///
 
     this.context.trace(`Verifying the '${sectionString}' section...`, this.node);
 

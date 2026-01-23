@@ -12,9 +12,11 @@ export default define(class Error extends Element {
   verify() {
     let verifies = false;
 
-    const errorString = this.string;  ///
+    const node = this.getNode(),
+          context = this.getContext(),
+          errorString = this.getString();  ///
 
-    this.context.warning(`The '${errorString}' error cannot be verified.`, this.node);
+    context.warning(`The '${errorString}' error cannot be verified.`, node);
 
     return verifies;
   }

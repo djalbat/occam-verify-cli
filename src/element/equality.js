@@ -76,7 +76,7 @@ export default define(class Equality extends Element {
   verify(assignments, stated, context) {
     let verifies = false;
 
-    const equalityString = this.string; ///
+    const equalityString = this.getString(); ///
 
     context.trace(`Verifying the '${equalityString}' equality...`);
 
@@ -113,7 +113,7 @@ export default define(class Equality extends Element {
   verifyTerms(context) {
     let termsVerify;
 
-    const equalityString = this.string; ///
+    const equalityString = this.getString(); ///
 
     context.trace(`Verifying the '${equalityString}' equality's terms...`);
 
@@ -149,7 +149,7 @@ export default define(class Equality extends Element {
   verifyWhenStated(assignments, context) {
     let verifiesWhenStated;
 
-    const equalityString = this.string; ///
+    const equalityString = this.getString(); ///
 
     context.trace(`Verifying the '${equalityString}' stated equality...`);
 
@@ -165,7 +165,7 @@ export default define(class Equality extends Element {
   verifyWhenDerived(context) {
     let verifiesWhenDerived;
 
-    const equalityString = this.string; ///
+    const equalityString = this.getString(); ///
 
     context.trace(`Verifying the '${equalityString}' derived equality...`);
 

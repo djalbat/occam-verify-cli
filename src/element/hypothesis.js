@@ -20,7 +20,7 @@ export default define(class Hypothesis extends Element {
   verify(context) {
     let verifies = false;
 
-    const hypothesisString = this.string; ///
+    const hypothesisString = this.getString(); ///
 
     context.trace(`Verifying the '${hypothesisString}' hypothesis...`, this.node);
 

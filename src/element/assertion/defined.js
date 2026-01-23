@@ -93,7 +93,7 @@ export default define(class DefinedAssertion extends Assertion {
 
     if (this.frame !== null) {
       const frameString = this.frame.getString(), ///
-            definedAssertionString = this.getString();  ///; ///
+            definedAssertionString = this.getString();  ///
 
       context.trace(`Validating the'${definedAssertionString}' defined assertino's '${frameString}' frame...`);
 
