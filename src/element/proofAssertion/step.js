@@ -74,8 +74,7 @@ export default define(class Step extends ProofAssertion {
           const satisfiesAssertioValidates = this.validateSatisfiesAssertion(context);
 
           if (satisfiesAssertioValidates) {
-            const stated = this.isStated(),
-                  statementValidates = statement.validate(assignments, stated, context);
+            const statementValidates = this.validateStatement(assignments, context);
 
             if (statementValidates) {
               const reference = this.getReference(),
@@ -113,8 +112,6 @@ export default define(class Step extends ProofAssertion {
 
     return verifies;
   }
-
-  validateStatement(context) {}
 
   validateReference(context) {
     let referenceValidates = true;

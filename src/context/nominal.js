@@ -16,6 +16,12 @@ class NominalContext {
     return this.parser;
   }
 
+  getContext() {
+    const context = null;
+
+    return context;
+  }
+
   static fromNothing() {
     const lexer = nominalLexer, ///
           parser = nominalParser, ///

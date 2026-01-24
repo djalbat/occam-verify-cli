@@ -25,6 +25,12 @@ export default define(class Supposition extends ProofAssertion {
     return this.procedureCall;
   }
 
+  isStated() {
+    const stated = true; ///
+
+    return stated;
+  }
+
   verify(context) {
     let verifies = false;
 
@@ -39,9 +45,8 @@ export default define(class Supposition extends ProofAssertion {
     if ((statement !== null) || (procedureCall !== null)) {
       attempt((context) => {
         if (statement !== null) {
-          const stated = true,
-                assignments = [],
-                statementValidates = statement.validate(assignments, stated, context);
+          const assignments = [],
+                statementValidates = this.validateStatement(assignments, context);
 
           if (statementValidates) {
             const assignmentsAssigned = assignAssignments(assignments, context);
@@ -59,7 +64,7 @@ export default define(class Supposition extends ProofAssertion {
         }
 
         if (procedureCall !== null) {
-          const procedureCallValidates = this.procedureCall.validate(context);
+          const procedureCallValidates = procedureCall.validate(context);
 
           if (procedureCallValidates) {
             this.setContext(context);

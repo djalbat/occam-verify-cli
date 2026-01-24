@@ -7,13 +7,14 @@ import { chainContext } from "../utilities/context";
 const { extract } = arrayUtilities;
 
 export default class EphemeralContext {
-  constructor(context, terms, frames, statements, references, assertions) {
+  constructor(context, terms, frames, statements, assertions, references, substitutions) {
     this.context = context;
     this.terms = terms;
     this.frames = frames;
     this.statements = statements;
-    this.references = references;
     this.assertions = assertions;
+    this.references = references;
+    this.substitutions = substitutions;
 
     return chainContext(this);
   }
@@ -34,12 +35,16 @@ export default class EphemeralContext {
     return this.statements;
   }
 
+  getAssertions() {
+    return this.assertions;
+  }
+
   getReferences() {
     return this.references;
   }
 
-  getAssertions() {
-    return this.assertions;
+  getSubstitutions() {
+    return this.substitutions;
   }
 
   addTerm(term) {
@@ -56,7 +61,7 @@ export default class EphemeralContext {
       }
     });
 
-    context.trace(`ADded the '${termString}' term to the context.`);
+    context.trace(`Added the '${termString}' term to the context.`);
 
     this.terms.push(term);
   }
@@ -99,6 +104,25 @@ export default class EphemeralContext {
     this.statements.push(statement);
   }
 
+  addAssertion(assertion) {
+    const context = this, ///
+          assertionA = assertion, ///
+          assertionString = assertion.getString();
+
+    extract(this.assertions, (assertion) => {
+      const assertionB = assertion, ///
+        assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
+
+      if (assertionAEqualToAssertionB) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${assertionString}' assertion to the context.`);
+
+    this.assertions.push(assertion);
+  }
+
   addReference(reference) {
     const context = this, ///
           referenceA = reference, ///
@@ -118,23 +142,23 @@ export default class EphemeralContext {
     this.references.push(reference);
   }
 
-  addAssertion(assertion) {
+  addSubstitution(substitution) {
     const context = this, ///
-          assertionA = assertion, ///
-          assertionString = assertion.getString();
+          substitutionA = substitution, ///
+          substitutionString = substitution.getString();
 
-    extract(this.assertions, (assertion) => {
-      const assertionB = assertion, ///
-        assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
+    extract(this.substitutions, (substitution) => {
+      const substitutionB = substitution, ///
+            substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
 
-      if (assertionAEqualToAssertionB) {
+      if (substitutionAEqualToAssertionB) {
         return true;
       }
     });
 
-    context.trace(`Added the '${assertionString}' assertion to the context.`);
+    context.trace(`Added the '${substitutionString}' substitution to the context.`);
 
-    this.assertions.push(assertion);
+    this.substitutions.push(substitution);
   }
 
   findTermByTermNode(termNode) {
@@ -173,18 +197,6 @@ export default class EphemeralContext {
     return statement;
   }
 
-  findReferenceByMetavariableNode(metavariableNode) {
-    const reference = this.references.find((reference) => {
-      const referenceMatcheMetavariableNode = reference.matchMetavariableNode(metavariableNode);
-
-      if (referenceMatcheMetavariableNode) {
-        return true;
-      }
-    }) || null;
-
-    return reference;
-  }
-
   findAssertionByAssertionNode(assertionNode) {
     const assertion = this.assertions.find((assertion) => {
       const assertionNodeMatches = assertion.matchNode(assertionNode);
@@ -197,13 +209,38 @@ export default class EphemeralContext {
     return assertion;
   }
 
+  findReferenceByMetavariableNode(metavariableNode) {
+    const reference = this.references.find((reference) => {
+      const referenceMatcheMetavariableNode = reference.matchMetavariableNode(metavariableNode);
+
+      if (referenceMatcheMetavariableNode) {
+        return true;
+      }
+    }) || null;
+
+    return reference;
+  }
+
+  findSubstitutionBySubstitutionNode(substitutionNode) {
+    const substitution = this.substitutions.find((substitution) => {
+      const substitutionNodeMatches = substitution.matchNode(substitutionNode);
+
+      if (substitutionNodeMatches) {
+        return true;
+      }
+    }) || null;
+
+    return substitution;
+  }
+
   static fromNothing(context) {
     const terms = [],
           frames = [],
           statements = [],
-          references = [],
           assertions = [],
-          emphemeralContext = new EphemeralContext(context, terms, frames, statements, references, assertions);
+          references = [],
+          substitutions = [],
+          emphemeralContext = new EphemeralContext(context, terms, frames, statements, assertions, references, substitutions);
 
     return emphemeralContext;
   }

@@ -171,18 +171,7 @@ class ScopedContext {
     this.subproofOrProofAssertions.push(subproofOrProofAssertion);
   }
 
-  findVariableByVariableIdentifier(variableIdentifier, nested = true) {
-    const variables = this.getVariables(nested),
-          variable = variables.find((variable) => {
-            const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
-
-            if (variableComparesToVariableIdentifier) {
-              return true;
-            }
-          }) || null;
-
-    return variable;
-  }
+  findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
 
   findJudgementByMetavariable(metavariable) {
     const judgements = this.getJudgements(),
@@ -202,20 +191,17 @@ class ScopedContext {
     return judgement;
   }
 
-  findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
+  findVariableByVariableIdentifier(variableIdentifier, nested = true) {
+    const variables = this.getVariables(nested),
+          variable = variables.find((variable) => {
+            const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
 
-  isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) {
-    const variable = this.findVariableByVariableIdentifier(variableIdentifier, nested),
-          variablePresent = (variable !== null);
+            if (variableComparesToVariableIdentifier) {
+              return true;
+            }
+          }) || null;
 
-    return variablePresent;
-  }
-
-  isJudgementPresentByMetavariable(metavariable) {
-    const judgement = this.findJudgementByMetavariable(metavariable),
-          judgementPresent = (judgement !== null);
-
-    return judgementPresent;
+    return variable;
   }
 
   isTermGrounded(term) {
@@ -264,6 +250,20 @@ class ScopedContext {
           metavariableDefined = judgementPresent; ///
 
     return metavariableDefined
+  }
+
+  isJudgementPresentByMetavariable(metavariable) {
+    const judgement = this.findJudgementByMetavariable(metavariable),
+          judgementPresent = (judgement !== null);
+
+    return judgementPresent;
+  }
+
+  isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) {
+    const variable = this.findVariableByVariableIdentifier(variableIdentifier, nested),
+          variablePresent = (variable !== null);
+
+    return variablePresent;
   }
 
   compareTermAndPropertyRelation(term, propertyRelation) {

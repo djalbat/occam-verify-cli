@@ -1,9 +1,8 @@
 "use strict";
 
-import { levels } from "necessary";
-import {EMPTY_STRING} from "./constants";
+import { LEVELS, SINGLE_SPACE, EMPTY_STRING, LEVEL_MAXIMUM_LENGTH, LINE_INDEX_MAXIMUM_LENGTH } from "./constants";
 
-const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL } = levels;
+const [ TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL ] = LEVELS;
 
 export default class Log {
   constructor(messages, logLevel, follow) {
@@ -24,46 +23,39 @@ export default class Log {
     return this.follow;
   }
 
-  trace(message, filePath, lineIndex = null) {
+  trace(message, filePath = null, lineIndex = null) {
     const level = TRACE_LEVEL;
 
     this.write(level, message, filePath, lineIndex);
   }
 
-  debug(message, filePath, lineIndex = null) {
+  debug(message, filePath = null, lineIndex = null) {
     const level = DEBUG_LEVEL;
 
     this.write(level, message, filePath, lineIndex);
   }
 
-  info(message, filePath, lineIndex = null) {
+  info(message, filePath = null, lineIndex = null) {
     const level = INFO_LEVEL;
 
     this.write(level, message, filePath, lineIndex);
   }
 
-  warning(message, filePath, lineIndex = null) {
+  warning(message, filePath = null, lineIndex = null) {
     const level = WARNING_LEVEL;
 
     this.write(level, message, filePath, lineIndex);
   }
 
-  error(message, filePath, lineIndex = null) {
+  error(message, filePath = null, lineIndex = null) {
     const level = ERROR_LEVEL;
 
     this.write(level, message, filePath, lineIndex);
   }
 
   write(level, message, filePath, lineIndex) {
-    const levels = [
-            TRACE_LEVEL,
-            DEBUG_LEVEL,
-            INFO_LEVEL,
-            WARNING_LEVEL,
-            ERROR_LEVEL
-          ],
-          levelIndex = levels.indexOf(level),
-          logLevelIndex = levels.indexOf(this.logLevel);
+    const levelIndex = LEVELS.indexOf(level),
+          logLevelIndex = LEVELS.indexOf(this.logLevel);
 
     if (levelIndex < logLevelIndex) {
       return;
@@ -95,19 +87,22 @@ export default class Log {
   }
 }
 
-function formatMessage(level, message, filePath = null, lineIndex = null) {
+function formatMessage(level, message, filePath, lineIndex) {
   let formattedMessage = EMPTY_STRING;
 
-  const upperCaseLevel = level.toUpperCase();
+  const leftPaddedLevel = leftPadLevel(level),
+        upperCaseLeftPaddedLevel = leftPaddedLevel.toUpperCase();
 
-  formattedMessage += `${upperCaseLevel}:`;
+  formattedMessage += `${upperCaseLeftPaddedLevel}:`;
 
   if (filePath !== null) {
     formattedMessage += ` ${filePath}`;
   }
 
   if (lineIndex !== null) {
-    formattedMessage += ` [${lineIndex}]`;
+    const leftPaddedLineIndex = leftPadLineIndex(lineIndex);
+
+    formattedMessage += ` [${leftPaddedLineIndex}]`;
   }
 
   formattedMessage += ` - ${message}`;
@@ -116,3 +111,29 @@ function formatMessage(level, message, filePath = null, lineIndex = null) {
 
   return message;
 }
+
+function leftPadLineIndex(lineIndex) {
+  lineIndex = `${lineIndex}`;
+
+  const maximumLength = LINE_INDEX_MAXIMUM_LENGTH,
+        leftPaddedLineIndex = leftPad(lineIndex, maximumLength);
+
+  return leftPaddedLineIndex;
+}
+
+function leftPadLevel(level) {
+  const maximumLength = LEVEL_MAXIMUM_LENGTH,
+        leftPaddedLevel = leftPad(level, maximumLength);
+
+  return leftPaddedLevel;
+}
+
+function leftPad(string, maximumLength) {
+  const stringLength = string.length,
+        length = maximumLength - stringLength,
+        indent = SINGLE_SPACE.repeat(length),
+        leftPaddedString = `${indent}${string}`;
+
+  return leftPaddedString;
+}
+

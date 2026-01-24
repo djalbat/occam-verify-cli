@@ -10,13 +10,15 @@ import FileContext from "../context/file";
 import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
 
+import { LEVELS } from "../constants";
 import { getMetaTypes } from "../metaTypes";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities,
       { tail, push, first, clear, filter, resolve, compress } = arrayUtilities,
-      { isFilePathFurtleFilePath, isFilePathNominalFilePath } = filePathUtilities;
+      { isFilePathFurtleFilePath, isFilePathNominalFilePath } = filePathUtilities,
+      [ TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL ] = LEVELS;
 
 export default class ReleaseContext {
   constructor(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts) {
@@ -81,6 +83,12 @@ export default class ReleaseContext {
 
   getDependencyReleaseContexts() {
     return this.dependencyReleaseContexts;
+  }
+
+  getContext() {
+    const context = null;
+
+    return context;
   }
 
   isReleased() {
@@ -430,15 +438,39 @@ export default class ReleaseContext {
 
   matchShortenedVersion(shortenedVersion) { return this.entries.matchShortenedVersion(shortenedVersion); }
 
-  trace(message, filePath = null, lineIndex = null) { this.log.trace(message, filePath, lineIndex); }
+  trace(message, filePath = null, lineIndex = null) {
+    const level = TRACE_LEVEL;
 
-  debug(message, filePath = null, lineIndex = null) { this.log.debug(message, filePath, lineIndex); }
+    this.writeToLog(level, message, filePath, lineIndex);
+  }
 
-  info(message, filePath = null, lineIndex = null) { this.log.info(message, filePath, lineIndex); }
+  debug(message, filePath = null, lineIndex = null) {
+    const level = DEBUG_LEVEL
 
-  warning(message, filePath = null, lineIndex = null) { this.log.warning(message, filePath, lineIndex); }
+    this.writeToLog(level, message, filePath, lineIndex);
+  }
 
-  error(message, filePath = null, lineIndex = null) { this.log.error(message, filePath, lineIndex); }
+  info(message, filePath = null, lineIndex = null) {
+    const level = INFO_LEVEL;
+
+    this.writeToLog(level, message, filePath, lineIndex);
+  }
+
+  warning(message, filePath = null, lineIndex = null) {
+    const level = WARNING_LEVEL;
+
+    this.writeToLog(level, message, filePath, lineIndex);
+  }
+
+  error(message, filePath = null, lineIndex = null) {
+    const level = ERROR_LEVEL;
+
+    this.writeToLog(level, message, filePath, lineIndex);
+  }
+
+  writeToLog(level, message, filePath, lineIndex) {
+    this.log.write(level, message, filePath, lineIndex);
+  }
 
   initialise(releaseContexts) {
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),

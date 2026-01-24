@@ -11,6 +11,10 @@ export default class LiteralContext {
     return chainContext(this);
   }
 
+  getContext() {
+    return this.context;
+  }
+
   getTokens() {
     return this.tokens;
   }

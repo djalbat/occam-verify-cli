@@ -1,8 +1,10 @@
 "use strict";
 
-import elements from "../elements";
+import { arrayUtilities } from "necessary";
 
 import { chainContext } from "../utilities/context";
+
+const { extract } = arrayUtilities;
 
 export default class LiminalContext {
   constructor(context, substitutions) {
@@ -12,43 +14,42 @@ export default class LiminalContext {
     return chainContext(this);
   }
 
+  getContext() {
+    return this.context;
+  }
+
   getSubstitutions() {
-    return this.substitutions;
+    let substitutions = this.context.getSubstitutions();
+
+    substitutions = [ ///
+      ...this.substitutions,
+      ...substitutions
+    ]
+
+    return substitutions;
   }
 
   addSubstitution(substitution) {
-    const context = this; ///
+    const context = this, ///
+          substitutionA = substitution, ///
+          substitutionString = substitution.getString();
 
-    this.substitutions.addSubstitution(substitution, context);
-  }
+    extract(this.substitutions, (substitution) => {
+      const substitutionB = substitution, ///
+            substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
 
-  removeSubstitution(substitution) {
-    const context = this; ///
+      if (substitutionAEqualToAssertionB) {
+        return true;
+      }
+    });
 
-    this.substitutions.removeSubstitution(substitution, context);
-  }
+    context.trace(`Added the '${substitutionString}' substitution to the context.`);
 
-  snapshot() {
-    const context = this; ///
-
-    this.substitutions.snapshot(context);
-  }
-
-  rollback() {
-    const context = this; ///
-
-    this.substitutions.rollback(context);
-  }
-
-  continue() {
-    const context = this; ///
-
-    this.substitutions.continue(context);
+    this.substitutions.push(substitution);
   }
 
   static fromNothing(context) {
-    const { Substitutions } = elements,
-          substitutions = Substitutions.fromNothing(context),
+    const substitutions = [],
           emphemeralContext = new LiminalContext(context, substitutions);
 
     return emphemeralContext;

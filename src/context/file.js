@@ -4,6 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import elements from "../elements";
 
+import { LEVELS } from "../constants";
 import { verifyFile } from "../process/verify";
 import { chainContext } from "../utilities/context";
 import { baseTypeFromNothing } from "../types";
@@ -33,7 +34,8 @@ import { typesFromJSON,
          metatheoremsToMetatheoremsJSON,
          metavariablesToMetavariablesJSON } from "../utilities/json";
 
-const { push, filter } = arrayUtilities;
+const { push, filter } = arrayUtilities,
+      [ TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL ] = LEVELS;
 
 export default class FileContext {
   constructor(context, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
@@ -786,33 +788,44 @@ export default class FileContext {
   }
 
   trace(message, node = null) {
-    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
+    const level = TRACE_LEVEL;
 
-    this.context.trace(message, this.filePath, this.lineIndex);
+    this.writeToLog(level, message, node);
   }
 
   debug(message, node = null) {
-    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
+    const level = DEBUG_LEVEL;
 
-    this.context.debug(message, this.filePath, this.lineIndex);
+    this.writeToLog(level, message, node);
   }
 
   info(message, node = null) {
-    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
+    const level = INFO_LEVEL;
 
-    this.context.info(message, this.filePath, this.lineIndex);
+    this.writeToLog(level, message, node);
   }
 
   warning(message, node = null) {
-    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
+    const level = WARNING_LEVEL;
 
-    this.context.warning(message, this.filePath, this.lineIndex);
+    this.writeToLog(level, message, node);
   }
 
   error(message, node = null) {
-    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
+    const level = ERROR_LEVEL;
 
-    this.context.error(message, this.filePath, this.lineIndex);
+    this.writeToLog(level, message, node);
+  }
+
+  writeToLog(level, message, node) {
+    const lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex),
+          filePath = (lineIndex === null) ?
+                        this.filePath :
+                          null;
+
+    this.context.writeToLog(level, message, filePath, lineIndex);
+
+    this.lineIndex = lineIndex;
   }
 
   verify() {
@@ -830,9 +843,9 @@ export default class FileContext {
 
       verifies = verifyFile(fileNode, context);
 
-      if (!verifies) {
-        this.clear();
-      }
+      verifies ?
+        this.complete() :
+          this.clear();
 
       if (verifies) {
         this.info(`...verified the '${this.filePath}' file.`);
@@ -842,7 +855,24 @@ export default class FileContext {
     return verifies;
   }
 
+  prepare() {
+    if (this.tokens !== null) {
+      return;
+    }
+
+    const file = this.findFile(this.filePath),
+          lexer = this.getLexer(),
+          parser = this.getParser(),
+          content = file.getContent();
+
+    this.tokens = lexer.tokenise(content);
+
+    this.node = parser.parse(this.tokens);
+  }
+
   clear() {
+    this.lineIndex = null;
+
     this.types = [];
     this.rules = [];
     this.axioms = [];
@@ -858,21 +888,8 @@ export default class FileContext {
     this.metavariables = [];
   }
 
-  prepare() {
+  complete() {
     this.lineIndex = null;
-
-    if (this.tokens !== null) {
-      return;
-    }
-
-    const file = this.findFile(this.filePath),
-          lexer = this.getLexer(),
-          parser = this.getParser(),
-          content = file.getContent();
-
-    this.tokens = lexer.tokenise(content);
-
-    this.node = parser.parse(this.tokens);
   }
 
   initialise(json) {
