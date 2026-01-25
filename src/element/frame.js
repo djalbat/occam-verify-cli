@@ -1,13 +1,13 @@
 "use strict";
 
+import { Element } from "occam-furtle";
 import { arrayUtilities } from "necessary";
-import { Element, elements } from "occam-furtle";
 
+import { define } from "../elements";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { assumptionsStringFromAssumptions } from "../utilities/string";
 
-const { first } = arrayUtilities,
-      { define } = elements;
+const { first } = arrayUtilities;
 
 export default define(class Frame extends Element {
   constructor(context, string, node, assumptions) {

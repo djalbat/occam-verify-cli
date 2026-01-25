@@ -1,16 +1,13 @@
 "use strict";
 
-import { elements } from "occam-furtle";
-
 import Substitution from "../substitution";
 
+import { define } from "../../elements";
 import { literally } from "../../utilities/context";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
 import { termSubstitutionFromStatementNode, termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
-
-const { define } = elements;
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, targetTerm, replacementTerm) {

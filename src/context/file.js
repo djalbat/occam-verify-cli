@@ -1,7 +1,9 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { elements, nodeUtilities, contextUtilities } from "occam-furtle";
+import { nodeUtilities, contextUtilities } from "occam-furtle";
+
+import elements from "../elements";
 
 import { LEVELS } from "../constants";
 import { verifyFile } from "../process/verify";

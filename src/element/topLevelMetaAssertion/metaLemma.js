@@ -1,10 +1,8 @@
 "use strict";
 
-import { elements } from "occam-furtle";
-
 import TopLevelMetaAssertion from "./../topLevelMetaAssertion";
 
-const { define } = elements;
+import { define } from "../../elements";
 
 export default define(class MetaLemma extends TopLevelMetaAssertion {
   verify() {

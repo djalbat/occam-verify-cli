@@ -1,6 +1,6 @@
 "use strict";
 
-import { elements } from "occam-furtle";
+import elements from "../elements";
 
 import { literally } from "../utilities/context";
 import { baseTypeFromNothing } from "../types";

@@ -1,11 +1,10 @@
 "use strict";
 
-import { Element, elements } from "occam-furtle";
+import { Element } from "occam-furtle";
 
+import { define } from "../elements";
 import { synthetically } from "../utilities/context";
 import { typeToTypeJSON } from "../utilities/json";
-
-const { define } = elements;
 
 export default define(class Variable extends Element {
   constructor(context, string, node, type, identifier, propertyRelations) {

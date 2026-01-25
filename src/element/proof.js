@@ -1,10 +1,9 @@
 "use strict";
 
-import { Element, elements } from "occam-furtle";
+import { Element } from "occam-furtle";
 
 import { scope } from "../utilities/context";
-
-const { define } = elements;
+import { define } from "../elements";
 
 export default define(class Proof extends Element {
   constructor(context, string, node, derivation) {

@@ -1,6 +1,6 @@
 "use strict";
 
-import { elements } from "occam-furtle";
+import elements from "./elements";
 
 import { BASE_TYPE_SYMBOL } from "./constants";
 

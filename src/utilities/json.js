@@ -1,6 +1,6 @@
 "use strict";
 
-import { elements } from "occam-furtle";
+import elements from "../elements";
 
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
 

@@ -1,9 +1,12 @@
 "use strict";
 
+import { Element } from "occam-furtle";
 import { arrayUtilities } from "necessary";
-import { Element, elements } from "occam-furtle";
+
+import elements from "../elements";
 
 import { scope } from "../utilities/context";
+import { define } from "../elements";
 import { labelsFromJSON,
          premisesFromJSON,
          conclusionFromJSON,
@@ -11,8 +14,7 @@ import { labelsFromJSON,
          premisesToPremisesJSON,
          conclusionToConclusionJSON } from "../utilities/json";
 
-const { define } = elements,
-      { reverse, extract, backwardsEvery } = arrayUtilities;
+const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 export default define(class Rule extends Element {
   constructor(context, string, node, proof, labels, premises, conclusion) {

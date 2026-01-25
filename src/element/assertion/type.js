@@ -1,12 +1,10 @@
 "use strict";
 
-import { elements } from "occam-furtle";
-
+import elements from "../../elements";
 import Assertion from "../assertion";
 
+import { define } from "../../elements";
 import { variableAssignmentFromVariable } from "../../process/assign";
-
-const { define } = elements;
 
 export default define(class TypeAssertion extends Assertion {
   constructor(context, string, node, term, type) {

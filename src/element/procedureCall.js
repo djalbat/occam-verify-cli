@@ -1,11 +1,10 @@
 "use strict";
 
+import { Element } from "occam-furtle";
 import { Expressions } from "occam-furtle";
-import { Element, elements } from "occam-furtle";
 
+import { define } from "../elements";
 import { parametersFromJSON, procedureReferenceFromJSON, parametersToParametersJSON, procedureReferenceToProcedureReferenceJSON } from "../utilities/json";
-
-const { define } = elements;
 
 export default define(class ProcedureCall extends Element {
   constructor(context, string, node, parameters, procedureReference) {

@@ -1,10 +1,9 @@
 "use strict";
 
-import { Element, elements } from "occam-furtle";
+import { Element } from "occam-furtle";
 
+import { define } from "../elements";
 import { judgementAssignmentFromJudgement } from "../process/assign";
-
-const { define } = elements;
 
 export default define(class Judgement extends Element {
   constructor(context, string, node, frame, assumption) {

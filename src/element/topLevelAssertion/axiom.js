@@ -1,10 +1,8 @@
 "use strict";
 
-import { elements } from "occam-furtle";
-
 import TopLevelAssertion  from "../../node/topLevelAssertion";
 
-const { define } = elements;
+import { define } from "../../elements";
 
 export default define(class Axiom extends TopLevelAssertion {
   isSatisfiable() {

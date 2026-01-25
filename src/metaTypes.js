@@ -1,6 +1,6 @@
 "use strict";
 
-import { elements } from "occam-furtle";
+import elements from "./elements";
 
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 

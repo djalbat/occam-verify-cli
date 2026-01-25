@@ -1,14 +1,13 @@
 "use strict";
 
-import { Element, elements } from "occam-furtle";
+import { Element } from "occam-furtle";
 
+import { define } from "../elements";
 import { attempt } from "../utilities/context";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { unifyMetavariableIntrinsically } from "../process/unify";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
-
-const { define } = elements;
 
 export default define(class Reference extends Element {
   constructor(context, string, node, metavariable) {

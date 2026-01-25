@@ -1,10 +1,9 @@
 "use strict";
 
-import { elements } from "occam-furtle";
-
+import elements from "../../elements";
 import Constructor from "../constructor";
 
-const { define } = elements;
+import { define } from "../../elements";
 
 export default define(class BracketedConstructor extends Constructor {
   unifyTerm(term, context, verifyAhead) {

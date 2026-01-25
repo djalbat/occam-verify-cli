@@ -1,13 +1,13 @@
 "use strict";
 
+import { Element } from "occam-furtle";
 import { arrayUtilities } from "necessary";
-import { Element, elements } from "occam-furtle";
 
+import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
 import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
-const { define } = elements,
-      { find, first, clear, prune, filter, extract, compress, correlate } = arrayUtilities;
+const { find, first, clear, prune, filter, extract, compress, correlate } = arrayUtilities;
 
 export default define(class Substitutions extends Element {
   constructor(context, string, node, array, savedArray) {
