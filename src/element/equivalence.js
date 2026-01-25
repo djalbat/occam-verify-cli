@@ -1,17 +1,16 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { Element, elements } from "occam-furtle";
 
-import Element from "../element";
-
-import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { termsStringFromTerms } from "../utilities/string";
 import { instantiateEquivalence } from "../process/instantiate";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
 import { equivalenceFromEquivalenceNode } from "../utilities/element";
 
-const { compress } = arrayUtilities;
+const { define } = elements,
+      { compress } = arrayUtilities;
 
 export default define(class Equivalence extends Element {
   constructor(context, string, node, terms) {

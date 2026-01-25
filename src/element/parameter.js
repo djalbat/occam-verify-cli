@@ -1,8 +1,8 @@
 "use strict";
 
-import Element from "../element";
+import { Element, elements } from "occam-furtle";
 
-import { define } from "../elements";
+const { define } = elements;
 
 export default define(class Parameter extends Element {
   constructor(context, string, node, name, identifier) {

@@ -1,12 +1,15 @@
 "use strict";
 
+import { elements } from "occam-furtle";
+
 import Substitution from "../substitution";
 
-import { define } from "../../elements";
 import { literally } from "../../utilities/context";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
+
+const { define } = elements;
 
 export default define(class ReferenceSubstitution extends Substitution {
   constructor(context, string, node, targetReference, replacementReference) {

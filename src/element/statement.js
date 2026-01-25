@@ -1,15 +1,14 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { Element, elements } from "occam-furtle";
 
-import Element from "../element";
-
-import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
-const { match, backwardsSome } = arrayUtilities;
+const { define } = elements,
+      { match, backwardsSome } = arrayUtilities;
 
 export default define(class Statement extends Element {
   constructor(context, string, node) {

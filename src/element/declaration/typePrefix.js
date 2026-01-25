@@ -1,8 +1,10 @@
 "use strict";
 
+import { elements } from "occam-furtle";
+
 import Declaration from "../declaration";
 
-import { define } from "../../elements";
+const { define } = elements;
 
 export default define(class TypePrefixDeclaration extends Declaration {
   constructor(context, string, node, typePrefix) {

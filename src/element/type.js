@@ -1,15 +1,14 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { Element, elements } from "occam-furtle";
 
-import Element from "../element";
-
-import { define } from "../elements";
 import { baseTypeFromNothing } from "../types";
 import { typeStringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/string";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
-const { push, first } = arrayUtilities;
+const { define } = elements,
+      { push, first } = arrayUtilities;
 
 export default define(class Type extends Element {
   constructor(context, string, node, name, prefixName, superTypes, properties, provisional) {

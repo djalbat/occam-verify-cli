@@ -1,10 +1,12 @@
 "use strict";
 
-import Element from "../element";
+import { Element, elements } from "occam-furtle";
+
 import assignAssignments from "../process/assign";
 
-import { define } from "../elements";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
+
+const { define } = elements;
 
 export default define(class Hypothesis extends Element {
   constructor(context, string, node, statement) {

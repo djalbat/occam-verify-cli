@@ -1,13 +1,14 @@
 "use strict";
 
+import { elements } from "occam-furtle";
 import { arrayUtilities } from "necessary";
 
 import Assertion from "../assertion";
 
-import { define } from "../../elements";
 import { unifyStatement } from "../../process/unify";
 
-const { match } = arrayUtilities;
+const { match } = arrayUtilities,
+      { define } = elements;
 
 export default define(class SubproofAssertion extends Assertion {
   constructor(context, string, node, statements) {

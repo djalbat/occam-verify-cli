@@ -2,7 +2,7 @@
 
 import Combinator from "../combinator";
 
-import { define } from "../../elements";
+const { define } = elements;
 
 export default define(class BracketedCombinator extends Combinator {
   unifyStatement(statement, assignments, stated, context) {

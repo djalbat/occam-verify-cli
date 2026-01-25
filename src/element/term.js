@@ -1,14 +1,13 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { Element, elements } from "occam-furtle";
 
-import Element from "../element";
-
-import { define } from "../elements";
 import { validateTerms } from "../utilities/validation";
 import { typeToTypeJSON } from "../utilities/json";
 
-const { filter, compress } = arrayUtilities;
+const { define } = elements,
+      { filter, compress } = arrayUtilities;
 
 export default define(class Term extends Element {
   constructor(context, string, node, type) {

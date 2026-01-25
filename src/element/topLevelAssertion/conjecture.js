@@ -1,8 +1,10 @@
 "use strict";
 
+import { elements } from "occam-furtle";
+
 import TopLevelAssertion from "../topLevelAssertion";
 
-import { define } from "../../elements";
+const { define } = elements;
 
 export default define(class Conjecture extends TopLevelAssertion {
   verify() {

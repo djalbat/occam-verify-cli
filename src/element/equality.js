@@ -1,11 +1,11 @@
 "use strict";
 
-import Element from "../element";
-import elements from "../elements";
+import { Element, elements } from "occam-furtle";
 
-import { define } from "../elements";
 import { equateTerms } from "../process/equate";
 import { equalityAssignmentFromEquality, variableAssignmentFromVariable } from "../process/assign";
+
+const { define } = elements;
 
 export default define(class Equality extends Element {
   constructor(context, string, node, leftTerm, rightTerm) {

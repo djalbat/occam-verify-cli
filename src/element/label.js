@@ -1,9 +1,10 @@
 "use strict";
 
-import Element from "../element";
+import { Element, elements } from "occam-furtle";
 
-import { define } from "../elements";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
+
+const { define } = elements;
 
 export default define(class Label extends Element {
   constructor(context, string, node, metavariable) {

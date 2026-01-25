@@ -1,6 +1,6 @@
 "use strict";
 
-import Element from "../element";
+import { Element } from "occam-furtle";
 
 import { equateStatements } from "../process/equate";
 

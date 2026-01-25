@@ -1,12 +1,14 @@
 "use strict";
 
-import elements from "../../elements";
+import { elements } from "occam-furtle";
+
 import ProofAssertion from "../proofAssertion";
 
-import { define } from "../../elements";
 import { unifyStatements } from "../../utilities/unification";
 import { attempt, liminally } from "../../utilities/context";
 import { propertyAssertionFromStatement } from "../../utilities/statement";
+
+const { define } = elements;
 
 export default define(class Step extends ProofAssertion {
   constructor(context, string, node, statement, reference, satisfiesAssertion) {

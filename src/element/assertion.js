@@ -1,6 +1,6 @@
 "use strict";
 
-import Element from "../element";
+import { Element } from "occam-furtle";
 
 export default class Assertion extends Element {
   constructor(context, string, node) {

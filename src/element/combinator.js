@@ -1,11 +1,12 @@
 "use strict";
 
-import Element from "../element";
+import { Element, elements } from "occam-furtle";
 
-import { define } from "../elements";
 import { verifyCombinator } from "../process/verify";
 import { unifyStatementWithCombinator } from "../process/unify";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
+
+const { define } = elements;
 
 export default define(class Combinator extends Element {
   constructor(context, string, node, statement) {

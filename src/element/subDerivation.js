@@ -1,13 +1,12 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { Element, elements } from "occam-furtle";
 
-import Element from "../element";
 import assignAssignments from "../process/assign";
 
-import { define } from "../elements";
-
-const { last } = arrayUtilities;
+const { last } = arrayUtilities,
+      { define } = elements;
 
 export default define(class SubDerivation extends Element {
   constructor(context, string, node, subproofOrProofAssertions) {

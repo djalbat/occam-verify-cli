@@ -1,9 +1,10 @@
 "use strict";
 
-import elements from "../../elements";
+import { elements } from "occam-furtle";
+
 import Assertion from "../assertion";
 
-import { define } from "../../elements";
+const { define } = elements;
 
 export default define(class SatisfiesAssertion extends Assertion {
   constructor(context, string, node, signature, reference) {

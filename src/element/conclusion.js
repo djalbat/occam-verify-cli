@@ -1,10 +1,11 @@
 "use strict";
 
-import Element from "../element";
+import { Element, elements } from "occam-furtle";
 
-import { define } from "../elements";
 import { attempt } from "../utilities/context";
 import { termsFromJSON, framesFromJSON, statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
+
+const { define } = elements;
 
 export  default define(class Conclusion extends Element {
   constructor(context, string, node, statement) {

@@ -1,16 +1,14 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { Element, elements } from "occam-furtle";
 
-import Element from "../element";
-import elements from "../elements";
-
-import { define } from "../elements";
 import { synthetically } from "../utilities/context";
 import { signatureStringFromTerms } from "../utilities/string";
 import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
 
-const { match, compare, correlate } = arrayUtilities;
+const { define } = elements,
+      { match, compare, correlate } = arrayUtilities;
 
 export default define(class Signature extends Element {
   constructor(context, string, node, terms) {

@@ -1,9 +1,10 @@
 "use strict";
 
+import { elements } from "occam-furtle";
+
 import ProofAssertion from "../proofAssertion";
 import assignAssignments from "../../process/assign";
 
-import { define } from "../../elements";
 import { attempt, synthetically } from "../../utilities/context";
 import { termsFromJSON,
          framesFromJSON,
@@ -13,6 +14,8 @@ import { termsFromJSON,
          procedureCallFromJSON,
          statementToStatementJSON,
          procedureCallToProcedureCallJSON } from "../../utilities/json";
+
+const { define } = elements;
 
 export default define(class Supposition extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {

@@ -1,14 +1,14 @@
 "use strict";
 
-import Element from "../element";
-import elements from "../elements";
+import { Element, elements } from "occam-furtle";
 
-import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
 import { synthetically } from "../utilities/context";
 import { typeToTypeJSON } from "../utilities/json";
 import { metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
+
+const { define } = elements;
 
 export default define(class Metavariable extends Element {
   constructor(context, string, node, name, type, metaType) {

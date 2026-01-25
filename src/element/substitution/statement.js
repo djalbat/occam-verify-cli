@@ -1,9 +1,9 @@
 "use strict";
 
-import elements from "../../elements";
+import { elements } from "occam-furtle";
+
 import Substitution from "../substitution";
 
-import { define } from "../../elements";
 import { literally } from "../../utilities/context";
 import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
@@ -11,6 +11,8 @@ import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
 import { statementToStatementJSON, metavariableToMetavariableJSON } from "../../utilities/json";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
+
+const { define } = elements;
 
 export default define(class StatementSubstitution extends Substitution {
   constructor(context, string, node, resolved, substitution, targetStatement, replacementStatement) {

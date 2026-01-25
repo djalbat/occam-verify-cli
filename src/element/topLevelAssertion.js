@@ -1,8 +1,7 @@
 "use strict";
 
+import { Element } from "occam-furtle";
 import { arrayUtilities } from "necessary";
-
-import Element from "../element";
 
 import { scope, attempt } from "../utilities/context";
 import { labelsFromJSON,

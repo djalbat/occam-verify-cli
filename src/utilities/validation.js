@@ -1,6 +1,6 @@
 "use strict";
 
-import elements from "../elements";
+import { elements } from "occam-furtle";
 
 import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
 import { equalityFromStatement,

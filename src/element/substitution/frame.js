@@ -1,12 +1,15 @@
 "use strict";
 
+import { elements } from "occam-furtle";
+
 import Substitution from "../substitution";
 
-import { define } from "../../elements";
 import { literally } from "../../utilities/context";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
 import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
+
+const { define } = elements;
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(context, string, node, targetFrame, replacementFrame) {

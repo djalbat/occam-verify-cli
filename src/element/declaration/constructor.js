@@ -1,9 +1,12 @@
 "use strict";
 
+import { elements } from "occam-furtle";
+
 import Declaration from "../declaration";
 
-import { define } from "../../elements";
 import { validateTerm } from "../../process/validate";
+
+const { define } = elements;
 
 export default define(class ConstructorDeclaration extends Declaration {
   constructor(context, string, node, constructor) {

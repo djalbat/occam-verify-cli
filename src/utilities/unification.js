@@ -1,8 +1,7 @@
 "use strict";
 
+import { elements } from "occam-furtle";
 import { arrayUtilities } from "necessary";
-
-import elements from "../elements";
 
 import { synthetically } from "../utilities/context";
 import { equalityFromStatement,

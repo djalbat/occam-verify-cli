@@ -2,8 +2,9 @@
 
 import Assertion from "../assertion";
 
-import { define } from "../../elements";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
+
+const { define } = elements;
 
 export default define(class ContainedAssertion extends Assertion {
   constructor(context, string, node, term, frame, negated, statement) {

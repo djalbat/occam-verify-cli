@@ -1,10 +1,11 @@
 "use strict";
 
-import Element from "../element";
+import { Element, elements } from "occam-furtle";
 
-import { define } from "../elements";
 import { unifyTermWithConstructor } from "../process/unify";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
+
+const { define } = elements;
 
 export default define(class Constructor extends Element {
   constructor(context, string, node, term) {

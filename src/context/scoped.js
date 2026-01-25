@@ -1,9 +1,7 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { contextUtilities } from "occam-furtle";
-
-import elements from "../elements";
+import { elements, contextUtilities } from "occam-furtle";
 
 const { last } = arrayUtilities,
       { chainContext } = contextUtilities;
