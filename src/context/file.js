@@ -1,14 +1,13 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { contextUtilities } from "occam-furtle";
+import { nodeUtilities, contextUtilities } from "occam-furtle";
 
 import elements from "../elements";
 
 import { LEVELS } from "../constants";
 import { verifyFile } from "../process/verify";
 import { baseTypeFromNothing } from "../types";
-import { nodeAsString, nodesAsString } from "../utilities/node";
 import { typesFromJSON,
          rulesFromJSON,
          axiomsFromJSON,
@@ -35,6 +34,7 @@ import { typesFromJSON,
          metavariablesToMetavariablesJSON } from "../utilities/json";
 
 const { push, filter } = arrayUtilities,
+      { nodeAsString, nodesAsString } = nodeUtilities,
       { chainContext, lineIndexFromNodeAndTokens } = contextUtilities,
       [ TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL ] = LEVELS;
 
