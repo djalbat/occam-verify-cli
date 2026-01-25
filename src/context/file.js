@@ -1,12 +1,12 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { contextUtilities } from "occam-furtle";
 
 import elements from "../elements";
 
 import { LEVELS } from "../constants";
 import { verifyFile } from "../process/verify";
-import { chainContext } from "../utilities/context";
 import { baseTypeFromNothing } from "../types";
 import { nodeAsString, nodesAsString } from "../utilities/node";
 import { typesFromJSON,
@@ -35,6 +35,7 @@ import { typesFromJSON,
          metavariablesToMetavariablesJSON } from "../utilities/json";
 
 const { push, filter } = arrayUtilities,
+      { chainContext, lineIndexFromNodeAndTokens } = contextUtilities,
       [ TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL ] = LEVELS;
 
 export default class FileContext {
@@ -250,12 +251,6 @@ export default class FileContext {
 
   getMetavariables(includeRelease = true) {
     return this.metavariables;
-  }
-
-  getFileContext() {
-    const fileContext = this; ///
-
-    return fileContext;
   }
 
   addType(type) {
@@ -775,6 +770,20 @@ export default class FileContext {
     return topLevelMetaAssertionPresent;
   }
 
+  getFileContext() {
+    const fileContext = this; ///
+
+    return fileContext;
+  }
+
+  getDepth() {
+    let depth = this.context.getDepth();
+
+    depth++;
+
+    return depth;
+  }
+
   nodeAsString(node) {
     const string = nodeAsString(node, this.tokens);
 
@@ -1010,26 +1019,4 @@ export default class FileContext {
 
     return fileContext;
   }
-}
-
-function lineIndexFromNodeAndTokens(node, tokens, lineIndex) {
-  if (node !== null) {
-    lineIndex = 0;
-
-    const firstSignificantTokenIndex = node.getFirstSignificantTokenIndex(tokens);
-
-    tokens.some((token, tokenIndex) => {
-      const tokenEndOfLineToken = token.isEndOfLineToken();
-
-      if (tokenEndOfLineToken) {
-        lineIndex += 1;
-      }
-
-      if (tokenIndex === firstSignificantTokenIndex) {
-        return true;
-      }
-    });
-  }
-
-  return lineIndex;
 }

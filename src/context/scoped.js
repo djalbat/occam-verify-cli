@@ -1,12 +1,12 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { contextUtilities } from "occam-furtle";
 
 import elements from "../elements";
 
-import { chainContext } from "../utilities/context";
-
-const { last } = arrayUtilities;
+const { last } = arrayUtilities,
+      { chainContext } = contextUtilities;
 
 class ScopedContext {
   constructor(context, variables, judgements, equivalences, subproofOrProofAssertions) {
@@ -278,6 +278,16 @@ class ScopedContext {
           });
 
     return comparesToTermAndPropertyRelation;
+  }
+
+  getFileContext() { return this.context.getFileContext(); }
+
+  getDepth() {
+    let depth = this.context.getDepth();
+
+    depth++;
+
+    return depth;
   }
 
   static fromNothing(context) {

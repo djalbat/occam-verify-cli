@@ -85,12 +85,6 @@ export default class ReleaseContext {
     return this.dependencyReleaseContexts;
   }
 
-  getContext() {
-    const context = null;
-
-    return context;
-  }
-
   isReleased() {
     const released = (this.json !== null);
 
@@ -470,6 +464,18 @@ export default class ReleaseContext {
 
   writeToLog(level, message, filePath, lineIndex) {
     this.log.write(level, message, filePath, lineIndex);
+  }
+
+  getFileContext() {
+    const fileContext = null;
+
+    return fileContext;
+  }
+
+  getDepth() {
+    const depth = -1;
+
+    return depth;
   }
 
   initialise(releaseContexts) {

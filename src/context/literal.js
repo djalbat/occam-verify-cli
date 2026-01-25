@@ -1,7 +1,10 @@
 "use strict";
 
+import { contextUtilities } from "occam-furtle";
+
 import { nodeAsString } from "../utilities/node";
-import { chainContext } from "../utilities/context";
+
+const { chainContext } = contextUtilities;
 
 export default class LiteralContext {
   constructor(context, tokens) {
@@ -27,6 +30,16 @@ export default class LiteralContext {
     const string = nodeAsString(node, this.tokens);
 
     return string;
+  }
+
+  getFileContext() { return this.context.getFileContext(); }
+
+  getDepth() {
+    let depth = this.context.getDepth();
+
+    depth++;
+
+    return depth;
   }
 
   static fromNothing(context) {

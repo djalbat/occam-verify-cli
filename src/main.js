@@ -1,6 +1,7 @@
 "use strict";
 
-import Log from "./log";
+import { Log } from "occam-furtle";
+
 import helpAction from "./action/help";
 import verifyAction from "./action/verify";
 import versionAction from "./action/version";

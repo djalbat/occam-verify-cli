@@ -1,10 +1,10 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { contextUtilities } from "occam-furtle";
 
-import { chainContext } from "../utilities/context";
-
-const { extract } = arrayUtilities;
+const { extract } = arrayUtilities,
+      { chainContext } = contextUtilities;
 
 export default class EphemeralContext {
   constructor(context, terms, frames, statements, assertions, references, substitutions) {
@@ -231,6 +231,16 @@ export default class EphemeralContext {
     }) || null;
 
     return substitution;
+  }
+
+  getFileContext() { return this.context.getFileContext(); }
+
+  getDepth() {
+    let depth = this.context.getDepth();
+
+    depth++;
+
+    return depth;
   }
 
   static fromNothing(context) {

@@ -1,6 +1,8 @@
 "use strict";
 
-import { chainContext } from "../utilities/context";
+import { contextUtilities } from "occam-furtle";
+
+const { chainContext } = contextUtilities;
 
 export default class SyntheticContext {
   constructor(context, generalContext, specificContext) {
@@ -38,6 +40,16 @@ export default class SyntheticContext {
   isVariablePresentByVariableIdentifier(variableIdentifier) { this.generalContext.isVariablePresentByVariableIdentifier(variableIdentifier); }
 
   isMetavariablePresentByMetavariableName(metavariableName) { this.generalContext.isMetavariablePresentByMetavariableName(metavariableName); }
+
+  getFileContext() { return this.context.getFileContext(); }
+
+  getDepth() {
+    let depth = this.context.getDepth();
+
+    depth++;
+
+    return depth;
+  }
 
   static fromNothing(generalContext, specificContext) {
     const context = specificContext,  ///

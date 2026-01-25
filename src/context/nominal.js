@@ -16,10 +16,16 @@ class NominalContext {
     return this.parser;
   }
 
-  getContext() {
-    const context = null;
+  getFileContext() {
+    const fileContext = null;
 
-    return context;
+    return fileContext;
+  }
+
+  getDepth() {
+    const depth = -1;
+
+    return depth;
   }
 
   static fromNothing() {
