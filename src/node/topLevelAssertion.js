@@ -1,6 +1,6 @@
 "use strict";
 
-import NonTerminalNode from "../nonTerminalNode";
+import { NonTerminalNode } from "occam-furtle";
 
 export default class TopLevelAssertionNode extends NonTerminalNode {
   getBodyNode() {

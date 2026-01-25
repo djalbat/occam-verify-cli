@@ -1,6 +1,6 @@
 "use strict";
 
-import NonTerminalNode from "../nonTerminalNode";
+import { NonTerminalNode } from "occam-furtle";
 
 import { SIGNATURE_RULE_NAME, PARENTHESISED_LABEL_RULE_NAME, PARENTHESISED_LABELS_RULE_NAME } from "../ruleNames";
 

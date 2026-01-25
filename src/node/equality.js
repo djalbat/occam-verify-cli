@@ -1,8 +1,7 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-
-import NonTerminalNode from "../nonTerminalNode";
+import { NonTerminalNode } from "occam-furtle";
 
 import { TERM_RULE_NAME } from "../ruleNames";
 

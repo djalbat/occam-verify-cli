@@ -1,10 +1,10 @@
 "use strict";
 
-import DocumentNode from "../nonTerminalNode";
+import { NonTerminalNode } from "occam-furtle";
 
 import { STATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
-export default class AssumptionpNode extends DocumentNode {
+export default class AssumptionpNode extends NonTerminalNode {
   isSingular() {
     let singular = false;
 

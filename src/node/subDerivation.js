@@ -1,6 +1,6 @@
 "use strict";
 
-import NonTerminalNode from "../nonTerminalNode";
+import { NonTerminalNode } from "occam-furtle";
 
 import { STEP_RULE_NAME, SUBPROOF_RULE_NAME } from "../ruleNames";
 
