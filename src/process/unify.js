@@ -1,9 +1,12 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
+import { queryUtilities } from "occam-furtle";
+
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { termFromTermNode, frameFromFrameNode, statementFromStatementNode } from "../utilities/element";
 import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual, isLastRemainingArgumentFunction } from "../utilities/pass";
+
+const { nodeQuery } = queryUtilities;
 
 const nonTerminalNodeQuery = nodeQuery("/*");
 

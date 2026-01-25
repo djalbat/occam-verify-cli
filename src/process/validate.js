@@ -1,8 +1,11 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
+import { queryUtilities } from "occam-furtle";
+
 import { isLastRemainingArgumentFunction } from "../utilities/pass";
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
+
+const { nodeQuery } = queryUtilities;
 
 const nonTerminalNodeQuery = nodeQuery("/*");
 

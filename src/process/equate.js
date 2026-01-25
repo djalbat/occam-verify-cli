@@ -1,7 +1,10 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
+import { queryUtilities } from "occam-furtle";
+
 import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual } from "../utilities/pass";
+
+const { nodeQuery } = queryUtilities;
 
 const termNodeQuery = nodeQuery("/term"),
       nonTerminalNodeQuery = nodeQuery("/*");

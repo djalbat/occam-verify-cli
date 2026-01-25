@@ -1,6 +1,7 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
+import { queryUtilities } from "occam-furtle";
+
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 import { ruleFromRuleNode,
          errorFromErrorNode,
@@ -18,6 +19,8 @@ import { ruleFromRuleNode,
          constructorDeclarationFromConstructorDeclarationNode,
          complexTypeDeclarationFromComplexTypeDeclarationNode,
          metavariableDeclarationFromMetavariableDeclarationNode } from "../utilities/element";
+
+const { nodeQuery } = queryUtilities;
 
 const nonTerminalNodeQuery = nodeQuery("/*");
 
