@@ -1,6 +1,6 @@
 "use strict";
 
-import { Dependency } from "occam-entities";
+import { Dependency } from "occam-model";
 
 import "../preamble";
 

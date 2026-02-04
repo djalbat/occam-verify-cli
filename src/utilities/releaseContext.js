@@ -1,7 +1,7 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { Entries, metaJSONUtilities } from "occam-entities";
+import { Entries, metaJSONUtilities } from "occam-model";
 
 import ReleaseContext from "../context/release";
 
