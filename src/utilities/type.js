@@ -1,8 +1,8 @@
 "use strict";
 
-import elements from "./elements";
+import elements from "../elements";
 
-import { BASE_TYPE_SYMBOL } from "./constants";
+import { BASE_TYPE_SYMBOL } from "../constants";
 
 let baseType = null;
 
