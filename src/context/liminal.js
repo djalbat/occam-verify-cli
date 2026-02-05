@@ -48,16 +48,6 @@ export default class LiminalContext {
     this.substitutions.push(substitution);
   }
 
-  getFileContext() { return this.context.getFileContext(); }
-
-  getDepth() {
-    let depth = this.context.getDepth();
-
-    depth++;
-
-    return depth;
-  }
-
   static fromNothing(context) {
     const substitutions = [],
           emphemeralContext = new LiminalContext(context, substitutions);

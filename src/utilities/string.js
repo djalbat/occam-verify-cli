@@ -1,6 +1,6 @@
 "use strict";
 
-import { baseTypeFromNothing } from "../types";
+import { baseTypeFromNothing } from "../utilities/type";
 
 export function termsStringFromTerms(terms) {
   const termsString = terms.reduce((termsString, term) => {

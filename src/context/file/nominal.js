@@ -1,13 +1,12 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { nodeUtilities, contextUtilities } from "occam-furtle";
+import { FileContext, contextUtilities } from "occam-furtle";
 
-import elements from "../elements";
+import elements from "../../elements";
 
-import { LEVELS } from "../constants";
-import { verifyFile } from "../process/verify";
-import { baseTypeFromNothing } from "../types";
+import { verifyFile } from "../../process/verify";
+import { baseTypeFromNothing } from "../../utilities/type";
 import { typesFromJSON,
          rulesFromJSON,
          axiomsFromJSON,
@@ -31,18 +30,17 @@ import { typesFromJSON,
          typePrefixesToTypePrefixesJSON,
          constructorsToConstructorsJSON,
          metatheoremsToMetatheoremsJSON,
-         metavariablesToMetavariablesJSON } from "../utilities/json";
+         metavariablesToMetavariablesJSON } from "../../utilities/json";
 
 const { push, filter } = arrayUtilities,
-      { nodeAsString, nodesAsString } = nodeUtilities,
-      { chainContext, lineIndexFromNodeAndTokens } = contextUtilities,
-      [ TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL ] = LEVELS;
+      { chainContext } = contextUtilities;
 
-export default class FileContext {
-  constructor(context, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
+export default class NominalFileContext extends FileContext {
+  constructor(context, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
+    super(context, filePath, tokens, node);
+
     this.context = context;
     this.filePath = filePath;
-    this.lineIndex = lineIndex;
     this.tokens = tokens;
     this.node = node;
     this.types = types;
@@ -60,26 +58,6 @@ export default class FileContext {
     this.metavariables = metavariables;
 
     return chainContext(this);
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getFilePath() {
-    return this.filePath;
-  }
-
-  getLineIndex() {
-    return this.lineIndex;
-  }
-
-  getTokens() {
-    return this.tokens;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getJudgements() {
@@ -770,118 +748,16 @@ export default class FileContext {
     return topLevelMetaAssertionPresent;
   }
 
-  getFileContext() {
-    const fileContext = this; ///
+  verifyFile() {
+    const node = this.getNode(),
+          context = this,
+          fileNode = node,  ///
+          fileVerifies = verifyFile(fileNode, context);
 
-    return fileContext;
-  }
-
-  getDepth() {
-    let depth = this.context.getDepth();
-
-    depth++;
-
-    return depth;
-  }
-
-  nodeAsString(node) {
-    const string = nodeAsString(node, this.tokens);
-
-    return string;
-  }
-
-  nodesAsString(node) {
-    const string = nodesAsString(node, this.tokens);
-
-    return string;
-  }
-
-  trace(message, node = null) {
-    const level = TRACE_LEVEL;
-
-    this.writeToLog(level, message, node);
-  }
-
-  debug(message, node = null) {
-    const level = DEBUG_LEVEL;
-
-    this.writeToLog(level, message, node);
-  }
-
-  info(message, node = null) {
-    const level = INFO_LEVEL;
-
-    this.writeToLog(level, message, node);
-  }
-
-  warning(message, node = null) {
-    const level = WARNING_LEVEL;
-
-    this.writeToLog(level, message, node);
-  }
-
-  error(message, node = null) {
-    const level = ERROR_LEVEL;
-
-    this.writeToLog(level, message, node);
-  }
-
-  writeToLog(level, message, node) {
-    const lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex),
-          filePath = (lineIndex === null) ?
-                        this.filePath :
-                          null;
-
-    this.context.writeToLog(level, message, filePath, lineIndex);
-
-    this.lineIndex = lineIndex;
-  }
-
-  verify() {
-    let verifies = false;
-
-    this.prepare();
-
-    if (this.node === null) {
-      this.warning(`Unable to verify the '${this.filePath}' file because it cannot be parsed.`);
-    } else {
-      this.debug(`Verifying the '${this.filePath}' file...`);
-
-      const context = this, ///
-            fileNode = this.node; ///
-
-      verifies = verifyFile(fileNode, context);
-
-      verifies ?
-        this.complete() :
-          this.clear();
-
-      if (verifies) {
-        this.info(`...verified the '${this.filePath}' file.`);
-      }
-    }
-
-    return verifies;
-  }
-
-  prepare() {
-    if (this.tokens !== null) {
-      return;
-    }
-
-    const file = this.findFile(this.filePath),
-          lexer = this.getLexer(),
-          parser = this.getParser(),
-          content = file.getContent();
-
-    this.tokens = lexer.tokenise(content);
-
-    this.node = parser.parse(this.tokens);
+    return fileVerifies;
   }
 
   clear() {
-    this.lineIndex = null;
-
     this.types = [];
     this.rules = [];
     this.axioms = [];
@@ -898,7 +774,7 @@ export default class FileContext {
   }
 
   complete() {
-    this.lineIndex = null;
+    ///
   }
 
   initialise(json) {
@@ -976,11 +852,7 @@ export default class FileContext {
   }
 
   static fromFile(file, context) {
-    const filePath = file.getPath(),
-          lineIndex = null,
-          tokens = null,
-          node = null,
-          types = [],
+    const types = [],
           rules = [],
           axioms = [],
           lemmas = [],
@@ -993,16 +865,13 @@ export default class FileContext {
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(context, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables);
+          nominalFileContext = FileContext.fromFile(NominalFileContext, file, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
 
-    return fileContext;
+    return nominalFileContext;
   }
 
   static fromFilePath(filePath, context) {
-    const lineIndex = null,
-          tokens = null,
-          node = null,
-          types = null,
+    const types = null,
           rules = null,
           axioms = null,
           lemmas = null,
@@ -1015,8 +884,8 @@ export default class FileContext {
           constructors = null,
           metatheorems = null,
           metavariables = null,
-          fileContext = new FileContext(context, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables);
+          nominalFileContext = FileContext.fromFilePath(NominalFileContext, filePath, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
 
-    return fileContext;
+    return nominalFileContext;
   }
 }

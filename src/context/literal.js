@@ -31,16 +31,6 @@ export default class LiteralContext {
     return string;
   }
 
-  getFileContext() { return this.context.getFileContext(); }
-
-  getDepth() {
-    let depth = this.context.getDepth();
-
-    depth++;
-
-    return depth;
-  }
-
   static fromNothing(context) {
     const tokens = null,
           literalContext = new LiteralContext(context, tokens);

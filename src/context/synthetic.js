@@ -41,16 +41,6 @@ export default class SyntheticContext {
 
   isMetavariablePresentByMetavariableName(metavariableName) { this.generalContext.isMetavariablePresentByMetavariableName(metavariableName); }
 
-  getFileContext() { return this.context.getFileContext(); }
-
-  getDepth() {
-    let depth = this.context.getDepth();
-
-    depth++;
-
-    return depth;
-  }
-
   static fromNothing(generalContext, specificContext) {
     const context = specificContext,  ///
           syntheticContext = new SyntheticContext(context, generalContext, specificContext);

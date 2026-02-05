@@ -3,5 +3,5 @@
 import { NonTerminalNode } from "occam-furtle";
 
 export default class DocumentNode extends NonTerminalNode {
-  static fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(DocumentNode, ruleName, childNodes, opacity, precedence); }
 }

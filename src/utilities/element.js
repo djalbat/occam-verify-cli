@@ -3,7 +3,7 @@
 import elements from "../elements";
 
 import { literally } from "../utilities/context";
-import { baseTypeFromNothing } from "../types";
+import { baseTypeFromNothing } from "../utilities/type";
 import { instantiateReference } from "../process/instantiate";
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { equivalenceStringFromTerms,

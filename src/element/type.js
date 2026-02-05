@@ -4,7 +4,7 @@ import { Element } from "occam-furtle";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { baseTypeFromNothing } from "../types";
+import { baseTypeFromNothing } from "../utilities/type";
 import { typeStringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/string";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 

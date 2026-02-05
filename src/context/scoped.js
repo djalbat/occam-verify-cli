@@ -280,16 +280,6 @@ class ScopedContext {
     return comparesToTermAndPropertyRelation;
   }
 
-  getFileContext() { return this.context.getFileContext(); }
-
-  getDepth() {
-    let depth = this.context.getDepth();
-
-    depth++;
-
-    return depth;
-  }
-
   static fromNothing(context) {
     const { Equivalences } = elements,
           variables = [],
