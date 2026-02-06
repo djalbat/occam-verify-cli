@@ -472,7 +472,7 @@ export default class ReleaseContext {
     this.initialised = true;
   }
 
-  verify() {
+  async verify() {
     let verifies = false;
 
     const typePrefixes = this.getTypePrefixes(),
