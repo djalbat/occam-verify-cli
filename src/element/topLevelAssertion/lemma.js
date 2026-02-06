@@ -8,13 +8,12 @@ export default define(class Lemma extends TopLevelAssertion {
   async verify() {
     let verifies;
 
-    const node = this.getNode(),
-          context = this.getContext(),
+    const context = this.getContext(),
           lemmaString = this.getString(); ///
 
     (lemmaString === null) ?
-      context.trace(`Verifying a lemma...`, node) :
-        context.trace(`Verifying the '${lemmaString}' lemma...`, node);
+      context.trace(`Verifying a lemma...`) :
+        context.trace(`Verifying the '${lemmaString}' lemma...`);
 
     verifies = super.verify();
 
@@ -24,8 +23,8 @@ export default define(class Lemma extends TopLevelAssertion {
       context.addLemma(lemma);
 
       (lemmaString === null) ?
-        context.debug(`...verified a lemma.`, node) :
-          context.debug(`...verified the '${lemmaString}' lemma.`, node);
+        context.debug(`...verified a lemma.`) :
+          context.debug(`...verified the '${lemmaString}' lemma.`);
     }
 
     return verifies;

@@ -34,10 +34,9 @@ export default define(class Supposition extends ProofAssertion {
   verify(context) {
     let verifies = false;
 
-    const node = this.getNode(),
-          suppositionString = this.getString(); ///
+    const suppositionString = this.getString(); ///
 
-    context.trace(`Verifying the '${suppositionString}' supposition...`, node);
+    context.trace(`Verifying the '${suppositionString}' supposition...`);
 
     const statement = this.getStatement(),
           procedureCall = this.getProcedureCall();
@@ -74,11 +73,11 @@ export default define(class Supposition extends ProofAssertion {
         }
       }, context);
     } else {
-      context.debug(`Unable to verify the '${suppositionString}' supposition because it is nonsense.`, node);
+      context.debug(`Unable to verify the '${suppositionString}' supposition because it is nonsense.`);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${suppositionString}' supposition.`, node);
+      context.debug(`...verified the '${suppositionString}' supposition.`);
     }
 
     return verifies;
@@ -202,11 +201,10 @@ export default define(class Supposition extends ProofAssertion {
   unifySubproof(subproof, substitutions, context) {
     let subproofUnifies = false;
 
-    const node = this.getNode(),
-          subproofString = subproof.getString(),
+    const subproofString = subproof.getString(),
           suppositionString = this.getString(); ///
 
-    context.trace(`Unifying the '${subproofString}' subproof with the '${suppositionString}' supposition...`, node);
+    context.trace(`Unifying the '${subproofString}' subproof with the '${suppositionString}' supposition...`);
 
     const specificContext = context;  ///
 
@@ -236,7 +234,7 @@ export default define(class Supposition extends ProofAssertion {
     }
 
     if (subproofUnifies) {
-      context.debug(`...unified the '${subproofString}' subproof with the '${suppositionString}' supposition.`, node);
+      context.debug(`...unified the '${subproofString}' subproof with the '${suppositionString}' supposition.`);
     }
 
     return subproofUnifies;
@@ -245,13 +243,12 @@ export default define(class Supposition extends ProofAssertion {
   unifySupposition(supposition, substitutions, generalContext, specificContext) {
     let suppositionUnifies;
 
-    const node = this.getNode(),
-          context = specificContext,  ///
+    const context = specificContext,  ///
           specificSupposition = supposition,  ///
           generalSuppositionString = this.getString(), ///
           specificSuppositionString = specificSupposition.getString();
 
-    context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition...`, node);
+    context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition...`);
 
     const statement = specificSupposition.getStatement(),
           statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
@@ -259,7 +256,7 @@ export default define(class Supposition extends ProofAssertion {
     suppositionUnifies = statementUnifies;  ///
 
     if (suppositionUnifies) {
-      context.debug(`...unified the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition.`, node);
+      context.debug(`...unified the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition.`);
     }
 
     return suppositionUnifies;

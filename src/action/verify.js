@@ -13,7 +13,7 @@ export default async function verifyAction(argument, log) {
   const name = argument, ///
         context = {},
         callback = async (context, filePath, lineIndex) => {
-          debugger
+          ///
         },
         dependency = Dependency.fromName(name),
         dependentNames = [],

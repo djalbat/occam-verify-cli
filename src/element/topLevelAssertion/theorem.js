@@ -8,11 +8,10 @@ export default define(class Theorem extends TopLevelAssertion {
   async verify() {
     let verifies;
 
-    const node = this.getNode(),
-          context = this.getContext(),
+    const context = this.getContext(),
           theoremString = this.getString();  ///
 
-    context.trace(`Verifying the '${theoremString}' theorem...`, node);
+    context.trace(`Verifying the '${theoremString}' theorem...`);
 
     verifies = super.verify();
 
@@ -21,7 +20,7 @@ export default define(class Theorem extends TopLevelAssertion {
 
       context.addTheorem(theorem);
 
-      context.debug(`...verified the '${theoremString}' theorem.`, node);
+      context.debug(`...verified the '${theoremString}' theorem.`);
     }
 
     return verifies;

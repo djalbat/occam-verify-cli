@@ -8,11 +8,10 @@ export default define(class MetaLemma extends TopLevelMetaAssertion {
   async verify() {
     let verifies;
 
-    const node = this.getNode(),
-          context = this.getContext(),
+    const context = this.getContext(),
           metaLemmaString = this.getString(); ///
 
-    context.trace(`Verifying the '${metaLemmaString}' meta-lemma...`, node);
+    context.trace(`Verifying the '${metaLemmaString}' meta-lemma...`);
 
     verifies = super.verify();
 
@@ -21,7 +20,7 @@ export default define(class MetaLemma extends TopLevelMetaAssertion {
 
       context.addMetatheorem(metaTheorem);
 
-      context.debug(`...verified the '${metaLemmaString}' meta-lemma.`, node);
+      context.debug(`...verified the '${metaLemmaString}' meta-lemma.`);
     }
 
     return verifies;

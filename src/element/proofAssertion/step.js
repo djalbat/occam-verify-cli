@@ -59,10 +59,9 @@ export default define(class Step extends ProofAssertion {
   verify(assignments, context) {
     let verifies = false;
 
-    const node = this.getNode(),
-          stepString = this.getString(); ///
+    const stepString = this.getString(); ///
 
-    context.trace(`Verifying the '${stepString}' step...`, node);
+    context.trace(`Verifying the '${stepString}' step...`);
 
     const statement = this.getStatement();
 
@@ -103,11 +102,11 @@ export default define(class Step extends ProofAssertion {
         return verifies;
       }, context);
     } else {
-      context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`, node);
+      context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${stepString}' step.`, node);
+      context.debug(`...verified the '${stepString}' step.`);
     }
 
     return verifies;

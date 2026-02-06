@@ -57,11 +57,10 @@ export default define(class Hypothesis extends Element {
   compareProofAssertion(proofAssertion, context) {
     let comparesToProofAssertion = false;
 
-    const node = this.getNode(),
-          hypothesisString = this.getString(), ///
+    const hypothesisString = this.getString(), ///
           proofAssertionString = proofAssertion.getString();
 
-    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${proofAssertionString}' proof assertion...`, node);
+    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${proofAssertionString}' proof assertion...`);
 
     const proofAssertionStatement = proofAssertion.getStatement(),
           statementEqualToStepStatement = this.statement.isEqualTo(proofAssertionStatement);
@@ -71,7 +70,7 @@ export default define(class Hypothesis extends Element {
     }
 
     if (comparesToProofAssertion) {
-      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${proofAssertionString}' proof assertion.`, node);
+      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${proofAssertionString}' proof assertion.`);
     }
 
     return comparesToProofAssertion;

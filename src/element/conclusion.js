@@ -20,10 +20,9 @@ export  default define(class Conclusion extends Element {
   verify(context) {
     let verifies = false;
 
-    const node = this.getNode(),
-          conclusionString = this.getString();  ///
+    const conclusionString = this.getString();  ///
 
-    context.trace(`Verifying the '${conclusionString}' conclusion...`, node);
+    context.trace(`Verifying the '${conclusionString}' conclusion...`);
 
     if (this.statement !== null) {
       attempt((context) => {
@@ -38,11 +37,11 @@ export  default define(class Conclusion extends Element {
         }
       }, context);
     } else {
-      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`, node);
+      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${conclusionString}' conclusion.`, node);
+      context.debug(`...verified the '${conclusionString}' conclusion.`);
     }
 
     return verifies;

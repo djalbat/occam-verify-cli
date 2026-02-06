@@ -37,7 +37,7 @@ export default define(class Premise extends ProofAssertion {
     const node = this.getNode(),
           premiseString = this.getString(); ///
 
-    context.trace(`Verifying the '${premiseString}' premise...`, node);
+    context.trace(`Verifying the '${premiseString}' premise...`);
 
     const statement = this.getStatement(),
           procedureCall = this.getProcedureCall();
@@ -74,11 +74,11 @@ export default define(class Premise extends ProofAssertion {
         }
       }, context);
     } else {
-      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`, node);
+      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${premiseString}' premise.`, node);
+      context.debug(`...verified the '${premiseString}' premise.`);
     }
 
     return verifies;
@@ -202,11 +202,10 @@ export default define(class Premise extends ProofAssertion {
   unifySubproof(subproof, substitutions, context) {
     let subproofUnifies = false;
 
-    const node = this.getNode(),
-          premiseString = this.getString(),
+    const premiseString = this.getString(),
           subproofString = subproof.getString();
 
-    context.trace(`Unifying the '${subproofString}' subproof with the '${premiseString}' premise...`, node);
+    context.trace(`Unifying the '${subproofString}' subproof with the '${premiseString}' premise...`);
 
     const specificContext = context;  ///
 
@@ -236,7 +235,7 @@ export default define(class Premise extends ProofAssertion {
     }
 
     if (subproofUnifies) {
-      context.debug(`...unified the '${subproofString}' subproof with the '${premiseString}' premise.`, node);
+      context.debug(`...unified the '${subproofString}' subproof with the '${premiseString}' premise.`);
     }
 
     return subproofUnifies;

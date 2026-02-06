@@ -8,11 +8,10 @@ export default define(class Conjecture extends TopLevelAssertion {
   async verify() {
     let verifies;
 
-    const node = this.getNode(),
-          context = this.getContext(),
+    const context = this.getContext(),
           conjectureString = this.getString();  ///
 
-    context.trace(`Verifying the '${conjectureString}' conjecture...`, node);
+    context.trace(`Verifying the '${conjectureString}' conjecture...`);
 
     verifies = super.verify();
 
@@ -21,7 +20,7 @@ export default define(class Conjecture extends TopLevelAssertion {
 
       context.addConjecture(conjecture);
 
-      context.debug(`...verified the '${conjectureString}' conjecture.`, node);
+      context.debug(`...verified the '${conjectureString}' conjecture.`);
     }
 
     return verifies;

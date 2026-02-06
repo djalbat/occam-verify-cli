@@ -185,11 +185,10 @@ export default define(class Rule extends Element {
   async verify() {
     let verifies = false;
 
-    const node = this.getNode(),
-          context = this.getContext(),
+    const context = this.getContext(),
           ruleString = this.getString(); ///
 
-    context.trace(`Verifying the '${ruleString}' rule...`, node);
+    context.trace(`Verifying the '${ruleString}' rule...`);
 
     scope((context) => {
       const labelsVerify = this.verifyLabels();
@@ -216,7 +215,7 @@ export default define(class Rule extends Element {
 
       context.addRule(rule);
 
-      context.debug(`...verified the '${ruleString}' rule.`, node);
+      context.debug(`...verified the '${ruleString}' rule.`);
     }
 
     return verifies;

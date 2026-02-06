@@ -21,11 +21,10 @@ export default define(class Combinator extends Element {
   verify() {
     let verifies;
 
-    const node = this.getNode(),
-          context = this.getContext(),
+    const context = this.getContext(),
           combinatorString = this.getString();  ///
 
-    context.trace(`Verifying the '${combinatorString}' combinator...`, node);
+    context.trace(`Verifying the '${combinatorString}' combinator...`);
 
     const combinator = this,  ///
           combinatorVerifies = verifyCombinator(combinator, context);
@@ -35,7 +34,7 @@ export default define(class Combinator extends Element {
     }
 
     if (verifies) {
-      context.debug(`...verified the '${combinatorString}' combinator.`, node);
+      context.debug(`...verified the '${combinatorString}' combinator.`);
     }
 
     return verifies;

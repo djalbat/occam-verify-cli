@@ -18,11 +18,10 @@ export default define(class CombinatorDeclaration extends Declaration {
   async verify() {
     let verifies = false;
 
-    const node = this.getNode(),
-          context = this.getContext(),
+    const context = this.getContext(),
           combinatorDeclarationString = this.getString();  ///
 
-    context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`, node);
+    context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 
     const combinatorVerifies = this.combinator.verify();
 
@@ -33,7 +32,7 @@ export default define(class CombinatorDeclaration extends Declaration {
     }
 
     if (verifies) {
-      context.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`, node);
+      context.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`);
     }
 
     return verifies;

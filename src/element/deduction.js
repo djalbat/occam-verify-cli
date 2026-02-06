@@ -20,10 +20,9 @@ export default define(class Deduction extends Element {
   verify(context) {
     let verifies = false;
 
-    const node = this.getNode(),
-          deductionString = this.getString();  ///
+    const deductionString = this.getString();  ///
 
-    context.trace(`Verifying the '${deductionString}' deduction...`, node);
+    context.trace(`Verifying the '${deductionString}' deduction...`);
 
     if (this.statement !== null) {
       attempt((context) => {
@@ -38,11 +37,11 @@ export default define(class Deduction extends Element {
         }
       }, context);
     } else {
-      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`, node);
+      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${deductionString}' deduction.`, node);
+      context.debug(`...verified the '${deductionString}' deduction.`);
     }
 
     return verifies;
