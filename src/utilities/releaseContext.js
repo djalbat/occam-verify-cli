@@ -5,98 +5,60 @@ import { Entries, metaJSONUtilities } from "occam-model";
 
 import ReleaseContext from "../context/release";
 
+import { asyncEveryDependency } from "../utilities/dependency";
+
 const { last } = arrayUtilities,
       { isMetaJSONFileValid } = metaJSONUtilities;
 
-export function createReleaseContext(dependency, dependentNames, context, callback) {
+export async function createReleaseContext(dependency, dependentNames, context) {
+  let success = false;
+
   const { log, releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
         releaseContext = releaseContextMap[releaseName] || null;
 
   if (releaseContext !== null) {
-    const error = null,
-          releaseMatchesDependency = checkReleaseMatchesDependency(releaseContext, dependency, dependentNames, context);
-
-    let success;
-
-    if (releaseMatchesDependency) {
-      log.debug(`Already created the '${releaseName}' context.`);
-
-      success = true;
-    } else {
-      success = false;
-    }
-
-    callback(error, success);
-
-    return;
-  }
-
-  const { releaseContextFromDependency } = context,
-        dependencyString = dependency.asString(),
-        dependentNamesLength = dependentNames.length;
-
-  if (dependentNamesLength === 0) {
-    log.info(`Creating the '${releaseName}' context...`);
-  } else {
-    const lastDependentName = last(dependentNames),
-          dependentName = lastDependentName;  ///
-
-    log.info(`Creating the '${releaseName}' context given the '${dependentName}' dependant's '${dependencyString}' dependency...`);
-  }
-
-  releaseContextFromDependency(dependency, context, (error, releaseContext) => {
-    if (error) {
-      callback(error);
-
-      return;
-    }
-
-    const releaseContextCreated = checkReleaseContextCreated(releaseContext, dependency, context);
-
-    if (!releaseContextCreated) {
-      const error = null,
-            success = false;
-
-      callback(error, success);
-
-      return;
-    }
-
     const releaseMatchesDependency = checkReleaseMatchesDependency(releaseContext, dependency, dependentNames, context);
 
-    if (!releaseMatchesDependency) {
-      const error = null,
-            success = false;
+    if (releaseMatchesDependency) {
+      log.debug(`The '${releaseName}' context has already been created.`);
 
-      callback(error, success);
+      success = true;
+    }
+  } else {
+    const dependencyString = dependency.asString(),
+          dependentNamesLength = dependentNames.length;
 
-      return;
+    if (dependentNamesLength === 0) {
+      log.info(`Creating the '${releaseName}' context...`);
+    } else {
+      const lastDependentName = last(dependentNames),
+            dependentName = lastDependentName;  ///
+
+      log.info(`Creating the '${releaseName}' context given the '${dependentName}' dependant's '${dependencyString}' dependency...`);
     }
 
-    releaseContextMap[releaseName] = releaseContext;
+    const { releaseContextFromDependency } = context,
+          releaseContext = await releaseContextFromDependency(dependency, context),
+          releaseContextCreated = checkReleaseContextCreated(releaseContext, dependency, context);
 
-    createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context, (error, success) => {
-      if (error) {
-        callback(error);
+    if (releaseContextCreated) {
+      const releaseMatchesDependency = checkReleaseMatchesDependency(releaseContext, dependency, dependentNames, context);
 
-        return;
+      if (releaseMatchesDependency) {
+        releaseContextMap[releaseName] = releaseContext;
+
+        success = await createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context);
       }
+    }
 
-      if (!success) {
+    success ?
+      log.debug(`...created the '${releaseName}' context.`) :
         log.warning(`...unable to create the '${releaseName}' context.`);
+  }
 
-        callback(error, success);
-
-        return;
-      }
-
-      log.debug(`...created the '${releaseName}' context.`);
-
-      callback(error, success);
-    });
-  }, context);
+  return success;
 }
 
 export function releaseContextFromJSON(json, context) {
@@ -175,6 +137,29 @@ export default {
   initialiseReleaseContext,
   releaseContextFromProject
 };
+
+async function createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context) {
+  let success;
+
+  const dependencyName = dependency.getName(),
+        dependencies = releaseContext.getDependencies();
+
+  dependentNames = [ ...dependentNames, dependencyName ];  ///
+
+  success = await asyncEveryDependency(dependencies, async (dependency) => {
+    let success = false;
+
+    const cyclicDependencyExists = checkCyclicDependencyExists(dependency, dependentNames, context);
+
+    if (!cyclicDependencyExists) {
+      success = await createReleaseContext(dependency, dependentNames, context);
+    }
+
+    return success;
+  });
+
+  return success;
+}
 
 function retrieveReleaseContexts(releaseContext, releaseContextMap) {
   const releaseContexts = [],
@@ -271,63 +256,6 @@ function checkReleaseMatchesDependency(releaseContext, dependency, dependentName
   }
 
   return releaseMatchesDependency;
-}
-
-function createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context, callback) {
-  const dependencyName = dependency.getName(),
-        dependencies = releaseContext.getDependencies();
-
-  dependentNames = [ ...dependentNames, dependencyName ];  ///
-
-  dependencies.asynchronousForEachDependency((dependency, next, done) => {
-    const cyclicDependencyExists = checkCyclicDependencyExists(dependency, dependentNames);
-
-    if (cyclicDependencyExists) {
-      const error = null,
-            success = false;
-
-      callback(error, success);
-
-      callback = null;
-
-      done();
-
-      return;
-    }
-
-    createReleaseContext(dependency, dependentNames, context, (error, success) => {
-      if (error) {
-        callback(error);
-
-        callback = null;
-
-        done();
-
-        return;
-      }
-
-      if (!success) {
-        callback(error, success);
-
-        callback = null;
-
-        done();
-
-        return;
-      }
-
-      next();
-    });
-  }, done);
-
-  function done() {
-    if (callback !== null) {
-      const error = null,
-            success = true;
-
-      callback(error, success);
-    }
-  }
 }
 
 function initialiseDependencyReleaseContexts(dependency, releaseContext, context) {

@@ -9,24 +9,15 @@ const { loadProject } = occamFileSystemUtilities,
       { concatenatePaths } = pathUtilities,
       { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities;
 
-export function releaseContextFromDependency(dependency, context, callback) {
+export async function releaseContextFromDependency(dependency, context) {
+  let releaseContext = null;
+
   const projectsDirectoryPath = process.cwd(), ///
         dependencyName = dependency.getName(),
         entryPath = concatenatePaths(projectsDirectoryPath, dependencyName),
         entryExists = checkEntryExists(entryPath);
 
-  if (!entryExists) {
-    const error = null,
-          releaseContext = null;
-
-    callback(error, releaseContext);
-
-    return;
-  }
-
-  let releaseContext = null;
-
-  try {
+  if (entryExists) {
     const entryFile = isEntryFile(entryPath);
 
     if (entryFile) {
@@ -38,21 +29,15 @@ export function releaseContextFromDependency(dependency, context, callback) {
       releaseContext = releaseContextFromJSON(json, context);
     } else {
       const projectName = dependencyName, ///
-        project = loadProject(projectName, projectsDirectoryPath);
+            project = loadProject(projectName, projectsDirectoryPath);
 
       if (project !== null) {
         releaseContext = releaseContextFromProject(project, context);
       }
     }
-  } catch (error) {
-    callback(error, releaseContext);
-
-    return;
   }
 
-  const error = null;
-
-  callback(error, releaseContext);
+  return releaseContext;
 }
 
 export default {
