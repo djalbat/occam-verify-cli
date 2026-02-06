@@ -11,8 +11,8 @@ import NominalParser from "../nominal/parser";
 import NominalFileContext from "../context/file/nominal";
 
 import { getMetaTypes } from "../metaTypes";
-import { TRACE_LEVEL, BREAK_MESSAGE } from "../constants";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
+import { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, BREAK_MESSAGE } from "../constants";
 
 const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities,
@@ -442,6 +442,36 @@ export default class ReleaseContext {
 
   matchShortenedVersion(shortenedVersion) { return this.entries.matchShortenedVersion(shortenedVersion); }
 
+  trace(message) {
+    const level = TRACE_LEVEL;
+
+    this.writeToLog(level, message);
+  }
+
+  debug(message) {
+    const level = DEBUG_LEVEL;
+
+    this.writeToLog(level, message);
+  }
+
+  info(message) {
+    const level = INFO_LEVEL;
+
+    this.writeToLog(level, message);
+  }
+
+  warning(message) {
+    const level = WARNING_LEVEL;
+
+    this.writeToLog(level, message);
+  }
+
+  error(message) {
+    const level = ERROR_LEVEL;
+
+    this.writeToLog(level, message);
+  }
+
   writeToLog(level, message, filePath = null, lineIndex = null) {
     this.log.write(level, message, filePath, lineIndex);
   }
@@ -481,7 +511,7 @@ export default class ReleaseContext {
 
     if (typePrefixesVerify) {
       const verifiedFileContexts = [],
-            fileContextsVerify = verifyFileContexts(this.fileContexts, verifiedFileContexts);
+            fileContextsVerify = await verifyFileContexts(this.fileContexts, verifiedFileContexts);
 
       if (fileContextsVerify) {
         this.fileContexts = verifiedFileContexts; ///
@@ -571,7 +601,7 @@ function verifyTypePrefixes(typePrefixes, releaseContext) {
   return typePrefixesVerify;
 }
 
-function verifyFileContexts(fileContexts, verifiedFileContexts) {
+async function verifyFileContexts(fileContexts, verifiedFileContexts) {
   const resolved = resolve(fileContexts, verifiedFileContexts, (fileContext) => {
           const fileContextVerifies = fileContext.verify();
 
