@@ -2,15 +2,7 @@
 
 import { levels } from "necessary";
 
-const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL } = levels;
-
-export const LEVELS = [
-  TRACE_LEVEL,
-  DEBUG_LEVEL,
-  INFO_LEVEL,
-  WARNING_LEVEL,
-  ERROR_LEVEL
-];
+export const { TRACE_LEVEL } = levels;
 
 export const S = "s";
 export const MISSING = "missing";
@@ -19,6 +11,7 @@ export const UNDEFINED = "undefined";
 export const PROVISIONAL = "Provisional";
 export const EMPTY_STRING = "";
 export const SINGLE_SPACE = " ";
+export const BREAK_MESSAGE = ":: BREAK ::";
 export const PROVISIONALLY = "provisionally";
 export const BASE_TYPE_SYMBOL = "<>";
 export const OCCAM_VERIFY_CLI = "Occam Verify-CLI";

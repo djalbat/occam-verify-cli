@@ -1,25 +1,26 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { contextUtilities } from "occam-furtle";
+import { Context, contextUtilities } from "occam-furtle";
 
 const { extract } = arrayUtilities,
       { chainContext } = contextUtilities;
 
-export default class LiminalContext {
+export default class LiminalContext extends Context {
   constructor(context, substitutions) {
-    this.context = context;
+    super(context);
+
     this.substitutions = substitutions;
 
     return chainContext(this);
   }
 
-  getContext() {
-    return this.context;
-  }
-
   getSubstitutions() {
-    let substitutions = this.context.getSubstitutions();
+    let substitutions;
+
+    const context = this.getContext();
+
+    substitutions = context.getSubstitutions();
 
     substitutions = [ ///
       ...this.substitutions,

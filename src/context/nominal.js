@@ -1,9 +1,12 @@
 "use strict";
 
+import { Context, contextUtilities } from "occam-furtle";
 import { nominalLexer, nominalParser } from "../utilities/nominal";
 
-class NominalContext {
-  constructor(lexer, parser) {
+class NominalContext extends Context {
+  constructor(context, lexer, parser) {
+    super(context);
+
     this.lexer = lexer;
     this.parser = parser;
   }

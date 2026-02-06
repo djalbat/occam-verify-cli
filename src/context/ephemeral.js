@@ -1,14 +1,15 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { contextUtilities } from "occam-furtle";
+import { Context, contextUtilities } from "occam-furtle";
 
 const { extract } = arrayUtilities,
       { chainContext } = contextUtilities;
 
-export default class EphemeralContext {
+export default class EphemeralContext extends Context {
   constructor(context, terms, frames, statements, assertions, references, substitutions) {
-    this.context = context;
+    super(context);
+
     this.terms = terms;
     this.frames = frames;
     this.statements = statements;
@@ -17,10 +18,6 @@ export default class EphemeralContext {
     this.substitutions = substitutions;
 
     return chainContext(this);
-  }
-
-  getContext() {
-    return this.context;
   }
 
   getTerms() {

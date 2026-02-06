@@ -1,20 +1,16 @@
 "use strict";
 
-import { nodeUtilities, contextUtilities } from "occam-furtle";
+import { Context, contextUtilities } from "occam-furtle";
 
-const { nodeAsString } = nodeUtilities,
-      { chainContext } = contextUtilities;
+const { chainContext } = contextUtilities;
 
-export default class LiteralContext {
+export default class LiteralContext extends Context {
   constructor(context, tokens) {
-    this.context = context;
+    super(context);
+
     this.tokens = tokens;
 
     return chainContext(this);
-  }
-
-  getContext() {
-    return this.context;
   }
 
   getTokens() {
@@ -23,12 +19,6 @@ export default class LiteralContext {
 
   setTokens(tokens) {
     this.tokens = tokens;
-  }
-
-  nodeAsString(node) {
-    const string = nodeAsString(node, this.tokens);
-
-    return string;
   }
 
   static fromNothing(context) {

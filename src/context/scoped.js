@@ -1,16 +1,17 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { contextUtilities } from "occam-furtle";
+import { Context, contextUtilities } from "occam-furtle";
 
 import elements from "../elements";
 
 const { last } = arrayUtilities,
       { chainContext } = contextUtilities;
 
-class ScopedContext {
+class ScopedContext extends Context {
   constructor(context, variables, judgements, equivalences, subproofOrProofAssertions) {
-    this.context = context;
+    super(context);
+
     this.variables = variables;
     this.judgements = judgements;
     this.equivalences = equivalences;
@@ -19,15 +20,13 @@ class ScopedContext {
     return chainContext(this);
   }
 
-  getContext() {
-    return this.context;
-  }
-
   getVariables(nested = true) {
     let variables;
 
     if (nested) {
-      variables = this.context.getVariables();
+      const context = this.getContext();
+
+      variables = context.getVariables();
 
       variables = [
         ...this.variables,
@@ -41,7 +40,11 @@ class ScopedContext {
   }
 
   getJudgements() {
-    let judgements = this.context.getJudgements();
+    let judgements;
+
+    const context = this.getContext();
+
+    judgements = context.getJudgements();
 
     judgements = [ ///
       ...this.judgements,
@@ -52,9 +55,15 @@ class ScopedContext {
   }
 
   getEquivalences() {
-    let equivalences = this.context.getEquivalences();
+    let equivalences;
 
-    const context = this; ///
+    let context;
+
+    context = this.getContext();
+
+    equivalences = context.getEquivalences();
+
+    context = this; ///
 
     equivalences = this.equivalences.mergedWith(equivalences, context);  ///
 
@@ -88,7 +97,11 @@ class ScopedContext {
   }
 
   getSubproofOrProofAssertions() {
-    let subproofOrProofAssertions = this.context.getSubproofOrProofAssertions();
+    let subproofOrProofAssertions;
+
+    const context = this.getContext();
+
+    subproofOrProofAssertions = context.getSubproofOrProofAssertions();
 
     subproofOrProofAssertions = [  ///
       ...subproofOrProofAssertions,

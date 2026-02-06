@@ -100,7 +100,7 @@ export function createReleaseContext(dependency, dependentNames, context, callba
 }
 
 export function releaseContextFromJSON(json, context) {
-  const { log } = context,
+  const { log, callback } = context,
         { name } = json;
 
   ({context} = json); ///
@@ -115,7 +115,7 @@ export function releaseContextFromJSON(json, context) {
 
   json = contextJSON; ///
 
-  const releaseContext = ReleaseContext.fromLogNameJSONAndEntries(log, name, json, entries);
+  const releaseContext = ReleaseContext.fromLogNameJSONEntriesAndCallback(log, name, json, entries, callback);
 
   return releaseContext;
 }
@@ -157,12 +157,12 @@ export function releaseContextFromProject(project, context) {
     const metaJSONFileValid = isMetaJSONFileValid(metaJSONFile);
 
     if (metaJSONFileValid) {
-      const { log } = context,
+      const { log, callback } = context,
             name = project.getName(),
             json = null,
             entries = project.getEntries();
 
-      releaseContext = ReleaseContext.fromLogNameJSONAndEntries(log, name, json, entries);
+      releaseContext = ReleaseContext.fromLogNameJSONEntriesAndCallback(log, name, json, entries, callback);
     }
   }
 

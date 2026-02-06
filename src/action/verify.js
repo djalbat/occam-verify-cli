@@ -12,12 +12,16 @@ import { createReleaseContext, initialiseReleaseContext } from "../utilities/rel
 export default function verifyAction(argument, log) {
   const name = trimTrailingSlash(argument), ///
         context = {},
+        callback = async (context, filePath, lineIndex) => {
+          debugger
+        },
         dependency = Dependency.fromName(name),
         dependentNames = [],
         releaseContextMap = {};
 
   Object.assign(context, {
     log,
+    callback,
     releaseContextMap,
     releaseContextFromDependency
   });
@@ -63,14 +67,6 @@ export default function verifyAction(argument, log) {
   });
 }
 
-function startClock() {
-  let now;
-
-  now = Date.now();
-
-  return now;
-}
-
 function stopClock(now, log) {
   const then = now; ///
 
@@ -79,6 +75,14 @@ function stopClock(now, log) {
   const seconds = Math.floor(now - then) / 1000;
 
   log.info(`Time ${seconds} seconds.`);
+}
+
+function startClock() {
+  let now;
+
+  now = Date.now();
+
+  return now;
 }
 
 function trimTrailingSlash(string) {

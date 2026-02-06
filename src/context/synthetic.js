@@ -1,20 +1,17 @@
 "use strict";
 
-import { contextUtilities } from "occam-furtle";
+import { Context, contextUtilities } from "occam-furtle";
 
 const { chainContext } = contextUtilities;
 
-export default class SyntheticContext {
+export default class SyntheticContext extends Context {
   constructor(context, generalContext, specificContext) {
-    this.context = context;
+    super(context);
+
     this.generalContext = generalContext;
     this.specificContext = specificContext;
 
     return chainContext(this);
-  }
-
-  getContext() {
-    return this.context;
   }
 
   getGeneralContext() {

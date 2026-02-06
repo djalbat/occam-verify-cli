@@ -10,22 +10,22 @@ import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
 import NominalFileContext from "../context/file/nominal";
 
-import { LEVELS } from "../constants";
 import { getMetaTypes } from "../metaTypes";
+import { TRACE_LEVEL, BREAK_MESSAGE } from "../constants";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities,
       { tail, push, first, filter, resolve, compress } = arrayUtilities,
-      { isFilePathFurtleFilePath, isFilePathNominalFilePath } = filePathUtilities,
-      [ TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL ] = LEVELS;
+      { isFilePathFurtleFilePath, isFilePathNominalFilePath } = filePathUtilities;
 
 export default class ReleaseContext {
-  constructor(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts) {
+  constructor(log, name, json, entries, callback, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts) {
     this.log = log;
     this.name = name;
     this.json = json;
     this.entries = entries;
+    this.callback = callback;
     this.lexer = lexer;
     this.parser = parser;
     this.verified = verified;
@@ -49,6 +49,10 @@ export default class ReleaseContext {
 
   getEntries() {
     return this.entries;
+  }
+
+  getCallback() {
+    return this.callback;
   }
 
   getLexer() {
@@ -83,6 +87,12 @@ export default class ReleaseContext {
 
   getDependencyReleaseContexts() {
     return this.dependencyReleaseContexts;
+  }
+
+  getReleaaseContext() {
+    const releaseContext = this;  ///
+
+    return releaseContext;
   }
 
   isReleased() {
@@ -432,37 +442,7 @@ export default class ReleaseContext {
 
   matchShortenedVersion(shortenedVersion) { return this.entries.matchShortenedVersion(shortenedVersion); }
 
-  trace(message, filePath = null, lineIndex = null) {
-    const level = TRACE_LEVEL;
-
-    this.writeToLog(level, message, filePath, lineIndex);
-  }
-
-  debug(message, filePath = null, lineIndex = null) {
-    const level = DEBUG_LEVEL
-
-    this.writeToLog(level, message, filePath, lineIndex);
-  }
-
-  info(message, filePath = null, lineIndex = null) {
-    const level = INFO_LEVEL;
-
-    this.writeToLog(level, message, filePath, lineIndex);
-  }
-
-  warning(message, filePath = null, lineIndex = null) {
-    const level = WARNING_LEVEL;
-
-    this.writeToLog(level, message, filePath, lineIndex);
-  }
-
-  error(message, filePath = null, lineIndex = null) {
-    const level = ERROR_LEVEL;
-
-    this.writeToLog(level, message, filePath, lineIndex);
-  }
-
-  writeToLog(level, message, filePath, lineIndex) {
+  writeToLog(level, message, filePath = null, lineIndex = null) {
     this.log.write(level, message, filePath, lineIndex);
   }
 
@@ -526,7 +506,18 @@ export default class ReleaseContext {
     return json;
   }
 
-  static fromLogNameJSONAndEntries(log, name, json, entries) {
+  async break(filePath, lineIndex) {
+    const level = TRACE_LEVEL,
+          message = BREAK_MESSAGE;
+
+    this.writeToLog(level, message, filePath, lineIndex);
+
+    const context = this; ///
+
+    await this.callback(context, filePath, lineIndex);
+  }
+
+  static fromLogNameJSONEntriesAndCallback(log, name, json, entries, callback) {
     const lexer = null,
           parser = null,
           verifies = false,
@@ -534,7 +525,7 @@ export default class ReleaseContext {
           fileContexts = [],
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, name, json, entries, lexer, parser, verifies, initialised, fileContexts, customGrammar, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, name, json, entries, callback, lexer, parser, verifies, initialised, fileContexts, customGrammar, dependencyReleaseContexts);
 
     return releaseContext;
   }
