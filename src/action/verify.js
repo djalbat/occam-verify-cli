@@ -28,7 +28,7 @@ export default async function verifyAction(argument, log) {
 
   let now = startClock();
 
-  // try {
+  try {
     const success = await createReleaseContext(dependency, dependentNames, context);
 
     if (!success) {
@@ -60,8 +60,8 @@ export default async function verifyAction(argument, log) {
     }
 
     stopClock(now, log);
-  // }
-  // catch (error) {
-  //   log.error(error);
-  // }
+  }
+  catch (error) {
+    log.error(error);
+  }
 }

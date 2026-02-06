@@ -1,6 +1,8 @@
 "use strict";
 
-export function verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap) {
+import { asyncEveryDependency } from "../utilities/dependency";
+
+export async function verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap) {
   let releaseVerifies = false;
 
   const releaseContext = releaseContextMap[releaseName];
@@ -16,9 +18,9 @@ export function verifyRelease(releaseName, dependentName, dependentReleased, rel
       } else {
         const dependentName = releaseName,  ///
               dependentReleased = released, ///
-              dependencyReleasesVVerifies = verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap);
+              dependencyReleasesVerifies = await verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap);
 
-        if (dependencyReleasesVVerifies) {
+        if (dependencyReleasesVerifies) {
           const releaseContextVerified = releaseContext.isVerified();
 
           if (releaseContextVerified) {
@@ -26,7 +28,7 @@ export function verifyRelease(releaseName, dependentName, dependentReleased, rel
           } else {
             releaseContext.info(`Verifying the '${releaseName}' project...`);
 
-            const releaseContextVerifies = releaseContext.verify();
+            const releaseContextVerifies = await releaseContext.verify();
 
             if (releaseContextVerifies) {
               releaseContext.info(`...verified the '${releaseName}' project.`);
@@ -46,17 +48,17 @@ export default {
   verifyRelease
 };
 
-function verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap) {
+async function verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap) {
   const dependencies = releaseContext.getDependencies(),
-        dependencyReleasesVVerifies = dependencies.everyDependency((dependency) => {
+        dependencyReleasesVerifies = await asyncEveryDependency(dependencies, async (dependency) => {
           const name = dependency.getName(),
                 releaseName = name, ///
-                releaseVerifies = verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap);
+                releaseVerifies = await verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap);
 
           if (releaseVerifies) {
             return true;
           }
         });
 
-  return dependencyReleasesVVerifies;
+  return dependencyReleasesVerifies;
 }
