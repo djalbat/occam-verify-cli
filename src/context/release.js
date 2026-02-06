@@ -3,8 +3,8 @@
 import { arrayUtilities } from "necessary";
 
 import { filePathUtilities } from "occam-model";
-import { FurtleFileContext } from "occam-furtle";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
+import { FurtleFileContext, asynchronousUtilities } from "occam-furtle";
 
 import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
@@ -14,9 +14,10 @@ import { getMetaTypes } from "../metaTypes";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 import { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, BREAK_MESSAGE } from "../constants";
 
-const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
+const { asyncResolve } = asynchronousUtilities,
+      { tail, push, first, filter, compress } = arrayUtilities,
+      { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities,
-      { tail, push, first, filter, resolve, compress } = arrayUtilities,
       { isFilePathFurtleFilePath, isFilePathNominalFilePath } = filePathUtilities;
 
 export default class ReleaseContext {
@@ -602,8 +603,8 @@ function verifyTypePrefixes(typePrefixes, releaseContext) {
 }
 
 async function verifyFileContexts(fileContexts, verifiedFileContexts) {
-  const resolved = resolve(fileContexts, verifiedFileContexts, (fileContext) => {
-          const fileContextVerifies = fileContext.verify();
+  const resolved = asyncResolve(fileContexts, verifiedFileContexts, async (fileContext) => {
+          const fileContextVerifies = await fileContext.verify();
 
           if (fileContextVerifies) {
             return true;
