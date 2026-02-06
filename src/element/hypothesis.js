@@ -23,7 +23,7 @@ export default define(class Hypothesis extends Element {
 
     const hypothesisString = this.getString(); ///
 
-    context.trace(`Verifying the '${hypothesisString}' hypothesis...`, this.node);
+    context.trace(`Verifying the '${hypothesisString}' hypothesis...`);
 
     if (false) {
       ///
@@ -44,11 +44,11 @@ export default define(class Hypothesis extends Element {
         }
       }
     } else {
-      context.debug(`Unable to verify the '${hypothesisString}' hypothesis because it is nonsense.`, this.node);
+      context.debug(`Unable to verify the '${hypothesisString}' hypothesis because it is nonsense.`);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${hypothesisString}' hypothesis.`, this.node);
+      context.debug(`...verified the '${hypothesisString}' hypothesis.`);
     }
 
     return verifies;

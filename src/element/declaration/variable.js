@@ -15,34 +15,6 @@ export default define(class VariableDeclaration extends Declaration {
     return this.variable;
   }
 
-  verify() {
-    let verifies = false;
-
-    const node = this.getNode(),
-          context = this.getContext(),
-          variableDeclarationString = this.getString(); ///
-
-    context.trace(`Verifying the '${variableDeclarationString}' variable declaration...`, node);
-
-    const variableTypeVerifies = this.verifyVariableType();
-
-    if (variableTypeVerifies) {
-      const variableVerifies = this.verifyVariable();
-
-      if (variableVerifies) {
-        context.addVariable(this.variable);
-
-        verifies = true;
-      }
-    }
-
-    if (verifies) {
-      context.debug(`...verified the '${variableDeclarationString}' variable declaration.`, node);
-    }
-
-    return verifies;
-  }
-
   verifyVariable() {
     let  variableVerifies = false;
 
@@ -111,6 +83,36 @@ export default define(class VariableDeclaration extends Declaration {
     }
 
     return variableTypeVerifies;
+  }
+
+  async verify() {
+    let verifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          variableDeclarationString = this.getString(); ///
+
+    await this.break(context);
+
+    context.trace(`Verifying the '${variableDeclarationString}' variable declaration...`, node);
+
+    const variableTypeVerifies = this.verifyVariableType();
+
+    if (variableTypeVerifies) {
+      const variableVerifies = this.verifyVariable();
+
+      if (variableVerifies) {
+        context.addVariable(this.variable);
+
+        verifies = true;
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${variableDeclarationString}' variable declaration.`, node);
+    }
+
+    return verifies;
   }
 
   static name = "VariableDeclaration";

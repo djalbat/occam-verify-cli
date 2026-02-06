@@ -20,53 +20,6 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     return this.prefixed;
   }
 
-  verify() {
-    let verifies = false;
-
-    const node = this.getNode(),
-          context = this.getContext(),
-          complexTypeDeclarationString = this.getString(); ///
-
-    context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration...`, node);
-
-    if (this.prefixed) {
-      const typeString = this.type.getString();
-
-      context.trace(`The '${typeString}' type is prefixed.`);
-    } else {
-      const typeVerifies = this.verifyType();
-
-      if (typeVerifies) {
-        const superTypesVerify = this.verifySuperTypes();
-
-        if (superTypesVerify) {
-          const propertiesVerify = this.verifyProperties();
-
-          if (propertiesVerify) {
-            const typePrefix = context.getTypePrefix();
-
-            if (typePrefix !== null) {
-              const typePrefixName = typePrefix.getName(),
-                    prefixName = typePrefixName;  ///
-
-              this.type.setPrefixName(prefixName);
-            }
-
-            context.addType(this.type);
-
-            verifies = true;
-          }
-        }
-      }
-    }
-
-    if (verifies) {
-      context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration.`, node);
-    }
-
-    return verifies;
-  }
-
   verifyType() {
     let typeVerifies = false;
 
@@ -308,6 +261,53 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     }
 
     return propertyNominalTypeNameVerifies;
+  }
+
+  async verify() {
+    let verifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          complexTypeDeclarationString = this.getString(); ///
+
+    context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration...`, node);
+
+    if (this.prefixed) {
+      const typeString = this.type.getString();
+
+      context.trace(`The '${typeString}' type is prefixed.`);
+    } else {
+      const typeVerifies = this.verifyType();
+
+      if (typeVerifies) {
+        const superTypesVerify = this.verifySuperTypes();
+
+        if (superTypesVerify) {
+          const propertiesVerify = this.verifyProperties();
+
+          if (propertiesVerify) {
+            const typePrefix = context.getTypePrefix();
+
+            if (typePrefix !== null) {
+              const typePrefixName = typePrefix.getName(),
+                    prefixName = typePrefixName;  ///
+
+              this.type.setPrefixName(prefixName);
+            }
+
+            context.addType(this.type);
+
+            verifies = true;
+          }
+        }
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration.`, node);
+    }
+
+    return verifies;
   }
 
   static name = "ComplexTypeDeclaration";

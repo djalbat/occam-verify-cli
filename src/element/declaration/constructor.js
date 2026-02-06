@@ -16,7 +16,7 @@ export default define(class ConstructorDeclaration extends Declaration {
     return this.constructor;
   }
 
-  verify() {
+  async verify() {
     let verifies;
 
     const node = this.getNode(),

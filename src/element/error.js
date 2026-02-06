@@ -9,7 +9,7 @@ export default define(class Error extends Element {
     super(context, string, node);
   }
 
-  verify() {
+  async verify() {
     let verifies = false;
 
     const node = this.getNode(),

@@ -90,7 +90,7 @@ export default class ReleaseContext {
     return this.dependencyReleaseContexts;
   }
 
-  getReleaaseContext() {
+  getReleaseContext() {
     const releaseContext = this;  ///
 
     return releaseContext;

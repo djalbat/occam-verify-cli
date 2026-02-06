@@ -100,7 +100,7 @@ export default class TopLevelAssertion extends Element {
       const proofAssertions = context.getProofAssertions(),
             topLevelAssertionString = this.getString();  ///
 
-      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' top level assertion...`, this.node);
+      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' top level assertion...`);
 
       correlatesToHypotheses = correlate(this.hypotheses, proofAssertions, (hypothesis, proofAssertion) => {
         const hypothesesComparesToStep = hypothesis.compareProofAssertion(proofAssertion, context);
@@ -111,7 +111,7 @@ export default class TopLevelAssertion extends Element {
       });
 
       if (correlatesToHypotheses) {
-        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' top level assertion.`, this.node);
+        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' top level assertion.`);
       }
     } else {
       correlatesToHypotheses = true

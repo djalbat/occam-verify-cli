@@ -15,39 +15,6 @@ export default define(class TypePrefixDeclaration extends Declaration {
     return this.typePrefix;
   }
 
-  verify() {
-    let verifies = false;
-
-    const node = this.getNode(),
-          context = this.getContext(),
-          typePrefixDeclarationString = this.getString();  ///
-
-    context.trace(`Verifying the '${typePrefixDeclarationString}' type prefix declaration...`, node);
-
-    const includeRelease = true,
-          includeDependencies = false,
-          types = context.getTypes(includeRelease, includeDependencies),
-          typesLength = types.length;
-
-    if (typesLength > 0) {
-      context.debug(`Unable to verify the '${typePrefixDeclarationString}' type prefix declaration because types have already been declared.`, node);
-    } else {
-      const typePrefixVerifies = this.verifyTypePrefix();
-
-      if (typePrefixVerifies) {
-        context.addTypePrefix(this.typePrefix);
-
-        verifies = true;
-      }
-    }
-
-    if (verifies) {
-      context.debug(`...verified the '${typePrefixDeclarationString}' type prefix declaration.`, node);
-    }
-
-    return verifies;
-  }
-
   verifyTypePrefix() {
     let typePrefixVerifies = false;
 
@@ -85,6 +52,39 @@ export default define(class TypePrefixDeclaration extends Declaration {
     }
 
     return typePrefixVerifies;
+  }
+
+  async verify() {
+    let verifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          typePrefixDeclarationString = this.getString();  ///
+
+    context.trace(`Verifying the '${typePrefixDeclarationString}' type prefix declaration...`, node);
+
+    const includeRelease = true,
+          includeDependencies = false,
+          types = context.getTypes(includeRelease, includeDependencies),
+          typesLength = types.length;
+
+    if (typesLength > 0) {
+      context.debug(`Unable to verify the '${typePrefixDeclarationString}' type prefix declaration because types have already been declared.`, node);
+    } else {
+      const typePrefixVerifies = this.verifyTypePrefix();
+
+      if (typePrefixVerifies) {
+        context.addTypePrefix(this.typePrefix);
+
+        verifies = true;
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${typePrefixDeclarationString}' type prefix declaration.`, node);
+    }
+
+    return verifies;
   }
 
   static name = "TypePrefixDeclaration";

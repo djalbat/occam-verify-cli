@@ -160,7 +160,7 @@ export default define(class Step extends ProofAssertion {
     const stepString = this.getString(), ///
           satisfiesAssertionString = satisfiesAssertion.getString();
 
-    context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`, this.node);
+    context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`);
 
     const reference = satisfiesAssertion.getReference(),
           axiom = context.findAxiomByReference(reference);
@@ -181,7 +181,7 @@ export default define(class Step extends ProofAssertion {
     }
 
     if (unifiesWithSatisfiesAssertion) {
-      context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`, this.node);
+      context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`);
     }
 
     return unifiesWithSatisfiesAssertion;

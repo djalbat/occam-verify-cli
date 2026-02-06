@@ -15,7 +15,7 @@ export default define(class CombinatorDeclaration extends Declaration {
     return this.combinator;
   }
 
-  verify() {
+  async verify() {
     let verifies = false;
 
     const node = this.getNode(),

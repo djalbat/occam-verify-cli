@@ -748,15 +748,6 @@ export default class NominalFileContext extends FileContext {
     return topLevelMetaAssertionPresent;
   }
 
-  verifyFile() {
-    const node = this.getNode(),
-          context = this,
-          fileNode = node,  ///
-          fileVerifies = verifyFile(fileNode, context);
-
-    return fileVerifies;
-  }
-
   clear() {
     this.types = [];
     this.rules = [];
@@ -807,6 +798,15 @@ export default class NominalFileContext extends FileContext {
     this.metatheorems = metatheoremsFromJSON(json, fileContext);
 
     this.metavariables = metavariablesFromJSON(json, fileContext);
+  }
+
+  async verifyFile() {
+    const node = this.getNode(),
+          context = this,
+          fileNode = node,  ///
+          fileVerifies = await verifyFile(fileNode, context);
+
+    return fileVerifies;
   }
 
   toJSON() {

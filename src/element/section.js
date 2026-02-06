@@ -35,33 +35,6 @@ export default define(class Section extends Element {
     return this.conjecture;
   }
 
-  verify() {
-    let verifies = false;
-
-    const sectionString = this.getString();  ///
-
-    this.context.trace(`Verifying the '${sectionString}' section...`, this.node);
-
-    const hypothesesVerify = this.verifyHypotheses();
-
-    if (hypothesesVerify) {
-      const topLevelAssertion = (this.axiom || this.lemma || this.theorem || this.conjecture),
-            topLevelAssertionVerifies = topLevelAssertion.verify(this.context);
-
-      if (topLevelAssertionVerifies) {
-        topLevelAssertion.setHypotheses(this.hypotheses);
-
-        verifies = true;
-      }
-    }
-
-    if (verifies) {
-      this.context.debug(`...verified the '${sectionString}' section.`, this.node);
-    }
-
-    return verifies;
-  }
-
   verifyHypotheses() {
     const hypothesesVerify = this.hypotheses.every((hypothesis) => {
       const hypothesisVerifies = hypothesis.verify(this.context);
@@ -72,6 +45,34 @@ export default define(class Section extends Element {
     });
 
     return hypothesesVerify;
+  }
+
+  async verify() {
+    let verifies = false;
+
+    const context = this.getContext(),
+          sectionString = this.getString();  ///
+
+    context.trace(`Verifying the '${sectionString}' section...`);
+
+    const hypothesesVerify = this.verifyHypotheses();
+
+    if (hypothesesVerify) {
+      const topLevelAssertion = (this.axiom || this.lemma || this.theorem || this.conjecture),
+            topLevelAssertionVerifies = topLevelAssertion.verify(context);
+
+      if (topLevelAssertionVerifies) {
+        topLevelAssertion.setHypotheses(this.hypotheses);
+
+        verifies = true;
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${sectionString}' section.`);
+    }
+
+    return verifies;
   }
 
   static name = "Section";

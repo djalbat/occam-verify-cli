@@ -12,32 +12,6 @@ export default define(class Axiom extends TopLevelAssertion {
     return satisfiable;
   }
 
-  verify() {
-    let verifies;
-
-    const node = this.getNode(),
-          context = this.getContext(),
-          axiomString = this.getString(); ///
-
-    context.trace(`Verifying the '${axiomString}' axiom...`, node);
-
-    const signatureVerifies = this.verifySignature();
-
-    if (signatureVerifies) {
-      verifies = super.verify();
-    }
-
-    if (verifies) {
-      const axiom = this; ///
-
-      context.addAxiom(axiom);
-
-      context.debug(`...verified the '${axiomString}' axiom.`, node);
-    }
-
-    return verifies;
-  }
-
   verifySignature() {
     let signatureVerifies;
 
@@ -260,6 +234,32 @@ export default define(class Axiom extends TopLevelAssertion {
     }
 
     return topLevelAssertionUnifies;
+  }
+
+  async verify() {
+    let verifies;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          axiomString = this.getString(); ///
+
+    context.trace(`Verifying the '${axiomString}' axiom...`, node);
+
+    const signatureVerifies = this.verifySignature();
+
+    if (signatureVerifies) {
+      verifies = super.verify();
+    }
+
+    if (verifies) {
+      const axiom = this; ///
+
+      context.addAxiom(axiom);
+
+      context.debug(`...verified the '${axiomString}' axiom.`, node);
+    }
+
+    return verifies;
   }
 
   static name = "Axiom";

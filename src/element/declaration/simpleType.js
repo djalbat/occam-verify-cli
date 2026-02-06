@@ -20,49 +20,6 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     return this.prefixed;
   }
 
-  verify() {
-    let verifies = false;
-
-    const node = this.getNode(),
-          context = this.getContext(),
-          simpleTypeDeclarationString = this.getString();  ///
-
-    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`, node);
-
-    if (this.prefixed) {
-      const typeString = this.type.getString();
-
-      context.trace(`The '${typeString}' type is prefixed.`);
-    } else {
-      const typeVerifies = this.verifyType();
-
-      if (typeVerifies) {
-        const superTypesVerify = this.verifySuperTypes();
-
-        if (superTypesVerify) {
-          const typePrefix = context.getTypePrefix();
-
-          if (typePrefix !== null) {
-            const typePrefixName = typePrefix.getName(),
-                  prefixName = typePrefixName;  ///
-
-            this.type.setPrefixName(prefixName);
-          }
-
-          context.addType(this.type);
-
-          verifies = true;
-        }
-      }
-    }
-
-    if (verifies) {
-      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration.`, node);
-    }
-
-    return verifies;
-  }
-
   verifyType() {
     let typeVerifies = false;
 
@@ -167,6 +124,49 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     }
 
     return superTypesVerify;
+  }
+
+  async verify() {
+    let verifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          simpleTypeDeclarationString = this.getString();  ///
+
+    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`, node);
+
+    if (this.prefixed) {
+      const typeString = this.type.getString();
+
+      context.trace(`The '${typeString}' type is prefixed.`);
+    } else {
+      const typeVerifies = this.verifyType();
+
+      if (typeVerifies) {
+        const superTypesVerify = this.verifySuperTypes();
+
+        if (superTypesVerify) {
+          const typePrefix = context.getTypePrefix();
+
+          if (typePrefix !== null) {
+            const typePrefixName = typePrefix.getName(),
+              prefixName = typePrefixName;  ///
+
+            this.type.setPrefixName(prefixName);
+          }
+
+          context.addType(this.type);
+
+          verifies = true;
+        }
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration.`, node);
+    }
+
+    return verifies;
   }
 
   static name = "SimpleTypeDeclaration";

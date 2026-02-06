@@ -1,6 +1,6 @@
 "use strict";
 
-import { queryUtilities } from "occam-furtle";
+import { queryUtilities, asynchronousUtilities } from "occam-furtle";
 
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 import { ruleFromRuleNode,
@@ -20,7 +20,8 @@ import { ruleFromRuleNode,
          complexTypeDeclarationFromComplexTypeDeclarationNode,
          metavariableDeclarationFromMetavariableDeclarationNode } from "../utilities/element";
 
-const { nodeQuery } = queryUtilities;
+const { nodeQuery } = queryUtilities,
+      { asyncSome, asyncEvery } = asynchronousUtilities;
 
 const nonTerminalNodeQuery = nodeQuery("/*");
 
@@ -130,7 +131,7 @@ class Pass {
       if (node !== null) {
         const success = run(node, ...remainingArguments);
 
-        visited = success;
+        visited = success;  ///
 
         return true;
       }
@@ -140,15 +141,111 @@ class Pass {
   }
 }
 
-class TopLevelPass extends Pass {
+class AsyncPass {
+  async run(node, ...remainingArguments) {
+    let success;
+
+    const visited = await this.visitNode(node, ...remainingArguments);
+
+    success = visited;  ///
+
+    return success;
+  }
+
+  async descend(childNodes, ...remainingArguments) {
+    let descended = false;
+
+    const visited = await asyncEvery(childNodes, async (childNode) => {
+      const node = childNode, ///
+            visited = await this.visitNode(node, ...remainingArguments);
+
+      if (visited) {
+        return true;
+      }
+    });
+
+    if (visited) {
+      descended = true;
+    }
+
+    return descended;
+  }
+
+  async visitNode(node, ...remainingArguments) {
+    let visited;
+
+    const nodeTerminalNode = node.isTerminalNode();
+
+    if (nodeTerminalNode) {
+      const terminalNode = node;  ///
+
+      visited = await this.visitTerminalNode(terminalNode, ...remainingArguments);
+    } else {
+      const nonTerminalNode = node;  ///
+
+      visited = await this.visitNonTerminalNode(nonTerminalNode, ...remainingArguments);
+    }
+
+    return visited;
+  }
+
+  async visitTerminalNode(terminalNode, ...remainingArguments) {
+    const visited = true;
+
+    return visited;
+  }
+
+  async visitNonTerminalNode(nonTerminalNode, ...remainingArguments) {
+    let visited = false;
+
+    let { maps } = this.constructor;
+
+    maps = [ ///
+      ...maps,
+      {
+        nodeQuery: nonTerminalNodeQuery,
+        run: async (node, ...remainingArguments) => {
+          let visited = false;
+
+          const childNodes = nonTerminalNode.getChildNodes(), ///
+                descended = await this.descend(childNodes, ...remainingArguments);
+
+          if (descended) {
+            visited = true;
+          }
+
+          return visited;
+        }
+      }
+    ]
+
+    await asyncSome(maps, async (map) => {
+      const { nodeQuery, run } = map;
+
+      const node = nodeQuery(nonTerminalNode);
+
+      if (node !== null) {
+        const success = await run(node, ...remainingArguments);
+
+        visited = success;  ///
+
+        return true;
+      }
+    });
+
+    return visited;
+  }
+}
+
+class TopLevelPass extends AsyncPass {
   static maps = [
     {
       nodeQuery: errorNodeQuery,
-      run: (errorNode, context) => {
+      run: async (errorNode, context) => {
         let success = false;
 
         const error = errorFromErrorNode(errorNode, context),
-              errorVerifies = error.verify();
+              errorVerifies = await error.verify();
 
         if (errorVerifies) {
           success = true;
@@ -159,11 +256,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: ruleNodeQuery,
-      run: (ruleNode, context) => {
+      run: async (ruleNode, context) => {
         let success = false;
 
         const rule = ruleFromRuleNode(ruleNode, context),
-              ruleVerifies = rule.verify();
+              ruleVerifies = await rule.verify();
 
         if (ruleVerifies) {
           success = true;
@@ -174,11 +271,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: axiomNodeQuery,
-      run: (axiomNode, context) => {
+      run: async (axiomNode, context) => {
         let success = false;
 
         const axiom = axiomFromAxiomNode(axiomNode, context),
-              axiomVerifies = axiom.verify();
+              axiomVerifies = await axiom.verify();
 
         if (axiomVerifies) {
           success = true;
@@ -189,11 +286,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: lemmaNodeQuery,
-      run: (lemmaNode, context) => {
+      run: async (lemmaNode, context) => {
         let success = false;
 
         const lemma = lemmaFromLemmaNode(lemmaNode, context),
-              lemmaVerifies = lemma.verify();
+              lemmaVerifies = await lemma.verify();
 
         if (lemmaVerifies) {
           success = true;
@@ -204,11 +301,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: sectionNodeQuery,
-      run: (sectionNode, context) => {
+      run: async (sectionNode, context) => {
         let success = false;
 
         const section = sectionFromSectionNode(sectionNode, context),
-              sectionVerifies = section.verify();
+              sectionVerifies = await section.verify();
 
         if (sectionVerifies) {
           success = true;
@@ -219,11 +316,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: theoremNodeQuery,
-      run: (theoremNode, context) => {
+      run: async (theoremNode, context) => {
         let success = false;
 
         const theorem = theoremFromTheoremNode(theoremNode, context),
-              theoremVerifies = theorem.verify();
+              theoremVerifies = await theorem.verify();
 
         if (theoremVerifies) {
           success = true;
@@ -234,11 +331,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: metaLemmaNodeQuery,
-      run: (metaLemmaNode, context) => {
+      run: async (metaLemmaNode, context) => {
         let success = false;
 
         const metaLemma = metaLemmaFromMetaLemmaNode(metaLemmaNode, context),
-              metaLemmaVerifies = metaLemma.verify();
+              metaLemmaVerifies = await metaLemma.verify();
 
         if (metaLemmaVerifies) {
           success = true;
@@ -249,11 +346,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: conjectureNodeQuery,
-      run: (conjectureNode, context) => {
+      run: async (conjectureNode, context) => {
         let success = false;
 
         const conjecture = conjectureFromConjectureNode(conjectureNode, context),
-              conjectureVerifies = conjecture.verify();
+              conjectureVerifies = await conjecture.verify();
 
         if (conjectureVerifies) {
           success = true;
@@ -264,11 +361,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: metatheoremNodeQuery,
-      run: (metatheoremNode, context) => {
+      run: async (metatheoremNode, context) => {
         let success = false;
 
         const metatheorem = metatheoremFromMetatheoremNode(metatheoremNode, context),
-              metatheoremVerifies = metatheorem.verify();
+              metatheoremVerifies = await metatheorem.verify();
 
         if (metatheoremVerifies) {
           success = true;
@@ -279,11 +376,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: variableDeclarationNodeQuery,
-      run: (variableDeclarationNode, context) => {
+      run: async (variableDeclarationNode, context) => {
         let success = false;
 
         const variableDeclaration = variableDeclarationFromVariableDeclarationNode(variableDeclarationNode, context),
-              variableDeclarationVerifies = variableDeclaration.verify();
+              variableDeclarationVerifies = await variableDeclaration.verify();
 
         if (variableDeclarationVerifies) {
           success = true;
@@ -294,11 +391,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: simpleTypeDeclarationNodeQuery,
-      run: (simpleTypeDeclarationNode, context) => {
+      run: async (simpleTypeDeclarationNode, context) => {
         let success = false;
 
         const simpleTypeDeclaration = simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
-              simpleTypeDeclarationVerifies = simpleTypeDeclaration.verify();
+              simpleTypeDeclarationVerifies = await simpleTypeDeclaration.verify();
 
         if (simpleTypeDeclarationVerifies) {
           success = true;
@@ -309,11 +406,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: typePrefixDeclarationNodeQuery,
-      run: (typePrefixDeclarationNode, context) => {
+      run: async (typePrefixDeclarationNode, context) => {
         let success = false;
 
         const typePrefixDeclaration = typePrefixDeclarationFromTypePrefixDeclarationNode(typePrefixDeclarationNode, context),
-              typePrefixDeclarationVerifies = typePrefixDeclaration.verify();
+              typePrefixDeclarationVerifies = await typePrefixDeclaration.verify();
 
         if (typePrefixDeclarationVerifies) {
           success = true;
@@ -324,11 +421,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: combinatorDeclarationNodeQuery,
-      run: (combinatorDeclarationNode, context) => {
+      run: async (combinatorDeclarationNode, context) => {
         let success = false;
 
         const combinatorDeclaration = combinatorDeclarationFromCombinatorDeclarationNode(combinatorDeclarationNode, context),
-              combinatorDeclarationVerifies = combinatorDeclaration.verify();
+              combinatorDeclarationVerifies = await combinatorDeclaration.verify();
 
         if (combinatorDeclarationVerifies) {
           success = true;
@@ -339,11 +436,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: constructorDeclarationNodeQuery,
-      run: (constructorDeclarationNode, context) => {
+      run: async (constructorDeclarationNode, context) => {
         let success = false;
 
         const constructorDeclaration = constructorDeclarationFromConstructorDeclarationNode(constructorDeclarationNode, context),
-              constructorDeclarationVerifies = constructorDeclaration.verify();
+              constructorDeclarationVerifies = await constructorDeclaration.verify();
 
         if (constructorDeclarationVerifies) {
           success = true;
@@ -354,11 +451,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: complexTypeDeclarationNodeQuery,
-      run: (complexTypeDeclarationNode, context) => {
+      run: async (complexTypeDeclarationNode, context) => {
         let success = false;
 
         const complexTypeDeclaration = complexTypeDeclarationFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
-              complexTypeDeclarationVerifies = complexTypeDeclaration.verify();
+              complexTypeDeclarationVerifies = await complexTypeDeclaration.verify();
 
         if (complexTypeDeclarationVerifies) {
           success = true;
@@ -369,11 +466,11 @@ class TopLevelPass extends Pass {
     },
     {
       nodeQuery: metavariableDeclarationNodeQuery,
-      run: (metavariableDeclarationNode, context) => {
+      run: async (metavariableDeclarationNode, context) => {
         let success = false;
 
         const metavariableDeclaration = metavariableDeclarationFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
-              metavariableDeclarationVerifies = metavariableDeclaration.verify();
+              metavariableDeclarationVerifies = await metavariableDeclaration.verify();
 
         if (metavariableDeclarationVerifies) {
           success = true;
@@ -484,11 +581,11 @@ const topLevelPass = new TopLevelPass(),
       combinatorPass = new ConbinatorPass(),
       constructorPass = new ConstructorPass();
 
-export function verifyFile(fileNode, context) {
+export async function verifyFile(fileNode, context) {
   let fileVerifies = false;
 
   const node = fileNode, ///
-        sucess = topLevelPass.run(node, context);
+        sucess = await topLevelPass.run(node, context);
 
   if (sucess) {
     fileVerifies = true;

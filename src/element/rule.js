@@ -54,47 +54,6 @@ export default define(class Rule extends Element {
     return comparesToMetavariableName;
   }
 
-  verify() {
-    let verifies = false;
-
-    const node = this.getNode(),
-          context = this.getContext(),
-          ruleString = this.getString(); ///
-
-    context.trace(`Verifying the '${ruleString}' rule...`, node);
-
-    scope((context) => {
-      const labelsVerify = this.verifyLabels();
-
-      if (labelsVerify) {
-        const premisesVerify = this.verifyPremises(context);
-
-        if (premisesVerify) {
-          const conclusionVerifies = this.verifyConclusion(context);
-
-          if (conclusionVerifies) {
-            const proofVerifies = this.verifyProof(context);
-
-            if (proofVerifies) {
-              verifies = true;
-            }
-          }
-        }
-      }
-
-    }, context);
-
-    if (verifies) {
-      const rule = this;  ///
-
-      context.addRule(rule);
-
-      context.debug(`...verified the '${ruleString}' rule.`, node);
-    }
-
-    return verifies;
-  }
-
   verifyLabels() {
     const labelsVerify = this.labels.every((label) => {
       const nameOnly = true,
@@ -221,6 +180,46 @@ export default define(class Rule extends Element {
     });
 
     return subproofOrProofAssertionsUnifiesWithPremises;
+  }
+
+  async verify() {
+    let verifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          ruleString = this.getString(); ///
+
+    context.trace(`Verifying the '${ruleString}' rule...`, node);
+
+    scope((context) => {
+      const labelsVerify = this.verifyLabels();
+
+      if (labelsVerify) {
+        const premisesVerify = this.verifyPremises(context);
+
+        if (premisesVerify) {
+          const conclusionVerifies = this.verifyConclusion(context);
+
+          if (conclusionVerifies) {
+            const proofVerifies = this.verifyProof(context);
+
+            if (proofVerifies) {
+              verifies = true;
+            }
+          }
+        }
+      }
+    }, context);
+
+    if (verifies) {
+      const rule = this;  ///
+
+      context.addRule(rule);
+
+      context.debug(`...verified the '${ruleString}' rule.`, node);
+    }
+
+    return verifies;
   }
 
   toJSON() {
