@@ -1,6 +1,6 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-furtle";
+import { NonTerminalNode } from "occam-languages";
 
 import { LABEL_RULE_NAME } from "../ruleNames";
 

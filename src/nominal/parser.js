@@ -1,6 +1,6 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-furtle";
+import { NonTerminalNode } from "occam-languages";
 import { NominalParser as NominalParserBase } from "occam-grammars";
 
 import NonTerminalNodeMap from "../nonTerminalNodeMap";

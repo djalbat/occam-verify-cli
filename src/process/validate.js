@@ -1,166 +1,17 @@
 "use strict";
 
+import { ForwardPass } from "occam-languages";
 import { queryUtilities } from "occam-furtle";
 
-import { isLastRemainingArgumentFunction } from "../utilities/pass";
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 
 const { nodeQuery } = queryUtilities;
-
-const nonTerminalNodeQuery = nodeQuery("/*");
 
 const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type"),
       statementNodeQuery = nodeQuery("/statement");
 
-class Pass {
-  run(node, ...remainingArguments) {
-    let success;
-
-    const visited = this.visitNode(node, ...remainingArguments);
-
-    success = visited;  ///
-
-    return success;
-  }
-
-  descend(childNodes, ...remainingArguments) {
-    let descended = false;
-
-    const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
-
-    if (lastRemainingArgumentFunction) {
-      const index = 0;
-
-      descended = this.descendAhead(index, childNodes, ...remainingArguments); ///
-    } else {
-      const visited = childNodes.every((childNode) => {
-        const node = childNode, ///
-              visited = this.visitNode(node, ...remainingArguments);
-
-        if (visited) {
-          return true;
-        }
-      });
-
-      if (visited) {
-        descended = true;
-      }
-    }
-
-    return descended;
-  }
-
-  descendAhead(index, childNodes, ...remainingArguments) {
-    let descendedAhead = false;
-
-    const descendAhead = remainingArguments.pop(), ///
-          childNodesLength = childNodes.length;
-
-    if (index === childNodesLength) {
-      descendedAhead = descendAhead();
-    } else {
-      const childNode = childNodes[index],
-            node = childNode, ///
-            visited = this.visitNode(node, ...remainingArguments, () => {
-              remainingArguments.push(descendAhead);
-
-              const aheadIndex = index + 1,
-                    descendedAhead = this.descendAhead(aheadIndex, childNodes, ...remainingArguments);
-
-              return descendedAhead;
-            });
-
-      if (visited) {
-        descendedAhead = true;
-      }
-    }
-
-    return descendedAhead;
-  }
-
-  visitNode(node, ...remainingArguments) {
-    let visited;
-
-    const nodeTerminalNode = node.isTerminalNode();
-
-    if (nodeTerminalNode) {
-      const terminalNode = node;  ///
-
-      visited = this.visitTerminalNode(terminalNode, ...remainingArguments);
-    } else {
-      const nonTerminalNode = node;  ///
-
-      visited = this.visitNonTerminalNode(nonTerminalNode, ...remainingArguments);
-    }
-
-    return visited;
-  }
-
-  visitTerminalNode(terminalNode, ...remainingArguments) {
-    let visited = false;
-
-    const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
-
-    if (lastRemainingArgumentFunction) {
-      const descendAhead = remainingArguments.pop(), ///
-            descendedAhead = descendAhead();
-
-      if (descendedAhead) {
-        visited = true;
-      }
-
-      remainingArguments.push(descendAhead);
-    } else {
-      visited = true;
-    }
-
-    return visited;
-  }
-
-  visitNonTerminalNode(nonTerminalNode, ...remainingArguments) {
-    let visited = false;
-
-    let { maps } = this.constructor;
-
-    maps = [ ///
-      ...maps,
-      {
-        nodeQuery: nonTerminalNodeQuery,
-        run: (node, ...remainingArguments) => {
-          let visited = false;
-
-          const childNodes = nonTerminalNode.getChildNodes(), ///
-                descended = this.descend(childNodes, ...remainingArguments);
-
-          if (descended) {
-            visited = true;
-          }
-
-          return visited;
-        }
-      }
-    ]
-
-    maps.some((map) => {
-      const { nodeQuery, run } = map;
-
-      const node = nodeQuery(nonTerminalNode);
-
-      if (node !== null) {
-        const success = run(node, ...remainingArguments);
-
-        visited = success;
-
-        return true;
-      }
-    });
-
-    return visited;
-  }
-}
-
-class TermPass extends Pass {
+class TermPass extends ForwardPass {
   run(statementNode, context) {
     let success = false;
 
@@ -219,7 +70,7 @@ class TermPass extends Pass {
   ];
 }
 
-class StatementPass extends Pass {
+class StatementPass extends ForwardPass {
   run(statementNode, context) {
     let success = false;
 

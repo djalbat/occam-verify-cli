@@ -1,7 +1,8 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { FileContext, contextUtilities } from "occam-furtle";
+import { FileContext, contextUtilities } from "occam-languages";
+import { lexersUtilities, parsersUtilities } from "occam-nominal";
 
 import elements from "../../elements";
 
@@ -33,7 +34,9 @@ import { typesFromJSON,
          metavariablesToMetavariablesJSON } from "../../utilities/json";
 
 const { push, filter } = arrayUtilities,
-      { chainContext } = contextUtilities;
+      { chainContext } = contextUtilities,
+      { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
+      { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class NominalFileContext extends FileContext {
   constructor(context, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
@@ -746,6 +749,22 @@ export default class NominalFileContext extends FileContext {
           topLevelMetaAssertionPresent = (topLevelMetaAssertion !== null);
 
     return topLevelMetaAssertionPresent;
+  }
+
+  getLexer() {
+    const combinedCustomGrammar = this.getCombinedCustomGrammar(),
+          nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar),
+          lexer = nominalLexer; ///
+
+    return lexer;
+  }
+
+  getParser() {
+    const combinedCustomGrammar = this.getCombinedCustomGrammar(),
+          nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar),
+          parser = nominalParser; ///
+
+    return parser;
   }
 
   clear() {

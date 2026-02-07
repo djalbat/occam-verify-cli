@@ -1,6 +1,6 @@
 "use strict";
 
-import { Element } from "occam-furtle";
+import { Element } from "occam-languages";
 
 import { scope } from "../utilities/context";
 import { labelFromJSON,

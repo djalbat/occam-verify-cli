@@ -1,7 +1,7 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { Context, contextUtilities } from "occam-furtle";
+import { Context, contextUtilities } from "occam-languages";
 
 import elements from "../elements";
 

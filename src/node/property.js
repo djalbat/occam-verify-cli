@@ -1,6 +1,6 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-furtle";
+import { NonTerminalNode } from "occam-languages";
 
 import { SINGLE_SPACE } from "../constants";
 

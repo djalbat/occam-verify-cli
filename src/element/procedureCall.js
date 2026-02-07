@@ -1,6 +1,6 @@
 "use strict";
 
-import { Element } from "occam-furtle";
+import { Element } from "occam-languages";
 import { Expressions } from "occam-furtle";
 
 import { define } from "../elements";

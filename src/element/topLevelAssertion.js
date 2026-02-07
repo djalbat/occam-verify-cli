@@ -1,6 +1,6 @@
 "use strict";
 
-import { Element } from "occam-furtle";
+import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { scope, attempt } from "../utilities/context";

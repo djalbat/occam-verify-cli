@@ -1,6 +1,6 @@
 "use strict";
 
-import { Context, contextUtilities } from "occam-furtle";
+import { Context, contextUtilities } from "occam-languages";
 
 const { chainContext } = contextUtilities;
 

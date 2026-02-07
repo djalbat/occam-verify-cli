@@ -1,9 +1,8 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { ReleaseContext } from "occam-languages";
 import { Entries, metaJSONUtilities } from "occam-model";
-
-import ReleaseContext from "../context/release";
 
 import { asyncEveryDependency } from "../utilities/dependency";
 
@@ -77,7 +76,7 @@ export function releaseContextFromJSON(json, context) {
 
   json = contextJSON; ///
 
-  const releaseContext = ReleaseContext.fromLogNameJSONEntriesAndCallback(log, name, json, entries, callback);
+  const releaseContext = ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar);
 
   return releaseContext;
 }
@@ -124,7 +123,7 @@ export function releaseContextFromProject(project, context) {
             json = null,
             entries = project.getEntries();
 
-      releaseContext = ReleaseContext.fromLogNameJSONEntriesAndCallback(log, name, json, entries, callback);
+      releaseContext = ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar);
     }
   }
 
@@ -235,11 +234,10 @@ function checkCyclicDependencyExists(dependency, dependentNames, context) {
 function checkReleaseMatchesDependency(releaseContext, dependency, dependentNames, context) {
   let releaseMatchesDependency = true;
 
-  const entries = releaseContext.getEntries(),
-        shortenedVersion = dependency.getShortedVersion();
+  const shortenedVersion = dependency.getShortedVersion();
 
   if (shortenedVersion !== null) {
-    const entriesMatchShortenedVersion = entries.matchShortenedVersion(shortenedVersion);
+    const entriesMatchShortenedVersion = releaseContext.matchShortenedVersion(shortenedVersion);
 
     if (!entriesMatchShortenedVersion) {
       const { log } = context,

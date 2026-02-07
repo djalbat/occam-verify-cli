@@ -1,6 +1,6 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-furtle";
+import { NonTerminalNode } from "occam-languages";
 
 import { FRAME_RULE_NAME, ASSUMPTION_RULE_NAME } from "../ruleNames";
 

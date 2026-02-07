@@ -1,6 +1,6 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-furtle";
+import { NonTerminalNode } from "occam-languages";
 
 import { REFERENCE_RULE_NAME, SATISFIES_ASSERTION_RULE_NAME } from "../ruleNames";
 

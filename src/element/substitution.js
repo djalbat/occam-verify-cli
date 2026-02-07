@@ -1,6 +1,6 @@
 "use strict";
 
-import { Element } from "occam-furtle";
+import { Element } from "occam-languages";
 
 export default class Substitution extends Element {
   constructor(context, string, node) {

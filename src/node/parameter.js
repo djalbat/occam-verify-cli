@@ -1,6 +1,6 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-furtle";
+import { NonTerminalNode } from "occam-languages";
 
 import { NAME_TOKEN_TYPE, IDENTIFIER_TOKEN_TYPE } from "../tokenTypes";
 
