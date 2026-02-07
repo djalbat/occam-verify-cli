@@ -3,7 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import { filePathUtilities } from "occam-model";
-import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
+import { lexersUtilities, parsersUtilities } from "occam-nominal";
 import { FurtleFileContext, asynchronousUtilities } from "occam-furtle";
 
 import NominalLexer from "../nominal/lexer";

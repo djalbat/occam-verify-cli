@@ -1,6 +1,6 @@
 "use strict";
 
-import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
+import { lexersUtilities, parsersUtilities } from "occam-nominal";
 
 import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
