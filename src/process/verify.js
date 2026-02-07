@@ -314,9 +314,9 @@ class ConbinatorPass extends StandardPass {
 
         const term = termFromTermNode(termNode, context),
               termValidates = term.validate(context, () => {
-                const verifiesAhead = true;
+                const validatesForwards = true;
 
-                return verifiesAhead;
+                return validatesForwards;
               });
 
         if (termValidates) {
@@ -353,9 +353,9 @@ class ConstructorPass extends StandardPass {
 
         const term = termFromTermNode(termNode, context),
               termValidates = term.validate(context, () => {
-                const verifiesAhead = true;
+                const validatesForwards = true;
 
-                return verifiesAhead;
+                return validatesForwards;
               });
 
         if (termValidates) {

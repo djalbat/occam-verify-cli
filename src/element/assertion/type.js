@@ -92,16 +92,16 @@ export default define(class TypeAssertion extends Assertion {
     context.trace(`Verifying the '${typeAssertionString}' stated type assertion...`);
 
     const termVerifies = this.term.verify(context, () => {
-      let verifiesAhead;
+      let verifiesForwards;
 
       const termType = this.term.getType(),
             typeEqualToOrSubTypeOfTermType = this.type.isEqualToOrSubTypeOf(termType);
 
       if (typeEqualToOrSubTypeOfTermType) {
-        verifiesAhead = true;
+        verifiesForwards = true;
       }
 
-      return verifiesAhead;
+      return verifiesForwards;
     });
 
     if (termVerifies) {
@@ -123,7 +123,7 @@ export default define(class TypeAssertion extends Assertion {
     context.trace(`Verifying the '${typeAssertionString}' derived type assertion...`);
 
     const termVerifies = this.term.verify(context, () => {
-      let verifiesAhead = false;
+      let verifiesForwards = false;
 
       const termType = this.term.getType(),
             termTypeProvisional = termType.isProvisional();
@@ -131,10 +131,10 @@ export default define(class TypeAssertion extends Assertion {
       if (!termTypeProvisional) {
         const typeEqualToOrSuperTypeOfTermType = this.type.isEqualToOrSuperTypeOf(termType);
 
-        verifiesAhead = typeEqualToOrSuperTypeOfTermType; ///
+        verifiesForwards = typeEqualToOrSuperTypeOfTermType; ///
       }
 
-      return verifiesAhead;
+      return verifiesForwards;
     });
 
     verifiesWhenDerived = termVerifies; ///

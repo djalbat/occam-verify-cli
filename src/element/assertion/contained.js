@@ -79,9 +79,9 @@ export default define(class ContainedAssertion extends Assertion {
         context.debug(`The '${termString}' term is not singular.`);
       } else {
         termValidates = this.term.validate(context, () => {
-          const validatesAhead = true;
+          const validatesForwards = true;
 
-          return validatesAhead;
+          return validatesForwards;
         });
 
         if (termValidates) {

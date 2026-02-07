@@ -102,9 +102,9 @@ export default define(class TermSubstitution extends Substitution {
 
     if (targetTermSingular) {
       targetTermValidates = this.targetTerm.validate(context, () => {
-        const verifiesAhead = true;
+        const verifiesForwards = true;
 
-        return verifiesAhead;
+        return verifiesForwards;
       });
     } else {
       context.debug(`The '${termSubstitutionString}' term subtitution's '${targetTermString}' target term is not singular.`);
@@ -126,9 +126,9 @@ export default define(class TermSubstitution extends Substitution {
     context.trace(`Validating the '${termSubstitutionString}' term subtitution's '${replacementTermString}' replacement term...`);
 
     replacementTermValidates = this.replacementTerm.validate(context, () => {
-      const validatesAhead = true;
+      const validatesForwards = true;
 
-      return validatesAhead;
+      return validatesForwards;
     });
 
     if (replacementTermValidates) {

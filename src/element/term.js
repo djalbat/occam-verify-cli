@@ -95,7 +95,7 @@ export default define(class Term extends Element {
     return comparesToParamter;
   }
 
-  validate(context, verifyAhead) {
+  validate(context, verifyForwards) {
     let validates;
 
     const termString = this.getString();  ///
@@ -104,7 +104,7 @@ export default define(class Term extends Element {
 
     validates = validateTerms.some((validateTerm) => {  ///
       const term = this, ///
-            termValidates = validateTerm(term, context, verifyAhead);
+            termValidates = validateTerm(term, context, verifyForwards);
 
       if (termValidates) {
         return true;
@@ -131,15 +131,15 @@ export default define(class Term extends Element {
     context.trace(`Validating the '${termString}' term given the '${typeString}' type...`);
 
     const validates = this.validate(context, () => {
-            let verifiesAhead;
+            let validatesForwards;
 
             const typeEqualToOrSubTypeOfGivenTypeType = this.type.isEqualToOrSubTypeOf(type);
 
             if (typeEqualToOrSubTypeOfGivenTypeType) {
-              verifiesAhead = true;
+              validatesForwards = true;
             }
 
-            return verifiesAhead;
+            return validatesForwards;
           });
 
     if (validates) {

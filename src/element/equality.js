@@ -117,23 +117,23 @@ export default define(class Equality extends Element {
     context.trace(`Verifying the '${equalityString}' equality's terms...`);
 
     const leftTermVerifies = this.leftTerm.verify(context, () => {
-      let verifiesAhead;
+      let verifiesForwards;
 
       const rightTermVerifies = this.rightTerm.verify(context, () => {
-        let verifiesAhead;
+        let verifiesForwards;
 
         const leftTermType = this.leftTerm.getType(),
               rightTermType = this.rightTerm.getType(),
               leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
 
-        verifiesAhead = leftTermTypeComparableToRightTermType;  ///
+        verifiesForwards = leftTermTypeComparableToRightTermType;  ///
 
-        return verifiesAhead;
+        return verifiesForwards;
       });
 
-      verifiesAhead = rightTermVerifies; ///
+      verifiesForwards = rightTermVerifies; ///
 
-      return verifiesAhead;
+      return verifiesForwards;
     });
 
     termsVerify = leftTermVerifies; ///

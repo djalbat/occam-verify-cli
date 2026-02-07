@@ -97,9 +97,9 @@ export default define(class PropertyAssertion extends Assertion {
     context.trace(`Validating the '${termString}' term...`);
 
     termValidates = this.term.validate(context, () => {
-      const validatesAhead = true;
+      const validatesForwards = true;
 
-      return validatesAhead;
+      return validatesForwards;
     });
 
     if (termValidates) {

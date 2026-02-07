@@ -12,7 +12,7 @@ import { equalityFromStatement,
          containedAssertionFromStatement,
          satisfiesAssertionFromStatement } from "../utilities/statement";
 
-function validateTermAsVariable(term, context, validateAhead) {
+function validateTermAsVariable(term, context, validateForwards) {
   let termValidatesAsVariable = false;
 
   const termNode = term.getNode(),
@@ -31,9 +31,9 @@ function validateTermAsVariable(term, context, validateAhead) {
 
       term.setType(type);
 
-      const verifiesAhead = validateAhead();
+      const verifiesForwards = validateForwards();
 
-      if (verifiesAhead) {
+      if (verifiesForwards) {
         termValidatesAsVariable = true;
       }
     }
@@ -46,13 +46,13 @@ function validateTermAsVariable(term, context, validateAhead) {
   return termValidatesAsVariable;
 }
 
-function unifyTermWithConstructors(term, context, validateAhead) {
+function unifyTermWithConstructors(term, context, validateForwards) {
   let termUnifiesWithConstructors;
 
   const constructors = context.getConstructors();
 
   termUnifiesWithConstructors = constructors.some((constructor) => {
-    const unifiesWithConstructor = constructor.unifyTerm(term, context, validateAhead);
+    const unifiesWithConstructor = constructor.unifyTerm(term, context, validateForwards);
 
     if (unifiesWithConstructor) {
       return true;
@@ -62,12 +62,12 @@ function unifyTermWithConstructors(term, context, validateAhead) {
   return termUnifiesWithConstructors;
 }
 
-function unifyTermWithBracketedConstructor(term, context, validateAhead) {
+function unifyTermWithBracketedConstructor(term, context, validateForwards) {
   let termUnifiesWithBracketedConstructor;
 
   const bracketedConstructor = bracketedConstructorFromNothing();
 
-  termUnifiesWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, validateAhead);
+  termUnifiesWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, validateForwards);
 
   return termUnifiesWithBracketedConstructor;
 }

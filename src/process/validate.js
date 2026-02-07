@@ -29,11 +29,11 @@ class TermPass extends ForwardPass {
   static maps = [
     {
       nodeQuery: termNodeQuery,
-      run: (termNode, context, validateAhead) => {
+      run: (termNode, context, validateForwards) => {
         let success = false;
 
         const term = termFromTermNode(termNode, context),
-              termValidates = term.validate(context, validateAhead);
+              termValidates = term.validate(context, validateForwards);
 
         if (termValidates) {
           success = true;
@@ -44,16 +44,16 @@ class TermPass extends ForwardPass {
     },
     {
       nodeQuery: typeNodeQuery,
-      run: (typeNode, context, validateAhead) => {
+      run: (typeNode, context, validateForwards) => {
         let success = false;
 
         const nominalTypeName = typeNode.getNominalTypeName(),
               typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
         if (typePresent) {
-          const verifiesAhead = validateAhead();
+          const validatesForwards = validateForwards();
 
-          if (verifiesAhead) {
+          if (validatesForwards) {
             success = true;
           }
         } else {
@@ -110,9 +110,9 @@ class StatementPass extends ForwardPass {
 
         const term = termFromTermNode(termNode, context),
               termValidates = term.validate(context, () => {
-                const verifiesAhead = true;
+                const validatesForwards = true;
 
-                return verifiesAhead;
+                return validatesForwards;
               });
 
         if (termValidates) {

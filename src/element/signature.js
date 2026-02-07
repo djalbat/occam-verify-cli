@@ -30,9 +30,9 @@ export default define(class Signature extends Element {
 
     verifies = this.terms.every((term) => {
       const termVerifies = term.verify(context, () => {
-        const verifiesAhead = true;
+        const verifiesForwards = true;
 
-        return verifiesAhead;
+        return verifiesForwards;
       });
 
       if (termVerifies) {

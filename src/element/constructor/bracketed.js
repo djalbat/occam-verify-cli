@@ -6,7 +6,7 @@ import Constructor from "../constructor";
 import { define } from "../../elements";
 
 export default define(class BracketedConstructor extends Constructor {
-  unifyTerm(term, context, verifyAhead) {
+  unifyTerm(term, context, verifyForwards) {
     let termUnifies;
 
     const termString = term.getString();
@@ -14,7 +14,7 @@ export default define(class BracketedConstructor extends Constructor {
     context.trace(`Unifying the '${termString}' term with the bracketed constructor...`);
 
     termUnifies = super.unifyTerm(term, context, () => {
-      let verifiesAhead = false;
+      let verifiesForwards = false;
 
       const { Term } = elements,
             bracketedTerm = term, ///
@@ -27,21 +27,21 @@ export default define(class BracketedConstructor extends Constructor {
         term = Term.fromTermNode(termNode, context);
 
         const termVVerifies = term.verify(context, () => {
-          let verifiesAhead;
+          let verifiesForwards;
 
           const type = term.getType();
 
           bracketedTerm.setType(type);
 
-          verifiesAhead = verifyAhead();
+          verifiesForwards = verifyForwards();
 
-          return verifiesAhead;
+          return verifiesForwards;
         });
 
-        verifiesAhead = termVVerifies;  ///
+        verifiesForwards = termVVerifies;  ///
       }
 
-      return verifiesAhead;
+      return verifiesForwards;
     });
 
     if (termUnifies) {
