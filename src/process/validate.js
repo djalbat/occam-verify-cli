@@ -1,7 +1,7 @@
 "use strict";
 
 import { ForwardPass } from "occam-languages";
-import { queryUtilities } from "occam-furtle";
+import { queryUtilities } from "occam-languages";
 
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 

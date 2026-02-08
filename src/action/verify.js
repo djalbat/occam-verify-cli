@@ -1,13 +1,15 @@
 "use strict";
 
-import { Dependency } from "occam-model";
-
 import "../preamble";
+
+import { Dependency } from "occam-model";
+import { releaseContextTiilities } from "occam-languages";
 
 import { verifyRelease } from "../utilities/release";
 import { startClock, stopClock } from "../utilities/clock";
 import { releaseContextFromDependency } from "../utilities/fileSystem";
-import { createReleaseContext, initialiseReleaseContext } from "../utilities/releaseContext";
+
+const { createReleaseContext, initialiseReleaseContext } = releaseContextTiilities;
 
 export default async function verifyAction(argument, log) {
   const name = argument, ///

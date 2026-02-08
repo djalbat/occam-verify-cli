@@ -1,7 +1,6 @@
 "use strict";
 
-import { queryUtilities } from "occam-furtle";
-import { EquivalencePass } from "occam-languages";
+import { queryUtilities, EquivalencePass } from "occam-languages";
 
 const { nodeQuery } = queryUtilities;
 

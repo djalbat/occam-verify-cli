@@ -1,7 +1,6 @@
 "use strict";
 
-import { ZipPass } from "occam-languages";
-import { queryUtilities } from "occam-furtle";
+import { ZipPass, queryUtilities } from "occam-languages";
 
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { termFromTermNode, frameFromFrameNode, statementFromStatementNode } from "../utilities/element";

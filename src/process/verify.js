@@ -1,7 +1,6 @@
 "use strict";
 
-import { queryUtilities } from "occam-furtle";
-import { StandardPass, AsyncPass } from "occam-languages"
+import { AsyncPass, StandardPass, queryUtilities } from "occam-languages"
 
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 import { ruleFromRuleNode,
