@@ -1,6 +1,6 @@
 "use strict";
 
-import { AsyncPass, StandardPass, queryUtilities } from "occam-languages"
+import { AsyncPass, SimplePass, queryUtilities } from "occam-languages"
 
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 import { ruleFromRuleNode,
@@ -287,7 +287,7 @@ class TopLevelPass extends AsyncPass {
   ];
 }
 
-class ConbinatorPass extends StandardPass {
+class ConbinatorPass extends SimplePass {
   static maps = [
     {
       nodeQuery: statementNodeQuery,
@@ -343,7 +343,7 @@ class ConbinatorPass extends StandardPass {
   ];
 }
 
-class ConstructorPass extends StandardPass {
+class ConstructorPass extends SimplePass {
   static maps = [
     {
       nodeQuery: termNodeQuery,

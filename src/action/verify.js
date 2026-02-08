@@ -5,8 +5,8 @@ import "../preamble";
 import { Dependency } from "occam-model";
 import { releaseContextTiilities } from "occam-languages";
 
-import { verifyRelease } from "../utilities/release";
 import { startClock, stopClock } from "../utilities/clock";
+import { verifyReleaseContext } from "../utilities/release";
 import { releaseContextFromDependency } from "../utilities/fileSystem";
 
 const { createReleaseContext, initialiseReleaseContext } = releaseContextTiilities;
@@ -53,7 +53,7 @@ export default async function verifyAction(argument, log) {
 
     const dependentName = null,
           dependentReleased = false,
-          releaseVerifies = await verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap);
+          releaseVerifies = await verifyReleaseContext(releaseName, dependentName, dependentReleased, releaseContextMap);
 
     if (!releaseVerifies) {
       log.warning(`The '${name}' project or package cannot be verified.`);
