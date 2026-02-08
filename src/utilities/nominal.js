@@ -1,13 +1,13 @@
 "use strict";
 
+import { customGrammarUtilities } from "occam-custom-grammars";
 import { lexersUtilities, parsersUtilities } from "occam-nominal";
 
 import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
 
-import { combinedCustomGrammarFromNothing } from "./customGrammar";
-
-const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
+const { combinedCustomGrammarFromNothing } = customGrammarUtilities,
+      { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 const combinedCustomGrammar = combinedCustomGrammarFromNothing();
