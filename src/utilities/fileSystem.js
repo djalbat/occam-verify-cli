@@ -1,13 +1,13 @@
 "use strict";
 
+import { releaseContextUtilities } from "occam-languages";
 import { fileSystemUtilities as occamFileSystemUtilities } from "occam-file-system";
 import { pathUtilities, fileSystemUtilities as necessaryFileSystemUtilities } from "necessary";
 
-import { releaseContextFromJSON, releaseContextFromProject } from "../utilities/releaseContext";
-
 const { loadProject } = occamFileSystemUtilities,
       { concatenatePaths } = pathUtilities,
-      { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities;
+      { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities,
+      { releaseContextFromJSON, releaseContextFromProject } = releaseContextUtilities;
 
 export async function releaseContextFromDependency(dependency, context) {
   let releaseContext = null;
