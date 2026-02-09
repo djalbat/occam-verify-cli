@@ -5,32 +5,27 @@ import "../preamble";
 import { Dependency } from "occam-model";
 import { releaseContextUtilities } from "occam-languages";
 
-import { startClock, stopClock } from "../utilities/clock";
 import { releaseContextFromDependency } from "../utilities/fileSystem";
 
 const { createReleaseContext, verifyReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
-export default async function verifyAction(argument, log) {
-  const name = argument, ///
-        context = {},
-        callback = async (context, filePath, lineIndex) => {
+export default async function verifyAction(name, log) {
+  const callback = async (context, filePath, lineIndex) => {
           ///
         },
-        dependency = Dependency.fromName(name),
-        dependentNames = [],
-        releaseContextMap = {};
-
-  Object.assign(context, {
-    log,
-    callback,
-    releaseContextMap,
-    releaseContextFromDependency
-  });
-
-  let now = startClock();
+        releaseContextMap = {},
+        context = {
+          log,
+          callback,
+          releaseContextMap,
+          releaseContextFromDependency
+        }
 
   // try {
-    const success = await createReleaseContext(dependency, dependentNames, context);
+
+    const dependentNames = [],
+          dependency = Dependency.fromName(name),
+          success = await createReleaseContext(dependency, dependentNames, context);
 
     if (!success) {
       log.warning(`The '${name}' project or package cannot be created.`);
@@ -60,7 +55,6 @@ export default async function verifyAction(argument, log) {
       return;
     }
 
-    stopClock(now, log);
   // }
   // catch (error) {
   //   log.error(error);
