@@ -5,7 +5,8 @@ import "../preamble";
 import { Dependency } from "occam-model";
 import { releaseContextUtilities } from "occam-languages";
 
-import { releaseContextFromDependency } from "../utilities/fileSystem";
+import { FileContextFromFilePath } from "../utilities/fileContext";
+import { releaseContextFromDependency } from "../utilities/releaseContext";
 
 const { createReleaseContext, verifyReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
@@ -18,6 +19,7 @@ export default async function verifyAction(name, log) {
           log,
           callback,
           releaseContextMap,
+          FileContextFromFilePath,
           releaseContextFromDependency
         }
 
