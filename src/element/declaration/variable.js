@@ -5,82 +5,89 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class VariableDeclaration extends Declaration {
-  constructor(context, string, node, variable) {
+  constructor(context, string, node, variable, type, provisional) {
     super(context, string, node);
 
     this.variable = variable;
+    this.type = type;
+    this.provisional = provisional;
   }
 
   getVariable() {
     return this.variable;
   }
 
+  getType() {
+    return this.type;
+  }
+
+  isProvisional() {
+    return this.provisional;
+  }
+
+  verifyType() {
+    let typeVerifies = false;
+
+    const context = this.getContext();
+
+    const typeString = this.type.getString(),
+          variableDeclarationString = this.getString(); ///
+
+    context.trace(`Verifying the '${variableDeclarationString}' variable declaration's '${typeString}' type...`);
+
+    const nominalTypeName = this.type.getNominalTypeName(),
+          type = context.findTypeByNominalTypeName(nominalTypeName),
+          typePresent = (type !== null)
+
+    if (!typePresent) {
+      context.debug(`The '${typeString}' type is not present.`);
+    } else {
+      const typeComparesToProvisional = type.compareProvisional(this.provisional);
+
+      if (!typeComparesToProvisional) {
+        this.provisional ?
+          context.debug(`The '${variableDeclarationString}' variable declaration's '${typeString}' type is present but not provisional.`) :
+            context.debug(`The '${variableDeclarationString}' variable declaration's '${typeString}' type is present but provisional.`);
+      } else {
+        this.variable.setType(type);
+
+        typeVerifies = true;
+      }
+    }
+
+    if (typeVerifies) {
+      context.debug(`...verified the '${variableDeclarationString}' variable declaration's '${typeString}' type.`);
+    }
+
+    return typeVerifies;
+  }
+
   verifyVariable() {
     let  variableVerifies = false;
 
     const context = this.getContext(),
-          variableString = this.variable.getString();
+          variableString = this.variable.getString(),
+          variableDeclarationString = this.getString(); ///
 
-    context.trace(`Verifying the '${variableString}' variable...`);
+    context.trace(`Verifying the '${variableDeclarationString}' variable declaration's '${variableString}' variable...`);
 
     const variableIdentifier = this.variable.getIdentifier(),
-          variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentifier);
+          variable = context.findVariableByVariableIdentifier(variableIdentifier),
+          variablePresent = (variable !== null);
 
     if (variablePresent) {
-      context.debug(`The '${variableName}' variable is already present.`);
+      const variableIdentifier = variable.getIdentifier();
+
+      context.debug(`The '${variableIdentifier}' variable is already present.`);
     } else {
       variableVerifies = true;
     }
 
     if ( variableVerifies) {
-      context.debug(`...verified the '${variableString}' variable.`);
+      context.trace(`...verified the '${variableDeclarationString}' variable declaration's '${variableString}' variable.`);
     }
 
     return variableVerifies;
-  }
-
-  verifyVariableType() {
-    let variableTypeVerifies = false;
-
-    const context = this.getContext();
-
-    let type;
-
-    type = this.variable.getType();
-
-    const typeString = type.getString();
-
-    context.trace(`Verifying the '${typeString}' type...`);
-
-    const includeSupertypes = false,
-          provisional = type.isProvisional(includeSupertypes),
-          nominalTypeName = type.getNominalTypeName();
-
-    type = context.findTypeByNominalTypeName(nominalTypeName);
-
-    const typePresent = (type !== null)
-
-    if (!typePresent) {
-      context.debug(`The '${typeString}' type is not present.`);
-    } else {
-      const typeComparesToProvisional = type.compareProvisional(provisional);
-
-      if (!typeComparesToProvisional) {
-        provisional ?
-          context.debug(`The '${typeString}' type is present but not provisional.`) :
-            context.debug(`The '${typeString}' type is present but provisional.`);
-      } else {
-        this.variable.setType(type);
-
-        variableTypeVerifies = true;
-      }
-    }
-
-    if (variableTypeVerifies) {
-      context.debug(`...verified the '${typeString}' type.`);
-    }
-
-    return variableTypeVerifies;
   }
 
   async verify() {
@@ -94,9 +101,9 @@ export default define(class VariableDeclaration extends Declaration {
 
     context.trace(`Verifying the '${variableDeclarationString}' variable declaration...`, node);
 
-    const variableTypeVerifies = this.verifyVariableType();
+    const typeVerifies = this.verifyType();
 
-    if (variableTypeVerifies) {
+    if (typeVerifies) {
       const variableVerifies = this.verifyVariable();
 
       if (variableVerifies) {

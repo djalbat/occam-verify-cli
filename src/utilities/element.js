@@ -619,13 +619,8 @@ export function variableDeclarationFromVariableDeclarationNode(variableDeclarati
         provisional = variableDeclarationNode.isProvisional(),
         variableNode = variableDeclarationNode.getVariableNode(),
         type = typeFromTypeNode(typeNode, context),
-        variable = variableFromVariableNode(variableNode, context);
-
-  type.setProvisional(provisional);
-
-  variable.setType(type);
-
-  const variableDeclaration = new VariableDeclaration(context, string, node, variable);
+        variable = variableFromVariableNode(variableNode, context),
+        variableDeclaration = new VariableDeclaration(context, string, node, variable, type, provisional);
 
   return variableDeclaration;
 }
@@ -716,11 +711,8 @@ export function metavariableDeclarationFromMetavariableDeclarationNode(metavaria
         node = metavariableDeclarationNode,  ///
         string = context.nodeAsString(node),
         metaType = metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
-        metavariable = metavariableFromMetavariableDeclarationNode(metavariableDeclarationNode, context);
-
-  metavariable.setMetaType(metaType);
-
-  const metavariableDeclaration = new MetavariableDeclaration(context, string, node, metavariable);
+        metavariable = metavariableFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
+        metavariableDeclaration = new MetavariableDeclaration(context, string, node, metavariable, metaType);
 
   return metavariableDeclaration;
 }

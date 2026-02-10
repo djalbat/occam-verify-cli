@@ -5,6 +5,8 @@ import { FileContext, contextUtilities } from "occam-languages";
 import { lexersUtilities, parsersUtilities } from "occam-nominal";
 
 import elements from "../../elements";
+import NominalLexer from "../../nominal/lexer";
+import NominalParser from "../../nominal/parser";
 
 import { verifyFile } from "../../process/verify";
 import { baseTypeFromNothing } from "../../utilities/type";
@@ -753,7 +755,7 @@ export default class NominalFileContext extends FileContext {
 
   getLexer() {
     const combinedCustomGrammar = this.getCombinedCustomGrammar(),
-          nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar),
+          nominalLexer = nominalLexerFromCombinedCustomGrammar(NominalLexer, combinedCustomGrammar),
           lexer = nominalLexer; ///
 
     return lexer;
@@ -761,7 +763,7 @@ export default class NominalFileContext extends FileContext {
 
   getParser() {
     const combinedCustomGrammar = this.getCombinedCustomGrammar(),
-          nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar),
+          nominalParser = nominalParserFromCombinedCustomGrammar(NominalParser, combinedCustomGrammar),
           parser = nominalParser; ///
 
     return parser;
