@@ -961,13 +961,8 @@ export function assumptionFromJudgementNode(judgementNode, context) {
 }
 
 export function statementFromCombinatorNode(combinatorNode, context) {
-  let statement = null;
-
-  const statementNode = combinatorNode.getStatementNode();
-
-  if (statementNode !== null) {
-    statement = statementFromStatementNode(statementNode, context);
-  }
+  const statementNode = combinatorNode.getStatementNode(),
+        statement = statementFromStatementNode(statementNode, context);
 
   return statement;
 }

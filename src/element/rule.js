@@ -185,8 +185,11 @@ export default define(class Rule extends Element {
   async verify() {
     let verifies = false;
 
-    const context = this.getContext(),
-          ruleString = this.getString(); ///
+    const context = this.getContext();
+
+    this.break(context);
+
+    const ruleString = this.getString(); ///
 
     context.trace(`Verifying the '${ruleString}' rule...`);
 

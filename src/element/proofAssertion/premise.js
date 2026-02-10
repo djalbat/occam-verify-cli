@@ -5,14 +5,7 @@ import assignAssignments from "../../process/assign";
 
 import { define } from "../../elements";
 import { attempt, synthetically } from "../../utilities/context";
-import { termsFromJSON,
-         framesFromJSON,
-         termsToTermsJSON,
-         statementFromJSON,
-         framesToFramesJSON,
-         procedureCallFromJSON,
-         statementToStatementJSON,
-         procedureCallToProcedureCallJSON } from "../../utilities/json";
+import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
 
 export default define(class Premise extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -34,8 +27,9 @@ export default define(class Premise extends ProofAssertion {
   verify(context) {
     let verifies = false;
 
-    const node = this.getNode(),
-          premiseString = this.getString(); ///
+    this.break(context);
+
+    const premiseString = this.getString(); ///
 
     context.trace(`Verifying the '${premiseString}' premise...`);
 
@@ -242,29 +236,13 @@ export default define(class Premise extends ProofAssertion {
   }
 
   toJSON() {
-    let frames,
-        terms;
-
-    frames = this.context.getFrames();
-
-    terms = this.context.getTerms();
-
     const procedureCallJSON = procedureCallToProcedureCallJSON(this.procedureCall),
           statementJSON = statementToStatementJSON(this.statement),
-          framesJSON = framesToFramesJSON(frames),
-          termsJSON = termsToTermsJSON(terms);
-
-    frames = framesJSON;  ///
-
-    terms = termsJSON;  ///
-
-    const procedureCall = procedureCallJSON,  ///
+          procedureCall = procedureCallJSON,  ///
           statement = statementJSON,  ///
           json = {
-            procedureCall,
             statement,
-            frames,
-            terms
+            procedureCall
           };
 
     return json;
@@ -273,9 +251,7 @@ export default define(class Premise extends ProofAssertion {
   static name = "Premise";
 
   static fromJSON(json, context) {
-    const terms = termsFromJSON(json, context),
-          frames = framesFromJSON(json, context),
-          statement = statementFromJSON(json, context),
+    const statement = statementFromJSON(json, context),
           procedureCall = procedureCallFromJSON(json, context);
 
     let string;
