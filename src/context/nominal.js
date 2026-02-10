@@ -1,6 +1,6 @@
 "use strict";
 
-import { Context, contextUtilities } from "occam-languages";
+import { Context } from "occam-languages";
 import { nominalLexer, nominalParser } from "../utilities/nominal";
 
 class NominalContext extends Context {
