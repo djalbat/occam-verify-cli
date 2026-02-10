@@ -176,11 +176,10 @@ export default define(class Axiom extends TopLevelAssertion {
   unifyLastProofAssertion(lastProofAssertion, substitutions, context) {
     let lastProofAssertionUnifies = false;
 
-    const node = this.getNode(),
-          axiomString = this.getString(),
+    const axiomString = this.getString(),
           lastProofAssertionString = lastProofAssertion.getString();
 
-    context.trace(`Unifying the '${lastProofAssertionString}' last proof assertion with the '${axiomString}' axiom...`, node)
+    context.trace(`Unifying the '${lastProofAssertionString}' last proof assertion with the '${axiomString}' axiom...`)
 
     const statement = lastProofAssertion.getStatement(),
           statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
@@ -190,7 +189,7 @@ export default define(class Axiom extends TopLevelAssertion {
     }
 
     if (lastProofAssertionUnifies) {
-      context.debug(`...unified the '${lastProofAssertionString}' last proof assertion with the '${axiomString}' axiom.`, node)
+      context.debug(`...unified the '${lastProofAssertionString}' last proof assertion with the '${axiomString}' axiom.`)
     }
 
     return lastProofAssertionUnifies;
@@ -199,11 +198,10 @@ export default define(class Axiom extends TopLevelAssertion {
   unifyTopLevelAssertion(topLevelAssertion, substitutions, context) {
     let topLevelAssertionUnifies = false;
 
-    const node = this.getNode(),
-          axiomString = this.getString(),
+    const axiomString = this.getString(),
           topLevelAssertionString = topLevelAssertion.getString();
 
-    context.trace(`Unifying the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom...`, node);
+    context.trace(`Unifying the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom...`);
 
     const hypothesesCorrelate = topLevelAssertion.correlateHypotheses(context);
 
@@ -228,7 +226,7 @@ export default define(class Axiom extends TopLevelAssertion {
     }
 
     if (topLevelAssertionUnifies) {
-      context.debug(`...unified the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom.`, node);
+      context.debug(`...unified the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom.`);
     }
 
     return topLevelAssertionUnifies;
@@ -237,11 +235,10 @@ export default define(class Axiom extends TopLevelAssertion {
   async verify() {
     let verifies;
 
-    const node = this.getNode(),
-          context = this.getContext(),
+    const context = this.getContext(),
           axiomString = this.getString(); ///
 
-    context.trace(`Verifying the '${axiomString}' axiom...`, node);
+    context.trace(`Verifying the '${axiomString}' axiom...`);
 
     const signatureVerifies = this.verifySignature();
 
@@ -254,7 +251,7 @@ export default define(class Axiom extends TopLevelAssertion {
 
       context.addAxiom(axiom);
 
-      context.debug(`...verified the '${axiomString}' axiom.`, node);
+      context.debug(`...verified the '${axiomString}' axiom.`);
     }
 
     return verifies;

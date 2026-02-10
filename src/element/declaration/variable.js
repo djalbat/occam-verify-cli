@@ -93,13 +93,13 @@ export default define(class VariableDeclaration extends Declaration {
   async verify() {
     let verifies = false;
 
-    const node = this.getNode(),
-          context = this.getContext(),
-          variableDeclarationString = this.getString(); ///
+    const context = this.getContext();
 
     await this.break(context);
 
-    context.trace(`Verifying the '${variableDeclarationString}' variable declaration...`, node);
+    const variableDeclarationString = this.getString(); ///
+
+    context.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
 
     const typeVerifies = this.verifyType();
 
@@ -114,7 +114,7 @@ export default define(class VariableDeclaration extends Declaration {
     }
 
     if (verifies) {
-      context.debug(`...verified the '${variableDeclarationString}' variable declaration.`, node);
+      context.debug(`...verified the '${variableDeclarationString}' variable declaration.`);
     }
 
     return verifies;

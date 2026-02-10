@@ -71,11 +71,13 @@ export default define(class MetavariableDeclaration extends Declaration {
       context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration's '${metavariableTypeString}' metavariable type...`);
 
       const nominalTypeName = metavariableType.getNominalTypeName(),
-        typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
+            type = context.findTypeByNominalTypeName(nominalTypeName);
 
-      if (!typePresent) {
+      if (type !== null) {
         context.debug(`The '${metavariableTypeString}' type is not present.`);
       } else {
+        this.metavariable.setType(type);
+
         metavariableTypeVerified = true;
       }
 
@@ -90,10 +92,11 @@ export default define(class MetavariableDeclaration extends Declaration {
   async verify() {
     let verifies;
 
-    const context = this.getContext(),
-          metavariableDeclarationString = this.getString(); ///
+    const context = this.getContext();
 
     await this.break(context);
+
+    const metavariableDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
 

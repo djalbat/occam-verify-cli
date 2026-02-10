@@ -126,11 +126,10 @@ export default define(class SimpleTypeDeclaration extends Declaration {
   async verify() {
     let verifies = false;
 
-    const node = this.getNode(),
-          context = this.getContext(),
+    const context = this.getContext(),
           simpleTypeDeclarationString = this.getString();  ///
 
-    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`, node);
+    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`);
 
     if (this.prefixed) {
       const typeString = this.type.getString();
@@ -160,7 +159,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     }
 
     if (verifies) {
-      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration.`, node);
+      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration.`);
     }
 
     return verifies;
