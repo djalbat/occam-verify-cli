@@ -117,7 +117,8 @@ export function frameFromFrameNode(frameNode, context) {
         node = frameNode, ///
         string = context.nodeAsString(node),
         assumptions = assumptionsFromFrameNode(frameNode, context),
-        frame = new Frame(context, string, node, assumptions);
+        metavariable = metavariableFromFrameNode(frameNode, context),
+        frame = new Frame(context, string, node, assumptions, metavariable);
 
   return frame;
 }
@@ -380,9 +381,9 @@ export function assumptionFromAssumptionNode(assumptionNode, context) {
   const { Assumption } = elements,
         node = assumptionNode, ///
         string = context.nodeAsString(node),
-        statement = statementFromAssumptionNode(assumptionNode, context),
         reference = referenceFromAssumptionNode(assumptionNode, context),
-        assumption = new Assumption(context, string, node, statement, reference);
+        statement = statementFromAssumptionNode(assumptionNode, context),
+        assumption = new Assumption(context, string, node, reference, statement);
 
   return assumption;
 }
@@ -870,6 +871,18 @@ export function termsFromEquivalenceNode(equivalenceNode, context) {
   return terms;
 }
 
+export function metavariableFromFrameNode(frameNode, context) {
+  let metavariable = null;
+
+  const metavariableNode = frameNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+  }
+
+  return metavariable;
+}
+
 export function metavariableFromLabelNode(labelNode, context) {
   const metavariableNode = labelNode.getMetavariableNode(),
         metavariable = metavariableFromMetavariableNode(metavariableNode, context);
@@ -955,6 +968,13 @@ export function assumptionFromJudgementNode(judgementNode, context) {
   return assumption;
 }
 
+export function referenceFromAssumptionNode(assumptionNode, context) {
+  const metavariableNode = assumptionNode.getMetavariableNode(),
+        reference = referenceFromMetavariableNode(metavariableNode, context);
+
+  return reference;
+}
+
 export function statementFromCombinatorNode(combinatorNode, context) {
   const statementNode = combinatorNode.getStatementNode(),
         statement = statementFromStatementNode(statementNode, context);
@@ -984,13 +1004,6 @@ export function statementFromAssumptionNode(assumptionNode, context) {
   }
 
   return statement;
-}
-
-export function referenceFromAssumptionNode(assumptionNode, context) {
-  const metavariableNode = assumptionNode.getMetavariableNode(),
-        reference = referenceFromMetavariableNode(metavariableNode, context);
-
-  return reference;
 }
 
 export function statementFromHypothesisNode(hypothesisNode, context) {

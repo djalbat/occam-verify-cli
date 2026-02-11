@@ -59,6 +59,8 @@ export default define(class Step extends ProofAssertion {
   verify(assignments, context) {
     let verifies = false;
 
+    this.break(context);
+
     const stepString = this.getString(); ///
 
     context.trace(`Verifying the '${stepString}' step...`);

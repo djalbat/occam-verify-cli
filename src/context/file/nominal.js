@@ -551,19 +551,6 @@ export default class NominalFileContext extends FileContext {
     return type;
   }
 
-  findMetaTypeByMetaTypeName(metaTypeName) {
-    const metaTypes = this.getMetaTypes(),
-          metaType = metaTypes.find((metaType) => {
-            const metaTypeComparesToMetaTypeName = metaType.compareMetaTypeName(metaTypeName);
-
-            if (metaTypeComparesToMetaTypeName) {
-              return true;
-            }
-          }) || null;
-
-    return metaType;
-  }
-
   findTypePrefixByTypePrefixName(typePrefixName) {
     const typePrefixes = this.getTypePrefixes(),
           typePrefix = typePrefixes.find((typePrefix) => {

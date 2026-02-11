@@ -23,7 +23,8 @@ export default define(class Judgement extends Element {
 
   isSingular() {
     const node = this.getNode(),
-          singular = node.isSingular();
+          judgementNode = node, ///
+          singular = judgementNode.isSingular();
 
     return singular;
   }

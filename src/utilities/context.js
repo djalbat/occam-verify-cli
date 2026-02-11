@@ -44,3 +44,11 @@ export function synthetically(innerFunction, generalContext, specificContext) {
 
   return innerFunction(context);
 }
+
+export async function asyncAttempt(innerFunction, context) {
+  const ephemeralContext = EphemeralContext.fromNothing(context);
+
+  context = ephemeralContext;  ///
+
+  return await innerFunction(context);
+}

@@ -15,7 +15,7 @@ export default define(class Lemma extends TopLevelAssertion {
       context.trace(`Verifying a lemma...`) :
         context.trace(`Verifying the '${lemmaString}' lemma...`);
 
-    verifies = super.verify();
+    verifies = await super.verify();
 
     if (verifies) {
       const lemma = this; ///

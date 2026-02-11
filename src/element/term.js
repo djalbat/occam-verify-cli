@@ -26,7 +26,8 @@ export default define(class Term extends Element {
 
   isSingular() {
     const node = this.getNode(),
-          singular = node.isSingular();
+          termNode = node,  ///
+          singular = termNode.isSingular();
 
     return singular;
   }
@@ -76,10 +77,12 @@ export default define(class Term extends Element {
   }
 
   isEqualTo(term) {
-    const node = this.getNode(),
-          termNode = term.getNode(),
-          nodeMatchesTermNode = node.match(termNode),
-          equalTo = nodeMatchesTermNode; ///
+    const termA = this, ///
+          termB = term, ///
+          termANode = termA.getNode(),
+          termBNode = termB.getNode(),
+          termANodeMatchesTermBNode = termANode.match(termBNode),
+          equalTo = termANodeMatchesTermBNode; ///
 
     return equalTo;
   }

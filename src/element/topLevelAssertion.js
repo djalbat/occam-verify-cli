@@ -2,8 +2,9 @@
 
 import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
+import { asynchronousUtilities } from "occam-languages";
 
-import { scope, attempt } from "../utilities/context";
+import { scope, asyncAttempt } from "../utilities/context";
 import { labelsFromJSON,
          deductionFromJSON,
          signatureFromJSON,
@@ -15,7 +16,8 @@ import { labelsFromJSON,
          hypothesesToHypothesesJSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
 
-const { extract, reverse, correlate, backwardsEvery } = arrayUtilities;
+const { asyncEvery } = asynchronousUtilities,
+      { extract, reverse, correlate, backwardsEvery } = arrayUtilities;
 
 export default class TopLevelAssertion extends Element {
   constructor(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses) {
@@ -120,34 +122,6 @@ export default class TopLevelAssertion extends Element {
     return correlatesToHypotheses;
   }
 
-  verify() {
-    let verifies = false;
-
-    const context = this.getContext();
-
-    scope((context) => {
-      const labelsVerify = this.verifyLabels();
-
-      if (labelsVerify) {
-        const suppositionsVerify = this.verifySuppositions(context);
-
-        if (suppositionsVerify) {
-          const deductionVerifies = this.verifyDeduction(context);
-
-          if (deductionVerifies) {
-            const proofVerifies = this.verifyProof(context);
-
-            if (proofVerifies) {
-              verifies = true;
-            }
-          }
-        }
-      }
-    }, context);
-
-    return verifies;
-  }
-
   verifyLabels() {
     const labelsVerify = this.labels.every((label) => {
       const nameOnly = true,
@@ -161,9 +135,39 @@ export default class TopLevelAssertion extends Element {
     return labelsVerify;
   }
 
-  verifySuppositions(context) {
-    const suppositionsVerify = this.suppositions.every((supposition) => {
-      const suppositionVerifies = this.verifySupposition(supposition, context);
+  async verify() {
+    let verifies = false;
+
+    const context = this.getContext();
+
+    await this.break(context);
+
+    scope((context) => {
+      const labelsVerify = this.verifyLabels();
+
+      if (labelsVerify) {
+        const suppositionsVerify = await this.verifySuppositions(context);
+
+        if (suppositionsVerify) {
+          const deductionVerifies = await this.verifyDeduction(context);
+
+          if (deductionVerifies) {
+            const proofVerifies = await this.verifyProof(context);
+
+            if (proofVerifies) {
+              verifies = true;
+            }
+          }
+        }
+      }
+    }, context);
+
+    return verifies;
+  }
+
+  async verifySuppositions(context) {
+    const suppositionsVerify = await asyncEvery(this.suppositions, (supposition) => {
+      const suppositionVerifies = await this.verifySupposition(supposition, context);
 
       if (suppositionVerifies) {
         return true;
@@ -173,24 +177,24 @@ export default class TopLevelAssertion extends Element {
     return suppositionsVerify;
   }
 
-  verifySupposition(supposition, context) {
-    const suppositionVerifies = supposition.verify(context);
+  async verifySupposition(supposition, context) {
+    const suppositionVerifies = await supposition.verify(context);
 
     return suppositionVerifies;
   }
 
-  verifyDeduction(context) {
-    const deductionVerifies = this.deduction.verify(context);
+  async verifyDeduction(context) {
+    const deductionVerifies = await this.deduction.verify(context);
 
     return deductionVerifies;
   }
 
-  verifyProof(context) {
+  async verifyProof(context) {
     let proofVerifies = true; ///
 
     if (this.proof !== null) {
-      proofVerifies = attempt((context) => {
-        const proofVerifies = this.proof.verify(this.deduction, context);
+      proofVerifies = asyncAttempt((context) => {
+        const proofVerifies = await this.proof.verify(this.deduction, context);
 
         return proofVerifies;
       }, context);

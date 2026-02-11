@@ -24,8 +24,10 @@ export default define(class Supposition extends ProofAssertion {
     return stated;
   }
 
-  verify(context) {
+  async verify(context) {
     let verifies = false;
+
+    this.break(context);
 
     const suppositionString = this.getString(); ///
 

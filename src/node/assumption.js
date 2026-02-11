@@ -5,18 +5,6 @@ import { NonTerminalNode } from "occam-languages";
 import { STATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class AssumptionpNode extends NonTerminalNode {
-  isSingular() {
-    let singular = false;
-
-    const statementNode = this.getStatementNode();
-
-    if (statementNode === null) {
-      singular = true;
-    }
-
-    return singular;
-  }
-
   getStatementNode() {
     const ruleName = STATEMENT_RULE_NAME,
           statementNode = this.getNodeByRuleName(ruleName);

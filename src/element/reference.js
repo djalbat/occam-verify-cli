@@ -36,6 +36,17 @@ export default define(class Reference extends Element {
 
   isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
+  isEqualTo(reference) {
+    const referenceA = this, ///
+          referenceB = reference, ///
+          referenceANode = referenceA.getNode(),
+          referenceBNode = referenceB.getNode(),
+          referenceANodeMatchesReferenceBNode = referenceANode.match(referenceBNode),
+          equalTo = referenceANodeMatchesReferenceBNode; ///
+
+    return equalTo;
+  }
+
   compareParameter(parameter) {
     let comparesToParamter = false;
 

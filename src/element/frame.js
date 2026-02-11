@@ -1,53 +1,26 @@
 "use strict";
 
 import { Element } from "occam-languages";
-import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
+import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { assumptionsStringFromAssumptions } from "../utilities/string";
 
-const { first } = arrayUtilities;
-
 export default define(class Frame extends Element {
-  constructor(context, string, node, assumptions) {
+  constructor(context, string, node, assumptions, metavairable) {
     super(context, string, node);
 
     this.assumptions = assumptions;
+    this.metavariable = metavairable;
   }
 
   getAssumptions() {
     return this.assumptions;
   }
 
-  getLength() { return this.assumptions.length; }
-
-  getAssumption() {
-    let assumption = null;
-
-    const length = this.getLength();
-
-    if (length === 1) {
-      const firstAssumption = first(this.assumptions);
-
-      assumption = firstAssumption; ///
-    }
-
-    return assumption;
-  }
-
   getMetavariable() {
-    let metavariable = null;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const assumption = this.getAssumption();
-
-      metavariable = assumption.getMetavariable();
-    }
-
-    return metavariable;
+    return this.metavariable;
   }
 
   getMetavariableName() {
@@ -59,7 +32,8 @@ export default define(class Frame extends Element {
 
   isSingular() {
     const node = this.getNode(),
-          singular = node.isSingular();
+          frameNode = node, ///
+          singular = frameNode.isSingular();
 
     return singular;
   }
@@ -84,6 +58,17 @@ export default define(class Frame extends Element {
     }
 
     return metavariableEqualToMetavariable;
+  }
+
+  isEqualTo(frame) {
+    const frameA = this, ///
+          frameB = frame, ///
+          frameANode = frameA.getNode(),
+          frameBNode = frameB.getNode(),
+          frameANodeMatchesFrameBNode = frameANode.match(frameBNode),
+          equalTo = frameANodeMatchesFrameBNode; ///
+
+    return equalTo;
   }
 
   compareParameter(parameter) {
@@ -161,9 +146,10 @@ export default define(class Frame extends Element {
 
     context.trace(`Validating the '${frameString}' frame...`);
 
-    const assumptionsValidate = this.validateAssumptions(assignments, stated, context);
+    const assumptionsValidate = this.validateAssumptions(assignments, stated, context),
+          metavariablevalidates = this.validateMetavariable(assignments, stated, context);
 
-    if (assumptionsValidate) {
+    if (assumptionsValidate && metavariablevalidates) {
       let validatesWhenStated = false,
           validatesWhenDerived = false;
 
@@ -228,28 +214,69 @@ export default define(class Frame extends Element {
   }
 
   validateAssumptions(assignments, stated, context) {
-    let assumptionsValidate;
+    let assumptionsValidate = false;
 
-    const frameString = this.getString(), ///
-          assumptionsString = assumptionsStringFromAssumptions(this.assumptions);
+    const singular = this.isSingular();
 
-    context.trace(`Validating the '${assumptionsString}' assumptions of the '${frameString}' frame...`);
+    if (!singular) {
+      const frameString = this.getString(), ///
+            assumptionsString = assumptionsStringFromAssumptions(this.assumptions);
 
-    stated = true;  ///
+      context.trace(`Validating the '${assumptionsString}' assumptions of the '${frameString}' frame...`);
 
-    assignments = null; ///
+      stated = true;  ///
 
-    assumptionsValidate = this.assumptions.every((assumption) => {
-      const assumptionVerifies = assumption.validate(assignments, stated, context);
+      assignments = null; ///
 
-      return assumptionVerifies;
-    });
+      assumptionsValidate = this.assumptions.every((assumption) => {
+        const assumptionVerifies = assumption.validate(assignments, stated, context);
 
-    if (assumptionsValidate) {
-      context.debug(`...validated the '${assumptionsString}' assumptions of the '${frameString}' frame.`);
+        return assumptionVerifies;
+      });
+
+      if (assumptionsValidate) {
+        context.debug(`...validated the '${assumptionsString}' assumptions of the '${frameString}' frame.`);
+      }
+    } else {
+      assumptionsValidate = true;
     }
 
     return assumptionsValidate;
+  }
+
+  validateMetavariable(assignments, stated, context) {
+    let metavariableValidates = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const frameString = this.getString(), ///
+            metavraibleString = this.metavariable.getString();
+
+      context.trace(`Validating the '${frameString}' frame's '${metavraibleString}' metavariable...`);
+
+      const metavariable = context.findMetavariable(this.metavariable);
+
+      if (metavariable !== null) {
+        const metaTypeName = FRAME_META_TYPE_NAME,
+              frameMetaType = findMetaTypeByMetaTypeName(metaTypeName),
+              metavariableValidateGivenMetaType = metavariable.validateGivenMetaType(frameMetaType, context);
+
+        if (metavariableValidateGivenMetaType) {
+          metavariableValidates = true;
+        }
+      } else {
+        context.debug(`The '${frameString}' frame's '${metavraibleString}' metavariable is not present.`);
+      }
+
+      if (metavariableValidates) {
+        context.debug(`...validated the '${frameString}' frame's '${metavraibleString}' metavariable.`);
+      }
+    } else {
+      metavariableValidates = true;
+    }
+
+    return metavariableValidates;
   }
 
   validateGivenMetaType(metaType, assignments, stated, context) {

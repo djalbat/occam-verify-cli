@@ -8,10 +8,10 @@ export default class FrameNode extends NonTerminalNode {
   isSingular() {
     let singular = false;
 
-    const singularAssumptionNode = this.getSingularAssumptionNode();
+    const metavariableNode = this.getMetavariableNode();
 
-    if (singularAssumptionNode !== null) {
-      singular = singularAssumptionNode.isSingular();
+    if (metavariableNode !== null) {
+      singular = true;
     }
 
     return singular;
@@ -29,27 +29,6 @@ export default class FrameNode extends NonTerminalNode {
     return metavariableName;
   }
 
-  getMetavariableNode() {
-    const singularMetavariableNode = this.getSingularMetavariableNode(),
-          metavariableNode = singularMetavariableNode;  ///
-
-    return metavariableNode;
-  }
-
-  getSingularMetavariableNode() {
-    let singularMetavariableNode = null;
-
-    const singularAssumptionNode = this.getSingularAssumptionNode();
-
-    if (singularAssumptionNode !== null) {
-      const metavariableNode = singularAssumptionNode.getMetavariableNode();
-
-      singularMetavariableNode = metavariableNode;  ///
-    }
-
-    return singularMetavariableNode;
-  }
-
   getAssumptionNodes() {
     const ruleName = ASSUMPTION_RULE_NAME,
           declarationNodes = this.getNodesByRuleName(ruleName);
@@ -57,18 +36,11 @@ export default class FrameNode extends NonTerminalNode {
     return declarationNodes;
   }
 
-  getMetavariableNodes() {
+  getMetavariableNode() {
     const ruleName = METAVARIABLE_RULE_NAME,
-          metavariableNodes = this.getNodesByRuleName(ruleName);
+          metavariableNode = this.getNodeByRuleName(ruleName);
 
-    return metavariableNodes;
-  }
-
-  getSingularAssumptionNode() {
-    const ruleName = ASSUMPTION_RULE_NAME,
-          singularAssumptionNode = this.getSingularNodeByRuleName(ruleName);
-
-    return singularAssumptionNode;
+    return metavariableNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(FrameNode, ruleName, childNodes, opacity, precedence); }

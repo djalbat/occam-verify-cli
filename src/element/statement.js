@@ -17,7 +17,8 @@ export default define(class Statement extends Element {
 
   isSingular() {
     const node = this.getNode(),
-          singular = node.isSingular();
+          statementNode = node, ///
+          singular = statementNode.isSingular();
 
     return singular;
   }
@@ -106,10 +107,12 @@ export default define(class Statement extends Element {
   }
 
   isEqualTo(statement) {
-    const node = this.getNode(),
-          statementNode = statement.getNode(),
-          nodeMatchesStatementNode = node.match(statementNode),
-          equalTo = nodeMatchesStatementNode; ///
+    const statementA = this, ///
+          statementB = statement, ///
+          statementANode = statementA.getNode(),
+          statementBNode = statementB.getNode(),
+          statementANodeMatchesStatementBNode = statementANode.match(statementBNode),
+          equalTo = statementANodeMatchesStatementBNode; ///
 
     return equalTo;
   }

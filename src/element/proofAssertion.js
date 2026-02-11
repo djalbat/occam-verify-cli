@@ -59,7 +59,7 @@ export default class ProofAssertion extends Element {
     statementValidates = this.statement.validate(assignments, stated, context);
 
     if (statementValidates) {
-      context.debug(`...validated the '${proofAssertionString}' proof assertion's '${statementString}' reference. `);
+      context.debug(`...validated the '${proofAssertionString}' proof assertion's '${statementString}' statement. `);
     }
 
     return statementValidates;

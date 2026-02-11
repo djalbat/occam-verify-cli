@@ -7,7 +7,7 @@ import { unifyStatementIntrinsically } from "../process/unify";
 import { referenceFromJSON, referenceToReferenceJSON } from "../utilities/json";
 
 export default define(class Assumption extends Element {
-  constructor(context, string, node, statement, reference) {
+  constructor(context, string, node, reference, statement) {
     super(context, string, node);
 
     this.statement = statement;
@@ -24,12 +24,6 @@ export default define(class Assumption extends Element {
 
   getMetavariable() { return this.reference.getMetavariable(); }
 
-  isSimple() {
-    const simple = (this.statement === null);
-
-    return simple;
-  }
-
   compareSubstitution(substitution, context) {
     let comparesToSubstituion = false;
 
@@ -38,29 +32,13 @@ export default define(class Assumption extends Element {
 
     context.trace(`Comparing the '${assumptionString}' assumption to the '${substitutionString}' substitution...`);
 
-    const simple = this.isSimple();
+    const statement = substitution.getStatement(),
+          metavariable = substitution.getMetavariable(),
+          statementEqualToStatement = this.statement.isEqualTo(statement),
+          referenceMetavariableEqualToMetavariable = this.reference.isMetavariableEqualToMetavariable(metavariable);
 
-    if (simple) {
-      const metavariable = this.reference.getMetavariable(),
-            judgement = context.findJudgementByMetavariable(metavariable);
-
-      if (judgement !== null) {
-        const assumption = judgement.getDeclaration(),
-              assumptionComaresToSubstitution = assumption.compareSubstitution(substitution, context);
-
-        if (assumptionComaresToSubstitution) {
-          comparesToSubstituion = true;
-        }
-      }
-    } else {
-      const statement = substitution.getStatement(),
-            metavariable = substitution.getMetavariable(),
-            statementEqualToStatement = this.statement.isEqualTo(statement),
-            referenceMetavariableEqualToMetavariable = this.reference.isMetavariableEqualToMetavariable(metavariable);
-
-      if (statementEqualToStatement && referenceMetavariableEqualToMetavariable) {
-        comparesToSubstituion = true;
-      }
+    if (statementEqualToStatement && referenceMetavariableEqualToMetavariable) {
+      comparesToSubstituion = true;
     }
 
     if (comparesToSubstituion) {
@@ -77,62 +55,67 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' assumption...`);
 
-    const simple = this.isSimple();
+    const referenceValidates = this.validateReference(assignments, stated, context);
 
-    if (simple) {
-      const referenceValidatesAsMetavariable = this.validateReferenceAsMetavariable(assignments, stated, context);
+    if (referenceValidates) {
+      const statementValidates = this.validateStatement(assignments, stated, context);
 
-      if (referenceValidatesAsMetavariable) {
-        validates = true;
-      }
-    } else {
-      const referenceValidates = this.reference.validate(context);
+      if (statementValidates) {
+        let validatesWhenStated = false,
+            validatesWhenDerived = false;
 
-      if (referenceValidates) {
-        const statementValidates = this.validateStatement(assignments, stated, context);
+        if (stated) {
+          validatesWhenStated = this.validateWhenStated(assignments, context);
+        } else {
+          validatesWhenDerived = this.validateWhenDerived(context);
+        }
 
-        if (statementValidates) {
-          let validatesWhenStated = false,
-              validatesWhenDerived = false;
-
-          if (stated) {
-            validatesWhenStated = this.validateWhenStated(assignments, context);
-          } else {
-            validatesWhenDerived = this.validateWhenDerived(context);
-          }
-
-          if (validatesWhenStated || validatesWhenDerived) {
-            validates = true;
-          }
+        if (validatesWhenStated || validatesWhenDerived) {
+          validates = true;
         }
       }
+    }
 
-      if (validates) {
-        context.debug(`...validated the '${assumptionString}' assumption.`);
-      }
+    if (validates) {
+      context.debug(`...validated the '${assumptionString}' assumption.`);
     }
 
     return validates;
   }
 
+  validateReference(assignments, stated, context) {
+    let referenceValidates;
+
+    const assumptionString = this.getString(),
+          referenceString = this.reference.getString();
+
+    context.trace(`Validating the '${assumptionString}' assumption's '${referenceString}' reference...`);
+
+    referenceValidates = this.reference.validate(context);
+
+    if (referenceValidates) {
+      context.debug(`...validated the '${assumptionString}' assumption's '${referenceString}' statement.`);
+    }
+
+    return referenceValidates;
+  }
+
   validateStatement(assignments, stated, context) {
-    let statementValidates = true;  ///
+    let statementValidates;
 
-    if (this.statement !== null) {
-      const assumptionString = this.getString(),
-            statementString = this.statement.getString();
+    const assumptionString = this.getString(),
+          statementString = this.statement.getString();
 
-      context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);
+    context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);
 
-      stated = true;  ///
+    stated = true;  ///
 
-      assignments = null; ///
+    assignments = null; ///
 
-      statementValidates = this.statement.validate(assignments, stated, context);
+    statementValidates = this.statement.validate(assignments, stated, context);
 
-      if (statementValidates) {
-        context.debug(`...validated the '${assumptionString}' assumption's '${statementString}' statement.`);
-      }
+    if (statementValidates) {
+      context.debug(`...validated the '${assumptionString}' assumption's '${statementString}' statement.`);
     }
 
     return statementValidates;
@@ -207,26 +190,20 @@ export default define(class Assumption extends Element {
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnifies;
 
-    const simple = this.isSimple();
+    const context = generalContext,  ///
+          statementString = statement.getString(),
+          assumptionStatementString = this.statement.getString();
 
-    if (simple) {
-      statementUnifies = false;
-    } else {
-      const context = generalContext,  ///
-            statementString = statement.getString(),
-            assumptionStatementString = this.statement.getString();
+    context.trace(`Unifying the '${statementString}' statement with the '${assumptionStatementString}' statement...`);
 
-      context.trace(`Unifying the '${statementString}' statement with the '${assumptionStatementString}' statement...`);
+    const generalStatement = this.statement,
+          specificStatement = statement,  ///
+          statementUUnifiesIntrinsically = unifyStatementIntrinsically(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
-      const generalStatement = this.statement,
-            specificStatement = statement,  ///
-            statementUUnifiesIntrinsically = unifyStatementIntrinsically(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+    statementUnifies = statementUUnifiesIntrinsically;  ///
 
-      statementUnifies = statementUUnifiesIntrinsically;  ///
-
-      if (statementUnifies) {
-        context.debug(`...unified the '${statementString}' statement with the '${assumptionStatementString}' statement.`);
-      }
+    if (statementUnifies) {
+      context.debug(`...unified the '${statementString}' statement with the '${assumptionStatementString}' statement.`);
     }
 
     return statementUnifies;
