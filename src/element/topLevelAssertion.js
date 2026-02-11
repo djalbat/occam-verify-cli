@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 import { asynchronousUtilities } from "occam-languages";
 
-import { scope, asyncAttempt } from "../utilities/context";
+import { asyncScope, asyncAttempt } from "../utilities/context";
 import { labelsFromJSON,
          deductionFromJSON,
          signatureFromJSON,
@@ -140,9 +140,7 @@ export default class TopLevelAssertion extends Element {
 
     const context = this.getContext();
 
-    await this.break(context);
-
-    scope((context) => {
+    await asyncScope(async (context) => {
       const labelsVerify = this.verifyLabels();
 
       if (labelsVerify) {
@@ -166,7 +164,7 @@ export default class TopLevelAssertion extends Element {
   }
 
   async verifySuppositions(context) {
-    const suppositionsVerify = await asyncEvery(this.suppositions, (supposition) => {
+    const suppositionsVerify = await asyncEvery(this.suppositions, async (supposition) => {
       const suppositionVerifies = await this.verifySupposition(supposition, context);
 
       if (suppositionVerifies) {
@@ -193,7 +191,7 @@ export default class TopLevelAssertion extends Element {
     let proofVerifies = true; ///
 
     if (this.proof !== null) {
-      proofVerifies = asyncAttempt((context) => {
+      proofVerifies = await asyncAttempt(async (context) => {
         const proofVerifies = await this.proof.verify(this.deduction, context);
 
         return proofVerifies;

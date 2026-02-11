@@ -8,8 +8,11 @@ export default define(class Lemma extends TopLevelAssertion {
   async verify() {
     let verifies;
 
-    const context = this.getContext(),
-          lemmaString = this.getString(); ///
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const lemmaString = this.getString(); ///
 
     (lemmaString === null) ?
       context.trace(`Verifying a lemma...`) :

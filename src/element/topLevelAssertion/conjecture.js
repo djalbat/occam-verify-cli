@@ -8,8 +8,11 @@ export default define(class Conjecture extends TopLevelAssertion {
   async verify() {
     let verifies;
 
-    const context = this.getContext(),
-          conjectureString = this.getString();  ///
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const conjectureString = this.getString();  ///
 
     context.trace(`Verifying the '${conjectureString}' conjecture...`);
 

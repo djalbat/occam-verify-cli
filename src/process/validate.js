@@ -17,7 +17,7 @@ class TermPass extends ForwardPass {
 
     const nonTerminalNode = statementNode,  ///
           childNodes = nonTerminalNode.getChildNodes(), ///
-          descended = this.descend(childNodes,context);
+          descended = this.descend(childNodes, context);
 
     if (descended) {
       success = true;
@@ -76,7 +76,7 @@ class StatementPass extends ForwardPass {
 
     const nonTerminalNode = statementNode,  ///
           childNodes = nonTerminalNode.getChildNodes(), ///
-          descended = this.descend(childNodes,context);
+          descended = this.descend(childNodes, context);
 
     if (descended) {
       success = true;

@@ -235,8 +235,11 @@ export default define(class Axiom extends TopLevelAssertion {
   async verify() {
     let verifies;
 
-    const context = this.getContext(),
-          axiomString = this.getString(); ///
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const axiomString = this.getString(); ///
 
     context.trace(`Verifying the '${axiomString}' axiom...`);
 

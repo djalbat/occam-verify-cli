@@ -1,9 +1,7 @@
 "use strict";
 
 import { ruleFromRuleName } from "../utilities/bnf";
-import { TERM_RULE_NAME,
-         REFERENCE_RULE_NAME,
-         STATEMENT_RULE_NAME,
+import { REFERENCE_RULE_NAME,
          COMBINATOR_RULE_NAME,
          CONSTRUCTOR_RULE_NAME,
          EQUIVALENCE_RULE_NAME,
@@ -12,9 +10,7 @@ import { TERM_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME,
          REFERENCE_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
-const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
-      referencePlaceholderRule = ruleFromRuleName(REFERENCE_RULE_NAME),
-      statementPlaceholderRule = ruleFromRuleName(STATEMENT_RULE_NAME),
+const referencePlaceholderRule = ruleFromRuleName(REFERENCE_RULE_NAME),
       combinatorPlaceholderRule = ruleFromRuleName(COMBINATOR_RULE_NAME),
       constructorPlaceholderRule = ruleFromRuleName(CONSTRUCTOR_RULE_NAME),
       equivalencePlaceholderRule = ruleFromRuleName(EQUIVALENCE_RULE_NAME),
@@ -23,11 +19,7 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       statementSubstitutionPlaceholderRule = ruleFromRuleName(STATEMENT_SUBSTITUTION_RULE_NAME),
       referenceSubstitutionPlaceholderRule = ruleFromRuleName(REFERENCE_SUBSTITUTION_RULE_NAME);
 
-export function instantiateTerm(string, context) { return instantiate(termPlaceholderRule, string, context); }
-
 export function instantiateReference(string, context) { return instantiate(referencePlaceholderRule, string, context); }
-
-export function instantiateStatement(string, context) { return instantiate(statementPlaceholderRule, string, context); }
 
 export function instantiateCombinator(string, context) { return instantiate(combinatorPlaceholderRule, string, context); }
 

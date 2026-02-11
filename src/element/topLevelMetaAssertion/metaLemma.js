@@ -8,8 +8,11 @@ export default define(class MetaLemma extends TopLevelMetaAssertion {
   async verify() {
     let verifies;
 
-    const context = this.getContext(),
-          metaLemmaString = this.getString(); ///
+    const context = this.getContext();
+
+    this.break(context);
+
+    const metaLemmaString = this.getString(); ///
 
     context.trace(`Verifying the '${metaLemmaString}' meta-lemma...`);
 

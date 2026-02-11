@@ -8,8 +8,11 @@ export default define(class Theorem extends TopLevelAssertion {
   async verify() {
     let verifies;
 
-    const context = this.getContext(),
-          theoremString = this.getString();  ///
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const theoremString = this.getString();  ///
 
     context.trace(`Verifying the '${theoremString}' theorem...`);
 

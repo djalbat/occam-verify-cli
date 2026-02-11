@@ -52,3 +52,12 @@ export async function asyncAttempt(innerFunction, context) {
 
   return await innerFunction(context);
 }
+
+export async function asyncScope(innerFunction, context) {
+  const scopedContext = ScopedContext.fromNothing(context);
+
+  context = scopedContext;  ///
+
+  return await innerFunction(context);
+}
+

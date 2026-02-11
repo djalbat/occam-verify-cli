@@ -1,14 +1,18 @@
 "use strict";
 
-export function judgementAssignmentFromJudgement(judgement) {
+export function variableAssignmentFromVariable(variable) {
   return function (context) {
-    const judgementString = judgement.getString(),
-          judgementAdded = context.addJudgement(judgement),
-          assigned = judgementAdded; ///
+    const nested = false;
+
+    context.addVariable(variable, nested);
+
+    const variableTypeString = variable.getTypeString(),
+          variableString = variable.getString(),
+          assigned = true;
 
     assigned ?
-      context.trace(`Assigned the '${judgementString}' judgement.`) :
-        context.debug(`Unable to assign the '${judgementString}' judgement.`);
+      context.trace(`Assigned the '${variableString}' variable with type '${variableTypeString}'.`) :
+        context.debug(`Unable to assign the '${variableString}' variable with type '${variableTypeString}'.`);
 
     return assigned;
   };
@@ -28,19 +32,15 @@ export function equalityAssignmentFromEquality(equality) {
   };
 }
 
-export function variableAssignmentFromVariable(variable) {
+export function judgementAssignmentFromJudgement(judgement) {
   return function (context) {
-    const nested = false;
-
-    context.addVariable(variable, nested);
-
-    const variableTypeString = variable.getTypeString(),
-          variableString = variable.getString(),
-          assigned = true;
+    const judgementString = judgement.getString(),
+          judgementAdded = context.addJudgement(judgement),
+          assigned = judgementAdded; ///
 
     assigned ?
-      context.trace(`Assigned the '${variableString}' variable with type '${variableTypeString}'.`) :
-        context.debug(`Unable to assign the '${variableString}' variable with type '${variableTypeString}'.`);
+      context.trace(`Assigned the '${judgementString}' judgement.`) :
+        context.debug(`Unable to assign the '${judgementString}' judgement.`);
 
     return assigned;
   };
