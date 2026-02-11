@@ -44,6 +44,8 @@ export default define(class MetavariableDeclaration extends Declaration {
         const metavariableTypeVerified = this.verifyMetavariableType();
 
         if (metavariableTypeVerified) {
+          this.metavariable.setMetaType(this.metaType);
+
           metavariableVerifies = true;
         }
       }

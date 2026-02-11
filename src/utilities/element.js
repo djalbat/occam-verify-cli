@@ -975,8 +975,13 @@ export function statementFromConclusionNode(conclusinoNode, context) {
 }
 
 export function statementFromAssumptionNode(assumptionNode, context) {
-  const statementNode = assumptionNode.getStatementNode(),
-        statement = statementFromStatementNode(statementNode, context);
+  let statement;
+
+  const statementNode = assumptionNode.getStatementNode();
+
+  if (statementNode !== null) {
+    statement = statementFromStatementNode(statementNode, context);
+  }
 
   return statement;
 }

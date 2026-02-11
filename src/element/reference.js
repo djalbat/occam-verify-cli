@@ -57,26 +57,30 @@ export default define(class Reference extends Element {
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchNode(metavariableNode); }
 
   validate(context) {
-    let validate = false;
+    let validates = false;
 
     const referenceString = this.getString(); ///
 
     context.trace(`Validating the '${referenceString}' reference...`);
 
-    if (!validate) {
+    if (!validates) {
       const metavariableValidates = this.validateMetavariable(context);
 
-      validate = metavariableValidates; ///
+      if (metavariableValidates) {
+        validates = true;
+      }
     }
 
-    if (!validate) {
+    if (!validates) {
       const reference = this, ///
             labelPresent = context.isLabelPresentByReference(reference);
 
-      validate = labelPresent;  ///
+      if (labelPresent) {
+        validates = true; ///
+      }
     }
 
-    if (validate) {
+    if (validates) {
       const reference = this; ///
 
       context.addReference(reference);
@@ -84,19 +88,30 @@ export default define(class Reference extends Element {
       context.debug(`...validated the '${referenceString}' reference.`);
     }
 
-    return validate;
+    return validates;
   }
 
   validateMetavariable(context) {
     let metavariableValidates = false;
 
+    const referenceString = this.getString(),
+          metavariableString = this.metavariable.getString();
+
+    context.trace(`Validating the '${referenceString}' reference's '${metavariableString}' metavariable....'`);
+
     const metaTypeName = REFERENCE_META_TYPE_NAME,
           referenceMetaType = findMetaTypeByMetaTypeName(metaTypeName),
           metaType = referenceMetaType, ///
-          metavariableValidatesGivenMetaType = this.metavariable.validateGivenMetaType(metaType, context);
+          metavariable = context.findMetavariable(this.metavariable);
 
-    if (metavariableValidatesGivenMetaType) {
-      metavariableValidates = true;
+    if (metavariable !== null) {
+      const metavariableValidatesGivenMetaType = metavariable.validateGivenMetaType(metaType, context);
+
+      if (metavariableValidatesGivenMetaType) {
+        metavariableValidates = true;
+      }
+    } else {
+      context.debug(`The '${metavariableString}' metavariable is not present.`);
     }
 
     return metavariableValidates;

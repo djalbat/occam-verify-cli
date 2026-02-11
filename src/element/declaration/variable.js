@@ -80,6 +80,8 @@ export default define(class VariableDeclaration extends Declaration {
 
       context.debug(`The '${variableIdentifier}' variable is already present.`);
     } else {
+      this.variable.setType(this.type);
+
       variableVerifies = true;
     }
 
