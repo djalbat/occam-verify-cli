@@ -75,6 +75,15 @@ export default define(class Term extends Element {
     return variableIdentifier;
   }
 
+  isEqualTo(term) {
+    const node = this.getNode(),
+          termNode = term.getNode(),
+          nodeMatchesTermNode = node.match(termNode),
+          equalTo = nodeMatchesTermNode; ///
+
+    return equalTo;
+  }
+
   compareParameter(parameter) {
     let comparesToParamter = false;
 

@@ -105,6 +105,15 @@ export default define(class Statement extends Element {
     return metavariableEqualToMetavariable;
   }
 
+  isEqualTo(statement) {
+    const node = this.getNode(),
+          statementNode = statement.getNode(),
+          nodeMatchesStatementNode = node.match(statementNode),
+          equalTo = nodeMatchesStatementNode; ///
+
+    return equalTo;
+  }
+
   compareParameter(parameter) {
     let comparesToParamter = false;
 

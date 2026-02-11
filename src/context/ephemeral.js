@@ -108,7 +108,7 @@ export default class EphemeralContext extends Context {
 
     extract(this.assertions, (assertion) => {
       const assertionB = assertion, ///
-        assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
+            assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
 
       if (assertionAEqualToAssertionB) {
         return true;
