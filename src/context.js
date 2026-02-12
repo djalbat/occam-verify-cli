@@ -24,9 +24,24 @@ export default class Context extends ContextBase {
     return combinators;
   }
 
+  findMetavariable(metavariable) {
+    const context = this.getContext();
+
+    metavariable = context.findMetavariable(metavariable);  ///
+
+    return metavariable;
+  }
+
+  isMetavariablePresentByReference(reference) {
+    const context = this.getContext(),
+          metavariablePresent = context.isMetavariablePresentByReference(reference);  ///
+
+    return metavariablePresent;
+  }
+
   findProcedureByName(name) {
     const context = this.getContext(),
-          procedure = context.findProcedureByName(name);
+      procedure = context.findProcedureByName(name);
 
     return procedure;
   }
@@ -43,6 +58,12 @@ export default class Context extends ContextBase {
           metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
     return metavariable;
+  }
+
+  addJudgement(judgement) {
+    const context = this.getContext();
+
+    context.addJudgement(judgement);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {
