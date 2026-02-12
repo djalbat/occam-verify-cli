@@ -1,10 +1,10 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { Context, contextUtilities } from "occam-languages";
 
-const { extract } = arrayUtilities,
-      { chainContext } = contextUtilities;
+import Context from "../context";
+
+const { extract } = arrayUtilities;
 
 export default class EphemeralContext extends Context {
   constructor(context, terms, frames, statements, assertions, references, substitutions) {
@@ -16,8 +16,6 @@ export default class EphemeralContext extends Context {
     this.assertions = assertions;
     this.references = references;
     this.substitutions = substitutions;
-
-    return chainContext(this);
   }
 
   getTerms() {

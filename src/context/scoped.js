@@ -1,12 +1,11 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { Context, contextUtilities } from "occam-languages";
 
+import Context from "../context";
 import elements from "../elements";
 
-const { last } = arrayUtilities,
-      { chainContext } = contextUtilities;
+const { last } = arrayUtilities;
 
 class ScopedContext extends Context {
   constructor(context, variables, judgements, equivalences, subproofOrProofAssertions) {
@@ -16,8 +15,6 @@ class ScopedContext extends Context {
     this.judgements = judgements;
     this.equivalences = equivalences;
     this.subproofOrProofAssertions = subproofOrProofAssertions;
-
-    return chainContext(this);
   }
 
   getVariables(nested = true) {

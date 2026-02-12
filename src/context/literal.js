@@ -1,16 +1,12 @@
 "use strict";
 
-import { Context, contextUtilities } from "occam-languages";
-
-const { chainContext } = contextUtilities;
+import Context from "../context";
 
 export default class LiteralContext extends Context {
   constructor(context, tokens) {
     super(context);
 
     this.tokens = tokens;
-
-    return chainContext(this);
   }
 
   getTokens() {

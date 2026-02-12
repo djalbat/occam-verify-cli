@@ -4,7 +4,6 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { synthetically } from "../utilities/context";
 import { signatureStringFromTerms } from "../utilities/string";
 import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
 
@@ -63,11 +62,13 @@ export default define(class Signature extends Element {
                     termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
 
               if (termTypeEqualToOrSubTypeOfVariableType) {
-                synthetically((context) => {
-                  const { TermSubstitution } = elements;
+                debugger
 
-                  TermSubstitution.fromTermAndVariable(term, variable, context);
-                });
+                // synthetically((context) => {
+                //   const { TermSubstitution } = elements;
+                //
+                //   TermSubstitution.fromTermAndVariable(term, variable, context);
+                // });
 
                 return true;
               }

@@ -4,7 +4,7 @@ import ProofAssertion from "../proofAssertion";
 import assignAssignments from "../../process/assign";
 
 import { define } from "../../elements";
-import { attempt, synthetically } from "../../utilities/context";
+import { attempt } from "../../utilities/context";
 import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
 
 export default define(class Supposition extends ProofAssertion {
@@ -174,13 +174,15 @@ export default define(class Supposition extends ProofAssertion {
 
     context = specificContext;  ///
 
-    const proofAssertionContext = proofAssertion.getContext(),
-          statementUnifies = synthetically((specificContext) => {
-            const statement = proofAssertion.getStatement(),
-                  statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+    debugger
 
-            return statementUnifies;
-          }, specificContext, proofAssertionContext);
+    // const proofAssertionContext = proofAssertion.getContext(),
+    //       statementUnifies = synthetically((specificContext) => {
+    //         const statement = proofAssertion.getStatement(),
+    //               statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+    //
+    //         return statementUnifies;
+    //       }, specificContext, proofAssertionContext);
 
     if (statementUnifies) {
       proofAssertionUnifies = true;

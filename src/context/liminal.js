@@ -1,19 +1,17 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { Context, contextUtilities } from "occam-languages";
 import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
-const { compress } = arrayUtilities,
-      { chainContext } = contextUtilities;
+import Context from "../context";
+
+const { compress } = arrayUtilities;
 
 export default class LiminalContext extends Context {
   constructor(context, substitutions) {
     super(context);
 
     this.substitutions = substitutions;
-
-    return chainContext(this);
   }
 
   getSubstitutions() {

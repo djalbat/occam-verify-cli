@@ -1,8 +1,9 @@
 "use strict";
 
-import { Context, nodeUtilities } from "occam-languages";
+import { nodeUtilities } from "occam-languages";
 import { lexersUtilities, parsersUtilities } from "occam-nominal";
 
+import Context from "../context";
 import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
 

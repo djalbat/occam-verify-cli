@@ -4,7 +4,6 @@ import { arrayUtilities } from "necessary";
 
 import elements from "../elements";
 
-import { synthetically } from "../utilities/context";
 import { equalityFromStatement,
          judgementFromStatement,
          typeAssertionFromStatement,
@@ -55,12 +54,14 @@ function unifyStatementWithReference(statement, reference, satisfiesAssertion, c
     if (metavariableValidates) {
       const metavariable = reference.getMetavariable();
 
-      synthetically((context) => {
-        const { StatementSubstitution } = elements;
+      debugger
 
-        StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
-
-      }, generalContext, specificContext);
+      // synthetically((context) => {
+      //   const { StatementSubstitution } = elements;
+      //
+      //   StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+      //
+      // }, generalContext, specificContext);
 
       statementUnifiesWithReference = true;
     }
@@ -157,12 +158,14 @@ function unifyStatementWithTopLevelAssertion(statement, reference, satisfiesAsse
       if (statementAndSubproofOrProofAssertionsUnify) {
         const metavariable = reference.getMetavariable();
 
-        synthetically((context) => {
-          const { StatementSubstitution } = elements;
+        debugger
 
-          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
-
-        }, generalContext, specificContext);
+        // synthetically((context) => {
+        //   const { StatementSubstitution } = elements;
+        //
+        //   StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+        //
+        // }, generalContext, specificContext);
 
         statementUnifiesWithTopLevelAssertion = true;
       }

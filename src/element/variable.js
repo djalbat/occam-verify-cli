@@ -3,7 +3,6 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { synthetically } from "../utilities/context";
 import { typeToTypeJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {
