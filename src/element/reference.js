@@ -225,9 +225,8 @@ export default define(class Reference extends Element {
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference...`);
 
-    const { Substitutions } = elements,
-          label = topLevelMetaAssertion.getLabel(),
-          substitutions = Substitutions.fromNothing(context),
+    const label = topLevelMetaAssertion.getLabel(),
+          substitutions = [],
           labelUnifies = this.unifyLabel(label, substitutions, context);
 
     topLevelMetaAssertionUnifies = labelUnifies;  ///

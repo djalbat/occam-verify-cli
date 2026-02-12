@@ -6,7 +6,6 @@ import elements from "../elements";
 
 import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
-import { synthetically } from "../utilities/context";
 import { typeToTypeJSON } from "../utilities/json";
 import { metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
@@ -103,7 +102,7 @@ export default define(class Metavariable extends Element {
     return validatesGivenMetaType;
   }
 
-  unifyFrame(frame, substitutions, generalContext, specificContext) {
+  unifyFrame(frame, generalContext, specificContext) {
     let frameUnifies = false;
 
     const context = specificContext,  ///
@@ -112,30 +111,27 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
-    const frameMetavariableUnifies = this.unifyFrameMetavariable(frame, substitutions, generalContext, specificContext);
+    const metavariable = this, ///
+          frameMetavariableUnifies = this.unifyFrameMetavariable(frame, generalContext, specificContext);
 
     if (frameMetavariableUnifies) {
       frameUnifies = true;
     } else {
-      const metavariable = this, ///
-            simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariable(metavariable);
+      const simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable);
 
-      if (simpleSubstitutionPresent) {
-        const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable),
-              substitution = simpleSubstitution,  ///
+      if (simpleSubstitution !== null) {
+        const substitution = simpleSubstitution,  ///
               substitutionFrameEqualToFrame = substitution.isFrameEqualToFrame(frame);
 
         if (substitutionFrameEqualToFrame) {
           frameUnifies = true;
         }
       } else {
-        const metavariable = this;  ///
+        const { FrameSubstitution } = elements,
+              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
+              substitution = frameSubstitution; ///
 
-        synthetically((context) => {
-          const { FrameSubstitution } = elements;
-
-          FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
-        }, generalContext, specificContext);
+        context.addSubstitution(substitution);
 
         frameUnifies = true;
       }
@@ -148,7 +144,7 @@ export default define(class Metavariable extends Element {
     return frameUnifies;
   }
 
-  unifyStatement(statement, substitution, substitutions, generalContext, specificContext) {
+  unifyStatement(statement, substitution, generalContext, specificContext) {
     let statementUnifies = false;
 
     const context = specificContext,  ///
@@ -160,17 +156,17 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
-    const statementMetavariableUnifies = this.unifyStatementMetavariable(statement, substitutions, generalContext, specificContext);
+    const metavariable = this, ///
+          statementMetavariableUnifies = this.unifyStatementMetavariable(statement, generalContext, specificContext);
 
     if (statementMetavariableUnifies) {
       statementUnifies = true;
     } else {
       const context = specificContext,  ///
-            metavariable = this, ///
-            substitutionPresent = substitutions.isSubstitutionPresentByMetavariableAndSubstitution(metavariable, substitution);
+            substitutionPresent = context.isSubstitutionPresentByMetavariableAndSubstitution(metavariable, substitution);
 
       if (substitutionPresent) {
-        substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
+        substitution = context.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
 
         const substitutionComparesToStatement = substitution.compareStatement(statement, context);
 
@@ -178,16 +174,14 @@ export default define(class Metavariable extends Element {
           statementUnifies = true;
         }
       } else {
-        const metavariable = this;  ///
+        const { StatementSubstitution } = elements,
+              statementSubstitution = (substitution !== null) ?
+                                        StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
+                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
 
-        synthetically((context) => {
-          const { StatementSubstitution } = elements;
+        substitution = statementSubstitution; ///
 
-          (substitution !== null) ?
-            StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
-              StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
-
-        }, generalContext, specificContext);
+        context.addSubstitution(substitution);
 
         statementUnifies = true;
       }
@@ -209,13 +203,13 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Unifying the '${referenceString}' reference with the '${metavariableString}' metavariable...`);
 
-    const referenceMetavariableUnifies = this.unifyReferenceMetavariable(reference, substitutions, generalContext, specificContext);
+    const metavariable = this, ///
+          referenceMetavariableUnifies = this.unifyReferenceMetavariable(reference, substitutions, generalContext, specificContext);
 
     if (referenceMetavariableUnifies) {
       referenceUnifies = true;
     } else {
-      const metavariable = this, ///
-            simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariable(metavariable);
+      const simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariable(metavariable);
 
       if (simpleSubstitutionPresent) {
         const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable), ///
@@ -226,13 +220,11 @@ export default define(class Metavariable extends Element {
           referenceUnifies = true;
         }
       } else {
-        const metavariable = this;  ///
+        const { ReferenceSubstitution } = elements,
+              referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
+              substitution = referenceSubstitution; ///
 
-        synthetically((context) => {
-          const { ReferenceSubstitution } = elements;
-
-          ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
-        }, generalContext, specificContext);
+        context.addSubstitution(substitution);
 
         referenceUnifies = true;
       }
@@ -272,7 +264,7 @@ export default define(class Metavariable extends Element {
     return metavariableUnifies;
   }
 
-  unifyFrameMetavariable(frame, substitutions, generalContext, specificContext) {
+  unifyFrameMetavariable(frame, generalContext, specificContext) {
     let frameMetavariableUnifies = false;
 
     const context = specificContext,  ///
@@ -312,7 +304,7 @@ export default define(class Metavariable extends Element {
     return frameMetavariableUnifies;
   }
 
-  unifyStatementMetavariable(statement, substitutions, generalContext, specificContext) {
+  unifyStatementMetavariable(statement, generalContext, specificContext) {
     let statementMetavariableUnifies = false;
 
     const context = specificContext,  ///
@@ -338,7 +330,7 @@ export default define(class Metavariable extends Element {
 
           const generalMetavariable = this, ///
                 specificMetavariable = statementMetavariable, ///
-                metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
+                metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
 
           statementMetavariableUnifies = metavariableUnifiesIntrinsically; ///
 

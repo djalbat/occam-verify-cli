@@ -214,7 +214,7 @@ export default define(class Frame extends Element {
   }
 
   validateAssumptions(assignments, stated, context) {
-    let assumptionsValidate = false;
+    let assumptionsValidate;
 
     const singular = this.isSingular();
 

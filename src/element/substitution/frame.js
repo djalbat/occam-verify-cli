@@ -149,8 +149,6 @@ export default define(class FrameSubstitution extends Substitution {
             frameSubstitutionNode = instantiateFrameSubstitution(string, context),
             frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
 
-      frameSubstitution.validate(context);
-
       return frameSubstitution;
     }, context);
   }

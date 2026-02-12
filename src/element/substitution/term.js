@@ -156,8 +156,6 @@ export default define(class TermSubstitution extends Substitution {
             termSubstitutionNode = instantiateTermSubstitution(string, context),
             termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
 
-      termSubstitution.validate(context);
-
       return termSubstitution;
     }, context);
   }

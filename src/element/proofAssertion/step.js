@@ -1,6 +1,5 @@
 "use strict";
 
-import elements from "../../elements";
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
@@ -167,9 +166,8 @@ export default define(class Step extends ProofAssertion {
           axiom = context.findAxiomByReference(reference);
 
     if (axiom !== null) {
-      const { Substitutions } = elements,
-            step = this,  ///
-            substitutions = Substitutions.fromNothing(context),
+      const step = this,  ///
+            substitutions = [],
             stepUnifies = axiom.unifyStep(step, substitutions, context);
 
       if (stepUnifies) {

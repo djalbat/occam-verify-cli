@@ -226,7 +226,7 @@ export default define(class Statement extends Element {
     return subproofUnifies;
   }
 
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
+  unifyStatement(statement, generalContext, specificContext) {
     let statementUnifies;
 
     const context = specificContext,  ///
@@ -237,7 +237,7 @@ export default define(class Statement extends Element {
 
     context.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
 
-    statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+    statementUnifies = unifyStatement(generalStatement, specificStatement, generalContext, specificContext);
 
     if (statementUnifies) {
       context.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`);

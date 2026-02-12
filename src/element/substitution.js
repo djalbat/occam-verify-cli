@@ -50,6 +50,17 @@ export default class Substitution extends Element {
     return metavariableEqualToMetavariable;
   }
 
+  isEqualTo(substitution) {
+    const substitutionA = this, ///
+          substitutionB = substitution, ///
+          substitutionANode = substitutionA.getNode(),
+          substitutionBNode = substitutionB.getNode(),
+          substitutionANodeMatchesSubstitutionBNode = substitutionANode.match(substitutionBNode),
+          equalTo = substitutionANodeMatchesSubstitutionBNode; ///
+
+    return equalTo;
+  }
+
   compareTerm(term, context) {
     const comparesToTerm = false;
 

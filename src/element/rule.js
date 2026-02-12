@@ -3,8 +3,6 @@
 import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
-import elements from "../elements";
-
 import { scope } from "../utilities/context";
 import { define } from "../elements";
 import { labelsFromJSON,
@@ -97,8 +95,7 @@ export default define(class Rule extends Element {
     if (this.proof === null) {
       proofVerifies = true;
     } else {
-      const { Substitutions } = elements,
-            substitutions = Substitutions.fromNothing(context);
+      const substitutions = [];
 
       proofVerifies = this.proof.verify(substitutions, this.conclusion, context);
     }
@@ -106,13 +103,23 @@ export default define(class Rule extends Element {
     return proofVerifies;
   }
 
-  unifyStatementWithConclusion(statement, substitutions, context) {
+  unifyStatementWithConclusion(statement, context) {
     let statementUnifiesWithConclusion = false;
 
-    const statementUnifies = this.conclusion.unifyStatement(statement, substitutions, context);
+    const ruleString = this.getString(),
+          statementString = statement.getString(),
+          conclusionString = this.conclusion.getString();
+
+    context.trace(`Unifying the '${statementString}' statement with the '${ruleString}' rule's '${conclusionString}' conclusion...`);
+
+    const statementUnifies = this.conclusion.unifyStatement(statement, context);
 
     if (statementUnifies) {
       statementUnifiesWithConclusion = true;
+    }
+
+    if (statementUnifiesWithConclusion) {
+      context.debug(`...unified the '${statementString}' statement with the '${ruleString}' rule's '${conclusionString}' conclusion.`);
     }
 
     return statementUnifiesWithConclusion;
@@ -121,15 +128,13 @@ export default define(class Rule extends Element {
   unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context) {
     let statementAndSubproofOrProofAssertionsUnify = false;
 
-    const { Substitutions } = elements,
-          substitutions = Substitutions.fromNothing(context),
-          statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, context);
+    const statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, context);
 
     if (statementUnifiesWithConclusion) {
-      const subproofOrProofAssertionsUnifiesWithPremises = this.unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, substitutions, context);
+      const subproofOrProofAssertionsUnifiesWithPremises = this.unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context);
 
       if (subproofOrProofAssertionsUnifiesWithPremises) {
-        const substitutionsResolved = substitutions.areResolved();
+        const substitutionsResolved = context.areSubstitutionsResolved();
 
         if (substitutionsResolved) {
           statementAndSubproofOrProofAssertionsUnify = true;
@@ -140,12 +145,12 @@ export default define(class Rule extends Element {
     return statementAndSubproofOrProofAssertionsUnify;
   }
 
-  unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, substitutions, context) {
+  unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context) {
     let subproofOrProofAssertionsUnifiesWithPremise = false;
 
     if (!subproofOrProofAssertionsUnifiesWithPremise) {
       const subproofOrProofAssertion = extract(subproofOrProofAssertions, (subproofOrProofAssertion) => {
-        const subproofOrProofAssertionUnifies = premise.unifySubproofOrProofAssertion(subproofOrProofAssertion, substitutions, context);
+        const subproofOrProofAssertionUnifies = premise.unifySubproofOrProofAssertion(subproofOrProofAssertion, context);
 
         if (subproofOrProofAssertionUnifies) {
           return true;
@@ -158,7 +163,7 @@ export default define(class Rule extends Element {
     }
 
     if (!subproofOrProofAssertionsUnifiesWithPremise) {
-      const premiseUnifiesIndependently = premise.unifyIndependently(substitutions, context);
+      const premiseUnifiesIndependently = premise.unifyIndependently(context);
 
       if (premiseUnifiesIndependently) {
         subproofOrProofAssertionsUnifiesWithPremise = true;
@@ -168,11 +173,13 @@ export default define(class Rule extends Element {
     return subproofOrProofAssertionsUnifiesWithPremise;
   }
 
-  unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, substitutions, context) {
+  unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context) {
+    let subproofOrProofAssertionsUnifiesWithPremises;
+
     subproofOrProofAssertions = reverse(subproofOrProofAssertions); ///
 
-    const subproofOrProofAssertionsUnifiesWithPremises = backwardsEvery(this.premises, (premise) => {
-      const stepUnifiesWithPremise = this.unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, substitutions, context);
+    subproofOrProofAssertionsUnifiesWithPremises = backwardsEvery(this.premises, (premise) => {
+      const stepUnifiesWithPremise = this.unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context);
 
       if (stepUnifiesWithPremise) {
         return true;

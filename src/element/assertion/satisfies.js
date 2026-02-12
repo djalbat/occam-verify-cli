@@ -1,6 +1,5 @@
 "use strict";
 
-import elements from "../../elements";
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
@@ -94,16 +93,14 @@ export default define(class SatisfiesAssertion extends Assertion {
     if (satisfiable) {
       let substitutions;
 
-      const { Substitutions } = elements;
-
-      substitutions = Substitutions.fromNothing(context);
+      substitutions = [];
 
       const axiomComparesToSignature = axiom.compareSignature(this.signature, substitutions, context);
 
       if (axiomComparesToSignature) {
         const substitutionsB = substitutions; ///
 
-        substitutions = Substitutions.fromNothing(context);
+        substitutions = [];
 
         statementUnifies = axiom.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 

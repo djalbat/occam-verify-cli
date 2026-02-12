@@ -47,7 +47,7 @@ export  default define(class Conclusion extends Element {
     return verifies;
   }
 
-  unifyStatement(statement, substitutions, context) {
+  unifyStatement(statement, context) {
     let statementUnifies;
 
     const statementString = statement.getString(),
@@ -63,7 +63,7 @@ export  default define(class Conclusion extends Element {
 
     context = specificContext;  ///
 
-    statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    statementUnifies = this.statement.unifyStatement(statement, generalContext, specificContext);
 
     if (statementUnifies) {
       context.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);

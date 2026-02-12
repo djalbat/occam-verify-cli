@@ -136,8 +136,6 @@ export default define(class ReferenceSubstitution extends Substitution {
             referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
             referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
 
-      referenceSubstitution.validate(context);
-
       return referenceSubstitution;
     }, context);
   }

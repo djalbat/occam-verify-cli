@@ -13,16 +13,16 @@ const typeNodeQuery = nodeQuery("/type"),
       metaTypeNodeQuery = nodeQuery("/metaType"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
+      frameAMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
-      assumptionMetavariableNodeQuery = nodeQuery("/assumption/metavariable!"),
-      frameAssumptionMetavariableNodeQuery = nodeQuery("/frame/assumption!/metavariable!");
+      assumptionMetavariableNodeQuery = nodeQuery("/assumption/metavariable!");
 
 class MetaLevelPass extends ZipPass {
   static maps = [
     {
       generalNodeQuery: assumptionMetavariableNodeQuery,
       specificNodeQuery: assumptionMetavariableNodeQuery,
-      run: (generalAssumptionMetavariableNode, specificAssumptionMetavariableNode, substitutions, generalContext, specificContext) => {
+      run: (generalAssumptionMetavariableNode, specificAssumptionMetavariableNode, generalContext, specificContext) => {
         let success = false;
 
         let context,
@@ -40,7 +40,7 @@ class MetaLevelPass extends ZipPass {
         metavariableNode = specificAssumptionMetavariableNode; ///
 
         const reference = context.findReferenceByMetavariableNode(metavariableNode),
-              referenceUnifies = metavariable.unifyReference(reference, substitutions, generalContext, specificContext);
+              referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
 
         if (referenceUnifies) {
           success = true;
@@ -52,7 +52,7 @@ class MetaLevelPass extends ZipPass {
     {
       generalNodeQuery: statementMetavariableNodeQuery,
       specificNodeQuery: statementNodeQuery,
-      run: (generalStatementMetavariableNode, specificStatementNode, substitutions, generalContext, specificContext) => {
+      run: (generalStatementMetavariableNode, specificStatementNode, generalContext, specificContext) => {
         let success = false;
 
         let context,
@@ -79,7 +79,7 @@ class MetaLevelPass extends ZipPass {
         statementNode = specificStatementNode;  ///
 
         const statement = context.findStatementByStatementNode(statementNode),
-              statementUnifies = metavariable.unifyStatement(statement, substitution, substitutions, generalContext, specificContext);
+              statementUnifies = metavariable.unifyStatement(statement, substitution, generalContext, specificContext);
 
         if (statementUnifies) {
           success = true;
@@ -89,13 +89,13 @@ class MetaLevelPass extends ZipPass {
       }
     },
     {
-      generalNodeQuery: frameAssumptionMetavariableNodeQuery,
+      generalNodeQuery: frameAMetavariableNodeQuery,
       specificNodeQuery: frameNodeQuery,
-      run: (generalFrameAssumptionMetavariableNode, specificFrameNode, substitutions, generalContext, specificContext) => {
+      run: (generalFrameMetavariableNode, specificFrameNode, generalContext, specificContext) => {
         let success = false;
 
         const frameNode = specificFrameNode, ///
-              metavariableNode = generalFrameAssumptionMetavariableNode,  ///
+              metavariableNode = generalFrameMetavariableNode,  ///
               metavariableName = metavariableNode.getMetavariableName();
 
         let context;
@@ -107,7 +107,7 @@ class MetaLevelPass extends ZipPass {
         context = specificContext;  ///
 
         const frame = context.findFrameByFrameNode(frameNode),
-              frameUnifies = metavariable.unifyFrame(frame, substitutions, generalContext, specificContext);
+              frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
 
         if (frameUnifies) {
           success = true;
@@ -119,7 +119,7 @@ class MetaLevelPass extends ZipPass {
     {
       generalNodeQuery: termVariableNodeQuery,
       specificNodeQuery: termNodeQuery,
-      run: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
+      run: (generalTermVariableNode, specificTermNode, generalContext, specificContext) => {
         let success = false;
 
         const termNode = specificTermNode, ///
@@ -135,7 +135,7 @@ class MetaLevelPass extends ZipPass {
         context = specificContext;  ///
 
         const term = context.findTermByTermNode(termNode),
-              termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
+              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
 
         if (termUnifies) {
           success = true;
@@ -338,14 +338,14 @@ const metaLevelPass = new MetaLevelPass(),
       metavariablePass = new MetavariablePass(),
       intrinsicLevelPass = new IntrinsicLevelPass();
 
-export function unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext) {
+export function unifyStatement(generalStatement, specificStatement, generalContext, specificContext) {
   let statementUnifies = false;
 
   const generalStatementNode = generalStatement.getNode(),
         specificStatementNode = specificStatement.getNode(),
         generalNode = generalStatementNode, ///
         specificNode = specificStatementNode,  ///
-        success = metaLevelPass.run(generalNode, specificNode, substitutions, generalContext, specificContext);
+        success = metaLevelPass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     statementUnifies = true;

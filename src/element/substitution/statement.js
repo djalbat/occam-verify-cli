@@ -1,6 +1,5 @@
 "use strict";
 
-import elements from "../../elements";
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
@@ -182,8 +181,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     context = specificContext;  ///
 
-    const { Substitutions } = elements,
-          substitutions = Substitutions.fromNothing(context);
+    const substitutions = [];
 
     statementUnifies = this.replacementStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
@@ -294,8 +292,6 @@ export default define(class StatementSubstitution extends Substitution {
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
             statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
-      statementSubstitution.validate(context);
-
       return statementSubstitution;
     }, context);
   }
@@ -308,8 +304,6 @@ export default define(class StatementSubstitution extends Substitution {
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
             statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context);
-
-      statementSubstitution.validate(context);
 
       return statementSubstitution;
     }, context);

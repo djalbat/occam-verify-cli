@@ -116,11 +116,12 @@ export default define(class Variable extends Element {
 
     context.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
-    let variable;
+    let variable,
+        substitution;
 
     variable = this; ///
 
-    const substitution = substitutions.findSubstitutionByVariable(variable);
+    substitution = substitutions.findSubstitutionByVariable(variable);
 
     if (substitution !== null) {
       const substitutionComparesToTerm = substitution.compareTerm(term, context);
@@ -148,11 +149,12 @@ export default define(class Variable extends Element {
             termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
 
       if (termTypeEqualToOrSubTypeOfVariableType) {
-        synthetically((context) => {
-          const { TermSubstitution } = elements;
+        const { TermSubstitution } = elements,
+              termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, context);
 
-          TermSubstitution.fromTermAndVariable(term, variable, context);
-        }, generalContext, specificContext);
+        substitution = termSubstitution;  ///
+
+        context.addSubstitution(substitution);
 
         termUnifies = true;
       }
