@@ -1,7 +1,5 @@
 "use strict";
 
-import nominalContext from "../context/nominal";
-
 import { literally } from "../utilities/context";
 import { BASE_TYPE_SYMBOL } from "../constants";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
@@ -13,8 +11,6 @@ let bracketedCombinator = null,
 
 export function bracketedCombinatorFromNothing() {
   if (bracketedCombinator === null) {
-    const context = nominalContext; ///
-
     bracketedCombinator = literally((context) => {
       const bracketedCombinatorString = `(${STATEMENT_META_TYPE_NAME})`,
             string = bracketedCombinatorString, ///
@@ -23,7 +19,7 @@ export function bracketedCombinatorFromNothing() {
             bracketedCombinator = combinatorFromCombinatorNode(bracketedCombinatorNode, context);
 
       return bracketedCombinator;
-    }, context);
+    });
   }
 
   return bracketedCombinator;
@@ -31,8 +27,6 @@ export function bracketedCombinatorFromNothing() {
 
 export function bracketedConstructorFromNothing() {
   if (bracketedConstructor === null) {
-    const context = nominalContext; ///
-
     bracketedConstructor = literally((context) => {
       const bracketedConstructorString = `(${BASE_TYPE_SYMBOL})`,
             string = bracketedConstructorString,  ///
@@ -41,7 +35,7 @@ export function bracketedConstructorFromNothing() {
             bracketedConstructor = constructorFromConstructorNode(bracketedConstructorNode, context);
 
       return bracketedConstructor;
-    }, context);
+    });
   }
 
   return bracketedConstructor;

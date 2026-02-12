@@ -29,10 +29,9 @@ export function liminally(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function literally(innerFunction, context) {
-  const literalContext = LiteralContext.fromNothing(context);
-
-  context = literalContext;  ///
+export function literally(innerFunction) {
+  const literalContext = LiteralContext.fromNothing(),
+        context = literalContext;  ///
 
   return innerFunction(context);
 }
