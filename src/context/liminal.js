@@ -2,8 +2,9 @@
 
 import { arrayUtilities } from "necessary";
 import { Context, contextUtilities } from "occam-languages";
+import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
-const { extract } = arrayUtilities,
+const { compress } = arrayUtilities,
       { chainContext } = contextUtilities;
 
 export default class LiminalContext extends Context {
@@ -30,14 +31,25 @@ export default class LiminalContext extends Context {
     return substitutions;
   }
 
+  commit(context) {
+    if (context === undefined) {
+      context = this.getContext();
+    }
+
+    context.addSubstitutions(this.substitutions);
+  }
+
   addSubstitution(substitution) {
-    const context = this, ///
-          substitutionA = substitution, ///
+    const context = this,
           substitutionString = substitution.getString();
 
-    extract(this.substitutions, (substitution) => {
-      const substitutionB = substitution, ///
-            substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
+    this.substitutions = [ ///
+      ...this.substitutions,
+      substitution
+    ];
+
+    compress(this.substitutions, (substitutionA, substitutionB) => {
+      const substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
 
       if (substitutionAEqualToAssertionB) {
         return true;
@@ -45,8 +57,26 @@ export default class LiminalContext extends Context {
     });
 
     context.trace(`Added the '${substitutionString}' substitution to the context.`);
+  }
 
-    this.substitutions.push(substitution);
+  addSubstitutions(substitutions) {
+    const context = this,
+          substitutionsString = substitutionsStringFromSubstitutions(substitutions);
+
+    this.substitutions = [ ///
+      ...this.substitutions,
+      ...substitutions
+    ];
+
+    compress(this.substitutions, (substitutionA, substitutionB) => {
+      const substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
+
+      if (!substitutionAEqualToAssertionB) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${substitutionsString}' substitutions to the context.`);
   }
 
   findSubstitution(callback) { return this.substitutions.find(callback) }

@@ -4,7 +4,7 @@ import ProofAssertion from "../proofAssertion";
 import assignAssignments from "../../process/assign";
 
 import { define } from "../../elements";
-import { attempt, synthetically } from "../../utilities/context";
+import { attempt, liminally } from "../../utilities/context";
 import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
 
 export default define(class Premise extends ProofAssertion {
@@ -118,8 +118,13 @@ export default define(class Premise extends ProofAssertion {
     return unifiesIndependently;
   }
 
-  unifySubproofOrProofAssertion(subproofOrProofAssertion, substitutions, context) {
-    let subproofOrProofAssertionUnifies = false;
+  unifySubproofOrProofAssertion(subproofOrProofAssertion, context) {
+    let subproofOrProofAssertionUnifies;
+
+    const premiseString = this.getString(), ///
+          subproofOrProofAssertionString = subproofOrProofAssertion.getString();
+
+    context.trace(`Unifying the '${subproofOrProofAssertionString}' subproof or proof assertion with the '${premiseString}' premise...`);
 
     const subproofOrProofAssertionProofAssertion = subproofOrProofAssertion.isProofAssertion(),
           proofAssertion = subproofOrProofAssertionProofAssertion ?
@@ -129,62 +134,52 @@ export default define(class Premise extends ProofAssertion {
                         null :
                           subproofOrProofAssertion;
 
-    substitutions.snapshot(context);
-
-    if (subproof !== null) {
-      const subproofUnifies = this.unifySubproof(subproof, substitutions, context);
-
-      if (subproofUnifies) {
-        subproofOrProofAssertionUnifies = true;
-      }
-    }
-
     if (proofAssertion !== null) {
-      const proofAssertionUnifies = this.unifyProofAssertion(proofAssertion, substitutions, context);
+      const proofAssertionUnifies = this.unifyProofAssertion(proofAssertion, context);
 
       if (proofAssertionUnifies) {
         subproofOrProofAssertionUnifies = true;
       }
     }
 
-    if (subproofOrProofAssertionUnifies) {
-      substitutions.resolve(context);
+    if (subproof !== null) {
+      const subproofUnifies = this.unifySubproof(subproof, context);
+
+      if (subproofUnifies) {
+        subproofOrProofAssertionUnifies = true;
+      }
     }
 
-    subproofOrProofAssertionUnifies ?
-      substitutions.continue(context) :
-        substitutions.rollback(context);
+    if (subproofOrProofAssertionUnifies) {
+      context.debug(`...unified the '${subproofOrProofAssertionString}' subproof or proof assertion with the '${premiseString}' premise.`);
+    }
 
     return subproofOrProofAssertionUnifies;
   }
 
-  unifyProofAssertion(proofAssertion, substitutions, context) {
-    let proofAssertionUnifies = false;
+  unifyProofAssertion(proofAssertion, context) {
+    let proofAssertionUnifies;
 
     const premiseString = this.getString(), ///
           proofAssertionString = proofAssertion.getString();
 
     context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${premiseString}' premise...`);
 
-    const specificContext = context;  ///
-
-    context = this.getContext();
-
-    const generalContext = context; ///
-
-    context = specificContext;  ///
-
     const proofAssertionContext = proofAssertion.getContext(),
-          statementUnifies = synthetically((specificContext) => {
-            const statement = proofAssertion.getStatement(),
-                  statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+          premiseContext = this.getContext(),
+          generalContext = premiseContext, ///
+          specificContext = proofAssertionContext; ///
 
-            return statementUnifies;
-          }, specificContext, proofAssertionContext);
+    proofAssertionUnifies = liminally((specificContext) => {
+      const statement = proofAssertion.getStatement(),
+            statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
 
-    if (statementUnifies) {
-      proofAssertionUnifies = true;
-    }
+      if (statementUnifies) {
+        specificContext.commit(context);
+
+        return true;
+      }
+    }, specificContext);
 
     if (proofAssertionUnifies) {
       context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${premiseString}' premise.`);
@@ -193,7 +188,7 @@ export default define(class Premise extends ProofAssertion {
     return proofAssertionUnifies;
   }
 
-  unifySubproof(subproof, substitutions, context) {
+  unifySubproof(subproof, context) {
     let subproofUnifies = false;
 
     const premiseString = this.getString(),

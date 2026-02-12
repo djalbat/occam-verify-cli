@@ -11,6 +11,7 @@ import { labelsFromJSON,
          labelsToLabelsJSON,
          premisesToPremisesJSON,
          conclusionToConclusionJSON } from "../utilities/json";
+import { subproofOrProofAssertionsStringFromSubproofOrProofAssertions } from "../utilities/string";
 
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
