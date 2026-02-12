@@ -3,6 +3,20 @@
 import { Context as ContextBase } from "occam-languages";
 
 export default class Context extends ContextBase {
+  getLexer() {
+    const context = this.getContext(),
+          lexer = context.getLexer();
+
+    return lexer;
+  }
+
+  getParser() {
+    const context = this.getContext(),
+          parser = context.getParser();
+
+    return parser;
+  }
+
   getCombinators(includeRelease) {
     const context = this.getContext(),
           combinators = context.getCombinators(includeRelease);
