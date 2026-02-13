@@ -27,7 +27,7 @@ export default define(class Supposition extends ProofAssertion {
   async verify(context) {
     let verifies = false;
 
-    this.break(context);
+    await this.break(context);
 
     const suppositionString = this.getString(); ///
 

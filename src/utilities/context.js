@@ -37,6 +37,14 @@ export function literally(innerFunction, context) {
   return innerFunction(context);
 }
 
+export async function asyncScope(innerFunction, context) {
+  const scopedContext = ScopedContext.fromNothing(context);
+
+  context = scopedContext;  ///
+
+  return await innerFunction(context);
+}
+
 export async function asyncAttempt(innerFunction, context) {
   const ephemeralContext = EphemeralContext.fromNothing(context);
 
@@ -45,10 +53,18 @@ export async function asyncAttempt(innerFunction, context) {
   return await innerFunction(context);
 }
 
-export async function asyncScope(innerFunction, context) {
-  const scopedContext = ScopedContext.fromNothing(context);
+export async function asyncLiminally(innerFunction, context) {
+  const liminalContext = LiminalContext.fromNothing(context);
 
-  context = scopedContext;  ///
+  context = liminalContext;  ///
+
+  return await innerFunction(context);
+}
+
+export async function asyncLiterally(innerFunction, context) {
+  const literalContext = LiteralContext.fromNothing(context);
+
+  context = literalContext;  ///
 
   return await innerFunction(context);
 }

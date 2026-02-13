@@ -3,8 +3,7 @@
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
-import { unifyStatements } from "../../utilities/unification";
-import { attempt, liminally } from "../../utilities/context";
+import { asyncAttempt, asyncLiminally } from "../../utilities/context";
 import { propertyAssertionFromStatement } from "../../utilities/statement";
 
 export default define(class Step extends ProofAssertion {
@@ -55,10 +54,10 @@ export default define(class Step extends ProofAssertion {
     return comparesToTermAndPropertyRelation;
   }
 
-  verify(assignments, context) {
+  async verify(assignments, context) {
     let verifies = false;
 
-    this.break(context);
+    await this.break(context);
 
     const stepString = this.getString(); ///
 
@@ -67,7 +66,7 @@ export default define(class Step extends ProofAssertion {
     const statement = this.getStatement();
 
     if (statement !== null) {
-      attempt((context) => {
+      asyncAttempt(async (context) => {
         const referenceValidates = this.validateReference(context);
 
         if (referenceValidates) {
@@ -79,9 +78,9 @@ export default define(class Step extends ProofAssertion {
             if (statementValidates) {
               const reference = this.getReference(),
                     satisfiesAssertion = this.getSatisfiesAssertion(),
-                    statementUnifies = liminally((context) => {
-                      const statementUnifies = unifyStatements.some((unifyStatement) => {
-                        const statementUnifies = unifyStatement(statement, reference, satisfiesAssertion, context);
+                    statementUnifies = await asyncLiminally(async (context) => {
+                      const statementUnifies = await asyncSome(async (unifyStatement) => {
+                        const statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
 
                         if (statementUnifies) {
                           this.setContext(context);

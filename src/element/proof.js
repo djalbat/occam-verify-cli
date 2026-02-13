@@ -2,8 +2,8 @@
 
 import { Element } from "occam-languages";
 
-import { scope } from "../utilities/context";
 import { define } from "../elements";
+import { asyncScope } from "../utilities/context";
 
 export default define(class Proof extends Element {
   constructor(context, string, node, derivation) {
@@ -26,11 +26,11 @@ export default define(class Proof extends Element {
     return statement;
   }
 
-  verify(conclusion, context) {
+  async verify(conclusion, context) {
     let verifies = false;
 
-    scope((context) => {
-      const derivationVerifies = this.derivation.verify(context);
+    asyncScope(async (context) => {
+      const derivationVerifies = await this.derivation.verify(context);
 
       if (derivationVerifies) {
         const lastProofAssertion = context.getLastProofAssertion();

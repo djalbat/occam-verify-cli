@@ -1,9 +1,8 @@
 "use strict";
 
-import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
+import { Element, asynchronousUtilities } from "occam-languages";
 
-import { scope } from "../utilities/context";
 import { define } from "../elements";
 import { labelsFromJSON,
          premisesFromJSON,
@@ -11,9 +10,9 @@ import { labelsFromJSON,
          labelsToLabelsJSON,
          premisesToPremisesJSON,
          conclusionToConclusionJSON } from "../utilities/json";
-import { subproofOrProofAssertionsStringFromSubproofOrProofAssertions } from "../utilities/string";
 
-const { reverse, extract, backwardsEvery } = arrayUtilities;
+const { reverse, extract } = arrayUtilities,
+      { asyncBackwardsEvery } = asynchronousUtilities;
 
 export default define(class Rule extends Element {
   constructor(context, string, node, proof, labels, premises, conclusion) {
@@ -126,13 +125,13 @@ export default define(class Rule extends Element {
     return statementUnifiesWithConclusion;
   }
 
-  unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context) {
+  async unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context) {
     let statementAndSubproofOrProofAssertionsUnify = false;
 
     const statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, context);
 
     if (statementUnifiesWithConclusion) {
-      const subproofOrProofAssertionsUnifiesWithPremises = this.unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context);
+      const subproofOrProofAssertionsUnifiesWithPremises = await this.unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context);
 
       if (subproofOrProofAssertionsUnifiesWithPremises) {
         const substitutionsResolved = context.areSubstitutionsResolved();
@@ -146,13 +145,13 @@ export default define(class Rule extends Element {
     return statementAndSubproofOrProofAssertionsUnify;
   }
 
-  unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context) {
+  async unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context) {
     let subproofOrProofAssertionsUnifiesWithPremises;
 
     subproofOrProofAssertions = reverse(subproofOrProofAssertions); ///
 
-    subproofOrProofAssertionsUnifiesWithPremises = backwardsEvery(this.premises, (premise) => {
-      const stepUnifiesWithPremise = this.unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context);
+    subproofOrProofAssertionsUnifiesWithPremises = asyncBackwardsEvery(this.premises, async (premise) => {
+      const stepUnifiesWithPremise = await this.unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context);
 
       if (stepUnifiesWithPremise) {
         return true;
@@ -162,7 +161,7 @@ export default define(class Rule extends Element {
     return subproofOrProofAssertionsUnifiesWithPremises;
   }
 
-  unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context) {
+  async unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context) {
     let subproofOrProofAssertionsUnifiesWithPremise = false;
 
     if (!subproofOrProofAssertionsUnifiesWithPremise) {
@@ -180,7 +179,7 @@ export default define(class Rule extends Element {
     }
 
     if (!subproofOrProofAssertionsUnifiesWithPremise) {
-      const premiseUnifiesIndependently = premise.unifyIndependently(context);
+      const premiseUnifiesIndependently = await premise.unifyIndependently(context);
 
       if (premiseUnifiesIndependently) {
         subproofOrProofAssertionsUnifiesWithPremise = true;
@@ -195,7 +194,7 @@ export default define(class Rule extends Element {
 
     const context = this.getContext();
 
-    this.break(context);
+    await this.break(context);
 
     const ruleString = this.getString(); ///
 

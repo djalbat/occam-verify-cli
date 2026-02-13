@@ -66,7 +66,7 @@ export default define(class ProcedureCall extends Element {
     return validates;
   }
 
-  unifyIndependently(context) {
+  async unifyIndependently(context) {
     let unifiesIndependently = false;
 
     const procedureCallString = this.getString(); ///
@@ -80,9 +80,17 @@ export default define(class ProcedureCall extends Element {
 
     try {
       const term = procedure.call(terms, context),
-            boolean = term.isBoolean();
+            boolean = await term.isBoolean();
 
-      unifiesIndependently = boolean; ///
+      if (!boolean) {
+        context.info(`The '${procedureCallString}' procedure call did not return a boolean.`);
+      } else {
+        const primitiveValue = term.getPrimitiveValue();
+
+        if (primitiveValue) {
+          unifiesIndependently = true;
+        }
+      }
     } catch (exception) {
       const message = exception.getMessage();
 

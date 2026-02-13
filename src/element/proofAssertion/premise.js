@@ -24,10 +24,10 @@ export default define(class Premise extends ProofAssertion {
     return stated;
   }
 
-  verify(context) {
+  async verify(context) {
     let verifies = false;
 
-    this.break(context);
+    await this.break(context);
 
     const premiseString = this.getString(); ///
 
@@ -78,7 +78,7 @@ export default define(class Premise extends ProofAssertion {
     return verifies;
   }
 
-  unifyIndependently(context) {
+  async unifyIndependently(context) {
     let unifiesIndependently = false;
 
     const premiseString = this.getString(); ///
@@ -96,7 +96,7 @@ export default define(class Premise extends ProofAssertion {
     }
 
     if (this.procedureCall !== null) {
-      const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(context);
+      const procedureCallResolvedIndependently = await this.procedureCall.unifyIndependently(context);
 
       if (procedureCallResolvedIndependently) {
         unifiesIndependently = true;

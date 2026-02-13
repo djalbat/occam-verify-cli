@@ -10,7 +10,7 @@ export default define(class MetaLemma extends TopLevelMetaAssertion {
 
     const context = this.getContext();
 
-    this.break(context);
+    await this.break(context);
 
     const metaLemmaString = this.getString(); ///
 
