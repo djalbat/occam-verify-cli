@@ -3,6 +3,7 @@
 import { arrayUtilities } from "necessary";
 import { Element, asynchronousUtilities } from "occam-languages";
 
+import { scope } from "../utilities/context";
 import { define } from "../elements";
 import { labelsFromJSON,
          premisesFromJSON,

@@ -1,10 +1,14 @@
 "use strict";
 
+import { asynchronousUtilities } from "occam-languages";
+
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { asyncAttempt, asyncLiminally } from "../../utilities/context";
 import { propertyAssertionFromStatement } from "../../utilities/statement";
+
+const { asyncSome } = asynchronousUtilities;
 
 export default define(class Step extends ProofAssertion {
   constructor(context, string, node, statement, reference, satisfiesAssertion) {
