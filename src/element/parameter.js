@@ -20,8 +20,8 @@ export default define(class Parameter extends Element {
     return this.identifier;
   }
 
-  findReplacementNode(substitutions) {
-    let replacementNode = null;
+  findPrimitive(substitutions) {
+    let primitive = null;
 
     const parameter = this, ///
           substitution = substitutions.find((substitution) => {
@@ -33,10 +33,10 @@ export default define(class Parameter extends Element {
           }) || null;
 
     if (substitution !== null) {
-      replacementNode = substitution.getReplacementNode();
+      primitive = substitution.getPrimitive();
     }
 
-    return replacementNode;
+    return primitive;
   }
 
   toJSON() {

@@ -26,16 +26,15 @@ export default define(class ProcedureCall extends Element {
 
   getName() { return this.procedureReference.getName(); }
 
-  findNodes(context) {
+  findPrimitives(context) {
     const substitutions = context.getSubstitutions(),
-          nodes = this.parameters.map((parameter) => {
-            const replacementNode = parameter.findReplacementNode(substitutions),
-                  node = replacementNode;  ///
+          primitives = this.parameters.map((parameter) => {
+            const primitive = parameter.findPrimitive(substitutions);
 
-            return node;
+            return primitive;
           });
 
-    return nodes;
+    return primitives;
   }
 
   validate(context) {
@@ -75,13 +74,13 @@ export default define(class ProcedureCall extends Element {
     context.trace(`Unifying the '${procedureCallString}' procedure call independently...`);
 
     const name = this.getName(),
-          nodes = this.findNodes(context),
-          terms = termsFromPrimitives(nodes, context),
+          primitives = this.findPrimitives(context),
+          terms = termsFromPrimitives(primitives),
           procedure = context.findProcedureByName(name);
 
     try {
-      const value = procedure.call(terms, context),
-            boolean = value.getBoolean();
+      const term = procedure.call(terms, context),
+            boolean = term.isBoolean();
 
       unifiesIndependently = boolean; ///
     } catch (exception) {

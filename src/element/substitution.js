@@ -1,6 +1,9 @@
 "use strict";
 
 import { Element } from "occam-languages";
+import { primitiveUtilities } from "occam-furtle";
+
+const { primitiveFromNode } =primitiveUtilities;
 
 export default class Substitution extends Element {
   constructor(context, string, node) {
@@ -11,6 +14,15 @@ export default class Substitution extends Element {
     const substitution = null;
 
     return substitution;
+  }
+
+  getPrimitive() {
+    const context = this.getContext(),
+          replacementNode = this.getReplacementNode(),
+          node = replacementNode, ///
+          primitive = primitiveFromNode(node, context);
+
+    return primitive;
   }
 
   isSimple() {
