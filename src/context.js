@@ -17,11 +17,25 @@ export default class Context extends ContextBase {
     return parser;
   }
 
+  getFilePath() {
+    const context = this.getContext(),
+          filePath = context.getFilePath();
+
+    return filePath;
+  }
+
   getCombinators(includeRelease) {
     const context = this.getContext(),
           combinators = context.getCombinators(includeRelease);
 
     return combinators;
+  }
+
+  getSubproofOrProofAssertions() {
+    const context = this.getContext(),
+          subproofOrProofAssertions = context.getSubproofOrProofAssertions();
+
+    return subproofOrProofAssertions;
   }
 
   findMetavariable(metavariable) {
@@ -32,18 +46,32 @@ export default class Context extends ContextBase {
     return metavariable;
   }
 
-  isMetavariablePresentByReference(reference) {
-    const context = this.getContext(),
-          metavariablePresent = context.isMetavariablePresentByReference(reference);  ///
-
-    return metavariablePresent;
-  }
-
   findProcedureByName(name) {
     const context = this.getContext(),
       procedure = context.findProcedureByName(name);
 
     return procedure;
+  }
+
+  findRuleByReference(reference) {
+    const context = this.getContext(),
+          rule = context.findRuleByReference(reference);
+
+    return rule;
+  }
+
+  findFrameByFrameNode(frameNode) {
+    const context = this.getContext(),
+          frame = context.findFrameByFrameNode(frameNode);
+
+    return frame;
+  }
+
+  findStatementByStatementNode(statementNode) {
+    const context = this.getContext(),
+          statement = context.findStatementByStatementNode(statementNode);
+
+    return statement;
   }
 
   findVariableByVariableIdentifier(variableIdentifier) {
@@ -60,10 +88,25 @@ export default class Context extends ContextBase {
     return metavariable;
   }
 
-  addJudgement(judgement) {
-    const context = this.getContext();
+  isLabelPresentByReference(reference) {
+    const context = this.getContext(),
+          labelPresent = context.isLabelPresentByReference(reference);
 
-    context.addJudgement(judgement);
+    return labelPresent;
+  }
+
+  isMetavariablePresentByReference(reference) {
+    const context = this.getContext(),
+          metavariablePresent = context.isMetavariablePresentByReference(reference);
+
+    return metavariablePresent;
+  }
+
+  addJudgement(judgement) {
+    const context = this.getContext(),
+          judgementAdded = context.addJudgement(judgement);
+
+    return judgementAdded;
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {
