@@ -5,6 +5,7 @@ import { asynchronousUtilities } from "occam-languages";
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
+import { unifyStatements } from "../../utilities/unification";
 import { asyncAttempt, asyncLiminally } from "../../utilities/context";
 import { propertyAssertionFromStatement } from "../../utilities/statement";
 
@@ -83,7 +84,7 @@ export default define(class Step extends ProofAssertion {
               const reference = this.getReference(),
                     satisfiesAssertion = this.getSatisfiesAssertion(),
                     statementUnifies = await asyncLiminally(async (context) => {
-                      const statementUnifies = await asyncSome(async (unifyStatement) => {
+                      const statementUnifies = await asyncSome(unifyStatements, async (unifyStatement) => {
                         const statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
 
                         if (statementUnifies) {

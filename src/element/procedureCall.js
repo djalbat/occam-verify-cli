@@ -24,8 +24,6 @@ export default define(class ProcedureCall extends Element {
     return this.procedureReference;
   }
 
-  getName() { return this.procedureReference.getName(); }
-
   findPrimitives(context) {
     const substitutions = context.getSubstitutions(),
           primitives = this.parameters.map((parameter) => {
@@ -79,8 +77,8 @@ export default define(class ProcedureCall extends Element {
           procedure = context.findProcedureByName(name);
 
     try {
-      const term = procedure.call(terms, context),
-            boolean = await term.isBoolean();
+      const term = await procedure.call(terms, context),
+            boolean = term.isBoolean();
 
       if (!boolean) {
         context.info(`The '${procedureCallString}' procedure call did not return a boolean.`);
