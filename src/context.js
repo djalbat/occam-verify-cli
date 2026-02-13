@@ -24,6 +24,13 @@ export default class Context extends ContextBase {
     return filePath;
   }
 
+  getVariables(includeRelease) {
+    const context = this.getContext(),
+          variables = context.getVariables(includeRelease);
+
+    return variables;
+  }
+
   getCombinators(includeRelease) {
     const context = this.getContext(),
           combinators = context.getCombinators(includeRelease);
@@ -86,6 +93,13 @@ export default class Context extends ContextBase {
           metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
     return metavariable;
+  }
+
+  isProcedurePresentByName(name) {
+    const context = this.getContext(),
+          procedurePresent = context.isProcedurePresentByName(name);
+
+    return procedurePresent;
   }
 
   isLabelPresentByReference(reference) {

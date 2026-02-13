@@ -24,6 +24,8 @@ export default define(class ProcedureCall extends Element {
     return this.procedureReference;
   }
 
+  getName() { return this.procedureReference.getName(); }
+
   findPrimitives(context) {
     const substitutions = context.getSubstitutions(),
           primitives = this.parameters.map((parameter) => {
@@ -76,7 +78,7 @@ export default define(class ProcedureCall extends Element {
           terms = termsFromPrimitives(primitives),
           procedure = context.findProcedureByName(name);
 
-    try {
+    // try {
       const term = await procedure.call(terms, context),
             boolean = term.isBoolean();
 
@@ -89,11 +91,11 @@ export default define(class ProcedureCall extends Element {
           unifiesIndependently = true;
         }
       }
-    } catch (exception) {
-      const message = exception.getMessage();
-
-      context.info(message);
-    }
+    // } catch (exception) {
+    //   const message = exception.getMessage();
+    //
+    //   context.info(message);
+    // }
 
     if (unifiesIndependently) {
       context.debug(`...unified the '${procedureCallString}' procedure call independently.`);
