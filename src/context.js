@@ -81,6 +81,13 @@ export default class Context extends ContextBase {
     return statement;
   }
 
+  findTopLevelAssertionByReference(reference) {
+    const context = this.getContext(),
+          topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+
+    return topLevelAssertion;
+  }
+
   findVariableByVariableIdentifier(variableIdentifier) {
     const context = this.getContext(),
           variable = context.findVariableByVariableIdentifier(variableIdentifier);
@@ -114,6 +121,12 @@ export default class Context extends ContextBase {
           metavariablePresent = context.isMetavariablePresentByReference(reference);
 
     return metavariablePresent;
+  }
+
+  addRule(rule) {
+    const context = this.getContext();
+
+    context.addRule(rule);
   }
 
   addJudgement(judgement) {

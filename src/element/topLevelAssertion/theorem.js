@@ -16,7 +16,7 @@ export default define(class Theorem extends TopLevelAssertion {
 
     context.trace(`Verifying the '${theoremString}' theorem...`);
 
-    verifies = super.verify();
+    verifies = await super.verify();
 
     if (verifies) {
       const theorem = this; ///

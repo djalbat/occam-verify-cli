@@ -1,7 +1,6 @@
 "use strict";
 
 import ProofAssertion from "../proofAssertion";
-import assignAssignments from "../../process/assign";
 
 import { define } from "../../elements";
 import { attempt, liminally } from "../../utilities/context";
@@ -24,90 +23,56 @@ export default define(class Premise extends ProofAssertion {
     return stated;
   }
 
-  async verify(context) {
-    let verifies = false;
-
-    await this.break(context);
+  validate(assignments, context) {
+    let validates = false;
 
     const premiseString = this.getString(); ///
 
-    context.trace(`Verifying the '${premiseString}' premise...`);
+    context.trace(`Validatting the '${premiseString}' premise...`);
 
     const statement = this.getStatement(),
           procedureCall = this.getProcedureCall();
 
-    if ((statement !== null) || (procedureCall !== null)) {
-      attempt((context) => {
-        if (statement !== null) {
-          const assignments = [],
-                statementValidates = this.validateStatement(assignments, context);
+    if (false) {
+      ///
+    } else if (statement !== null) {
+      const statementValidates = this.validateStatement(assignments, context);
 
-          if (statementValidates) {
-            const assignmentsAssigned = assignAssignments(assignments, context);
+      if (statementValidates) {
+        validates = true;
+      }
+    } else if (procedureCall !== null) {
+      const procedureCallValidates = this.validateProcedureCall(assignments, context);
 
-            if (assignmentsAssigned) {
-              const subproofOrProofAssertion = this;  ///
-
-              context.addSubproofOrProofAssertion(subproofOrProofAssertion);
-
-              this.setContext(context);
-
-              verifies = true;
-            }
-          }
-        }
-
-        if (procedureCall !== null) {
-          const procedureCallValidates = procedureCall.validate(context);
-
-          if (procedureCallValidates) {
-            this.setContext(context);
-
-            verifies = true;
-          }
-        }
-      }, context);
+      if (procedureCallValidates) {
+        validates = true;
+      }
     } else {
-      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`);
+      context.debug(`Unable to validate the '${premiseString}' premise because it is nonsense.`);
     }
 
-    if (verifies) {
-      context.debug(`...verified the '${premiseString}' premise.`);
+    if (validates) {
+      context.debug(`...validated the '${premiseString}' premise.`);
     }
 
-    return verifies;
+    return validates;
   }
 
-  async unifyIndependently(context) {
-    let unifiesIndependently = false;
+  validateProcedureCall(assignments, context) {
+    let procedureCallValidates = false;
 
-    const premiseString = this.getString(); ///
+    const premiseString = this.getString(), ///
+          procedureCallString = this.procedureCall.getString();
 
-    context.trace(`Unifying the '${premiseString}' premise independently...`);
+    context.trace(`Validatting the '${premiseString}' premise's '${procedureCallString}' procedure call...`);
 
-    const statement = this.getStatement();
+    procedureCallValidates = this.procedureCall.validate(context);
 
-    if (statement !== null) {
-      const statementUnifiesIndependently = statement.unifyIndependently(context);
-
-      if (statementUnifiesIndependently) {
-        unifiesIndependently = true;
-      }
+    if (procedureCallValidates) {
+      context.debug(`...validated the '${premiseString}' premise's '${procedureCallString}' procedure call.`);
     }
 
-    if (this.procedureCall !== null) {
-      const procedureCallResolvedIndependently = await this.procedureCall.unifyIndependently(context);
-
-      if (procedureCallResolvedIndependently) {
-        unifiesIndependently = true;
-      }
-    }
-
-    if (unifiesIndependently) {
-      context.debug(`...unified the '${premiseString}' premise independenly.`);
-    }
-
-    return unifiesIndependently;
+    return procedureCallValidates;
   }
 
   unifySubproofOrProofAssertion(subproofOrProofAssertion, context) {
@@ -220,6 +185,65 @@ export default define(class Premise extends ProofAssertion {
     }
 
     return subproofUnifies;
+  }
+
+  async verify(assignments, context) {
+    let verifies = false;
+
+    await this.break(context);
+
+    const premiseString = this.getString(); ///
+
+    context.trace(`Verifying the '${premiseString}' premise...`);
+
+    attempt((context) => {
+      const validates = this.validate(assignments, context);
+
+      if (validates) {
+        this.setContext(context);
+
+        verifies = true;
+      }
+    }, context);
+
+    if (verifies) {
+      context.debug(`...verified the '${premiseString}' premise.`);
+    }
+
+    return verifies;
+  }
+
+  async unifyIndependently(context) {
+    let unifiesIndependently = false;
+
+    const premiseString = this.getString(); ///
+
+    context.trace(`Unifying the '${premiseString}' premise independently...`);
+
+    const statement = this.getStatement(),
+          procedureCall = this.getProcedureCall();
+
+    if (statement !== null) {
+      const statementUnifiesIndependently = statement.unifyIndependently(context);
+
+      if (statementUnifiesIndependently) {
+        unifiesIndependently = true;
+      }
+    }
+
+    if (procedureCall !== null) {
+      const procedureCallResolvedIndependently = await procedureCall.unifyIndependently(context);
+
+      if (procedureCallResolvedIndependently) {
+        unifiesIndependently = true;
+      }
+    }
+
+    if (unifiesIndependently) {
+      context.debug(`...unified the '${premiseString}' premise independenly.`);
+    }
+
+    return unifiesIndependently;
   }
 
   toJSON() {

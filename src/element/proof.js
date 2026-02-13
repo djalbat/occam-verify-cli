@@ -26,21 +26,21 @@ export default define(class Proof extends Element {
     return statement;
   }
 
-  async verify(conclusion, context) {
+  async verify(statement, context) {
     let verifies = false;
 
-    asyncScope(async (context) => {
+    await asyncScope(async (context) => {
       const derivationVerifies = await this.derivation.verify(context);
 
       if (derivationVerifies) {
         const lastProofAssertion = context.getLastProofAssertion();
 
         if (lastProofAssertion !== null) {
-          const statement = this.getStatement(),
-                conclusionStatement = conclusion.getStatement(),
-                conclusionStatementEqualToStatement = conclusionStatement.isEqualTo(statement);
+          const proof = this, ///
+                proofStatement = proof.getStatement(),
+                proofStatementEqualToStatement = proofStatement.isEqualTo(statement);
 
-          if (conclusionStatementEqualToStatement) {
+          if (proofStatementEqualToStatement) {
             verifies = true;
           }
         }

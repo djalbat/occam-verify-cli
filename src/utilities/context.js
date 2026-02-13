@@ -61,11 +61,3 @@ export async function asyncLiminally(innerFunction, context) {
   return await innerFunction(context);
 }
 
-export async function asyncLiterally(innerFunction, context) {
-  const literalContext = LiteralContext.fromNothing(context);
-
-  context = literalContext;  ///
-
-  return await innerFunction(context);
-}
-

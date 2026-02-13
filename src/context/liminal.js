@@ -2,6 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 import { substitutionsStringFromSubstitutions } from "../utilities/string";
+import { resolveSustitutions, areSubstitutionsResolved } from "../utilities/substitutions";
 
 import Context from "../context";
 
@@ -76,6 +77,10 @@ export default class LiminalContext extends Context {
 
     context.trace(`Added the '${substitutionsString}' substitutions to the context.`);
   }
+
+  resolveSustitutions() { resolveSustitutions(this.substitutions); }
+
+  areSubstitutionsResolved() { return areSubstitutionsResolved(this.substitutions); }
 
   findSubstitution(callback) { return this.substitutions.find(callback) }
 

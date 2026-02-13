@@ -1,5 +1,52 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
+const { compress } = arrayUtilities;
+
+export function resolveSubstitutions(substitutions) {
+  const metavariables = metavariablesFromSubstitutions(substitutions);
+
+  metavariables.forEach((metavariable) => {
+    const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
+          complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
+            let resolved;
+
+            const substitution = complexSubstitution; ///
+
+            resolved = substitution.isResolved();
+
+            if (!resolved) {
+              substitution.resolve(substitutions, context);
+            }
+          });
+
+    if (complexSubstitutionsResolved) {
+      return true;
+    }
+  });
+}
+
+export function areSubstitutionsResolved(substitutions) {
+  const metavariables = metavariablesFromSubstitutions(substitutions),
+        resolved = metavariables.every((metavariable) => {
+          const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
+                complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
+                  const complexSubstitutionResolved = complexSubstitution.isResolved();
+
+                  if (complexSubstitutionResolved) {
+                    return true;
+                  }
+                });
+
+          if (complexSubstitutionsResolved) {
+            return true;
+          }
+        });
+
+  return resolved;
+}
+
 export function termFromTermAndSubstitutions(term, substitutions, generalContext, specificContext) {
   if (term !== null) {
     const termNode = term.getNode(),
@@ -86,4 +133,26 @@ export function statementFromStatementAndSubstitutions(statement, substitutions,
   }
 
   return statement;
+}
+
+function metavariablesFromSubstitutions(substitutions) {
+  const metavariables = [];
+
+  substitutions.forEach((substitution) => {
+    const metavariable = substitution.getMetavariable();
+
+    if (metavariable !== null) {
+      metavariables.push(metavariable);
+    }
+  });
+
+  compress(metavariables, (metavariableA, metavariableB) => {
+    const metavariableAEqualToMetavariableB = metavariableB.isEqualTo(metavariableA);
+
+    if (!metavariableAEqualToMetavariableB) {
+      return true;
+    }
+  });
+
+  return metavariables;
 }

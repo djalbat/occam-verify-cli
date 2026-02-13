@@ -246,7 +246,7 @@ export default define(class Axiom extends TopLevelAssertion {
     const signatureVerifies = this.verifySignature();
 
     if (signatureVerifies) {
-      verifies = super.verify();
+      verifies = await super.verify();
     }
 
     if (verifies) {

@@ -4,7 +4,9 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 import { asynchronousUtilities } from "occam-languages";
 
-import { asyncScope, asyncAttempt } from "../utilities/context";
+import assignAssignments from "../process/assign";
+
+import { asyncScope } from "../utilities/context";
 import { labelsFromJSON,
          deductionFromJSON,
          signatureFromJSON,
@@ -16,7 +18,7 @@ import { labelsFromJSON,
          hypothesesToHypothesesJSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
 
-const { asyncEvery } = asynchronousUtilities,
+const { asyncForwardsEvery } = asynchronousUtilities,
       { extract, reverse, correlate, backwardsEvery } = arrayUtilities;
 
 export default class TopLevelAssertion extends Element {
@@ -138,7 +140,10 @@ export default class TopLevelAssertion extends Element {
   async verify() {
     let verifies = false;
 
-    const context = this.getContext();
+    const context = this.getContext(),
+          topLevelAssertionString = this.getString(); ///
+
+    context.trace(`Verifying the '${topLevelAssertionString}' top level assertion...`);
 
     await asyncScope(async (context) => {
       const labelsVerify = this.verifyLabels();
@@ -160,45 +165,80 @@ export default class TopLevelAssertion extends Element {
       }
     }, context);
 
+    if (verifies) {
+      context.debug(`...verified the '${topLevelAssertionString}' top level assertion.`);
+    }
+
     return verifies;
   }
 
-  async verifySuppositions(context) {
-    const suppositionsVerify = await asyncEvery(this.suppositions, async (supposition) => {
-      const suppositionVerifies = await this.verifySupposition(supposition, context);
+  async verifyProof(context) {
+    let proofVerifies;
 
-      if (suppositionVerifies) {
-        return true;
+    if (this.proof === null) {
+      proofVerifies = true;
+    } else {
+      const topLevelAssertionString = this.getString();  ///
+
+      context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's proof...`);
+
+      const statement = this.deduction.getStatement();
+
+      proofVerifies = this.proof.verify(statement, context);
+
+      if (proofVerifies) {
+        context.debug(`...verified the '${topLevelAssertionString}' top level assertion's proof.`);
       }
-    });
+    }
 
-    return suppositionsVerify;
-  }
-
-  async verifySupposition(supposition, context) {
-    const suppositionVerifies = await supposition.verify(context);
-
-    return suppositionVerifies;
+    return proofVerifies;
   }
 
   async verifyDeduction(context) {
-    const deductionVerifies = await this.deduction.verify(context);
+    let deductionVerifies;
+
+    const topLevelAssertionString = this.getString();
+
+    context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's deduction...`);
+
+    deductionVerifies = await this.deduction.verify(context);
+
+    if (deductionVerifies) {
+      context.debug(`...verified the '${topLevelAssertionString}' top level assertion's deduction.`);
+    }
 
     return deductionVerifies;
   }
 
-  async verifyProof(context) {
-    let proofVerifies = true; ///
+  async verifySuppositions(context) {
+    let suppositionsVerify;
 
-    if (this.proof !== null) {
-      proofVerifies = await asyncAttempt(async (context) => {
-        const proofVerifies = await this.proof.verify(this.deduction, context);
+    const topLevelAssertionString = this.getString();  ///
 
-        return proofVerifies;
-      }, context);
+    context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's suppositions...`);
+
+    suppositionsVerify = await asyncForwardsEvery(this.suppositions, async (supposition) => {
+      const assignments = [],
+            suppositionVerifies = await supposition.verify(assignments, context)
+
+      if (suppositionVerifies) {
+        const assignmentsAssigned = assignAssignments(assignments, context);
+
+        if (assignmentsAssigned) {
+          const subproofOrProofAssertion = supposition;  ////
+
+          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+
+          return true;
+        }
+      }
+    });
+
+    if (suppositionsVerify) {
+      context.debug(`...verified the '${topLevelAssertionString}' top level assertion's suppositions.`);
     }
 
-    return proofVerifies;
+    return suppositionsVerify;
   }
 
   unifyStatementWithDeduction(statement, substitutions, context) {

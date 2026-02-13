@@ -16,7 +16,7 @@ export default define(class Conjecture extends TopLevelAssertion {
 
     context.trace(`Verifying the '${conjectureString}' conjecture...`);
 
-    verifies = super.verify();
+    verifies = await super.verify();
 
     if (verifies) {
       const conjecture = this;  ///

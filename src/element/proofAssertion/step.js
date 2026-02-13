@@ -59,62 +59,38 @@ export default define(class Step extends ProofAssertion {
     return comparesToTermAndPropertyRelation;
   }
 
-  async verify(assignments, context) {
-    let verifies = false;
-
-    await this.break(context);
+  validate(assignments, context) {
+    let validates = false;
 
     const stepString = this.getString(); ///
 
-    context.trace(`Verifying the '${stepString}' step...`);
+    context.trace(`Validating the '${stepString}' step...`);
 
     const statement = this.getStatement();
 
     if (statement !== null) {
-      asyncAttempt(async (context) => {
-        const referenceValidates = this.validateReference(context);
+      const referenceValidates = this.validateReference(context);
 
-        if (referenceValidates) {
-          const satisfiesAssertioValidates = this.validateSatisfiesAssertion(context);
+      if (referenceValidates) {
+        const satisfiesAssertioValidates = this.validateSatisfiesAssertion(context);
 
-          if (satisfiesAssertioValidates) {
-            const statementValidates = this.validateStatement(assignments, context);
+        if (satisfiesAssertioValidates) {
+          const statementValidates = this.validateStatement(assignments, context);
 
-            if (statementValidates) {
-              const reference = this.getReference(),
-                    satisfiesAssertion = this.getSatisfiesAssertion(),
-                    statementUnifies = await asyncLiminally(async (context) => {
-                      const statementUnifies = await asyncSome(unifyStatements, async (unifyStatement) => {
-                        const statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
-
-                        if (statementUnifies) {
-                          this.setContext(context);
-
-                          return true;
-                        }
-                      });
-
-                      return statementUnifies;
-                    }, context);
-
-              if (statementUnifies) {
-                verifies = true;
-              }
-            }
+          if (statementValidates) {
+            validates = true;
           }
         }
-
-        return verifies;
-      }, context);
+      }
     } else {
-      context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`);
+      context.debug(`Unable to validate the '${stepString}' step because it is nonsense.`);
     }
 
-    if (verifies) {
-      context.debug(`...verified the '${stepString}' step.`);
+    if (validates) {
+      context.debug(`...validate the '${stepString}' step.`);
     }
 
-    return verifies;
+    return validates;
   }
 
   validateReference(context) {
@@ -188,6 +164,69 @@ export default define(class Step extends ProofAssertion {
     }
 
     return unifiesWithSatisfiesAssertion;
+  }
+
+  async verify(assignments, context) {
+    let verifies = false;
+
+    await this.break(context);
+
+    const stepString = this.getString(); ///
+
+    context.trace(`Verifying the '${stepString}' step...`);
+
+    await asyncAttempt(async (context) => {
+      const validates = this.validate(assignments, context);
+
+      if (validates) {
+        const unifies = await this.unify(context);
+
+        if (unifies) {
+          this.setContext(context);
+
+          verifies = true;
+        }
+      }
+    }, context);
+
+    if (verifies) {
+      context.debug(`...verified the '${stepString}' step.`);
+    }
+
+    return verifies;
+  }
+
+  async unify(context) {
+    let unifies = false;
+
+    const stepString = this.getString(); ///
+
+    context.trace(`Unifying the '${stepString}' step...`);
+
+    const statement = this.getStatement(),
+          reference = this.getReference(),
+          satisfiesAssertion = this.getSatisfiesAssertion(),
+          statementUnifies = await asyncLiminally(async (context) => {
+            const statementUnifies = await asyncSome(unifyStatements, async (unifyStatement) => {
+              const statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
+
+              if (statementUnifies) {
+                return true;
+              }
+            });
+
+            return statementUnifies;
+          }, context);
+
+    if (statementUnifies) {
+      unifies = true;
+    }
+
+    if (unifies) {
+      context.debug(`...unified the '${stepString}' step.`);
+    }
+
+    return unifies;
   }
 
   static name = "Step";
