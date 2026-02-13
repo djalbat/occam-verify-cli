@@ -49,7 +49,7 @@ export default class LiminalContext extends Context {
     compress(this.substitutions, (substitutionA, substitutionB) => {
       const substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
 
-      if (substitutionAEqualToAssertionB) {
+      if (!substitutionAEqualToAssertionB) {
         return true;
       }
     });

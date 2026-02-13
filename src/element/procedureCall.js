@@ -1,10 +1,12 @@
 "use strict";
 
 import { Element } from "occam-languages";
-import { Expressions } from "occam-furtle";
+import { termsUtilities } from "occam-furtle";
 
 import { define } from "../elements";
 import { parametersFromJSON, procedureReferenceFromJSON, parametersToParametersJSON, procedureReferenceToProcedureReferenceJSON } from "../utilities/json";
+
+const { termsFromPrimitives } = termsUtilities;
 
 export default define(class ProcedureCall extends Element {
   constructor(context, string, node, parameters, procedureReference) {
@@ -65,7 +67,7 @@ export default define(class ProcedureCall extends Element {
     return validates;
   }
 
-  unifyIndependently(substitutions, context) {
+  unifyIndependently(context) {
     let unifiesIndependently = false;
 
     const procedureCallString = this.getString(); ///
@@ -74,11 +76,11 @@ export default define(class ProcedureCall extends Element {
 
     const name = this.getName(),
           nodes = this.findNodes(context),
-          procedure = context.findProcedureByName(name),
-          expressions = Expressions.fromNodes(nodes, context);
+          terms = termsFromPrimitives(nodes, context),
+          procedure = context.findProcedureByName(name);
 
     try {
-      const value = procedure.call(expressions, context),
+      const value = procedure.call(terms, context),
             boolean = value.getBoolean();
 
       unifiesIndependently = boolean; ///

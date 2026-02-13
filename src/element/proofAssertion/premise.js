@@ -78,25 +78,17 @@ export default define(class Premise extends ProofAssertion {
     return verifies;
   }
 
-  unifyIndependently(substitutions, context) {
+  unifyIndependently(context) {
     let unifiesIndependently = false;
 
     const premiseString = this.getString(); ///
 
     context.trace(`Unifying the '${premiseString}' premise independently...`);
 
-    const specificContext = context; ///
-
-    context = this.getContext();
-
-    const generalContext = context;  ///
-
-    context = specificContext;  ///
-
     const statement = this.getStatement();
 
     if (statement !== null) {
-      const statementUnifiesIndependently = statement.unifyIndependently(substitutions, generalContext, specificContext);
+      const statementUnifiesIndependently = statement.unifyIndependently(context);
 
       if (statementUnifiesIndependently) {
         unifiesIndependently = true;
@@ -104,7 +96,7 @@ export default define(class Premise extends ProofAssertion {
     }
 
     if (this.procedureCall !== null) {
-      const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(substitutions, context);
+      const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(context);
 
       if (procedureCallResolvedIndependently) {
         unifiesIndependently = true;

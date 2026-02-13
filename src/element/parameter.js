@@ -24,7 +24,7 @@ export default define(class Parameter extends Element {
     let replacementNode = null;
 
     const parameter = this, ///
-          substitution = substitutions.findSubstitution((substitution) => {
+          substitution = substitutions.find((substitution) => {
             const substitutionComparesToParamter = substitution.compareParameter(parameter);
 
             if (substitutionComparesToParamter) {

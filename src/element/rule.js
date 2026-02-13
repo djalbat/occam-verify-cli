@@ -146,6 +146,22 @@ export default define(class Rule extends Element {
     return statementAndSubproofOrProofAssertionsUnify;
   }
 
+  unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context) {
+    let subproofOrProofAssertionsUnifiesWithPremises;
+
+    subproofOrProofAssertions = reverse(subproofOrProofAssertions); ///
+
+    subproofOrProofAssertionsUnifiesWithPremises = backwardsEvery(this.premises, (premise) => {
+      const stepUnifiesWithPremise = this.unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context);
+
+      if (stepUnifiesWithPremise) {
+        return true;
+      }
+    });
+
+    return subproofOrProofAssertionsUnifiesWithPremises;
+  }
+
   unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context) {
     let subproofOrProofAssertionsUnifiesWithPremise = false;
 
@@ -172,22 +188,6 @@ export default define(class Rule extends Element {
     }
 
     return subproofOrProofAssertionsUnifiesWithPremise;
-  }
-
-  unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context) {
-    let subproofOrProofAssertionsUnifiesWithPremises;
-
-    subproofOrProofAssertions = reverse(subproofOrProofAssertions); ///
-
-    subproofOrProofAssertionsUnifiesWithPremises = backwardsEvery(this.premises, (premise) => {
-      const stepUnifiesWithPremise = this.unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context);
-
-      if (stepUnifiesWithPremise) {
-        return true;
-      }
-    });
-
-    return subproofOrProofAssertionsUnifiesWithPremises;
   }
 
   async verify() {

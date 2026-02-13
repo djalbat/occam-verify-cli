@@ -48,7 +48,7 @@ export default class Context extends ContextBase {
 
   findProcedureByName(name) {
     const context = this.getContext(),
-      procedure = context.findProcedureByName(name);
+          procedure = context.findProcedureByName(name);
 
     return procedure;
   }
