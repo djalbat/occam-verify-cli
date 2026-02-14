@@ -56,7 +56,14 @@ export default define(class Rule extends Element {
   }
 
   verifyLabels() {
-    const labelsVerify = this.labels.every((label) => {
+    let labelsVerify;
+
+    const context = this.getContext(),
+          ruleString = this.getString();
+
+    context.trace(`Verifying the '${ruleString}' rule's labels...`);
+
+    labelsVerify = this.labels.every((label) => {
       const nameOnly = true,
             labelVerifies = label.verify(nameOnly);
 
@@ -64,6 +71,10 @@ export default define(class Rule extends Element {
         return true;
       }
     });
+
+    if (labelsVerify) {
+      context.trace(`...verified the '${ruleString}' rule's labels.`);
+    }
 
     return labelsVerify;
   }
@@ -188,7 +199,7 @@ export default define(class Rule extends Element {
   async verifyConclusion(context) {
     let conclusionVerifies;
 
-    const ruleString = this.getString();
+    const ruleString = this.getString();  ///
 
     context.trace(`Verifying the '${ruleString}' rule's conclusion...`);
 

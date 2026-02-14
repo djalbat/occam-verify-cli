@@ -2,7 +2,9 @@
 
 import { Element } from "occam-languages";
 
-import { scope } from "../utilities/context";
+import assignAssignments from "../process/assign";
+
+import { asyncScope } from "../utilities/context";
 import { labelFromJSON,
          labelToLabelJSON,
          deductionFromJSON,
@@ -53,22 +55,44 @@ export default class TopLevelMetaAssertion extends Element {
     return comparesToReference;
   }
 
-  verify() {
+  verifyLabel() {
+    let labelVerifies;
+
+    const context = this.getContext(),
+          topLevelMetaAssertionString = this.getString();
+
+    context.trace(`Verifiesing the '${topLevelMetaAssertionString}' top level meta assertion's label...`);
+
+    const nameOnly = true;
+
+    labelVerifies = this.label.verify(nameOnly);
+
+    if (labelVerifies) {
+      context.trace(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's label.`);
+    }
+
+    return labelVerifies;
+  }
+
+  async verify() {
     let verifies = false;
 
-    const context = this.getContext();
+    const context = this.getContext(),
+          topLevelMetaAssertionString = this.getString(); ///
 
-    scope((context) => {
+    context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta assertion...`);
+
+    await asyncScope(async (context) => {
       const labelVerifies = this.verifyLabel();
 
       if (labelVerifies) {
-        const suppositionsVerify = this.verifySuppositions(context);
+        const suppositionsVerify = await this.verifySuppositions(context);
 
         if (suppositionsVerify) {
-          const deductionVerifies = this.verifyDeduction(context);
+          const deductionVerifies = await this.verifyDeduction(context);
 
           if (deductionVerifies) {
-            const proofVerifies = this.verifyProof(context);
+            const proofVerifies = await this.verifyProof(context);
 
             if (proofVerifies) {
               verifies = true;
@@ -78,50 +102,80 @@ export default class TopLevelMetaAssertion extends Element {
       }
     }, context);
 
+    if (verifies) {
+      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion.`);
+    }
+
     return verifies;
   }
 
-  verifyLabel() {
-    const nameOnly = false,
-          labelVerifies = this.label.verify(nameOnly);
-
-    return labelVerifies;
-  }
-
-  verifySuppositions(context) {
-    const suppositionsVerify = this.suppositions.every((supposition) => {
-      const suppositionVerifies = this.verifySupposition(supposition, context);
-
-      if (suppositionVerifies) {
-        return true;
-      }
-    });
-
-    return suppositionsVerify;
-  }
-
-  verifySupposition(supposition, context) {
-    const suppositionVerifies = supposition.verify(context);
-
-    return suppositionVerifies;
-  }
-
-  verifyDeduction(context) {
-    const deductionVerifies = this.deduction.verify(context);
-
-    return deductionVerifies;
-  }
-
-  verifyProof(context) {
+  async verifyProof(context) {
     let proofVerifies;
 
     if (this.proof === null) {
       proofVerifies = true;
     } else {
-      proofVerifies = this.proof.verify(this.substitutions, this.deduction, context);
+      const topLevelMetaAssertionString = this.getString();  ///
+
+      context.trace(`Verifying the '${topLevelMetaAssertionString}' top meta level assertion's proof...`);
+
+      const statement = this.deduction.getStatement();
+
+      proofVerifies = this.proof.verify(statement, context);
+
+      if (proofVerifies) {
+        context.debug(`...verified the '${topLevelMetaAssertionString}' top meta level assertion's proof.`);
+      }
     }
 
     return proofVerifies;
+  }
+
+  async verifyDeduction(context) {
+    let deductionVerifies;
+
+    const topLevelMetaAssertionString = this.getString(); ///
+
+    context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta assertion's deduction...`);
+
+    deductionVerifies = await this.deduction.verify(context);
+
+    if (deductionVerifies) {
+      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's deduction.`);
+    }
+
+    return deductionVerifies;
+  }
+
+  async verifySuppositions(context) {
+    let suppositionsVerify;
+
+    const topLevelMetaAssertionString = this.getString();  ///
+
+    context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta assertion's suppositions...`);
+
+    suppositionsVerify = await asyncForwardsEvery(this.suppositions, async (supposition) => {
+      const assignments = [],
+            suppositionVerifies = await supposition.verify(assignments, context)
+
+      if (suppositionVerifies) {
+        const assignmentsAssigned = assignAssignments(assignments, context);
+
+        if (assignmentsAssigned) {
+          const subproofOrProofAssertion = supposition;  ////
+
+          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+
+          return true;
+        }
+      }
+    });
+
+    if (suppositionsVerify) {
+      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's suppositions.`);
+    }
+
+    return suppositionsVerify;
   }
 
   toJSON() {

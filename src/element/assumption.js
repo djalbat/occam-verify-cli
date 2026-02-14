@@ -86,7 +86,7 @@ export default define(class Assumption extends Element {
   validateReference(assignments, stated, context) {
     let referenceValidates;
 
-    const assumptionString = this.getString(),
+    const assumptionString = this.getString(),  ///
           referenceString = this.reference.getString();
 
     context.trace(`Validating the '${assumptionString}' assumption's '${referenceString}' reference...`);
@@ -103,7 +103,7 @@ export default define(class Assumption extends Element {
   validateStatement(assignments, stated, context) {
     let statementValidates;
 
-    const assumptionString = this.getString(),
+    const assumptionString = this.getString(),  ///
           statementString = this.statement.getString();
 
     context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);

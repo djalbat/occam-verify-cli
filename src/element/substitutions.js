@@ -7,7 +7,7 @@ import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
 import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
-const { find, first, clear, prune, filter, extract, compress, correlate } = arrayUtilities;
+const { first, extract, correlate } = arrayUtilities;
 
 export default define(class Substitutions extends Element {
   getNonTrivialLength() {
@@ -36,18 +36,6 @@ export default define(class Substitutions extends Element {
     return firstSubstitution;
   }
 
-  getLength() { return this.array.length; }
-
-  mapSubstitution(callback) { return this.array.map(callback); }
-
-  someSubstitution(callback) { return this.array.some(callback); }
-
-  everySubstitution(callback) { return this.array.every(callback); }
-
-  reduceSubstitution(callback, initialValue) { return this.array.reduce(callback, initialValue); }
-
-  forEachSubstitution(callback) { this.array.forEach(callback); }
-
   extractSubstitution(callbcak) { return extract(this.array, callbcak); }
 
   findSubstitutionByVariable(variable) {
@@ -66,58 +54,6 @@ export default define(class Substitutions extends Element {
     return substitution;
   }
 
-  findSubstitutionsByMetavariable(metavariable) {
-    const substitutions = this.findSubstitutions((substitution) => {
-      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualToMetavariable(metavariable);
-
-      if (substitutionMetavariableEqualToMetavariable) {
-        return true;
-      }
-    });
-
-    return substitutions;
-  }
-
-  isSubstitutionPresentByVariable(variable) {
-    const substitution = this.findSubstitutionByVariable(variable),
-          substitutionPresent = (substitution !== null);
-
-    return substitutionPresent;
-  }
-
-  addSubstitution(substitution, context) {
-    const substitutionString = substitution.getString(),
-          substitutionsString = this.asString();  ///
-
-    this.array.push(substitution);
-
-    const string = this.asString();
-
-    this.setString(string);
-
-    context.trace(`Added the '${substitutionString}' substitution to the '${substitutionsString}' substitutions.`);
-  }
-
-  removeSubstitution(substitution, context) {
-    const substitutionA = substitution; ///
-
-    prune(this.array, (substitution) => {
-      const substitutionB = substitution; ///
-
-      if (substitutionA !== substitutionB) {
-        return true;
-      }
-    });
-
-    const string = this.asString(),
-          substitutionString = substitution.getString(),
-          substitutionsString = string; ///
-
-    this.setString(string);
-
-    context.trace(`Removed the '${substitutionString}' substitution from the '${substitutionsString}' substitutions.`);
-  }
-
   correlateSubstitutions(substitutions) {
     const array = substitutions.getArray(),
           arrayA = array, ///
@@ -131,100 +67,6 @@ export default define(class Substitutions extends Element {
           });
 
     return correlates;
-  }
-
-  clear() {
-    clear(this.array);
-
-    this.savedArray = null;
-  }
-
-  resolve(context) {
-    const metavariables = this.getMetavariables();
-
-    metavariables.forEach((metavariable) => {
-      const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
-            complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
-              let resolved;
-
-              const substitutions = this, ///
-                    substitution = complexSubstitution; ///
-
-              resolved = substitution.isResolved();
-
-              if (!resolved) {
-                substitution.resolve(substitutions, context);
-              }
-            });
-
-      if (complexSubstitutionsResolved) {
-        return true;
-      }
-    });
-  }
-
-  areResolved() {
-    const metavariables = this.getMetavariables(),
-          resolved = metavariables.every((metavariable) => {
-            const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
-                  complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
-                        const complexSubstitutionResolved = complexSubstitution.isResolved();
-
-                        if (complexSubstitutionResolved) {
-                          return true;
-                        }
-                      });
-
-                    if (complexSubstitutionsResolved) {
-                      return true;
-                    }
-                  });
-
-    return resolved;
-  }
-
-  snapshot(context) {
-    const substitutionsString = this.getString(); ///
-
-    context.trace(`Taking a snapshot of the '${substitutionsString}' substitutions.`);
-
-    this.savedArray = [
-      ...this.array
-    ];
-  }
-
-  rollback(context) {
-    const substitutionsString = this.getString(); ///
-
-    context.trace(`Rolling back the '${substitutionsString}' substitutions.`);
-
-    const array = [
-      ...this.array
-    ];
-
-    leftDifference(array, this.savedArray);
-
-    array.forEach((substitution) => {
-      this.removeSubstitution(substitution, context);
-    });
-
-    this.array = [
-      ...this.savedArray
-    ];
-
-    this.savedArray = null;
-
-    const string = this.asString();
-
-    this.setString(string);
-  }
-
-  continue(context) {
-    const substitutionsString = this.getString(); ///
-
-    context.trace(`Continuing with the '${substitutionsString}' substitutions.`);
-
-    this.savedArray = null;
   }
 
   asString() {
@@ -256,13 +98,3 @@ export default define(class Substitutions extends Element {
     return substitutions;
   }
 });
-
-function leftDifference(arrayA, arrayB) {
-  filter(arrayA, (elementA) => {
-    const arrayBIncludesElementA = arrayB.includes(elementA);
-
-    if (!arrayBIncludesElementA) {
-      return true;
-    }
-  });
-}
