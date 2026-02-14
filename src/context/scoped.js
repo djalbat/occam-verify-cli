@@ -189,10 +189,9 @@ class ScopedContext extends Context {
             const judgementSingular = judgement.isSingular();
 
             if (judgementSingular) {
-              const judgementMetavariable = judgement.getMetavariable(),
-                    judgementMetavariableEqualToMetavariable = judgementMetavariable.isEqualTo(metavariable);
+              const judgementMetavariableComparesToMetavariable = judgement.compareMetavariable(metavariable);
 
-              if (judgementMetavariableEqualToMetavariable) {
+              if (judgementMetavariableComparesToMetavariable) {
                 return true;
               }
             }

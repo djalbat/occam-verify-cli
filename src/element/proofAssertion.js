@@ -65,7 +65,7 @@ export default class ProofAssertion extends Element {
     return statementValidates;
   }
 
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
+  unifyStatement(statement, generalContext, specificContext) {
     let statementUnifies = false;
 
     if (this.statement !== null) {
@@ -74,7 +74,8 @@ export default class ProofAssertion extends Element {
             proofAssertionString = this.getString();  ///
 
       context.trace(`Unifying the '${statementString}' statement with the '${proofAssertionString}' proof assertion...`);
-      statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+      statementUnifies = this.statement.unifyStatement(statement, generalContext, specificContext);
 
       if (statementUnifies) {
         context.debug(`...unified the '${statementString}' statement with the '${proofAssertionString}' proof assertion.`);

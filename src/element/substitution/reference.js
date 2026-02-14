@@ -24,8 +24,6 @@ export default define(class ReferenceSubstitution extends Substitution {
     return this.replacementReference;
   }
 
-  getMetavariable(context) { return this.targetReference.getMetavariable(); }
-
   getTargetNode() {
     const targetReferenceNode = this.targetReference.getNode(),
           tergetNode = targetReferenceNode; ///

@@ -84,26 +84,30 @@ export default define(class Statement extends Element {
     return frameContained;
   }
 
-  isMetavariableEqualToMetavariable(metavariable, context) {
-    let metavariableEqualToMetavariable;
+  compareMetavariable(metavariable) {
+    let metavaraibleComparseTo;
 
     const singular = this.isSingular();
 
     if (singular) {
+      let metavariableName;
+
       const node = this.getNode(),
-            metavariableA = metavariable, ///
-            singularMetavariableNode = node.getSingularMetavariableNode(),
-            metavariableName = singularMetavariableNode.getMetavariableName();
+            statementNode = node,  ///
+            singularMetavariableNode = statementNode.getSingularMetavariableNode();
 
-      metavariable = context.findMetavariableByMetavariableName(metavariableName)
+      metavariableName = singularMetavariableNode.getMetavariableName();
 
-      const metavariableB = metavariable,
-            equalTo = metavariableA.isEqualTo(metavariableB);
+      const metavariableNameA = metavariableName ///
 
-      metavariableEqualToMetavariable = equalTo;  ///
+      metavariableName = metavariable.getName();
+
+      const metavariableNameB = metavariableName; ///
+
+      metavaraibleComparseTo = (metavariableNameA === metavariableNameB);
     }
 
-    return metavariableEqualToMetavariable;
+    return metavaraibleComparseTo;
   }
 
   isEqualTo(statement) {
@@ -187,7 +191,7 @@ export default define(class Statement extends Element {
     return validatesGivenMetaType;
   }
 
-  unifySubproof(subproof, substitutions, generalContext, specificContext) {
+  unifySubproof(subproof, generalContext, specificContext) {
     let subproofUnifies = false;
 
     const node = this.getNode(),
@@ -211,7 +215,7 @@ export default define(class Statement extends Element {
       subproofUnifies = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
         const generalStatement = subproofAssertionStatement,  ///
               specificStatement = subproofStatement,  ///
-              statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+              statementUnifies = unifyStatement(generalStatement, specificStatement, generalContext, specificContext);
 
         if (statementUnifies) {
           return true;
@@ -246,7 +250,7 @@ export default define(class Statement extends Element {
     return statementUnifies;
   }
 
-  unifyIndependently(substitutions, generalContext, specificContext) {
+  unifyIndependently(generalContext, specificContext) {
     let unifiesIndependently = false;
 
     const context = specificContext,  ///
@@ -263,7 +267,7 @@ export default define(class Statement extends Element {
       const context = generalContext, ///
             assertionNode = (definedAssertionNode || containedAssertionNode),
             assertion = context.findAssertionByAssertionNode(assertionNode),
-            assertionUnifiesIndependently = assertion.unifyIndependently(substitutions, generalContext, specificContext);
+            assertionUnifiesIndependently = assertion.unifyIndependently(generalContext, specificContext);
 
       if (assertionUnifiesIndependently) {
         unifiesIndependently = true;

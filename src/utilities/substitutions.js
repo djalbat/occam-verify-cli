@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 const { compress } = arrayUtilities;
 
-export function termFromTermAndSubstitutions(term, substitutions, generalContext, specificContext) {
+export function termFromTermAndSubstitutions(term, generalContext, specificContext) {
   if (term !== null) {
     const termNode = term.getNode(),
           termSingular = term.isSingular();
@@ -16,7 +16,7 @@ export function termFromTermAndSubstitutions(term, substitutions, generalContext
             variable = generalContext.findVariableByVariableIdentifier(variableIdentifier);
 
       if (variable !== null) {
-        const substitution = substitutions.findSubstitutionByVariable(variable);
+        const substitution = specificContext.findSubstitutionByVariable(variable);
 
         if (substitution !== null) {
           const termSubstitution = substitution;  ///
@@ -30,7 +30,7 @@ export function termFromTermAndSubstitutions(term, substitutions, generalContext
   return term;
 }
 
-export function frameFromFrameAndSubstitutions(frame, substitutions, generalContext, specificContext) {
+export function frameFromFrameAndSubstitutions(frame, generalContext, specificContext) {
   if (frame !== null) {
     const frameNode = frame.getNode(),
           frameSingular = frame.isSingular();
@@ -44,7 +44,7 @@ export function frameFromFrameAndSubstitutions(frame, substitutions, generalCont
       if (metavariable !== null) {
         let substitution = null;
 
-        substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution);
+        substitution = specificContext.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution);
 
         if (substitution !== null) {
           const frameSubstitution = substitution; ///
@@ -58,7 +58,7 @@ export function frameFromFrameAndSubstitutions(frame, substitutions, generalCont
   return frame;
 }
 
-export function statementFromStatementAndSubstitutions(statement, substitutions, generalContext, specificContext) {
+export function statementFromStatementAndSubstitutions(statement, generalContext, specificContext) {
   if (statement !== null) {
     const statementNode = statement.getNode(),
           statementSingular = statement.isSingular();
@@ -78,7 +78,7 @@ export function statementFromStatementAndSubstitutions(statement, substitutions,
             metavariable = generalContext.findMetavariableByMetavariableName(metavariableName);
 
       if (metavariable !== null) {
-        substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution);
+        substitution = specificContext.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution);
 
         if (substitution !== null) {
           const statementSubstitution = substitution; ///
@@ -92,11 +92,12 @@ export function statementFromStatementAndSubstitutions(statement, substitutions,
   return statement;
 }
 
-export function metavariablesFromSubstitutions(substitutions, context) {
+export function metavariablesFromSubstitutions(substitutions, generalContext, specificContext) {
   const metavariables = [];
 
   substitutions.forEach((substitution) => {
-    const metavariable = substitution.getMetavariable(context);
+    const context = generalContext, ///
+          metavariable = substitution.getMetavariable(context);
 
     if (metavariable !== null) {
       metavariables.push(metavariable);
@@ -104,9 +105,9 @@ export function metavariablesFromSubstitutions(substitutions, context) {
   });
 
   compress(metavariables, (metavariableA, metavariableB) => {
-    const metavariableAEqualToMetavariableB = metavariableB.isEqualTo(metavariableA);
+    const metavariableComparesToMetavariableB = metavariableB.compare(metavariableA);
 
-    if (!metavariableAEqualToMetavariableB) {
+    if (!metavariableComparesToMetavariableB) {
       return true;
     }
   });

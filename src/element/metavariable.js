@@ -39,10 +39,11 @@ export default define(class Metavariable extends Element {
     this.metaType = metaType;
   }
 
-  isNameEqualTo(name) {
-    const nameEqualTo = (name === this.name);
+  compare(metavariable) {
+    const name = metavariable.getName(),
+          comparesToMetavariable = (this.name === name);
 
-    return nameEqualTo;
+    return comparesToMetavariable;
   }
 
   isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
@@ -274,9 +275,9 @@ export default define(class Metavariable extends Element {
     if (generalContextFilePath === specificContextFilePath) {
       const metavariable = this,  ///
             metavariableString = metavariable.getString(),
-            frameMetavariableEqualToMetvariable = frame.isMetavariableEqualToMetavariable(metavariable, context);
+            frameMetavariableComparesToMetvariable = frame.compareMetavariable(metavariable);
 
-      if (frameMetavariableEqualToMetvariable) {
+      if (frameMetavariableComparesToMetvariable) {
         frameMetavariableUnifies = true;
       } else {
         const frameSingular = frame.isSingular();
@@ -304,6 +305,41 @@ export default define(class Metavariable extends Element {
     return frameMetavariableUnifies;
   }
 
+  unifyReferenceMetavariable(reference, generalContext, specificContext) {
+    let referenceMetavariableUnifies = false;
+
+    const context = specificContext,  ///
+          generalContextFilePath = generalContext.getFilePath(),
+          specificContextFilePath = specificContext.getFilePath();
+
+    if (generalContextFilePath === specificContextFilePath) {
+      const metavariable = this,  ///
+            metavariableString = metavariable.getString(),
+            referenceMetavariableComparesToMetvariable = reference.compareMetavariable(metavariable);
+
+      if (referenceMetavariableComparesToMetvariable) {
+        referenceMetavariableUnifies = true;
+      } else {
+        const referenceMetavariable = reference.getMetavariable(),
+              referenceMetavariableString = referenceMetavariable.getString();
+
+        context.trace(`Unifying the reference's ${referenceMetavariableString}' metavariable with the '${metavariableString}' metavariable...`);
+
+        const generalMetavariable = this, ///
+              specificMetavariable = referenceMetavariable, ///
+              metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
+
+        referenceMetavariableUnifies = metavariableUnifiesIntrinsically; ///
+
+        if (referenceMetavariableUnifies) {
+          context.debug(`...unified the reference's '${referenceMetavariableString}' metavariable with the '${metavariableString}' metavariable.`);
+        }
+      }
+    }
+
+    return referenceMetavariableUnifies;
+  }
+
   unifyStatementMetavariable(statement, generalContext, specificContext) {
     let statementMetavariableUnifies = false;
 
@@ -314,9 +350,9 @@ export default define(class Metavariable extends Element {
     if (generalContextFilePath === specificContextFilePath) {
       const metavariable = this,  ///
             metavariableString = metavariable.getString(),
-            statementMetavariableEqualToMetvariable = statement.isMetavariableEqualToMetavariable(metavariable, context);
+            statementMetavariableComparesToMetvariable = statement.compareMetavariable(metavariable);
 
-      if (statementMetavariableEqualToMetvariable) {
+      if (statementMetavariableComparesToMetvariable) {
         statementMetavariableUnifies = true;
       } else {
         const statementSingular = statement.isSingular();
@@ -342,41 +378,6 @@ export default define(class Metavariable extends Element {
     }
 
     return statementMetavariableUnifies;
-  }
-
-  unifyReferenceMetavariable(reference, substitutions, generalContext, specificContext) {
-    let referenceMetavariableUnifies = false;
-
-    const context = specificContext,  ///
-          generalContextFilePath = generalContext.getFilePath(),
-          specificContextFilePath = specificContext.getFilePath();
-
-    if (generalContextFilePath === specificContextFilePath) {
-      const metavariable = this,  ///
-            metavariableString = metavariable.getString(),
-            referenceMetavariableEqualToMetvariable = reference.isMetavariableEqualToMetavariable(metavariable);
-
-      if (referenceMetavariableEqualToMetvariable) {
-        referenceMetavariableUnifies = true;
-      } else {
-        const referenceMetavariable = reference.getMetavariable(),
-              referenceMetavariableString = referenceMetavariable.getString();
-
-        context.trace(`Unifying the reference's ${referenceMetavariableString}' metavariable with the '${metavariableString}' metavariable...`);
-
-        const generalMetavariable = this, ///
-              specificMetavariable = referenceMetavariable, ///
-              metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
-
-        referenceMetavariableUnifies = metavariableUnifiesIntrinsically; ///
-
-        if (referenceMetavariableUnifies) {
-          context.debug(`...unified the reference's '${referenceMetavariableString}' metavariable with the '${metavariableString}' metavariable.`);
-        }
-      }
-    }
-
-    return referenceMetavariableUnifies;
   }
 
   toJSON() {

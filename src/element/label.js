@@ -20,14 +20,14 @@ export default define(class Label extends Element {
 
   getMetavariableNode() { return this.metavariable.getNode(); }
 
-  compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
+  compareMetavariable(metavariable) { return this.metavariable.compare(metavariable); }
 
-  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
+  compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
 
   compareReference(reference) {
     const metavariable = reference.getMetavariable(),
-          metavariableEqualToMetavariable = this.isMetavariableEqualToMetavariable(metavariable),
-          comparesToReference = metavariableEqualToMetavariable; ///
+          metavariableComparesToMetavariable = this.compareMetavariable(metavariable),
+          comparesToReference = metavariableComparesToMetavariable; ///
 
     return comparesToReference;
   }

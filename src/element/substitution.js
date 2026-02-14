@@ -62,12 +62,6 @@ export default class Substitution extends Element {
     return referenceEqualToReference;
   }
 
-  isMetavariableEqualToMetavariable(metavariable) {
-    const metavariableEqualToMetavariable = false;
-
-    return metavariableEqualToMetavariable;
-  }
-
   isEqualTo(substitution) {
     const substitutionA = this, ///
           substitutionB = substitution, ///
@@ -101,6 +95,12 @@ export default class Substitution extends Element {
     const comparesToSubstitution = false;
 
     return comparesToSubstitution;
+  }
+
+  compareMetavariable(metavariable) {
+    const compaaresToMetavariable = false;
+
+    return compaaresToMetavariable;
   }
 
   resolve(substitutions, context) {

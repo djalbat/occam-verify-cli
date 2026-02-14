@@ -84,12 +84,12 @@ export default define(class Premise extends ProofAssertion {
     context.trace(`Unifying the '${subproofOrProofAssertionString}' subproof or proof assertion with the '${premiseString}' premise...`);
 
     const subproofOrProofAssertionProofAssertion = subproofOrProofAssertion.isProofAssertion(),
-          proofAssertion = subproofOrProofAssertionProofAssertion ?
-                             subproofOrProofAssertion :
-                               null,
-          subproof = subproofOrProofAssertionProofAssertion ?
-                        null :
-                          subproofOrProofAssertion;
+                                                   proofAssertion = subproofOrProofAssertionProofAssertion ?
+                                                                      subproofOrProofAssertion :
+                                                                        null,
+                                                   subproof = subproofOrProofAssertionProofAssertion ?
+                                                                 null :
+                                                                   subproofOrProofAssertion;
 
     if (proofAssertion !== null) {
       const proofAssertionUnifies = this.unifyProofAssertion(proofAssertion, context);
@@ -224,7 +224,15 @@ export default define(class Premise extends ProofAssertion {
           procedureCall = this.getProcedureCall();
 
     if (statement !== null) {
-      const statementUnifiesIndependently = statement.unifyIndependently(context);
+      const specificContext = context;  ///
+
+      context = this.getContext();
+
+      const generalContext = context; ///
+
+      context = specificContext;  ///
+
+      const statementUnifiesIndependently = statement.unifyIndependently(generalContext, specificContext);
 
       if (statementUnifiesIndependently) {
         unifiesIndependently = true;

@@ -34,8 +34,6 @@ export default define(class Reference extends Element {
     return metavariableNode;
   }
 
-  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
-
   isEqualTo(reference) {
     const referenceA = this, ///
           referenceB = reference, ///
@@ -61,6 +59,28 @@ export default define(class Reference extends Element {
     }
 
     return comparesToParamter;
+  }
+
+  compareMetavariable(metavariable) {
+    let metavaraibleComparseTo;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      let metavariableName;
+
+      metavariableName = this.metavariable.getName();
+
+      const metavariableNameA = metavariableName ///
+
+      metavariableName = metavariable.getName();
+
+      const metavariableNameB = metavariableName; ///
+
+      metavaraibleComparseTo = (metavariableNameA === metavariableNameB);
+    }
+
+    return metavaraibleComparseTo;
   }
 
   compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }

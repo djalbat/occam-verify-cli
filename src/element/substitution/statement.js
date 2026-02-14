@@ -104,6 +104,8 @@ export default define(class StatementSubstitution extends Substitution {
     return comparesToSubstitution;
   }
 
+  compareMetavariable(metavariable) { return this.targetStatement.compareMetavariable(metavariable); }
+
   validate(context) {
     let validates = false;
 

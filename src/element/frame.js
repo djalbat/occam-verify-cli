@@ -38,26 +38,26 @@ export default define(class Frame extends Element {
     return singular;
   }
 
-  isMetavariableEqualToMetavariable(metavariable, context) {
-    let metavariableEqualToMetavariable;
+  compareMetavariable(metavariable) {
+    let metavaraibleComparseTo;
 
     const singular = this.isSingular();
 
     if (singular) {
-      const node = this.getNode(),
-            metavariableA = metavariable, ///
-            singularMetavariableNode = node.getSingularMetavariableNode(),
-            metavariableName = singularMetavariableNode.getMetavariableName();
+      let metavariableName;
 
-      metavariable = context.findMetavariableByMetavariableName(metavariableName)
+      metavariableName = this.metavariable.getName();
 
-      const metavariableB = metavariable,
-            equalTo = metavariableA.isEqualTo(metavariableB);
+      const metavariableNameA = metavariableName ///
 
-      metavariableEqualToMetavariable = equalTo;  ///
+      metavariableName = metavariable.getName();
+
+      const metavariableNameB = metavariableName; ///
+
+      metavaraibleComparseTo = (metavariableNameA === metavariableNameB);
     }
 
-    return metavariableEqualToMetavariable;
+    return metavaraibleComparseTo;
   }
 
   isEqualTo(frame) {
@@ -124,7 +124,7 @@ export default define(class Frame extends Element {
 
     context.trace(`Comparing the '${frameString}' frame to the '${substitutionsString}' substitutions...`);
 
-    comparesToSubstitutions = substitutions.everySubstitution((substitution) => {
+    comparesToSubstitutions = substitutions.every((substitution) => {
       const compaaresToSubstitution = this.compareSubstitution(substitution, context);
 
       if (compaaresToSubstitution) {

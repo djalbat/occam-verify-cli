@@ -590,9 +590,9 @@ export default class NominalFileContext extends FileContext {
   findLabelByMetavariable(metavariable) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
-            const metavariableEqualToLabelMetavariable = label.isMetavariableEqualToMetavariable(metavariable);
+            const labelMetavariableComparesToMetavariable = label.compareMetavariable(metavariable);
 
-            if (metavariableEqualToLabelMetavariable) {
+            if (labelMetavariableComparesToMetavariable) {
               return true;
             }
           }) || null;
@@ -606,10 +606,9 @@ export default class NominalFileContext extends FileContext {
             const judgementSingular = judgement.isSingular();
 
             if (judgementSingular) {
-              const judgementMetavariable = judgement.getMetavariable(),
-                    judgementMetavariableEqualToMetavariable = judgementMetavariable.isEqualTo(metavariable);
+              const judgementMetavariableComparesToMetavariable = judgement.compareMetavariable(metavariable);
 
-              if (judgementMetavariableEqualToMetavariable) {
+              if (judgementMetavariableComparesToMetavariable) {
                 return true;
               }
             }

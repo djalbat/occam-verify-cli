@@ -35,9 +35,9 @@ export default define(class Assumption extends Element {
     const statement = substitution.getStatement(),
           metavariable = substitution.getMetavariable(context),
           statementEqualToStatement = this.statement.isEqualTo(statement),
-          referenceMetavariableEqualToMetavariable = this.reference.isMetavariableEqualToMetavariable(metavariable);
+          referenceMetavariableComparesToMetavariable = this.reference.compareMetavariable(metavariable);
 
-    if (statementEqualToStatement && referenceMetavariableEqualToMetavariable) {
+    if (statementEqualToStatement && referenceMetavariableComparesToMetavariable) {
       comparesToSubstituion = true;
     }
 

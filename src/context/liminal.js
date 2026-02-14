@@ -78,13 +78,12 @@ export default class LiminalContext extends Context {
     context.trace(`Added the '${substitutionsString}' substitutions to the context.`);
   }
 
-  resolveSubstitutions() {
-    const context = this, ///
-          metavariables = metavariablesFromSubstitutions(this.substitutions, context);
+  resolveSubstitutions(generalContext, specificContext) {
+    const metavariables = metavariablesFromSubstitutions(this.substitutions, generalContext, specificContext);
 
     metavariables.forEach((metavariable) => {
       const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
-            complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
+            complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
               let resolved;
 
               const substitution = complexSubstitution; ///
@@ -102,9 +101,8 @@ export default class LiminalContext extends Context {
     });
   }
 
-  areSubstitutionsResolved() {
-    const context = this, ///
-          metavariables = metavariablesFromSubstitutions(this.substitutions, context),
+  areSubstitutionsResolved(generalContext, specificContext) {
+    const metavariables = metavariablesFromSubstitutions(this.substitutions, generalContext, specificContext),
           resolved = metavariables.every((metavariable) => {
             const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
                   complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
@@ -133,9 +131,9 @@ export default class LiminalContext extends Context {
 
       if (substitutionSimple) {
         const simpleSubstitution = substitution,  ///
-              simpleSubstitutionMetavariableEqualToMetavariable = simpleSubstitution.isMetavariableEqualToMetavariable(metavariable);
+              simpleSubstitutionMetavariableComparesToMetavariable = simpleSubstitution.compareMetavariable(metavariable);
 
-        if (simpleSubstitutionMetavariableEqualToMetavariable) {
+        if (simpleSubstitutionMetavariableComparesToMetavariable) {
           return true;
         }
       }
@@ -150,9 +148,9 @@ export default class LiminalContext extends Context {
 
       if (substitutionComplex) {
         const complexSubstitution = substitution, ///
-              complexSubstitutionMetavariableEqualToMetavariable = complexSubstitution.isMetavariableEqualToMetavariable(metavariable);
+              complexSubstitutionMetavariableComparesToMetavariable = complexSubstitution.compareMetavariable(metavariable);
 
-        if (complexSubstitutionMetavariableEqualToMetavariable) {
+        if (complexSubstitutionMetavariableComparesToMetavariable) {
           return true;
         }
       }
@@ -165,9 +163,9 @@ export default class LiminalContext extends Context {
     const substitutionA = substitution; ///
 
     substitution = this.findSubstitution((substitution) => {  ///
-      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualToMetavariable(metavariable);
+      const substitutionMetavariablCompareslToMetavariable = substitution.compareMetavariable(metavariable);
 
-      if (substitutionMetavariableEqualToMetavariable) {
+      if (substitutionMetavariablCompareslToMetavariable) {
         const substitutionB = substitution, ///
               substitutionBSubstitutionComparesToSubstitutionA = substitutionB.compareSubstitution(substitutionA);
 
