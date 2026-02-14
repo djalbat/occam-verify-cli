@@ -3,8 +3,8 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
 import { unifySubstitution } from "../../process/unify";
+import { liminally, literally } from "../../utilities/context";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
@@ -180,45 +180,28 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementStatementValidates;
   }
 
-  unifyStatement(statement, context) {
-    let statementUnifies = false;
+  unifyReplacementStatement(replacementStatement, context) {
+    let replacementStatemnentUnifies = false;
 
-    const statementString = statement.getString(),
-          statementSubstitutionString = this.getString();
+    const substitutionString = this.getString(),  ///
+          replacementStatementString = replacementStatement.getString(),
+          substitutionReplacementStatementString = this.replacementStatement.getString();  ///
 
-    context.trace(`Unifying the '${statementString}' statement with the '${statementSubstitutionString}' statement substiution's statement...`);
+    context.trace(`Unifying the '${replacementStatementString}' replacement statement with the '${substitutionString}' substiution's '${substitutionReplacementStatementString}' replacement statement...`);
 
-    const specificContext = context; ///
-
-    context = this.getContext();
-
-    const generalContext = context; ///
-
-    context = specificContext;  ///
-
-    const substitutions = [];
-
-    statementUnifies = this.replacementStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    let substitution = null;
+    const generalContext = context, ///
+          specificContext = context,  ///
+          statementUnifies = this.replacementStatement.unifyStatement(replacementStatement, generalContext, specificContext);
 
     if (statementUnifies) {
-      const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
-
-      if (substitutionsNonTrivialLength === 1) {
-        const firstSubstitution = substitutions.getFirstSubstitution();
-
-        substitution = firstSubstitution; ///
-      } else {
-        statementUnifies = false;
-      }
+      replacementStatemnentUnifies = true;
     }
 
-    if (statementUnifies) {
-      context.trace(`...unified the '${statementString}' statement with the '${statementSubstitutionString}' statement substiution's statement.`);
+    if (replacementStatemnentUnifies) {
+      context.debug(`...unified the '${replacementStatementString}' replacement statement with the '${substitutionString}' substiution's '${substitutionReplacementStatementString}' replacement statement.`);
     }
 
-    return substitution;
+    return replacementStatemnentUnifies;
   }
 
   unifySubstitution(substitution, substitutions, context) {
@@ -247,30 +230,50 @@ export default define(class StatementSubstitution extends Substitution {
     return substitutionUnifies;
   }
 
-  resolve(substitutions, context) {
+  resolve(generalContext, specificContext) {
+    let context;
+
     context = this.getContext();
 
     const substitutionString = this.getString(); ///
 
     context.trace(`Resolving the ${substitutionString} substitution...`);
 
-    substitutions.snapshot(context);
+    const terms = context.getTerms(),
+          frames = context.getFrames();
 
-    const metavariable = this.getMetavariable(),
-          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable),
-          substitution = simpleSubstitution.unifyStatement(this.replacementStatement, context);
+    context = generalContext; ///
+
+    const metavariable = this.getMetavariable(context);
+
+    context = specificContext;  ///
+
+    const simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable),
+          substitution = liminally((context) => {
+            let substitution = null;
+
+            context.addTerms(terms);
+
+            context.addFrames(frames);
+
+            const replacementStatementUnifies = simpleSubstitution.unifyReplacementStatement(this.replacementStatement, context);
+
+            if (replacementStatementUnifies) {
+              const soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution();
+
+              substitution = soleNonTrivialSubstitution; ///
+            }
+
+            return substitution;
+          }, context);
 
     if (substitution !== null) {
-      const substitutionUnifies = this.unifySubstitution(substitution, substitutions, context);
+      const substitutionUnifies = this.unifySubstitution(substitution, context);
 
       if (substitutionUnifies) {
         this.resolved = true;
       }
     }
-
-    this.resolved ?
-      substitutions.continue(context) :
-        substitutions.rollback(context);
 
     if (this.resolved) {
       context.debug(`...resolved the '${substitutionString}' substitution.`);

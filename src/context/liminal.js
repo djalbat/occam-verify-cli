@@ -2,32 +2,104 @@
 
 import { arrayUtilities } from "necessary";
 import { metavariablesFromSubstitutions } from "../utilities/substitutions";
-import { substitutionsStringFromSubstitutions } from "../utilities/string";
+import { termsStringFromTerms, framesStringFromFrames, substitutionsStringFromSubstitutions } from "../utilities/string";
 
 import Context from "../context";
 
-const { find, compress } = arrayUtilities;
+const { find, first, compress } = arrayUtilities;
 
 export default class LiminalContext extends Context {
-  constructor(context, substitutions) {
+  constructor(context, terms, frames, substitutions) {
     super(context);
 
+    this.terms = terms;
+    this.frames = frames;
     this.substitutions = substitutions;
   }
 
-  getSubstitutions() {
+  getTerms(nested = true) {
+    let terms;
+
+    if (nested) {
+      const context = this.getContext();
+
+      terms = context.getTerms();
+
+      terms = [ ///
+        ...this.terms,
+        ...terms
+      ]
+    } else {
+      terms = this.terms;
+    }
+
+    return terms;
+  }
+
+  getFrames(nested = true) {
+    let frames;
+
+    if (nested) {
+      const context = this.getContext();
+
+      frames = context.getFrames();
+
+      frames = [ ///
+        ...this.frames,
+        ...frames
+      ]
+    } else {
+      frames = this.frames;
+    }
+
+    return frames;
+  }
+
+  getSubstitutions(nested = true) {
     let substitutions;
 
-    const context = this.getContext();
+    if (nested) {
+      const context = this.getContext();
 
-    substitutions = context.getSubstitutions();
+      substitutions = context.getSubstitutions();
 
-    substitutions = [ ///
-      ...this.substitutions,
-      ...substitutions
-    ]
+      substitutions = [ ///
+        ...this.substitutions,
+        ...substitutions
+      ]
+    } else {
+      substitutions = this.substitutions;
+    }
 
     return substitutions;
+  }
+
+  getNonTrivialSubstitutions(nested = true) {
+    const nonTrivialSubstitutions = this.findSubstitutions((substitution) => {
+      const substitutionNonTrivial = substitution.isNonTrivial();
+
+      if (substitutionNonTrivial) {
+        return true;
+      }
+    }, nested);
+
+    return nonTrivialSubstitutions;
+  }
+
+  getSoleNonTrivialSubstitution() {
+    let soleNonTrivialSubstitutions = null;
+
+    const nested = false,
+          nonTrivialSubstitutions = this.getNonTrivialSubstitutions(nested),
+          nonTrivialSubstitutionsLength = nonTrivialSubstitutions.length;
+
+    if (nonTrivialSubstitutionsLength === 1) {
+      const firstNonTrivkalSubstitution = first(nonTrivialSubstitutions);
+
+      soleNonTrivialSubstitutions = firstNonTrivkalSubstitution; ///
+    }
+
+    return soleNonTrivialSubstitutions;
   }
 
   commit(context) {
@@ -36,6 +108,46 @@ export default class LiminalContext extends Context {
     }
 
     context.addSubstitutions(this.substitutions);
+  }
+
+  addTerm(term) {
+    const context = this,
+      termString = term.getString();
+
+    this.terms = [ ///
+      ...this.terms,
+      term
+    ];
+
+    compress(this.terms, (termA, termB) => {
+      const termAEqualToTermB = termA.isEqualTo(termB);
+
+      if (!termAEqualToTermB) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${termString}' term to the context.`);
+  }
+
+  addFrame(frame) {
+    const context = this,
+          frameString = frame.getString();
+
+    this.frames = [ ///
+      ...this.frames,
+      frame
+    ];
+
+    compress(this.frames, (frameA, frameB) => {
+      const frameAEqualToFrameB = frameA.isEqualTo(frameB);
+
+      if (!frameAEqualToFrameB) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${frameString}' frame to the context.`);
   }
 
   addSubstitution(substitution) {
@@ -48,6 +160,26 @@ export default class LiminalContext extends Context {
     ];
 
     compress(this.substitutions, (substitutionA, substitutionB) => {
+      const substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
+
+      if (!substitutionAEqualToSubstitutionB) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${substitutionString}' substitution to the context.`);
+  }
+
+  addTerms(terms) {
+    const context = this,
+          termsString = termsStringFromTerms(terms);
+
+    this.terms = [ ///
+      ...this.terms,
+      ...terms
+    ];
+
+    compress(this.terms, (substitutionA, substitutionB) => {
       const substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
 
       if (!substitutionAEqualToAssertionB) {
@@ -55,7 +187,27 @@ export default class LiminalContext extends Context {
       }
     });
 
-    context.trace(`Added the '${substitutionString}' substitution to the context.`);
+    context.trace(`Added the '${termsString}' terms to the context.`);
+  }
+
+  addFrames(frames) {
+    const context = this,
+          framesString = framesStringFromFrames(frames);
+
+    this.frames = [ ///
+      ...this.frames,
+      ...frames
+    ];
+
+    compress(this.frames, (substitutionA, substitutionB) => {
+      const substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
+
+      if (!substitutionAEqualToAssertionB) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${framesString}' frames to the context.`);
   }
 
   addSubstitutions(substitutions) {
@@ -79,19 +231,17 @@ export default class LiminalContext extends Context {
   }
 
   resolveSubstitutions(generalContext, specificContext) {
-    const metavariables = metavariablesFromSubstitutions(this.substitutions, generalContext, specificContext);
+    const substitutions = this.getSubstitutions(),
+          metavariables = metavariablesFromSubstitutions(substitutions, generalContext, specificContext);
 
     metavariables.forEach((metavariable) => {
       const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
             complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
-              let resolved;
-
-              const substitution = complexSubstitution; ///
-
-              resolved = substitution.isResolved();
+              const substitution = complexSubstitution, ///
+                    resolved = substitution.isResolved();
 
               if (!resolved) {
-                substitution.resolve(this.substitutions, context);
+                substitution.resolve(generalContext, specificContext);
               }
             });
 
@@ -102,7 +252,8 @@ export default class LiminalContext extends Context {
   }
 
   areSubstitutionsResolved(generalContext, specificContext) {
-    const metavariables = metavariablesFromSubstitutions(this.substitutions, generalContext, specificContext),
+    const substitutions = this.getSubstitutions(),
+          metavariables = metavariablesFromSubstitutions(substitutions, generalContext, specificContext),
           resolved = metavariables.every((metavariable) => {
             const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
                   complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
@@ -121,9 +272,48 @@ export default class LiminalContext extends Context {
     return resolved;
   }
 
-  findSubstitution(callback) { return this.substitutions.find(callback) }
+  findSubstitution(callback) {
+    const substitutions = this.getSubstitutions(),
+          substitution = substitutions.find(callback);
 
-  findSubstitutions(callback) { return find(this.substitutions, callback); }
+    return substitution;
+  }
+
+  findSubstitutions(callback, nested = true) {
+    let substitutions;
+
+    substitutions = this.getSubstitutions(nested);
+
+    substitutions = find(substitutions, callback);  ///
+
+    return substitutions;
+  }
+
+  findTermByTermNode(termNode) {
+    const terms = this.getTerms(),
+          term = terms.find((term) => {
+            const termNodeMatches = term.matchNode(termNode);
+
+            if (termNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return term;
+  }
+
+  findFrameByFrameNode(frameNode) {
+    const frames = this.getFrames(),
+          frame = frames.find((frame) => {
+            const frameNodeMatches = frame.matchNode(frameNode);
+
+            if (frameNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return frame;
+  }
 
   findSimpleSubstitutionByMetavariable(metavariable) {
     const simpleSubstitution = this.findSubstitution((substitution) => {
@@ -194,8 +384,10 @@ export default class LiminalContext extends Context {
   }
 
   static fromNothing(context) {
-    const substitutions = [],
-          emphemeralContext = new LiminalContext(context, substitutions);
+    const terms = [],
+          frames = [],
+          substitutions = [],
+          emphemeralContext = new LiminalContext(context, terms, frames, substitutions);
 
     return emphemeralContext;
   }

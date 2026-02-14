@@ -59,7 +59,7 @@ export default class TopLevelMetaAssertion extends Element {
     let labelVerifies;
 
     const context = this.getContext(),
-          topLevelMetaAssertionString = this.getString();
+          topLevelMetaAssertionString = this.getString(); ///
 
     context.trace(`Verifiesing the '${topLevelMetaAssertionString}' top level meta assertion's label...`);
 

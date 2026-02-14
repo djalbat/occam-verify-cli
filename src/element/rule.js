@@ -59,7 +59,7 @@ export default define(class Rule extends Element {
     let labelsVerify;
 
     const context = this.getContext(),
-          ruleString = this.getString();
+          ruleString = this.getString();  ///
 
     context.trace(`Verifying the '${ruleString}' rule's labels...`);
 

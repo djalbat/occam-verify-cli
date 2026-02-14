@@ -16,6 +16,20 @@ export function termsStringFromTerms(terms) {
   return termsString;
 }
 
+export function framesStringFromFrames(frames) {
+  const framesString = frames.reduce((framesString, frame) => {
+    const frameString = frame.getString();
+
+    framesString = (framesString !== null) ?
+                    `${framesString}, ${frameString}` :
+                       frameString;
+
+    return framesString;
+  }, null);
+
+  return framesString;
+}
+
 export function labelsStringFromLabels(labels) {
   const labelsString = labels.reduce((labelsString, label) => {
     const labelString = label.getString();

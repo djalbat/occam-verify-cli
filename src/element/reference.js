@@ -62,22 +62,20 @@ export default define(class Reference extends Element {
   }
 
   compareMetavariable(metavariable) {
-    let metavaraibleComparseTo;
+    let metavaraibleComparseTo = false;
 
-    const singular = this.isSingular();
+    let metavariableName;
 
-    if (singular) {
-      let metavariableName;
+    metavariableName = this.metavariable.getName();
 
-      metavariableName = this.metavariable.getName();
+    const metavariableNameA = metavariableName ///
 
-      const metavariableNameA = metavariableName ///
+    metavariableName = metavariable.getName();
 
-      metavariableName = metavariable.getName();
+    const metavariableNameB = metavariableName; ///
 
-      const metavariableNameB = metavariableName; ///
-
-      metavaraibleComparseTo = (metavariableNameA === metavariableNameB);
+    if (metavariableNameA === metavariableNameB) {
+      metavaraibleComparseTo = true;
     }
 
     return metavaraibleComparseTo;

@@ -1,6 +1,8 @@
 "use strict";
 
-import { Context, nodeUtilities } from "occam-languages";
+import {  nodeUtilities } from "occam-languages";
+
+import Context from "../context";
 
 const { nodeAsString, nodesAsString } = nodeUtilities;
 

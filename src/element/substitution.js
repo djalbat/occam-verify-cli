@@ -50,6 +50,13 @@ export default class Substitution extends Element {
     return trivial;
   }
 
+  isNonTrivial() {
+    const trivial = this.isTrivial(),
+          nonTrivlal = !trivial;
+
+    return nonTrivlal;
+  }
+
   isFrameEqualToFrame(frame) {
     const frameEqualToFrame = false;
 
@@ -103,7 +110,7 @@ export default class Substitution extends Element {
     return compaaresToMetavariable;
   }
 
-  resolve(substitutions, context) {
+  resolve(substitutions, generalContext, specificContext) {
     const resolved = true;
 
     return resolved;

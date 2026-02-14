@@ -24,6 +24,20 @@ export default class Context extends ContextBase {
     return filePath;
   }
 
+  getTerms() {
+    const context = this.getContext(),
+          terms = context.getTerms();
+
+    return terms;
+  }
+
+  getFrames() {
+    const context = this.getContext(),
+          frames = context.getFrames();
+
+    return frames;
+  }
+
   getVariables(includeRelease) {
     const context = this.getContext(),
           variables = context.getVariables(includeRelease);
@@ -79,6 +93,13 @@ export default class Context extends ContextBase {
           statement = context.findStatementByStatementNode(statementNode);
 
     return statement;
+  }
+
+  findReferenceByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+          reference = context.findReferenceByMetavariableNode(metavariableNode);
+
+    return reference;
   }
 
   findTopLevelAssertionByReference(reference) {
