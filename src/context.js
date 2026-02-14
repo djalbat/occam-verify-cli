@@ -123,6 +123,13 @@ export default class Context extends ContextBase {
     return metavariable;
   }
 
+  findSimpleSubstitutionByMetavariable(metavariable) {
+    const context = this.getContext(),
+          simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable);
+
+    return simpleSubstitution;
+  }
+
   isProcedurePresentByName(name) {
     const context = this.getContext(),
           procedurePresent = context.isProcedurePresentByName(name);

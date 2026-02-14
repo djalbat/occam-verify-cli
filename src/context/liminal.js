@@ -74,14 +74,15 @@ export default class LiminalContext extends Context {
     return substitutions;
   }
 
-  getNonTrivialSubstitutions(nested = true) {
-    const nonTrivialSubstitutions = this.findSubstitutions((substitution) => {
-      const substitutionNonTrivial = substitution.isNonTrivial();
+  getNonTrivialSubstitutions() {
+    const nested = false,
+          nonTrivialSubstitutions = this.findSubstitutions((substitution) => {
+          const substitutionNonTrivial = substitution.isNonTrivial();
 
-      if (substitutionNonTrivial) {
-        return true;
-      }
-    }, nested);
+          if (substitutionNonTrivial) {
+            return true;
+          }
+        }, nested);
 
     return nonTrivialSubstitutions;
   }
@@ -89,8 +90,7 @@ export default class LiminalContext extends Context {
   getSoleNonTrivialSubstitution() {
     let soleNonTrivialSubstitutions = null;
 
-    const nested = false,
-          nonTrivialSubstitutions = this.getNonTrivialSubstitutions(nested),
+    const nonTrivialSubstitutions = this.getNonTrivialSubstitutions(),
           nonTrivialSubstitutionsLength = nonTrivialSubstitutions.length;
 
     if (nonTrivialSubstitutionsLength === 1) {
@@ -100,14 +100,6 @@ export default class LiminalContext extends Context {
     }
 
     return soleNonTrivialSubstitutions;
-  }
-
-  commit(context) {
-    if (context === undefined) {
-      context = this.getContext();
-    }
-
-    context.addSubstitutions(this.substitutions);
   }
 
   addTerm(term) {
@@ -130,46 +122,6 @@ export default class LiminalContext extends Context {
     context.trace(`Added the '${termString}' term to the context.`);
   }
 
-  addFrame(frame) {
-    const context = this,
-          frameString = frame.getString();
-
-    this.frames = [ ///
-      ...this.frames,
-      frame
-    ];
-
-    compress(this.frames, (frameA, frameB) => {
-      const frameAEqualToFrameB = frameA.isEqualTo(frameB);
-
-      if (!frameAEqualToFrameB) {
-        return true;
-      }
-    });
-
-    context.trace(`Added the '${frameString}' frame to the context.`);
-  }
-
-  addSubstitution(substitution) {
-    const context = this,
-          substitutionString = substitution.getString();
-
-    this.substitutions = [ ///
-      ...this.substitutions,
-      substitution
-    ];
-
-    compress(this.substitutions, (substitutionA, substitutionB) => {
-      const substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
-
-      if (!substitutionAEqualToSubstitutionB) {
-        return true;
-      }
-    });
-
-    context.trace(`Added the '${substitutionString}' substitution to the context.`);
-  }
-
   addTerms(terms) {
     const context = this,
           termsString = termsStringFromTerms(terms);
@@ -190,6 +142,26 @@ export default class LiminalContext extends Context {
     context.trace(`Added the '${termsString}' terms to the context.`);
   }
 
+  addFrame(frame) {
+    const context = this,
+          frameString = frame.getString();
+
+    this.frames = [ ///
+      ...this.frames,
+      frame
+    ];
+
+    compress(this.frames, (frameA, frameB) => {
+      const frameAEqualToFrameB = frameA.isEqualTo(frameB);
+
+      if (!frameAEqualToFrameB) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${frameString}' frame to the context.`);
+  }
+
   addFrames(frames) {
     const context = this,
           framesString = framesStringFromFrames(frames);
@@ -208,6 +180,26 @@ export default class LiminalContext extends Context {
     });
 
     context.trace(`Added the '${framesString}' frames to the context.`);
+  }
+
+  addSubstitution(substitution) {
+    const context = this,
+          substitutionString = substitution.getString();
+
+    this.substitutions = [ ///
+      ...this.substitutions,
+      substitution
+    ];
+
+    compress(this.substitutions, (substitutionA, substitutionB) => {
+      const substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
+
+      if (!substitutionAEqualToSubstitutionB) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${substitutionString}' substitution to the context.`);
   }
 
   addSubstitutions(substitutions) {
@@ -270,6 +262,14 @@ export default class LiminalContext extends Context {
           });
 
     return resolved;
+  }
+
+  commit(context) {
+    if (context === undefined) {
+      context = this.getContext();
+    }
+
+    context.addSubstitutions(this.substitutions);
   }
 
   findSubstitution(callback) {

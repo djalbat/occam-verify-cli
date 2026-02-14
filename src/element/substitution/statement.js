@@ -204,8 +204,9 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementStatemnentUnifies;
   }
 
-  unifySubstitution(substitution, substitutions, context) {
-    const generalSubstitution = this.substitution,  ///
+  unifySubstitution(substitution) {
+    const context = this.getContext(),
+          generalSubstitution = this.substitution,  ///
           specificSubstitution = substitution,  ///
           generalSubstitutionString = generalSubstitution.getString(),
           specificSubstitutionString = specificSubstitution.getString();
@@ -220,8 +221,9 @@ export default define(class StatementSubstitution extends Substitution {
 
     substitutionContext = substitution.getContext();
 
-    const specificContext = substitutionContext,  ///
-          substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
+    const specificContext = substitutionContext;  ///
+
+    const substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, generalContext, specificContext);
 
     if (substitutionUnifies) {
       context.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
@@ -268,7 +270,7 @@ export default define(class StatementSubstitution extends Substitution {
           }, context);
 
     if (substitution !== null) {
-      const substitutionUnifies = this.unifySubstitution(substitution, context);
+      const substitutionUnifies = this.unifySubstitution(substitution);
 
       if (substitutionUnifies) {
         this.resolved = true;

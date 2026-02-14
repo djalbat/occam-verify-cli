@@ -213,7 +213,7 @@ export default define(class Metavariable extends Element {
       const simpleSubstitutionPresent = context.isSimpleSubstitutionPresentByMetavariable(metavariable);
 
       if (simpleSubstitutionPresent) {
-        const simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable), ///
+        const simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable),
               substitution = simpleSubstitution,  ///
               substitutionReferenceEqualToReference = substitution.isReferenceEqualToReference(reference);
 
