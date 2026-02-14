@@ -1,12 +1,12 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { metavariablesFromSubstitutions } from "../utilities/substitutions";
 import { substitutionsStringFromSubstitutions } from "../utilities/string";
-import { resolveSustitutions, areSubstitutionsResolved } from "../utilities/substitutions";
 
 import Context from "../context";
 
-const { compress } = arrayUtilities;
+const { find, compress } = arrayUtilities;
 
 export default class LiminalContext extends Context {
   constructor(context, substitutions) {
@@ -78,11 +78,54 @@ export default class LiminalContext extends Context {
     context.trace(`Added the '${substitutionsString}' substitutions to the context.`);
   }
 
-  resolveSustitutions() { resolveSustitutions(this.substitutions); }
+  resolveSubstitutions() {
+    const context = this, ///
+          metavariables = metavariablesFromSubstitutions(this.substitutions, context);
 
-  areSubstitutionsResolved() { return areSubstitutionsResolved(this.substitutions); }
+    metavariables.forEach((metavariable) => {
+      const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
+            complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
+              let resolved;
+
+              const substitution = complexSubstitution; ///
+
+              resolved = substitution.isResolved();
+
+              if (!resolved) {
+                substitution.resolve(this.substitutions, context);
+              }
+            });
+
+      if (complexSubstitutionsResolved) {
+        return true;
+      }
+    });
+  }
+
+  areSubstitutionsResolved() {
+    const context = this, ///
+          metavariables = metavariablesFromSubstitutions(this.substitutions, context),
+          resolved = metavariables.every((metavariable) => {
+            const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
+                  complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
+                    const complexSubstitutionResolved = complexSubstitution.isResolved();
+
+                    if (complexSubstitutionResolved) {
+                      return true;
+                    }
+                  });
+
+            if (complexSubstitutionsResolved) {
+              return true;
+            }
+          });
+
+    return resolved;
+  }
 
   findSubstitution(callback) { return this.substitutions.find(callback) }
+
+  findSubstitutions(callback) { return find(this.substitutions, callback); }
 
   findSimpleSubstitutionByMetavariable(metavariable) {
     const simpleSubstitution = this.findSubstitution((substitution) => {
@@ -99,6 +142,23 @@ export default class LiminalContext extends Context {
     }) || null;
 
     return simpleSubstitution;
+  }
+
+  findComplexSubstitutionsByMetavariable(metavariable) {
+    const complexSubstitutions = this.findSubstitutions((substitution) => {
+      const substitutionComplex = substitution.isComplex();
+
+      if (substitutionComplex) {
+        const complexSubstitution = substitution, ///
+              complexSubstitutionMetavariableEqualToMetavariable = complexSubstitution.isMetavariableEqualToMetavariable(metavariable);
+
+        if (complexSubstitutionMetavariableEqualToMetavariable) {
+          return true;
+        }
+      }
+    });
+
+    return complexSubstitutions;
   }
 
   findSubstitutionByMetavariableAndSubstitution(metavariable, substitution) {

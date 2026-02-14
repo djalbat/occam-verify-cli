@@ -25,6 +25,12 @@ export default class Substitution extends Element {
     return primitive;
   }
 
+  getMetavariable(context) {
+    const metavariable = null;
+
+    return metavariable;
+  }
+
   isSimple() {
     const simple = true;
 

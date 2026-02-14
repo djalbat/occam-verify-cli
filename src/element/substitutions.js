@@ -10,43 +10,6 @@ import { substitutionsStringFromSubstitutions } from "../utilities/string";
 const { find, first, clear, prune, filter, extract, compress, correlate } = arrayUtilities;
 
 export default define(class Substitutions extends Element {
-  constructor(context, string, node, array, savedArray) {
-    super(context, string, node);
-
-    this.array = array;
-    this.savedArray = savedArray;
-  }
-
-  getArray() {
-    return this.array;
-  }
-
-  getSavedArray() {
-    return this.savedArray;
-  }
-
-  getMetavariables() {
-    const metavariables = [];
-
-    this.forEachSubstitution((substitution) => {
-      const metavariable = substitution.getMetavariable();
-
-      if (metavariable !== null) {
-        metavariables.push(metavariable);
-      }
-    });
-
-    compress(metavariables, (metavariableA, metavariableB) => {
-      const metavariableAEqualToMetavariableB = metavariableB.isEqualTo(metavariableA);
-
-      if (!metavariableAEqualToMetavariableB) {
-        return true;
-      }
-    });
-
-    return metavariables;
-  }
-
   getNonTrivialLength() {
     const nonTrivialLength = this.reduceSubstitution((nonTrivialLength, substitution) => {
       const substitutionTrivial = substitution.isTrivial();
@@ -87,25 +50,6 @@ export default define(class Substitutions extends Element {
 
   extractSubstitution(callbcak) { return extract(this.array, callbcak); }
 
-  findSubstitutions(callback) {
-    let string;
-
-    const array = find(this.array, callback),
-          context = null;
-
-    string = null;
-
-    const node = null,
-          savedArray = [],
-          substitutions = new Substitutions(context, string, node, array, savedArray);
-
-    string = substitutions.asString();
-
-    substitutions.setString(string);
-
-    return substitutions;
-  }
-
   findSubstitutionByVariable(variable) {
     const substitution = this.findSubstitution((substitution) => {
       const substitutionVariable = substitution.getVariable();
@@ -132,23 +76,6 @@ export default define(class Substitutions extends Element {
     });
 
     return substitutions;
-  }
-
-  findComplexSubstitutionsByMetavariable(metavariable) {
-    const complexSubstitutions = this.findSubstitutions((substitution) => {
-      const substitutionComplex = substitution.isComplex();
-
-      if (substitutionComplex) {
-        const complexSubstitution = substitution, ///
-              complexSubstitutionMetavariableEqualToMetavariable = complexSubstitution.isMetavariableEqualToMetavariable(metavariable);
-
-        if (complexSubstitutionMetavariableEqualToMetavariable) {
-          return true;
-        }
-      }
-    });
-
-    return complexSubstitutions;
   }
 
   isSubstitutionPresentByVariable(variable) {
