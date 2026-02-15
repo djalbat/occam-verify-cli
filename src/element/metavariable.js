@@ -186,7 +186,7 @@ export default define(class Metavariable extends Element {
               statementSubstitutionValidates = statementSubstitution.validate(generalContext, specificContext);
 
         if (statementSubstitutionValidates) {
-          substitution = statementSubstitution; ///
+          const substitution = statementSubstitution; ///
 
           context.addSubstitution(substitution);
 

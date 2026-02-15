@@ -65,12 +65,13 @@ export default define(class TermSubstitution extends Substitution {
   validate(generalContext, specificContext) {
     let validates = false;
 
-    const context = this.getContext(),
-          termSubstitutionString = this.getString();  ///
-
-    context.trace(`Validating the '${termSubstitutionString}' term substitution...`);
+    const context = this.getContext();
 
     specificContext = context;  ///
+
+    const termSubstitutionString = this.getString();  ///
+
+    context.trace(`Validating the '${termSubstitutionString}' term substitution...`);
 
     const targetTermValidates = this.validateTargetTerm(generalContext, specificContext);
 

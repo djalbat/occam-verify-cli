@@ -62,12 +62,13 @@ export default define(class ReferenceSubstitution extends Substitution {
   validate(generalContext, specificContext) {
     let validates = false;
 
-    const context = this.getContext(),
-          referenceSubstitutionString = this.getString();  ///
-
-    context.trace(`Validating the '${referenceSubstitutionString}' reference substitution...`);
+    const context = this.getContext();
 
     specificContext = context;  ///
+
+    const referenceSubstitutionString = this.getString();  ///
+
+    context.trace(`Validating the '${referenceSubstitutionString}' reference substitution...`);
 
     const targetReferenceValidates = this.validateTargetReference(generalContext, specificContext);
 

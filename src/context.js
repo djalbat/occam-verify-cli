@@ -33,9 +33,16 @@ export default class Context extends ContextBase {
 
   getFrames() {
     const context = this.getContext(),
-          frames = context.getFrames();
+      frames = context.getFrames();
 
     return frames;
+  }
+
+  getSubstitutions() {
+    const context = this.getContext(),
+          substitutions = context.getSubstitutions();
+
+    return substitutions;
   }
 
   getVariables(includeRelease) {

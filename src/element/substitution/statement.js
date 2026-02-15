@@ -109,12 +109,13 @@ export default define(class StatementSubstitution extends Substitution {
   validate(generalContext, specificContext) {
     let validates = false;
 
-    const context = this.getContext(),
-          statementSubstitutionString = this.getString();  ///
-
-    context.trace(`Validating the '${statementSubstitutionString}' statement substitution...`);
+    const context = this.getContext();
 
     specificContext = context;  ///
+
+    const statementSubstitutionString = this.getString();  ///
+
+    context.trace(`Validating the '${statementSubstitutionString}' statement substitution...`);
 
     const targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
 
@@ -194,8 +195,11 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Unifying the '${replacementStatementString}' replacement statement with the '${substitutionString}' substiution's '${substitutionReplacementStatementString}' replacement statement...`);
 
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
     const generalContext = context, ///
-          specificContext = context,  ///
           statementUnifies = this.replacementStatement.unifyStatement(replacementStatement, generalContext, specificContext);
 
     if (statementUnifies) {
@@ -240,32 +244,33 @@ export default define(class StatementSubstitution extends Substitution {
   resolve(generalContext, specificContext) {
     let context;
 
-    context = this.getContext();
-
     const substitutionString = this.getString(); ///
 
-    context.trace(`Resolving the ${substitutionString} substitution...`);
-
     context = generalContext; ///
+
+    context.trace(`Resolving the ${substitutionString} substitution...`);
 
     const metavariable = this.getMetavariable(context);
 
     context = specificContext;  ///
 
-    const simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable),
-          substitution = liminally((context) => {
-            let substitution = null;
+    const simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable);
 
-            const replacementStatementUnifies = simpleSubstitution.unifyReplacementStatement(this.replacementStatement, context);
+    context = this.getContext();  ///
 
-            if (replacementStatementUnifies) {
-              const soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution();
+    const substitution = liminally((context) => {
+      let substitution = null;
 
-              substitution = soleNonTrivialSubstitution; ///
-            }
+      const replacementStatementUnifies = simpleSubstitution.unifyReplacementStatement(this.replacementStatement, context);
 
-            return substitution;
-          }, context);
+      if (replacementStatementUnifies) {
+        const soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution();
+
+        substitution = soleNonTrivialSubstitution; ///
+      }
+
+      return substitution;
+    }, context);
 
     if (substitution !== null) {
       const substitutionUnifies = this.unifySubstitution(substitution);
