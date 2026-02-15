@@ -668,17 +668,12 @@ export function referenceSubstitutionFromReferenceSubstitutionNode(referenceSubs
   return referenceSubstitution;
 }
 
-export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context) {
-  if (context === undefined) {
-    context = substitution; ///
-
-    substitution = null;
-  }
-
+export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
   const { StatementSubstitution } = elements,
         node = statementSubstitutionNode,  ///
         string = context.nodeAsString(node),
-        resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context),
+        resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
+        substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
         targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
         replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
         statementSubstitution = new StatementSubstitution(context, string, node, resolved, substitution, targetStatement, replacementStatement);
@@ -1431,8 +1426,8 @@ export function prefixedFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode,
   return prefixed;
 }
 
-export function resolvedFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context) {
-  const resolved = (substitution === null);
+export function resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const resolved = statementSubstitutionNode.isResolved();
 
   return resolved;
 }
@@ -1506,6 +1501,14 @@ export function suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNod
   return suppositions;
 }
 
+export function substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const frameSubstitution = frameSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
+        termSubstitution = termSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
+        substitution = (frameSubstitution || termSubstitution);
+
+  return substitution;
+}
+
 export function constructorFromConstructorDeclarationNode(constructorDeclarationNode, context) {
   const constructorNode = constructorDeclarationNode.getConstructorNode(),
         constructor = constructorFromConstructorNode(constructorNode, context);
@@ -1532,6 +1535,30 @@ export function targetStatementFromStatementSubstitutionNode(statementSubstituti
         targetStatement = statementFromStatementNode(targetStatementNode, context);
 
   return targetStatement;
+}
+
+export function termSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  let termSubstitution = null;
+
+  const termSubstitutionNode = statementSubstitutionNode.getTermSubstitutionNode();
+
+  if (termSubstitutionNode !== null) {
+    termSubstitution = termSubstitutionFromTermubstitutionNode(termSubstitutionNode, context);
+  }
+
+  return termSubstitution;
+}
+
+export function frameSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  let frameSubstitution = null;
+
+  const frameSubstitutionNode = statementSubstitutionNode.getFrameSubstitutionNode();
+
+  if (frameSubstitutionNode !== null) {
+    frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+  }
+
+  return frameSubstitution;
 }
 
 export function replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {

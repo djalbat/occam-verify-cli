@@ -244,11 +244,13 @@ export default define(class StatementSubstitution extends Substitution {
   resolve(generalContext, specificContext) {
     let context;
 
+    context = this.getContext();
+
     const substitutionString = this.getString(); ///
 
-    context = generalContext; ///
-
     context.trace(`Resolving the ${substitutionString} substitution...`);
+
+    context = generalContext; ///
 
     const metavariable = this.getMetavariable(context);
 
@@ -258,19 +260,20 @@ export default define(class StatementSubstitution extends Substitution {
 
     context = this.getContext();  ///
 
-    const substitution = liminally((context) => {
-      let substitution = null;
+    const replacementStatement = this.getReplacementStatement(),
+          substitution = liminally((context) => {
+            let substitution = null;
 
-      const replacementStatementUnifies = simpleSubstitution.unifyReplacementStatement(this.replacementStatement, context);
+            const replacementStatementUnifies = simpleSubstitution.unifyReplacementStatement(replacementStatement, context);
 
-      if (replacementStatementUnifies) {
-        const soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution();
+            if (replacementStatementUnifies) {
+              const soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution();
 
-        substitution = soleNonTrivialSubstitution; ///
-      }
+              substitution = soleNonTrivialSubstitution; ///
+            }
 
-      return substitution;
-    }, context);
+            return substitution;
+          }, context);
 
     if (substitution !== null) {
       const substitutionUnifies = this.unifySubstitution(substitution);
@@ -326,7 +329,7 @@ export default define(class StatementSubstitution extends Substitution {
       const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-            statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, substitution, context);
+            statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
       return statementSubstitution;
     }, context);

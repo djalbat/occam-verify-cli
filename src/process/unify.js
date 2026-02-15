@@ -67,9 +67,7 @@ class MetaLevelPass extends ZipPass {
 
         statementNode = metavariableNodeParentNode; ///
 
-        const frameSubstitutionNode = statementNode.getFrameSubstitutionNode(),
-              termSubstitutionNode = statementNode.getTermSubstitutionNode(),
-              substitutionNode = (frameSubstitutionNode || termSubstitutionNode),
+        const substitutionNode = statementNode.getSubstitutionNode(),
               substitution = (substitutionNode !== null) ?
                                context.findSubstitutionBySubstitutionNode(substitutionNode) :
                                  null;
@@ -354,14 +352,14 @@ export function unifyStatement(generalStatement, specificStatement, generalConte
   return statementUnifies;
 }
 
-export function unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext) {
+export function unifySubstitution(generalSubstitution, specificSubstitution, generalContext, specificContext) {
   let substitutionUnifies = false;
 
   const generalSubstitutionNode = generalSubstitution.getNode(),
         specificSubstitutionNode = specificSubstitution.getNode(),
         generalNode = generalSubstitutionNode, ///
         specificNode = specificSubstitutionNode,  ///
-        success = metaLevelPass.run(generalNode, specificNode, substitutions, generalContext, specificContext);
+        success = metaLevelPass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     substitutionUnifies = true;
@@ -399,14 +397,14 @@ export function unifyTermWithConstructor(term, constructor, generalContext, spec
   return termUnifiesWithConstructor;
 }
 
-export function unifyStatementIntrinsically(generalStatement, specificStatement, substitutions, generalContext, specificContext) {
+export function unifyStatementIntrinsically(generalStatement, specificStatement, generalContext, specificContext) {
   let statementUnifiesIntrinsically = false;
 
   const generalStatementNode = generalStatement.getNode(),
         specificStatementNode = specificStatement.getNode(),
         generalNode = generalStatementNode, ///
         specificNode = specificStatementNode, ///
-        success = intrinsicLevelPass.run(generalNode, specificNode, substitutions, generalContext, specificContext);
+        success = intrinsicLevelPass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     statementUnifiesIntrinsically = true;

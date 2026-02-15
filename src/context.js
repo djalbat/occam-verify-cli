@@ -47,7 +47,7 @@ export default class Context extends ContextBase {
 
   getVariables(includeRelease) {
     const context = this.getContext(),
-          variables = context.getVariables(includeRelease);
+      variables = context.getVariables(includeRelease);
 
     return variables;
   }
@@ -57,6 +57,13 @@ export default class Context extends ContextBase {
           combinators = context.getCombinators(includeRelease);
 
     return combinators;
+  }
+
+  getMetavariables(includeRelease) {
+    const context = this.getContext(),
+          metavariables = context.getMetavariables(includeRelease);
+
+    return metavariables;
   }
 
   getSubproofOrProofAssertions() {
