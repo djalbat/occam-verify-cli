@@ -192,7 +192,7 @@ export default define(class Premise extends ProofAssertion {
 
     await this.break(context);
 
-    const premiseString = this.getString(); ///
+    const premiseString = this.getString();
 
     context.trace(`Verifying the '${premiseString}' premise...`);
 

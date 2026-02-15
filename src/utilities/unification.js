@@ -60,6 +60,8 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
       //   const { StatementSubstitution } = elements;
       //
       //   StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+
+      //  validate
       //
       // }, generalContext, specificContext);
 
@@ -164,6 +166,8 @@ async function unifyStatementWithTopLevelAssertion(statement, reference, satisfi
         //   const { StatementSubstitution } = elements;
         //
         //   StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+
+        // vaiddate
         //
         // }, generalContext, specificContext);
 

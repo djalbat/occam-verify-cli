@@ -157,11 +157,41 @@ export default class Context extends ContextBase {
     context.addRule(rule);
   }
 
+  adTerm(term) {
+    const context = this.getContext();
+
+    context.adTerm(term);
+  }
+
+  addFrame(frame) {
+    const context = this.getContext();
+
+    context.addFrame(frame);
+  }
+
+  addStatement(statement) {
+    const context = this.getContext();
+
+    context.addStatement(statement);
+  }
+
+  addReference(reference) {
+    const context = this.getContext();
+
+    context.addReference(reference);
+  }
+
   addJudgement(judgement) {
     const context = this.getContext(),
-          judgementAdded = context.addJudgement(judgement);
+      judgementAdded = context.addJudgement(judgement);
 
     return judgementAdded;
+  }
+
+  addSubstitution(substitution) {
+    const context = this.getContext();
+
+    context.addSubstitution(substitution);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {

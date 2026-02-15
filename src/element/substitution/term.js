@@ -62,17 +62,20 @@ export default define(class TermSubstitution extends Substitution {
     return comparesToParameter;
   }
 
-  validate(context) {
+  validate(generalContext, specificContext) {
     let validates = false;
 
-    const termSubstitutionString = this.getString();  ///
+    const context = this.getContext(),
+          termSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${termSubstitutionString}' term substitution...`);
 
-    const targetTermValidates = this.validateTargetTerm(context);
+    specificContext = context;  ///
+
+    const targetTermValidates = this.validateTargetTerm(generalContext, specificContext);
 
     if (targetTermValidates) {
-      const replacementTermValidates = this.validateReplacementTerm(context);
+      const replacementTermValidates = this.validateReplacementTerm(generalContext, specificContext);
 
       if (replacementTermValidates) {
         validates = true;
@@ -90,10 +93,11 @@ export default define(class TermSubstitution extends Substitution {
     return validates;
   }
 
-  validateTargetTerm(context) {
+  validateTargetTerm(generalContext, specificContext) {
     let targetTermValidates = false;
 
-    const targetTermString = this.targetTerm.getString(),
+    const context = generalContext, ///
+          targetTermString = this.targetTerm.getString(),
           termSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${termSubstitutionString}' term subtitution's '${targetTermString}' target term...`);
@@ -117,10 +121,11 @@ export default define(class TermSubstitution extends Substitution {
     return targetTermValidates;
   }
 
-  validateReplacementTerm(context) {
+  validateReplacementTerm(generalContext, specificContext) {
     let replacementTermValidates;
 
-    const replacementTermString = this.replacementTerm.getString(),
+    const context = specificContext,  ///
+          replacementTermString = this.replacementTerm.getString(),
           termSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${termSubstitutionString}' term subtitution's '${replacementTermString}' replacement term...`);

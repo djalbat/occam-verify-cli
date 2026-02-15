@@ -24,13 +24,6 @@ export function judgementFromStatement(statement, context) {
   return judgement;
 }
 
-export function metavariableFromStatement(statement, context) {
-  const statementNode = statement.getNode(),
-        metavariable = metavariableFromStatementNode(statementNode, context);
-
-  return metavariable;
-}
-
 export function typeAssertionFromStatement(statement, context) {
   const statementNode = statement.getNode(),
         typeAssertion = typeAssertionFromStatementNode(statementNode, context);

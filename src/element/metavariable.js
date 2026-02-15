@@ -130,11 +130,15 @@ export default define(class Metavariable extends Element {
       } else {
         const { FrameSubstitution } = elements,
               frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
-              substitution = frameSubstitution; ///
+              framesubstitutionValidates = frameSubstitution.validate(generalContext, specificContext);
 
-        context.addSubstitution(substitution);
+        if (framesubstitutionValidates) {
+          const substitution = frameSubstitution; ///
 
-        frameUnifies = true;
+          context.addSubstitution(substitution);
+
+          frameUnifies = true;
+        }
       }
     }
 
@@ -178,13 +182,16 @@ export default define(class Metavariable extends Element {
         const { StatementSubstitution } = elements,
               statementSubstitution = (substitution !== null) ?
                                         StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
-                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
+              statementSubstitutionValidates = statementSubstitution.validate(generalContext, specificContext);
 
-        substitution = statementSubstitution; ///
+        if (statementSubstitutionValidates) {
+          substitution = statementSubstitution; ///
 
-        context.addSubstitution(substitution);
+          context.addSubstitution(substitution);
 
-        statementUnifies = true;
+          statementUnifies = true;
+        }
       }
     }
 

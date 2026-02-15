@@ -2,57 +2,17 @@
 
 import { arrayUtilities } from "necessary";
 import { metavariablesFromSubstitutions } from "../utilities/substitutions";
-import { termsStringFromTerms, framesStringFromFrames, substitutionsStringFromSubstitutions } from "../utilities/string";
+import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
 import Context from "../context";
 
 const { find, first, compress } = arrayUtilities;
 
 export default class LiminalContext extends Context {
-  constructor(context, terms, frames, substitutions) {
+  constructor(context, substitutions) {
     super(context);
 
-    this.terms = terms;
-    this.frames = frames;
     this.substitutions = substitutions;
-  }
-
-  getTerms(nested = true) {
-    let terms;
-
-    if (nested) {
-      const context = this.getContext();
-
-      terms = context.getTerms();
-
-      terms = [ ///
-        ...this.terms,
-        ...terms
-      ]
-    } else {
-      terms = this.terms;
-    }
-
-    return terms;
-  }
-
-  getFrames(nested = true) {
-    let frames;
-
-    if (nested) {
-      const context = this.getContext();
-
-      frames = context.getFrames();
-
-      frames = [ ///
-        ...this.frames,
-        ...frames
-      ]
-    } else {
-      frames = this.frames;
-    }
-
-    return frames;
   }
 
   getSubstitutions(nested = true) {
@@ -100,86 +60,6 @@ export default class LiminalContext extends Context {
     }
 
     return soleNonTrivialSubstitutions;
-  }
-
-  addTerm(term) {
-    const context = this,
-      termString = term.getString();
-
-    this.terms = [ ///
-      ...this.terms,
-      term
-    ];
-
-    compress(this.terms, (termA, termB) => {
-      const termAEqualToTermB = termA.isEqualTo(termB);
-
-      if (!termAEqualToTermB) {
-        return true;
-      }
-    });
-
-    context.trace(`Added the '${termString}' term to the context.`);
-  }
-
-  addTerms(terms) {
-    const context = this,
-          termsString = termsStringFromTerms(terms);
-
-    this.terms = [ ///
-      ...this.terms,
-      ...terms
-    ];
-
-    compress(this.terms, (substitutionA, substitutionB) => {
-      const substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
-
-      if (!substitutionAEqualToAssertionB) {
-        return true;
-      }
-    });
-
-    context.trace(`Added the '${termsString}' terms to the context.`);
-  }
-
-  addFrame(frame) {
-    const context = this,
-          frameString = frame.getString();
-
-    this.frames = [ ///
-      ...this.frames,
-      frame
-    ];
-
-    compress(this.frames, (frameA, frameB) => {
-      const frameAEqualToFrameB = frameA.isEqualTo(frameB);
-
-      if (!frameAEqualToFrameB) {
-        return true;
-      }
-    });
-
-    context.trace(`Added the '${frameString}' frame to the context.`);
-  }
-
-  addFrames(frames) {
-    const context = this,
-          framesString = framesStringFromFrames(frames);
-
-    this.frames = [ ///
-      ...this.frames,
-      ...frames
-    ];
-
-    compress(this.frames, (substitutionA, substitutionB) => {
-      const substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
-
-      if (!substitutionAEqualToAssertionB) {
-        return true;
-      }
-    });
-
-    context.trace(`Added the '${framesString}' frames to the context.`);
   }
 
   addSubstitution(substitution) {
@@ -289,32 +169,6 @@ export default class LiminalContext extends Context {
     return substitutions;
   }
 
-  findTermByTermNode(termNode) {
-    const terms = this.getTerms(),
-          term = terms.find((term) => {
-            const termNodeMatches = term.matchNode(termNode);
-
-            if (termNodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return term;
-  }
-
-  findFrameByFrameNode(frameNode) {
-    const frames = this.getFrames(),
-          frame = frames.find((frame) => {
-            const frameNodeMatches = frame.matchNode(frameNode);
-
-            if (frameNodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return frame;
-  }
-
   findSimpleSubstitutionByMetavariable(metavariable) {
     const simpleSubstitution = this.findSubstitution((substitution) => {
       const substitutionSimple = substitution.isSimple();
@@ -384,10 +238,8 @@ export default class LiminalContext extends Context {
   }
 
   static fromNothing(context) {
-    const terms = [],
-          frames = [],
-          substitutions = [],
-          emphemeralContext = new LiminalContext(context, terms, frames, substitutions);
+    const substitutions = [],
+          emphemeralContext = new LiminalContext(context, substitutions);
 
     return emphemeralContext;
   }

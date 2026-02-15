@@ -95,7 +95,9 @@ function validateStatementAsMetavariable(statement, assignments, stated, context
             substitution = (termSubstitution || frameSubstitution);
 
       if (substitution !== null) {
-        const substitutionValidates = substitution.validate(context);
+        const generalContext = context, ///
+              specificContext = context,  ///
+              substitutionValidates = substitution.validate(generalContext, specificContext);
 
         if (!substitutionValidates) {
           statementValidatesAsMetavariableAndSubstitution = false;

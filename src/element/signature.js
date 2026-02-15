@@ -68,6 +68,8 @@ export default define(class Signature extends Element {
                 //   const { TermSubstitution } = elements;
                 //
                 //   TermSubstitution.fromTermAndVariable(term, variable, context);
+
+                //  validates...
                 // });
 
                 return true;

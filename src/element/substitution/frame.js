@@ -59,17 +59,20 @@ export default define(class FrameSubstitution extends Substitution {
     return comparesToParameter;
   }
 
-  validate(context) {
+  validate(generalContext, specificContext) {
     let validates = false;
 
-    const frameSubstitutionString = this.getString();  ///
+    const context = this.getContext(),
+          frameSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${frameSubstitutionString}' frame substitution...`);
 
-    const targetFrameValidates = this.validateTargetFrame(context);
+    specificContext = context;  ///
+
+    const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
 
     if (targetFrameValidates) {
-      const replacementFrameValidates = this.validateReplacementFrame(context);
+      const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
 
       if (replacementFrameValidates) {
         validates = true;
@@ -87,10 +90,11 @@ export default define(class FrameSubstitution extends Substitution {
     return validates;
   }
 
-  validateTargetFrame(context) {
+  validateTargetFrame(generalContext, specificContext) {
     let targetFrameValidates = false;
 
-    const targetFrameString = this.targetFrame.getString(),
+    const context = generalContext,  ///
+          targetFrameString = this.targetFrame.getString(),
           frameSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${frameSubstitutionString}' frame subtitution's '${targetFrameString}' target frame...`);
@@ -113,10 +117,11 @@ export default define(class FrameSubstitution extends Substitution {
     return targetFrameValidates;
   }
 
-  validateReplacementFrame(context) {
+  validateReplacementFrame(generalContext, specificContext) {
     let replacementFrameValidates;
 
-    const replacementFrameString = this.replacementFrame.getString(),
+    const context = specificContext, ///
+          replacementFrameString = this.replacementFrame.getString(),
           frameSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${frameSubstitutionString}' frame subtitution's '${replacementFrameString}' replacement frame...`);
