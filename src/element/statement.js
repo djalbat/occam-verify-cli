@@ -30,16 +30,50 @@ export default define(class Statement extends Element {
     return metavariableName;
   }
 
+  getStatementNode() {
+    const node = this.getNode(),
+          statementNode = node; ///
+
+    return statementNode;
+  }
+
+  matchStatementNode(statementNode) {
+    const statementNodeA = statementNode; ///
+
+    statementNode = this.getStatementNode();
+
+    const statementNodeB = statementNode, ///
+          statementNodeAAMatchesStatementBNodeB = statementNodeA.match(statementNodeB),
+          equalTo = statementNodeAAMatchesStatementBNodeB; ///
+
+    return equalTo;
+  }
+
+  isValid(context) {
+    const statementNode = this.getStatementNode(),
+          statementPresent = context.isStatementPresentByStatementNode(statementNode),
+          valid = statementPresent;  ///
+
+    return valid;
+  }
+
+  isEqualTo(statement) {
+    const statementNode = statement.getNode(),
+          statementNodeMatches = this.matchStatementNode(statementNode),
+          equalTo = statementNodeMatches;  ///
+
+    return equalTo;
+  }
+
   isTermContained(term, context) {
     let termContained;
 
-    const node = this.getNode(),
-          termString = term.getString(),
+    const termString = term.getString(),
           statementString = this.getString();  ///
 
     context.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`);
 
-    const statementNode = node, ///
+    const statementNode = this.getStatementNode(),
           statementNodeTermNodes = statementNode.getTermNodes();
 
     termContained = statementNodeTermNodes.some((statementNodeTermNode) => {  ///
@@ -65,8 +99,7 @@ export default define(class Statement extends Element {
 
     context.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`);
 
-    const node = this.getNode(),
-          statementNode = node, ///
+    const statementNode = this.getStatementNode(),
           statementNodeFrameNodes = statementNode.getFrameNodes();
 
     frameContained = statementNodeFrameNodes.some((statementNodeFrameNode) => {  ///
@@ -92,8 +125,7 @@ export default define(class Statement extends Element {
     if (singular) {
       let metavariableName;
 
-      const node = this.getNode(),
-            statementNode = node,  ///
+      const statementNode = this.getStatementNode(),
             singularMetavariableNode = statementNode.getSingularMetavariableNode();
 
       metavariableName = singularMetavariableNode.getMetavariableName();
@@ -108,17 +140,6 @@ export default define(class Statement extends Element {
     }
 
     return metavaraibleComparseTo;
-  }
-
-  isEqualTo(statement) {
-    const statementA = this, ///
-          statementB = statement, ///
-          statementANode = statementA.getNode(),
-          statementBNode = statementB.getNode(),
-          statementANodeMatchesStatementBNode = statementANode.match(statementBNode),
-          equalTo = statementANodeMatchesStatementBNode; ///
-
-    return equalTo;
   }
 
   compareParameter(parameter) {
@@ -148,21 +169,29 @@ export default define(class Statement extends Element {
 
     context.trace(`Validating the '${statementString}' statement...`);
 
-    validates = validateStatements.some((validateStatement) => {
-      const statement = this, ///
-            statementValidates = validateStatement(statement, assignments, stated, context);
+    const valid = this.isValid(context);
 
-      if (statementValidates) {
-        return true;
+    if (valid) {
+      validates = true;
+
+      context.debug(`...the '${statementString}' statement is alrady valid.`);
+    } else {
+      validates = validateStatements.some((validateStatement) => {
+        const statement = this, ///
+              statementValidates = validateStatement(statement, assignments, stated, context);
+
+        if (statementValidates) {
+          return true;
+        }
+      });
+
+      if (validates) {
+        const statement = this; ///
+
+        context.addStatement(statement);
+
+        context.debug(`...validated the '${statementString}' statement.`);
       }
-    });
-
-    if (validates) {
-      const statement = this; ///
-
-      context.addStatement(statement);
-
-      context.debug(`...validated the '${statementString}' statement.`);
     }
 
     return validates;
@@ -194,8 +223,7 @@ export default define(class Statement extends Element {
   unifySubproof(subproof, generalContext, specificContext) {
     let subproofUnifies = false;
 
-    const node = this.getNode(),
-          statementNode = node, ///
+    const statementNode = this.getStatementNode(),
           subproofAssertionNode = statementNode.getSubproofAssertionNode(),
           assertionNode = subproofAssertionNode;  ///
 
@@ -258,8 +286,7 @@ export default define(class Statement extends Element {
 
     context.trace(`Unifying the '${statementString}' statement independently...`);
 
-    const node = this.getNode(),
-          statementNode = node, ///
+    const statementNode = this.getStatementNode(),
           definedAssertionNode = statementNode.getDefinedAssertionNode(),
           containedAssertionNode = statementNode.getContainedAssertionNode();
 

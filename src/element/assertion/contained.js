@@ -38,27 +38,35 @@ export default define(class ContainedAssertion extends Assertion {
 
     context.trace(`Validating the '${containedAssertionString}' contained assertion...`);
 
-    const termValidates = this.validateTerm(assignments, stated, context),
-          frameVerifies = this.validateFrame(assignments, stated, context),
-          statementValidates = this.validateStatement(assignments, stated, context)
+    const valid = this.isValid(context);
 
-    if (termValidates || frameVerifies || statementValidates) {
-      let validatesWhenStated = false,
-          validatesWhenDerived = false;
+    if (!valid) {
+      validates = true;
 
-      if (stated) {
-        validatesWhenStated = this.validateWhenStated(assignments, context);
-      } else {
-        validatesWhenDerived = this.validateWhenDerived(context);
+      context.debug(`...the '${containedAssertionString}' contained assertion is already valid.`);
+    } else {
+      const termValidates = this.validateTerm(assignments, stated, context),
+            frameVerifies = this.validateFrame(assignments, stated, context),
+            statementValidates = this.validateStatement(assignments, stated, context)
+
+      if (termValidates || frameVerifies || statementValidates) {
+        let validatesWhenStated = false,
+            validatesWhenDerived = false;
+
+        if (stated) {
+          validatesWhenStated = this.validateWhenStated(assignments, context);
+        } else {
+          validatesWhenDerived = this.validateWhenDerived(context);
+        }
+
+        if (validatesWhenStated || validatesWhenDerived) {
+          validates = true;
+        }
       }
 
-      if (validatesWhenStated || validatesWhenDerived) {
-        validates = true;
+      if (validates) {
+        context.debug(`...validated the '${containedAssertionString}' contained assertion.`);
       }
-    }
-
-    if (validates) {
-      context.debug(`...validated the '${containedAssertionString}' contained assertion.`);
     }
 
     return validates;

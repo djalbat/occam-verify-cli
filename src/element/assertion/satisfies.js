@@ -31,16 +31,24 @@ export default define(class SatisfiesAssertion extends Assertion {
 
     context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertion...`);
 
-    const signatureVerifies = this.validateSignature(assignments, stated, context);
+    const valid = this.isValid(context);
 
-    if (signatureVerifies) {
-      const referenceVerifies = this.validateReference(assignments, stated, context);
+    if (valid) {
+      validates = true;
 
-      validates = referenceVerifies; ///
-    }
+      context.debug(`...the '${satisfiesAssertionString}' satisfies assertion is already valid.`);
+    } else {
+      const signatureVerifies = this.validateSignature(assignments, stated, context);
 
-    if (validates) {
-      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertion.`);
+      if (signatureVerifies) {
+        const referenceVerifies = this.validateReference(assignments, stated, context);
+
+        validates = referenceVerifies; ///
+      }
+
+      if (validates) {
+        context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertion.`);
+      }
     }
 
     return validates;

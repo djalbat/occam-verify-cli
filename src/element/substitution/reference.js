@@ -70,22 +70,30 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution...`);
 
-    const targetReferenceValidates = this.validateTargetReference(generalContext, specificContext);
+    const valid = this.isValid(context);
 
-    if (targetReferenceValidates) {
-      const replacementReferenceValidates = this.validateReplacementReference(generalContext, specificContext);
+    if (valid) {
+      validates = true;
 
-      if (replacementReferenceValidates) {
-        validates = true;
+      context.debug(`...the '${referenceSubstitutionString}' reference substitution is already valid.`);
+    } else {
+      const targetReferenceValidates = this.validateTargetReference(generalContext, specificContext);
+
+      if (targetReferenceValidates) {
+        const replacementReferenceValidates = this.validateReplacementReference(generalContext, specificContext);
+
+        if (replacementReferenceValidates) {
+          validates = true;
+        }
       }
-    }
 
-    if (validates) {
-      const substititoin = this;  ///
+      if (validates) {
+        const substititoin = this;  ///
 
-      context.addSubstitution(substititoin);
+        context.addSubstitution(substititoin);
 
-      context.debug(`...validated the '${referenceSubstitutionString}' reference substitution.`);
+        context.debug(`...validated the '${referenceSubstitutionString}' reference substitution.`);
+      }
     }
 
     return validates;

@@ -55,35 +55,43 @@ export default define(class PropertyAssertion extends Assertion {
 
     context.trace(`Validating the '${propertyAssertionString}' property assertion...`);
 
-    const termValidates = this.validateTerm(assignments, stated, context);
+    const valid = this.isValid(context);
 
-    if (termValidates) {
-      const propertyRelationVerifies = this.validatePropertyRelation(assignments, stated, context);
+    if (valid) {
+      validates = true;
 
-      if (propertyRelationVerifies) {
-        let validatesWhenStated = false,
+      context.debug(`...the '${propertyAssertionString}' property assertion is already valid.`);
+    } else {
+      const termValidates = this.validateTerm(assignments, stated, context);
+
+      if (termValidates) {
+        const propertyRelationVerifies = this.validatePropertyRelation(assignments, stated, context);
+
+        if (propertyRelationVerifies) {
+          let validatesWhenStated = false,
             validatesWhenDerived = false;
 
+          if (stated) {
+            validatesWhenStated = this.validateWhenStated(assignments, context);
+          } else {
+            validatesWhenDerived = this.validateWhenDerived(context);
+          }
+
+          if (validatesWhenStated || validatesWhenDerived) {
+            validates = true;
+          }
+        }
+      }
+
+      if (validates) {
         if (stated) {
-          validatesWhenStated = this.validateWhenStated(assignments, context);
-        } else {
-          validatesWhenDerived = this.validateWhenDerived(context);
-        }
-
-        if (validatesWhenStated || validatesWhenDerived) {
-          validates = true;
+          this.assign(assignments, context);
         }
       }
-    }
 
-    if (validates) {
-      if (stated) {
-        this.assign(assignments, context);
+      if (validates) {
+        context.debug(`...validated the '${propertyAssertionString}' property assertion.`);
       }
-    }
-
-    if (validates) {
-      context.debug(`...validated the '${propertyAssertionString}' property assertion.`);
     }
 
     return validates;

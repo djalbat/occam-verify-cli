@@ -228,6 +228,78 @@ export default class EphemeralContext extends Context {
     return substitution;
   }
 
+  isTermPresentByTermNode(termNode) {
+    const termPresent = this.terms.some((term) => {
+      const termNodeMatches = term.matchTermNode(termNode);
+
+      if (termNodeMatches) {
+        return true;
+      }
+    });
+
+    return termPresent;
+  }
+
+  isFramePresentByFrameNode(frameNode) {
+    const framePresent = this.frames.some((frame) => {
+      const frameNodeMatches = frame.matchFrameNode(frameNode);
+
+      if (frameNodeMatches) {
+        return true;
+      }
+    });
+
+    return framePresent;
+  }
+
+  isStatementPresentByStatementNode(statementNode) {
+    const statementPresent = this.statements.some((statement) => {
+      const statementNodeMatches = statement.matchStatementNode(statementNode);
+
+      if (statementNodeMatches) {
+        return true;
+      }
+    });
+
+    return statementPresent;
+  }
+
+  isAssertionPresentByAssertionNode(assertionNode) {
+    const assertionPresent = this.assertions.some((assertion) => {
+      const assertionNodeMatches = assertion.matchAssertionNode(assertionNode);
+
+      if (assertionNodeMatches) {
+        return true;
+      }
+    });
+
+    return assertionPresent;
+  }
+
+  isReferencePresentByReferenceNode(referenceNode) {
+    const referencePresent = this.references.some((reference) => {
+      const referenceNodeMatches = reference.matchReferenceNode(referenceNode);
+
+      if (referenceNodeMatches) {
+        return true;
+      }
+    });
+
+    return referencePresent;
+  }
+
+  isSubstitutionPresentBySubstitutionNode(substitutionNode) {
+    const substitutionPresent = this.substitutions.some((substitution) => {
+      const substitutionNodeMatches = substitution.matchSubstitutionNode(substitutionNode);
+
+      if (substitutionNodeMatches) {
+        return true;
+      }
+    });
+
+    return substitutionPresent;
+  }
+
   static fromNothing(context) {
     const terms = [],
           frames = [],

@@ -28,35 +28,43 @@ export default define(class DefinedAssertion extends Assertion {
   }
 
   validate(assignments, stated, context) {
-    let validated = false;
+    let validates = false;
 
     const definedAssertionString = this.getString(); ///
 
     context.trace(`Validating the '${definedAssertionString}' defined assertion...`);
 
-    const termValidates = this.validateTerm(assignments, stated, context),
-          frameVerifies = this.validateFrame(assignments, stated, context);
+    const valid = this.isValid(context);
 
-    if (termValidates || frameVerifies) {
-      let verifiesWhenStated = false,
-          verifiesWhenDerived = false;
+    if (valid) {
+      validates = true;
 
-      if (stated) {
-        verifiesWhenStated = this.validateWhenStated(assignments, context);
-      } else {
-        verifiesWhenDerived = this.validateWhenDerived(context);
+      context.debug(`...the '${definedAssertionString}' defined assertion is already valid.`);
+    } else {
+      const termValidates = this.validateTerm(assignments, stated, context),
+            frameVerifies = this.validateFrame(assignments, stated, context);
+
+      if (termValidates || frameVerifies) {
+        let verifiesWhenStated = false,
+            verifiesWhenDerived = false;
+
+        if (stated) {
+          verifiesWhenStated = this.validateWhenStated(assignments, context);
+        } else {
+          verifiesWhenDerived = this.validateWhenDerived(context);
+        }
+
+        if (verifiesWhenStated || verifiesWhenDerived) {
+          validates = true;
+        }
       }
 
-      if (verifiesWhenStated || verifiesWhenDerived) {
-        validated = true;
+      if (validates) {
+        context.debug(`...validates the '${definedAssertionString}' defined assertion.`);
       }
     }
 
-    if (validated) {
-      context.debug(`...validated the '${definedAssertionString}' defined assertion.`);
-    }
-
-    return validated;
+    return validates;
   }
 
   validateTerm(assignments, stated, context) {
@@ -80,7 +88,7 @@ export default define(class DefinedAssertion extends Assertion {
         });
 
         if (termValidates) {
-          context.debug(`...validated the'${definedAssertionString}' defined assertino's '${termString}' term.`);
+          context.debug(`...validates the'${definedAssertionString}' defined assertino's '${termString}' term.`);
         }
       }
     }
@@ -109,7 +117,7 @@ export default define(class DefinedAssertion extends Assertion {
         frameVerifies = this.frame.validate(assignments, stated, context);
 
         if (frameVerifies) {
-          context.debug(`...validated the'${definedAssertionString}' defined assertino's '${frameString}' frame.`);
+          context.debug(`...validates the'${definedAssertionString}' defined assertino's '${frameString}' frame.`);
         }
       }
     }
@@ -127,7 +135,7 @@ export default define(class DefinedAssertion extends Assertion {
     verifiesWhenStated = true;
 
     if (verifiesWhenStated) {
-      context.debug(`...validated the '${definedAssertionString}' stated defined assertion.`);
+      context.debug(`...validates the '${definedAssertionString}' stated defined assertion.`);
     }
 
     return verifiesWhenStated;
@@ -146,7 +154,7 @@ export default define(class DefinedAssertion extends Assertion {
     verifiesWhenDerived = validateWhenDerived(this.term, this.frame, this.negated, generalContext, specificContext);
 
     if (verifiesWhenDerived) {
-      context.debug(`...validated the '${definedAssertionString}' derived defined assertion.`);
+      context.debug(`...validates the '${definedAssertionString}' derived defined assertion.`);
     }
 
     return verifiesWhenDerived;

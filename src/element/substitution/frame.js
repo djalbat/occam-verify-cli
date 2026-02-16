@@ -70,22 +70,30 @@ export default define(class FrameSubstitution extends Substitution {
 
     context.trace(`Validating the '${frameSubstitutionString}' frame substitution...`);
 
-    const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
+    const valid = this.isValid(context);
 
-    if (targetFrameValidates) {
-      const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
+    if (valid) {
+      validates = true;
 
-      if (replacementFrameValidates) {
-        validates = true;
+      context.debug(`...the '${frameSubstitutionString}' frame substitution is already valid.`);
+    } else {
+      const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
+
+      if (targetFrameValidates) {
+        const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
+
+        if (replacementFrameValidates) {
+          validates = true;
+        }
       }
-    }
 
-    if (validates) {
-      const substititoin = this;  ///
+      if (validates) {
+        const substititoin = this;  ///
 
-      context.addSubstitution(substititoin);
+        context.addSubstitution(substititoin);
 
-      context.debug(`...validated the '${frameSubstitutionString}' frame substitution.`);
+        context.debug(`...validated the '${frameSubstitutionString}' frame substitution.`);
+      }
     }
 
     return validates;

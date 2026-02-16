@@ -144,6 +144,48 @@ export default class Context extends ContextBase {
     return simpleSubstitution;
   }
 
+  isTermPresentByTermNode(termNode) {
+    const context = this.getContext(),
+          termPresent = context.isTermPresentByTermNode(termNode);
+
+    return termPresent;
+  }
+
+  isFramePresentByFrameNode(frameNode) {
+    const context = this.getContext(),
+          framePresent = context.isFramePresentByFrameNode(frameNode);
+
+    return framePresent;
+  }
+
+  isStatementPresentByStatementNode(statementNode) {
+    const context = this.getContext(),
+      statementPresent = context.isStatementPresentByStatementNode(statementNode);
+
+    return statementPresent;
+  }
+
+  isAssertionPresentByAssertionNode(assertionNode) {
+    const context = this.getContext(),
+          assertionPresent = context.isAssertionPresentByAssertionNode(assertionNode);
+
+    return assertionPresent;
+  }
+
+  isReferencePresentByReferenceNode(referenceNode) {
+    const context = this.getContext(),
+          referencePresent = context.isReferencePresentByReferenceNode(referenceNode);
+
+    return referencePresent;
+  }
+
+  isSubstitutionPresentBySubstitutionNode(substitutionNode) {
+    const context = this.getContext(),
+          substitutionPresent = context.isSubstitutionPresentBySubstitutionNode(substitutionNode);
+
+    return substitutionPresent;
+  }
+
   isProcedurePresentByName(name) {
     const context = this.getContext(),
           procedurePresent = context.isProcedurePresentByName(name);

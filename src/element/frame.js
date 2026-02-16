@@ -30,12 +30,11 @@ export default define(class Frame extends Element {
     return metavariableName;
   }
 
-  isSingular() {
+  getFrameNode() {
     const node = this.getNode(),
-          frameNode = node, ///
-          singular = frameNode.isSingular();
+          frameNode = node; ///
 
-    return singular;
+    return frameNode;
   }
 
   compareMetavariable(metavariable) {
@@ -60,15 +59,40 @@ export default define(class Frame extends Element {
     return metavaraibleComparseTo;
   }
 
-  isEqualTo(frame) {
-    const frameA = this, ///
-          frameB = frame, ///
-          frameANode = frameA.getNode(),
-          frameBNode = frameB.getNode(),
-          frameANodeMatchesFrameBNode = frameANode.match(frameBNode),
-          equalTo = frameANodeMatchesFrameBNode; ///
+  matchFrameNode(frameNode) {
+    const frameNodeA = frameNode; ///
+
+    frameNode = this.getFrameNode();
+
+    const frameNodeB = frameNode, ///
+          frameNodeAAMatchesFrameBNodeB = frameNodeA.match(frameNodeB),
+          equalTo = frameNodeAAMatchesFrameBNodeB; ///
 
     return equalTo;
+  }
+
+  isValid(context) {
+    const frameNode = this.getFrameNode(),
+          framePresent = context.isFramePresentByFrameNode(frameNode),
+          valid = framePresent;  ///
+
+    return valid;
+  }
+
+  isEqualTo(frame) {
+    const frameNode = frame.getNode(),
+          frameNodeMatches = this.matchFrameNode(frameNode),
+          equalTo = frameNodeMatches;  ///
+
+    return equalTo;
+  }
+
+  isSingular() {
+    const node = this.getNode(),
+          frameNode = node, ///
+          singular = frameNode.isSingular();
+
+    return singular;
   }
 
   compareParameter(parameter) {
@@ -146,30 +170,38 @@ export default define(class Frame extends Element {
 
     context.trace(`Validating the '${frameString}' frame...`);
 
-    const assumptionsValidate = this.validateAssumptions(assignments, stated, context),
-          metavariablevalidates = this.validateMetavariable(assignments, stated, context);
+    const valid = this.isValid(context);
 
-    if (assumptionsValidate && metavariablevalidates) {
-      let validatesWhenStated = false,
-          validatesWhenDerived = false;
+    if (valid) {
+      validates = true;
 
-      if (stated) {
-        validatesWhenStated = this.validateWhenStated(assignments, context);
-      } else {
-        validatesWhenDerived = this.validateWhenDerived(context);
+      context.debug(`...the '${frameString}' frame is already valid.`);
+    } else {
+      const assumptionsValidate = this.validateAssumptions(assignments, stated, context),
+            metavariablevalidates = this.validateMetavariable(assignments, stated, context);
+
+      if (assumptionsValidate && metavariablevalidates) {
+        let validatesWhenStated = false,
+              validatesWhenDerived = false;
+
+        if (stated) {
+          validatesWhenStated = this.validateWhenStated(assignments, context);
+        } else {
+          validatesWhenDerived = this.validateWhenDerived(context);
+        }
+
+        if (validatesWhenStated || validatesWhenDerived) {
+          validates = true;
+        }
       }
 
-      if (validatesWhenStated || validatesWhenDerived) {
-        validates = true;
+      if (validates) {
+        const frame = this; ///
+
+        context.addFrame(frame);
+
+        context.debug(`...validated the '${frameString}' frame.`);
       }
-    }
-
-    if (validates) {
-      const frame = this; ///
-
-      context.addFrame(frame);
-
-      context.debug(`...validated the '${frameString}' frame.`);
     }
 
     return validates;

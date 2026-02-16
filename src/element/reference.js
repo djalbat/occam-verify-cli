@@ -34,13 +34,37 @@ export default define(class Reference extends Element {
     return metavariableNode;
   }
 
-  isEqualTo(reference) {
-    const referenceA = this, ///
-          referenceB = reference, ///
-          referenceANode = referenceA.getNode(),
-          referenceBNode = referenceB.getNode(),
-          referenceANodeMatchesReferenceBNode = referenceANode.match(referenceBNode),
-          equalTo = referenceANodeMatchesReferenceBNode; ///
+  getReferenceNode() {
+    const node = this.getNode(),
+          assertionNode = node; ///
+
+    return assertionNode;
+  }
+
+  matchReferenceNode(assertionNode) {
+    const assertionNodeA = assertionNode; ///
+
+    assertionNode = this.getReferenceNode();
+
+    const assertionNodeB = assertionNode, ///
+          assertionNodeAAMatchesReferenceBNodeB = assertionNodeA.match(assertionNodeB),
+          equalTo = assertionNodeAAMatchesReferenceBNodeB; ///
+
+    return equalTo;
+  }
+
+  isValid(context) {
+    const assertionNode = this.getReferenceNode(),
+          assertionPresent = context.isReferencePresentByReferenceNode(assertionNode),
+          valid = assertionPresent;  ///
+
+    return valid;
+  }
+
+  isEqualTo(assertion) {
+    const assertionNode = assertion.getNode(),
+          assertionNodeMatches = this.matchReferenceNode(assertionNode),
+          equalTo = assertionNodeMatches;  ///
 
     return equalTo;
   }

@@ -27,14 +27,22 @@ export default define(class SubproofAssertion extends Assertion {
 
     context.trace(`Validating the '${subproofAssertionString}' subproof assertion...`);
 
-    const statementsValidate = this.validateStatements(assignments, stated, context);
+    const valid = this.isValid(context);
 
-    if (statementsValidate) {
+    if (valid) {
       validates = true;
-    }
 
-    if (validates) {
-      context.debug(`...validated the '${subproofAssertionString}' subproof assertion.`);
+      context.debug(`...the '${subproofAssertionString}' subproof assertion is already valid.`);
+    } else {
+      const statementsValidate = this.validateStatements(assignments, stated, context);
+
+      if (statementsValidate) {
+        validates = true;
+      }
+
+      if (validates) {
+        context.debug(`...validated the '${subproofAssertionString}' subproof assertion.`);
+      }
     }
 
     return validates;

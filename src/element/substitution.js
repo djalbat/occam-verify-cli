@@ -31,6 +31,41 @@ export default class Substitution extends Element {
     return metavariable;
   }
 
+  getSubstitutionNode() {
+    const node = this.getNode(),
+          substitutionNode = node; ///
+
+    return substitutionNode;
+  }
+
+  matchSubstitutionNode(substitutionNode) {
+    const substitutionNodeA = substitutionNode; ///
+
+    substitutionNode = this.getSubstitutionNode();
+
+    const substitutionNodeB = substitutionNode, ///
+          substitutionNodeAAMatchesSubstitutionBNodeB = substitutionNodeA.match(substitutionNodeB),
+          equalTo = substitutionNodeAAMatchesSubstitutionBNodeB; ///
+
+    return equalTo;
+  }
+
+  isValid(context) {
+    const substitutionNode = this.getSubstitutionNode(),
+          substitutionPresent = context.isSubstitutionPresentBySubstitutionNode(substitutionNode),
+          valid = substitutionPresent;  ///
+
+    return valid;
+  }
+
+  isEqualTo(substitution) {
+    const substitutionNode = substitution.getNode(),
+          substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
+          equalTo = substitutionNodeMatches;  ///
+
+    return equalTo;
+  }
+
   isSimple() {
     const simple = true;
 
@@ -67,17 +102,6 @@ export default class Substitution extends Element {
     const referenceEqualToReference = false;
 
     return referenceEqualToReference;
-  }
-
-  isEqualTo(substitution) {
-    const substitutionA = this, ///
-          substitutionB = substitution, ///
-          substitutionANode = substitutionA.getNode(),
-          substitutionBNode = substitutionB.getNode(),
-          substitutionANodeMatchesSubstitutionBNode = substitutionANode.match(substitutionBNode),
-          equalTo = substitutionANodeMatchesSubstitutionBNode; ///
-
-    return equalTo;
   }
 
   compareTerm(term, context) {

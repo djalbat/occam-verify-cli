@@ -73,22 +73,30 @@ export default define(class TermSubstitution extends Substitution {
 
     context.trace(`Validating the '${termSubstitutionString}' term substitution...`);
 
-    const targetTermValidates = this.validateTargetTerm(generalContext, specificContext);
+    const valid = this.isValid(context);
 
-    if (targetTermValidates) {
-      const replacementTermValidates = this.validateReplacementTerm(generalContext, specificContext);
+    if (valid) {
+      validates = true;
 
-      if (replacementTermValidates) {
-        validates = true;
+      context.debug(`...the '${termSubstitutionString}' term substitution is alrady valid.`);
+    } else {
+      const targetTermValidates = this.validateTargetTerm(generalContext, specificContext);
+
+      if (targetTermValidates) {
+        const replacementTermValidates = this.validateReplacementTerm(generalContext, specificContext);
+
+        if (replacementTermValidates) {
+          validates = true;
+        }
       }
-    }
 
-    if (validates) {
-      const substititoin = this;  ///
+      if (validates) {
+        const substititoin = this;  ///
 
-      context.addSubstitution(substititoin);
+        context.addSubstitution(substititoin);
 
-      context.debug(`...validated the '${termSubstitutionString}' term substitution.`);
+        context.debug(`...validated the '${termSubstitutionString}' term substitution.`);
+      }
     }
 
     return validates;

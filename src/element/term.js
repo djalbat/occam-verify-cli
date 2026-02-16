@@ -24,15 +24,47 @@ export default define(class Term extends Element {
     this.type = type;
   }
 
-  isSingular() {
+  getTermNode() {
     const node = this.getNode(),
-          termNode = node,  ///
-          singular = termNode.isSingular();
+          termNode = node;  ///
 
-    return singular;
+    return termNode;
   }
 
-  isProvisional() { return this.type.isProvisional(); }
+  getVariableIdentifier() {
+    const termNode = this.getTermNode(),
+          variableIdentifier = termNode.getVariableIdentifier();
+
+    return variableIdentifier;
+  }
+
+  matchTermNode(termNode) {
+    const termNodeA = termNode; ///
+
+    termNode = this.getTermNode();
+
+    const termNodeB = termNode, ///
+      termNodeAAMatchesTermBNodeB = termNodeA.match(termNodeB),
+      equalTo = termNodeAAMatchesTermBNodeB; ///
+
+    return equalTo;
+  }
+
+  isValid(context) {
+    const termNode = this.getTermNode(),
+          termPresent = context.isTermPresentByTermNode(termNode),
+          valid = termPresent;  ///
+
+    return valid;
+  }
+
+  isEqualTo(term) {
+    const termNode = term.getNode(),
+          termNodeMatches = this.matchTermNode(termNode),
+          equalTo = termNodeMatches;  ///
+
+    return equalTo;
+  }
 
   isGrounded(definedVariables, context) {
     const term  = this, ///
@@ -53,6 +85,15 @@ export default define(class Term extends Element {
     return grounded;
   }
 
+  isSingular() {
+    const termNode = this.getTermNode(),
+          singular = termNode.isSingular();
+
+    return singular;
+  }
+
+  isProvisional() { return this.type.isProvisional(); }
+
   isInitiallyGrounded(context) {
     const term  = this, ///
           variables = variablesFromTerm(term, context),
@@ -67,24 +108,6 @@ export default define(class Term extends Element {
           implicitlyGrounded = grounded;  ///
 
     return implicitlyGrounded;
-  }
-
-  getVariableIdentifier() {
-    const node = this.getNode(),
-          variableIdentifier = node.getVariableIdentifier();
-
-    return variableIdentifier;
-  }
-
-  isEqualTo(term) {
-    const termA = this, ///
-          termB = term, ///
-          termANode = termA.getNode(),
-          termBNode = termB.getNode(),
-          termANodeMatchesTermBNode = termANode.match(termBNode),
-          equalTo = termANodeMatchesTermBNode; ///
-
-    return equalTo;
   }
 
   compareParameter(parameter) {
@@ -114,21 +137,29 @@ export default define(class Term extends Element {
 
     context.trace(`Validating the '${termString}' term...`);
 
-    validates = validateTerms.some((validateTerm) => {  ///
-      const term = this, ///
-            termValidates = validateTerm(term, context, verifyForwards);
+    const valid = this.isValid(context);
 
-      if (termValidates) {
-        return true;
+    if (valid) {
+      validates = true;
+
+      context.debug(`...the '${termString}' term is already valid.`);
+    } else {
+      validates = validateTerms.some((validateTerm) => {  ///
+        const term = this, ///
+              termValidates = validateTerm(term, context, verifyForwards);
+
+        if (termValidates) {
+          return true;
+        }
+      });
+
+      if (validates) {
+        const term = this;  ///
+
+        context.addTerm(term);
+
+        context.debug(`...validated the '${termString}' term.`);
       }
-    });
-
-    if (validates) {
-      const term = this;  ///
-
-      context.addTerm(term);
-
-      context.debug(`...validated the '${termString}' term.`);
     }
 
     return validates;

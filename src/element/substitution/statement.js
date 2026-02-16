@@ -117,22 +117,30 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Validating the '${statementSubstitutionString}' statement substitution...`);
 
-    const targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
+    const valid = this.isValid(context);
 
-    if (targetStatementValidates) {
-      const replacementStatementValidates = this.validateReplacementStatement(generalContext, specificContext);
+    if (valid) {
+      validates = true;
 
-      if (replacementStatementValidates) {
-        validates = true;
+      context.debug(`...the '${statementSubstitutionString}' statement substitution is already valid.`);
+    } else {
+      const targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
+
+      if (targetStatementValidates) {
+        const replacementStatementValidates = this.validateReplacementStatement(generalContext, specificContext);
+
+        if (replacementStatementValidates) {
+          validates = true;
+        }
       }
-    }
 
-    if (validates) {
-      const substititoin = this;  ///
+      if (validates) {
+        const substititoin = this;  ///
 
-      context.addSubstitution(substititoin);
+        context.addSubstitution(substititoin);
 
-      context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
+        context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
+      }
     }
 
     return validates;
