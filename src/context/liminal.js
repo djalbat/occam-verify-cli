@@ -6,7 +6,7 @@ import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
 import Context from "../context";
 
-const { find, first, compress } = arrayUtilities;
+const { find, first, prune, compress } = arrayUtilities;
 
 export default class LiminalContext extends Context {
   constructor(context, substitutions) {
@@ -34,9 +34,8 @@ export default class LiminalContext extends Context {
     return substitutions;
   }
 
-  getNonTrivialSubstitutions() {
-    const nested = false,
-          nonTrivialSubstitutions = this.findSubstitutions((substitution) => {
+  getNonTrivialSubstitutions(nested = true) {
+    const nonTrivialSubstitutions = this.findSubstitutions((substitution) => {
           const substitutionNonTrivial = substitution.isNonTrivial();
 
           if (substitutionNonTrivial) {
@@ -47,10 +46,10 @@ export default class LiminalContext extends Context {
     return nonTrivialSubstitutions;
   }
 
-  getSoleNonTrivialSubstitution() {
+  getSoleNonTrivialSubstitution(nested = true) {
     let soleNonTrivialSubstitutions = null;
 
-    const nonTrivialSubstitutions = this.getNonTrivialSubstitutions(),
+    const nonTrivialSubstitutions = this.getNonTrivialSubstitutions(nested),
           nonTrivialSubstitutionsLength = nonTrivialSubstitutions.length;
 
     if (nonTrivialSubstitutionsLength === 1) {
@@ -100,6 +99,23 @@ export default class LiminalContext extends Context {
     });
 
     context.trace(`Added the '${substitutionsString}' substitutions to the context.`);
+  }
+
+  removeSubstitution(substitution) {
+    const context = this,
+          substitutionA = substitution, ///
+          substitutionString = substitution.getString();
+
+    prune(this.substitutions, (substitution) => {
+      const substitutionB = substitution,
+            substitutionAEqualTosubstitutionB = substitutionA.isEqualTo(substitutionB);
+
+      if (!substitutionAEqualTosubstitutionB) {
+        return true;
+      }
+    });
+
+    context.trace(`Removed the '${substitutionString}' substitution to the context.`);
   }
 
   resolveSubstitutions(generalContext, specificContext) {

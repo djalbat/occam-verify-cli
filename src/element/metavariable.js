@@ -9,6 +9,7 @@ import { EMPTY_STRING } from "../constants";
 import { typeToTypeJSON } from "../utilities/json";
 import { metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
+import {get} from "necessary/lib/utilities/ajax";
 
 export default define(class Metavariable extends Element {
   constructor(context, string, node, name, type, metaType) {
@@ -159,6 +160,8 @@ export default define(class Metavariable extends Element {
                                   substitution.getString() :
                                     EMPTY_STRING;
 
+
+
     context.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
     const metavariable = this, ///
@@ -167,8 +170,7 @@ export default define(class Metavariable extends Element {
     if (statementMetavariableUnifies) {
       statementUnifies = true;
     } else {
-      const context = specificContext,  ///
-            substitutionPresent = context.isSubstitutionPresentByMetavariableAndSubstitution(metavariable, substitution);
+      const substitutionPresent = context.isSubstitutionPresentByMetavariableAndSubstitution(metavariable, substitution);
 
       if (substitutionPresent) {
         substitution = context.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
@@ -182,8 +184,17 @@ export default define(class Metavariable extends Element {
         const { StatementSubstitution } = elements,
               statementSubstitution = (substitution !== null) ?
                                         StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
-                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
-              statementSubstitutionValidates = statementSubstitution.validate(generalContext, specificContext);
+                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+
+        if (substitution !== null) {
+          const context = generalContext; ///
+
+          substitution = statementSubstitution.getSubstitution();
+
+          substitution.setContext(context);
+        }
+
+        const statementSubstitutionValidates = statementSubstitution.validate(generalContext, specificContext);
 
         if (statementSubstitutionValidates) {
           const substitution = statementSubstitution; ///

@@ -239,7 +239,7 @@ export default class Context extends ContextBase {
 
   addJudgement(judgement) {
     const context = this.getContext(),
-      judgementAdded = context.addJudgement(judgement);
+          judgementAdded = context.addJudgement(judgement);
 
     return judgementAdded;
   }
@@ -248,6 +248,12 @@ export default class Context extends ContextBase {
     const context = this.getContext();
 
     context.addSubstitution(substitution);
+  }
+
+  removeSubstitution(substitution) {
+    const context = this.getContext();
+
+    context.removeSubstitution(substitution);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {
