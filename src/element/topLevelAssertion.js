@@ -290,7 +290,7 @@ export default class TopLevelAssertion extends Element {
 
           context = this.getContext();
 
-          const generalContext = context;
+          const generalContext = context; ///
 
           context = specificContext;  ///
 
@@ -318,7 +318,7 @@ export default class TopLevelAssertion extends Element {
 
           context = this.getContext();
 
-          const generalContext = context;
+          const generalContext = context; ///
 
           context = specificContext;  ///
 
