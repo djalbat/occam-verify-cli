@@ -255,8 +255,8 @@ export default class LiminalContext extends Context {
 
   static fromNothing(context) {
     const substitutions = [],
-          emphemeralContext = new LiminalContext(context, substitutions);
+          liminalContext = new LiminalContext(context, substitutions);
 
-    return emphemeralContext;
+    return liminalContext;
   }
 }
