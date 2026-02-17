@@ -9,7 +9,6 @@ import { EMPTY_STRING } from "../constants";
 import { typeToTypeJSON } from "../utilities/json";
 import { metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
-import {get} from "necessary/lib/utilities/ajax";
 
 export default define(class Metavariable extends Element {
   constructor(context, string, node, name, type, metaType) {
