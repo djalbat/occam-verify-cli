@@ -173,7 +173,7 @@ export default define(class Metavariable extends Element {
       const substitutionPresent = context.isSubstitutionPresentByMetavariableAndSubstitution(metavariable, substitution);
 
       if (substitutionPresent) {
-        substitution = context.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
+        substitution = context.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution, generalContet, specificContext); ///
 
         const substitutionComparesToStatement = substitution.compareStatement(statement, context);
 

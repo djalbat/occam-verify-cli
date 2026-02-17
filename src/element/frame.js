@@ -38,7 +38,7 @@ export default define(class Frame extends Element {
   }
 
   compareMetavariable(metavariable) {
-    let metavaraibleComparseTo;
+    let metavaraibleComparseTo = false;
 
     const singular = this.isSingular();
 

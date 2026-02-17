@@ -38,6 +38,21 @@ export default define(class ReferenceSubstitution extends Substitution {
     return replacementNode;
   }
 
+  getMetavariable(generalContext, specificContext) {
+    let metavariable = null;
+
+    const targetReferenceNode = this.targetReference.getNode(),
+          metavariableName = targetReferenceNode.getMetavariableName();
+
+    if (metavariableName !== null) {
+      const context = generalContext; ///
+
+      metavariable = context.findMetavariableByMetavariableName(metavariableName);
+    }
+
+    return metavariable;
+  }
+
   isTrivial() {
     const targetReferenceEqualToReplacementReference = this.targetReference.isEqualTo(this.replacementReference),
           trivial = targetReferenceEqualToReplacementReference; ///

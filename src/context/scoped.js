@@ -186,14 +186,10 @@ class ScopedContext extends Context {
   findJudgementByMetavariable(metavariable) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementSingular = judgement.isSingular();
+            const judgementMetavariableComparesToMetavariable = judgement.compareMetavariable(metavariable);
 
-            if (judgementSingular) {
-              const judgementMetavariableComparesToMetavariable = judgement.compareMetavariable(metavariable);
-
-              if (judgementMetavariableComparesToMetavariable) {
-                return true;
-              }
+            if (judgementMetavariableComparesToMetavariable) {
+              return true;
             }
           }) || null;
 
@@ -232,33 +228,6 @@ class ScopedContext extends Context {
           termGrounded = termMatchesGroundedTerm; ///
 
     return termGrounded;
-  }
-
-  isVariableDefined(variable) {
-    const context = this, ///
-          equivalences = this.getEquivalences(),
-          groundedTerms = [],
-          definedVariables = [];
-
-    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
-
-    const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
-            const definedVariableEqualToVariable = definedVariable.isEqualTo(variable);
-
-            if (definedVariableEqualToVariable === variable) {
-              return true;
-            }
-          }),
-          variableDefined = variableMatchesDefinedVariable; ///
-
-    return variableDefined;
-  }
-
-  isMetavariableDefined(metavariable) {
-    const judgementPresent = this.isJudgementPresentByMetavariable(metavariable),
-          metavariableDefined = judgementPresent; ///
-
-    return metavariableDefined
   }
 
   isJudgementPresentByMetavariable(metavariable) {

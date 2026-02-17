@@ -38,22 +38,6 @@ export default define(class Substitutions extends Element {
 
   extractSubstitution(callbcak) { return extract(this.array, callbcak); }
 
-  findSubstitutionByVariable(variable) {
-    const substitution = this.findSubstitution((substitution) => {
-      const substitutionVariable = substitution.getVariable();
-
-      if (substitutionVariable !== null) {
-        const substitutionVariableEqualToVariable = substitutionVariable.isEqualTo(variable);
-
-        if (substitutionVariableEqualToVariable) {
-          return true;
-        }
-      }
-    }) || null;
-
-    return substitution;
-  }
-
   correlateSubstitutions(substitutions) {
     const array = substitutions.getArray(),
           arrayA = array, ///

@@ -69,7 +69,7 @@ class MetaLevelPass extends ZipPass {
 
         const substitutionNode = statementNode.getSubstitutionNode(),
               substitution = (substitutionNode !== null) ?
-                               context.findSubstitutionBySubstitutionNode(substitutionNode) :
+                               context.findSubstitutionBySubstitutionNode(substitutionNode, generalContext, specificContext) :
                                  null;
 
         context = specificContext; ///

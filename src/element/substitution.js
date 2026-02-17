@@ -104,6 +104,12 @@ export default class Substitution extends Element {
     return referenceEqualToReference;
   }
 
+  compare(substitution) {
+    const comparesToSubstitution = false;
+
+    return comparesToSubstitution;
+  }
+
   compareTerm(term, context) {
     const comparesToTerm = false;
 
@@ -120,12 +126,6 @@ export default class Substitution extends Element {
     const comparesToParameter = false;
 
     return comparesToParameter;
-  }
-
-  compareSubstitution(substitution) {
-    const comparesToSubstitution = false;
-
-    return comparesToSubstitution;
   }
 
   compareMetavariable(metavariable) {

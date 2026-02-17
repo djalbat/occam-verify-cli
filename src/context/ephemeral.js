@@ -216,7 +216,7 @@ export default class EphemeralContext extends Context {
     return reference;
   }
 
-  findSubstitutionBySubstitutionNode(substitutionNode) {
+  findSubstitutionBySubstitutionNode(substitutionNode, generalContext, specificContext) {
     const substitution = this.substitutions.find((substitution) => {
       const substitutionNodeMatches = substitution.matchNode(substitutionNode);
 

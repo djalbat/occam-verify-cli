@@ -118,9 +118,23 @@ export default class Context extends ContextBase {
 
   findTopLevelAssertionByReference(reference) {
     const context = this.getContext(),
-          topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+      topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
     return topLevelAssertion;
+  }
+
+  findSubstitutionByVariable(variable, generalContext, specificContext) {
+    const context = this.getContext(),
+          substitution = context.findSubstitutionByVariable(variable, generalContext, specificContext);
+
+    return substitution;
+  }
+
+  findSubstitutionByMetavariable(metavariable, generalContet, specificContext) {
+    const context = this.getContext(),
+          substitution = context.findSubstitutionByMetavariable(metavariable, generalContet, specificContext);
+
+    return substitution;
   }
 
   findVariableByVariableIdentifier(variableIdentifier) {
@@ -144,6 +158,14 @@ export default class Context extends ContextBase {
     return simpleSubstitution;
   }
 
+  findSubstitutionByMetavariableAndSubstitution(metavariable, substitution, generalContet, specificContext) {
+    const context = this.getContext();
+
+    substitution = context.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution, generalContet, specificContext); ///
+
+    return substitution;
+  }
+
   isTermPresentByTermNode(termNode) {
     const context = this.getContext(),
           termPresent = context.isTermPresentByTermNode(termNode);
@@ -156,6 +178,13 @@ export default class Context extends ContextBase {
           framePresent = context.isFramePresentByFrameNode(frameNode);
 
     return framePresent;
+  }
+
+  isJudgementPresentByMetavariable(metavariable) {
+    const context = this.getContext(),
+          judgementPresent = context.isJudgementPresentByMetavariable(metavariable);
+
+    return judgementPresent;
   }
 
   isStatementPresentByStatementNode(statementNode) {

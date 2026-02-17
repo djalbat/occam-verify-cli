@@ -33,7 +33,7 @@ export default define(class Assumption extends Element {
     context.trace(`Comparing the '${assumptionString}' assumption to the '${substitutionString}' substitution...`);
 
     const statement = substitution.getStatement(),
-          metavariable = substitution.getMetavariable(context),
+          metavariable = substitution.getMetavariable(generalContext, specificContext),
           statementEqualToStatement = this.statement.isEqualTo(statement),
           referenceMetavariableComparesToMetavariable = this.reference.compareMetavariable(metavariable);
 

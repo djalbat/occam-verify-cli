@@ -38,6 +38,13 @@ export default define(class Variable extends Element {
     return identifierEqualTo;
   }
 
+  compare(variable) {
+    const variableIdentifier = variable.getIdentifier(),
+          comparesTo = (this.identifier === variableIdentifier);
+
+    return comparesTo;
+  }
+
   compareParamter(parameter) {
     const identifier = parameter.getIdentifier(),
           identifierEqualTo = this.isIdentifierEqualTo(identifier),
@@ -120,7 +127,7 @@ export default define(class Variable extends Element {
 
     variable = this; ///
 
-    substitution = substitutions.findSubstitutionByVariable(variable);
+    substitution = substitutions.findSubstitutionByVariable(variable, generalContext, specificContext);
 
     if (substitution !== null) {
       const substitutionComparesToTerm = substitution.compareTerm(term, context);

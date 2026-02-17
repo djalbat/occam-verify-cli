@@ -31,6 +31,8 @@ export default define(class Judgement extends Element {
 
   getMetavariable() { return this.frame.getMetavariable(); }
 
+  compareMetavariable(metavariable) { return this.frame.compareMetavariable(metavariable); }
+
   validate(assignments, stated, context) {
     let validates = false;
 

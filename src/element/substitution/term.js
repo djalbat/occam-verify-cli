@@ -39,6 +39,20 @@ export default define(class TermSubstitution extends Substitution {
     return replacementNode;
   }
 
+  getVariable(generalContext, specificContext) {
+    let variable = null;
+
+    const targetTermNode = this.targetTerm.getNode(),
+          variableIdentifier = targetTermNode.getVariableIdentifier();
+
+    if (variableIdentifier !== null) {
+      const context = specificContext;  ///
+      variable = context.findVariableByVariableIdentifier(variableIdentifier);
+    }
+
+    return variable;
+  }
+
   isTrivial() {
     const targetTermEqualToReplacementTerm = this.targetTerm.isEqualTo(this.replacementTerm),
           trivial = targetTermEqualToReplacementTerm; ///

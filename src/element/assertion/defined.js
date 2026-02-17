@@ -1,6 +1,5 @@
 "use strict";
 
-import elements from "../../elements";
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
@@ -160,7 +159,7 @@ export default define(class DefinedAssertion extends Assertion {
     return verifiesWhenDerived;
   }
 
-  unifyIndependently(substitutions, generalContext, specificContext) {
+  unifyIndependently(generalContext, specificContext) {
     let unifiesIndependently;
 
     const context = specificContext, ///
@@ -168,8 +167,8 @@ export default define(class DefinedAssertion extends Assertion {
 
     context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);
 
-    const term = termFromTermAndSubstitutions(this.term, substitutions, generalContext, specificContext),
-          frame = frameFromFrameAndSubstitutions(this.frame, substitutions, generalContext, specificContext),
+    const term = termFromTermAndSubstitutions(this.term, generalContext, specificContext),
+          frame = frameFromFrameAndSubstitutions(this.frame, generalContext, specificContext),
           verifiesWhenDerived = validateWhenDerived(term, frame, this.negated, generalContext, specificContext);
 
     unifiesIndependently = verifiesWhenDerived; ///
@@ -190,11 +189,8 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   const context = specificContext;  ///
 
   if (term !== null) {
-    const { Variable } = elements,
-          termNode = term.getNode(),
-          variable = Variable.fromTermNode(termNode, context),
-          generalContext = context, ///
-          variableDefined = generalContext.isVariableDefined(variable);
+    const variable = term.getVariable(generalContext, specificContext),
+          variableDefined = isVariableDefined(variable, context);
 
     if (!negated && variableDefined) {
       verifiesWhenDerived = true;
@@ -206,10 +202,8 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   }
 
   if (frame!== null) {
-    const { Metavariable } = elements,
-          frameNode = frame.getNode(),
-          metavariable = Metavariable.fromFrameNode(frameNode, context),
-          metavariableDefined = context.isMetavariableDefined(metavariable);
+    const metavariable = frame.getMetavariable(generalContext, specificContext),
+          metavariableDefined = isMetavariableDefined(metavariable, context);
 
     if (!negated && metavariableDefined) {
       verifiesWhenDerived = true;
@@ -221,4 +215,30 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   }
 
   return verifiesWhenDerived;
+}
+
+function isVariableDefined(variable, context) {
+  const equivalences = context.getEquivalences(),
+        groundedTerms = [],
+        definedVariables = [];
+
+  equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
+
+  const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
+          const definedVariableEqualToVariable = definedVariable.compare(variable);
+
+          if (definedVariableEqualToVariable === variable) {
+            return true;
+          }
+        }),
+        variableDefined = variableMatchesDefinedVariable; ///
+
+  return variableDefined;
+}
+
+function isMetavariableDefined(metavariable, context) {
+  const judgementPresent = context.isJudgementPresentByMetavariable(metavariable),
+        metavariableDefined = judgementPresent; ///
+
+  return metavariableDefined
 }
