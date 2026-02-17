@@ -92,7 +92,6 @@ export default class NominalFileContext extends FileContext {
     return parser;
   }
 
-
   getJudgements() {
     const judgements = [];
 
