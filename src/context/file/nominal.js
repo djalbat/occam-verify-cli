@@ -40,8 +40,8 @@ const { push, filter } = arrayUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class NominalFileContext extends FileContext {
-  constructor(context, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
-    super(context, filePath, tokens, node);
+  constructor(context, filePath, tokens, node, lexer, parser, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
+    super(context, filePath, tokens, node, lexer, parser);
 
     this.context = context;
     this.filePath = filePath;
@@ -856,7 +856,9 @@ export default class NominalFileContext extends FileContext {
   }
 
   static fromFile(file, context) {
-    const types = [],
+    const lexer = null,
+          parser = null,
+          types = [],
           rules = [],
           axioms = [],
           lemmas = [],
@@ -869,13 +871,15 @@ export default class NominalFileContext extends FileContext {
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          nominalFileContext = FileContext.fromFile(NominalFileContext, file, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
+          nominalFileContext = FileContext.fromFileLexerAndParser(NominalFileContext, file, lexer, parser, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
 
     return nominalFileContext;
   }
 
   static fromFilePath(filePath, context) {
-    const types = null,
+    const lexer = null,
+          parser = null,
+          types = null,
           rules = null,
           axioms = null,
           lemmas = null,
@@ -888,7 +892,7 @@ export default class NominalFileContext extends FileContext {
           constructors = null,
           metatheorems = null,
           metavariables = null,
-          nominalFileContext = FileContext.fromFilePath(NominalFileContext, filePath, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
+          nominalFileContext = FileContext.fromFilePathLexerAndParser(NominalFileContext, filePath, lexer, parser, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
 
     return nominalFileContext;
   }
