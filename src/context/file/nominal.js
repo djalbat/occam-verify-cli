@@ -62,6 +62,37 @@ export default class NominalFileContext extends FileContext {
     this.metavariables = metavariables;
   }
 
+  getLexer() {
+    let lexer = super.getLexer();
+
+    if (lexer === null) {
+      const combinedCustomGrammar = this.getCombinedCustomGrammar(),
+            nominalLexer = nominalLexerFromCombinedCustomGrammar(NominalLexer, combinedCustomGrammar);
+
+      lexer = nominalLexer; ///
+
+      this.setLexer(lexer);
+    }
+
+    return lexer;
+  }
+
+  getParser() {
+    let parser = super.getParser();
+
+    if (parser === null) {
+      const combinedCustomGrammar = this.getCombinedCustomGrammar(),
+            nominalParser = nominalParserFromCombinedCustomGrammar(NominalParser, combinedCustomGrammar);
+
+      parser = nominalParser; ///
+
+      this.setParser(parser);
+    }
+
+    return parser;
+  }
+
+
   getJudgements() {
     const judgements = [];
 
@@ -734,22 +765,6 @@ export default class NominalFileContext extends FileContext {
           topLevelMetaAssertionPresent = (topLevelMetaAssertion !== null);
 
     return topLevelMetaAssertionPresent;
-  }
-
-  getLexer() {
-    const combinedCustomGrammar = this.getCombinedCustomGrammar(),
-          nominalLexer = nominalLexerFromCombinedCustomGrammar(NominalLexer, combinedCustomGrammar),
-          lexer = nominalLexer; ///
-
-    return lexer;
-  }
-
-  getParser() {
-    const combinedCustomGrammar = this.getCombinedCustomGrammar(),
-          nominalParser = nominalParserFromCombinedCustomGrammar(NominalParser, combinedCustomGrammar),
-          parser = nominalParser; ///
-
-    return parser;
   }
 
   clear() {
