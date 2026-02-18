@@ -100,9 +100,9 @@ export default define(class TermSubstitution extends Substitution {
       }
 
       if (validates) {
-        const substititoin = this;  ///
+        const substitution = this;  ///
 
-        context.addSubstitution(substititoin);
+        context.addSubstitution(substitution);
 
         context.debug(`...validated the '${termSubstitutionString}' term substitution.`);
       }

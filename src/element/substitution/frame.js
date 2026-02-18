@@ -99,9 +99,9 @@ export default define(class FrameSubstitution extends Substitution {
       }
 
       if (validates) {
-        const substititoin = this;  ///
+        const substitution = this;  ///
 
-        context.addSubstitution(substititoin);
+        context.addSubstitution(substitution);
 
         context.debug(`...validated the '${frameSubstitutionString}' frame substitution.`);
       }

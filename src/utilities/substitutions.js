@@ -119,7 +119,7 @@ export function metavariableNamesFromSubstitutions(substitutions) {
   });
 
   compress(metavariableNames, (metavariableNameA, metavariableNameB) => {
-    if (metavariableNameB !== metavariableNameB) {
+    if (metavariableNameA !== metavariableNameB) {
       return true;
     }
   });

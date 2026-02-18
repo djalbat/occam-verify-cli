@@ -162,10 +162,6 @@ export default define(class Variable extends Element {
               termSubstitutionValidates = termSubstitution.validate(generalContext, specificContext);
 
         if (termSubstitutionValidates) {
-          substitution = termSubstitution;  ///
-
-          context.addSubstitution(substitution);
-
           termUnifies = true;
         }
       }

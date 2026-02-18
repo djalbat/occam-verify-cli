@@ -138,6 +138,8 @@ export default class LiminalContext extends Context {
       context = this.getContext();
     }
 
+    context.debug(`Commiting the limiinal context`);
+
     context.addSubstitutions(this.substitutions);
   }
 

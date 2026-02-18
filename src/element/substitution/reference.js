@@ -99,9 +99,9 @@ export default define(class ReferenceSubstitution extends Substitution {
       }
 
       if (validates) {
-        const substititoin = this;  ///
+        const subsitution = this;  ///
 
-        context.addSubstitution(substititoin);
+        context.addSubstitution(subsitution);
 
         context.debug(`...validated the '${referenceSubstitutionString}' reference substitution.`);
       }

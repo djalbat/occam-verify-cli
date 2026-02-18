@@ -135,9 +135,9 @@ export default define(class StatementSubstitution extends Substitution {
       }
 
       if (validates) {
-        const substititoin = this;  ///
+        const substitution = this;  ///
 
-        context.addSubstitution(substititoin);
+        context.addSubstitution(substitution);
 
         context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
       }

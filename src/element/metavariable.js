@@ -148,10 +148,6 @@ export default define(class Metavariable extends Element {
               framesubstitutionValidates = frameSubstitution.validate(generalContext, specificContext);
 
         if (framesubstitutionValidates) {
-          const substitution = frameSubstitution; ///
-
-          context.addSubstitution(substitution);
-
           frameUnifies = true;
         }
       }
@@ -212,10 +208,6 @@ export default define(class Metavariable extends Element {
         const statementSubstitutionValidates = statementSubstitution.validate(generalContext, specificContext);
 
         if (statementSubstitutionValidates) {
-          const substitution = statementSubstitution; ///
-
-          context.addSubstitution(substitution);
-
           statementUnifies = true;
         }
       }
@@ -257,11 +249,12 @@ export default define(class Metavariable extends Element {
         const { ReferenceSubstitution } = elements,
               metavariable = this, ///
               referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
-              substitution = referenceSubstitution; ///
+              referenceSubstitutionValidates = referenceSubstitution.validate(generalContext, specificContext);
 
-        context.addSubstitution(substitution);
+        if (referenceSubstitutionValidates) {
+          referenceUnifies = true;
 
-        referenceUnifies = true;
+        }
       }
     }
 

@@ -179,6 +179,8 @@ class ScopedContext extends Context {
     } else {
       this.judgements.push(judgement);
 
+      judgementAdded = true;
+
       context.debug(`...added the '${judgementString}' judgement to the scoped context.`);
     }
 
