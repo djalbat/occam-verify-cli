@@ -102,11 +102,18 @@ export default class Context extends ContextBase {
     return metavariable;
   }
 
-  findProcedureByProcedureName(procedureName) {
+  findRuleByReference(reference) {
     const context = this.getContext(),
-          procedure = context.findProcedureByProcedureName(procedureName);
+      rule = context.findRuleByReference(reference);
 
-    return procedure;
+    return rule;
+  }
+
+  findTopLevelAssertionByReference(reference) {
+    const context = this.getContext(),
+          topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+
+    return topLevelAssertion;
   }
 
   findFrameByFrameNode(frameNode) {
@@ -180,18 +187,25 @@ export default class Context extends ContextBase {
     return substitution;
   }
 
-  findRuleByReference(reference) {
+  findProcedureByProcedureName(procedureName) {
     const context = this.getContext(),
-          rule = context.findRuleByReference(reference);
+      procedure = context.findProcedureByProcedureName(procedureName);
 
-    return rule;
+    return procedure;
   }
 
-  findTopLevelAssertionByReference(reference) {
+  isLabelPresentByReference(reference) {
     const context = this.getContext(),
-          topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+          labelPresent = context.isLabelPresentByReference(reference);
 
-    return topLevelAssertion;
+    return labelPresent;
+  }
+
+  isMetavariablePresentByReference(reference) {
+    const context = this.getContext(),
+          metavariablePresent = context.isMetavariablePresentByReference(reference);
+
+    return metavariablePresent;
   }
 
   isTermPresentByTermNode(termNode) {
@@ -201,16 +215,9 @@ export default class Context extends ContextBase {
     return termPresent;
   }
 
-  isProcedurePresentByProcedureName(procedureName) {
-    const context = this.getContext(),
-          procedurePresent = context.isProcedurePresentByProcedureName(procedureName);
-
-    return procedurePresent;
-  }
-
   isFramePresentByFrameNode(frameNode) {
     const context = this.getContext(),
-          framePresent = context.isFramePresentByFrameNode(frameNode);
+      framePresent = context.isFramePresentByFrameNode(frameNode);
 
     return framePresent;
   }
@@ -250,18 +257,11 @@ export default class Context extends ContextBase {
     return substitutionPresent;
   }
 
-  isLabelPresentByReference(reference) {
+  isProcedurePresentByProcedureName(procedureName) {
     const context = this.getContext(),
-          labelPresent = context.isLabelPresentByReference(reference);
+          procedurePresent = context.isProcedurePresentByProcedureName(procedureName);
 
-    return labelPresent;
-  }
-
-  isMetavariablePresentByReference(reference) {
-    const context = this.getContext(),
-          metavariablePresent = context.isMetavariablePresentByReference(reference);
-
-    return metavariablePresent;
+    return procedurePresent;
   }
 
   addRule(rule) {

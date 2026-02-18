@@ -17,21 +17,17 @@ class ScopedContext extends Context {
     this.subproofOrProofAssertions = subproofOrProofAssertions;
   }
 
-  getVariables(nested = true) {
+  getVariables() {
     let variables;
 
-    if (nested) {
-      const context = this.getContext();
+    const context = this.getContext();
 
-      variables = context.getVariables();
+    variables = context.getVariables();
 
-      variables = [
-        ...this.variables,
-        ...variables
-      ];
-    } else {
-      variables = this.variables;
-    }
+    variables = [
+      ...this.variables,
+      ...variables
+    ];
 
     return variables;
   }
@@ -213,8 +209,8 @@ class ScopedContext extends Context {
     return judgement;
   }
 
-  findVariableByVariableIdentifier(variableIdentifier, nested = true) {
-    const variables = this.getVariables(nested),
+  findVariableByVariableIdentifier(variableIdentifier) {
+    const variables = this.getVariables(),
           variable = variables.find((variable) => {
             const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
 
@@ -254,8 +250,8 @@ class ScopedContext extends Context {
     return judgementPresent;
   }
 
-  isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) {
-    const variable = this.findVariableByVariableIdentifier(variableIdentifier, nested),
+  isVariablePresentByVariableIdentifier(variableIdentifier) {
+    const variable = this.findVariableByVariableIdentifier(variableIdentifier),
           variablePresent = (variable !== null);
 
     return variablePresent;
