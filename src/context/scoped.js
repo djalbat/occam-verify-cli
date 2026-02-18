@@ -109,77 +109,91 @@ class ScopedContext extends Context {
   }
 
   addEquality(equality) {
-    let equalityAdded;
+    let equalityAdded = false;
 
-    const equalityReflexive = equality.isReflexive();
+    const context = this, ///
+          equalityString = equality.getString();
 
-    if (!equalityReflexive) {
+    context.trace(`Adding the '${equalityString}' equality to the scoped context...`);
+
+    const equalityRelfexive = equality.isReflexive();
+
+    if (equalityRelfexive) {
+      context.trace(`The '${equalityString}' equality is reflexive and will not added to the scoped context.`);
+    } else {
       const { Equivalence } = elements,
             equivalence = Equivalence.fromEquality(equality),
             context = this; ///
 
       this.equivalences = this.equivalences.mergedWithEquivalence(equivalence, context);
-    }
 
-    equalityAdded = true;
+      equalityAdded = true;
 
-    if (equalityAdded) {
-      const context = this, ///
-            equalityString = equality.getString();
-
-      context.trace(`Added the '${equalityString}' equality.`)
+      context.debug(`...added the '${equalityString}' equality to the scoped context.`);
     }
 
     return equalityAdded;
   }
 
-  addVariable(variable, nested = true) {
-    let variableAdded = false;
+  addVariable(variable) {
+    const context = this, ///
+          variableA = variable, ///
+          variableString = variable.getString();
 
-    const variableIdentifier = variable.getIdentifier(),
-          variablePresent = this.isVariablePresentByVariableIdentifier(variableIdentifier, nested);
+    context.trace(`Adding the '${variableString}' variable to the scoped context...`);
 
-    if (!variablePresent) {
+    const variableB = this.variables.find((variable) => {
+      const variableB = variable, ///
+            variableAComparesToVariableB = variableA.compare(variableB);
+
+      if (variableAComparesToVariableB) {
+        return true;
+      }
+    }) || null;
+
+    if (variableB !== null) {
+      context.trace(`The '${variableString}' variable has already been added to the scoped context.`);
+    } else {
       this.variables.push(variable);
 
-      variableAdded = true;
+      context.debug(`...added the '${variableString}' variable to the scoped context.`);
     }
-
-    if (variableAdded) {
-      const context = this,
-            variableString = variable.getString();
-
-      context.trace(`Added the '${variableString}' variable.`)
-    }
-
-    return variableAdded;
   }
 
   addJudgement(judgement) {
     let judgementAdded = false;
 
+    const context = this, ///
+          judgementString = judgement.getString();
+
+    context.trace(`Adding the '${judgementString}' judgement to the scoped context...`);
+
     const metavariable = judgement.getMetavariable(),
           metavariableName = metavariable.getMetavariableName(),
           judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName);
 
-    if (!judgementPresent) {
+    if (judgementPresent) {
+      const metavariableString = metavariable.getString();
+
+      context.trace(`A '${judgementString}' judgement for the '${metavariableString}' metavariable is already present.`);
+    } else {
       this.judgements.push(judgement);
 
-      judgementAdded = true;
-    }
-
-    if (judgementAdded) {
-      const context = this, ///
-            judgementString = judgement.getString();
-
-      context.trace(`Added the '${judgementString}' judgement.`)
+      context.debug(`...added the '${judgementString}' judgement to the scoped context.`);
     }
 
     return judgementAdded;
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {
+    const context = this, ///
+          subproofOrProofAssertionString = subproofOrProofAssertion.getString();
+
+    context.trace(`Adding the '${subproofOrProofAssertionString}' subproof or proof assertion to the scoped context...`);
+
     this.subproofOrProofAssertions.push(subproofOrProofAssertion);
+
+    context.debug(`...added the '${subproofOrProofAssertionString}' subproof or proof assertion to the scoped context.`);
   }
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }

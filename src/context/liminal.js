@@ -2,11 +2,10 @@
 
 import { arrayUtilities } from "necessary";
 import { metavariableNamesFromSubstitutions } from "../utilities/substitutions";
-import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
 import Context from "../context";
 
-const { find, first, prune, compress } = arrayUtilities;
+const { find, first } = arrayUtilities;
 
 export default class LiminalContext extends Context {
   constructor(context, substitutions) {
@@ -62,60 +61,34 @@ export default class LiminalContext extends Context {
   }
 
   addSubstitution(substitution) {
-    const context = this,
-          substitutionString = substitution.getString();
-
-    this.substitutions = [ ///
-      ...this.substitutions,
-      substitution
-    ];
-
-    compress(this.substitutions, (substitutionA, substitutionB) => {
-      const substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
-
-      if (!substitutionAEqualToSubstitutionB) {
-        return true;
-      }
-    });
-
-    context.trace(`Added the '${substitutionString}' substitution to the context.`);
-  }
-
-  addSubstitutions(substitutions) {
-    const context = this,
-          substitutionsString = substitutionsStringFromSubstitutions(substitutions);
-
-    this.substitutions = [ ///
-      ...this.substitutions,
-      ...substitutions
-    ];
-
-    compress(this.substitutions, (substitutionA, substitutionB) => {
-      const substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
-
-      if (!substitutionAEqualToAssertionB) {
-        return true;
-      }
-    });
-
-    context.trace(`Added the '${substitutionsString}' substitutions to the context.`);
-  }
-
-  removeSubstitution(substitution) {
-    const context = this,
+    const context = this, ///
           substitutionA = substitution, ///
           substitutionString = substitution.getString();
 
-    prune(this.substitutions, (substitution) => {
-      const substitutionB = substitution,
-            substitutionAEqualTosubstitutionB = substitutionA.isEqualTo(substitutionB);
+    context.trace(`Adding the '${substitutionString}' substitution to the liminal context...`);
 
-      if (!substitutionAEqualTosubstitutionB) {
+    const substitutionB = this.substitutions.find((substitution) => {
+      const substitutionB = substitution, ///
+            substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
+
+      if (substitutionAEqualToSubstitutionB) {
         return true;
       }
-    });
+    }) || null;
 
-    context.trace(`Removed the '${substitutionString}' substitution to the context.`);
+    if (substitutionB !== null) {
+      context.trace(`The '${substitutionString}' substitution has already been added to the liminal context.`);
+    } else {
+      this.substitutions.push(substitution);
+
+      context.debug(`...added the '${substitutionString}' substitution to the liminal context.`);
+    }
+  }
+
+  addSubstitutions(substitutions) {
+    substitutions.forEach((substitution) => {
+      this.addSubstitution(substitution);
+    });
   }
 
   resolveSubstitutions(generalContext, specificContext) {
@@ -139,7 +112,7 @@ export default class LiminalContext extends Context {
     });
   }
 
-  areSubstitutionsResolved(generalContext, specificContext) {
+  areSubstitutionsResolved() {
     const substitutions = this.getSubstitutions(),
           metavariableNames = metavariableNamesFromSubstitutions(substitutions),
           resolved = metavariableNames.every((metavariableName) => {

@@ -221,15 +221,7 @@ export default define(class Rule extends Element {
       const subproofOrProofAssertionsUnifiesWithPremises = await this.unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context);
 
       if (subproofOrProofAssertionsUnifiesWithPremises) {
-        const specificContext = context;  ///
-
-        context = this.getContext();
-
-        const generalContext = context; ///
-
-        context = specificContext;  ///
-
-        const substitutionsResolved = context.areSubstitutionsResolved(generalContext, specificContext);
+        const substitutionsResolved = context.areSubstitutionsResolved();
 
         if (substitutionsResolved) {
           statementAndSubproofOrProofAssertionsUnify = true;

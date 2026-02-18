@@ -1,10 +1,6 @@
 "use strict";
 
-import { arrayUtilities } from "necessary";
-
 import Context from "../context";
-
-const { extract } = arrayUtilities;
 
 export default class EphemeralContext extends Context {
   constructor(context, terms, frames, statements, assertions, references, substitutions) {
@@ -47,18 +43,24 @@ export default class EphemeralContext extends Context {
           context = this, ///
           termString = term.getString();
 
-    extract(this.terms, (term) => {
+    context.trace(`Adding the '${termString}' term to the ephemeral context...`);
+
+    const termB = this.terms.find((term) => {
       const termB = term, ///
             termAEqualToTermB = termA.isEqualTo(termB);
 
       if (termAEqualToTermB) {
         return true;
       }
-    });
+    }) || null;
 
-    context.trace(`Added the '${termString}' term to the context.`);
+    if (termB !== null) {
+      context.trace(`The '${termString}' term has already been added to the ephemeral context.`);
+    } else {
+      this.terms.push(term);
 
-    this.terms.push(term);
+      context.debug(`...added the '${termString}' term to the ephemeral context.`);
+    }
   }
 
   addFrame(frame) {
@@ -66,18 +68,24 @@ export default class EphemeralContext extends Context {
           context = this, ///
           frameString = frame.getString();
 
-    extract(this.frames, (frame) => {
+    context.trace(`Adding the '${frameString}' frame to the ephemeral context...`);
+
+    const frameB = this.frames.find((frame) => {
       const frameB = frame, ///
             frameAEqualToFrameB = frameA.isEqualTo(frameB);
 
       if (frameAEqualToFrameB) {
         return true;
       }
-    });
+    }) || null;
 
-    context.trace(`Added the '${frameString}' frame to the context.`);
+    if (frameB !== null) {
+      context.trace(`The '${frameString}' frame has already been added to the ephemeral context.`);
+    } else {
+      this.frames.push(frame);
 
-    this.frames.push(frame);
+      context.debug(`...added the '${frameString}' frame to the ephemeral context.`);
+    }
   }
 
   addStatement(statement) {
@@ -85,18 +93,24 @@ export default class EphemeralContext extends Context {
           statementA = statement, ///
           statementString = statement.getString();
 
-    extract(this.statements, (statement) => {
-      const statementB = statement, ///
-            statementAEqualToFrameB = statementA.isEqualTo(statementB);
+    context.trace(`Adding the '${statementString}' statement to the ephemeral context...`);
 
-      if (statementAEqualToFrameB) {
+    const statementB = this.statements.find((statement) => {
+      const statementB = statement, ///
+            statementAEqualToStatementB = statementA.isEqualTo(statementB);
+
+      if (statementAEqualToStatementB) {
         return true;
       }
-    });
+    }) || null;
 
-    context.trace(`Added the '${statementString}' statement to the context.`);
+    if (statementB !== null) {
+      context.trace(`The '${statementString}' statement has already been added to the ephemeral context.`);
+    } else {
+      this.statements.push(statement);
 
-    this.statements.push(statement);
+      context.debug(`...added the '${statementString}' statement to the ephemeral context.`);
+    }
   }
 
   addAssertion(assertion) {
@@ -104,18 +118,24 @@ export default class EphemeralContext extends Context {
           assertionA = assertion, ///
           assertionString = assertion.getString();
 
-    extract(this.assertions, (assertion) => {
+    context.trace(`Adding the '${assertionString}' assertion to the ephemeral context...`);
+
+    const assertionB = this.assertions.find((assertion) => {
       const assertionB = assertion, ///
             assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
 
       if (assertionAEqualToAssertionB) {
         return true;
       }
-    });
+    }) || null;
 
-    context.trace(`Added the '${assertionString}' assertion to the context.`);
+    if (assertionB !== null) {
+      context.trace(`The '${assertionString}' assertion has already been added to the ephemeral context.`);
+    } else {
+      this.assertions.push(assertion);
 
-    this.assertions.push(assertion);
+      context.debug(`...added the '${assertionString}' assertion to the ephemeral context.`);
+    }
   }
 
   addReference(reference) {
@@ -123,18 +143,24 @@ export default class EphemeralContext extends Context {
           referenceA = reference, ///
           referenceString = reference.getString();
 
-    extract(this.references, (reference) => {
+    context.trace(`Adding the '${referenceString}' reference to the ephemeral context...`);
+
+    const referenceB = this.references.find((reference) => {
       const referenceB = reference, ///
             referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);
 
       if (referenceAEqualToReferenceB) {
         return true;
       }
-    });
+    }) || null;
 
-    context.trace(`Added the '${referenceString}' reference to the context.`);
+    if (referenceB !== null) {
+      context.trace(`The '${referenceString}' reference has already been added to the ephemeral context.`);
+    } else {
+      this.references.push(reference);
 
-    this.references.push(reference);
+      context.debug(`...added the '${referenceString}' reference to the ephemeral context.`);
+    }
   }
 
   addSubstitution(substitution) {
@@ -142,18 +168,24 @@ export default class EphemeralContext extends Context {
           substitutionA = substitution, ///
           substitutionString = substitution.getString();
 
-    extract(this.substitutions, (substitution) => {
-      const substitutionB = substitution, ///
-            substitutionAEqualToAssertionB = substitutionA.isEqualTo(substitutionB);
+    context.trace(`Adding the '${substitutionString}' substitution to the ephemeral context...`);
 
-      if (substitutionAEqualToAssertionB) {
+    const substitutionB = this.substitutions.find((substitution) => {
+      const substitutionB = substitution, ///
+            substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
+
+      if (substitutionAEqualToSubstitutionB) {
         return true;
       }
-    });
+    }) || null;
 
-    context.trace(`Added the '${substitutionString}' substitution to the context.`);
+    if (substitutionB !== null) {
+      context.trace(`The '${substitutionString}' substitution has already been added to the ephemeral context.`);
+    } else {
+      this.substitutions.push(substitution);
 
-    this.substitutions.push(substitution);
+      context.debug(`...added the '${substitutionString}' substitution to the ephemeral context.`);
+    }
   }
 
   findTermByTermNode(termNode) {

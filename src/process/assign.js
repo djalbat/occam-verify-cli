@@ -2,9 +2,7 @@
 
 export function variableAssignmentFromVariable(variable) {
   return function (context) {
-    const nested = false;
-
-    context.addVariable(variable, nested);
+    context.addVariable(variable);
 
     const variableTypeString = variable.getTypeString(),
           variableString = variable.getString(),

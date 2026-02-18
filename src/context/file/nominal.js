@@ -259,54 +259,119 @@ export default class NominalFileContext extends FileContext {
 
   addType(type) {
     this.types.push(type);
+
+    const filePath = this.getFilePath(),
+          typeString = type.toString();
+
+    this.trace(`Added the '${typeString}' type to the '${filePath}' file context.`)
   }
 
   addRule(rule) {
     this.rules.push(rule);
+
+    const filePath = this.getFilePath(),
+          ruleString = rule.toString();
+
+    this.trace(`Added the '${ruleString}' rule to the '${filePath}' file context.`)
   }
 
   addAxiom(axiom) {
     this.axioms.push(axiom);
+
+    const filePath = this.getFilePath(),
+          axiomString = axiom.toString();
+
+    this.trace(`Added the '${axiomString}' axiom to the '${filePath}' file context.`)
   }
 
   addLemma(lemma) {
     this.lemmas.push(lemma);
+
+    const filePath = this.getFilePath(),
+          lemmaString = lemma.toString();
+
+    this.trace(`Added the '${lemmaString}' lemma to the '${filePath}' file context.`)
   }
 
   addTheorem(theorem) {
     this.theorems.push(theorem);
+
+    const filePath = this.getFilePath(),
+          theoremString = theorem.toString();
+
+    this.trace(`Added the '${theoremString}' theorem to the '${filePath}' file context.`)
   }
 
   addVariable(variable) {
     this.variables.push(variable);
+
+    const filePath = this.getFilePath(),
+          variableString = variable.toString();
+
+    this.trace(`Added the '${variableString}' variable to the '${filePath}' file context.`)
   }
 
   addMetaLemma(metaLemma) {
     this.metaLemmas.push(metaLemma);
+
+    const filePath = this.getFilePath(),
+          metaLemmaString = metaLemma.toString();
+
+    this.trace(`Added the '${metaLemmaString}' meta-lemma to the '${filePath}' file context.`)
   }
 
   addConjecture(conjecture) {
     this.conjectures.push(conjecture);
+
+    const filePath = this.getFilePath(),
+          ocnjectureString = ocnjecture.toString();
+
+    this.trace(`Added the '${ocnjectureString}' ocnjecture to the '${filePath}' file context.`)
   }
 
   addCombinator(combinator) {
     this.combinators.push(combinator);
+
+    const filePath = this.getFilePath(),
+          combinatorString = combinator.toString();
+
+    this.trace(`Added the '${combinatorString}' combinator to the '${filePath}' file context.`)
   }
 
   addTypePrefix(typePrefix) {
     this.typePrefixes.push(typePrefix);
+
+    const filePath = this.getFilePath(),
+          typePrefixString = typePrefix.toString();
+
+    this.trace(`Added the '${typePrefixString}' type-prefix to the '${filePath}' file context.`)
   }
 
   addConstructor(constructor) {
     this.constructors.push(constructor);
+
+    const filePath = this.getFilePath(),
+          constructorString = constructor.toString();
+
+    this.trace(`Added the '${constructorString}' constructor to the '${filePath}' file context.`)
   }
 
   addMetatheorem(metatheorem) {
     this.metatheorems.push(metatheorem);
+
+    const filePath = this.getFilePath(),
+          metatheoremString = metatheorem.toString();
+
+    this.trace(`Added the '${metatheoremString}' metatheorem to the '${filePath}' file context.`)
   }
 
   addMetavariable(metavariable) {
     this.metavariables.push(metavariable);
+
+    const filePath = this.getFilePath(),
+          metavariableString = metavariable.toString();
+
+    this.trace(`Added the '${metavariableString}' metavariable to the '${filePath}' file context.`)
   }
 
   findLabelByReference(reference, context) {
@@ -650,14 +715,6 @@ export default class NominalFileContext extends FileContext {
     return metavariable;
   }
 
-  isMetavariablePresent(metavariable) {
-    metavariable = this.findMetavariable(metavariable);
-
-    const metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
-  }
-
   isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) {
     const type = this.findTypeByTypeName(typeName, includeRelease, includeDependencies),
           typePresent = (type !== null);
@@ -714,6 +771,21 @@ export default class NominalFileContext extends FileContext {
     return metavariablePresent;
   }
 
+  isMetavariablePresent(metavariable) {
+    metavariable = this.findMetavariable(metavariable);
+
+    const metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
+  }
+
+  isProcedurePresentByName(name) {
+    const procedure = this.findProcedureByName(name),
+          procedurePresent = (procedure !== null);
+
+    return procedurePresent;
+  }
+
   isLabelPresentByReference(reference) {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
@@ -726,13 +798,6 @@ export default class NominalFileContext extends FileContext {
           });
 
     return labelPresent;
-  }
-
-  isProcedurePresentByName(name) {
-    const procedure = this.findProcedureByName(name),
-          procedurePresent = (procedure !== null);
-
-    return procedurePresent;
   }
 
   isMetavariablePresentByReference(reference) {
