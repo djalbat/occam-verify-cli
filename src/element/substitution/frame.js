@@ -38,20 +38,9 @@ export default define(class FrameSubstitution extends Substitution {
     return replacementNode;
   }
 
-  getMetavariable(generalContext, specificContext) {
-    let metavariable = null;
+  matchMetavariableName(metavariableName) { return this.targetFrame.matchMetavariableName(metavariableName); }
 
-    const targetFrameNode = this.targetFrame.getNode(),
-          metavariableName = targetFrameNode.getMetavariableName();
-
-    if (metavariableName !== null) {
-      const context = generalContext; ///
-
-      metavariable = context.findMetavariableByMetavariableName(metavariableName);
-    }
-
-    return metavariable;
-  }
+  getMetavariableName() { return this.targetFrame.getMetavariableName(); }
 
   isTrivial() {
     const targetFrameEqualToReplacementFrame = this.targetFrame.isEqualTo(this.replacementFrame),

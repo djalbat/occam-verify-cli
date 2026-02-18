@@ -159,7 +159,8 @@ class ScopedContext extends Context {
     let judgementAdded = false;
 
     const metavariable = judgement.getMetavariable(),
-          judgementPresent = this.isJudgementPresentByMetavariable(metavariable);
+          metavariableName = metavariable.getMetavariableName(),
+          judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName);
 
     if (!judgementPresent) {
       this.judgements.push(judgement);
@@ -183,10 +184,10 @@ class ScopedContext extends Context {
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
 
-  findJudgementByMetavariable(metavariable) {
+  findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementMetavariableComparesToMetavariable = judgement.compareMetavariable(metavariable);
+            const judgementMetavariableComparesToMetavariable = judgement.matchMetavariableName(metavariableName);
 
             if (judgementMetavariableComparesToMetavariable) {
               return true;
@@ -230,8 +231,8 @@ class ScopedContext extends Context {
     return termGrounded;
   }
 
-  isJudgementPresentByMetavariable(metavariable) {
-    const judgement = this.findJudgementByMetavariable(metavariable),
+  isJudgementPresentByMetavariableName(metavariableName) {
+    const judgement = this.findJudgementByMetavariableName(metavariableName),
           judgementPresent = (judgement !== null);
 
     return judgementPresent;

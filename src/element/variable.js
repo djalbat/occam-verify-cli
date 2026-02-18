@@ -113,7 +113,7 @@ export default define(class Variable extends Element {
     return typeValidates;
   }
 
-  unifyTerm(term, substitutions, generalContext, specificContext) {
+  unifyTerm(term, generalContext, specificContext) {
     let termUnifies = false;
 
     const context = specificContext,  ///
@@ -127,7 +127,9 @@ export default define(class Variable extends Element {
 
     variable = this; ///
 
-    substitution = substitutions.findSubstitutionByVariable(variable, generalContext, specificContext);
+    const variableIdentifier = variable.getIdentifier();
+
+    substitution = context.findSubstitutionByVariableIdentifier(variableIdentifier);
 
     if (substitution !== null) {
       const substitutionComparesToTerm = substitution.compareTerm(term, context);

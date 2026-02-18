@@ -49,6 +49,24 @@ export default define(class Statement extends Element {
     return equalTo;
   }
 
+  matchMetavariableName(metavariableName) {
+    let metavariableNameMatches = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const metavariableNameA = metavariableName ///
+
+      metavariableName = this.getMetavariableName();
+
+      const metavariableNameB = metavariableName; ///
+
+      metavariableNameMatches = (metavariableNameA === metavariableNameB);
+    }
+
+    return metavariableNameMatches;
+  }
+
   isValid(context) {
     const statementNode = this.getStatementNode(),
           statementPresent = context.isStatementPresentByStatementNode(statementNode),

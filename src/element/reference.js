@@ -53,6 +53,20 @@ export default define(class Reference extends Element {
     return equalTo;
   }
 
+  matchMetavariableName(metavariableName) {
+    let metavariableNameMatches = false;
+
+    const metavariableNameA = metavariableName ///
+
+    metavariableName = this.getMetavariableName();
+
+    const metavariableNameB = metavariableName; ///
+
+    metavariableNameMatches = (metavariableNameA === metavariableNameB);
+
+    return metavariableNameMatches;
+  }
+
   isValid(context) {
     const assertionNode = this.getReferenceNode(),
           assertionPresent = context.isReferencePresentByReferenceNode(assertionNode),

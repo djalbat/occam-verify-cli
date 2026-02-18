@@ -23,13 +23,6 @@ export default define(class Frame extends Element {
     return this.metavariable;
   }
 
-  getMetavariableName() {
-    const node = this.getNode(),
-          metavariableName = node.getMetavariableName();
-
-    return metavariableName;
-  }
-
   getFrameNode() {
     const node = this.getNode(),
           frameNode = node; ///
@@ -37,26 +30,18 @@ export default define(class Frame extends Element {
     return frameNode;
   }
 
-  compareMetavariable(metavariable) {
-    let metavaraibleComparseTo = false;
+  getMetavariableName() {
+    const frameNode = this.getFrameNode(),
+          metavariableName = frameNode.getMetavariableName();
 
-    const singular = this.isSingular();
+    return metavariableName;
+  }
 
-    if (singular) {
-      let metavariableName;
+  getMetavariableNode() {
+    const frameNode = this.getFrameNode(),
+          metavariableNode = frameNode.getMetavariableNode();
 
-      metavariableName = this.metavariable.getName();
-
-      const metavariableNameA = metavariableName ///
-
-      metavariableName = metavariable.getName();
-
-      const metavariableNameB = metavariableName; ///
-
-      metavaraibleComparseTo = (metavariableNameA === metavariableNameB);
-    }
-
-    return metavaraibleComparseTo;
+    return metavariableNode;
   }
 
   matchFrameNode(frameNode) {
@@ -88,11 +73,28 @@ export default define(class Frame extends Element {
   }
 
   isSingular() {
-    const node = this.getNode(),
-          frameNode = node, ///
+    const frameNode = this.getFrameNode(),
           singular = frameNode.isSingular();
 
     return singular;
+  }
+
+  matchMetavariableName(metavariableName) {
+    let metavariableNameMatches = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const metavariableNameA = metavariableName ///
+
+      metavariableName = this.getMetavariableName();
+
+      const metavariableNameB = metavariableName; ///
+
+      metavariableNameMatches = (metavariableNameA === metavariableNameB);
+    }
+
+    return metavariableNameMatches;
   }
 
   compareParameter(parameter) {

@@ -624,17 +624,13 @@ export default class NominalFileContext extends FileContext {
     return label;
   }
 
-  findJudgementByMetavariable(metavariable) {
+  findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementSingular = judgement.isSingular();
+            const judgementMetavariableComparesToMetavariable = judgement.matchMetavariableName(metavariableName);
 
-            if (judgementSingular) {
-              const judgementMetavariableComparesToMetavariable = judgement.compareMetavariable(metavariable);
-
-              if (judgementMetavariableComparesToMetavariable) {
-                return true;
-              }
+            if (judgementMetavariableComparesToMetavariable) {
+              return true;
             }
           }) || null;
 

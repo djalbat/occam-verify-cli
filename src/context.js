@@ -123,16 +123,16 @@ export default class Context extends ContextBase {
     return topLevelAssertion;
   }
 
-  findSubstitutionByVariable(variable, generalContext, specificContext) {
+  findSubstitutionByVariableIdentifier(variableIdentifier) {
     const context = this.getContext(),
-          substitution = context.findSubstitutionByVariable(variable, generalContext, specificContext);
+          substitution = context.findSubstitutionByVariableIdentifier(variableIdentifier);
 
     return substitution;
   }
 
-  findSubstitutionByMetavariable(metavariable, generalContet, specificContext) {
+  findSubstitutionByMetavariableName(metavariableName) {
     const context = this.getContext(),
-          substitution = context.findSubstitutionByMetavariable(metavariable, generalContet, specificContext);
+          substitution = context.findSubstitutionByMetavariableName(metavariableName);
 
     return substitution;
   }
@@ -158,10 +158,10 @@ export default class Context extends ContextBase {
     return simpleSubstitution;
   }
 
-  findSubstitutionByMetavariableAndSubstitution(metavariable, substitution, generalContet, specificContext) {
+  findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) {
     const context = this.getContext();
 
-    substitution = context.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution, generalContet, specificContext); ///
+    substitution = context.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution); ///
 
     return substitution;
   }
@@ -180,9 +180,9 @@ export default class Context extends ContextBase {
     return framePresent;
   }
 
-  isJudgementPresentByMetavariable(metavariable) {
+  isJudgementPresentByMetavariableName(metavariableName) {
     const context = this.getContext(),
-          judgementPresent = context.isJudgementPresentByMetavariable(metavariable);
+          judgementPresent = context.isJudgementPresentByMetavariableName(metavariableName);
 
     return judgementPresent;
   }

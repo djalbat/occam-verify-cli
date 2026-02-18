@@ -39,6 +39,20 @@ export default define(class Metavariable extends Element {
     this.metaType = metaType;
   }
 
+  getMetavariableNode() {
+    const node = this.getNode(),
+          metavarialbeNode = node;  ///
+
+    return metavarialbeNode;
+  }
+
+  getMetavariableName() {
+    const metavarialbeNode = this.getMetavariableNode(),
+          metavariableName = metavarialbeNode.getMetavariableName();
+
+    return metavariableName;
+  }
+
   compare(metavariable) {
     const name = metavariable.getName(),
           comparesToMetavariable = (this.name === name);
@@ -169,10 +183,11 @@ export default define(class Metavariable extends Element {
     if (statementMetavariableUnifies) {
       statementUnifies = true;
     } else {
-      const substitutionPresent = context.isSubstitutionPresentByMetavariableAndSubstitution(metavariable, substitution);
+      const metavariableName = metavariable.getName(),
+            substitutionPresent = context.isSubstitutionPresentByMetavariableNameAndSubstitution(metavariableName, substitution);
 
       if (substitutionPresent) {
-        substitution = context.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution, generalContet, specificContext); ///
+        substitution = context.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution); ///
 
         const substitutionComparesToStatement = substitution.compareStatement(statement, context);
 
@@ -295,8 +310,8 @@ export default define(class Metavariable extends Element {
           specificContextFilePath = specificContext.getFilePath();
 
     if (generalContextFilePath === specificContextFilePath) {
-      const metavariable = this,  ///
-            frameMetavariableComparesToMetvariable = frame.compareMetavariable(metavariable);
+      const metavariableName = this.getMetavariableName(),  ///
+            frameMetavariableComparesToMetvariable = frame.matchMetavariableName(metavariableName);
 
       if (frameMetavariableComparesToMetvariable) {
         frameMetavariableUnifies = true;

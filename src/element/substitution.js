@@ -25,17 +25,23 @@ export default class Substitution extends Element {
     return primitive;
   }
 
-  getMetavariable(context) {
-    const metavariable = null;
-
-    return metavariable;
-  }
-
   getSubstitutionNode() {
     const node = this.getNode(),
           substitutionNode = node; ///
 
     return substitutionNode;
+  }
+
+  getNetavariableName() {
+    const metavariableName = null;
+
+    return metavariableName;
+  }
+
+  getVariableIdentifier() {
+    const variableIdentifier = null;
+
+    return variableIdentifier;
   }
 
   matchSubstitutionNode(substitutionNode) {

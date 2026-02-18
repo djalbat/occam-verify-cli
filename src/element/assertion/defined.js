@@ -189,7 +189,8 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   const context = specificContext;  ///
 
   if (term !== null) {
-    const variable = term.getVariable(generalContext, specificContext),
+    const variableIdentifier = term.getVariableIdentifier(),
+          variable = context.findVariableByVariableIdentifier(variableIdentifier),
           variableDefined = isVariableDefined(variable, context);
 
     if (!negated && variableDefined) {
@@ -202,7 +203,8 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   }
 
   if (frame!== null) {
-    const metavariable = frame.getMetavariable(generalContext, specificContext),
+    const metavariableName = frame.getMetavariableName(),
+          metavariable = context.findMetavariableByMetavariableName(metavariableName),
           metavariableDefined = isMetavariableDefined(metavariable, context);
 
     if (!negated && metavariableDefined) {
@@ -237,7 +239,8 @@ function isVariableDefined(variable, context) {
 }
 
 function isMetavariableDefined(metavariable, context) {
-  const judgementPresent = context.isJudgementPresentByMetavariable(metavariable),
+  const metavariableName = metavariable.getNode(),
+        judgementPresent = context.isJudgementPresentByMetavariableName(metavariableName),
         metavariableDefined = judgementPresent; ///
 
   return metavariableDefined

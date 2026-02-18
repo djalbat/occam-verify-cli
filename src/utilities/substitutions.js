@@ -16,7 +16,7 @@ export function termFromTermAndSubstitutions(term, generalContext, specificConte
             variable = generalContext.findVariableByVariableIdentifier(variableIdentifier);
 
       if (variable !== null) {
-        const substitution = specificContext.findSubstitutionByVariable(variable, generalContext, specificContext);
+        const substitution = specificContext.findSubstitutionByVariableIdentifier(variableIdentifier);
 
         if (substitution !== null) {
           const termSubstitution = substitution,  ///
@@ -43,7 +43,7 @@ export function frameFromFrameAndSubstitutions(frame, generalContext, specificCo
             metavariable = generalContext.findMetavariableByMetavariableName(metavariableName);
 
       if (metavariable !== null) {
-        const substitution = specificContext.findSubstitutionByMetavariable(metavariable, generalContext, specificContext);
+        const substitution = specificContext.findSubstitutionByMetavariableName(metavariableName);
 
         if (substitution !== null) {
           const frameSubstitution = substitution, ///
@@ -77,7 +77,7 @@ export function statementFromStatementAndSubstitutions(statement, generalContext
 
         specificContext = context;  ///
 
-        substitution = specificContext.findSubstitutionBySubstitutionNode(substitutionNode, generalContext, specificContext);
+        substitution = specificContext.findSubstitutionBySubstitutionNode(substitutionNode);
 
         context = generalContext; ///
 
@@ -91,8 +91,8 @@ export function statementFromStatementAndSubstitutions(statement, generalContext
 
       if (metavariable !== null) {
         substitution = (substitution !== null) ?
-                         specificContext.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution, generalContext, specificContext) :
-                           specificContext.findSubstitutionByMetavariable(metavariable, generalContext, specificContext);
+                         specificContext.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) :
+                           specificContext.findSubstitutionByMetavariableName(metavariableName);
 
         if (substitution !== null) {
           const statementSubstitution = substitution, ///
@@ -112,7 +112,8 @@ export function metavariablesFromSubstitutions(substitutions, generalContext, sp
 
   substitutions.forEach((substitution) => {
     const context = generalContext, ///
-          metavariable = substitution.getMetavariable(generalContext, specificContext);
+          metavariableName = substitution.getMetavariableName(),
+          metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
     if (metavariable !== null) {
       metavariables.push(metavariable);
