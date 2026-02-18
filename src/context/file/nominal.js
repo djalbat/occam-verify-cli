@@ -472,9 +472,9 @@ export default class NominalFileContext extends FileContext {
   findProcedureByProcedureName(procedureName) {
     const procedures = this.getProcedures(),
           procedure = procedures.find((procedure) => {
-            const nameMatches = procedure.matchName(procedureName);
+            const procedureComparesToProcedureName = procedure.compareProcedureName(procedureName);
 
-            if (nameMatches) {
+            if (procedureComparesToProcedureName) {
               return true;
             }
           }) || null;
