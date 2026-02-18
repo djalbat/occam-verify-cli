@@ -68,7 +68,7 @@ export default define(class StatementSubstitution extends Substitution {
 
   getMetavariableName() { return this.targetStatement.getMetavariableName(); }
 
-  matchMetavariableName(metavariableName) { return this.targetStatement.matchMetavariableName(metavariableName); }
+  compareMetavariableName(metavariableName) { return this.targetStatement.compareMetavariableName(metavariableName); }
 
   compareStatement(statement, context) {
     statement = stripBracketsFromStatement(statement, context); ///

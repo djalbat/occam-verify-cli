@@ -653,7 +653,7 @@ export default class NominalFileContext extends FileContext {
   findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementMetavariableComparesToMetavariable = judgement.matchMetavariableName(metavariableName);
+            const judgementMetavariableComparesToMetavariable = judgement.compareMetavariableName(metavariableName);
 
             if (judgementMetavariableComparesToMetavariable) {
               return true;

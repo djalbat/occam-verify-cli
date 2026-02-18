@@ -199,7 +199,7 @@ class ScopedContext extends Context {
   findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementMetavariableComparesToMetavariable = judgement.matchMetavariableName(metavariableName);
+            const judgementMetavariableComparesToMetavariable = judgement.compareMetavariableName(metavariableName);
 
             if (judgementMetavariableComparesToMetavariable) {
               return true;
@@ -232,7 +232,7 @@ class ScopedContext extends Context {
 
     const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
         const groundedTermNode = groundedTerm.getNode(),
-              groundedTermNodeMatches = term.matchNode(groundedTermNode);
+              groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
 
             if (groundedTermNodeMatches) {
               return true;

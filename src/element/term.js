@@ -44,8 +44,8 @@ export default define(class Term extends Element {
     termNode = this.getTermNode();
 
     const termNodeB = termNode, ///
-      termNodeAAMatchesTermBNodeB = termNodeA.match(termNodeB),
-      equalTo = termNodeAAMatchesTermBNodeB; ///
+          termNodeAAMatchesTermBNodeB = termNodeA.match(termNodeB),
+          equalTo = termNodeAAMatchesTermBNodeB; ///
 
     return equalTo;
   }

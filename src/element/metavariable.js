@@ -70,6 +70,18 @@ export default define(class Metavariable extends Element {
     return comparesToMetavariableName;
   }
 
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeA = metavariableNode; ///
+
+    metavariableNode = this.getMetavariableNode();  ///
+
+    const metavariableNodeB = metavariableNode, ///
+          metavariableNodeAMatchesMetavariableNodeB = metavariableNodeA.match(metavariableNodeB),
+          metavariableNodeMatches = metavariableNodeAMatchesMetavariableNodeB;  ///
+
+    return metavariableNodeMatches;
+  }
+
   validate(context) {
     let validates = false;
 
@@ -307,7 +319,7 @@ export default define(class Metavariable extends Element {
 
     if (generalContextFilePath === specificContextFilePath) {
       const metavariableName = this.getMetavariableName(),  ///
-            frameMetavariableComparesToMetvariable = frame.matchMetavariableName(metavariableName);
+            frameMetavariableComparesToMetvariable = frame.compareMetavariableName(metavariableName);
 
       if (frameMetavariableComparesToMetvariable) {
         frameMetavariableUnifies = true;

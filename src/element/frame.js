@@ -79,7 +79,7 @@ export default define(class Frame extends Element {
     return singular;
   }
 
-  matchMetavariableName(metavariableName) {
+  compareMetavariableName(metavariableName) {
     let metavariableNameMatches = false;
 
     const singular = this.isSingular();

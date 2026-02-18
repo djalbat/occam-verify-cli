@@ -47,7 +47,7 @@ export default define(class ReferenceSubstitution extends Substitution {
 
   getMetavariableName() { return this.targetReference.getMetavariableName(); }
 
-  matchMetavariableName(metavariableName) { return this.targetReference.matchMetavariableName(metavariableName); }
+  compareMetavariableName(metavariableName) { return this.targetReference.compareMetavariableName(metavariableName); }
 
   isTrivial() {
     const targetReferenceEqualToReplacementReference = this.targetReference.isEqualTo(this.replacementReference),

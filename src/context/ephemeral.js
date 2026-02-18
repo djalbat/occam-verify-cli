@@ -190,7 +190,7 @@ export default class EphemeralContext extends Context {
 
   findTermByTermNode(termNode) {
     const term = this.terms.find((term) => {
-      const termNodeMatches = term.matchNode(termNode);
+      const termNodeMatches = term.matchTermNode(termNode);
 
       if (termNodeMatches) {
         return true;
@@ -202,7 +202,7 @@ export default class EphemeralContext extends Context {
 
   findFrameByFrameNode(frameNode) {
     const frame = this.frames.find((frame) => {
-      const frameNodeMatches = frame.matchNode(frameNode);
+      const frameNodeMatches = frame.matchFrameNode(frameNode);
 
       if (frameNodeMatches) {
         return true;

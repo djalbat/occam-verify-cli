@@ -45,7 +45,7 @@ export default define(class FrameSubstitution extends Substitution {
     return replacementNode;
   }
 
-  matchMetavariableName(metavariableName) { return this.targetFrame.matchMetavariableName(metavariableName); }
+  compareMetavariableName(metavariableName) { return this.targetFrame.compareMetavariableName(metavariableName); }
 
   getMetavariableName() { return this.targetFrame.getMetavariableName(); }
 

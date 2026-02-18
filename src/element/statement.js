@@ -44,7 +44,7 @@ export default define(class Statement extends Element {
     return equalTo;
   }
 
-  matchMetavariableName(metavariableName) {
+  compareMetavariableName(metavariableName) {
     let metavariableNameMatches = false;
 
     const singular = this.isSingular();
@@ -90,7 +90,7 @@ export default define(class Statement extends Element {
           statementNodeTermNodes = statementNode.getTermNodes();
 
     termContained = statementNodeTermNodes.some((statementNodeTermNode) => {  ///
-      const statementNodeTermNodeMatches = term.matchNode(statementNodeTermNode);
+      const statementNodeTermNodeMatches = term.matchTermNode(statementNodeTermNode);
 
       if (statementNodeTermNodeMatches) {
         return true;
