@@ -146,7 +146,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     replacementReferenceValidates = this.replacementReference.validate(context);
 
     if (replacementReferenceValidates) {
-      context.debug(`...validated the '${referenceSubstitutionString}' reference subtitution's '${replacementReferenceString}' replacement reference...`);
+      context.debug(`...validated the '${referenceSubstitutionString}' reference subtitution's '${replacementReferenceString}' replacement reference.`);
     }
 
     return replacementReferenceValidates;

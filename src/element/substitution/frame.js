@@ -152,7 +152,7 @@ export default define(class FrameSubstitution extends Substitution {
     replacementFrameValidates = this.replacementFrame.validate(assignments, stated, context);
 
     if (replacementFrameValidates) {
-      context.debug(`...validated the '${frameSubstitutionString}' frame subtitution's '${replacementFrameString}' replacement frame...`);
+      context.debug(`...validated the '${frameSubstitutionString}' frame subtitution's '${replacementFrameString}' replacement frame.`);
     }
 
     return replacementFrameValidates;

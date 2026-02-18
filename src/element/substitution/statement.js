@@ -188,7 +188,7 @@ export default define(class StatementSubstitution extends Substitution {
     replacementStatementValidates = this.replacementStatement.validate(assignments, stated, context);
 
     if (replacementStatementValidates) {
-      context.debug(`...validated the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement...`);
+      context.debug(`...validated the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement.`);
     }
 
     return replacementStatementValidates;
