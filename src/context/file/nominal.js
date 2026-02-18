@@ -469,10 +469,10 @@ export default class NominalFileContext extends FileContext {
     return theorem;
   }
 
-  findProcedureByName(name) {
+  findProcedureByProcedureName(procedureName) {
     const procedures = this.getProcedures(),
           procedure = procedures.find((procedure) => {
-            const nameMatches = procedure.matchName(name);
+            const nameMatches = procedure.matchName(procedureName);
 
             if (nameMatches) {
               return true;
@@ -779,8 +779,8 @@ export default class NominalFileContext extends FileContext {
     return metavariablePresent;
   }
 
-  isProcedurePresentByName(name) {
-    const procedure = this.findProcedureByName(name),
+  isProcedurePresentByProcedureName(procedureName) {
+    const procedure = this.findProcedureByProcedureName(procedureName),
           procedurePresent = (procedure !== null);
 
     return procedurePresent;

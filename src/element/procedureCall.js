@@ -31,7 +31,7 @@ export default define(class ProcedureCall extends Element {
     return procedureCallNode;
   }
 
-  getName() { return this.procedureReference.getName(); }
+  getProcedureName() { return this.procedureReference.getProcedureName(); }
 
   findPrimitives(context) {
     const substitutions = context.getSubstitutions(),
@@ -51,8 +51,8 @@ export default define(class ProcedureCall extends Element {
 
     context.trace(`Validating the '${procedureCallString}' procedure call...`);
 
-    const name = this.getName(),
-          procedure = context.findProcedureByName(name);
+    const procedureName = this.getProcedureName(),
+          procedure = context.findProcedureByProcedureName(procedureName);
 
     if (procedure !== null) {
       const procedureBoolean = procedure.isBoolean();
@@ -80,13 +80,13 @@ export default define(class ProcedureCall extends Element {
 
     context.trace(`Unifying the '${procedureCallString}' procedure call independently...`);
 
-    const name = this.getName(),
-          primitives = this.findPrimitives(context),
-          terms = termsFromPrimitives(primitives),
-          procedure = context.findProcedureByName(name);
+    const procedureName = this.getProcedureName(),
+          procedure = context.findProcedureByProcedureName(procedureName);
 
-    try {
-      const term = await procedure.call(terms, context),
+    // try {
+      const primitives = this.findPrimitives(context),
+            terms = termsFromPrimitives(primitives),
+            term = await procedure.call(terms, context),
             boolean = term.isBoolean();
 
       if (!boolean) {
@@ -98,11 +98,11 @@ export default define(class ProcedureCall extends Element {
           unifiesIndependently = true;
         }
       }
-    } catch (exception) {
-      const message = exception.getMessage();
-
-      context.info(message);
-    }
+    // } catch (exception) {
+    //   const message = exception.getMessage();
+    //
+    //   context.info(message);
+    // }
 
     if (unifiesIndependently) {
       context.debug(`...unified the '${procedureCallString}' procedure call independently.`);

@@ -17,9 +17,9 @@ export default class Assertion extends Element {
 
     const assertionNodeB = assertionNode, ///
           assertionNodeAAMatchesAssertionBNodeB = assertionNodeA.match(assertionNodeB),
-          equalTo = assertionNodeAAMatchesAssertionBNodeB; ///
+          assertionNodeMatches = assertionNodeAAMatchesAssertionBNodeB; ///
 
-    return equalTo;
+    return assertionNodeMatches;
   }
 
   isValid(context) {
@@ -32,8 +32,8 @@ export default class Assertion extends Element {
 
   isEqualTo(assertion) {
     const assertionNode = assertion.getNode(),
-      assertionNodeMatches = this.matchAssertionNode(assertionNode),
-      equalTo = assertionNodeMatches;  ///
+          assertionNodeMatches = this.matchAssertionNode(assertionNode),
+          equalTo = assertionNodeMatches;  ///
 
     return equalTo;
   }

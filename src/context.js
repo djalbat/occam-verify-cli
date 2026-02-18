@@ -102,9 +102,9 @@ export default class Context extends ContextBase {
     return metavariable;
   }
 
-  findProcedureByName(name) {
+  findProcedureByProcedureName(procedureName) {
     const context = this.getContext(),
-          procedure = context.findProcedureByName(name);
+          procedure = context.findProcedureByProcedureName(procedureName);
 
     return procedure;
   }
@@ -201,9 +201,9 @@ export default class Context extends ContextBase {
     return termPresent;
   }
 
-  isProcedurePresentByName(name) {
+  isProcedurePresentByProcedureName(procedureName) {
     const context = this.getContext(),
-          procedurePresent = context.isProcedurePresentByName(name);
+          procedurePresent = context.isProcedurePresentByProcedureName(procedureName);
 
     return procedurePresent;
   }
