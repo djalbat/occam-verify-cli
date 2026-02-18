@@ -54,8 +54,9 @@ export default define(class Metavariable extends Element {
   }
 
   compare(metavariable) {
-    const name = metavariable.getName(),
-          comparesToMetavariable = (this.name === name);
+    const metavariableName = metavariable.getName(),
+          comparesToMetavariableName = this.compareMetavariableName(metavariableName),
+          comparesToMetavariable = comparesToMetavariableName;  ///
 
     return comparesToMetavariable;
   }

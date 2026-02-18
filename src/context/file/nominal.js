@@ -374,43 +374,34 @@ export default class NominalFileContext extends FileContext {
     this.trace(`Added the '${metavariableString}' metavariable to the '${filePath}' file context.`)
   }
 
-  findLabelByReference(reference, context) {
+  findMetavariable(metavariable) {
+    const metavariables = this.getMetavariables(),
+          specificMetavariable = metavariable;  ///
+
+    metavariable = metavariables.find((metavariable) => {
+      const context = this, ///
+            generalMetavariable = metavariable, ///
+            metavariableUnifies = generalMetavariable.unifyMetavariable(specificMetavariable, context);
+
+      if (metavariableUnifies) {
+        return true;
+      }
+    }) || null;
+
+    return metavariable;
+  }
+
+  findLabelByMetavariable(metavariable) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
-            const metavariableUnifies = label.unifyReference(reference, context);
+            const labelMetavariableComparesToMetavariable = label.compareMetavariable(metavariable);
 
-            if (metavariableUnifies) {
+            if (labelMetavariableComparesToMetavariable) {
               return true;
             }
           }) || null;
 
     return label;
-  }
-
-  findMetaLemmaByReference(reference) {
-    const metaLemmas = this.getMetaLemmas(),
-          metaLemma = metaLemmas.find((metaLemma) => {
-            const metaLemmaComparesToReference = metaLemma.compareReference(reference);
-
-            if (metaLemmaComparesToReference) {
-              return true;
-            }
-          }) || null;
-
-    return metaLemma;
-  }
-
-  findMetatheoremByReference(reference) {
-    const metatheorems = this.getMetatheorems(),
-          metatheorem = metatheorems.find((metatheorem) => {
-            const metatheoremComparesToReference = metatheorem.compareReference(reference);
-
-            if (metatheoremComparesToReference) {
-              return true;
-            }
-          }) || null;
-
-    return metatheorem;
   }
 
   findRuleByReference(reference) {
@@ -469,17 +460,17 @@ export default class NominalFileContext extends FileContext {
     return theorem;
   }
 
-  findProcedureByProcedureName(procedureName) {
-    const procedures = this.getProcedures(),
-          procedure = procedures.find((procedure) => {
-            const procedureComparesToProcedureName = procedure.compareProcedureName(procedureName);
+  findMetaLemmaByReference(reference) {
+    const metaLemmas = this.getMetaLemmas(),
+          metaLemma = metaLemmas.find((metaLemma) => {
+            const metaLemmaComparesToReference = metaLemma.compareReference(reference);
 
-            if (procedureComparesToProcedureName) {
+            if (metaLemmaComparesToReference) {
               return true;
             }
           }) || null;
 
-    return procedure;
+    return metaLemma;
   }
 
   findConjectureByReference(reference) {
@@ -512,6 +503,19 @@ export default class NominalFileContext extends FileContext {
     return metaLemmas;
   }
 
+  findMetatheoremByReference(reference) {
+    const metatheorems = this.getMetatheorems(),
+      metatheorem = metatheorems.find((metatheorem) => {
+        const metatheoremComparesToReference = metatheorem.compareReference(reference);
+
+        if (metatheoremComparesToReference) {
+          return true;
+        }
+      }) || null;
+
+    return metatheorem;
+  }
+
   findMetatheoremsByReference(reference) {
     const metatheorems = this.getMetatheorems();
 
@@ -526,6 +530,16 @@ export default class NominalFileContext extends FileContext {
     });
 
     return metatheorems;
+  }
+
+  findTopLevelAssertionByReference(reference) {
+    const axiom = this.findAxiomByReference(reference),
+          lemma = this.findLemmaByReference(reference),
+          theorem = this.findTheoremByReference(reference),
+          conjecture = this.findConjectureByReference(reference),
+          topLevelAssertion = (axiom || lemma || theorem || conjecture);
+
+    return topLevelAssertion;
   }
 
   findTopLevelMetaAssertionByReference(reference) {
@@ -545,33 +559,6 @@ export default class NominalFileContext extends FileContext {
           ];
 
     return topLevelMetaAssertions;
-  }
-
-  findTopLevelAssertionByReference(reference) {
-    const axiom = this.findAxiomByReference(reference),
-          lemma = this.findLemmaByReference(reference),
-          theorem = this.findTheoremByReference(reference),
-          conjecture = this.findConjectureByReference(reference),
-          topLevelAssertion = (axiom || lemma || theorem || conjecture);
-
-    return topLevelAssertion;
-  }
-
-  findMetavariable(metavariable) {
-    const metavariables = this.getMetavariables(),
-          specificMetavariable = metavariable;  ///
-
-    metavariable = metavariables.find((metavariable) => {
-      const context = this, ///
-            generalMetavariable = metavariable, ///
-            metavariableUnifies = generalMetavariable.unifyMetavariable(specificMetavariable, context);
-
-      if (metavariableUnifies) {
-        return true;
-      }
-    }) || null;
-
-    return metavariable;
   }
 
   findTypeByTypeName(typeName, includeRelease = true, includeDependencies = true) {
@@ -650,38 +637,12 @@ export default class NominalFileContext extends FileContext {
     return typePrefix;
   }
 
-  findVariableByVariableIdentifier(variableIdentifier) {
-    const variables = this.getVariables(),
-          variable = variables.find((variable) => {
-            const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
-
-            if (variableComparesToVariableIdentifier) {
-              return true;
-            }
-          }) || null;
-
-    return variable;
-  }
-
   findLabelByMetavariableName(metavariableName) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
             const labelComparesToMetavariableName = label.compareMetavariableName(metavariableName);
 
             if (labelComparesToMetavariableName) {
-              return true;
-            }
-          }) || null;
-
-    return label;
-  }
-
-  findLabelByMetavariable(metavariable) {
-    const labels = this.getLabels(),
-          label = labels.find((label) => {
-            const labelMetavariableComparesToMetavariable = label.compareMetavariable(metavariable);
-
-            if (labelMetavariableComparesToMetavariable) {
               return true;
             }
           }) || null;
@@ -702,6 +663,19 @@ export default class NominalFileContext extends FileContext {
     return judgement;
   }
 
+  findVariableByVariableIdentifier(variableIdentifier) {
+    const variables = this.getVariables(),
+          variable = variables.find((variable) => {
+            const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
+
+            if (variableComparesToVariableIdentifier) {
+              return true;
+            }
+          }) || null;
+
+    return variable;
+  }
+
   findMetavariableByMetavariableName(metavariableName) {
     const metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
@@ -713,6 +687,69 @@ export default class NominalFileContext extends FileContext {
           }) || null;
 
     return metavariable;
+  }
+
+  findProcedureByProcedureName(procedureName) {
+    const procedures = this.getProcedures(),
+          procedure = procedures.find((procedure) => {
+            const procedureComparesToProcedureName = procedure.compareProcedureName(procedureName);
+
+            if (procedureComparesToProcedureName) {
+              return true;
+            }
+          }) || null;
+
+    return procedure;
+  }
+
+  isMetavariablePresent(metavariable) {
+    metavariable = this.findMetavariable(metavariable);
+
+    const metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
+  }
+
+  isLabelPresentByMetavariable(metavariable) {
+    const label = this.findLabelByMetavariable(metavariable),
+          labelPresent = (label !== null);
+
+    return labelPresent;
+  }
+
+  isLabelPresentByReference(reference) {
+    const labels = this.getLabels(),
+          labelPresent = labels.some((label) => {
+            const context = this, ///
+              labelUnifies = reference.unifyLabel(label, context);
+
+            if (labelUnifies) {
+              return true;
+            }
+          });
+
+    return labelPresent;
+  }
+
+  isMetavariablePresentByReference(reference) {
+    const metavariables = this.getMetavariables(),
+          metavariablePresent = metavariables.some((metavariable) => {
+            const context = this, ///
+              metavariableUnifies = reference.unifyMetavariable(metavariable, context);
+
+            if (metavariableUnifies) {
+              return true;
+            }
+          });
+
+    return metavariablePresent;
+  }
+
+  isTopLevelMetaAssertionPresentByReference(reference) {
+    const topLevelMetaAssertion = this.findTopLevelMetaAssertionByReference(reference),
+          topLevelMetaAssertionPresent = (topLevelMetaAssertion !== null);
+
+    return topLevelMetaAssertionPresent;
   }
 
   isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) {
@@ -736,6 +773,13 @@ export default class NominalFileContext extends FileContext {
     return typePresent;
   }
 
+  isLabelPresentByMetavariableName(metavariableName) {
+    const label = this.findLabelByMetavariableName(metavariableName),
+          labelPresent = (label !== null);
+
+    return labelPresent;
+  }
+
   isTypePrefixPresentByTypePrefixName(typePrefixName) {
     const typePrefix = this.findTypePrefixByTypePrefixName(typePrefixName),
           typePrefixPresent = (typePrefix !== null);
@@ -750,31 +794,9 @@ export default class NominalFileContext extends FileContext {
     return variablePresent;
   }
 
-  isLabelPresentByMetavariableName(metavariableName) {
-    const label = this.findLabelByMetavariableName(metavariableName),
-          labelPresent = (label !== null);
-
-    return labelPresent;
-  }
-
-  isLabelPresentByMetavariable(metavariable) {
-    const label = this.findLabelByMetavariable(metavariable),
-          labelPresent = (label !== null);
-
-    return labelPresent;
-  }
-
   isMetavariablePresentByMetavariableName(metavariableName) {
     const metavariable = this.findMetavariableByMetavariableName(metavariableName),
           metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
-  }
-
-  isMetavariablePresent(metavariable) {
-    metavariable = this.findMetavariable(metavariable);
-
-    const metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;
   }
@@ -784,41 +806,6 @@ export default class NominalFileContext extends FileContext {
           procedurePresent = (procedure !== null);
 
     return procedurePresent;
-  }
-
-  isLabelPresentByReference(reference) {
-    const labels = this.getLabels(),
-          labelPresent = labels.some((label) => {
-            const context = this, ///
-                  labelUnifies = reference.unifyLabel(label, context);
-
-            if (labelUnifies) {
-              return true;
-            }
-          });
-
-    return labelPresent;
-  }
-
-  isMetavariablePresentByReference(reference) {
-    const metavariables = this.getMetavariables(),
-          metavariablePresent = metavariables.some((metavariable) => {
-            const context = this, ///
-                  metavariableUnifies = reference.unifyMetavariable(metavariable, context);
-
-            if (metavariableUnifies) {
-              return true;
-            }
-          });
-
-    return metavariablePresent;
-  }
-
-  isTopLevelMetaAssertionPresentByReference(reference) {
-    const topLevelMetaAssertion = this.findTopLevelMetaAssertionByReference(reference),
-          topLevelMetaAssertionPresent = (topLevelMetaAssertion !== null);
-
-    return topLevelMetaAssertionPresent;
   }
 
   clear() {
