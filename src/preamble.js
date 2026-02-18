@@ -38,7 +38,6 @@ import Metatheorem from "./element/topLevelMetaAssertion/metatheorem";
 import Equivalence from "./element/equivalence";
 import Equivalences from "./element/equivalences";
 import Metavariable from "./element/metavariable";
-import Substitutions from "./element/substitutions";
 import ProcedureCall from "./element/procedureCall";
 import SubDerivation from "./element/subDerivation";
 import TypeAssertion from "./element/assertion/type";

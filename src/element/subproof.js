@@ -21,6 +21,13 @@ export default define(class Subproof extends Element {
     return this.subDerivation;
   }
 
+  getSubproofNode() {
+    const node = this.getNode(),
+          subproofNode = node;  ///
+
+    return subproofNode;
+  }
+
   getLastProofAssertion() { return this.subDerivation.getLastProofAssertion(); }
 
   getStatements() {

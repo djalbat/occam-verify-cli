@@ -16,6 +16,13 @@ export default define(class Label extends Element {
     return this.metavariable;
   }
 
+  getLabelNode() {
+    const node = this.getNode(),
+          labelNode = node; ///
+
+    return labelNode;
+  }
+
   getMetavariableName() { return this.metavariable.getName(); }
 
   getMetavariableNode() { return this.metavariable.getNode(); }

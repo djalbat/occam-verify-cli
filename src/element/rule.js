@@ -43,6 +43,13 @@ export default define(class Rule extends Element {
     return this.conclusion;
   }
 
+  getRuleNode() {
+    const node = this.getNode(),
+          ruleNode = node;  ///
+
+    return ruleNode;
+  }
+
   compareMetavariableName(metavariableName) {
     const comparesToMetavariableName = this.labels.some((label) => {
       const labelComparesToMetavariableName = label.compareMetavariableName(metavariableName);

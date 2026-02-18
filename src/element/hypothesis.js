@@ -18,6 +18,13 @@ export default define(class Hypothesis extends Element {
     return this.statement;
   }
 
+  getHypothesisNode() {
+    const node = this.getNode(),
+          hypothesisNode = node;  ///
+
+    return hypothesisNode;
+  }
+
   verify(context) {
     let verifies = false;
 

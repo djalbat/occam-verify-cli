@@ -5,6 +5,13 @@ import TopLevelMetaAssertion from "./../topLevelMetaAssertion";
 import { define } from "../../elements";
 
 export default define(class MetaLemma extends TopLevelMetaAssertion {
+  getMetaLemmaNode() {
+    const node = this.getNode(),
+          metaLemmaNode = node; ///
+
+    return metaLemmaNode;
+  }
+
   async verify() {
     let verifies;
 

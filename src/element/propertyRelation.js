@@ -20,6 +20,13 @@ export default define(class PropertyRelation extends Element {
     return this.term;
   }
 
+  getPropertyRelationNode() {
+    const node = this.getNode(),
+          propertyRelationNode = node;  ///
+
+    return propertyRelationNode;
+  }
+
   verify(context) {
     let verifies = false;
 

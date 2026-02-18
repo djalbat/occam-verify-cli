@@ -21,9 +21,15 @@ export default define(class Judgement extends Element {
     return this.assumption;
   }
 
-  isSingular() {
+  getJudgementNode() {
     const node = this.getNode(),
-          judgementNode = node, ///
+          judgementNode = node; ///
+
+    return judgementNode;
+  }
+
+  isSingular() {
+    const judgementNode = this.getJudgementNode(),
           singular = judgementNode.isSingular();
 
     return singular;

@@ -15,6 +15,13 @@ export default define(class MetaType extends Element {
     return this.name;
   }
 
+  getMetaTypeNode() {
+    const node = this.getNode(),
+          metaTypeNode = node;  ///
+
+    return metaTypeNode;
+  }
+
   isEqualTo(metaType) {
     const equalTo = (this === metaType);
 

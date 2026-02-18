@@ -5,6 +5,13 @@ import TopLevelAssertion from "../topLevelAssertion";
 import { define } from "../../elements";
 
 export default define(class Theorem extends TopLevelAssertion {
+  getThoeremNode() {
+    const node = this.getNode(),
+          theoremNode = node; ///
+
+    return theoremNode;
+  }
+
   async verify() {
     let verifies;
 

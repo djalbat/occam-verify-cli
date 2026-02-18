@@ -17,6 +17,13 @@ export default define(class Constructor extends Element {
     return this.term;
   }
 
+  getConclusionNode() {
+    const node = this.getNode(),
+          constructorNode = node;  ///
+
+    return constructorNode;
+  }
+
   isProvisional() { return this.term.isProvisional(); }
 
   getType() { return this.term.getType(); }

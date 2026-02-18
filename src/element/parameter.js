@@ -20,6 +20,13 @@ export default define(class Parameter extends Element {
     return this.identifier;
   }
 
+  getParameterNode() {
+    const node = this.getNode(),
+          parameterNode = node; ///
+
+    return parameterNode;
+  }
+
   findPrimitive(substitutions) {
     let primitive = null;
 

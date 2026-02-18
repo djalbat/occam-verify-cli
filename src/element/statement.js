@@ -11,30 +11,25 @@ import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 const { match, backwardsSome } = arrayUtilities;
 
 export default define(class Statement extends Element {
-  constructor(context, string, node) {
-    super(context, string, node);
-  }
-
-  isSingular() {
-    const node = this.getNode(),
-          statementNode = node, ///
-          singular = statementNode.isSingular();
-
-    return singular;
-  }
-
-  getMetavariableName() {
-    const node = this.getNode(),
-          metavariableName = node.getMetavariableName();
-
-    return metavariableName;
-  }
-
   getStatementNode() {
     const node = this.getNode(),
           statementNode = node; ///
 
     return statementNode;
+  }
+
+  getMetavariableName() {
+    const sttaementNode = this.getStatementNode(),
+          metavariableName = sttaementNode.getMetavariableName();
+
+    return metavariableName;
+  }
+
+  isSingular() {
+    const statementNode = this.getStatementNode(),
+          singular = statementNode.isSingular();
+
+    return singular;
   }
 
   matchStatementNode(statementNode) {

@@ -14,6 +14,13 @@ export default define(class ProcedureReference extends Element {
     return this.name;
   }
 
+  getProcedureReferenceNode() {
+    const node = this.getNode(),
+          procedureReferenceNode = node;  ///
+
+    return procedureReferenceNode;
+  }
+
   toJSON() {
     const name = this.name,
           json = {

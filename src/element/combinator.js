@@ -18,6 +18,13 @@ export default define(class Combinator extends Element {
     return this.statement;
   }
 
+  getConbinatorNode() {
+    const node = this.getNode(),
+          combinatorNode = node;  ///
+
+    return combinatorNode;
+  }
+
   verify() {
     let verifies;
 

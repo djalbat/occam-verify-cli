@@ -16,6 +16,13 @@ export default define(class Proof extends Element {
     return this.derivation;
   }
 
+  getProofNode() {
+    const node = this.getNode(),
+          proofNode = node; ///
+
+    return proofNode;
+  }
+
   getLastProofAssertion() { return this.derivation.getLastProofAssertion(); }
 
   getStatement() {

@@ -15,6 +15,13 @@ export default define(class TypePrefix extends Element {
     return this.name;
   }
 
+  getTypePrefixNode() {
+    const node = this.getNode(),
+          typePrefixNode = node;  ///
+
+    return typePrefixNode;
+  }
+
   compareTypePrefixName(typePrefixName) {
     const comparesToTypePrefixName = (this.name === typePrefixName);
 

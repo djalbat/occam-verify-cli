@@ -5,8 +5,11 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 
 export default define(class Error extends Element {
-  constructor(context, string, node) {
-    super(context, string, node);
+  getErrorNode() {
+    const node = this.getNode(),
+          errorNode = node; ///
+
+    return errorNode;
   }
 
   async verify() {

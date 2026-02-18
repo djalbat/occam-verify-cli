@@ -30,6 +30,13 @@ export default define(class Variable extends Element {
     this.type = type;
   }
 
+  getVariableNode() {
+    const node = this.getNode(),
+          variableNode = node;  //
+
+    return variableNode;
+  }
+
   getTypeString() { return this.type.getString(); }
 
   isIdentifierEqualTo(identifier) {

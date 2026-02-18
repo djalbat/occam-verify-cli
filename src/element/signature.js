@@ -20,6 +20,13 @@ export default define(class Signature extends Element {
     return this.terms;
   }
 
+  getSignatureNode() {
+    const node = this.getNode(),
+          signatureNode = node; ///
+
+    return signatureNode;
+  }
+
   verify(context) {
     let verifies;
 

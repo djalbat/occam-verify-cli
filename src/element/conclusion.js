@@ -17,6 +17,13 @@ export  default define(class Conclusion extends Element {
     return this.statement;
   }
 
+  getConclusionNode() {
+    const node = this.getNode(),
+          conclusionNode = node;  ///
+
+    return conclusionNode;
+  }
+
   verify(context) {
     let verifies = false;
 

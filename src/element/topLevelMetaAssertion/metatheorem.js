@@ -5,6 +5,13 @@ import TopLevelMetaAssertion from "../topLevelMetaAssertion";
 import { define } from "../../elements";
 
 export default define(class Metatheorem extends TopLevelMetaAssertion {
+  getMetatheoremNode() {
+    const node = this.getNode(),
+          metatheoremNode = node; ///
+
+    return metatheoremNode;
+  }
+
   async verify() {
     let verifies;
 

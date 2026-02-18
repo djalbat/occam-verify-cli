@@ -20,6 +20,13 @@ export default define(class SubDerivation extends Element {
     return this.subproofOrProofAssertions;
   }
 
+  getSubDerivationNode() {
+    const node = this.getNode(),
+          subDerivationNode = node; ///
+
+    return subDerivationNode;
+  }
+
   getLastProofAssertion() {
     const lastSubproofOrProofAssertion = last(this.subproofOrProofAssertions),
           lastProofAssertion = lastSubproofOrProofAssertion;  ///

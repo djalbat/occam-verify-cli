@@ -20,6 +20,13 @@ export default define(class Property extends Element {
     return this.nominalTypeName;
   }
 
+  getPropertyNode() {
+    const node = this.getNode(),
+          properetyNode = node; ///
+
+    return properetyNode;
+  }
+
   comparePropertyName(propertyName) {
     const comparesToPropertyName = (this.name === propertyName);
 

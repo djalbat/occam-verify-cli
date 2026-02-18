@@ -17,6 +17,13 @@ export default define(class Deduction extends Element {
     return this.statement;
   }
 
+  getDeductionNode() {
+    const node = this.getNode(),
+          deductionNode = node; ///
+
+    return deductionNode;
+  }
+
   verify(context) {
     let verifies = false;
 

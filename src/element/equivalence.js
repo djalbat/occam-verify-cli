@@ -15,11 +15,19 @@ const { compress } = arrayUtilities;
 export default define(class Equivalence extends Element {
   constructor(context, string, node, terms) {
     super(context, string, node);
+
     this.terms = terms;
   }
 
   getTerms() {
     return this.terms;
+  }
+
+  getEquivalenceNode() {
+    const node = this.getNode(),
+          equivalenceNode = node; ///
+
+    return equivalenceNode;
   }
 
   getType() {

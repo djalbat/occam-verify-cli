@@ -24,6 +24,13 @@ export default define(class ProcedureCall extends Element {
     return this.procedureReference;
   }
 
+  getProcedureCallNode() {
+    const node = this.getNode(),
+          procedureCallNode = node;
+
+    return procedureCallNode;
+  }
+
   getName() { return this.procedureReference.getName(); }
 
   findPrimitives(context) {

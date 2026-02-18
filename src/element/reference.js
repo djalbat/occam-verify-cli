@@ -20,6 +20,14 @@ export default define(class Reference extends Element {
     return this.metavariable;
   }
 
+  getReferenceNode() {
+    const node = this.getNode(),
+          referenceNode = node; ///
+
+    return referenceNode;
+  }
+
+
   getName() { return this.metavariable.getName(); }
 
   getMetavariableName() {
@@ -32,13 +40,6 @@ export default define(class Reference extends Element {
     const metavariableNode = this.metavariable.getNode();
 
     return metavariableNode;
-  }
-
-  getReferenceNode() {
-    const node = this.getNode(),
-          assertionNode = node; ///
-
-    return assertionNode;
   }
 
   matchReferenceNode(assertionNode) {

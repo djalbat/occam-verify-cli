@@ -32,6 +32,13 @@ export default define(class Type extends Element {
     return this.superTypes;
   }
 
+  getTypeNode() {
+    const node = this.getNode(),
+          typeNode = node;  ///
+
+    return typeNode;
+  }
+
   getProperties(includeSuperTypes = true) {
     const properties = [];
 

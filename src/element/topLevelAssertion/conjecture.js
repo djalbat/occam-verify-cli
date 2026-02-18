@@ -5,6 +5,13 @@ import TopLevelAssertion from "../topLevelAssertion";
 import { define } from "../../elements";
 
 export default define(class Conjecture extends TopLevelAssertion {
+  getConjectureNode() {
+    const node = this.getNode(),
+          conjectureNode = node;  ///
+
+    return conjectureNode;
+  }
+
   async verify() {
     let verifies;
 

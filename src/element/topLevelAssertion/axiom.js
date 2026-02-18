@@ -5,6 +5,13 @@ import TopLevelAssertion  from "../../node/topLevelAssertion";
 import { define } from "../../elements";
 
 export default define(class Axiom extends TopLevelAssertion {
+  getAxiomNode() {
+    const node = this.getNode(),
+          axiomNode = node; ///
+
+    return axiomNode;
+  }
+
   isSatisfiable() {
     const signature = this.getSignature(),
           satisfiable = (signature !== null);

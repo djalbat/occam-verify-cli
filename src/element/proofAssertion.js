@@ -15,6 +15,13 @@ export default class ProofAssertion extends Element {
     return this.statement;
   }
 
+  getProofAssertionNode() {
+    const node = this.getNode(),
+          proofAssertionNode = node;  ///
+
+    return proofAssertionNode;
+  }
+
   isProofAssertion() {
     const proofAssertion = true;
 

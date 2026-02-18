@@ -20,6 +20,13 @@ export default define(class Equivalences extends Element {
     return this.array;
   }
 
+  getEquivalencesNode() {
+    const node = this.getNode(),
+          equivalencesNode = node;  ///
+
+    return equivalencesNode;
+  }
+
   getLength() { return this.array.length; }
 
   getTypes() {

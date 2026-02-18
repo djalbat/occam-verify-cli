@@ -35,6 +35,13 @@ export default define(class Section extends Element {
     return this.conjecture;
   }
 
+  getSectionNode() {
+    const node = this.getNode(),
+          sectionNode = node; ///
+
+    return sectionNode;
+  }
+
   verifyHypotheses() {
     const hypothesesVerify = this.hypotheses.every((hypothesis) => {
       const hypothesisVerifies = hypothesis.verify(this.context);

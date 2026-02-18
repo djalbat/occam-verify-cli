@@ -14,12 +14,19 @@ export default define(class Assumption extends Element {
     this.reference = reference;
   }
 
+  getReference() {
+    return this.reference;
+  }
+
   getStatement() {
     return this.statement;
   }
 
-  getReference() {
-    return this.reference;
+  getAssumptionNode() {
+    const node = this.getNode(),
+          assumptionNode = node;  ///
+
+    return assumptionNode;
   }
 
   getMetavariable() { return this.reference.getMetavariable(); }

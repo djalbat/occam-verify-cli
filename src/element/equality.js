@@ -22,6 +22,13 @@ export default define(class Equality extends Element {
     return this.rightTerm;
   }
 
+  getEqualityNode() {
+    const node = this.getNode(),
+          equalityNde = node; ///
+
+    return equalityNde;
+  }
+
   getType() {
     let type;
 
