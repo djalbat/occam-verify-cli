@@ -26,6 +26,13 @@ export default define(class DefinedAssertion extends Assertion {
     return this.negated;
   }
 
+  getDefinedAssertionNode() {
+    const node = this.getNode(),
+          definedAssertionNode = node;  ///
+
+    return definedAssertionNode;
+  }
+
   validate(assignments, stated, context) {
     let validates = false;
 

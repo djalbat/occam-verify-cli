@@ -16,31 +16,11 @@ export default define(class ConstructorDeclaration extends Declaration {
     return this.constructor;
   }
 
-  async verify() {
-    let verifies;
+  getConstructorDeclarationNode() {
+    const node = this.getNode(),
+          constructorDeclarationNode = node;  ///
 
-    const context = this.getContext(),
-          constructorDeclarationString = this.getString(); ///
-
-    context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
-
-    const constructorTypeVerifies = this.verifyConstructorType();
-
-    if (constructorTypeVerifies) {
-      const constructorValidates = this.verifyConstructor();
-
-      if (constructorValidates) {
-        context.addConstructor(this.constructor);
-
-        verifies = true;
-      }
-    }
-
-    if (verifies) {
-      context.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`);
-    }
-
-    return verifies;
+    return constructorDeclarationNode;
   }
 
   verifyConstructor() {
@@ -108,6 +88,33 @@ export default define(class ConstructorDeclaration extends Declaration {
     }
 
     return constructorTypeVerifies;
+  }
+
+  async verify() {
+    let verifies;
+
+    const context = this.getContext(),
+          constructorDeclarationString = this.getString(); ///
+
+    context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
+
+    const constructorTypeVerifies = this.verifyConstructorType();
+
+    if (constructorTypeVerifies) {
+      const constructorValidates = this.verifyConstructor();
+
+      if (constructorValidates) {
+        context.addConstructor(this.constructor);
+
+        verifies = true;
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`);
+    }
+
+    return verifies;
   }
 
   static name = "ConstructorDeclaration";

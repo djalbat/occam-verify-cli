@@ -144,9 +144,7 @@ async function unifyStatementWithTopLevelAssertion(statement, reference, satisfi
   let statementUnifiesWithTopLevelAssertion = false;
 
   if (reference !== null) {
-    const { Substitutions } = elements,
-          topLevelAssertion = context.findTopLevelAssertionByReference(reference),
-          generalSubstitutions = substitutions; ///
+    const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
     if (topLevelAssertion !== null) {
       const statementString = statement.getString(),
@@ -155,7 +153,7 @@ async function unifyStatementWithTopLevelAssertion(statement, reference, satisfi
       context.trace(`Unifying the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion...`);
 
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
-            statementAndSubproofOrProofAssertionsUnify = topLevelAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
+            statementAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
 
       if (statementAndSubproofOrProofAssertionsUnify) {
         const metavariable = reference.getMetavariable();

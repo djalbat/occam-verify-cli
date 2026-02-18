@@ -107,26 +107,22 @@ export function statementFromStatementAndSubstitutions(statement, generalContext
   return statement;
 }
 
-export function metavariablesFromSubstitutions(substitutions, generalContext, specificContext) {
-  const metavariables = [];
+export function metavariableNamesFromSubstitutions(substitutions) {
+  const metavariableNames = [];
 
   substitutions.forEach((substitution) => {
-    const context = generalContext, ///
-          metavariableName = substitution.getMetavariableName(),
-          metavariable = context.findMetavariableByMetavariableName(metavariableName);
+    const metavariableName = substitution.getMetavariableName();
 
-    if (metavariable !== null) {
-      metavariables.push(metavariable);
+    if (metavariableName !== null) {
+      metavariableNames.push(metavariableName);
     }
   });
 
-  compress(metavariables, (metavariableA, metavariableB) => {
-    const metavariableComparesToMetavariableB = metavariableB.compare(metavariableA);
-
-    if (!metavariableComparesToMetavariableB) {
+  compress(metavariableNames, (metavariableNameA, metavariableNameB) => {
+    if (metavariableNameB !== metavariableNameB) {
       return true;
     }
   });
 
-  return metavariables;
+  return metavariableNames;
 }

@@ -20,6 +20,13 @@ export default define(class SatisfiesAssertion extends Assertion {
     return this.reference;
   }
 
+  getSatisfiesAssertionNode() {
+    const node = this.getNode(),
+          satisfiesAssertionNode = node;  ///
+
+    return satisfiesAssertionNode;
+  }
+
   compareSubstitutions(substitutions, context) { return this.signature.compareSubstitutions(substitutions, context); }
 
   correlateSubstitutions(substitutions, context) { return this.signature.correlateSubstitutions(substitutions, context); }

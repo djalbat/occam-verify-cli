@@ -17,6 +17,13 @@ export default define(class Supposition extends ProofAssertion {
     return this.procedureCall;
   }
 
+  getSuppositionNode() {
+    const node = this.getNode(),
+          suppositionNode = node; ///
+
+    return suppositionNode;
+  }
+
   isStated() {
     const stated = true; ///
 

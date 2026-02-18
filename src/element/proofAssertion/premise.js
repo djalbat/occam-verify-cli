@@ -17,6 +17,13 @@ export default define(class Premise extends ProofAssertion {
     return this.procedureCall;
   }
 
+  getPremiseNode() {
+    const node = this.getNode(),
+          premiseNode = node; ///
+
+    return premiseNode;
+  }
+
   isStated() {
     const stated = true; ///
 

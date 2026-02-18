@@ -27,6 +27,13 @@ export default define(class Step extends ProofAssertion {
     return this.satisfiesAssertion;
   }
 
+  getStepNode() {
+    const node = this.getNode(),
+          stepNode = node;  ///
+
+    return stepNode;
+  }
+
   isSatisfied() {
     const satisfied = (this.satisfiesAssertion !== null);
 

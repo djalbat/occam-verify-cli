@@ -20,6 +20,13 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     return this.prefixed;
   }
 
+  getComplexTypeDeclarationNode() {
+    const node = this.getNode(),
+          complexTypeDeclarationNode = node;  ///
+
+    return complexTypeDeclarationNode;
+  }
+
   verifyType() {
     let typeVerifies = false;
 

@@ -5,19 +5,19 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class MetavariableDeclaration extends Declaration {
-  constructor(context, string, node, metavariable, metaType) {
+  constructor(context, string, node, metaType, metavariable) {
     super(context, string, node);
 
-    this.metavariable = metavariable;
     this.metaType = metaType;
-  }
-
-  getMetavariable() {
-    return this.metavariable;
+    this.metavariable = metavariable;
   }
 
   getMetaType() {
     return this.metaType;
+  }
+
+  getMetavariable() {
+    return this.metavariable;
   }
 
   verifyMetavariable() {

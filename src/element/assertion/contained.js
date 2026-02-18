@@ -31,6 +31,13 @@ export default define(class ContainedAssertion extends Assertion {
     return this.statement;
   }
 
+  getContainedAssertionNode() {
+    const node = this.getNode(),
+          containedAssertionNode = node;  ///
+
+    return containedAssertionNode;
+  }
+
   validate(assignments, stated, context) {
     let validates = false;
 

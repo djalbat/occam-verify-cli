@@ -15,6 +15,13 @@ export default define(class TypePrefixDeclaration extends Declaration {
     return this.typePrefix;
   }
 
+  getTypePrefixDeclarationNode() {
+    const node = this.getNode(),
+          typePrefixDeclarationNode = node; ///
+
+    return typePrefixDeclarationNode;
+  }
+
   verifyTypePrefix() {
     let typePrefixVerifies = false;
 

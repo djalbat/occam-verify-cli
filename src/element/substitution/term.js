@@ -25,6 +25,13 @@ export default define(class TermSubstitution extends Substitution {
     return this.replacementTerm;
   }
 
+  getTermSubstitutionNode() {
+    const node = this.getNode(),
+          termSubstitutionNode = node;  ///
+
+    return termSubstitutionNode;
+  }
+
   getTargetNode() {
     const targetTermNode = this.targetTerm.getNode(),
           tergetNode = targetTermNode; ///

@@ -22,6 +22,13 @@ export default define(class PropertyAssertion extends Assertion {
     return this.propertyRelation;
   }
 
+  getPropertyAssertionNode() {
+    const node = this.getNode(),
+          propertyAssertionNode = node; ///
+
+    return propertyAssertionNode;
+  }
+
   compareTermAndPropertyRelation(term, propertyRelation, context) {
     let comparesToTermAndPropertyRelation = false;
 

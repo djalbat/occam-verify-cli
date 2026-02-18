@@ -16,6 +16,13 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     return this.type;
   }
 
+  getSimpleTypeDeclarationNode() {
+    const node = this.getNode(),
+          simpleTypeDeclarationNode = node; ///
+
+    return simpleTypeDeclarationNode;
+  }
+
   isPrefixed() {
     return this.prefixed;
   }

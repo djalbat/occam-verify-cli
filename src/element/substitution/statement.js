@@ -37,20 +37,14 @@ export default define(class StatementSubstitution extends Substitution {
     return this.replacementStatement;
   }
 
-  getMetavariable(generalContext, specificContext) {
-    let metavariable = null;
+  getStatementSubstitutionNode() {
+    const node = this.getNode(),
+          statementSubstitutionNode = node; ///
 
-    const targetStatementNode = this.targetStatement.getNode(),
-          metavariableName = targetStatementNode.getMetavariableName();
-
-    if (metavariableName !== null) {
-      const context = generalContext; ///
-
-      metavariable = context.findMetavariableByMetavariableName(metavariableName);
-    }
-
-    return metavariable;
+    return statementSubstitutionNode;
   }
+
+  getMtavariableName() { return this.targetStatement.getMtavariableName(); }
 
   getTargetNode() {
     const targetStatementNode = this.targetStatement.getNode(),
@@ -252,11 +246,11 @@ export default define(class StatementSubstitution extends Substitution {
 
     context = generalContext; ///
 
-    const metavariable = this.getMetavariable(generalContext, specificContext);
+    const metavariableName = this.getMetavariableName();
 
     context = specificContext;  ///
 
-    const simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable);
+    const simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
 
     context = this.getContext();
 

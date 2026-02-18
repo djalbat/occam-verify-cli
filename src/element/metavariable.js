@@ -126,13 +126,13 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
-    const metavariable = this, ///
-          frameMetavariableUnifies = this.unifyFrameMetavariable(frame, generalContext, specificContext);
+    const frameMetavariableUnifies = this.unifyFrameMetavariable(frame, generalContext, specificContext);
 
     if (frameMetavariableUnifies) {
       frameUnifies = true;
     } else {
-      const simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable);
+      const metavariableName = this.getMetavariableName(),
+            simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
 
       if (simpleSubstitution !== null) {
         const substitution = simpleSubstitution,  ///
@@ -143,6 +143,7 @@ export default define(class Metavariable extends Element {
         }
       } else {
         const { FrameSubstitution } = elements,
+              metavariable = this, ///
               frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
               framesubstitutionValidates = frameSubstitution.validate(generalContext, specificContext);
 
@@ -236,16 +237,16 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Unifying the '${referenceString}' reference with the '${metavariableString}' metavariable...`);
 
-    const metavariable = this, ///
-          referenceMetavariableUnifies = this.unifyReferenceMetavariable(reference, generalContext, specificContext);
+    const referenceMetavariableUnifies = this.unifyReferenceMetavariable(reference, generalContext, specificContext);
 
     if (referenceMetavariableUnifies) {
       referenceUnifies = true;
     } else {
-      const simpleSubstitutionPresent = context.isSimpleSubstitutionPresentByMetavariable(metavariable);
+      const metavariableName = this.getMetavariableName(),
+            simpleSubstitutionPresent = context.isSimpleSubstitutionPresentByMetavariableName(metavariableName);
 
       if (simpleSubstitutionPresent) {
-        const simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable),
+        const simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName),
               substitution = simpleSubstitution,  ///
               substitutionReferenceEqualToReference = substitution.isReferenceEqualToReference(reference);
 
@@ -254,6 +255,7 @@ export default define(class Metavariable extends Element {
         }
       } else {
         const { ReferenceSubstitution } = elements,
+              metavariable = this, ///
               referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
               substitution = referenceSubstitution; ///
 

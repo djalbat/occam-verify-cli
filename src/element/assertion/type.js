@@ -22,6 +22,13 @@ export default define(class TypeAssertion extends Assertion {
     return this.type;
   }
 
+  getTypeAssertionNBode() {
+    const node = this.getNode(),
+          typeAssertionNode = node; ///
+
+    return typeAssertionNode;
+  }
+
   verify(assignments, stated, context) {
     let verifies = false;
 

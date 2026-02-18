@@ -5,24 +5,31 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class VariableDeclaration extends Declaration {
-  constructor(context, string, node, variable, type, provisional) {
+  constructor(context, string, node, type, variable, provisional) {
     super(context, string, node);
 
-    this.variable = variable;
     this.type = type;
+    this.variable = variable;
     this.provisional = provisional;
-  }
-
-  getVariable() {
-    return this.variable;
   }
 
   getType() {
     return this.type;
   }
 
+  getVariable() {
+    return this.variable;
+  }
+
   isProvisional() {
     return this.provisional;
+  }
+
+  getVariableDeclarationNode() {
+    const node = this.getNode(),
+          typePrefixDeclarationNode = node; ///
+
+    return typePrefixDeclarationNode;
   }
 
   verifyType() {

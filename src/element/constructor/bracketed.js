@@ -6,6 +6,13 @@ import Constructor from "../constructor";
 import { define } from "../../elements";
 
 export default define(class BracketedConstructor extends Constructor {
+  getBracketedConstructorNode() {
+    const node = this.getNode(),
+          bracketedConstructorNode = node;  ///
+
+    return bracketedConstructorNode;
+  }
+
   unifyTerm(term, context, verifyForwards) {
     let termUnifies;
 

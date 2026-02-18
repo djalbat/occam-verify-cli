@@ -1,7 +1,7 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { metavariablesFromSubstitutions } from "../utilities/substitutions";
+import { metavariableNamesFromSubstitutions } from "../utilities/substitutions";
 import { substitutionsStringFromSubstitutions } from "../utilities/string";
 
 import Context from "../context";
@@ -120,10 +120,10 @@ export default class LiminalContext extends Context {
 
   resolveSubstitutions(generalContext, specificContext) {
     const substitutions = this.getSubstitutions(),
-          metavariables = metavariablesFromSubstitutions(substitutions, generalContext, specificContext);
+          metavariableNames = metavariableNamesFromSubstitutions(substitutions);
 
-    metavariables.forEach((metavariable) => {
-      const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
+    metavariableNames.forEach((metavariableName) => {
+      const complexSubstitutions = this.findComplexSubstitutionsByMetavariableName(metavariableName),
             complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
               const substitution = complexSubstitution, ///
                     resolved = substitution.isResolved();
@@ -141,9 +141,9 @@ export default class LiminalContext extends Context {
 
   areSubstitutionsResolved(generalContext, specificContext) {
     const substitutions = this.getSubstitutions(),
-          metavariables = metavariablesFromSubstitutions(substitutions, generalContext, specificContext),
-          resolved = metavariables.every((metavariable) => {
-            const complexSubstitutions = this.findComplexSubstitutionsByMetavariable(metavariable),
+          metavariableNames = metavariableNamesFromSubstitutions(substitutions),
+          resolved = metavariableNames.every((metavariableName) => {
+            const complexSubstitutions = this.findComplexSubstitutionsByMetavariableName(metavariableName),
                   complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
                     const complexSubstitutionResolved = complexSubstitution.isResolved();
 
@@ -213,15 +213,15 @@ export default class LiminalContext extends Context {
     return substitution;
   }
 
-  findSimpleSubstitutionByMetavariable(metavariable) {
+  findSimpleSubstitutionByMetavariableName(metavariableName) {
     const simpleSubstitution = this.findSubstitution((substitution) => {
       const substitutionSimple = substitution.isSimple();
 
       if (substitutionSimple) {
         const simpleSubstitution = substitution,  ///
-              simpleSubstitutionMetavariableComparesToMetavariable = simpleSubstitution.compareMetavariable(metavariable);
+              simpleSubstitutionMatchesMetavariableName = simpleSubstitution.matchMetavariableName(metavariableName);
 
-        if (simpleSubstitutionMetavariableComparesToMetavariable) {
+        if (simpleSubstitutionMatchesMetavariableName) {
           return true;
         }
       }
@@ -230,21 +230,21 @@ export default class LiminalContext extends Context {
     return simpleSubstitution;
   }
 
-  findComplexSubstitutionsByMetavariable(metavariable) {
-    const complexSubstitutions = this.findSubstitutions((substitution) => {
+  findComplexSubstitutionsByMetavariableName(metavariableName) {
+    const complexSubstitution = this.findSubstitutions((substitution) => {
       const substitutionComplex = substitution.isComplex();
 
       if (substitutionComplex) {
-        const complexSubstitution = substitution, ///
-              complexSubstitutionMetavariableComparesToMetavariable = complexSubstitution.compareMetavariable(metavariable);
+        const complexSubstitution = substitution,  ///
+              complexSubstitutionMatchesMetavariableName = complexSubstitution.matchMetavariableName(metavariableName);
 
-        if (complexSubstitutionMetavariableComparesToMetavariable) {
+        if (complexSubstitutionMatchesMetavariableName) {
           return true;
         }
       }
-    });
+    }) || null;
 
-    return complexSubstitutions;
+    return complexSubstitution;
   }
 
   findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) {
@@ -266,8 +266,8 @@ export default class LiminalContext extends Context {
     return substitution;
   }
 
-  isSimpleSubstitutionPresentByMetavariable(metavariable) {
-    const simpleSubstitution = this.findSimpleSubstitutionByMetavariable(metavariable),
+  isSimpleSubstitutionPresentByMetavariableName(metavariableName) {
+    const simpleSubstitution = this.findSimpleSubstitutionByMetavariableName(metavariableName),
           simpleSubstitutionPresent = (simpleSubstitution !== null);
 
     return simpleSubstitutionPresent;

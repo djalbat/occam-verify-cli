@@ -24,6 +24,13 @@ export default define(class FrameSubstitution extends Substitution {
     return this.replacementFrame;
   }
 
+  getFrameSubstitutionNode() {
+    const node = this.getNode(),
+          frameSubstitutionNode = node; ///
+
+    return frameSubstitutionNode;
+  }
+
   getTargetNode() {
     const targetFrameNode = this.targetFrame.getNode(),
           tergetNode = targetFrameNode; ///

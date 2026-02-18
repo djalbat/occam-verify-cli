@@ -33,9 +33,23 @@ export default class Context extends ContextBase {
 
   getFrames() {
     const context = this.getContext(),
-      frames = context.getFrames();
+          frames = context.getFrames();
 
     return frames;
+  }
+
+  getStatements() {
+    const context = this.getContext(),
+          statements = context.getStatements();
+
+    return statements;
+  }
+
+  getReferences() {
+    const context = this.getContext(),
+          references = context.getReferences();
+
+    return references;
   }
 
   getSubstitutions() {
@@ -47,7 +61,7 @@ export default class Context extends ContextBase {
 
   getVariables(includeRelease) {
     const context = this.getContext(),
-      variables = context.getVariables(includeRelease);
+          variables = context.getVariables(includeRelease);
 
     return variables;
   }
@@ -57,6 +71,13 @@ export default class Context extends ContextBase {
           combinators = context.getCombinators(includeRelease);
 
     return combinators;
+  }
+
+  getConstrustors(includeRelease) {
+    const context = this.getContext(),
+          constructors = context.getConstrustors(includeRelease);
+
+    return constructors;
   }
 
   getMetavariables(includeRelease) {
@@ -88,13 +109,6 @@ export default class Context extends ContextBase {
     return procedure;
   }
 
-  findRuleByReference(reference) {
-    const context = this.getContext(),
-          rule = context.findRuleByReference(reference);
-
-    return rule;
-  }
-
   findFrameByFrameNode(frameNode) {
     const context = this.getContext(),
           frame = context.findFrameByFrameNode(frameNode);
@@ -116,18 +130,11 @@ export default class Context extends ContextBase {
     return reference;
   }
 
-  findTopLevelAssertionByReference(reference) {
+  findVariableByVariableIdentifier(variableIdentifier) {
     const context = this.getContext(),
-      topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+          variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
-    return topLevelAssertion;
-  }
-
-  findSubstitutionByVariableIdentifier(variableIdentifier) {
-    const context = this.getContext(),
-          substitution = context.findSubstitutionByVariableIdentifier(variableIdentifier);
-
-    return substitution;
+    return variable;
   }
 
   findSubstitutionByMetavariableName(metavariableName) {
@@ -137,13 +144,6 @@ export default class Context extends ContextBase {
     return substitution;
   }
 
-  findVariableByVariableIdentifier(variableIdentifier) {
-    const context = this.getContext(),
-          variable = context.findVariableByVariableIdentifier(variableIdentifier);
-
-    return variable;
-  }
-
   findMetavariableByMetavariableName(metavariableName) {
     const context = this.getContext(),
           metavariable = context.findMetavariableByMetavariableName(metavariableName);
@@ -151,11 +151,25 @@ export default class Context extends ContextBase {
     return metavariable;
   }
 
-  findSimpleSubstitutionByMetavariable(metavariable) {
+  findSubstitutionByVariableIdentifier(variableIdentifier) {
     const context = this.getContext(),
-          simpleSubstitution = context.findSimpleSubstitutionByMetavariable(metavariable);
+          substitution = context.findSubstitutionByVariableIdentifier(variableIdentifier);
+
+    return substitution;
+  }
+
+  findSimpleSubstitutionByMetavariableName(metavariableName) {
+    const context = this.getContext(),
+          simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
 
     return simpleSubstitution;
+  }
+
+  findComplexSubstitutionsByMetavariableName(metavariableName) {
+    const context = this.getContext(),
+          complexSubstitution = context.findComplexSubstitutionsByMetavariableName(metavariableName);
+
+    return complexSubstitution;
   }
 
   findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) {
@@ -166,6 +180,20 @@ export default class Context extends ContextBase {
     return substitution;
   }
 
+  findRuleByReference(reference) {
+    const context = this.getContext(),
+          rule = context.findRuleByReference(reference);
+
+    return rule;
+  }
+
+  findTopLevelAssertionByReference(reference) {
+    const context = this.getContext(),
+          topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+
+    return topLevelAssertion;
+  }
+
   isTermPresentByTermNode(termNode) {
     const context = this.getContext(),
           termPresent = context.isTermPresentByTermNode(termNode);
@@ -173,18 +201,18 @@ export default class Context extends ContextBase {
     return termPresent;
   }
 
+  isProcedurePresentByName(name) {
+    const context = this.getContext(),
+          procedurePresent = context.isProcedurePresentByName(name);
+
+    return procedurePresent;
+  }
+
   isFramePresentByFrameNode(frameNode) {
     const context = this.getContext(),
           framePresent = context.isFramePresentByFrameNode(frameNode);
 
     return framePresent;
-  }
-
-  isJudgementPresentByMetavariableName(metavariableName) {
-    const context = this.getContext(),
-          judgementPresent = context.isJudgementPresentByMetavariableName(metavariableName);
-
-    return judgementPresent;
   }
 
   isStatementPresentByStatementNode(statementNode) {
@@ -208,18 +236,18 @@ export default class Context extends ContextBase {
     return referencePresent;
   }
 
+  isJudgementPresentByMetavariableName(metavariableName) {
+    const context = this.getContext(),
+          judgementPresent = context.isJudgementPresentByMetavariableName(metavariableName);
+
+    return judgementPresent;
+  }
+
   isSubstitutionPresentBySubstitutionNode(substitutionNode) {
     const context = this.getContext(),
           substitutionPresent = context.isSubstitutionPresentBySubstitutionNode(substitutionNode);
 
     return substitutionPresent;
-  }
-
-  isProcedurePresentByName(name) {
-    const context = this.getContext(),
-          procedurePresent = context.isProcedurePresentByName(name);
-
-    return procedurePresent;
   }
 
   isLabelPresentByReference(reference) {

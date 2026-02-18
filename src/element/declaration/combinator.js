@@ -15,6 +15,13 @@ export default define(class CombinatorDeclaration extends Declaration {
     return this.combinator;
   }
 
+  getCombinatorDeclarationNode() {
+    const node = this.getNode(),
+          combinatorDeclarationNode = node; ///
+
+    return combinatorDeclarationNode;
+  }
+
   async verify() {
     let verifies = false;
 

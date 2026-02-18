@@ -20,6 +20,13 @@ export default define(class SubproofAssertion extends Assertion {
     return this.statements;
   }
 
+  getSubproofAssertionNode() {
+    const node = this.getNode(),
+          subproofAssertionNode = node; ///
+
+    return subproofAssertionNode;
+  }
+
   validate(assignments, stated, context) {
     let validates = false;
 
