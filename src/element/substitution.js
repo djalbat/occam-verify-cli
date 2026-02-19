@@ -6,12 +6,6 @@ import { primitiveUtilities } from "occam-furtle";
 const { primitiveFromNode } =primitiveUtilities;
 
 export default class Substitution extends Element {
-  getSubstitution() {
-    const substitution = null;
-
-    return substitution;
-  }
-
   getPrimitive() {
     const context = this.getContext(),
           replacementNode = this.getReplacementNode(),
@@ -26,18 +20,6 @@ export default class Substitution extends Element {
           substitutionNode = node; ///
 
     return substitutionNode;
-  }
-
-  getNetavariableName() {
-    const metavariableName = null;
-
-    return metavariableName;
-  }
-
-  getVariableIdentifier() {
-    const variableIdentifier = null;
-
-    return variableIdentifier;
   }
 
   matchSubstitutionNode(substitutionNode) {
@@ -68,23 +50,11 @@ export default class Substitution extends Element {
     return equalTo;
   }
 
-  isSimple() {
-    const simple = true;
-
-    return simple;
-  }
-
   isComplex() {
     const simple = this.isSimple(),
           complex = !simple;
 
     return complex;
-  }
-
-  isTrivial() {
-    const trivial = false;
-
-    return trivial;
   }
 
   isNonTrivial() {
@@ -94,22 +64,64 @@ export default class Substitution extends Element {
     return nonTrivlal;
   }
 
+  getVariable() {
+    const variable = null;
+
+    return variable;
+  }
+
+  getSubstitution() {
+    const substitution = null;
+
+    return substitution;
+  }
+
+  getMetavariable() {
+    const metavariable = null;
+
+    return metavariable;
+  }
+
+  getMetavariableName() {
+    const metavariableName = null;
+
+    return metavariableName;
+  }
+
+  getVariableIdentifier() {
+    const variableIdentifier = null;
+
+    return variableIdentifier;
+  }
+
+  isSimple() {
+    const simple = true;
+
+    return simple;
+  }
+
+  isTermEqualToTerm(term) {
+    const termEqualToTerm = false;
+
+    return termEqualToTerm;
+  }
+
   isFrameEqualToFrame(frame) {
     const frameEqualToFrame = false;
 
     return frameEqualToFrame;
   }
 
+  isStatementEqualToStatement(statement) {
+    const statementEqualToStatement = false;
+
+    return statementEqualToStatement;
+  }
+
   isReferenceEqualToReference(reference) {
     const referenceEqualToReference = false;
 
     return referenceEqualToReference;
-  }
-
-  compare(substitution) {
-    const comparesToSubstitution = false;
-
-    return comparesToSubstitution;
   }
 
   compareTerm(term, context) {
@@ -134,6 +146,18 @@ export default class Substitution extends Element {
     const compaaresToMetavariable = false;
 
     return compaaresToMetavariable;
+  }
+
+  compareMetavariableName(metavariableName) {
+    const comparesToMetavariableName = false;
+
+    return comparesToMetavariableName;
+  }
+
+  compareVariableIdentifier(variableIdentifier) {
+    const comparesToVariableIdentifier = false;
+
+    return comparesToVariableIdentifier;
   }
 
   resolve(substitutions, generalContext, specificContext) {

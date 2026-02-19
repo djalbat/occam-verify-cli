@@ -96,19 +96,16 @@ export default class LiminalContext extends Context {
           metavariableNames = metavariableNamesFromSubstitutions(substitutions);
 
     metavariableNames.forEach((metavariableName) => {
-      const complexSubstitutions = this.findComplexSubstitutionsByMetavariableName(metavariableName),
-            complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
-              const substitution = complexSubstitution, ///
-                    resolved = substitution.isResolved();
+      const complexSubstitutions = this.findComplexSubstitutionsByMetavariableName(metavariableName);
 
-              if (!resolved) {
-                substitution.resolve(generalContext, specificContext);
-              }
-            });
+      complexSubstitutions.forEach((complexSubstitution) => {
+        const substitution = complexSubstitution, ///
+              resolved = substitution.isResolved();
 
-      if (complexSubstitutionsResolved) {
-        return true;
-      }
+        if (!resolved) {
+          substitution.resolve(generalContext, specificContext);
+        }
+      });
     });
   }
 
@@ -143,9 +140,9 @@ export default class LiminalContext extends Context {
     context.addSubstitutions(this.substitutions);
   }
 
-  findSubstitution(callback, generalContext, specificContext) {
+  findSubstitution(callback) {
     const substitutions = this.getSubstitutions(),
-          substitution = substitutions.find(callback, generalContext, specificContext);
+          substitution = substitutions.find(callback);
 
     return substitution;
   }
@@ -162,14 +159,10 @@ export default class LiminalContext extends Context {
 
   findSubstitutionByVariableIdentifier(variableIdentifier) {
     const substitution = this.findSubstitution((substitution) => {
-      const substitutionVariable = substitution.getVariable();
+      const substitutionComparesToVariableIdentifier = substitution.compareVariableIdentifier(variableIdentifier);
 
-      if (substitutionVariable !== null) {
-        const substitutionVariableComparesToVariableIdentifier = substitutionVariable.compareVariableIdentifier(variableIdentifier);
-
-        if (substitutionVariableComparesToVariableIdentifier) {
-          return true;
-        }
+      if (substitutionComparesToVariableIdentifier) {
+        return true;
       }
     }) || null;
 
@@ -177,13 +170,8 @@ export default class LiminalContext extends Context {
   }
 
   findSubstitutionByMetavariableName(metavariableName) {
-    const substitution = this.findSubstitution((substitution) => {  ///
-      const substitutionComparesToMetavariableName = substitution.compareMetavariableName(metavariableName);
-
-      if (substitutionComparesToMetavariableName) {
-        return true;
-      }
-    }) || null;
+    const simpleSubstitution = this.findSimpleSubstitutionByMetavariableName(metavariableName),
+          substitution = simpleSubstitution;  ///
 
     return substitution;
   }

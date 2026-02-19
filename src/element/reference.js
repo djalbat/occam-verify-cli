@@ -87,7 +87,7 @@ export default define(class Reference extends Element {
   }
 
   compareMetavariable(metavariable) {
-    let metavaraibleComparseTo = false;
+    let comparesToMetavariable = false;
 
     let metavariableName;
 
@@ -100,10 +100,10 @@ export default define(class Reference extends Element {
     const metavariableNameB = metavariableName; ///
 
     if (metavariableNameA === metavariableNameB) {
-      metavaraibleComparseTo = true;
+      comparesToMetavariable = true;
     }
 
-    return metavaraibleComparseTo;
+    return comparesToMetavariable;
   }
 
   compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }

@@ -50,6 +50,24 @@ export default define(class Term extends Element {
     return equalTo;
   }
 
+  compareVariableIdentifier(variableIdentifier) {
+    let comparesToVariableIdentifier = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const variableIdentifierA = variableIdentifier; ///
+
+      variableIdentifier = this.getVariableIdentifier();
+
+      const variableIdentifierB = variableIdentifier;
+
+      comparesToVariableIdentifier = (variableIdentifierA === variableIdentifierB);
+    }
+
+    return comparesToVariableIdentifier;
+  }
+
   isValid(context) {
     const termNode = this.getTermNode(),
           termPresent = context.isTermPresentByTermNode(termNode),

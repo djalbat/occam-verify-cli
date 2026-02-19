@@ -148,7 +148,7 @@ export default define(class Frame extends Element {
   }
 
   compareMetavariableName(metavariableName) {
-    let metavariableNameMatches = false;
+    let comparesToMetavariableName = false;
 
     const singular = this.isSingular();
 
@@ -159,10 +159,10 @@ export default define(class Frame extends Element {
 
       const metavariableNameB = metavariableName; ///
 
-      metavariableNameMatches = (metavariableNameA === metavariableNameB);
+      comparesToMetavariableName = (metavariableNameA === metavariableNameB);
     }
 
-    return metavariableNameMatches;
+    return comparesToMetavariableName;
   }
 
   validate(assignments, stated, context) {

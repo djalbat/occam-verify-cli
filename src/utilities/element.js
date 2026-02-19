@@ -1563,7 +1563,7 @@ export function termSubstitutionFromStatementSubstitutionNode(statementSubstitut
   const termSubstitutionNode = statementSubstitutionNode.getTermSubstitutionNode();
 
   if (termSubstitutionNode !== null) {
-    termSubstitution = termSubstitutionFromTermubstitutionNode(termSubstitutionNode, context);
+    termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
   }
 
   return termSubstitution;

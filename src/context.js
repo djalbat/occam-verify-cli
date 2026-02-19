@@ -59,6 +59,13 @@ export default class Context extends ContextBase {
     return references;
   }
 
+  getEquivalences() {
+    const context = this.getContext(),
+          equivalences = context.getEquivalences();
+
+    return equivalences;
+  }
+
   getSubstitutions() {
     const context = this.getContext(),
           substitutions = context.getSubstitutions();
@@ -121,6 +128,13 @@ export default class Context extends ContextBase {
           topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
     return topLevelAssertion;
+  }
+
+  findTermByTermNode(termNode) {
+    const context = this.getContext(),
+          term = context.findTermByTermNode(termNode);
+
+    return term;
   }
 
   findFrameByFrameNode(frameNode) {

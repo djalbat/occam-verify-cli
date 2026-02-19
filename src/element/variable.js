@@ -2,6 +2,8 @@
 
 import { Element } from "occam-languages";
 
+import elements from "../elements";
+
 import { define } from "../elements";
 import { typeToTypeJSON } from "../utilities/json";
 

@@ -45,7 +45,7 @@ export default define(class Statement extends Element {
   }
 
   compareMetavariableName(metavariableName) {
-    let metavariableNameMatches = false;
+    let comparesToMetavariableName = false;
 
     const singular = this.isSingular();
 
@@ -56,10 +56,10 @@ export default define(class Statement extends Element {
 
       const metavariableNameB = metavariableName; ///
 
-      metavariableNameMatches = (metavariableNameA === metavariableNameB);
+      comparesToMetavariableName = (metavariableNameA === metavariableNameB);
     }
 
-    return metavariableNameMatches;
+    return comparesToMetavariableName;
   }
 
   isValid(context) {
@@ -130,31 +130,6 @@ export default define(class Statement extends Element {
     return frameContained;
   }
 
-  compareMetavariable(metavariable) {
-    let metavaraibleComparseTo;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      let metavariableName;
-
-      const statementNode = this.getStatementNode(),
-            singularMetavariableNode = statementNode.getSingularMetavariableNode();
-
-      metavariableName = singularMetavariableNode.getMetavariableName();
-
-      const metavariableNameA = metavariableName ///
-
-      metavariableName = metavariable.getName();
-
-      const metavariableNameB = metavariableName; ///
-
-      metavaraibleComparseTo = (metavariableNameA === metavariableNameB);
-    }
-
-    return metavaraibleComparseTo;
-  }
-
   compareParameter(parameter) {
     let comparesToParamter = false;
 
@@ -173,6 +148,28 @@ export default define(class Statement extends Element {
     }
 
     return comparesToParamter;
+  }
+
+  compareMetavariable(metavariable) {
+    let comparesToMetavariableName;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      let metavariableName;
+
+      metavariableName = metavariable.getName();
+
+      const metavariableNameA = metavariableName; ///
+
+      metavariableName = this.getMetavariableName();
+
+      const metavariableNameB = metavariableName; ///
+
+      comparesToMetavariableName = (metavariableNameA === metavariableNameB);
+    }
+
+    return comparesToMetavariableName;
   }
 
   validate(assignments, stated, context) {

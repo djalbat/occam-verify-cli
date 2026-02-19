@@ -80,7 +80,7 @@ export default define(class Equivalences extends Element {
   }
 
   mergedWith(equivalences, context) {
-    let  mergedEquivalences = this.clone(); ///
+    let  mergedEquivalences = this.clone(context); ///
 
     equivalences.forEachEquivalence((equivalence) => {
       mergedEquivalences = mergedEquivalences.mergedWithEquivalence(equivalence, context);
@@ -187,11 +187,13 @@ export default define(class Equivalences extends Element {
     }
   }
 
-  clone() {
-    const array = [
+  clone(context) {
+    const string = EMPTY_STRING,
+          node = null,
+          array = [
             ...this.array
           ],
-          equivalences = new Equivalences(array);
+          equivalences = new Equivalences(context, string, node, array);
 
     return equivalences;
   }

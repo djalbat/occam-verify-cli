@@ -48,6 +48,8 @@ export default define(class TermSubstitution extends Substitution {
 
   getVariableIdentifier() { return this.targetTerm.getVariableIdentifier(); }
 
+  compareVariableIdentifier(variableIdentifier) { return this.targetTerm.compareVariableIdentifier(variableIdentifier); }
+
   isTrivial() {
     const targetTermEqualToReplacementTerm = this.targetTerm.isEqualTo(this.replacementTerm),
           trivial = targetTermEqualToReplacementTerm; ///

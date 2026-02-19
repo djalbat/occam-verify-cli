@@ -13,17 +13,13 @@ export function termFromTermAndSubstitutions(term, generalContext, specificConte
 
     if (termSingular) {
       const variableIdentifier = termNode.getVariableIdentifier(),
-            variable = generalContext.findVariableByVariableIdentifier(variableIdentifier);
+            substitution = specificContext.findSubstitutionByVariableIdentifier(variableIdentifier);
 
-      if (variable !== null) {
-        const substitution = specificContext.findSubstitutionByVariableIdentifier(variableIdentifier);
+      if (substitution !== null) {
+        const termSubstitution = substitution,  ///
+              replacementTerm = termSubstitution.getReplacementTerm();
 
-        if (substitution !== null) {
-          const termSubstitution = substitution,  ///
-                replacementTerm = termSubstitution.getReplacementTerm();
-
-          term = replacementTerm; ///
-        }
+        term = replacementTerm; ///
       }
     }
   }
@@ -40,17 +36,13 @@ export function frameFromFrameAndSubstitutions(frame, generalContext, specificCo
 
     if (frameSingular) {
       const metavariableName = frameNode.getMetavariableName(),
-            metavariable = generalContext.findMetavariableByMetavariableName(metavariableName);
+            substitution = specificContext.findSubstitutionByMetavariableName(metavariableName);
 
-      if (metavariable !== null) {
-        const substitution = specificContext.findSubstitutionByMetavariableName(metavariableName);
+      if (substitution !== null) {
+        const frameSubstitution = substitution, ///
+              replacementFrame = frameSubstitution.getReplacementFrame();
 
-        if (substitution !== null) {
-          const frameSubstitution = substitution, ///
-                replacementFrame = frameSubstitution.getReplacementFrame();
-
-          frame = replacementFrame; ///
-        }
+        frame = replacementFrame; ///
       }
     }
   }
@@ -86,20 +78,17 @@ export function statementFromStatementAndSubstitutions(statement, generalContext
         specificContext = context;  ///
       }
 
-      const metavariableName = statementNode.getMetavariableName(),
-            metavariable = generalContext.findMetavariableByMetavariableName(metavariableName);
+      const metavariableName = statementNode.getMetavariableName();
 
-      if (metavariable !== null) {
-        substitution = (substitution !== null) ?
-                         specificContext.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) :
-                           specificContext.findSubstitutionByMetavariableName(metavariableName);
+      substitution = (substitution !== null) ?
+                       specificContext.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) :
+                         specificContext.findSubstitutionByMetavariableName(metavariableName);
 
-        if (substitution !== null) {
-          const statementSubstitution = substitution, ///
-                replacementStatement = statementSubstitution.getReplacementStatement();
+      if (substitution !== null) {
+        const statementSubstitution = substitution, ///
+              replacementStatement = statementSubstitution.getReplacementStatement();
 
-          statement = replacementStatement; ///
-        }
+        statement = replacementStatement; ///
       }
     }
   }

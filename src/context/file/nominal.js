@@ -94,6 +94,7 @@ export default class NominalFileContext extends FileContext {
 
   getEquivalences() {
     const { Equivalences } = elements,
+          context = this, ///
           equivalences = Equivalences.fromNothing(context);
 
     return equivalences;
