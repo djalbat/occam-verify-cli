@@ -89,6 +89,14 @@ export default define(class Equality extends Element {
     return reflexive;
   }
 
+  isEqualTo(equality) {
+    const equalityNode = equality.getNode(),
+          equalityNodeMatches = this.matchEqualityNode(equalityNode),
+          equalTo = equalityNodeMatches;  ///
+
+    return equalTo;
+  }
+
   isEqual(context) {
     let equal = false;
 
