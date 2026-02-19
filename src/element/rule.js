@@ -132,10 +132,6 @@ export default define(class Rule extends Element {
             const proofVerifies = await this.verifyProof(context);
 
             if (proofVerifies) {
-              const rule = this;  ///
-
-              context.addRule(rule);
-
               verifies = true;
             }
           }
@@ -144,6 +140,10 @@ export default define(class Rule extends Element {
     }, context);
 
     if (verifies) {
+      const rule = this;
+
+      context.addRule(rule);
+
       context.debug(`...verified the '${ruleString}' rule.`);
     }
 
@@ -184,7 +184,7 @@ export default define(class Rule extends Element {
             premiseVerifies = await premise.verify(assignments, context)
 
       if (premiseVerifies) {
-        const assignmentsAssigned = assignAssignments(assignments);
+        const assignmentsAssigned = assignAssignments(assignments, context);
 
         if (assignmentsAssigned) {
           const subproofOrProofAssertion = premise;  ////

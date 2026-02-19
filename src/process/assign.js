@@ -2,6 +2,26 @@
 
 import { variableFromVariableNode } from "../utilities/element";
 
+export function equalityAssignmentFromEquality(equality, context) {
+  const equalityAssignment = (context) => {
+    const equalityAdded = context.addEquality(equality);
+
+    return equalityAdded;
+  };
+
+  return equalityAssignment;
+}
+
+export function judgementAssignmentFromJudgement(judgement, context) {
+  const judgementAssignment = (context) => {
+    const judgementAdded = context.addJudgement(judgement);
+
+    return judgementAdded;
+  };
+
+  return judgementAssignment;
+}
+
 export function leftVariableAssignmentFromEquality(equality, context) {
   let leftVariableAssignment = null;
 
@@ -85,9 +105,9 @@ export function variableAssignmentFromPrepertyAssertion(propertyAssertion, conte
 
   }
 
-export default function assignAssignments(assignments) {
+export default function assignAssignments(assignments, context) {
   const assignmentsAssigned = assignments.every((assignment) => {
-    const assigned = assignment();
+    const assigned = assignment(context);
 
     if (assigned) {
       return true;
@@ -102,7 +122,7 @@ function variableAssignmentFromVariableNodeAndType(variableNode, type, context) 
 
   variable.setType(type);
 
-  const variableAssignment = () => {
+  const variableAssignment = (context) => {
     context.addVariable(variable);
 
     const variableTypeString = variable.getTypeString(),
@@ -114,7 +134,7 @@ function variableAssignmentFromVariableNodeAndType(variableNode, type, context) 
         context.debug(`Unable to assign the '${variableString}' variable with type '${variableTypeString}'.`);
 
     return assigned;
-  }
+  };
 
   return variableAssignment;
 }

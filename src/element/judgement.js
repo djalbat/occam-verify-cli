@@ -3,6 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { judgementAssignmentFromJudgement } from "../process/assign";
 
 export default define(class Judgement extends Element {
   constructor(context, string, node, frame, assumption) {
@@ -143,6 +144,22 @@ export default define(class Judgement extends Element {
     }
 
     return validatesWhenDerived;
+  }
+
+  assign(assignments, stated, context) {
+    if (assignments === null) {
+      return;
+    }
+
+    if (!stated) {
+      return;
+    }
+
+    const judgement = this, ///
+          judgementAssignment = judgementAssignmentFromJudgement(judgement, context),
+          assignment = judgementAssignment; ///
+
+    assignments.push(assignment);
   }
 
   static name = "Judgement";

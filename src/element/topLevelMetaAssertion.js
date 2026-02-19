@@ -159,7 +159,7 @@ export default class TopLevelMetaAssertion extends Element {
             suppositionVerifies = await supposition.verify(assignments, context)
 
       if (suppositionVerifies) {
-        const assignmentsAssigned = assignAssignments(assignments);
+        const assignmentsAssigned = assignAssignments(assignments, context);
 
         if (assignmentsAssigned) {
           const subproofOrProofAssertion = supposition;  ////

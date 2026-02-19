@@ -63,6 +63,21 @@ class ScopedContext extends Context {
     return equivalences;
   }
 
+  getSubproofOrProofAssertions() {
+    let subproofOrProofAssertions;
+
+    const context = this.getContext();
+
+    subproofOrProofAssertions = context.getSubproofOrProofAssertions();
+
+    subproofOrProofAssertions = [  ///
+      ...subproofOrProofAssertions,
+      ...this.subproofOrProofAssertions
+    ];
+
+    return subproofOrProofAssertions;
+  }
+
   getProofAssertions() {
     const subproofOrProofAssertions = this.getSubproofOrProofAssertions(),
           proofAssertions = subproofOrProofAssertions.filter((subproofOrProofAssertion) => {
@@ -89,24 +104,7 @@ class ScopedContext extends Context {
     return lastProofAssertion;
   }
 
-  getSubproofOrProofAssertions() {
-    let subproofOrProofAssertions;
-
-    const context = this.getContext();
-
-    subproofOrProofAssertions = context.getSubproofOrProofAssertions();
-
-    subproofOrProofAssertions = [  ///
-      ...subproofOrProofAssertions,
-      ...this.subproofOrProofAssertions
-    ];
-
-    return subproofOrProofAssertions;
-  }
-
   addEquality(equality) {
-    let equalityAdded = false;
-
     const context = this, ///
           equalityString = equality.getString();
 
@@ -123,64 +121,30 @@ class ScopedContext extends Context {
 
       this.equivalences = this.equivalences.mergedWithEquivalence(equivalence, context);
 
-      equalityAdded = true;
-
       context.debug(`...added the '${equalityString}' equality to the scoped context.`);
     }
-
-    return equalityAdded;
   }
 
   addVariable(variable) {
     const context = this, ///
-          variableA = variable, ///
           variableString = variable.getString();
 
     context.trace(`Adding the '${variableString}' variable to the scoped context...`);
 
-    const variableB = this.variables.find((variable) => {
-      const variableB = variable, ///
-            variableAComparesToVariableB = variableA.compare(variableB);
+    this.variables.push(variable);
 
-      if (variableAComparesToVariableB) {
-        return true;
-      }
-    }) || null;
-
-    if (variableB !== null) {
-      context.trace(`The '${variableString}' variable has already been added to the scoped context.`);
-    } else {
-      this.variables.push(variable);
-
-      context.debug(`...added the '${variableString}' variable to the scoped context.`);
-    }
+    context.debug(`...added the '${variableString}' variable to the scoped context.`);
   }
 
   addJudgement(judgement) {
-    let judgementAdded = false;
-
     const context = this, ///
           judgementString = judgement.getString();
 
     context.trace(`Adding the '${judgementString}' judgement to the scoped context...`);
 
-    const metavariable = judgement.getMetavariable(),
-          metavariableName = metavariable.getMetavariableName(),
-          judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName);
+    this.judgements.push(judgement);
 
-    if (judgementPresent) {
-      const metavariableString = metavariable.getString();
-
-      context.trace(`A '${judgementString}' judgement for the '${metavariableString}' metavariable is already present.`);
-    } else {
-      this.judgements.push(judgement);
-
-      judgementAdded = true;
-
-      context.debug(`...added the '${judgementString}' judgement to the scoped context.`);
-    }
-
-    return judgementAdded;
+    context.debug(`...added the '${judgementString}' judgement to the scoped context.`);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {

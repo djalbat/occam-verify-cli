@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { equateTerms } from "../process/equate";
-import { leftVariableAssignmentFromEquality, rightVariableAssignmentFromEquality } from "../process/assign";
+import { equalityAssignmentFromEquality, leftVariableAssignmentFromEquality, rightVariableAssignmentFromEquality } from "../process/assign";
 
 export default define(class Equality extends Element {
   constructor(context, string, node, leftTerm, rightTerm) {
@@ -229,18 +229,29 @@ export default define(class Equality extends Element {
       return;
     }
 
+
+
+
+
     const equality = this,  ///
+          equalityAssignment = equalityAssignmentFromEquality(equality, context),
           leftVariableAssignment = leftVariableAssignmentFromEquality(equality, context),
           rightVariableAssignment = rightVariableAssignmentFromEquality(equality, context);
 
+    let assignment;
+
+    assignment = equalityAssignment; ///
+
+    assignments.push(assignment);
+
     if (leftVariableAssignment !== null) {
-      const assignment = leftVariableAssignment;  ///
+      assignment = leftVariableAssignment;  ///
 
       assignments.push(assignment);
     }
 
     if (rightVariableAssignment !== null) {
-      const assignment = rightVariableAssignment;  ///
+      assignment = rightVariableAssignment;  ///
 
       assignments.push(assignment);
     }

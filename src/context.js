@@ -307,28 +307,16 @@ export default class Context extends ContextBase {
     return procedurePresent;
   }
 
-  addRule(rule) {
+  addTerm(term) {
     const context = this.getContext();
 
-    context.addRule(rule);
-  }
-
-  adTerm(term) {
-    const context = this.getContext();
-
-    context.adTerm(term);
+    context.addTerm(term);
   }
 
   addFrame(frame) {
     const context = this.getContext();
 
     context.addFrame(frame);
-  }
-
-  addVariable(variable) {
-    const context = this.getContext();
-
-    context.addVariable(variable);
   }
 
   addStatement(statement) {
