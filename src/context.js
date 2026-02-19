@@ -33,9 +33,16 @@ export default class Context extends ContextBase {
 
   getFrames() {
     const context = this.getContext(),
-          frames = context.getFrames();
+      frames = context.getFrames();
 
     return frames;
+  }
+
+  getEqualities() {
+    const context = this.getContext(),
+          equalities = context.getEqualities();
+
+    return equalities;
   }
 
   getStatements() {
@@ -118,9 +125,16 @@ export default class Context extends ContextBase {
 
   findFrameByFrameNode(frameNode) {
     const context = this.getContext(),
-          frame = context.findFrameByFrameNode(frameNode);
+      frame = context.findFrameByFrameNode(frameNode);
 
     return frame;
+  }
+
+  findEqualityByEqualityNode(equalityNode) {
+    const context = this.getContext(),
+          equality = context.findEqualityByEqualityNode(equalityNode);
+
+    return equality;
   }
 
   findStatementByStatementNode(statementNode) {
@@ -222,6 +236,13 @@ export default class Context extends ContextBase {
     return framePresent;
   }
 
+  isEqualityPresentByEqualityNode(equalityNode) {
+    const context = this.getContext(),
+          equalityPresent = context.isEqualityPresentByEqualityNode(equalityNode);
+
+    return equalityPresent;
+  }
+
   isStatementPresentByStatementNode(statementNode) {
     const context = this.getContext(),
       statementPresent = context.isStatementPresentByStatementNode(statementNode);
@@ -282,6 +303,12 @@ export default class Context extends ContextBase {
     context.addFrame(frame);
   }
 
+  addVariable(variable) {
+    const context = this.getContext();
+
+    context.addVariable(variable);
+  }
+
   addStatement(statement) {
     const context = this.getContext();
 
@@ -295,22 +322,15 @@ export default class Context extends ContextBase {
   }
 
   addJudgement(judgement) {
-    const context = this.getContext(),
-          judgementAdded = context.addJudgement(judgement);
+    const context = this.getContext();
 
-    return judgementAdded;
+    context.addJudgement(judgement);
   }
 
   addSubstitution(substitution) {
     const context = this.getContext();
 
     context.addSubstitution(substitution);
-  }
-
-  removeSubstitution(substitution) {
-    const context = this.getContext();
-
-    context.removeSubstitution(substitution);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {

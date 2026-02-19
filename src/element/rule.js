@@ -184,7 +184,7 @@ export default define(class Rule extends Element {
             premiseVerifies = await premise.verify(assignments, context)
 
       if (premiseVerifies) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
+        const assignmentsAssigned = assignAssignments(assignments);
 
         if (assignmentsAssigned) {
           const subproofOrProofAssertion = premise;  ////

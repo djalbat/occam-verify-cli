@@ -295,8 +295,8 @@ class ConbinatorPass extends SimplePass {
         let success = false;
 
         const statement = statementFromStatementNode(statementNode, context),
-              assignments = null,
               stated = false,
+              assignments = null,
               statementValidates = statement.validate(assignments, stated, context);
 
         if (statementValidates) {

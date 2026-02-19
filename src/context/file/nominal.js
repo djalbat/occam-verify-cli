@@ -862,7 +862,7 @@ export default class NominalFileContext extends FileContext {
 
   async verifyFile() {
     const node = this.getNode(),
-          context = this,
+          context = this, ///
           fileNode = node,  ///
           fileVerifies = await verifyFile(fileNode, context);
 

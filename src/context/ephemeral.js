@@ -3,11 +3,12 @@
 import Context from "../context";
 
 export default class EphemeralContext extends Context {
-  constructor(context, terms, frames, statements, assertions, references, substitutions) {
+  constructor(context, terms, frames, equalities, statements, assertions, references, substitutions) {
     super(context);
 
     this.terms = terms;
     this.frames = frames;
+    this.equalities = equalities;
     this.statements = statements;
     this.assertions = assertions;
     this.references = references;
@@ -20,6 +21,10 @@ export default class EphemeralContext extends Context {
 
   getFrames() {
     return this.frames;
+  }
+
+  getEqualities() {
+    return this.equalities;
   }
 
   getStatements() {
@@ -65,14 +70,14 @@ export default class EphemeralContext extends Context {
 
   addFrame(frame) {
     const frameA = frame, ///
-          context = this, ///
-          frameString = frame.getString();
+      context = this, ///
+      frameString = frame.getString();
 
     context.trace(`Adding the '${frameString}' frame to the ephemeral context...`);
 
     const frameB = this.frames.find((frame) => {
       const frameB = frame, ///
-            frameAEqualToFrameB = frameA.isEqualTo(frameB);
+        frameAEqualToFrameB = frameA.isEqualTo(frameB);
 
       if (frameAEqualToFrameB) {
         return true;
@@ -85,6 +90,31 @@ export default class EphemeralContext extends Context {
       this.frames.push(frame);
 
       context.debug(`...added the '${frameString}' frame to the ephemeral context.`);
+    }
+  }
+
+  addEquality(equality) {
+    const equalityA = equality, ///
+          context = this, ///
+          equalityString = equality.getString();
+
+    context.trace(`Adding the '${equalityString}' equality to the ephemeral context...`);
+
+    const equalityB = this.equalities.find((equality) => {
+      const equalityB = equality, ///
+            equalityAEqualToEqualityB = equalityA.isEqualTo(equalityB);
+
+      if (equalityAEqualToEqualityB) {
+        return true;
+      }
+    }) || null;
+
+    if (equalityB !== null) {
+      context.trace(`The '${equalityString}' equality has already been added to the ephemeral context.`);
+    } else {
+      this.equalities.push(equality);
+
+      context.debug(`...added the '${equalityString}' equality to the ephemeral context.`);
     }
   }
 
@@ -212,6 +242,18 @@ export default class EphemeralContext extends Context {
     return frame;
   }
 
+  findEqualityByEqualityNode(equalityNode) {
+    const equality = this.equalities.find((equality) => {
+      const equalityNodeMatches = equality.matchEqualityNode(equalityNode);
+
+      if (equalityNodeMatches) {
+        return true;
+      }
+    }) || null;
+
+    return equality;
+  }
+
   findStatementByStatementNode(statementNode) {
     const statement = this.statements.find((statement) => {
       const statementNodeMatches = statement.matchNode(statementNode);
@@ -284,6 +326,18 @@ export default class EphemeralContext extends Context {
     return framePresent;
   }
 
+  isEqualityPresentByEqualityNode(equalityNode) {
+    const equalityPresent = this.equalities.some((equality) => {
+      const equalityNodeMatches = equality.matchEqualityNode(equalityNode);
+
+      if (equalityNodeMatches) {
+        return true;
+      }
+    });
+
+    return equalityPresent;
+  }
+
   isStatementPresentByStatementNode(statementNode) {
     const statementPresent = this.statements.some((statement) => {
       const statementNodeMatches = statement.matchStatementNode(statementNode);
@@ -335,11 +389,12 @@ export default class EphemeralContext extends Context {
   static fromNothing(context) {
     const terms = [],
           frames = [],
+          equalities = [],
           statements = [],
           assertions = [],
           references = [],
           substitutions = [],
-          emphemeralContext = new EphemeralContext(context, terms, frames, statements, assertions, references, substitutions);
+          emphemeralContext = new EphemeralContext(context, terms, frames, equalities, statements, assertions, references, substitutions);
 
     return emphemeralContext;
   }

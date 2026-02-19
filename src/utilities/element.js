@@ -236,21 +236,15 @@ export function subproofFromSubproofNode(subproofNode, context) {
   return subproof;
 }
 
-export function equalityFromStatementNode(statementNode, context) {
-  let equality = null;
+export function equalityFromEqualityNode(equalityNode, context) {
+  const { Equality } = elements,
+        node = equalityNode, ///
+        string = context.nodeAsString(node),
+        leftTerm = leftTermFromEqualityNode(equalityNode, context),
+        rightTerm = rightTermFromEqualityNode(equalityNode, context),
+        subproof = new Equality(context, string, node, leftTerm, rightTerm);
 
-  const equalityNode = statementNode.getEqualityNode();
-
-  if (equalityNode !== null) {
-    const node = equalityNode,  ///
-          string = context.nodeAsString(node),
-          leftTerm = leftTermFromEqualityNode(equalityNode, context),
-          rightTerm = rightTermFromEqualityNode(equalityNode, context);
-
-    equality = new Equality(context, string, node, leftTerm, rightTerm);
-  }
-
-  return equality;
+  return subproof;
 }
 
 export function deductionFromDeductionNode(deductionNode, context) {
@@ -859,6 +853,13 @@ export function statementFromPremiseNode(premiseNode, context) {
   return statement;
 }
 
+export function leftTermFromEqualityNode(equalityNode, context) {
+  const leftTermNode = equalityNode.getLeftTermNode(),
+        leftTerm = termFromTermNode(leftTermNode, context);
+
+  return leftTerm;
+}
+
 export function termsFromEquivalenceNode(equivalenceNode, context) {
   const termNodes = equivalenceNode.getTermNodes(),
         terms = termsFromTermNodes(termNodes, context);
@@ -895,6 +896,25 @@ export function conjectureFromSectionNode(sectionNode, context) {
   }
 
   return conjecture;
+}
+
+export function rightTermFromEqualityNode(equalityNode, context) {
+  const rightTermNode = equalityNode.getRightTermNode(),
+        rightTerm = termFromTermNode(rightTermNode, context);
+
+  return rightTerm;
+}
+
+export function equalityFromStatementNode(statementNode, context) {
+  let equality = null;
+
+  const equalityNode = statementNode.getEqualityNode();
+
+  if (equalityNode !== null) {
+    equality = equalityFromEqualityNode(equalityNode, context);
+  }
+
+  return equality;
 }
 
 export function termFromTypeAssertionNode(typeAssertionNode, context) {

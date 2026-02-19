@@ -139,7 +139,7 @@ export default define(class Equivalences extends Element {
   }
 
   separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context) {
-    let equivalences = this,
+    let equivalences = this,  ///
         groundedEquivalences,
         remainingEquivalences,
         initiallyGroundedEquivalences,

@@ -40,7 +40,7 @@ export default define(class Hypothesis extends Element {
             statementValidates = this.statement.validate(assignments, stated, context);
 
       if (statementValidates) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
+        const assignmentsAssigned = assignAssignments(assignments);
 
         if (assignmentsAssigned) {
           const subproofOrProofAssertion = this;  ///

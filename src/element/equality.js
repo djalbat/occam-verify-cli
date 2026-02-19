@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { equateTerms } from "../process/equate";
-import { equalityAssignmentFromEquality, variableAssignmentFromVariable } from "../process/assign";
+import { leftVariableAssignmentFromEquality, rightVariableAssignmentFromEquality } from "../process/assign";
 
 export default define(class Equality extends Element {
   constructor(context, string, node, leftTerm, rightTerm) {
@@ -27,6 +27,18 @@ export default define(class Equality extends Element {
           equalityNde = node; ///
 
     return equalityNde;
+  }
+
+  getLeftTermNode() {
+    const leftTermNode = this.leftTerm.getNode();
+
+    return leftTermNode;
+  }
+
+  getRightTermNode() {
+    const rightTermNode = this.rightTerm.getNode();
+
+    return rightTermNode;
   }
 
   getType() {
@@ -57,6 +69,18 @@ export default define(class Equality extends Element {
     return terms;
   }
 
+  matchEqualityNode(equalityNode) {
+    const equalityNodeA = equalityNode; ///
+
+    equalityNode = this.getEqualityNode();
+
+    const equalityNodeB = equalityNode, ///
+          equalityNodeAAMatchesEqualityBNodeB = equalityNodeA.match(equalityNodeB),
+          equalityNodeMatches = equalityNodeAAMatchesEqualityBNodeB; ///
+
+    return equalityNodeMatches;
+  }
+
   isReflexive() {
     const leftTermString = this.leftTerm.getString(),
           rightTermString = this.rightTerm.getString(),
@@ -79,109 +103,127 @@ export default define(class Equality extends Element {
     return equal;
   }
 
-  verify(assignments, stated, context) {
-    let verifies = false;
+  isValid(context) {
+    const equalityNode = this.getEqualityNode(),
+          equalityPresent = context.isEqualityPresentByEqualityNode(equalityNode),
+          valid = equalityPresent;  ///
 
-    const equalityString = this.getString(); ///
-
-    context.trace(`Verifying the '${equalityString}' equality...`);
-
-    const termsVerify = this.verifyTerms(context);
-
-    if (termsVerify) {
-      let verifiesWhenStated = false,
-          verifiesWhenDerived = false;
-
-      if (stated) {
-        verifiesWhenStated = this.verifyWhenStated(assignments, context);
-      } else {
-        verifiesWhenDerived = this.verifyWhenDerived(context);
-      }
-
-      if (verifiesWhenStated || verifiesWhenDerived) {
-        verifies = true;
-      }
-    }
-
-    if (verifies) {
-
-        this.assign(assignments, context);
-
-    }
-
-    if (verifies) {
-      context.debug(`...verified the '${equalityString}' equality.`);
-    }
-
-    return verifies;
+    return valid;
   }
 
-  verifyTerms(context) {
-    let termsVerify;
+  validate(assignments, stated, context) {
+    let validates = false;
 
     const equalityString = this.getString(); ///
 
-    context.trace(`Verifying the '${equalityString}' equality's terms...`);
+    context.trace(`Validating the '${equalityString}' equality...`);
 
-    const leftTermVerifies = this.leftTerm.verify(context, () => {
-      let verifiesForwards;
+    const valid = this.isValid(context);
 
-      const rightTermVerifies = this.rightTerm.verify(context, () => {
-        let verifiesForwards;
+    if (valid) {
+      validates = true;
+
+      context.debug(`...the '${equalityString}' equality is already valid.`);
+    } else {
+      const termsValidate = this.validateTerms(context);
+
+      if (termsValidate) {
+        let validatesWhenStated = false,
+            validatesWhenDerived = false;
+
+        if (stated) {
+          validatesWhenStated = this.validateWhenStated(assignments, context);
+        } else {
+          validatesWhenDerived = this.validateWhenDerived(context);
+        }
+
+        if (validatesWhenStated || validatesWhenDerived) {
+          validates = true;
+        }
+      }
+
+      if (validates) {
+        const equality = this;  ///
+
+        context.addEquality(equality);
+
+        this.assign(assignments, context);
+      }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${equalityString}' equality.`);
+    }
+
+    return validates;
+  }
+
+  validateTerms(context) {
+    let termsValidate;
+
+    const equalityString = this.getString(); ///
+
+    context.trace(`Validating the '${equalityString}' equality's terms...`);
+
+    const leftTermValidates = this.leftTerm.validate(context, () => {
+      let validatesForwards;
+
+      const rightTermValidates = this.rightTerm.validate(context, () => {
+        let validatesForwards;
 
         const leftTermType = this.leftTerm.getType(),
               rightTermType = this.rightTerm.getType(),
               leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
 
-        verifiesForwards = leftTermTypeComparableToRightTermType;  ///
+        validatesForwards = leftTermTypeComparableToRightTermType;  ///
 
-        return verifiesForwards;
+        return validatesForwards;
       });
 
-      verifiesForwards = rightTermVerifies; ///
+      validatesForwards = rightTermValidates; ///
 
-      return verifiesForwards;
+      return validatesForwards;
     });
 
-    termsVerify = leftTermVerifies; ///
+    termsValidate = leftTermValidates; ///
 
-    if (termsVerify) {
-      context.debug(`...verified the '${equalityString}' equality's terms.`);
+    if (termsValidate) {
+      context.debug(`...validated the '${equalityString}' equality's terms.`);
     }
 
-    return termsVerify;
+    return termsValidate;
   }
 
-  verifyWhenStated(assignments, context) {
-    let verifiesWhenStated;
+  validateWhenStated(assignments, context) {
+    let validatesWhenStated;
 
     const equalityString = this.getString(); ///
 
-    context.trace(`Verifying the '${equalityString}' stated equality...`);
+    context.trace(`Validating the '${equalityString}' stated equality...`);
 
-    verifiesWhenStated = true;
+    validatesWhenStated = true;
 
-    if (verifiesWhenStated) {
-      context.debug(`...verified the '${equalityString}' stated equality.`);
+    if (validatesWhenStated) {
+      context.debug(`...validated the '${equalityString}' stated equality.`);
     }
 
-    return verifiesWhenStated;
+    return validatesWhenStated;
   }
 
-  verifyWhenDerived(context) {
-    let verifiesWhenDerived;
+  validateWhenDerived(context) {
+    let validatesWhenDerived;
 
     const equalityString = this.getString(); ///
 
-    context.trace(`Verifying the '${equalityString}' derived equality...`);
+    context.trace(`Validating the '${equalityString}' derived equality...`);
 
-    verifiesWhenDerived = true;  ///
+    validatesWhenDerived = true;  ///
 
-    if (verifiesWhenDerived) {
-      context.debug(`...verified the '${equalityString}' derived equality.`);
+    if (validatesWhenDerived) {
+      context.debug(`...validated the '${equalityString}' derived equality.`);
     }
 
-    return verifiesWhenDerived;
+    return validatesWhenDerived;
   }
 
   assign(assignments, context) {
@@ -189,41 +231,21 @@ export default define(class Equality extends Element {
       return;
     }
 
-    const { Variable } = elements,
-          type = this.getType(),
-          leftTermNode = this.leftTerm.getNode(),
-          rightTermNode = this.rightTerm.getNode(),
-          leftTermNodeSingularVariableNode = leftTermNode.getSingularVariableNode(),
-          rightTermNodeSingularVariableNode = rightTermNode.getSingularVariableNode(),
-          leftVariableNode = leftTermNodeSingularVariableNode,  ///
-          rightVariableNode = rightTermNodeSingularVariableNode;  ///
+    const equality = this,  ///
+          leftVariableAssignment = leftVariableAssignmentFromEquality(equality, context),
+          rightVariableAssignment = rightVariableAssignmentFromEquality(equality, context);
 
-    let assignment;
+    if (leftVariableAssignment !== null) {
+      const assigment = leftVariableAssignment;  ///
 
-    if (leftVariableNode !== null) {
-      const leftVariable = Variable.fromVariableNodeAndType(leftVariableNode, type, context),
-            leftVariableAssignment = variableAssignmentFromVariable(leftVariable);
-
-      assignment = leftVariableAssignment;  ///
-
-      assignments.push(assignment);
+      assignments.push(assigment);
     }
 
-    if (rightVariableNode !== null) {
-      const rightVariable = Variable.fromVariableNodeAndType(rightVariableNode, type, context),
-            rightVariableAssignment = variableAssignmentFromVariable(rightVariable);
+    if (rightVariableAssignment !== null) {
+      const assigment = rightVariableAssignment;  ///
 
-      assignment = rightVariableAssignment;  ///
-
-      assignments.push(assignment);
+      assignments.push(assigment);
     }
-
-    const equality = this,  //
-          equalityAssignment = equalityAssignmentFromEquality(equality);
-
-    assignment = equalityAssignment; ///
-
-    assignments.push(assignment);
   }
 
   static name = "Equality";

@@ -51,9 +51,9 @@ export default define(class Frame extends Element {
 
     const frameNodeB = frameNode, ///
           frameNodeAAMatchesFrameBNodeB = frameNodeA.match(frameNodeB),
-          equalTo = frameNodeAAMatchesFrameBNodeB; ///
+          frameNodeMatches = frameNodeAAMatchesFrameBNodeB; ///
 
-    return equalTo;
+    return frameNodeMatches;
   }
 
   isValid(context) {
@@ -77,24 +77,6 @@ export default define(class Frame extends Element {
           singular = frameNode.isSingular();
 
     return singular;
-  }
-
-  compareMetavariableName(metavariableName) {
-    let metavariableNameMatches = false;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const metavariableNameA = metavariableName ///
-
-      metavariableName = this.getMetavariableName();
-
-      const metavariableNameB = metavariableName; ///
-
-      metavariableNameMatches = (metavariableNameA === metavariableNameB);
-    }
-
-    return metavariableNameMatches;
   }
 
   compareParameter(parameter) {
@@ -165,6 +147,24 @@ export default define(class Frame extends Element {
     return comparesToSubstitutions;
   }
 
+  compareMetavariableName(metavariableName) {
+    let metavariableNameMatches = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const metavariableNameA = metavariableName ///
+
+      metavariableName = this.getMetavariableName();
+
+      const metavariableNameB = metavariableName; ///
+
+      metavariableNameMatches = (metavariableNameA === metavariableNameB);
+    }
+
+    return metavariableNameMatches;
+  }
+
   validate(assignments, stated, context) {
     let validates = false;
 
@@ -184,7 +184,7 @@ export default define(class Frame extends Element {
 
       if (assumptionsValidate && metavariablevalidates) {
         let validatesWhenStated = false,
-              validatesWhenDerived = false;
+            validatesWhenDerived = false;
 
         if (stated) {
           validatesWhenStated = this.validateWhenStated(assignments, context);
