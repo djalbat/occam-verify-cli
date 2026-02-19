@@ -3,7 +3,6 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { judgementAssignmentFromJudgement } from "../process/assign";
 
 export default define(class Judgement extends Element {
   constructor(context, string, node, frame, assumption) {
@@ -39,6 +38,26 @@ export default define(class Judgement extends Element {
 
   compareMetavariableName(metavariableName) { return this.frame.compareMetavariableName(metavariableName); }
 
+  matchJudgementNode(judgementNode) {
+    const judgementNodeA = judgementNode; ///
+
+    judgementNode = this.getJudgementNode();
+
+    const judgementNodeB = judgementNode, ///
+          judgementNodeAAMatchesJudgementBNodeB = judgementNodeA.match(judgementNodeB),
+          judgementNodeMatches = judgementNodeAAMatchesJudgementBNodeB; ///
+
+    return judgementNodeMatches;
+  }
+
+  isValid(context) {
+    const judgementNode = this.getJudgementNode(),
+          judgementPresent = context.isJudgementPresentByJudgementNode(judgementNode),
+          valid = judgementPresent;  ///
+
+    return valid;
+  }
+
   validate(assignments, stated, context) {
     let validates = false;
 
@@ -46,35 +65,41 @@ export default define(class Judgement extends Element {
 
     context.trace(`Validating the '${judgementString}' judgement...`);
 
-    const frameValidates = this.frame.validate(assignments, stated, context);
+    const valid = this.isValid(context);
 
-    if (frameValidates) {
-      const assumptionValidates = this.assumption.validate(assignments, stated, context);
+    if (valid) {
+      validates = true;
 
-      if (assumptionValidates) {
-        let validatesWhenStated = false,
-            validatesWhenDerived = false;
+      context.debug(`...the '${judgementString}' judgement is already valid.`);
+    } else {
+      const frameValidates = this.frame.validate(assignments, stated, context);
 
-        if (stated) {
-          validatesWhenStated = this.validateWhenStated(assignments, context);
-        } else {
-          validatesWhenDerived = this.validateWhenDerived(context);
-        }
+      if (frameValidates) {
+        const assumptionValidates = this.assumption.validate(assignments, stated, context);
 
-        if (validatesWhenStated || validatesWhenDerived) {
-          validates = true;
+        if (assumptionValidates) {
+          let validatesWhenStated = false,
+              validatesWhenDerived = false;
+
+          if (stated) {
+            validatesWhenStated = this.validateWhenStated(assignments, context);
+          } else {
+            validatesWhenDerived = this.validateWhenDerived(context);
+          }
+
+          if (validatesWhenStated || validatesWhenDerived) {
+            validates = true;
+          }
         }
       }
-    }
 
-    if (validates) {
-      if (stated) {
-        this.assign(assignments, context);
+      if (validates) {
+        const judgement = this; ///
+
+        context.addJudgement(judgement)
+
+        context.debug(`...validated the '${judgementString}' judgement.`);
       }
-    }
-
-    if (validates) {
-      context.debug(`...validated the '${judgementString}' judgement.`);
     }
 
     return validates;
@@ -118,18 +143,6 @@ export default define(class Judgement extends Element {
     }
 
     return validatesWhenDerived;
-  }
-
-  assign(assignments, context) {
-    if (assignments === null) {
-      return;
-    }
-
-    const judgement = this, ///
-          judgementAssignment = judgementAssignmentFromJudgement(judgement),
-          assignment = judgementAssignment; ///
-
-    assignments.push(assignment);
   }
 
   static name = "Judgement";

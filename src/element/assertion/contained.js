@@ -72,6 +72,10 @@ export default define(class ContainedAssertion extends Assertion {
       }
 
       if (validates) {
+        const assertion = this; ///
+
+        context.addAssertion(assertion);
+
         context.debug(`...validated the '${containedAssertionString}' contained assertion.`);
       }
     }

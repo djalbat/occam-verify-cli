@@ -31,6 +31,18 @@ export default define(class Assumption extends Element {
 
   getMetavariable() { return this.reference.getMetavariable(); }
 
+  matchAssumptionNode(assumptionode) {
+    const assumptionodeA = assumptionode; ///
+
+    assumptionode = this.getAssumptionNode();
+
+    const assumptionodeB = assumptionode, ///
+          assumptionodeAAMatchesAssumptionBNodeB = assumptionodeA.match(assumptionodeB),
+          assumptionodeMatches = assumptionodeAAMatchesAssumptionBNodeB; ///
+
+    return assumptionodeMatches;
+  }
+
   compareSubstitution(substitution, context) {
     let comparesToSubstituion = false;
 
@@ -55,6 +67,14 @@ export default define(class Assumption extends Element {
     return comparesToSubstituion;
   }
 
+  isValid(context) {
+    const assumptionNode = this.getAssumptionNode(),
+          assumptionPresent = context.isAssumptionPresentByAssumptionNode(assumptionNode),
+          valid = assumptionPresent;  ///
+
+    return valid;
+  }
+
   validate(assignments, stated, context) {
     let validates = false;
 
@@ -62,29 +82,41 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' assumption...`);
 
-    const referenceValidates = this.validateReference(assignments, stated, context);
+    const valid = this.isValid(context);
 
-    if (referenceValidates) {
-      const statementValidates = this.validateStatement(assignments, stated, context);
+    if (valid) {
+      validates = true;
 
-      if (statementValidates) {
-        let validatesWhenStated = false,
-            validatesWhenDerived = false;
+      context.debug(`...the '${assumptionString}' assumption is already valid.`);
+    } else {
+      const referenceValidates = this.validateReference(assignments, stated, context);
 
-        if (stated) {
-          validatesWhenStated = this.validateWhenStated(assignments, context);
-        } else {
-          validatesWhenDerived = this.validateWhenDerived(context);
-        }
+      if (referenceValidates) {
+        const statementValidates = this.validateStatement(assignments, stated, context);
 
-        if (validatesWhenStated || validatesWhenDerived) {
-          validates = true;
+        if (statementValidates) {
+          let validatesWhenStated = false,
+              validatesWhenDerived = false;
+
+          if (stated) {
+            validatesWhenStated = this.validateWhenStated(assignments, context);
+          } else {
+            validatesWhenDerived = this.validateWhenDerived(context);
+          }
+
+          if (validatesWhenStated || validatesWhenDerived) {
+            validates = true;
+          }
         }
       }
-    }
 
-    if (validates) {
-      context.debug(`...validated the '${assumptionString}' assumption.`);
+      if (validates) {
+        const assumption = this;  ///
+
+        context.addAssumption(assumption);
+
+        context.debug(`...validated the '${assumptionString}' assumption.`);
+      }
     }
 
     return validates;

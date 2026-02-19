@@ -34,23 +34,60 @@ export function rightVariableAssignmentFromEquality(equality, context) {
   return rightVariableAssignment;
 }
 
-export function judgementAssignmentFromJudgement(judgement) {
-  return function (context) {
-    const judgementString = judgement.getString(),
-          judgementAdded = context.addJudgement(judgement),
-          assigned = judgementAdded; ///
+export function variableAssignmentFromTypeAssertion(typeAssertion, context) {
 
-    assigned ?
-      context.trace(`Assigned the '${judgementString}' judgement.`) :
-        context.debug(`Unable to assign the '${judgementString}' judgement.`);
+  debugger
 
-    return assigned;
-  };
+  // const { Type, Variable } = elements,
+  //   termNode = this.term.getNode();
+  //
+  // let type,
+  //   provisional;
+  //
+  // provisional = this.type.isProvisional();
+  //
+  // if (!provisional) {
+  //   type = this.type;
+  // } else {
+  //   provisional = false;
+  //
+  //   type = Type.fromTypeAndProvisional(this.type, provisional);
+  // }
+  //
+  // const singularVariableNode = termNode.getSingularVariableNode();
+  //
+  // if (singularVariableNode !== null) {
+  //   const variableNode = singularVariableNode,  ///
+  //     variable = Variable.fromVariableNodeAndType(variableNode, type, context),
+  //     variableAssignment = variableAssignmentFromVariable(variable),
+
 }
 
+export function variableAssignmentFromPrepertyAssertion(propertyAssertion, context) {
+
+  debugger
+
+  // let variable;
+  //
+  // const { Variable } = elements,
+  //   termNode = this.term.getNode();
+  //
+  // variable = Variable.fromTermNode(termNode, context);
+  //
+  // if (variable !== null) {
+  //   const variableIdentifier = variable.getIdentifier();
+  //
+  //   variable = context.findVariableByVariableIdentifier(variableIdentifier);
+  //
+  //   variable = Variable.fromVariableAndPropertyRelation(variable, this.propertyRelation);
+  //
+  //   const variableAssignment = variableAssignmentFromVariable(variable),
+
+  }
+
 export default function assignAssignments(assignments) {
-  const assignmentsAssigned = assignments.every((assigment) => {
-    const assigned = assigment();
+  const assignmentsAssigned = assignments.every((assignment) => {
+    const assigned = assignment();
 
     if (assigned) {
       return true;

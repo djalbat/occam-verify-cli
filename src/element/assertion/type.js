@@ -1,10 +1,9 @@
 "use strict";
 
-import elements from "../../elements";
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { variableAssignmentFromVariable } from "../../process/assign";
+import { variableAssignmentFromTypeAssertion } from "../../process/assign";
 
 export default define(class TypeAssertion extends Assertion {
   constructor(context, string, node, term, type) {
@@ -54,9 +53,7 @@ export default define(class TypeAssertion extends Assertion {
     }
 
     if (verifies) {
-      if (stated) {
-        this.assign(assignments, context);
-      }
+      this.assign(assignments, stated, context);
     }
 
     if (verifies) {
@@ -153,37 +150,20 @@ export default define(class TypeAssertion extends Assertion {
     return verifiesWhenDerived;
   }
 
-  assign(assignments, context) {
+  assign(assignments, stated, context) {
     if (assignments === null) {
       return;
     }
 
-    const { Type, Variable } = elements,
-          termNode = this.term.getNode();
-
-    let type,
-        provisional;
-
-    provisional = this.type.isProvisional();
-
-    if (!provisional) {
-      type = this.type;
-    } else {
-      provisional = false;
-
-      type = Type.fromTypeAndProvisional(this.type, provisional);
+    if (!stated) {
+      return;
     }
 
-    const singularVariableNode = termNode.getSingularVariableNode();
+    const typeAssertion = this, ///
+          variableAssigment = variableAssignmentFromTypeAssertion(typeAssertion, context),
+          assignment = variableAssigment;  ///
 
-    if (singularVariableNode !== null) {
-      const variableNode = singularVariableNode,  ///
-            variable = Variable.fromVariableNodeAndType(variableNode, type, context),
-            variableAssignment = variableAssignmentFromVariable(variable),
-            assignment = variableAssignment;  ///
-
-      assignments.push(assignment);
-    }
+    assignments.push(assignment);
   }
 
   static name = "TypeAssertion";

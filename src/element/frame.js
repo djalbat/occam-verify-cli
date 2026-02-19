@@ -289,12 +289,12 @@ export default define(class Frame extends Element {
 
       context.trace(`Validating the '${frameString}' frame's '${metavraibleString}' metavariable...`);
 
-      const metavariable = context.findMetavariable(this.metavariable);
+      const metavariablePresent = context.isMetavariablePresent(this.metavariable);
 
-      if (metavariable !== null) {
+      if (metavariablePresent) {
         const metaTypeName = FRAME_META_TYPE_NAME,
               frameMetaType = findMetaTypeByMetaTypeName(metaTypeName),
-              metavariableValidateGivenMetaType = metavariable.validateGivenMetaType(frameMetaType, context);
+              metavariableValidateGivenMetaType = this.metavariable.validateGivenMetaType(frameMetaType, context);
 
         if (metavariableValidateGivenMetaType) {
           metavariableValidates = true;

@@ -147,12 +147,10 @@ export default define(class Equality extends Element {
 
         context.addEquality(equality);
 
-        this.assign(assignments, context);
-      }
-    }
+        this.assign(assignments, stated, context);
 
-    if (validates) {
-      context.debug(`...validated the '${equalityString}' equality.`);
+        context.debug(`...validated the '${equalityString}' equality.`);
+      }
     }
 
     return validates;
@@ -226,7 +224,7 @@ export default define(class Equality extends Element {
     return validatesWhenDerived;
   }
 
-  assign(assignments, context) {
+  assign(assignments, stated, context) {
     if (assignments === null) {
       return;
     }
@@ -236,15 +234,15 @@ export default define(class Equality extends Element {
           rightVariableAssignment = rightVariableAssignmentFromEquality(equality, context);
 
     if (leftVariableAssignment !== null) {
-      const assigment = leftVariableAssignment;  ///
+      const assignment = leftVariableAssignment;  ///
 
-      assignments.push(assigment);
+      assignments.push(assignment);
     }
 
     if (rightVariableAssignment !== null) {
-      const assigment = rightVariableAssignment;  ///
+      const assignment = rightVariableAssignment;  ///
 
-      assignments.push(assigment);
+      assignments.push(assignment);
     }
   }
 

@@ -132,9 +132,16 @@ export default class Context extends ContextBase {
 
   findEqualityByEqualityNode(equalityNode) {
     const context = this.getContext(),
-          equality = context.findEqualityByEqualityNode(equalityNode);
+      equality = context.findEqualityByEqualityNode(equalityNode);
 
     return equality;
+  }
+
+  findJudgementByJudgementNode(judgementNode) {
+    const context = this.getContext(),
+          judgement = context.findJudgementByJudgementNode(judgementNode);
+
+    return judgement;
   }
 
   findStatementByStatementNode(statementNode) {
@@ -208,6 +215,14 @@ export default class Context extends ContextBase {
     return procedure;
   }
 
+  isMetavariablePresent(metavariable) {
+    metavariable = this.findMetavariable(metavariable); ///
+
+    const metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
+  }
+
   isLabelPresentByReference(reference) {
     const context = this.getContext(),
           labelPresent = context.isLabelPresentByReference(reference);
@@ -231,9 +246,16 @@ export default class Context extends ContextBase {
 
   isFramePresentByFrameNode(frameNode) {
     const context = this.getContext(),
-      framePresent = context.isFramePresentByFrameNode(frameNode);
+          framePresent = context.isFramePresentByFrameNode(frameNode);
 
     return framePresent;
+  }
+
+  isJudgementPresentByJudgementNode(judgementNode) {
+    const context = this.getContext(),
+          judgementPresent = context.isJudgementPresentByJudgementNode(judgementNode);
+
+    return judgementPresent;
   }
 
   isEqualityPresentByEqualityNode(equalityNode) {
@@ -257,9 +279,9 @@ export default class Context extends ContextBase {
     return assertionPresent;
   }
 
-  isReferencePresentByReferenceNode(referenceNode) {
+  isReferencePresentByMetavariableNode(metvvariableNode) {
     const context = this.getContext(),
-          referencePresent = context.isReferencePresentByReferenceNode(referenceNode);
+          referencePresent = context.isReferencePresentByMetavariableNode(metvvariableNode);
 
     return referencePresent;
   }

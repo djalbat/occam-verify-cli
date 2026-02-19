@@ -66,6 +66,10 @@ export default define(class DefinedAssertion extends Assertion {
       }
 
       if (validates) {
+        const assertion = this; ///
+
+        context.addAssertion(assertion);
+
         context.debug(`...validates the '${definedAssertionString}' defined assertion.`);
       }
     }

@@ -1,10 +1,9 @@
 "use strict";
 
-import elements from "../../elements";
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { variableAssignmentFromVariable } from "../../process/assign";
+import { variableAssignmentFromPrepertyAssertion } from "../../process/assign";
 
 export default define(class PropertyAssertion extends Assertion {
   constructor(context, string, node, term, propertyRelation) {
@@ -76,7 +75,7 @@ export default define(class PropertyAssertion extends Assertion {
 
         if (propertyRelationVerifies) {
           let validatesWhenStated = false,
-            validatesWhenDerived = false;
+              validatesWhenDerived = false;
 
           if (stated) {
             validatesWhenStated = this.validateWhenStated(assignments, context);
@@ -91,12 +90,12 @@ export default define(class PropertyAssertion extends Assertion {
       }
 
       if (validates) {
-        if (stated) {
-          this.assign(assignments, context);
-        }
-      }
+        const assertion = this; ///
 
-      if (validates) {
+        context.addAssertion(assertion);
+
+        this.assign(assignments, stated, context);
+
         context.debug(`...validated the '${propertyAssertionString}' property assertion.`);
       }
     }
@@ -172,30 +171,20 @@ export default define(class PropertyAssertion extends Assertion {
     return validatesWhenDerived;
   }
 
-  assign(assignments, context) {
+  assign(assignments, stated, context) {
     if (assignments === null) {
       return;
     }
 
-    let variable;
-
-    const { Variable } = elements,
-          termNode = this.term.getNode();
-
-    variable = Variable.fromTermNode(termNode, context);
-
-    if (variable !== null) {
-      const variableIdentifier = variable.getIdentifier();
-
-      variable = context.findVariableByVariableIdentifier(variableIdentifier);
-
-      variable = Variable.fromVariableAndPropertyRelation(variable, this.propertyRelation);
-
-      const variableAssignment = variableAssignmentFromVariable(variable),
-            assignment = variableAssignment;  ///
-
-      assignments.push(assignment);
+    if (!stated) {
+      return;
     }
+
+    const propertyAssertion = this, ///
+          variableAssigment = variableAssignmentFromPrepertyAssertion(propertyAssertion, context),
+          assignment = variableAssigment; ///
+
+    assignments.push(assignment);
   }
 
   static name = "PropertyAssertion";

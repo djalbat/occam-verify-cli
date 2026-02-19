@@ -48,6 +48,10 @@ export default define(class SubproofAssertion extends Assertion {
       }
 
       if (validates) {
+        const assertion = this; ///
+
+        context.addAssertion(assertion);
+
         context.debug(`...validated the '${subproofAssertionString}' subproof assertion.`);
       }
     }
