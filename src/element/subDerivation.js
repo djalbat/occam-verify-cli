@@ -42,13 +42,11 @@ export default define(class SubDerivation extends Element {
             subproofOrProofAssertionVarifies = subproofOrProofAssertion.verify(substitutions, assignments, context);
 
       if (subproofOrProofAssertionVarifies) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
+        assignAssignments(assignments, context);
 
-        if (assignmentsAssigned) {
-          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+        context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 
-          return true;
-        }
+        return true;
       }
     });
 

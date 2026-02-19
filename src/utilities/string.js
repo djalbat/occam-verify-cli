@@ -154,7 +154,7 @@ export function signatureStringFromTerms(terms) {
 
 export function equivalenceStringFromTerms(terms) {
   const termsString = termsStringFromTerms(terms),
-        equivalenceString = termsString;  ///
+        equivalenceString = `[${termsString}]`;
 
   return equivalenceString;
 }

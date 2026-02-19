@@ -229,10 +229,6 @@ export default define(class Equality extends Element {
       return;
     }
 
-
-
-
-
     const equality = this,  ///
           equalityAssignment = equalityAssignmentFromEquality(equality, context),
           leftVariableAssignment = leftVariableAssignmentFromEquality(equality, context),

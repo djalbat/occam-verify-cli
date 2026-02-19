@@ -40,15 +40,13 @@ export default define(class Hypothesis extends Element {
             statementValidates = this.statement.validate(assignments, stated, context);
 
       if (statementValidates) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
+        assignAssignments(assignments, context);
 
-        if (assignmentsAssigned) {
-          const subproofOrProofAssertion = this;  ///
+        const subproofOrProofAssertion = this;  ///
 
-          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+        context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 
-          verifies = true;
-        }
+        verifies = true;
       }
     } else {
       context.debug(`Unable to verify the '${hypothesisString}' hypothesis because it is nonsense.`);

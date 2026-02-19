@@ -5,9 +5,9 @@ import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
 import { literally } from "../utilities/context";
-import { termsStringFromTerms } from "../utilities/string";
 import { instantiateEquivalence } from "../process/instantiate";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
+import { equivalenceStringFromTerms } from "../utilities/string";
 import { equivalenceFromEquivalenceNode } from "../utilities/element";
 
 const { compress } = arrayUtilities;
@@ -234,8 +234,8 @@ export default define(class Equivalence extends Element {
 
     return literally((context) => {
       const terms = combinedTerms,  ///
-            termsString = termsStringFromTerms(terms),
-            string = termsString,  ///
+            equivalenceString = equivalenceStringFromTerms(terms),
+            string = equivalenceString,  ///
             equivalenceNode = instantiateEquivalence(string, context),
             equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
 
@@ -248,8 +248,8 @@ export default define(class Equivalence extends Element {
   static fromEquality(equality, context) {
     return literally((context) => {
       const terms = equality.getTerms(),
-            termsString = termsStringFromTerms(terms),
-            string = termsString,  ///
+            equivalenceString = equivalenceStringFromTerms(terms),
+            string = equivalenceString,  ///
             equivalenceNode = instantiateEquivalence(string, context),
             equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
 

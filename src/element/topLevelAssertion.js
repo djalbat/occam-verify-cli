@@ -255,15 +255,13 @@ export default class TopLevelAssertion extends Element {
             suppositionVerifies = await supposition.verify(assignments, context)
 
       if (suppositionVerifies) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
+        assignAssignments(assignments, context);
 
-        if (assignmentsAssigned) {
-          const subproofOrProofAssertion = supposition;  ////
+        const subproofOrProofAssertion = supposition;  ////
 
-          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+        context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 
-          return true;
-        }
+        return true;
       }
     });
 

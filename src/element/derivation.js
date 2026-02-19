@@ -43,13 +43,11 @@ export default define(class Derivation extends Element {
             subproofOrProofAssertionVerifies = await subproofOrProofAssertion.verify(assignments, context);
 
       if (subproofOrProofAssertionVerifies) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
+        assignAssignments(assignments, context);
 
-        if (assignmentsAssigned) {
-          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+        context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 
-          return true;
-        }
+        return true;
       }
     });
 
