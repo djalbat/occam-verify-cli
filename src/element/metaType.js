@@ -48,7 +48,7 @@ export default define(class MetaType extends Element {
   static fromJSON(json, context) {
     const { name } = json,
           metaTypeName = name,  ///
-          metaType = findMetaTypeByMetaTypeName(metaTypeName);
+          metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
     return metaType;
   }

@@ -10,6 +10,7 @@ import NominalParser from "../../nominal/parser";
 
 import { verifyFile } from "../../process/verify";
 import { baseTypeFromNothing } from "../../utilities/type";
+import { findMetaTypeByMetaTypeName } from "../../metaTypes";
 import { typesFromJSON,
          rulesFromJSON,
          axiomsFromJSON,
@@ -403,6 +404,12 @@ export default class NominalFileContext extends FileContext {
           }) || null;
 
     return label;
+  }
+
+  findMetaTypeByMetaTypeName(metaTypeName) {
+    const metaType = findMetaTypeByMetaTypeName(metaTypeName);
+
+    return metaType;
   }
 
   findRuleByReference(reference) {

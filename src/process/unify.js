@@ -2,7 +2,6 @@
 
 import { ZipPass, queryUtilities } from "occam-languages";
 
-import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { termFromTermNode, frameFromFrameNode, statementFromStatementNode } from "../utilities/element";
 
 const { nodeQuery } = queryUtilities;
@@ -161,7 +160,7 @@ class CombinatorPass extends ZipPass {
         context = generalContext; ///
 
         const metaTypeName = metaTypeNode.getMetaTypeName(),
-              metaType = findMetaTypeByMetaTypeName(metaTypeName);
+              metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
         context = specificContext;  ///
 
@@ -189,7 +188,7 @@ class CombinatorPass extends ZipPass {
         context = generalContext; ///
 
         const metaTypeName = metaTypeNode.getMetaTypeName(),
-              metaType = findMetaTypeByMetaTypeName(metaTypeName);
+              metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
         context = specificContext;  ///
 

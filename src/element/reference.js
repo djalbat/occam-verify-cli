@@ -154,7 +154,7 @@ export default define(class Reference extends Element {
     context.trace(`Validating the '${referenceString}' reference's '${metavariableString}' metavariable....'`);
 
     const metaTypeName = REFERENCE_META_TYPE_NAME,
-          referenceMetaType = findMetaTypeByMetaTypeName(metaTypeName),
+          referenceMetaType = context.findMetaTypeByMetaTypeName(metaTypeName),
           metaType = referenceMetaType, ///
           metavariable = context.findMetavariable(this.metavariable);
 

@@ -293,7 +293,7 @@ export default define(class Frame extends Element {
 
       if (metavariablePresent) {
         const metaTypeName = FRAME_META_TYPE_NAME,
-              frameMetaType = findMetaTypeByMetaTypeName(metaTypeName),
+              frameMetaType = context.findMetaTypeByMetaTypeName(metaTypeName),
               metavariableValidateGivenMetaType = this.metavariable.validateGivenMetaType(frameMetaType, context);
 
         if (metavariableValidateGivenMetaType) {

@@ -44,7 +44,7 @@ export function metaTypeFromJSON(json, context) {
     const { name } = json,
           metaTypeName = name;  ///
 
-    metaType = findMetaTypeByMetaTypeName(metaTypeName);
+    metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
   }
 
   return metaType;

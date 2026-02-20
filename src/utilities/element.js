@@ -195,7 +195,7 @@ export function theoremFromTheoremNode(theoremNode, context) {
 
 export function metaTypeFromMetaTypeNode(metaTypeNode, context) {
   const metaTypeName = metaTypeNode.getMetaTypeName(),
-        metaType = findMetaTypeByMetaTypeName(metaTypeName);
+        metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
   return metaType;
 }
