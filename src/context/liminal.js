@@ -218,9 +218,9 @@ export default class LiminalContext extends Context {
 
       if (substitutionComparesToMetavariableName) {
         const substitutionB = substitution, ///
-              substitutionBSubstitutionComparesToSubstitutionA = substitutionB.compare(substitutionA);
+              substitutionBEqualToSubstitutionA = substitutionB.isEqualTo(substitutionA);
 
-        if (substitutionBSubstitutionComparesToSubstitutionA) {
+        if (substitutionBEqualToSubstitutionA) {
           return true;
         }
       }

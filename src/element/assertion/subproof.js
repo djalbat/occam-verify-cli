@@ -75,7 +75,7 @@ export default define(class SubproofAssertion extends Assertion {
     return statementsValidate;
   }
 
-  unifySubproof(subproof, substitutions, generalContext, specificContext) {
+  unifySubproof(subproof, generalContext, specificContext) {
     let subproofUnifies;
 
     const subproofString = subproof.getString(),
@@ -89,7 +89,7 @@ export default define(class SubproofAssertion extends Assertion {
     subproofUnifies = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
       const generalStatement = subproofAssertionStatement,  ///
             specificStatement = subproofStatement,  ///
-            statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+            statementUnifies = unifyStatement(generalStatement, specificStatement, generalContext, specificContext);
 
       if (statementUnifies) {
         return true;

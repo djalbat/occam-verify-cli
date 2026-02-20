@@ -193,12 +193,13 @@ export default define(class Metavariable extends Element {
     if (statementMetavariableUnifies) {
       statementUnifies = true;
     } else {
-      const metavariableName = metavariable.getName(),
-            substitutionPresent = context.isSubstitutionPresentByMetavariableNameAndSubstitution(metavariableName, substitution);
+      const metavariableName = metavariable.getName();
 
-      if (substitutionPresent) {
-        substitution = context.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution); ///
+      substitution = (substitution !== null) ?  ///
+                       context.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) :
+                         context.findSubstitutionByMetavariableName(metavariableName);
 
+      if (substitution !== null) {
         const substitutionComparesToStatement = substitution.compareStatement(statement, context);
 
         if (substitutionComparesToStatement) {

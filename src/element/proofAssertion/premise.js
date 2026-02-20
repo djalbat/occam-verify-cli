@@ -182,7 +182,7 @@ export default define(class Premise extends ProofAssertion {
         if (assertion !== null) {
           const subproofAssertion = assertion;  ///
 
-          subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
+          subproofUnifies = subproofAssertion.unifySubproof(subproof, generalContext, specificContext);
         }
       }
     }
