@@ -1,9 +1,9 @@
 "use strict";
 
-import elements from "../../elements";
 import Constructor from "../constructor";
 
 import { define } from "../../elements";
+import { termFromTermNode } from "../../utilities/element";
 
 export default define(class BracketedConstructor extends Constructor {
   getBracketedConstructorNode() {
@@ -13,7 +13,7 @@ export default define(class BracketedConstructor extends Constructor {
     return bracketedConstructorNode;
   }
 
-  unifyTerm(term, context, verifyForwards) {
+  unifyTerm(term, context, validateForwards) {
     let termUnifies;
 
     const termString = term.getString();
@@ -21,34 +21,33 @@ export default define(class BracketedConstructor extends Constructor {
     context.trace(`Unifying the '${termString}' term with the bracketed constructor...`);
 
     termUnifies = super.unifyTerm(term, context, () => {
-      let verifiesForwards = false;
+      let validatesForwards = false;
 
-      const { Term } = elements,
-            bracketedTerm = term, ///
+      const bracketedTerm = term, ///
             bracketedTermNode = bracketedTerm.getNode(),
             singularTermNode = bracketedTermNode.getSingularTermNode();
 
       if (singularTermNode !== null) {
         const termNode = singularTermNode;  ///
 
-        term = Term.fromTermNode(termNode, context);
+        term = termFromTermNode(termNode, context);
 
-        const termVVerifies = term.verify(context, () => {
-          let verifiesForwards;
+        const termValidates = term.validate(context, () => {
+          let validatesForwards;
 
           const type = term.getType();
 
           bracketedTerm.setType(type);
 
-          verifiesForwards = verifyForwards();
+          validatesForwards = validateForwards();
 
-          return verifiesForwards;
+          return validatesForwards;
         });
 
-        verifiesForwards = termVVerifies;  ///
+        validatesForwards = termValidates;  ///
       }
 
-      return verifiesForwards;
+      return validatesForwards;
     });
 
     if (termUnifies) {

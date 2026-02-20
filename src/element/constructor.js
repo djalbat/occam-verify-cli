@@ -30,7 +30,7 @@ export default define(class Constructor extends Element {
 
   setType(type) { this.term.setType(type); }
 
-  unifyTerm(term, context, verifyForwards) {
+  unifyTerm(term, context, validateForwards) {
     let termUnifies = false;
 
     const termString = term.getString(),
@@ -42,15 +42,15 @@ export default define(class Constructor extends Element {
           termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, context);
 
     if (termUnifiesWithConstructor) {
-      let verifiesForwards;
+      let validatesForwards;
 
       const type = this.getType();
 
       term.setType(type);
 
-      verifiesForwards = verifyForwards();
+      validatesForwards = validateForwards();
 
-      termUnifies = verifiesForwards;  ///
+      termUnifies = validatesForwards;  ///
     }
 
     if (termUnifies) {

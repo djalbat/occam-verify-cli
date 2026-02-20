@@ -1,7 +1,7 @@
 "use strict";
 
-import { ForwardPass } from "occam-languages";
 import { queryUtilities } from "occam-languages";
+import { SimplePass, ForwardPass } from "occam-languages";
 
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 
@@ -70,7 +70,7 @@ class TermPass extends ForwardPass {
   ];
 }
 
-class StatementPass extends ForwardPass {
+class StatementPass extends SimplePass {
   run(statementNode, context) {
     let success = false;
 
@@ -143,11 +143,11 @@ class StatementPass extends ForwardPass {
 const termPass = new TermPass(),
       statementPass = new StatementPass();
 
-export function validateTerm(termNode, context) {
+export function validateTerm(termNode, context, validateForwards) {
   let termValidates = false;
 
   const node = termNode, ///
-        sucess = termPass.run(node, context);
+        sucess = termPass.run(node, context, validateForwards);
 
   if (sucess) {
     termValidates = true;

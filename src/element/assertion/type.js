@@ -145,7 +145,9 @@ export default define(class TypeAssertion extends Assertion {
       if (!termTypeProvisional) {
         const typeEqualToOrSuperTypeOfTermType = this.type.isEqualToOrSuperTypeOf(termType);
 
-        validatesForwards = typeEqualToOrSuperTypeOfTermType; ///
+        if (typeEqualToOrSuperTypeOfTermType) {
+          validatesForwards = true;
+        }
       }
 
       return validatesForwards;

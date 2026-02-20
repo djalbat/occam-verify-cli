@@ -35,13 +35,13 @@ export default define(class Signature extends Element {
     context.trace(`Verifying the '${signatureString}' signature...`);
 
     verifies = this.terms.every((term) => {
-      const termVerifies = term.verify(context, () => {
-        const verifiesForwards = true;
+      const termValidates = term.validate(context, () => {
+        const validatesForwards = true;
 
-        return verifiesForwards;
+        return validatesForwards;
       });
 
-      if (termVerifies) {
+      if (termValidates) {
         return true;
       }
     });

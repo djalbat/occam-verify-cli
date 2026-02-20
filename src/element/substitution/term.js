@@ -126,9 +126,9 @@ export default define(class TermSubstitution extends Substitution {
 
     if (targetTermSingular) {
       targetTermValidates = this.targetTerm.validate(context, () => {
-        const verifiesForwards = true;
+        const validatesForwards = true;
 
-        return verifiesForwards;
+        return validatesForwards;
       });
     } else {
       context.debug(`The '${termSubstitutionString}' term subtitution's '${targetTermString}' target term is not singular.`);

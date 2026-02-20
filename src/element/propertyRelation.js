@@ -57,9 +57,9 @@ export default define(class PropertyRelation extends Element {
     context.trace(`Validating the '${termString}' term...`);
 
     termValidates = this.term.validate(context, () => {
-      const verifiesForwards = true;
+      const validatesForwards = true;
 
-      return verifiesForwards;
+      return validatesForwards;
     });
 
     if (termValidates) {

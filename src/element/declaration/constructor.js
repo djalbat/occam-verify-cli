@@ -33,7 +33,11 @@ export default define(class ConstructorDeclaration extends Declaration {
 
     const term = this.constructor.getTerm(),
           termNode = term.getNode(),
-          termValidates = validateTerm(termNode, context);
+          termValidates = validateTerm(termNode, context, () => {
+            const validatesFormards = true;
+
+            return validatesFormards;
+          });
 
     if (termValidates) {
       constructorValidates = true;

@@ -31,9 +31,9 @@ function validateTermAsVariable(term, context, validateForwards) {
 
       term.setType(type);
 
-      const verifiesForwards = validateForwards();
+      const validatesForwards = validateForwards();
 
-      if (verifiesForwards) {
+      if (validatesForwards) {
         termValidatesAsVariable = true;
       }
     }

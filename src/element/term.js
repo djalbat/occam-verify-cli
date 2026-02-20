@@ -148,7 +148,7 @@ export default define(class Term extends Element {
     return comparesToParamter;
   }
 
-  validate(context, verifyForwards) {
+  validate(context, validateForwards) {
     let validates;
 
     const termString = this.getString();  ///
@@ -162,9 +162,10 @@ export default define(class Term extends Element {
 
       context.debug(`...the '${termString}' term is already valid.`);
     } else {
+      const term = this;  ///
+
       validates = validateTerms.some((validateTerm) => {  ///
-        const term = this, ///
-              termValidates = validateTerm(term, context, verifyForwards);
+        const termValidates = validateTerm(term, context, validateForwards);
 
         if (termValidates) {
           return true;
