@@ -24,8 +24,10 @@ export  default define(class Conclusion extends Element {
     return conclusionNode;
   }
 
-  verify(context) {
+  async verify(context) {
     let verifies = false;
+
+    await this.break(context);
 
     const conclusionString = this.getString();  ///
 

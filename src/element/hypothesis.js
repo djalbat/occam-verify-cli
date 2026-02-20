@@ -25,8 +25,10 @@ export default define(class Hypothesis extends Element {
     return hypothesisNode;
   }
 
-  verify(context) {
+  async verify(context) {
     let verifies = false;
+
+    await this.break(context);
 
     const hypothesisString = this.getString(); ///
 

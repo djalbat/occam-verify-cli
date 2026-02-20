@@ -1,9 +1,11 @@
 "use strict";
 
-import { Element } from "occam-languages";
+import { Element, asynchronousUtilities } from "occam-languages";
 
-import { scope } from "../utilities/context";
 import { define } from "../elements";
+import { asyncScope } from "../utilities/context";
+
+const { asyncEvery } = asynchronousUtilities;
 
 export default define(class Subproof extends Element {
   constructor(context, string, node, suppositions, subDerivation) {
@@ -52,12 +54,12 @@ export default define(class Subproof extends Element {
     return proofAssertion;
   }
 
-  verify(substitutions, assignments, context) {
+  async verify(assignments, context) {
     let verifies = false;
 
-    scope(() => {
-      const suppositionsVerify = this.suppositions.every((supposition) => {
-        const suppositionVerifies = supposition.verify(context);
+    await asyncScope(async () => {
+      const suppositionsVerify = asyncEvery(this.suppositions, async (supposition) => {
+        const suppositionVerifies = await supposition.verify(assignments, context);
 
         if (suppositionVerifies) {
           return true;
@@ -65,7 +67,7 @@ export default define(class Subproof extends Element {
       });
 
       if (suppositionsVerify) {
-        const subDerivationVerifies = this.subDerivation.verify(substitutions, context);
+        const subDerivationVerifies = await this.subDerivation.verify(context);
 
         if (subDerivationVerifies) {
           verifies = true;

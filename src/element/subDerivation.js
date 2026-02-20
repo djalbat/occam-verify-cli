@@ -1,13 +1,14 @@
 "use strict";
 
-import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
-
-import assignAssignments from "../process/assign";
+import { Element, asynchronousUtilities } from "occam-languages";
 
 import { define } from "../elements";
 
-const { last } = arrayUtilities;
+import assignAssignments from "../process/assign";
+
+const { last } = arrayUtilities,
+      { asyncEvery } = asynchronousUtilities;
 
 export default define(class SubDerivation extends Element {
   constructor(context, string, node, subproofOrProofAssertions) {
@@ -34,12 +35,12 @@ export default define(class SubDerivation extends Element {
     return lastProofAssertion;
   }
 
-  verify(substitutions, context) {
+  async verify(context) {
     let verifies;
 
-    verifies = this.subproofOrProofAssertions.every((subproofOrProofAssertion) => { ///
+    verifies = await asyncEvery(this.subproofOrProofAssertions, async (subproofOrProofAssertion) => { ///
       const assignments = [],
-            subproofOrProofAssertionVarifies = subproofOrProofAssertion.verify(substitutions, assignments, context);
+            subproofOrProofAssertionVarifies = await subproofOrProofAssertion.verify(assignments, context);
 
       if (subproofOrProofAssertionVarifies) {
         assignAssignments(assignments, context);

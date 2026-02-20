@@ -6,6 +6,8 @@ import { lexersUtilities, parsersUtilities } from "occam-nominal";
 import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
 
+import { findMetaTypeByMetaTypeName } from "../metaTypes";
+
 const { nominalLexerFromNothing } = lexersUtilities,
       { nominalParserFromNothing } = parsersUtilities;
 
@@ -26,6 +28,12 @@ class NominalContext extends Context {
 
   getParser() {
     return this.parser;
+  }
+
+  findMetaTypeByMetaTypeName(metaTypeName) {
+    const metaType = findMetaTypeByMetaTypeName(metaTypeName);
+
+    return metaType;
   }
 
   static fromNothing() {

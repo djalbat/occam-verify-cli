@@ -24,8 +24,10 @@ export default define(class Deduction extends Element {
     return deductionNode;
   }
 
-  verify(context) {
+  async verify(context) {
     let verifies = false;
+
+    await this.break(context);
 
     const deductionString = this.getString();  ///
 

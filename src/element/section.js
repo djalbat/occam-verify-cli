@@ -66,7 +66,7 @@ export default define(class Section extends Element {
 
     if (hypothesesVerify) {
       const topLevelAssertion = (this.axiom || this.lemma || this.theorem || this.conjecture),
-            topLevelAssertionVerifies = topLevelAssertion.verify(context);
+            topLevelAssertionVerifies = await topLevelAssertion.verify(context);
 
       if (topLevelAssertionVerifies) {
         topLevelAssertion.setHypotheses(this.hypotheses);
