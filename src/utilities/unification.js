@@ -181,7 +181,7 @@ async function unifyStatementWithTopLevelAssertion(statement, reference, satisfi
   return statementUnifiesWithTopLevelAssertion;
 }
 
-async function unifyStatementAEquality(statement, reference, satisfiesAssertion, context) {
+async function unifyStatementAsEquality(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesAEquality = false;
 
   if (reference === null) {
@@ -339,7 +339,7 @@ export const unifyStatements = [
   unifyStatementWithReference,
   unifyStatementAsSatisfiesAssertion,
   unifyStatementWithTopLevelAssertion,
-  unifyStatementAEquality,
+  unifyStatementAsEquality,
   unifyStatementAsJudgement,
   unifyStatementAsTypeAssertion,
   unifyStatementAsPropertyAssertion,

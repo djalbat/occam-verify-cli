@@ -2,6 +2,8 @@
 
 import { Element, asynchronousUtilities } from "occam-languages";
 
+import assignAssignments from "../process/assign";
+
 import { define } from "../elements";
 import { asyncScope } from "../utilities/context";
 
@@ -58,10 +60,16 @@ export default define(class Subproof extends Element {
     let verifies = false;
 
     await asyncScope(async () => {
-      const suppositionsVerify = asyncEvery(this.suppositions, async (supposition) => {
+      const suppositionsVerify = await asyncEvery(this.suppositions, async (supposition) => {
         const suppositionVerifies = await supposition.verify(assignments, context);
 
         if (suppositionVerifies) {
+          assignAssignments(assignments, context);
+
+          const subproofOrProofAssertion = supposition;  ////
+
+          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+
           return true;
         }
       });
