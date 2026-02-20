@@ -16,20 +16,6 @@ export function termsStringFromTerms(terms) {
   return termsString;
 }
 
-export function framesStringFromFrames(frames) {
-  const framesString = frames.reduce((framesString, frame) => {
-    const frameString = frame.getString();
-
-    framesString = (framesString !== null) ?
-                    `${framesString}, ${frameString}` :
-                       frameString;
-
-    return framesString;
-  }, null);
-
-  return framesString;
-}
-
 export function labelsStringFromLabels(labels) {
   const labelsString = labels.reduce((labelsString, label) => {
     const labelString = label.getString();
@@ -131,20 +117,6 @@ export function suppositionsStringFromSuppositions(suppositions) {
   return suppositionsString;
 }
 
-export function substitutionsStringFromSubstitutions(substitutions) {
-  const substitutionsString = substitutions.reduce((substitutionsString, substitution) => {
-    const substitutionString = substitution.getString();
-
-    substitutionsString = (substitutionsString === null) ?
-                             substitutionString : ///
-                              `${substitutionsString}, ${substitutionString}`;
-
-    return substitutionsString;
-  }, null);
-
-  return substitutionsString;
-}
-
 export function signatureStringFromTerms(terms) {
   const termsString = termsStringFromTerms(terms),
         signatureString = `[${termsString}]`;
@@ -157,6 +129,12 @@ export function equivalenceStringFromTerms(terms) {
         equivalenceString = `[${termsString}]`;
 
   return equivalenceString;
+}
+
+export function typeStringFromNominalTypeName(nominalTypeName) {
+  const typeString = nominalTypeName;  ///
+
+  return typeString;
 }
 
 export function termSubstitutionStringFromTermAndVariable(term, variable) {

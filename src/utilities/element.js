@@ -7,6 +7,7 @@ import { baseTypeFromNothing } from "../utilities/type";
 import { instantiateReference } from "../process/instantiate";
 import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { equivalenceStringFromTerms,
+         typeStringFromNominalTypeName,
          rulsStringFromLabelsPremisesAndConclusion,
          sectionStringFromHypothesesTopLevelAssertion,
          subproofStringFromSuppositionsAndSubDerivation,
@@ -23,16 +24,15 @@ export function typeFromTypeNode(typeNode, context) {
     type = baseType;  ///
   } else {
     const { Type } = elements,
-          typeName = typeNode.getTypeName(),
-          typePrefixName = typeNode.getTypePrefixName(),
-          nominalTypeName = typeNode.getNominalTypeName(),
-          string = nominalTypeName,  ///
           node = typeNode,  ///
-          name = typeName,  ///
-          prefixName = typePrefixName,  ///
-          superTypes = null,
-          properties = null,
-          provisional = null;
+          name = nameFromTypeNode(typeNode, context),
+          prefixName = prefixNameFromTypeNode(typeNode, context),
+          superTypes = superTypesFromTypeNode(typeNode, context),
+          properties = propertiesFromTypeNode(typeNode, context),
+          provisional = provisionalFromTypeNode(typeNode, context),
+          nominalTypeName = nominalTypeNameFromTypeNode(typeNode, context),
+          typeString = typeStringFromNominalTypeName(nominalTypeName),
+          string = typeString;  ///
 
     type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
   }
@@ -707,6 +707,13 @@ export function metavariableDeclarationFromMetavariableDeclarationNode(metavaria
   return metavariableDeclaration;
 }
 
+export function nameFromTypeNode(typeNode, context) {
+  const typeName = typeNode.getTypeName(),
+    name = typeName;  ///
+
+  return name;
+}
+
 export function typeFromTermNode(termNode, context) {
   const type = null;
 
@@ -787,6 +794,25 @@ export function referenceFromStepNode(stepNode, context) {
   return reference;
 }
 
+export function superTypesFromTypeNode(typeNode, context) {
+  const superTypes = null;
+
+  return superTypes;
+}
+
+export function propertiesFromTypeNode(typeNode, context) {
+  const properties = null;
+
+  return properties;
+}
+
+export function prefixNameFromTypeNode(typeNode, context) {
+  const typePrefixName = typeNode.getTypePrefixName(),
+    prefixName = typePrefixName;  ///
+
+  return prefixName;
+}
+
 export function conclusionFromRuleNode(ruleNode, context) {
   const conclusionNode = ruleNode.getConclusionNode(),
         conclusion = conclusionFromConclusionNode(conclusionNode, context);
@@ -825,6 +851,12 @@ export function derivationFromProofNode(proofNode, context) {
         derivation = derivationFromDerivationNode(derivationNode, context);
 
   return derivation;
+}
+
+export function provisionalFromTypeNode(typeNode, context) {
+  const provisional = null;
+
+  return provisional;
 }
 
 export function termFromConstructorNode(ocnstructorNode, context) {
@@ -974,6 +1006,12 @@ export function stepFromStepOrSubproofNode(stepOrSubproofNode, context) {
   }
 
   return step;
+}
+
+export function nominalTypeNameFromTypeNode(typeNode, context) {
+  const nominalTypeName = typeNode.getNominalTypeName();
+
+  return nominalTypeName;
 }
 
 export function assumptionFromJudgementNode(judgementNode, context) {
@@ -1696,4 +1734,3 @@ export function stepsOrSubproofsFromSubDerivationNode(subDerivationNode, context
 
   return stepsOrSubproofs;
 }
-
