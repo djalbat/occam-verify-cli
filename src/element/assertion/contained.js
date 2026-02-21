@@ -38,30 +38,32 @@ export default define(class ContainedAssertion extends Assertion {
     return containedAssertionNode;
   }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let containedAssertion = null;
 
     const containedAssertionString = this.getString(); ///
 
     context.trace(`Validating the '${containedAssertionString}' contained assertion...`);
 
-    const valid = this.isValid(context);
+    const validAssertion = this.findValidAssertion(context);
 
-    if (!valid) {
-      validates = true;
+    if (validAssertion !== null) {
+      containedAssertion = validAssertion;  ///
 
       context.debug(`...the '${containedAssertionString}' contained assertion is already valid.`);
     } else {
-      const termValidates = this.validateTerm(assignments, stated, context),
-            frameVerifies = this.validateFrame(assignments, stated, context),
-            statementValidates = this.validateStatement(assignments, stated, context)
+      let validates = false;
 
-      if (termValidates || frameVerifies || statementValidates) {
+      const termValidates = this.validateTerm(stated, context),
+            frameValidates = this.validateFrame(stated, context),
+            statementValidates = this.validateStatement(stated, context)
+
+      if (termValidates || frameValidates || statementValidates) {
         let validatesWhenStated = false,
             validatesWhenDerived = false;
 
         if (stated) {
-          validatesWhenStated = this.validateWhenStated(assignments, context);
+          validatesWhenStated = this.validateWhenStated(context);
         } else {
           validatesWhenDerived = this.validateWhenDerived(context);
         }
@@ -74,16 +76,18 @@ export default define(class ContainedAssertion extends Assertion {
       if (validates) {
         const assertion = this; ///
 
+        containedAssertion = assertion;  ///
+
         context.addAssertion(assertion);
 
         context.debug(`...validated the '${containedAssertionString}' contained assertion.`);
       }
     }
 
-    return validates;
+    return containedAssertion;
   }
 
-  validateTerm(assignments, stated, context) {
+  validateTerm(stated, context) {
     let termValidates = false;
 
     if (this.term !== null) {
@@ -97,11 +101,17 @@ export default define(class ContainedAssertion extends Assertion {
       if (!termSingular) {
         context.debug(`The '${termString}' term is not singular.`);
       } else {
-        termValidates = this.term.validate(context, () => {
+        const term = this.term.validate(context, () => {
           const validatesForwards = true;
 
           return validatesForwards;
         });
+
+        if (term !== null) {
+          this.term = term;
+
+          termValidates = true;
+        }
 
         if (termValidates) {
           context.debug(`...validated the '${containedAssertionString}' contained assertino's '${termString}' term.`);
@@ -112,8 +122,8 @@ export default define(class ContainedAssertion extends Assertion {
     return termValidates;
   }
 
-  validateFrame(assignments, stated, context) {
-    let frameVerifies = false;
+  validateFrame(stated, context) {
+    let frameValidates = false;
 
     if (this.frame !== null) {
       const frameString = this.frame.getString(),
@@ -128,20 +138,24 @@ export default define(class ContainedAssertion extends Assertion {
       } else {
         stated = true;  ///
 
-        assignments = null; ///
+        const frame = this.frame.validate(stated, context);
 
-        frameVerifies = this.frame.validate(assignments, stated, context);
+        if (frame !== null) {
+          this.frame = frame;
 
-        if (frameVerifies) {
-          context.debug(`...validated the '${containedAssertionString}' contained assertino's '${frameString}' frame.`);
+          frameValidates = true;
         }
+      }
+
+      if (frameValidates) {
+        context.debug(`...validated the '${containedAssertionString}' contained assertino's '${frameString}' frame.`);
       }
     }
 
-    return frameVerifies;
+    return frameValidates;
   }
 
-  validateStatement(assignments, stated, context) {
+  validateStatement(stated, context) {
     let statementValidates = false;
 
     if (this.statement !== null) {
@@ -151,9 +165,11 @@ export default define(class ContainedAssertion extends Assertion {
 
       stated = true;  ///
 
-      assignments = null; ///
+      const statement = this.statement.validate(stated, context);
 
-      statementValidates = this.statement.validate(assignments, stated, context);
+      if (statement !== null) {
+        statementValidates = true;
+      }
 
       if (statementValidates) {
         context.debug(`...validated the '${statementString}' statement.`);
@@ -163,7 +179,7 @@ export default define(class ContainedAssertion extends Assertion {
     return statementValidates;
   }
 
-  validateWhenStated(assignments, context) {
+  validateWhenStated(context) {
     let validatesWhenStated;
 
     const containedAssertionString = this.getString(); ///

@@ -39,11 +39,10 @@ export default define(class Derivation extends Element {
     let verifies;
 
     verifies = await asyncEvery(this.subproofOrProofAssertions, async (subproofOrProofAssertion) => { ///
-      const assignments = [],
-            subproofOrProofAssertionVerifies = await subproofOrProofAssertion.verify(assignments, context);
+      const subproofOrProofAssertionVerifies = await subproofOrProofAssertion.verify(context);
 
       if (subproofOrProofAssertionVerifies) {
-        assignAssignments(assignments, context);
+        context.assignAssignments();
 
         context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 

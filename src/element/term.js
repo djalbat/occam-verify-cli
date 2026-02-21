@@ -68,12 +68,12 @@ export default define(class Term extends Element {
     return comparesToVariableIdentifier;
   }
 
-  isValid(context) {
+  findValidTerm(context) {
     const termNode = this.getTermNode(),
-          termPresent = context.isTermPresentByTermNode(termNode),
-          valid = termPresent;  ///
+          term = context.findTermByTermNode(termNode),
+          validTerm = term; ///
 
-    return valid;
+    return validTerm;
   }
 
   isEqualTo(term) {
@@ -149,23 +149,23 @@ export default define(class Term extends Element {
   }
 
   validate(context, validateForwards) {
-    let validates;
+    let term = null;
 
     const termString = this.getString();  ///
 
     context.trace(`Validating the '${termString}' term...`);
 
-    const valid = this.isValid(context);
+    const validTerm = this.findValidTerm(context),
+          valid = (validTerm !== null);
 
     if (valid) {
-      validates = true;
+      term = validTerm; ///
 
       context.debug(`...the '${termString}' term is already valid.`);
     } else {
-      const term = this;  ///
-
-      validates = validateTerms.some((validateTerm) => {  ///
-        const termValidates = validateTerm(term, context, validateForwards);
+      const validates = validateTerms.some((validateTerm) => {  ///
+        const term = this,  ///
+              termValidates = validateTerm(term, context, validateForwards);
 
         if (termValidates) {
           return true;
@@ -173,7 +173,7 @@ export default define(class Term extends Element {
       });
 
       if (validates) {
-        const term = this;  ///
+        term = null;  ///
 
         context.addTerm(term);
 
@@ -181,7 +181,7 @@ export default define(class Term extends Element {
       }
     }
 
-    return validates;
+    return term;
   }
 
   validateGivenType(type, context) {

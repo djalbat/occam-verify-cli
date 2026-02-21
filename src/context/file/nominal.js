@@ -729,7 +729,7 @@ export default class NominalFileContext extends FileContext {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
             const context = this, ///
-              labelUnifies = reference.unifyLabel(label, context);
+                  labelUnifies = reference.unifyLabel(label, context);
 
             if (labelUnifies) {
               return true;
@@ -743,7 +743,7 @@ export default class NominalFileContext extends FileContext {
     const metavariables = this.getMetavariables(),
           metavariablePresent = metavariables.some((metavariable) => {
             const context = this, ///
-              metavariableUnifies = reference.unifyMetavariable(metavariable, context);
+                  metavariableUnifies = reference.unifyMetavariable(metavariable, context);
 
             if (metavariableUnifies) {
               return true;

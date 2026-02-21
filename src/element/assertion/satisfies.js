@@ -31,47 +31,55 @@ export default define(class SatisfiesAssertion extends Assertion {
 
   correlateSubstitutions(substitutions, context) { return this.signature.correlateSubstitutions(substitutions, context); }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let satisfiesAssertion = null;
 
     const satisfiesAssertionString = this.getString(); ///
 
     context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertion...`);
 
-    const valid = this.isValid(context);
+    const validAssertion = this.findValidAssertion(context);
 
-    if (valid) {
-      validates = true;
+    if (validAssertion) {
+      satisfiesAssertion = validAssertion; ///
 
-      context.debug(`...the '${satisfiesAssertionString}' satisfies assertion is already valid.`);
+      context.debug(`...the '${satisfiesAssertionString}' satisfies satisfiesAssertion is already valid.`);
     } else {
-      const signatureVerifies = this.validateSignature(assignments, stated, context);
+      let validates = true;
+
+      const signatureVerifies = this.validateSignature(stated, context);
 
       if (signatureVerifies) {
-        const referenceVerifies = this.validateReference(assignments, stated, context);
+        const referenceVerifies = this.validateReference(stated, context);
 
-        validates = referenceVerifies; ///
+        if (referenceVerifies) {
+          validates = true;
+        }
+
+        validates = true;
       }
 
       if (validates) {
         const assertion = this; ///
 
-        context.addAssertion(assertion);
+        satisfiesAssertion = assertion; ///
+
+        context.addAssertion(satisfiesAssertion);
 
         context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertion.`);
       }
     }
 
-    return validates;
+    return satisfiesAssertion;
   }
 
-  validateSignature(assignments, stated, context) {
+  validateSignature(stated, context) {
     const signatureVerifies = this.signature.validate(context);
 
     return signatureVerifies;
   }
 
-  validateReference(assignments, stated, context) {
+  validateReference(stated, context) {
     let referenceVerifies = false;
 
     const referenceString = this.reference.getString(),

@@ -2,8 +2,6 @@
 
 import { Element } from "occam-languages";
 
-import assignAssignments from "../process/assign";
-
 import { define } from "../elements";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
@@ -37,14 +35,19 @@ export default define(class Hypothesis extends Element {
     if (false) {
       ///
     } else if (this.statement !== null) {
+      let statementValidates = false;
+
       const stated = true,
-            assignments = [],
-            statementValidates = this.statement.validate(assignments, stated, context);
+            statement = this.statement.validate(stated, context);
+
+      if (statement !== null) {
+        statementValidates = true;
+      }
 
       if (statementValidates) {
-        assignAssignments(assignments, context);
-
         const subproofOrProofAssertion = this;  ///
+
+        context.assignAssignments();
 
         context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 

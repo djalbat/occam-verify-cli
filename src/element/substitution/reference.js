@@ -71,7 +71,7 @@ export default define(class ReferenceSubstitution extends Substitution {
   }
 
   validate(generalContext, specificContext) {
-    let validates = false;
+    let referenceSubstitution = null;
 
     const context = this.getContext();
 
@@ -81,13 +81,15 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution...`);
 
-    const valid = this.isValid(context);
+    const validSubstitution = this.findValidSubstiution(context);
 
-    if (valid) {
-      validates = true;
+    if (validSubstitution) {
+      referenceSubstitution = validSubstitution;  ///
 
       context.debug(`...the '${referenceSubstitutionString}' reference substitution is already valid.`);
     } else {
+      let validates = false;
+
       const targetReferenceValidates = this.validateTargetReference(generalContext, specificContext);
 
       if (targetReferenceValidates) {
@@ -101,13 +103,15 @@ export default define(class ReferenceSubstitution extends Substitution {
       if (validates) {
         const subsitution = this;  ///
 
+        referenceSubstitution = subsitution;  ///
+
         context.addSubstitution(subsitution);
 
         context.debug(`...validated the '${referenceSubstitutionString}' reference substitution.`);
       }
     }
 
-    return validates;
+    return referenceSubstitution;
   }
 
   validateTargetReference(generalContext, specificContext) {
@@ -122,7 +126,11 @@ export default define(class ReferenceSubstitution extends Substitution {
     const targetReferenceSingular = this.targetReference.isSingular();
 
     if (targetReferenceSingular) {
-      targetReferenceValidates = this.targetReference.validate(context);
+      const targetReference = this.targetReference.validate(context);
+
+      if (targetReference !== null) {
+        targetReferenceValidates = true;
+      }
     } else {
       context.debug(`The '${referenceSubstitutionString}' reference subtitution's '${targetReferenceString}' target reference is not singular.`);
     }
@@ -135,7 +143,7 @@ export default define(class ReferenceSubstitution extends Substitution {
   }
 
   validateReplacementReference(generalContext, specificContext) {
-    let replacementReferenceValidates;
+    let replacementReferenceValidates = false;
 
     const context = specificContext,  ///
           replacementReferenceString = this.replacementReference.getString(),
@@ -143,7 +151,11 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference subtitution's '${replacementReferenceString}' replacement reference...`);
 
-    replacementReferenceValidates = this.replacementReference.validate(context);
+    const replacementReference = this.replacementReference.validate(context);
+
+    if (replacementReference !== null) {
+      replacementReferenceValidates = true;
+    }
 
     if (replacementReferenceValidates) {
       context.debug(`...validated the '${referenceSubstitutionString}' reference subtitution's '${replacementReferenceString}' replacement reference.`);

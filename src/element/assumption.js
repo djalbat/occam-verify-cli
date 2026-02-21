@@ -67,39 +67,41 @@ export default define(class Assumption extends Element {
     return comparesToSubstituion;
   }
 
-  isValid(context) {
+  findValidAssumption(context) {
     const assumptionNode = this.getAssumptionNode(),
-          assumptionPresent = context.isAssumptionPresentByAssumptionNode(assumptionNode),
-          valid = assumptionPresent;  ///
+          assumption = context.findAssumptionByAssumptionNode(assumptionNode),
+          validAssumption = assumption;  ///
 
-    return valid;
+    return validAssumption;
   }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let assumption = null;
 
     const assumptionString = this.getString();  ///
 
     context.trace(`Validating the '${assumptionString}' assumption...`);
 
-    const valid = this.isValid(context);
+    const validAssumption = this.findValidAssumption(context);
 
-    if (valid) {
-      validates = true;
+    if (validAssumption) {
+      assumption = validAssumption; ///
 
       context.debug(`...the '${assumptionString}' assumption is already valid.`);
     } else {
-      const referenceValidates = this.validateReference(assignments, stated, context);
+      let validates = false;
+
+      const referenceValidates = this.validateReference(stated, context);
 
       if (referenceValidates) {
-        const statementValidates = this.validateStatement(assignments, stated, context);
+        const statementValidates = this.validateStatement(stated, context);
 
         if (statementValidates) {
           let validatesWhenStated = false,
               validatesWhenDerived = false;
 
           if (stated) {
-            validatesWhenStated = this.validateWhenStated(assignments, context);
+            validatesWhenStated = this.validateWhenStated(context);
           } else {
             validatesWhenDerived = this.validateWhenDerived(context);
           }
@@ -119,18 +121,22 @@ export default define(class Assumption extends Element {
       }
     }
 
-    return validates;
+    return assumption;
   }
 
-  validateReference(assignments, stated, context) {
-    let referenceValidates;
+  validateReference(stated, context) {
+    let referenceValidates = false;
 
     const assumptionString = this.getString(),  ///
           referenceString = this.reference.getString();
 
     context.trace(`Validating the '${assumptionString}' assumption's '${referenceString}' reference...`);
 
-    referenceValidates = this.reference.validate(context);
+    const reference = this.reference.validate(context);
+
+    if (reference !== null) {
+      referenceValidates = true;
+    }
 
     if (referenceValidates) {
       context.debug(`...validated the '${assumptionString}' assumption's '${referenceString}' statement.`);
@@ -139,19 +145,21 @@ export default define(class Assumption extends Element {
     return referenceValidates;
   }
 
-  validateStatement(assignments, stated, context) {
-    let statementValidates;
+  validateStatement(stated, context) {
+    let statementValidates = false;
 
     const assumptionString = this.getString(),  ///
-          statementString = this.statement.getString();
+      statementString = this.statement.getString();
 
     context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);
 
     stated = true;  ///
 
-    assignments = null; ///
+    const statement = this.statement.validate(stated, context);
 
-    statementValidates = this.statement.validate(assignments, stated, context);
+    if (statement !== null) {
+      statementValidates = true;
+    }
 
     if (statementValidates) {
       context.debug(`...validated the '${assumptionString}' assumption's '${statementString}' statement.`);
@@ -160,7 +168,7 @@ export default define(class Assumption extends Element {
     return statementValidates;
   }
 
-  validateReferenceAsMetavariable(assignments, stated, context) {
+  validateReferenceAsMetavariable(stated, context) {
     let referenceValidatesAsMetavariable;
 
     const referenceString = this.reference.getString(),
@@ -177,7 +185,7 @@ export default define(class Assumption extends Element {
     return referenceValidatesAsMetavariable;
   }
 
-  validateWhenStated(assignments, context) {
+  validateWhenStated(context) {
     let validatesWhenStated;
 
     const assumptionString = this.getString();  ///

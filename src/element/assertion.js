@@ -22,12 +22,12 @@ export default class Assertion extends Element {
     return assertionNodeMatches;
   }
 
-  isValid(context) {
+  findValidAssertion(context) {
     const assertionNode = this.getAssertionNode(),
-          assertionPresent = context.isAssertionPresentByAssertionNode(assertionNode),
-          valid = assertionPresent;  ///
+          assertion = context.findAssertionByAssertionNode(assertionNode),
+          validAssertion = assertion;  ///
 
-    return valid;
+    return validAssertion;
   }
 
   isEqualTo(assertion) {

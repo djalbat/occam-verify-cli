@@ -66,7 +66,7 @@ export default define(class Step extends ProofAssertion {
     return comparesToTermAndPropertyRelation;
   }
 
-  validate(assignments, context) {
+  validate(context) {
     let validates = false;
 
     const stepString = this.getString(); ///
@@ -82,7 +82,7 @@ export default define(class Step extends ProofAssertion {
         const satisfiesAssertioValidates = this.validateSatisfiesAssertion(context);
 
         if (satisfiesAssertioValidates) {
-          const statementValidates = this.validateStatement(assignments, context);
+          const statementValidates = this.validateStatement(context);
 
           if (statementValidates) {
             validates = true;
@@ -109,7 +109,11 @@ export default define(class Step extends ProofAssertion {
 
       context.trace(`Validating the '${stepString}' step's '${referenceString}' reference... `);
 
-      referenceValidates = this.reference.validate(context);
+      const reference = this.reference.validate(context);
+
+      if (reference === null) {
+        referenceValidates = false;
+      }
 
       if (referenceValidates) {
         context.debug(`...validated the '${stepString}' step's '${referenceString}' reference. `);
@@ -124,17 +128,19 @@ export default define(class Step extends ProofAssertion {
 
     if (this.satisfiesAssertion !== null) {
       const stepString = this.getString(),  ///
-            satisfiesAssertion = this.satisfiesAssertion.getString();
+            satisfiesAssertionString = this.satisfiesAssertion.getString();
 
-      context.trace(`Validating the '${stepString}' step's '${satisfiesAssertion}' satisfies assertion... `);
+      context.trace(`Validating the '${stepString}' step's '${satisfiesAssertionString}' satisfies assertion... `);
 
       const stated = true,
-            assignments = null;
+            satisfiesAssertion = this.satisfiesAssertion.validate(stated, context);
 
-      satisfiesAssertionValidates = this.satisfiesAssertion.validate(assignments, stated, context);
+      if (satisfiesAssertion !== null) {
+        satisfiesAssertionValidates = true;
+      }
 
       if (satisfiesAssertionValidates) {
-        context.debug(`...validating the '${stepString}' step's '${satisfiesAssertion}' satisfies assertion. `);
+        context.debug(`...validating the '${stepString}' step's '${satisfiesAssertionString}' satisfies assertion. `);
       }
     }
 
@@ -173,7 +179,7 @@ export default define(class Step extends ProofAssertion {
     return unifiesWithSatisfiesAssertion;
   }
 
-  async verify(assignments, context) {
+  async verify(context) {
     let verifies = false;
 
     await this.break(context);
@@ -183,7 +189,7 @@ export default define(class Step extends ProofAssertion {
     context.trace(`Verifying the '${stepString}' step...`);
 
     await asyncAttempt(async (context) => {
-      const validates = this.validate(assignments, context);
+      const validates = this.validate(context);
 
       if (validates) {
         const unifies = await this.unify(context);

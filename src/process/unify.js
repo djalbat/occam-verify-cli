@@ -149,7 +149,7 @@ class CombinatorPass extends ZipPass {
     {
       generalNodeQuery: metaTypeNodeQuery,
       specificNodeQuery: statementNodeQuery,
-      run: (generalMetaTypeNode, specificStatementNode, assignments, stated, generalContext, specificContext) => {
+      run: (generalMetaTypeNode, specificStatementNode, stated, generalContext, specificContext) => {
         let success = false;
 
         const metaTypeNode = generalMetaTypeNode, ///
@@ -165,7 +165,7 @@ class CombinatorPass extends ZipPass {
         context = specificContext;  ///
 
         const statement = statementFromStatementNode(statementNode, context),
-              statementValidatesGivenType = statement.validateGivenMetaType(metaType, assignments, stated, context);
+              statementValidatesGivenType = statement.validateGivenMetaType(metaType, stated, context);
 
         if (statementValidatesGivenType) {
           success = true;
@@ -177,7 +177,7 @@ class CombinatorPass extends ZipPass {
     {
       generalNodeQuery: metaTypeNodeQuery,
       specificNodeQuery: frameNodeQuery,
-      run: (generalMetaTypeNode, specificFrameNode, assignments, stated, generalContext, specificContext) => {
+      run: (generalMetaTypeNode, specificFrameNode, stated, generalContext, specificContext) => {
         let success = false;
 
         const metaTypeNode = generalMetaTypeNode, ///
@@ -193,7 +193,7 @@ class CombinatorPass extends ZipPass {
         context = specificContext;  ///
 
         const frame = frameFromFrameNode(frameNode, context),
-              frameValidatesGivenMetaType = frame.validateGivenMetaType(metaType, assignments, stated, context);
+              frameValidatesGivenMetaType = frame.validateGivenMetaType(metaType, stated, context);
 
         if (frameValidatesGivenMetaType) {
           success = true;
@@ -205,7 +205,7 @@ class CombinatorPass extends ZipPass {
     {
       generalNodeQuery: typeNodeQuery,
       specificNodeQuery: termNodeQuery,
-      run: (generalTypeNode, specificTermNode, assignments, stated, generalContext, specificContext) => {
+      run: (generalTypeNode, specificTermNode, stated, generalContext, specificContext) => {
         let success = false;
 
         const typeNode = generalTypeNode, ///
@@ -412,13 +412,13 @@ export function unifyStatementIntrinsically(generalStatement, specificStatement,
   return statementUnifiesIntrinsically;
 }
 
-export function unifyStatementWithCombinator(statement, combinator, assignments, stated, generalContext, specificContext) {
+export function unifyStatementWithCombinator(statement, combinator, stated, generalContext, specificContext) {
   let statementUnifiesWithCombinator = false;
 
   const statementNode = statement.getNode(),
         combinatorStatement = combinator.getStatement(),
         combinatorStatementNode = combinatorStatement.getNode(),
-        success = combinatorPass.run(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext);
+        success = combinatorPass.run(combinatorStatementNode, statementNode, stated, generalContext, specificContext);
 
   if (success) {
     statementUnifiesWithCombinator = true;

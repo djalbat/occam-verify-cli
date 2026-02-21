@@ -32,7 +32,7 @@ export default define(class BracketedConstructor extends Constructor {
 
         term = termFromTermNode(termNode, context);
 
-        const termValidates = term.validate(context, () => {
+        term = term.validate(context, () => {
           let validatesForwards;
 
           const type = term.getType();
@@ -44,7 +44,9 @@ export default define(class BracketedConstructor extends Constructor {
           return validatesForwards;
         });
 
-        validatesForwards = termValidates;  ///
+        if (term !== null) {
+          validatesForwards = true;
+        }
       }
 
       return validatesForwards;

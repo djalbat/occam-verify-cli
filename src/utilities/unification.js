@@ -86,10 +86,9 @@ async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfie
 
     context.trace(`Unifying the '${statementString}' statement as a satisfies assertion...`);
 
-    const stated = true,
-          assignments = null;
+    const stated = true;
 
-    satisfiesAssertion.verifySignature(assignments, stated, context);
+    satisfiesAssertion.verifySignature(stated, context);
 
     if (reference === null) {
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions();

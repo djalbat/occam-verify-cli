@@ -54,31 +54,33 @@ export default define(class PropertyAssertion extends Assertion {
     return comparesToTermAndPropertyRelation;
   }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let propertyAssertion = null;
 
     const propertyAssertionString = this.getString(); ///
 
     context.trace(`Validating the '${propertyAssertionString}' property assertion...`);
 
-    const valid = this.isValid(context);
+    const validAssertion = this.findValidAssertion(context);
 
-    if (valid) {
-      validates = true;
+    if (validAssertion) {
+      propertyAssertion = validAssertion; ///
 
       context.debug(`...the '${propertyAssertionString}' property assertion is already valid.`);
     } else {
-      const termValidates = this.validateTerm(assignments, stated, context);
+      let validates = false;
+
+      const termValidates = this.validateTerm(stated, context);
 
       if (termValidates) {
-        const propertyRelationVerifies = this.validatePropertyRelation(assignments, stated, context);
+        const propertyRelationVerifies = this.validatePropertyRelation(stated, context);
 
         if (propertyRelationVerifies) {
           let validatesWhenStated = false,
               validatesWhenDerived = false;
 
           if (stated) {
-            validatesWhenStated = this.validateWhenStated(assignments, context);
+            validatesWhenStated = this.validateWhenStated(context);
           } else {
             validatesWhenDerived = this.validateWhenDerived(context);
           }
@@ -92,29 +94,37 @@ export default define(class PropertyAssertion extends Assertion {
       if (validates) {
         const assertion = this; ///
 
-        context.addAssertion(assertion);
+        propertyAssertion = assertion;  ///
 
-        this.assign(assignments, stated, context);
+        this.assign(stated, context);
+
+        context.addAssertion(assertion);
 
         context.debug(`...validated the '${propertyAssertionString}' property assertion.`);
       }
     }
 
-    return validates;
+    return propertyAssertion;
   }
 
-  validateTerm(assignments, stated, context) {
-    let termValidates;
+  validateTerm(stated, context) {
+    let termValidates = false;
 
     const termString = this.term.getString();
 
     context.trace(`Validating the '${termString}' term...`);
 
-    termValidates = this.term.validate(context, () => {
+    const term = this.term.validate(context, () => {
       const validatesForwards = true;
 
       return validatesForwards;
     });
+
+    if ((term !== null)) {
+      this.term = term;
+
+      termValidates = true;
+    }
 
     if (termValidates) {
       context.debug(`...validated the '${termString}' term.`);
@@ -123,7 +133,7 @@ export default define(class PropertyAssertion extends Assertion {
     return termValidates;
   }
 
-  validatePropertyRelation(assignments, stated, context) {
+  validatePropertyRelation(stated, context) {
     let propertyRelationVerifies;
 
     const propertyRelationString = this.propertyRelation.getString();
@@ -139,7 +149,7 @@ export default define(class PropertyAssertion extends Assertion {
     return propertyRelationVerifies;
   }
 
-  validateWhenStated(assignments, context) {
+  validateWhenStated(context) {
     let validatesWhenStated;
 
     const propertyAssertionString = this.getString(); ///
@@ -171,11 +181,7 @@ export default define(class PropertyAssertion extends Assertion {
     return validatesWhenDerived;
   }
 
-  assign(assignments, stated, context) {
-    if (assignments === null) {
-      return;
-    }
-
+  assign(stated, context) {
     if (!stated) {
       return;
     }
@@ -184,7 +190,7 @@ export default define(class PropertyAssertion extends Assertion {
           variableAssigment = variableAssignmentFromPrepertyAssertion(propertyAssertion, context),
           assignment = variableAssigment; ///
 
-    assignments.push(assignment);
+    context.addAssignment(assignment);
   }
 
   static name = "PropertyAssertion";

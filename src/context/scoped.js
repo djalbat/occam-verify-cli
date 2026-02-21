@@ -8,11 +8,12 @@ import elements from "../elements";
 const { last } = arrayUtilities;
 
 class ScopedContext extends Context {
-  constructor(context, variables, judgements, equivalences, subproofOrProofAssertions) {
+  constructor(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions) {
     super(context);
 
     this.variables = variables;
     this.judgements = judgements;
+    this.assignments = assignments;
     this.equivalences = equivalences;
     this.subproofOrProofAssertions = subproofOrProofAssertions;
   }
@@ -45,6 +46,10 @@ class ScopedContext extends Context {
     ]
 
     return judgements;
+  }
+
+  getAssignments() {
+    return this.assignments;
   }
 
   getEquivalences() {
@@ -146,6 +151,18 @@ class ScopedContext extends Context {
     context.debug(`...added the '${judgementString}' judgement to the scoped context.`);
   }
 
+  addAssignment(assignment) {
+    this.assignments.push(assignment);
+  }
+
+  assignAssignments() {
+    const context = this; ///
+
+    this.assignments.forEach((assignment) => {
+      assignment(context);
+    });
+  }
+
   addSubproofOrProofAssertion(subproofOrProofAssertion) {
     const context = this, ///
           subproofOrProofAssertionString = subproofOrProofAssertion.getString();
@@ -238,9 +255,10 @@ class ScopedContext extends Context {
     const { Equivalences } = elements,
           variables = [],
           judgements = [],
+          assignments = [],
           equivalences = Equivalences.fromNothing(context),
           subproofOrProofAssertions = [],
-          scopedContext = new ScopedContext(context, variables, judgements, equivalences, subproofOrProofAssertions);
+          scopedContext = new ScopedContext(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions);
 
     return scopedContext;
   }

@@ -50,17 +50,23 @@ export default define(class PropertyRelation extends Element {
   }
 
   validateTerm(context) {
-    let termValidates;
+    let termValidates = false;
 
     const termString = this.term.getString();
 
     context.trace(`Validating the '${termString}' term...`);
 
-    termValidates = this.term.validate(context, () => {
+    const term = this.term.validate(context, () => {
       const validatesForwards = true;
 
       return validatesForwards;
     });
+
+    if (term !== null) {
+      this.term = term;
+
+      termValidates = true;
+    }
 
     if (termValidates) {
       context.debug(`...validated the '${termString}' term.`);

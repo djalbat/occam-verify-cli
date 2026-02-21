@@ -3,8 +3,6 @@
 import { arrayUtilities } from "necessary";
 import { Element, asynchronousUtilities } from "occam-languages";
 
-import assignAssignments from "../process/assign";
-
 import { define } from "../elements";
 import { asyncScope } from "../utilities/context";
 import { labelsFromJSON,
@@ -180,13 +178,12 @@ export default define(class Rule extends Element {
     context.trace(`Verifying the '${ruleString}' rule's premises...`);
 
     premisesVerify = await asyncForwardsEvery(this.premises, async (premise) => {
-      const assignments = [],
-            premiseVerifies = await premise.verify(assignments, context)
+      const premiseVerifies = await premise.verify(context)
 
       if (premiseVerifies) {
-        assignAssignments(assignments, context);
-
         const subproofOrProofAssertion = premise;  ////
+
+        context.assignAssignments();
 
         context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 

@@ -358,6 +358,12 @@ export default class Context extends ContextBase {
     context.addJudgement(judgement);
   }
 
+  addAssignment(assignment) {
+    const context = this.getContext();
+
+    context.addAssignment(assignment);
+  }
+
   addSubstitution(substitution) {
     const context = this.getContext();
 

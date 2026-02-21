@@ -51,39 +51,41 @@ export default define(class Judgement extends Element {
     return judgementNodeMatches;
   }
 
-  isValid(context) {
+  findValidJudgement(context) {
     const judgementNode = this.getJudgementNode(),
-          judgementPresent = context.isJudgementPresentByJudgementNode(judgementNode),
-          valid = judgementPresent;  ///
+          judgement = context.findJudgementByJudgementNode(judgementNode),
+          validJudgemenet = judgement;  ///
 
-    return valid;
+    return validJudgemenet;
   }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let judgement = null;
 
     const judgementString = this.getString();  ///
 
     context.trace(`Validating the '${judgementString}' judgement...`);
 
-    const valid = this.isValid(context);
+    const validJudgement = this.findValidJudgement(context);
 
-    if (valid) {
-      validates = true;
+    if (validJudgement !== null) {
+      judgement = validJudgement; ///
 
       context.debug(`...the '${judgementString}' judgement is already valid.`);
     } else {
-      const frameValidates = this.frame.validate(assignments, stated, context);
+      let validates = false;
+
+      const frameValidates = this.validateFrame(stated, context);
 
       if (frameValidates) {
-        const assumptionValidates = this.assumption.validate(assignments, stated, context);
+        const assumptionValidates = this.validateAssumption(stated, context);
 
         if (assumptionValidates) {
           let validatesWhenStated = false,
               validatesWhenDerived = false;
 
           if (stated) {
-            validatesWhenStated = this.validateWhenStated(assignments, context);
+            validatesWhenStated = this.validateWhenStated(context);
           } else {
             validatesWhenDerived = this.validateWhenDerived(context);
           }
@@ -103,10 +105,56 @@ export default define(class Judgement extends Element {
       }
     }
 
-    return validates;
+    return judgement;
   }
 
-  validateWhenStated(assignments, context) {
+  validateFrame(stated, context) {
+    let frameValidates = false;
+
+    const frameString = this.frame.getString(),
+          judgementString = this.getString(); ///
+
+    context.trace(`Validating the '${judgementString}' judgement's '${frameString}' frame...`);
+
+    const frame = this.frame.validate(stated, context);
+
+    if (frame !== null) {
+      this.frame = frame;
+
+      frameValidates = true;
+    }
+
+    if (frameValidates) {
+      context.trace(`...validated the '${judgementString}' judgement's '${frameString}' frame.`);
+    }
+
+    return frameValidates;
+  }
+
+  validateAssumption(stated, context) {
+    let assumptionValidates = false;
+
+    const assumptionString = this.assumption.getString(),
+          judgementString = this.getString(); ///
+
+    context.trace(`Validating the '${judgementString}' judgement's '${assumptionString}' assumption...`);
+
+    const assumption = this.assumption.validate(stated, context);
+
+    if (assumption !== null) {
+      this.assumption = assumption;
+
+      assumptionValidates = true;
+    }
+
+    if (assumptionValidates) {
+      context.trace(`...validated the '${judgementString}' judgement's '${assumptionString}' assumption.`);
+    }
+
+    return assumptionValidates;
+  }
+
+  validateWhenStated(context) {
     let validatesWhenStated;
 
     const judgementString = this.getString();  ///
@@ -146,11 +194,7 @@ export default define(class Judgement extends Element {
     return validatesWhenDerived;
   }
 
-  assign(assignments, stated, context) {
-    if (assignments === null) {
-      return;
-    }
-
+  assign(stated, context) {
     if (!stated) {
       return;
     }
@@ -159,7 +203,7 @@ export default define(class Judgement extends Element {
           judgementAssignment = judgementAssignmentFromJudgement(judgement, context),
           assignment = judgementAssignment; ///
 
-    assignments.push(assignment);
+    context.addAssignment(assignment);
   }
 
   static name = "Judgement";

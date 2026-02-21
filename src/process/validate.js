@@ -32,10 +32,13 @@ class TermPass extends ForwardPass {
       run: (termNode, context, validateForwards) => {
         let success = false;
 
-        const term = termFromTermNode(termNode, context),
-              termValidates = term.validate(context, validateForwards);
+        let term;
 
-        if (termValidates) {
+        term = termFromTermNode(termNode, context);
+
+        term = term.validate(context, validateForwards);  ///
+
+        if (term !== null) {
           success = true;
         }
 
@@ -91,12 +94,15 @@ class StatementPass extends SimplePass {
       run: (statementNode, context) => {
         let success = false;
 
-        const statement = statementFromStatementNode(statementNode, context),
-              stated = false,
-              assignments = null,
-              statementValidates = statement.validate(assignments, stated, context);
+        let statement;
 
-        if (statementValidates) {
+        const stated = true;
+
+        statement = statementFromStatementNode(statementNode, context);
+
+        statement = statement.validate(stated, context);  ///
+
+        if (statement !== null) {
           success = true;
         }
 
@@ -108,14 +114,17 @@ class StatementPass extends SimplePass {
       run: (termNode, context) => {
         let success = false;
 
-        const term = termFromTermNode(termNode, context),
-              termValidates = term.validate(context, () => {
-                const validatesForwards = true;
+        let term;
 
-                return validatesForwards;
-              });
+        term = termFromTermNode(termNode, context);
 
-        if (termValidates) {
+        term = term.validate(context, () => { ///
+          const validatesForwards = true;
+
+          return validatesForwards;
+        });
+
+        if (term !== null) {
           success = true;
         }
 

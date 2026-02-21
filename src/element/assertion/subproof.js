@@ -27,21 +27,23 @@ export default define(class SubproofAssertion extends Assertion {
     return subproofAssertionNode;
   }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let subproofAssertion = null;
 
     const subproofAssertionString = this.getString();  ///
 
     context.trace(`Validating the '${subproofAssertionString}' subproof assertion...`);
 
-    const valid = this.isValid(context);
+    const validAssertion = this.findValidAssertion(context);
 
-    if (valid) {
-      validates = true;
+    if (validAssertion) {
+      subproofAssertion = validAssertion; ///
 
       context.debug(`...the '${subproofAssertionString}' subproof assertion is already valid.`);
     } else {
-      const statementsValidate = this.validateStatements(assignments, stated, context);
+      let validates = false;
+
+      const statementsValidate = this.validateStatements(stated, context);
 
       if (statementsValidate) {
         validates = true;
@@ -50,22 +52,28 @@ export default define(class SubproofAssertion extends Assertion {
       if (validates) {
         const assertion = this; ///
 
+        subproofAssertion = assertion;  ///
+
         context.addAssertion(assertion);
 
         context.debug(`...validated the '${subproofAssertionString}' subproof assertion.`);
       }
     }
 
-    return validates;
+    return subproofAssertion;
   }
 
-  validateStatements(assignments, stated, context) {
+  validateStatements(stated, context) {
     stated = true;  ///
 
-    assignments = null; ///
-
     const statementsValidate = this.statements.map((statement) => {
-      const statementValidates = statement.validate(assignments, stated, context);
+      let statementValidates = false;
+
+      statement = statement.validate(stated, context);  ///
+
+      if (statement !== null) {
+        statementValidates = true;
+      }
 
       if (statementValidates) {
         return true;

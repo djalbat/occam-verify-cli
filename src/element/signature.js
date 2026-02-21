@@ -28,23 +28,34 @@ export default define(class Signature extends Element {
   }
 
   verify(context) {
-    let verifies;
+    let verifies = false;
 
     const signatureString = this.getString();  ///
 
     context.trace(`Verifying the '${signatureString}' signature...`);
 
-    verifies = this.terms.every((term) => {
-      const termValidates = term.validate(context, () => {
-        const validatesForwards = true;
+    const terms = [],
+          termsValidate = this.terms.every((term) => {
+            term = term.validate(context, () => { ///
+              const validatesForwards = true;
 
-        return validatesForwards;
-      });
+              return validatesForwards;
+            });
 
-      if (termValidates) {
-        return true;
-      }
-    });
+            const termValidates = (term !== null);
+
+            if (termValidates) {
+              terms.push(term);
+
+              return true;
+            }
+          });
+
+    if (termsValidate) {
+      this.terms = terms;
+
+      verifies = true;
+    }
 
     if (verifies) {
       context.debug(`...verified the '${signatureString}' signature.`);

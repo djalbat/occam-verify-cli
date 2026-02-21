@@ -107,7 +107,7 @@ export default define(class StatementSubstitution extends Substitution {
   compareMetavariable(metavariable) { return this.targetStatement.compareMetavariable(metavariable); }
 
   validate(generalContext, specificContext) {
-    let validates = false;
+    let statementSubstitution = null;
 
     const context = this.getContext();
 
@@ -117,13 +117,15 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Validating the '${statementSubstitutionString}' statement substitution...`);
 
-    const valid = this.isValid(context);
+    const validSubstitution = this.findValidSubstiution(context);
 
-    if (valid) {
-      validates = true;
+    if (validSubstitution) {
+      statementSubstitution = validSubstitution;  ///
 
       context.debug(`...the '${statementSubstitutionString}' statement substitution is already valid.`);
     } else {
+      let validates = false;
+
       const targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
 
       if (targetStatementValidates) {
@@ -137,13 +139,15 @@ export default define(class StatementSubstitution extends Substitution {
       if (validates) {
         const substitution = this;  ///
 
+        statementSubstitution = substitution; ///
+
         context.addSubstitution(substitution);
 
         context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
       }
     }
 
-    return validates;
+    return statementSubstitution;
   }
 
   validateTargetStatement(generalContext, specificContext) {
@@ -159,9 +163,11 @@ export default define(class StatementSubstitution extends Substitution {
 
     if (targetStatementSingular) {
       const stated = true,
-            assignments = null;
+            targetStatement = this.targetStatement.validate(stated, context);
 
-      targetStatementValidates = this.targetStatement.validate(assignments, stated, context);
+      if (targetStatement !== null) {
+        targetStatementValidates = true;
+      }
     } else {
       context.debug(`The '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement is not singular.`);
     }
@@ -183,9 +189,11 @@ export default define(class StatementSubstitution extends Substitution {
     context.trace(`Validating the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement...`);
 
     const stated = true,
-          assignments = null;
+          replacementStatement = this.replacementStatement.validate(stated, context);
 
-    replacementStatementValidates = this.replacementStatement.validate(assignments, stated, context);
+    if (replacementStatement !== null) {
+      replacementStatementValidates = true;
+    }
 
     if (replacementStatementValidates) {
       context.debug(`...validated the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement.`);

@@ -5,8 +5,6 @@ import { Element, asynchronousUtilities } from "occam-languages";
 
 import { define } from "../elements";
 
-import assignAssignments from "../process/assign";
-
 const { last } = arrayUtilities,
       { asyncEvery } = asynchronousUtilities;
 
@@ -39,11 +37,10 @@ export default define(class SubDerivation extends Element {
     let verifies;
 
     verifies = await asyncEvery(this.subproofOrProofAssertions, async (subproofOrProofAssertion) => { ///
-      const assignments = [],
-            subproofOrProofAssertionVarifies = await subproofOrProofAssertion.verify(assignments, context);
+      const subproofOrProofAssertionVarifies = await subproofOrProofAssertion.verify(context);
 
       if (subproofOrProofAssertionVarifies) {
-        assignAssignments(assignments, context);
+        context.assignAssignments();
 
         context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 

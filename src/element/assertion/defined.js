@@ -33,29 +33,31 @@ export default define(class DefinedAssertion extends Assertion {
     return definedAssertionNode;
   }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let definedAssertion = null;
 
     const definedAssertionString = this.getString(); ///
 
     context.trace(`Validating the '${definedAssertionString}' defined assertion...`);
 
-    const valid = this.isValid(context);
+    const validAssertion = this.findValidAssertion(context);
 
-    if (valid) {
-      validates = true;
+    if (validAssertion !== null) {
+      definedAssertion = validAssertion;  ///
 
-      context.debug(`...the '${definedAssertionString}' defined assertion is already valid.`);
+      context.debug(`...the '${definedAssertionString}' defined definedAssertion is already valid.`);
     } else {
-      const termValidates = this.validateTerm(assignments, stated, context),
-            frameVerifies = this.validateFrame(assignments, stated, context);
+      let validates = false;
 
-      if (termValidates || frameVerifies) {
+      const termValidates = this.validateTerm(stated, context),
+            frameValidates = this.validateFrame(stated, context);
+
+      if (termValidates || frameValidates) {
         let verifiesWhenStated = false,
             verifiesWhenDerived = false;
 
         if (stated) {
-          verifiesWhenStated = this.validateWhenStated(assignments, context);
+          verifiesWhenStated = this.validateWhenStated(context);
         } else {
           verifiesWhenDerived = this.validateWhenDerived(context);
         }
@@ -68,16 +70,18 @@ export default define(class DefinedAssertion extends Assertion {
       if (validates) {
         const assertion = this; ///
 
+        definedAssertion = assertion; ///
+
         context.addAssertion(assertion);
 
-        context.debug(`...validates the '${definedAssertionString}' defined assertion.`);
+        context.debug(`...validated the '${definedAssertionString}' defined assertion.`);
       }
     }
 
-    return validates;
+    return definedAssertion;
   }
 
-  validateTerm(assignments, stated, context) {
+  validateTerm(stated, context) {
     let termValidates = false;
 
     if (this.term !== null) {
@@ -91,11 +95,17 @@ export default define(class DefinedAssertion extends Assertion {
       if (!termSingular) {
         context.debug(`The '${termString}' term is not singular.`);
       } else {
-        termValidates = this.term.validate(context, () => {
-          const validatesForwards = true;
+        const term = this.term.validate(context, () => {
+                const validatesForwards = true;
 
-          return validatesForwards;
-        });
+                return validatesForwards;
+              });
+
+        if (term !== null) {
+          this.term = term; ///
+
+          termValidates = true;
+        }
 
         if (termValidates) {
           context.debug(`...validates the'${definedAssertionString}' defined assertino's '${termString}' term.`);
@@ -106,8 +116,8 @@ export default define(class DefinedAssertion extends Assertion {
     return termValidates;
   }
 
-  validateFrame(assignments, stated, context) {
-    let frameVerifies = false;
+  validateFrame(stated, context) {
+    let frameValidates = false;
 
     if (this.frame !== null) {
       const frameString = this.frame.getString(), ///
@@ -122,20 +132,24 @@ export default define(class DefinedAssertion extends Assertion {
       } else {
         stated = true;  ///
 
-        assignments = null; ///
+        const frame = this.frame.validate(stated, context);
 
-        frameVerifies = this.frame.validate(assignments, stated, context);
+        if (frame !== null) {
+          this.frame = frame;
 
-        if (frameVerifies) {
+          frameValidates = true;
+        }
+
+        if (frameValidates) {
           context.debug(`...validates the'${definedAssertionString}' defined assertino's '${frameString}' frame.`);
         }
       }
     }
 
-    return frameVerifies;
+    return frameValidates;
   }
 
-  validateWhenStated(assignments, context) {
+  validateWhenStated(context) {
     let verifiesWhenStated;
 
     const definedAssertionString = this.getString(); ///

@@ -28,28 +28,30 @@ export default define(class TypeAssertion extends Assertion {
     return typeAssertionNode;
   }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let typeAssertion = null;
 
     const typeAssertionString = this.getString();  ///
 
     context.trace(`Validating the '${typeAssertionString}' type assertion...`);
 
-    const valid = this.isValid();
+    const validAssertion = this.findValidAssertion(context);
 
-    if (valid) {
-      validates = true;
+    if (validAssertion) {
+      typeAssertion = validAssertion; ///
 
       context.debug(`...the '${typeAssertionString}' type assertion is already valid.`);
     } else {
+      let validates = false;
+
       const typeValidates = this.validateType(context);
 
       if (typeValidates) {
         let validatesWhenStated = false,
-              validatesWhenDerived = false;
+            validatesWhenDerived = false;
 
         if (stated) {
-          validatesWhenStated = this.validateWhenStated(assignments, context);
+          validatesWhenStated = this.validateWhenStated(context);
         } else {
           validatesWhenDerived = this.validateWhenDerived(context);
         }
@@ -62,15 +64,17 @@ export default define(class TypeAssertion extends Assertion {
       if (validates) {
         const assertion = this; ///
 
-        context.addAssertion(assertion);
+        typeAssertion = assertion;  ///
 
-        this.assign(assignments, stated, context);
+        this.assign(stated, context);
+
+        context.addAssertion(assertion);
 
         context.debug(`...verified the '${typeAssertionString}' type assertion.`);
       }
     }
 
-    return validates;
+    return typeAssertion;
   }
 
   validateType(context) {
@@ -98,14 +102,14 @@ export default define(class TypeAssertion extends Assertion {
     return typeValidates;
   }
 
-  validateWhenStated(assignments, context) {
+  validateWhenStated(context) {
     let validatesWhenStated = false;
 
     const typeAssertionString = this.getString(); ///
 
     context.trace(`Validating the '${typeAssertionString}' stated type assertion...`);
 
-    const termValidates = this.term.validate(context, () => {
+    const term = this.term.validate(context, () => {
       let validatesForwards;
 
       const termType = this.term.getType(),
@@ -118,7 +122,9 @@ export default define(class TypeAssertion extends Assertion {
       return validatesForwards;
     });
 
-    if (termValidates) {
+    if (term !== null) {
+      this.term = term;
+
       validatesWhenStated = true;
     }
 
@@ -130,13 +136,13 @@ export default define(class TypeAssertion extends Assertion {
   }
 
   validateWhenDerived(context) {
-    let validatesWhenDerived;
+    let validatesWhenDerived = false;
 
     const typeAssertionString = this.getString(); ///
 
     context.trace(`Validating the '${typeAssertionString}' derived type assertion...`);
 
-    const termValidates = this.term.validate(context, () => {
+    const term = this.term.validate(context, () => {
       let validatesForwards = false;
 
       const termType = this.term.getType(),
@@ -153,7 +159,11 @@ export default define(class TypeAssertion extends Assertion {
       return validatesForwards;
     });
 
-    validatesWhenDerived = termValidates; ///
+    if (term !== null) {
+      this.term = term;
+
+      validatesWhenDerived = true;
+    }
 
     if (validatesWhenDerived) {
       context.debug(`...verified the '${typeAssertionString}' derived type assertion.`);
@@ -162,11 +172,7 @@ export default define(class TypeAssertion extends Assertion {
     return validatesWhenDerived;
   }
 
-  assign(assignments, stated, context) {
-    if (assignments === null) {
-      return;
-    }
-
+  assign(stated, context) {
     if (!stated) {
       return;
     }
@@ -175,7 +181,7 @@ export default define(class TypeAssertion extends Assertion {
           variableAssigment = variableAssignmentFromTypeAssertion(typeAssertion, context),
           assignment = variableAssigment;  ///
 
-    assignments.push(assignment);
+    context.addAassignment(assignment);
   }
 
   static name = "TypeAssertion";

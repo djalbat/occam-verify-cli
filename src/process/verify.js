@@ -294,12 +294,15 @@ class ConbinatorPass extends SimplePass {
       run: (statementNode, context) => {
         let success = false;
 
-        const statement = statementFromStatementNode(statementNode, context),
-              stated = false,
-              assignments = null,
-              statementValidates = statement.validate(assignments, stated, context);
+        let statement;
 
-        if (statementValidates) {
+        const stated = true;
+
+        statement = statementFromStatementNode(statementNode, context);
+
+        statement = statement.validate(stated, context);
+
+        if (statement !== null) {
           success = true;
         }
 
@@ -311,14 +314,17 @@ class ConbinatorPass extends SimplePass {
       run: (termNode, context) => {
         let success = false;
 
-        const term = termFromTermNode(termNode, context),
-              termValidates = term.validate(context, () => {
-                const validatesForwards = true;
+        let term;
 
-                return validatesForwards;
-              });
+        term = termFromTermNode(termNode, context);
 
-        if (termValidates) {
+        term = term.validate(context, () => { ///
+          const validatesForwards = true;
+
+          return validatesForwards;
+        });
+
+        if (term !== null) {
           success = true;
         }
 
@@ -350,14 +356,17 @@ class ConstructorPass extends SimplePass {
       run: (termNode, context) => {
         let success = false;
 
-        const term = termFromTermNode(termNode, context),
-              termValidates = term.validate(context, () => {
-                const validatesForwards = true;
+        let term;
 
-                return validatesForwards;
-              });
+        term = termFromTermNode(termNode, context);
 
-        if (termValidates) {
+        term = term.validate(context, () => { ///
+          const validatesForwards = true;
+
+          return validatesForwards;
+        });
+
+        if (term !== null) {
           success = true;
         }
 

@@ -105,12 +105,6 @@ export function variableAssignmentFromPrepertyAssertion(propertyAssertion, conte
 
   }
 
-export default function assignAssignments(assignments, context) {
-  assignments.forEach((assignment) => {
-    assignment(context);
-  });
-}
-
 function variableAssignmentFromVariableNodeAndType(variableNode, type, context) {
   const variable = variableFromVariableNode(variableNode, context);
 

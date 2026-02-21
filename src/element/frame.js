@@ -56,13 +56,14 @@ export default define(class Frame extends Element {
     return frameNodeMatches;
   }
 
-  isValid(context) {
+  findValidFrame(context) {
     const frameNode = this.getFrameNode(),
-          framePresent = context.isFramePresentByFrameNode(frameNode),
-          valid = framePresent;  ///
+          frame = context.findFrameByFrameNode(frameNode),
+          validFrame = frame; ///
 
-    return valid;
+    return validFrame;
   }
+
 
   isEqualTo(frame) {
     const frameNode = frame.getNode(),
@@ -165,29 +166,32 @@ export default define(class Frame extends Element {
     return comparesToMetavariableName;
   }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let frame = null;
 
     const frameString = this.getString();  ///
 
     context.trace(`Validating the '${frameString}' frame...`);
 
-    const valid = this.isValid(context);
+    const validFrame = this.findValidFrame(context),
+          valid = (validFrame !== null);
 
     if (valid) {
-      validates = true;
+      frame = validFrame; ///
 
       context.debug(`...the '${frameString}' frame is already valid.`);
     } else {
-      const assumptionsValidate = this.validateAssumptions(assignments, stated, context),
-            metavariablevalidates = this.validateMetavariable(assignments, stated, context);
+      let validates = false;
+
+      const assumptionsValidate = this.validateAssumptions(stated, context),
+            metavariablevalidates = this.validateMetavariable(stated, context);
 
       if (assumptionsValidate && metavariablevalidates) {
         let validatesWhenStated = false,
             validatesWhenDerived = false;
 
         if (stated) {
-          validatesWhenStated = this.validateWhenStated(assignments, context);
+          validatesWhenStated = this.validateWhenStated(context);
         } else {
           validatesWhenDerived = this.validateWhenDerived(context);
         }
@@ -198,7 +202,7 @@ export default define(class Frame extends Element {
       }
 
       if (validates) {
-        const frame = this; ///
+        frame = this; ///
 
         context.addFrame(frame);
 
@@ -206,10 +210,10 @@ export default define(class Frame extends Element {
       }
     }
 
-    return validates;
+    return frame;
   }
 
-  validateWhenStated(assignments, context) {
+  validateWhenStated(context) {
     let validatesWhenStated = false;
 
     const frameString = this.getString();  ///
@@ -247,7 +251,7 @@ export default define(class Frame extends Element {
     return validatesWhenDerived;
   }
 
-  validateAssumptions(assignments, stated, context) {
+  validateAssumptions(stated, context) {
     let assumptionsValidate;
 
     const singular = this.isSingular();
@@ -260,15 +264,21 @@ export default define(class Frame extends Element {
 
       stated = true;  ///
 
-      assignments = null; ///
+      const assumptions = [];
 
       assumptionsValidate = this.assumptions.every((assumption) => {
-        const assumptionVerifies = assumption.validate(assignments, stated, context);
+        const assumptionValidates = assumption.validate(stated, context);
 
-        return assumptionVerifies;
+        if (assumptionValidates) {
+          assumptions.push(assumption);
+
+          return true;
+        }
       });
 
       if (assumptionsValidate) {
+        this.assumptions = assumptions;
+
         context.debug(`...validated the '${assumptionsString}' assumptions of the '${frameString}' frame.`);
       }
     } else {
@@ -278,7 +288,7 @@ export default define(class Frame extends Element {
     return assumptionsValidate;
   }
 
-  validateMetavariable(assignments, stated, context) {
+  validateMetavariable(stated, context) {
     let metavariableValidates = false;
 
     const singular = this.isSingular();
@@ -313,7 +323,7 @@ export default define(class Frame extends Element {
     return metavariableValidates;
   }
 
-  validateGivenMetaType(metaType, assignments, stated, context) {
+  validateGivenMetaType(metaType, stated, context) {
     let validatesGivenMetaType = false;
 
     const frameString = this.getString(),  ///
@@ -324,7 +334,7 @@ export default define(class Frame extends Element {
     const metaTypeName = metaType.getName();
 
     if (metaTypeName === FRAME_META_TYPE_NAME) {
-      const validates = this.validate(assignments, stated, context)
+      const validates = this.validate(stated, context)
 
       validatesGivenMetaType = validates; ///
     }

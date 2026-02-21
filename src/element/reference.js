@@ -54,12 +54,12 @@ export default define(class Reference extends Element {
     return equalTo;
   }
 
-  isValid(context) {
+  findValidRefernece(context) {
     const metavariableNode = this.getMetavariableNode(),
-          referencePresent = context.isReferencePresentByMetavariableNode(metavariableNode),
-          valid = referencePresent;  ///
+          reference = context.findReferenceByMetavariableNode(metavariableNode),
+          validReference = reference;  ///
 
-    return valid;
+    return validReference;
   }
 
   isEqualTo(reference) {
@@ -111,38 +111,48 @@ export default define(class Reference extends Element {
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
   validate(context) {
-    let validates = false;
+    let reference = null;
 
     const referenceString = this.getString(); ///
 
     context.trace(`Validating the '${referenceString}' reference...`);
 
-    if (!validates) {
-      const metavariableValidates = this.validateMetavariable(context);
+    const validRefernece = this.findValidRefernece(context);
 
-      if (metavariableValidates) {
-        validates = true;
+    if (validRefernece !== null) {
+      reference = validRefernece; ///
+
+      context.debug(`...the '${referenceString}' reference is alrady valid.`);
+    } else {
+      let validates = false;
+
+      if (!validates) {
+        const metavariableValidates = this.validateMetavariable(context);
+
+        if (metavariableValidates) {
+          validates = true;
+        }
+      }
+
+      if (!validates) {
+        const reference = this, ///
+              labelPresent = context.isLabelPresentByReference(reference);
+
+        if (labelPresent) {
+          validates = true;
+        }
+      }
+
+      if (validates) {
+        const reference = this; ///
+
+        context.addReference(reference);
+
+        context.debug(`...validated the '${referenceString}' reference.`);
       }
     }
 
-    if (!validates) {
-      const reference = this, ///
-            labelPresent = context.isLabelPresentByReference(reference);
-
-      if (labelPresent) {
-        validates = true; ///
-      }
-    }
-
-    if (validates) {
-      const reference = this; ///
-
-      context.addReference(reference);
-
-      context.debug(`...validated the '${referenceString}' reference.`);
-    }
-
-    return validates;
+    return reference;
   }
 
   validateMetavariable(context) {

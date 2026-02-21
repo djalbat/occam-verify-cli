@@ -111,28 +111,30 @@ export default define(class Equality extends Element {
     return equal;
   }
 
-  isValid(context) {
+  findValidEquality(context) {
     const equalityNode = this.getEqualityNode(),
-          equalityPresent = context.isEqualityPresentByEqualityNode(equalityNode),
-          valid = equalityPresent;  ///
+          equality = context.findEqualityByEqualityNode(equalityNode),
+          validEquality = equality;  ///
 
-    return valid;
+    return validEquality;
   }
 
-  validate(assignments, stated, context) {
-    let validates = false;
+  validate(stated, context) {
+    let equality = false;
 
     const equalityString = this.getString(); ///
 
     context.trace(`Validating the '${equalityString}' equality...`);
 
-    const valid = this.isValid(context);
+    const validEquality = this.isValid(context);
 
-    if (valid) {
-      validates = true;
+    if (validEquality !== null) {
+      equality = validEquality; ///
 
       context.debug(`...the '${equalityString}' equality is already valid.`);
     } else {
+      let validates = false;
+
       const termsValidate = this.validateTerms(context);
 
       if (termsValidate) {
@@ -140,7 +142,7 @@ export default define(class Equality extends Element {
             validatesWhenDerived = false;
 
         if (stated) {
-          validatesWhenStated = this.validateWhenStated(assignments, context);
+          validatesWhenStated = this.validateWhenStated(context);
         } else {
           validatesWhenDerived = this.validateWhenDerived(context);
         }
@@ -153,45 +155,58 @@ export default define(class Equality extends Element {
       if (validates) {
         const equality = this;  ///
 
-        context.addEquality(equality);
+        this.assign(stated, context);
 
-        this.assign(assignments, stated, context);
+        context.addEquality(equality);
 
         context.debug(`...validated the '${equalityString}' equality.`);
       }
     }
 
-    return validates;
+    return equality;
   }
 
   validateTerms(context) {
-    let termsValidate;
+    let termsValidate = false;
 
     const equalityString = this.getString(); ///
 
     context.trace(`Validating the '${equalityString}' equality's terms...`);
 
-    const leftTermValidates = this.leftTerm.validate(context, () => {
-      let validatesForwards;
+    let leftTerm,
+        rightTerm = null;
 
-      const rightTermValidates = this.rightTerm.validate(context, () => {
+    leftTerm = this.leftTerm.validate(context, () => {
         let validatesForwards;
 
-        const leftTermType = this.leftTerm.getType(),
-              rightTermType = this.rightTerm.getType(),
-              leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
+        rightTerm = this.rightTerm.validate(context, () => {
+          let validatesForwards;
 
-        validatesForwards = leftTermTypeComparableToRightTermType;  ///
+          const leftTermType = this.leftTerm.getType(),
+                rightTermType = this.rightTerm.getType(),
+                leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
+
+          validatesForwards = leftTermTypeComparableToRightTermType;  ///
+
+          return validatesForwards;
+        });
+
+        const rightTermValidates = (rightTerm !== null);
+
+        validatesForwards = rightTermValidates; ///
 
         return validatesForwards;
       });
 
-      validatesForwards = rightTermValidates; ///
+    const leftTermValidates = (leftTerm !== null);
 
-      return validatesForwards;
-    });
+    if (leftTermValidates) {
+      this.leftTerm = leftTerm;
 
-    termsValidate = leftTermValidates; ///
+      this.rightTerm = rightTerm;
+
+      termsValidate = true;
+    }
 
     if (termsValidate) {
       context.debug(`...validated the '${equalityString}' equality's terms.`);
@@ -200,7 +215,7 @@ export default define(class Equality extends Element {
     return termsValidate;
   }
 
-  validateWhenStated(assignments, context) {
+  validateWhenStated(context) {
     let validatesWhenStated;
 
     const equalityString = this.getString(); ///
@@ -232,11 +247,7 @@ export default define(class Equality extends Element {
     return validatesWhenDerived;
   }
 
-  assign(assignments, stated, context) {
-    if (assignments === null) {
-      return;
-    }
-
+  assign(stated, context) {
     const equality = this,  ///
           equalityAssignment = equalityAssignmentFromEquality(equality, context),
           leftVariableAssignment = leftVariableAssignmentFromEquality(equality, context),
@@ -246,18 +257,18 @@ export default define(class Equality extends Element {
 
     assignment = equalityAssignment; ///
 
-    assignments.push(assignment);
+    context.addAssignment(assignment);
 
     if (leftVariableAssignment !== null) {
       assignment = leftVariableAssignment;  ///
 
-      assignments.push(assignment);
+      context.addAssignment(assignment);
     }
 
     if (rightVariableAssignment !== null) {
       assignment = rightVariableAssignment;  ///
 
-      assignments.push(assignment);
+      context.addAssignment(assignment);
     }
   }
 

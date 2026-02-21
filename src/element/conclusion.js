@@ -35,9 +35,14 @@ export  default define(class Conclusion extends Element {
 
     if (this.statement !== null) {
       attempt((context) => {
+        let statementValidates = false;
+
         const stated = true,
-              assignments = null,
-              statementValidates = this.statement.validate(assignments, stated, context);
+              statement = this.statement.validate(stated, context);
+
+        if (statement !== null) {
+          statementValidates = true;
+        }
 
         if (statementValidates) {
           this.setContext(context);

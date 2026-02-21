@@ -47,7 +47,7 @@ export default define(class Combinator extends Element {
     return verifies;
   }
 
-  unifyStatement(statement, assignments, stated, context) {
+  unifyStatement(statement, stated, context) {
     let statementUnifies;
 
     const statementString = statement.getString(),
@@ -64,7 +64,7 @@ export default define(class Combinator extends Element {
     context = specifiContext; ///
 
     const combinator = this, ///
-          statementUnifiesWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, generalContext, specifiContext);
+          statementUnifiesWithCombinator = unifyStatementWithCombinator(statement, combinator, stated, generalContext, specifiContext);
 
     statementUnifies = statementUnifiesWithCombinator; ///
 

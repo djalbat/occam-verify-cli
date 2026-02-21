@@ -2,8 +2,6 @@
 
 import { Element } from "occam-languages";
 
-import assignAssignments from "../process/assign";
-
 import { asyncScope } from "../utilities/context";
 import { labelFromJSON,
          labelToLabelJSON,
@@ -155,13 +153,12 @@ export default class TopLevelMetaAssertion extends Element {
     context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta assertion's suppositions...`);
 
     suppositionsVerify = await asyncForwardsEvery(this.suppositions, async (supposition) => {
-      const assignments = [],
-            suppositionVerifies = await supposition.verify(assignments, context)
+      const suppositionVerifies = await supposition.verify(context)
 
       if (suppositionVerifies) {
-        assignAssignments(assignments, context);
-
         const subproofOrProofAssertion = supposition;  ////
+
+        context.assignAssignments();
 
         context.addSubproofOrProofAssertion(subproofOrProofAssertion);
 

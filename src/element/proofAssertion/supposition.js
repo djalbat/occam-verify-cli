@@ -30,7 +30,7 @@ export default define(class Supposition extends ProofAssertion {
     return stated;
   }
 
-  validate(assignments, context) {
+  validate(context) {
     let validates = false;
 
     const suppositionString = this.getString(); ///
@@ -43,13 +43,13 @@ export default define(class Supposition extends ProofAssertion {
     if (false) {
       ///
     } else if (statement !== null) {
-      const statementValidates = this.validateStatement(assignments, context);
+      const statementValidates = this.validateStatement(context);
 
       if (statementValidates) {
         validates = true;
       }
     } else if (procedureCall !== null) {
-      const procedureCallValidates = this.validateProcedureCall(assignments, context);
+      const procedureCallValidates = this.validateProcedureCall(context);
 
       if (procedureCallValidates) {
         validates = true;
@@ -65,7 +65,7 @@ export default define(class Supposition extends ProofAssertion {
     return validates;
   }
 
-  validateProcedureCall(assignments, context) {
+  validateProcedureCall(context) {
     let procedureCallValidates = false;
 
     const suppositionString = this.getString(), ///
@@ -216,7 +216,7 @@ export default define(class Supposition extends ProofAssertion {
     return subproofUnifies;
   }
 
-  async verify(assignments, context) {
+  async verify(context) {
     let verifies = false;
 
     await this.break(context);
@@ -226,7 +226,7 @@ export default define(class Supposition extends ProofAssertion {
     context.trace(`Verifying the '${suppositionString}' supposition...`);
 
     attempt((context) => {
-      const validates = this.validate(assignments, context);
+      const validates = this.validate(context);
 
       if (validates) {
         this.setContext(context);

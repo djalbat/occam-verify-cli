@@ -53,17 +53,20 @@ export default class ProofAssertion extends Element {
     return comparesToStatement;
   }
 
-  validateStatement(assignments, context) {
-    let statementValidates;
+  validateStatement(context) {
+    let statementValidates = false;
 
     const statementString = this.statement.getString(),
           proofAssertionString = this.getString();  ///
 
     context.trace(`Validating the '${proofAssertionString}' proof assertion's '${statementString}' statement... `);
 
-    const stated = this.isStated();
+    const stated = this.isStated(),
+          statement = this.statement.validate(stated, context);
 
-    statementValidates = this.statement.validate(assignments, stated, context);
+    if (statement !== null) {
+      statementValidates = true;
+    }
 
     if (statementValidates) {
       context.debug(`...validated the '${proofAssertionString}' proof assertion's '${statementString}' statement. `);

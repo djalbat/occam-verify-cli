@@ -34,12 +34,12 @@ export default class Substitution extends Element {
     return equalTo;
   }
 
-  isValid(context) {
+  findValidSubstiution(context) {
     const substitutionNode = this.getSubstitutionNode(),
-          substitutionPresent = context.isSubstitutionPresentBySubstitutionNode(substitutionNode),
-          valid = substitutionPresent;  ///
+          substitution = context.findSubstitutionBySubstitutionNode(substitutionNode),
+          validSubstitution = substitution;  ///
 
-    return valid;
+    return validSubstitution;
   }
 
   isEqualTo(substitution) {
