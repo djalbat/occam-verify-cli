@@ -97,7 +97,7 @@ export default define(class Judgement extends Element {
       }
 
       if (validates) {
-        const judgement = this; ///
+        judgement = this; ///
 
         context.addJudgement(judgement)
 

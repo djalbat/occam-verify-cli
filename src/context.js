@@ -179,6 +179,13 @@ export default class Context extends ContextBase {
     return reference;
   }
 
+  findSubstitutionBySubstitutionNode(substitutionNode) {
+    const context = this.getContext(),
+          substitution = context.findSubstitutionBySubstitutionNode(substitutionNode);
+
+    return substitution;
+  }
+
   findVariableByVariableIdentifier(variableIdentifier) {
     const context = this.getContext(),
           variable = context.findVariableByVariableIdentifier(variableIdentifier);

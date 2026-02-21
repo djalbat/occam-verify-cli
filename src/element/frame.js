@@ -64,7 +64,6 @@ export default define(class Frame extends Element {
     return validFrame;
   }
 
-
   isEqualTo(frame) {
     const frameNode = frame.getNode(),
           frameNodeMatches = this.matchFrameNode(frameNode),

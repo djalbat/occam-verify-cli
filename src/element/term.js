@@ -159,9 +159,13 @@ export default define(class Term extends Element {
           valid = (validTerm !== null);
 
     if (valid) {
-      term = validTerm; ///
+      const validatesForward = validateForwards();
 
-      context.debug(`...the '${termString}' term is already valid.`);
+      if (validatesForward) {
+        term = validTerm; ///
+
+        context.debug(`...the '${termString}' term is already valid.`);
+      }
     } else {
       const validates = validateTerms.some((validateTerm) => {  ///
         const term = this,  ///
@@ -173,7 +177,7 @@ export default define(class Term extends Element {
       });
 
       if (validates) {
-        term = null;  ///
+        term = this;  ///
 
         context.addTerm(term);
 

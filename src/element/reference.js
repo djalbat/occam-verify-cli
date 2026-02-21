@@ -144,7 +144,7 @@ export default define(class Reference extends Element {
       }
 
       if (validates) {
-        const reference = this; ///
+        reference = this; ///
 
         context.addReference(reference);
 

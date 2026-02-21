@@ -113,7 +113,7 @@ export default define(class Assumption extends Element {
       }
 
       if (validates) {
-        const assumption = this;  ///
+        assumption = this;  ///
 
         context.addAssumption(assumption);
 

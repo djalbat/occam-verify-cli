@@ -196,7 +196,7 @@ export default define(class Statement extends Element {
       });
 
       if (validates) {
-        const statement = this; ///
+        statement = this; ///
 
         context.addStatement(statement);
 

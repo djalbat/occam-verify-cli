@@ -120,13 +120,13 @@ export default define(class Equality extends Element {
   }
 
   validate(stated, context) {
-    let equality = false;
+    let equality = null;
 
     const equalityString = this.getString(); ///
 
     context.trace(`Validating the '${equalityString}' equality...`);
 
-    const validEquality = this.isValid(context);
+    const validEquality = this.findValidEquality(context);
 
     if (validEquality !== null) {
       equality = validEquality; ///
@@ -153,7 +153,7 @@ export default define(class Equality extends Element {
       }
 
       if (validates) {
-        const equality = this;  ///
+        equality = this;  ///
 
         this.assign(stated, context);
 
@@ -174,38 +174,36 @@ export default define(class Equality extends Element {
     context.trace(`Validating the '${equalityString}' equality's terms...`);
 
     let leftTerm,
-        rightTerm = null;
+        rightTerm;
 
     leftTerm = this.leftTerm.validate(context, () => {
-        let validatesForwards;
+        let validatesForwards = false;
 
         rightTerm = this.rightTerm.validate(context, () => {
-          let validatesForwards;
-
-          const leftTermType = this.leftTerm.getType(),
-                rightTermType = this.rightTerm.getType(),
-                leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
-
-          validatesForwards = leftTermTypeComparableToRightTermType;  ///
+          const validatesForwards = true;
 
           return validatesForwards;
         });
 
-        const rightTermValidates = (rightTerm !== null);
-
-        validatesForwards = rightTermValidates; ///
+        if (rightTerm !== null) {
+          validatesForwards = true;
+        }
 
         return validatesForwards;
       });
 
-    const leftTermValidates = (leftTerm !== null);
+    if (leftTerm !== null) {
+      const leftTermType = leftTerm.getType(),
+            rightTermType = rightTerm.getType(),
+            leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
 
-    if (leftTermValidates) {
-      this.leftTerm = leftTerm;
+      if (leftTermTypeComparableToRightTermType) {
+        this.leftTerm = leftTerm;
 
-      this.rightTerm = rightTerm;
+        this.rightTerm = rightTerm;
 
-      termsValidate = true;
+        termsValidate = true;
+      }
     }
 
     if (termsValidate) {
