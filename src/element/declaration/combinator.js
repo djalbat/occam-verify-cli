@@ -30,7 +30,7 @@ export default define(class CombinatorDeclaration extends Declaration {
 
     context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 
-    const combinatorVerifies = this.combinator.verify();
+    const combinatorVerifies = this.combinator.verify(context);
 
     if (combinatorVerifies) {
       context.addCombinator(this.combinator);

@@ -25,16 +25,15 @@ export default define(class Combinator extends Element {
     return combinatorNode;
   }
 
-  verify() {
+  verify(context) {
     let verifies;
 
-    const context = this.getContext(),
-          combinatorString = this.getString();  ///
+    const combinatorString = this.getString();  ///
 
     context.trace(`Verifying the '${combinatorString}' combinator...`);
 
     const combinator = this,  ///
-          combinatorVerifies = verifyCombinator(combinator, context);
+          combinatorVerifies = verifyCombinator(combinator);
 
     if (combinatorVerifies) {
       verifies = true;
