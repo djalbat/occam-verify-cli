@@ -30,7 +30,7 @@ export default define(class CombinatorDeclaration extends Declaration {
 
     context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 
-    const combinatorVerifies = this.combinator.verify(context);
+    const combinatorVerifies = this.verifyCombinator();
 
     if (combinatorVerifies) {
       context.addCombinator(this.combinator);
@@ -43,6 +43,24 @@ export default define(class CombinatorDeclaration extends Declaration {
     }
 
     return verifies;
+  }
+
+  verifyCombinator() {
+    let combinatorVerifies;
+
+    const context = this.getContext(),
+          combinatorString = this.combinator.getString(),
+          combinatorDeclarationString = this.getString();  ///
+
+    context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration's '${combinatorString}' combinator...`);
+
+    combinatorVerifies = this.combinator.verify(context);
+
+    if (combinatorVerifies) {
+      context.debug(`...verified the '${combinatorDeclarationString}' combinator declaration's '${combinatorString}' combinator.`);
+    }
+
+    return combinatorVerifies;
   }
 
   static name = "CombinatorDeclaration";

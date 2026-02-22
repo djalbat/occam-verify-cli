@@ -5,7 +5,6 @@ import elements from "../elements";
 import { literally } from "../utilities/context";
 import { baseTypeFromNothing } from "../utilities/type";
 import { instantiateReference } from "../process/instantiate";
-import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { equivalenceStringFromTerms,
          typeStringFromNominalTypeName,
          rulsStringFromLabelsPremisesAndConclusion,
@@ -776,8 +775,10 @@ export function constructorDeclarationFromConstructorDeclarationNode(constructor
   const { ConstructorDeclaration } = elements,
         node = constructorDeclarationNode, ///
         string = context.nodeAsString(node),
+        type = typeFromConstructorDeclarationNode(constructorDeclarationNode, context),
+        provisional = provisionalFromConstructorDeclarationNode(constructorDeclarationNode, context),
         constructor = constructorFromConstructorDeclarationNode(constructorDeclarationNode, context),
-        constructorDeclaration = new ConstructorDeclaration(context, string, node, constructor);
+        constructorDeclaration = new ConstructorDeclaration(context, string, node, type, provisional, constructor);
 
   return constructorDeclaration;
 }
@@ -1503,6 +1504,13 @@ export function typeFromComplexTypeDeclarationNode(complexTypeDeclarationNode, c
   return type;
 }
 
+export function typeFromConstructorDeclarationNode(constructorDeclarationNode, context) {
+  const typeNode = constructorDeclarationNode.getTypeNode(),
+        type = typeFromTypeNode(typeNode, context);
+
+  return type;
+}
+
 export function containedAssertionFromStatementNode(statementNode, context) {0
   let containedAssertion = null;
 
@@ -1633,6 +1641,12 @@ export function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationN
         metaType = metaTypeFromMetaTypeNode(metaTypeNode, context);
 
   return metaType;
+}
+
+export function provisionalFromConstructorDeclarationNode(constructorDeclarationNode, context) {
+  const provisional = constructorDeclarationNode.isProvisional();
+
+  return provisional;
 }
 
 export function replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context) {
