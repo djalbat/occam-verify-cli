@@ -5,19 +5,19 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class ComplexTypeDeclaration extends Declaration {
-  constructor(context, string, node, type, prefixed) {
+  constructor(context, string, node, type, superTypes) {
     super(context, string, node);
 
     this.type = type;
-    this.prefixed = prefixed;
+    this.superTypes = superTypes;
   }
 
   getType() {
     return this.type;
   }
 
-  isPrefixed() {
-    return this.prefixed;
+  getSuperTypes() {
+    return this.superTypes;
   }
 
   getComplexTypeDeclarationNode() {

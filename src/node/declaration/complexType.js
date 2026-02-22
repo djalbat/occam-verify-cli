@@ -28,13 +28,6 @@ export default class ComplexTypeDeclarationNode extends DeclarationNode {
     return provisional;
   }
 
-  isPrefixed() {
-    const typeNode = this.getTypeNode(),
-          prefixed = typeNode.isPrefixed();
-
-    return prefixed;
-  }
-
   getTypeName() {
     const typeNode = this.getTypeNode(),
           typeName = typeNode.getTypeName();

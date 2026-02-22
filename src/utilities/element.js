@@ -741,9 +741,8 @@ export function simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDec
         node = simpleTypeDeclarationNode, ///
         string = context.nodeAsString(node),
         type = typeFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
-        prefixed = prefixedFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
         superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
-        simpleTypeDeclaration = new SimpleTypeDeclaration(context, string, node, type, prefixed, superTypes);
+        simpleTypeDeclaration = new SimpleTypeDeclaration(context, string, node, type, superTypes);
 
   return simpleTypeDeclaration;
 }
@@ -789,8 +788,8 @@ export function complexTypeDeclarationFromComplexTypeDeclarationNode(complexType
         node = complexTypeDeclarationNode,  ///
         string = context.nodeAsString(node),
         type = typeFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
-        prefixed = prefixedFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
-        complexTypeDeclaration = new ComplexTypeDeclaration(context, string, node, type, prefixed);
+        superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
+        complexTypeDeclaration = new ComplexTypeDeclaration(context, string, node, type, superTypes);
 
   return complexTypeDeclaration;
 }
@@ -1584,12 +1583,6 @@ export function suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, co
   return suppositions;
 }
 
-export function prefixedFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
-  const prefixed = simpleTypeDeclarationNode.isPrefixed();
-
-  return prefixed;
-}
-
 export function resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context) {
   const resolved = statementSubstitutionNode.isResolved();
 
@@ -1601,12 +1594,6 @@ export function deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, 
         deduction = deductionFromDeductionNode(deductionNode, context);
 
   return deduction;
-}
-
-export function prefixedFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
-  const prefixed = complexTypeDeclarationNode.isPrefixed();
-
-  return prefixed;
 }
 
 export function procedureReferenceFromProcedureCallNode(procedureCallNode, context) {
@@ -1658,10 +1645,18 @@ export function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationN
   return metaType;
 }
 
-export function provisionalFromConstructorDeclarationNode(constructorDeclarationNode, context) {
-  const provisional = constructorDeclarationNode.isProvisional();
+export function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
+  let superTypes = [];
 
-  return provisional;
+  const typesNode = complexTypeDeclarationNode.getTypesNode();
+
+  if (typesNode !== null) {
+    const types = typesFromTypesNode(typesNode, context);
+
+    superTypes = types; ///
+  }
+
+  return superTypes;
 }
 
 export function replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context) {
@@ -1698,6 +1693,12 @@ export function constructorFromConstructorDeclarationNode(constructorDeclaration
         constructor = constructorFromConstructorNode(constructorNode, context);
 
   return constructor;
+}
+
+export function provisionalFromConstructorDeclarationNode(constructorDeclarationNode, context) {
+  const provisional = constructorDeclarationNode.isProvisional();
+
+  return provisional;
 }
 
 export function metavariableFromMetavariableDeclarationNode(metavariableDeclarationNode, context) {

@@ -10,10 +10,9 @@ export function baseTypeFromNothing() {
   if (baseType === null) {
     const { Type } = elements,
           name = BASE_TYPE_SYMBOL,  ///
-          context = null,
-          provisional = false;
+          context = null;
 
-    baseType = Type.fromNameAndProvisional(name, provisional, context);
+    baseType = Type.fromName(name, context);
   }
 
   return baseType;

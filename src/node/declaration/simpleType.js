@@ -6,13 +6,6 @@ import { PROVISIONAL } from "../../constants";
 import { TYPE_RULE_NAME, TYPES_RULE_NAME } from "../../ruleNames";
 
 export default class SimpleTypeDeclarationNode extends DeclarationNode {
-  isPrefixed() {
-    const typeNode = this.getTypeNode(),
-          prefixed = typeNode.isPrefixed();
-
-    return prefixed;
-  }
-
   isProvisional() {
     let provisional = false;
 

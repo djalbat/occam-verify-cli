@@ -263,7 +263,7 @@ export default class NominalFileContext extends FileContext {
     this.types.push(type);
 
     const filePath = this.getFilePath(),
-          typeString = type.toString();
+          typeString = type.getString();
 
     this.trace(`Added the '${typeString}' type to the '${filePath}' file context.`)
   }
@@ -272,7 +272,7 @@ export default class NominalFileContext extends FileContext {
     this.rules.push(rule);
 
     const filePath = this.getFilePath(),
-          ruleString = rule.toString();
+          ruleString = rule.getString();
 
     this.trace(`Added the '${ruleString}' rule to the '${filePath}' file context.`)
   }
@@ -281,7 +281,7 @@ export default class NominalFileContext extends FileContext {
     this.axioms.push(axiom);
 
     const filePath = this.getFilePath(),
-          axiomString = axiom.toString();
+          axiomString = axiom.getString();
 
     this.trace(`Added the '${axiomString}' axiom to the '${filePath}' file context.`)
   }
@@ -290,7 +290,7 @@ export default class NominalFileContext extends FileContext {
     this.lemmas.push(lemma);
 
     const filePath = this.getFilePath(),
-          lemmaString = lemma.toString();
+          lemmaString = lemma.getString();
 
     this.trace(`Added the '${lemmaString}' lemma to the '${filePath}' file context.`)
   }
@@ -299,7 +299,7 @@ export default class NominalFileContext extends FileContext {
     this.theorems.push(theorem);
 
     const filePath = this.getFilePath(),
-          theoremString = theorem.toString();
+          theoremString = theorem.getString();
 
     this.trace(`Added the '${theoremString}' theorem to the '${filePath}' file context.`)
   }
@@ -308,7 +308,7 @@ export default class NominalFileContext extends FileContext {
     this.variables.push(variable);
 
     const filePath = this.getFilePath(),
-          variableString = variable.toString();
+          variableString = variable.getString();
 
     this.trace(`Added the '${variableString}' variable to the '${filePath}' file context.`)
   }
@@ -317,7 +317,7 @@ export default class NominalFileContext extends FileContext {
     this.metaLemmas.push(metaLemma);
 
     const filePath = this.getFilePath(),
-          metaLemmaString = metaLemma.toString();
+          metaLemmaString = metaLemma.getString();
 
     this.trace(`Added the '${metaLemmaString}' meta-lemma to the '${filePath}' file context.`)
   }
@@ -326,7 +326,7 @@ export default class NominalFileContext extends FileContext {
     this.conjectures.push(conjecture);
 
     const filePath = this.getFilePath(),
-          ocnjectureString = ocnjecture.toString();
+          ocnjectureString = ocnjecture.getString();
 
     this.trace(`Added the '${ocnjectureString}' ocnjecture to the '${filePath}' file context.`)
   }
@@ -335,7 +335,7 @@ export default class NominalFileContext extends FileContext {
     this.combinators.push(combinator);
 
     const filePath = this.getFilePath(),
-          combinatorString = combinator.toString();
+          combinatorString = combinator.getString();
 
     this.trace(`Added the '${combinatorString}' combinator to the '${filePath}' file context.`)
   }
@@ -344,7 +344,7 @@ export default class NominalFileContext extends FileContext {
     this.typePrefixes.push(typePrefix);
 
     const filePath = this.getFilePath(),
-          typePrefixString = typePrefix.toString();
+          typePrefixString = typePrefix.getString();
 
     this.trace(`Added the '${typePrefixString}' type-prefix to the '${filePath}' file context.`)
   }
@@ -353,7 +353,7 @@ export default class NominalFileContext extends FileContext {
     this.constructors.push(constructor);
 
     const filePath = this.getFilePath(),
-          constructorString = constructor.toString();
+          constructorString = constructor.getString();
 
     this.trace(`Added the '${constructorString}' constructor to the '${filePath}' file context.`)
   }
@@ -362,7 +362,7 @@ export default class NominalFileContext extends FileContext {
     this.metatheorems.push(metatheorem);
 
     const filePath = this.getFilePath(),
-          metatheoremString = metatheorem.toString();
+          metatheoremString = metatheorem.getString();
 
     this.trace(`Added the '${metatheoremString}' metatheorem to the '${filePath}' file context.`)
   }
@@ -371,7 +371,7 @@ export default class NominalFileContext extends FileContext {
     this.metavariables.push(metavariable);
 
     const filePath = this.getFilePath(),
-          metavariableString = metavariable.toString();
+          metavariableString = metavariable.getString();
 
     this.trace(`Added the '${metavariableString}' metavariable to the '${filePath}' file context.`)
   }
