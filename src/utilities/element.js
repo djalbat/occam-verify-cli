@@ -742,7 +742,8 @@ export function simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDec
         string = context.nodeAsString(node),
         type = typeFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
         prefixed = prefixedFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
-        simpleTypeDeclaration = new SimpleTypeDeclaration(context, string, node, type, prefixed);
+        superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
+        simpleTypeDeclaration = new SimpleTypeDeclaration(context, string, node, type, prefixed, superTypes);
 
   return simpleTypeDeclaration;
 }
@@ -1622,6 +1623,20 @@ export function replacementTermFromTermSubstitutionNode(termSubstitutionNode, co
   return replacementTerm;
 }
 
+export function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
+  let superTypes = [];
+
+  const typesNode = simpleTypeDeclarationNode.getTypesNode();
+
+  if (typesNode !== null) {
+    const types = typesFromTypesNode(typesNode, context);
+
+    superTypes = types; ///
+  }
+
+  return superTypes;
+}
+
 export function typePrefixFromTypePrefixDeclarationNode(typePrefixDeclarationNode, context) {
   const typePrefixNode = typePrefixDeclarationNode.getTypePrefixNode(),
         typePrefix = typePrefixFromTypePrefixNode(typePrefixNode, context);
@@ -1752,6 +1767,17 @@ export function termsFromTermNodes(termNodes, context) {
   });
 
   return terms;
+}
+
+export function typesFromTypesNode(typesNode, context) {
+  const typeNodes = typesNode.getTypeNodes(),
+        types = typeNodes.map((typeNode) => {
+          const type = typeFromTypeNode(typeNode, context);
+
+          return type;
+        });
+
+  return types;
 }
 
 export function labelsFromLabelNodes(labelNodes, context) {

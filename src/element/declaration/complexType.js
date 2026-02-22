@@ -41,20 +41,20 @@ export default define(class ComplexTypeDeclaration extends Declaration {
           typePresent = context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
 
     if (typePresent) {
-      context.trace(`The '${typeString}' type is already present.`);
+      context.debug(`The '${typeString}' type is already present.`);
     } else {
       const prefixedTypeName = typeName, ///
             typePresent = context.isTypePresentByPrefixedTypeName(prefixedTypeName);
 
       if (typePresent) {
-        context.trace(`The '${typeString}' type is already present.`);
+        context.debug(`The '${typeString}' type is already present.`);
       } else {
         typeVerifies = true;
       }
     }
 
     if (typeVerifies) {
-      context.trace(`...verified the '${typeString}' complex type.`);
+      context.debug(`...verified the '${typeString}' complex type.`);
     }
 
     return typeVerifies;

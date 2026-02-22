@@ -117,15 +117,15 @@ class ScopedContext extends Context {
 
     const equalityRelfexive = equality.isReflexive();
 
-    if (equalityRelfexive) {
-      context.trace(`The '${equalityString}' equality is reflexive and will not added to the scoped context.`);
-    } else {
+    if (!equalityRelfexive) {
       const { Equivalence } = elements,
             equivalence = Equivalence.fromEquality(equality, context);
 
       this.equivalences = this.equivalences.mergedWithEquivalence(equivalence, context);
 
       context.debug(`...added the '${equalityString}' equality to the scoped context.`);
+    } else {
+      context.debug(`The '${equalityString}' equality is reflexive and will not added to the scoped context.`);
     }
   }
 

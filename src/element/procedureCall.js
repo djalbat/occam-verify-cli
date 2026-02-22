@@ -60,10 +60,10 @@ export default define(class ProcedureCall extends Element {
       if (procedureBoolean) {
         validates = true;
       } else {
-        context.trace(`The '${procedureCallString}' procedure is not boolean.`);
+        context.debug(`The '${procedureCallString}' procedure is not boolean.`);
       }
     } else {
-      context.trace(`The '${procedureCallString}' procedure is not present.`);
+      context.debug(`The '${procedureCallString}' procedure is not present.`);
     }
 
     if (validates) {

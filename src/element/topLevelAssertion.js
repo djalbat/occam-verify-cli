@@ -140,7 +140,7 @@ export default class TopLevelAssertion extends Element {
     });
 
     if (labelsVerify) {
-      context.trace(`...verified the '${topLevelAssertionString}' top level assertion's labels.`);
+      context.debug(`...verified the '${topLevelAssertionString}' top level assertion's labels.`);
     }
 
     return labelsVerify;

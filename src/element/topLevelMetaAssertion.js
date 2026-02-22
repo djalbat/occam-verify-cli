@@ -66,7 +66,7 @@ export default class TopLevelMetaAssertion extends Element {
     labelVerifies = this.label.verify(nameOnly);
 
     if (labelVerifies) {
-      context.trace(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's label.`);
+      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's label.`);
     }
 
     return labelVerifies;

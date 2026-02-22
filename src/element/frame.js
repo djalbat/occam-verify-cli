@@ -224,7 +224,7 @@ export default define(class Frame extends Element {
     if (singular) {
       validatesWhenStated = true;
     } else {
-      context.trace(`The '${frameString}' stated frame must be singular.`);
+      context.debug(`The '${frameString}' stated frame must be singular.`);
     }
 
     if (validatesWhenStated) {

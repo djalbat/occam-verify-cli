@@ -78,7 +78,7 @@ export default define(class Rule extends Element {
     });
 
     if (labelsVerify) {
-      context.trace(`...verified the '${ruleString}' rule's labels.`);
+      context.debug(`...verified the '${ruleString}' rule's labels.`);
     }
 
     return labelsVerify;

@@ -40,13 +40,13 @@ export default define(class TypePrefixDeclaration extends Declaration {
             typePrefixPresent = context.isTypePrefixPresentByTypePrefixName(typePrefixName);
 
       if (typePrefixPresent) {
-        context.trace(`The '${typePrefixString}' type prefix is already present.`);
+        context.debug(`The '${typePrefixString}' type prefix is already present.`);
       } else {
         const nominalTypeName = typePrefixName,  ///
               typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
         if (typePresent) {
-          context.trace(`The '${typePrefixString}' type is already present.`);
+          context.debug(`The '${typePrefixString}' type is already present.`);
         } else {
           typePrefixVerifies = true;
         }

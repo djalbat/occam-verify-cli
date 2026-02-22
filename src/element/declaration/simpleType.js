@@ -3,17 +3,27 @@
 import Declaration from "../declaration";
 
 import { define } from "../../elements";
+import { superTypesStringFromSuperTypes } from "../../utilities/string";
 
 export default define(class SimpleTypeDeclaration extends Declaration {
-  constructor(context, string, node, type, prefixed) {
+  constructor(context, string, node, type, prefixed, superTypes) {
     super(context, string, node);
 
     this.type = type;
     this.prefixed = prefixed;
+    this.superTypes = superTypes;
   }
 
   getType() {
     return this.type;
+  }
+
+  isPrefixed() {
+    return this.prefixed;
+  }
+
+  getSuperTypes() {
+    return this.superTypes;
   }
 
   getSimpleTypeDeclarationNode() {
@@ -23,71 +33,65 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     return simpleTypeDeclarationNode;
   }
 
-  isPrefixed() {
-    return this.prefixed;
-  }
-
   verifyType() {
     let typeVerifies = false;
 
     const context = this.getContext(),
-          typeString = this.type.getString();
+          typeString = this.type.getString(),
+          simpleTypeDeclarationString = this.getString(); ///
 
-    context.trace(`Verifying the '${typeString}' simple type...`);
+    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type...`);
 
     const typeName = this.type.getName(),
           includeRelease = true,
           includeDependencies = false,
           typePresent = context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
 
-    if (typePresent) {
-      context.trace(`The '${typeString}' type is already present.`);
-    } else {
+    if (!typePresent) {
       const prefixedTypeName = typeName, ///
             typePresent = context.isTypePresentByPrefixedTypeName(prefixedTypeName);
 
-      if (typePresent) {
-        context.trace(`The '${typeString}' type is already present.`);
-      } else {
+      if (!typePresent) {
         typeVerifies = true;
+      } else {
+        context.debug(`The '${typeString}' type is already present.`);
       }
+    } else {
+      context.debug(`The '${typeString}' type is already present.`);
     }
 
     if (typeVerifies) {
-      context.trace(`...verified the '${typeString}' simple type.`);
+      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type`);
     }
 
     return typeVerifies;
   }
 
-  verifySuperType(superType) {
+  verifySuperType(superType, index) {
     let superTypeVerifies = false;
 
     const context = this.getContext(),
-          superTypeString = superType.getString();
+          superTypeString = superType.getString(),
+          simpleTypeDeclarationString = this.getString(); ///;
 
-    context.trace(`Verifying the '${superTypeString}' super-type...`);
+    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${superTypeString}' super-types...`);
 
     const nominalTypeName = superType.getNominalTypeName(),
           typeName = nominalTypeName, ///
           typeComparesToTypeName = this.type.compareTypeName(typeName);
 
-    if (typeComparesToTypeName) {
-      context.trace(`The super-type's name compares to the ${typeName}' simple type's name.`);
-    } else {
-      const oldSuperType = superType;
-
+    if (!typeComparesToTypeName) {
       superType = context.findTypeByNominalTypeName(nominalTypeName);
 
-      const superTypePresent = (superType !== null);
-
-      if (superTypePresent) {
-        const newSuperType = superType; ///
-
-        this.type.replaceSuperType(oldSuperType, newSuperType);
+      if (superType !== null) {
+        this.type.replaceSuperType(superType, index);
 
         superTypeVerifies = true;
+      } else {
+        context.debug(`The '${superTypeString}' super-type is not present.`);
       }
+    } else {
+      context.debug(`The '${superTypeString}' super-type's name compares to the ${typeName}' type's name.`);
     }
 
     if (superTypeVerifies) {
@@ -100,31 +104,28 @@ export default define(class SimpleTypeDeclaration extends Declaration {
   verifySuperTypes() {
     let superTypesVerify;
 
-    const context = this.getContext(),
-          typeString = this.type.getString();
+    const superTypesLength = this.superTypes.length;
 
-    context.trace(`Verifying the '${typeString}' simple type's super-types...`);
+    if (superTypesLength > 0) {
+      const context = this.getContext(),
+            superTypesString = superTypesStringFromSuperTypes(this.superTypes),
+            simpleTypeDeclarationString = this.getString(); ///;
 
-    const typeBasic = this.type.isBasic();
+      context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${superTypesString}' super-types...`);
 
-    if (typeBasic) {
-      superTypesVerify = true;
-
-      context.trace(`The '${typeString}' simple type is basic.`)
-    } else  {
-      const superTypes = this.type.getSuperTypes();
-
-      superTypesVerify = superTypes.every((superType) => {
-        const superTypeVerifies = this.verifySuperType(superType);
+      superTypesVerify = this.superTypes.every((superType, index) => {
+        const superTypeVerifies = this.verifySuperType(superType, index);
 
         if (superTypeVerifies) {
           return true;
         }
       });
-    }
 
-    if (superTypesVerify) {
-      context.debug(`...verified the '${typeString}' simple type's super-types.`);
+      if (superTypesVerify) {
+        context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration's '${superTypesString}' super-types.`);
+      }
+    } else {
+      superTypesVerify = true;
     }
 
     return superTypesVerify;
@@ -138,11 +139,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
 
     context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`);
 
-    if (this.prefixed) {
-      const typeString = this.type.getString();
-
-      context.trace(`The '${typeString}' type is prefixed.`);
-    } else {
+    if (!this.prefixed) {
       const typeVerifies = this.verifyType();
 
       if (typeVerifies) {
@@ -153,7 +150,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
 
           if (typePrefix !== null) {
             const typePrefixName = typePrefix.getName(),
-              prefixName = typePrefixName;  ///
+                  prefixName = typePrefixName;  ///
 
             this.type.setPrefixName(prefixName);
           }
@@ -163,6 +160,10 @@ export default define(class SimpleTypeDeclaration extends Declaration {
           verifies = true;
         }
       }
+    } else {
+      const typeString = this.type.getString();
+
+      context.trace(`The '${typeString}' type is prefixed.`);
     }
 
     if (verifies) {

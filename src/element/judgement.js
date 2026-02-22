@@ -148,7 +148,7 @@ export default define(class Judgement extends Element {
     }
 
     if (assumptionValidates) {
-      context.trace(`...validated the '${judgementString}' judgement's '${assumptionString}' assumption.`);
+      context.debug(`...validated the '${judgementString}' judgement's '${assumptionString}' assumption.`);
     }
 
     return assumptionValidates;

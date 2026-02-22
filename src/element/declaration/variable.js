@@ -93,7 +93,7 @@ export default define(class VariableDeclaration extends Declaration {
     }
 
     if ( variableVerifies) {
-      context.trace(`...verified the '${variableDeclarationString}' variable declaration's '${variableString}' variable.`);
+      context.debug(`...verified the '${variableDeclarationString}' variable declaration's '${variableString}' variable.`);
     }
 
     return variableVerifies;

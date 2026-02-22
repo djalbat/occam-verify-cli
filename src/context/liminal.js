@@ -77,7 +77,7 @@ export default class LiminalContext extends Context {
     }) || null;
 
     if (substitutionB !== null) {
-      context.trace(`The '${substitutionString}' substitution has already been added to the liminal context.`);
+      context.debug(`The '${substitutionString}' substitution has already been added to the liminal context.`);
     } else {
       this.substitutions.push(substitution);
 
