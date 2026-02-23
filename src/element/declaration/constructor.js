@@ -17,7 +17,7 @@ export default define(class ConstructorDeclaration extends Declaration {
     return this.type;
   }
 
-  isProvisinal() {
+  isProvisional() {
     return this.provisional;
   }
 
@@ -30,37 +30,6 @@ export default define(class ConstructorDeclaration extends Declaration {
           constructorDeclarationNode = node; ///
 
     return constructorDeclarationNode;
-  }
-
-  async verify() {
-    let verifies = false;
-
-    const context = this.getContext(),
-          constructorDeclarationString = this.getString();  ///
-
-    context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
-
-    const typeVerified = this.verifyType();
-
-    if (typeVerified) {
-      const constructorVerifies = this.verifyConstructor();
-
-      if (constructorVerifies) {
-        const constructorTypeVerifies = this.verifyConstructorType();
-
-        if (constructorTypeVerifies) {
-          context.addConstructor(this.constructor);
-
-          verifies = true;
-        }
-      }
-    }
-
-    if (verifies) {
-      context.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`);
-    }
-
-    return verifies;
   }
 
   verifyType() {
@@ -76,8 +45,7 @@ export default define(class ConstructorDeclaration extends Declaration {
           type = context.findTypeByNominalTypeName(nominalTypeName);
 
     if (type !== null) {
-      const includeSupertypes = false,
-            provisional = this.isProvisional(includeSupertypes),
+      const provisional = this.isProvisional(),
             typeComparesToProvisional = type.compareProvisional(provisional);
 
       if (!typeComparesToProvisional) {
@@ -118,71 +86,34 @@ export default define(class ConstructorDeclaration extends Declaration {
     return constructorVerifies;
   }
 
-  // verifyConstructorType() {
-  //   let constructorTypeVerifies = false;
-  //
-  //   const context = this.getContext(),
-  //         constructorType = this,
-  //         constructorTypeString = constructorType.getString(),
-  //         constructorDeclarationString = this.getString();  ///
-  //
-  //   context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration's '${constructorTypeString}' type...`);
-  //
-  //   const nominalTypeName = this.type.getNominalTypeName(),
-  //     typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
-  //
-  //   if (!typePresent) {
-  //     context.debug(`The '${typeString}' type is not present.`);
-  //   } else {
-  //     const includeSupertypes = false,
-  //       provisional = type.isProvisional(includeSupertypes),
-  //       typeComparesToProvisional = type.compareProvisional(provisional);
-  //
-  //     if (!typeComparesToProvisional) {
-  //       provisional ?
-  //         context.debug(`The '${typeString}' type is present but not provisional.`) :
-  //         context.debug(`The '${typeString}' type is present but provisional.`);
-  //     } else {
-  //       this.constructor.setType(type);
-  //
-  //       constructorTypeVerifies = true;
-  //     }
-  //   }
-  //
-  //   if (constructorTypeVerifies) {
-  //     context.debug(`...verified the '${constructorDeclarationString}' constructor declaration's '${typeString}' type.`);
-  //   }
-  //
-  //   return constructorTypeVerifies;
-  // }
+  async verify() {
+    let verifies = false;
+
+    const context = this.getContext(),
+          constructorDeclarationString = this.getString();  ///
+
+    context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
+
+    const typeVerified = this.verifyType();
+
+    if (typeVerified) {
+      const constructorVerifies = this.verifyConstructor();
+
+      if (constructorVerifies) {
+        this.constructor.setType(this.type);
+
+        context.addConstructor(this.constructor);
+
+        verifies = true;
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`);
+    }
+
+    return verifies;
+  }
 
   static name = "ConstructorDeclaration";
 });
-
-
-// verifyConstructor() {
-//   let constructorValidates = false;
-//
-//   const context = this.getContext(),
-//         constructorString = this.constructor.getString();
-//
-//   context.trace(`Verifying the '${constructorString}' constructor...`);
-//
-//   const term = this.constructor.getTerm(),
-//         termNode = term.getNode(),
-//         termValidates = validateTerm(termNode, context, () => {
-//           const validatesFormards = true;
-//
-//           return validatesFormards;
-//         });
-//
-//   if (termValidates) {
-//     constructorValidates = true;
-//   }
-//
-//   if (constructorValidates) {
-//     context.debug(`...verified the '${constructorString}' constructor.`);
-//   }
-//
-//   return constructorValidates;
-// }

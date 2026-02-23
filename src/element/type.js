@@ -233,12 +233,12 @@ export default define(class Type extends Element {
     return comparesToTypeName;
   }
 
-  compareProvisional(provisional) {
+  compareProvisional(provisional, includeSupertypes = true) {
     let comparesToProvisional;
 
     const provisionalA = provisional; ///
 
-    provisional = this.isProvisional();
+    provisional = this.isProvisional(includeSupertypes);
 
     const provisionalB = provisional; ///
 

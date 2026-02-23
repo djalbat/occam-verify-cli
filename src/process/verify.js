@@ -408,26 +408,22 @@ export async function verifyFile(fileNode, context) {
   return fileVerifies;
 }
 
-export function verifyCombinator(combintot) {
-  const context = combintot.getContext(),
-        statement = combintot.getStatement(),
-        statementNode = statement.getNode(),
+export function verifyStatementAsCombinator(statement, context) {
+  const statementNode = statement.getNode(),
         nonTerminalNode = statementNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
         descended = combinatorPass.descend(childNodes, context),
-        combinatorVerifies = descended;  ///
+        statementVerifiesAsCombinator = descended;  ///
 
-  return combinatorVerifies;
+  return statementVerifiesAsCombinator;
 }
 
-export function verifyConstrcctor(constructor) {
-  const context = constructor.getContext(),
-        term = constructor.getStatement(),
-        termNode = term.getNode(),
+export function verifyTermAsConstructor(term, context) {
+  const termNode = term.getNode(),
         nonTerminalNode = termNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
         descended = constructorPass.descend(childNodes, context),
-        constrcctorVerifies = descended;  ///
+        termVerifiesAsConstructor = descended;  ///
 
-  return constrcctorVerifies;
+  return termVerifiesAsConstructor;
 }

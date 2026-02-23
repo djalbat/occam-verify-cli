@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { verifyCombinator } from "../process/verify";
+import { verifyStatementAsCombinator } from "../process/verify";
 import { unifyStatementWithCombinator } from "../process/unify";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
@@ -26,16 +26,15 @@ export default define(class Combinator extends Element {
   }
 
   verify(context) {
-    let verifies;
+    let verifies = false;
 
     const combinatorString = this.getString();  ///
 
     context.trace(`Verifying the '${combinatorString}' combinator...`);
 
-    const combinator = this,  ///
-          combinatorVerifies = verifyCombinator(combinator);
+    const statementVerifiesAsCombinator = verifyStatementAsCombinator(this.statement, context);
 
-    if (combinatorVerifies) {
+    if (statementVerifiesAsCombinator) {
       verifies = true;
     }
 

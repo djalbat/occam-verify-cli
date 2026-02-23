@@ -7,11 +7,12 @@ import { superTypesStringFromSuperTypes } from "../../utilities/string";
 import {baseTypeFromNothing} from "../../utilities/type";
 
 export default define(class SimpleTypeDeclaration extends Declaration {
-  constructor(context, string, node, type, superTypes) {
+  constructor(context, string, node, type, superTypes, provisional) {
     super(context, string, node);
 
     this.type = type;
     this.superTypes = superTypes;
+    this.provisional = provisional;
   }
 
   getType() {
@@ -20,6 +21,10 @@ export default define(class SimpleTypeDeclaration extends Declaration {
 
   getSuperTypes() {
     return this.superTypes;
+  }
+
+  isProvisional() {
+    return this.provisional;
   }
 
   getSimpleTypeDeclarationNode() {
@@ -48,6 +53,8 @@ export default define(class SimpleTypeDeclaration extends Declaration {
             typePresent = context.isTypePresentByPrefixedTypeName(prefixedTypeName);
 
       if (!typePresent) {
+        this.type.setProvisional(this.provisional);
+
         typeVerifies = true;
       } else {
         context.debug(`The '${typeString}' type is already present.`);

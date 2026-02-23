@@ -742,7 +742,8 @@ export function simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDec
         string = context.nodeAsString(node),
         type = typeFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
         superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
-        simpleTypeDeclaration = new SimpleTypeDeclaration(context, string, node, type, superTypes);
+        provisional = provisionalFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
+        simpleTypeDeclaration = new SimpleTypeDeclaration(context, string, node, type, superTypes, provisional);
 
   return simpleTypeDeclaration;
 }
@@ -789,7 +790,8 @@ export function complexTypeDeclarationFromComplexTypeDeclarationNode(complexType
         string = context.nodeAsString(node),
         type = typeFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
         superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
-        complexTypeDeclaration = new ComplexTypeDeclaration(context, string, node, type, superTypes);
+        provisional = provisionalFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
+        complexTypeDeclaration = new ComplexTypeDeclaration(context, string, node, type, superTypes, provisional);
 
   return complexTypeDeclaration;
 }
@@ -1645,6 +1647,12 @@ export function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationN
   return metaType;
 }
 
+export function provisionalFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
+  const provisional = simpleTypeDeclarationNode.isProvisional();
+
+  return provisional;
+}
+
 export function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
   let superTypes = [];
 
@@ -1697,6 +1705,12 @@ export function constructorFromConstructorDeclarationNode(constructorDeclaration
 
 export function provisionalFromConstructorDeclarationNode(constructorDeclarationNode, context) {
   const provisional = constructorDeclarationNode.isProvisional();
+
+  return provisional;
+}
+
+export function provisionalFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
+  const provisional = complexTypeDeclarationNode.isProvisional();
 
   return provisional;
 }

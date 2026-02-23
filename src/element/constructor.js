@@ -3,6 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { verifyTermAsConstructor } from "../process/verify";
 import { unifyTermWithConstructor } from "../process/unify";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
 
@@ -24,11 +25,27 @@ export default define(class Constructor extends Element {
     return constructorNode;
   }
 
-  isProvisional() { return this.term.isProvisional(); }
-
-  getType() { return this.term.getType(); }
-
   setType(type) { this.term.setType(type); }
+
+  verify(context) {
+    let verifies = false;
+
+    const constructorString = this.getString();  ///
+
+    context.trace(`Verifying the '${constructorString}' constructor...`);
+
+    const termVerifiesAsConstructor = verifyTermAsConstructor(this.term, context);
+
+    if (termVerifiesAsConstructor) {
+      verifies = true;
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${constructorString}' constructor.`);
+    }
+
+    return verifies;
+  }
 
   unifyTerm(term, context, validateForwards) {
     let termUnifies = false;
