@@ -89,8 +89,11 @@ export default define(class ConstructorDeclaration extends Declaration {
   async verify() {
     let verifies = false;
 
-    const context = this.getContext(),
-          constructorDeclarationString = this.getString();  ///
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const constructorDeclarationString = this.getString();  ///
 
     context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
 

@@ -25,8 +25,11 @@ export default define(class CombinatorDeclaration extends Declaration {
   async verify() {
     let verifies = false;
 
-    const context = this.getContext(),
-          combinatorDeclarationString = this.getString();  ///
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const combinatorDeclarationString = this.getString();  ///
 
     context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 

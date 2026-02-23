@@ -266,8 +266,11 @@ export default define(class ComplexTypeDeclaration extends Declaration {
   async verify() {
     let verifies = false;
 
-    const context = this.getContext(),
-          complexTypeDeclarationString = this.getString(); ///
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const complexTypeDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration...`);
 

@@ -171,8 +171,11 @@ export default define(class SimpleTypeDeclaration extends Declaration {
   async verify() {
     let verifies = false;
 
-    const context = this.getContext(),
-          simpleTypeDeclarationString = this.getString();  ///
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const simpleTypeDeclarationString = this.getString();  ///
 
     context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`);
 

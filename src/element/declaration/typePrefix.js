@@ -63,8 +63,11 @@ export default define(class TypePrefixDeclaration extends Declaration {
   async verify() {
     let verifies = false;
 
-    const context = this.getContext(),
-          typePrefixDeclarationString = this.getString();  ///
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const typePrefixDeclarationString = this.getString();  ///
 
     context.trace(`Verifying the '${typePrefixDeclarationString}' type prefix declaration...`);
 

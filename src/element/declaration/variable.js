@@ -79,20 +79,15 @@ export default define(class VariableDeclaration extends Declaration {
     context.trace(`Verifying the '${variableDeclarationString}' variable declaration's '${variableString}' variable...`);
 
     const variableIdentifier = this.variable.getIdentifier(),
-          variable = context.findVariableByVariableIdentifier(variableIdentifier),
-          variablePresent = (variable !== null);
+          variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentifier);
 
     if (variablePresent) {
-      const variableIdentifier = variable.getIdentifier();
-
-      context.debug(`The '${variableIdentifier}' variable is already present.`);
+      context.debug(`The '${variableString}' variable is already present.`);
     } else {
-      this.variable.setType(this.type);
-
       variableVerifies = true;
     }
 
-    if ( variableVerifies) {
+    if (variableVerifies) {
       context.debug(`...verified the '${variableDeclarationString}' variable declaration's '${variableString}' variable.`);
     }
 
