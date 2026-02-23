@@ -90,7 +90,7 @@ export default define(class Constructor extends Element {
     context = specifiContext; ///
 
     const constructor = this, ///
-          termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, context, generalContext, specifiContext);
+          termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, generalContext, specifiContext);
 
     if (termUnifiesWithConstructor) {
       let validatesForwards;
