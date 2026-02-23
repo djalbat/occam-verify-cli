@@ -33,7 +33,7 @@ export default class Context extends ContextBase {
 
   getFrames() {
     const context = this.getContext(),
-      frames = context.getFrames();
+          frames = context.getFrames();
 
     return frames;
   }
@@ -87,9 +87,9 @@ export default class Context extends ContextBase {
     return combinators;
   }
 
-  getConstrustors(includeRelease) {
+  getConstructors(includeRelease) {
     const context = this.getContext(),
-          constructors = context.getConstrustors(includeRelease);
+          constructors = context.getConstructors(includeRelease);
 
     return constructors;
   }
@@ -118,7 +118,7 @@ export default class Context extends ContextBase {
 
   findRuleByReference(reference) {
     const context = this.getContext(),
-      rule = context.findRuleByReference(reference);
+          rule = context.findRuleByReference(reference);
 
     return rule;
   }
@@ -146,14 +146,14 @@ export default class Context extends ContextBase {
 
   findFrameByFrameNode(frameNode) {
     const context = this.getContext(),
-      frame = context.findFrameByFrameNode(frameNode);
+          frame = context.findFrameByFrameNode(frameNode);
 
     return frame;
   }
 
   findEqualityByEqualityNode(equalityNode) {
     const context = this.getContext(),
-      equality = context.findEqualityByEqualityNode(equalityNode);
+          equality = context.findEqualityByEqualityNode(equalityNode);
 
     return equality;
   }
@@ -184,6 +184,13 @@ export default class Context extends ContextBase {
           substitution = context.findSubstitutionBySubstitutionNode(substitutionNode);
 
     return substitution;
+  }
+
+  findTypeByNominalTypeName(nominalTypeName) {
+    const context = this.getContext(),
+          type = context.findTypeByNominalTypeName(nominalTypeName);
+
+    return type;
   }
 
   findVariableByVariableIdentifier(variableIdentifier) {
@@ -238,7 +245,7 @@ export default class Context extends ContextBase {
 
   findProcedureByProcedureName(procedureName) {
     const context = this.getContext(),
-      procedure = context.findProcedureByProcedureName(procedureName);
+          procedure = context.findProcedureByProcedureName(procedureName);
 
     return procedure;
   }
@@ -279,11 +286,11 @@ export default class Context extends ContextBase {
     return framePresent;
   }
 
-  isJudgementPresentByJudgementNode(judgementNode) {
+  isTypePresentByNominalTypeName(nominalTypeName) {
     const context = this.getContext(),
-          judgementPresent = context.isJudgementPresentByJudgementNode(judgementNode);
+          typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
-    return judgementPresent;
+    return typePresent;
   }
 
   isEqualityPresentByEqualityNode(equalityNode) {
@@ -291,6 +298,13 @@ export default class Context extends ContextBase {
           equalityPresent = context.isEqualityPresentByEqualityNode(equalityNode);
 
     return equalityPresent;
+  }
+
+  isJudgementPresentByJudgementNode(judgementNode) {
+    const context = this.getContext(),
+          judgementPresent = context.isJudgementPresentByJudgementNode(judgementNode);
+
+    return judgementPresent;
   }
 
   isStatementPresentByStatementNode(statementNode) {

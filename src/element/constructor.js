@@ -3,6 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { attempt } from "../utilities/context";
 import { verifyTermAsConstructor } from "../process/verify";
 import { unifyTermWithConstructor } from "../process/unify";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
@@ -25,6 +26,27 @@ export default define(class Constructor extends Element {
     return constructorNode;
   }
 
+  getType() { return this.term.getType(); }
+
+  getString() {
+    let string;
+
+    const type = this.getType();
+
+    if (type === null) {
+      const termString = this.term.getString();
+
+      string = termString;  ///
+    } else {
+      const typeString = type.getString(),
+            termString = this.term.getString();
+
+      string = `${termString}.${typeString}`;
+    }
+
+    return string;
+  }
+
   setType(type) { this.term.setType(type); }
 
   verify(context) {
@@ -34,11 +56,15 @@ export default define(class Constructor extends Element {
 
     context.trace(`Verifying the '${constructorString}' constructor...`);
 
-    const termVerifiesAsConstructor = verifyTermAsConstructor(this.term, context);
+    attempt((context) => {
+      const termVerifiesAsConstructor = verifyTermAsConstructor(this.term, context);
 
-    if (termVerifiesAsConstructor) {
-      verifies = true;
-    }
+      if (termVerifiesAsConstructor) {
+        this.setContext(context);
+
+        verifies = true;
+      }
+    }, context);
 
     if (verifies) {
       context.debug(`...verified the '${constructorString}' constructor.`);
@@ -55,8 +81,16 @@ export default define(class Constructor extends Element {
 
     context.trace(`Unifying the '${termString}' term with the '${constructorString}' constructor...`);
 
+    const specifiContext = context; ///
+
+    context = this.getContext();
+
+    const generalContext = context; ///
+
+    context = specifiContext; ///
+
     const constructor = this, ///
-          termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, context);
+          termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, context, generalContext, specifiContext);
 
     if (termUnifiesWithConstructor) {
       let validatesForwards;

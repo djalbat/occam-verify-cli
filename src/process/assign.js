@@ -55,32 +55,24 @@ export function rightVariableAssignmentFromEquality(equality, context) {
 }
 
 export function variableAssignmentFromTypeAssertion(typeAssertion, context) {
+  let variableAssignment = null;
 
-  debugger
+  const term = typeAssertion.getTerm(),
+        termSingular = term.isSingular();
 
-  // const { Type, Variable } = elements,
-  //   termNode = this.term.getNode();
-  //
-  // let type,
-  //   provisional;
-  //
-  // provisional = this.type.isProvisional();
-  //
-  // if (!provisional) {
-  //   type = this.type;
-  // } else {
-  //   provisional = false;
-  //
-  //   type = Type.fromTypeAndProvisional(this.type, provisional);
-  // }
-  //
-  // const singularVariableNode = termNode.getSingularVariableNode();
-  //
-  // if (singularVariableNode !== null) {
-  //   const variableNode = singularVariableNode,  ///
-  //     variable = Variable.fromVariableNodeAndType(variableNode, type, context),
-  //     variableAssignment = variableAssignmentFromVariable(variable),
+  if (termSingular) {
+    const variableIdentifier = term.getVariableIdentifier(),
+          variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
+    if (variable !== null) {
+      const type = typeAssertion.getType(),
+            variableNode = variable.getNode();
+
+      variableAssignment = variableAssignmentFromVariableNodeAndType(variableNode, type, context);
+    }
+  }
+
+  return variableAssignment;
 }
 
 export function variableAssignmentFromPrepertyAssertion(propertyAssertion, context) {

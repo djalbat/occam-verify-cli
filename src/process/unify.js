@@ -145,6 +145,22 @@ class MetaLevelPass extends ZipPass {
 }
 
 class CombinatorPass extends ZipPass {
+  run(combinatorStatementNode, statementNode, stated, generalContext, specificContext) {
+    let success = false;
+
+    const specificnonTerminalNode = statementNode,  ///
+          generalcnonTerminalNode = combinatorStatementNode,  ///
+          specificChildNodes = specificnonTerminalNode.getChildNodes(), ///
+          generalcChildNodes = generalcnonTerminalNode.getChildNodes(), ///
+          descended = this.descend(generalcChildNodes, specificChildNodes, stated, generalContext, specificContext);
+
+    if (descended) {
+      success = true;
+    }
+
+    return success;
+  }
+
   static maps = [
     {
       generalNodeQuery: metaTypeNodeQuery,
@@ -236,6 +252,22 @@ class CombinatorPass extends ZipPass {
 }
 
 class ConstructorPass extends ZipPass {
+  run(constructorTermNode, termNode, generalContext, specificContext) {
+    let success = false;
+
+    const specificnonTerminalNode = termNode,  ///
+          generalcnonTerminalNode = constructorTermNode,  ///
+          specificChildNodes = specificnonTerminalNode.getChildNodes(), ///
+          generalcChildNodes = generalcnonTerminalNode.getChildNodes(), ///
+          descended = this.descend(generalcChildNodes, specificChildNodes, generalContext, specificContext);
+
+    if (descended) {
+      success = true;
+    }
+
+    return success;
+  }
+
   static maps = [
     {
       generalNodeQuery: typeNodeQuery,

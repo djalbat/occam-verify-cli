@@ -288,6 +288,20 @@ class TopLevelPass extends AsyncPass {
 }
 
 class ConbinatorPass extends SimplePass {
+  run(statementNode, context) {
+    let success = false;
+
+    const nonTerminalNode = statementNode,  ///
+          childNodes = nonTerminalNode.getChildNodes(), ///
+          descended = this.descend(childNodes, context);
+
+    if (descended) {
+      success = true;
+    }
+
+    return success;
+  }
+
   static maps = [
     {
       nodeQuery: statementNodeQuery,
@@ -350,6 +364,20 @@ class ConbinatorPass extends SimplePass {
 }
 
 class ConstructorPass extends SimplePass {
+  run(termNode, context) {
+    let success = false;
+
+    const nonTerminalNode = termNode,  ///
+          childNodes = nonTerminalNode.getChildNodes(), ///
+          descended = this.descend(childNodes, context);
+
+    if (descended) {
+      success = true;
+    }
+
+    return success;
+  }
+
   static maps = [
     {
       nodeQuery: termNodeQuery,
@@ -408,22 +436,28 @@ export async function verifyFile(fileNode, context) {
   return fileVerifies;
 }
 
-export function verifyStatementAsCombinator(statement, context) {
-  const statementNode = statement.getNode(),
-        nonTerminalNode = statementNode, ///
-        childNodes = nonTerminalNode.getChildNodes(),
-        descended = combinatorPass.descend(childNodes, context),
-        statementVerifiesAsCombinator = descended;  ///
-
-  return statementVerifiesAsCombinator;
-}
-
 export function verifyTermAsConstructor(term, context) {
+  let termVerifiesAsConstructor = false;
+
   const termNode = term.getNode(),
-        nonTerminalNode = termNode, ///
-        childNodes = nonTerminalNode.getChildNodes(),
-        descended = constructorPass.descend(childNodes, context),
-        termVerifiesAsConstructor = descended;  ///
+        success = constructorPass.run(termNode, context);
+
+  if (success) {
+    termVerifiesAsConstructor = true;
+  }
 
   return termVerifiesAsConstructor;
+}
+
+export function verifyStatementAsCombinator(statement, context) {
+  let statementVerifiesAsCombinator = false;
+
+  const statementNode = statement.getNode(),
+        success = combinatorPass.run(statementNode, context);
+
+  if (success) {
+    statementVerifiesAsCombinator = true;
+  }
+
+  return statementVerifiesAsCombinator;
 }

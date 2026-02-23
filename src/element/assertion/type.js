@@ -80,9 +80,10 @@ export default define(class TypeAssertion extends Assertion {
   validateType(context) {
     let typeValidates;
 
-    const typeString = this.type.getString();
+    const typeString = this.type.getString(),
+          typeAssertionString = this.getString();  ///
 
-    context.trace(`Validating the '${typeString}' type...`);
+    context.trace(`Validating the '${typeAssertionString}' type assertion's '${typeString}' type...`);
 
     const nominalTypeName = this.type.getNominalTypeName(),
           type = context.findTypeByNominalTypeName(nominalTypeName);
@@ -96,7 +97,7 @@ export default define(class TypeAssertion extends Assertion {
     }
 
     if (typeValidates) {
-      context.debug(`...verified the '${typeString}' type.`);
+      context.debug(`...validated the '${typeAssertionString}' type assertion's '${typeString}' type.`);
     }
 
     return typeValidates;
@@ -178,10 +179,13 @@ export default define(class TypeAssertion extends Assertion {
     }
 
     const typeAssertion = this, ///
-          variableAssigment = variableAssignmentFromTypeAssertion(typeAssertion, context),
-          assignment = variableAssigment;  ///
+          variableAssigment = variableAssignmentFromTypeAssertion(typeAssertion, context);
 
-    context.addAassignment(assignment);
+    if (variableAssigment !== null) {
+      const assignment = variableAssigment;  ///
+
+      context.addAssignment(assignment);
+    }
   }
 
   static name = "TypeAssertion";

@@ -1,6 +1,6 @@
 "use strict";
 
-import TopLevelAssertion  from "../../node/topLevelAssertion";
+import TopLevelAssertion from "../topLevelAssertion";
 
 import { define } from "../../elements";
 
