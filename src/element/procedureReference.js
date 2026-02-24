@@ -39,11 +39,6 @@ export default define(class ProcedureReference extends Element {
   static name = "ProcedureReference";
 
   static fromJSON(json, context) {
-    const { name } = json,
-          string = name,  ///
-          node = null,
-          procedureReference = new ProcedureReference(context, string, node, name);
-
-    return procedureReference;
+    debugger
   }
 });

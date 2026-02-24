@@ -338,7 +338,7 @@ export default define(class StatementSubstitution extends Substitution {
   static name = "StatementSubstitution";
 
   static fromJSON(json, context) {
-    ///
+    debugger
   }
 
   static fromStatementAndMetavariable(statement, metavariable, context) {

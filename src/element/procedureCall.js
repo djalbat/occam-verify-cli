@@ -126,12 +126,6 @@ export default define(class ProcedureCall extends Element {
   static name = "ProcedureCall";
 
   static fromJSON(json, context) {
-    const node = null,
-          parameters = parametersFromJSON(json, context),
-          procedureReference = procedureReferenceFromJSON(json, context),
-          string = stringFromProcedureReferenceAndParameters(procedureReference, parameters),
-          procedureCall = new ProcedureCall(context, string, node, parameters, procedureReference);
-
-    return procedureCall;
+    debugger
   }
 });

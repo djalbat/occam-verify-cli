@@ -304,11 +304,6 @@ export default define(class Reference extends Element {
   static name = "Reference";
 
   static fromJSON(json, context) {
-    const metavariable = metavariableFromJSON(json, context),
-          string = metavariable.getString(),
-          node = metavariable.getNode(),
-          reference = new Reference(context, string, node, metavariable);
-
-    return reference;
+    debugger
   }
 });

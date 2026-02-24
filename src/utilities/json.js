@@ -1,8 +1,29 @@
 "use strict";
 
 import elements from "../elements";
+import EphemeralContext from "../context/ephemeral";
 
-import { findMetaTypeByMetaTypeName } from "../metaTypes";
+export function lemmasFromNothing() {
+  const lemmas = [];
+
+  return lemmas;
+}
+
+export function metaLemmasFromNothing() {
+  const metaLemmas = [];
+
+  return metaLemmas;
+}
+
+export function nameFromJSON(json, context) {
+  let { name } = json;
+
+  const nameJSON = name;  ///
+
+  name = nameJSON;  ///
+
+  return name;
+}
 
 export function termFromJSON(json, context) {
   let { term } = json;
@@ -314,6 +335,22 @@ export function variablesFromJSON(json, context) {
   return variables;
 }
 
+export function equalitiesFromJSON(json, context) {
+  let { equalities } = json;
+
+  const { Equality } = elements,
+        equalitiesJSON = equalities; ///
+
+  equalities = equalitiesJSON.map((equalityJSON) => {
+    const json = equalityJSON,  ///
+          equality = Equality.fromJSON(json, context);
+
+    return equality;
+  });
+
+  return equalities;
+}
+
 export function propertiesFromJSON(json, context) {
   let { properties } = json;
 
@@ -379,6 +416,70 @@ export function parametersFromJSON(json, context) {
   return parameters;
 }
 
+export function judgementsFromJSON(json, context) {
+  let { judgements } = json;
+
+  const { Judgement } = elements,
+        judgementsJSON = judgements; ///
+
+  judgements = judgementsJSON.map((judgementJSON) => {
+    const json = judgementJSON,  ///
+          judgement = Judgement.fromJSON(json, context);
+
+    return judgement;
+  });
+
+  return judgements;
+}
+
+export function statementsFromJSON(json, context) {
+  let { statements } = json;
+
+  const { Statement } = elements,
+        statementsJSON = statements; ///
+
+  statements = statementsJSON.map((statementJSON) => {
+    const json = statementJSON,  ///
+          statement = Statement.fromJSON(json, context);
+
+    return statement;
+  });
+
+  return statements;
+}
+
+export function assertionsFromJSON(json, context) {
+  let { assertions } = json;
+
+  const { Assertion } = elements,
+        assertionsJSON = assertions; ///
+
+  assertions = assertionsJSON.map((assertionJSON) => {
+    const json = assertionJSON,  ///
+          assertion = Assertion.fromJSON(json, context);
+
+    return assertion;
+  });
+
+  return assertions;
+}
+
+export function referencesFromJSON(json, context) {
+  let { references } = json;
+
+  const { Assertion } = elements,
+        referencesJSON = references; ///
+
+  references = referencesJSON.map((referenceJSON) => {
+    const json = referenceJSON,  ///
+          reference = Assertion.fromJSON(json, context);
+
+    return reference;
+  });
+
+  return references;
+}
+
 export function conjecturesFromJSON(json, context) {
   let { conjectures } = json;
 
@@ -409,6 +510,22 @@ export function combinatorsFromJSON(json, context) {
   });
 
   return combinators;
+}
+
+export function assumptionsFromJSON(json, context) {
+  let { assumptions } = json;
+
+  const { Assumption } = elements,
+        assumptionsJSON = assumptions; ///
+
+  assumptions = assumptionsJSON.map((assumptionJSON) => {
+    const json = assumptionJSON,  ///
+          assumption = Assumption.fromJSON(json, context);
+
+    return assumption;
+  });
+
+  return assumptions;
 }
 
 export function typePrefixesFromJSON(json, context) {
@@ -508,16 +625,24 @@ export function metavariablesFromJSON(json, context) {
   return metavariables;
 }
 
-export function lemmasFromNothing() {
-  const lemmas = [];
+export function ephemeralContextFromJSON(json, context) {
+  const releaseContext = context;
 
-  return lemmas;
+  ({context} = json);
+
+  json = context; ///
+
+  context = releaseContext; ///
+
+  const emphemeralContext = EphemeralContext.fromJSON(json, context);
+
+  return emphemeralContext;
 }
 
-export function metaLemmasFromNothing() {
-  const metaLemmas = [];
+export function nameToNameJSON(name) {
+  const nameJSON = name;  ///
 
-  return metaLemmas;
+  return nameJSON;
 }
 
 export function termToTermJSON(term) {
@@ -602,6 +727,16 @@ export function procedureReferenceToProcedureReferenceJSON(procedureReference) {
   return procedureReferenceJSON;
 }
 
+export function termsToTermsJSON(terms) {
+  const termsJSON = terms.map((term) => {
+    const termJSON = term.toJSON();
+
+    return termJSON;
+  });
+
+  return termsJSON;
+}
+
 export function typesToTypesJSON(types) {
   const typesJSON = types.map((type) => {
     const typeJSON = type.toJSON();
@@ -612,18 +747,6 @@ export function typesToTypesJSON(types) {
   });
 
   return typesJSON;
-}
-
-export function termsToTermsJSON(terms) {
-  const termsJSON = terms.map((term) => {
-    const termJSON = term.toJSON();
-
-    term = termJSON; ///
-
-    return term;
-  });
-
-  return termsJSON;
 }
 
 export function rulesToRulesJSON(rules) {
@@ -638,18 +761,6 @@ export function rulesToRulesJSON(rules) {
   return rulesJSON;
 }
 
-export function framesToFramesJSON(frames) {
-  const framesJSON = frames.map((frame) => {
-    const frameJSON = frame.toJSON();
-
-    frame = frameJSON; ///
-
-    return frame;
-  });
-
-  return framesJSON;
-}
-
 export function labelsToLabelsJSON(labels) {
   const labelsJSON = labels.map((label) => {
     const labelJSON = label.toJSON();
@@ -658,6 +769,16 @@ export function labelsToLabelsJSON(labels) {
   });
 
   return labelsJSON;
+}
+
+export function framesToFramesJSON(frames) {
+  const framesJSON = frames.map((frame) => {
+    const frameJSON = frame.toJSON();
+
+    return frameJSON;
+  });
+
+  return framesJSON;
 }
 
 export function axiomsToAxiomsJSON(axioms) {
@@ -754,16 +875,54 @@ export function propertiesToPropertiesJSON(properties) {
   return propertiesJSON;
 }
 
-export function typePrefixesToTypePrefixesJSON(typePrefixes) {
-  const typePrefixesJSON = typePrefixes.map((typePrefix) => {
-    const typePrefixJSON = typePrefix.toJSON();
+export function judgementsToJudgementsJSON(judgements) {
+  const judgementsJSON = judgements.map((judgement) => {
+    const judgementJSON = judgement.toJSON();
 
-    typePrefix = typePrefixJSON; ///
-
-    return typePrefix;
+    return judgementJSON;
   });
 
-  return typePrefixesJSON;
+  return judgementsJSON;
+}
+
+export function equalitiesToEqualitiesJSON(equalities) {
+  const equalitiesJSON = equalities.map((equality) => {
+    const equalityJSON = equality.toJSON();
+
+    return equalityJSON;
+  });
+
+  return equalitiesJSON;
+}
+
+export function statementsToStatementsJSON(statements) {
+  const statementsJSON = statements.map((statement) => {
+    const statementJSON = statement.toJSON();
+
+    return statementJSON;
+  });
+
+  return statementsJSON;
+}
+
+export function assertionsToAssertionsJSON(assertions) {
+  const assertionsJSON = assertions.map((assertion) => {
+    const assertionJSON = assertion.toJSON();
+
+    return assertionJSON;
+  });
+
+  return assertionsJSON;
+}
+
+export function referencesToReferencesJSON(references) {
+  const referencesJSON = references.map((reference) => {
+    const referenceJSON = reference.toJSON();
+
+    return referenceJSON;
+  });
+
+  return referencesJSON;
 }
 
 export function conjecturesToConjecturesJSON(conjectures) {
@@ -788,6 +947,16 @@ export function combinatorsToCombinatorsJSON(combinators) {
   });
 
   return combinatorsJSON;
+}
+
+export function assumptionsToAssumptionsJSON(assumptions) {
+  const assumptionsJSON = assumptions.map((assumption) => {
+    const assumptionJSON = assumption.toJSON();
+
+    return assumptionJSON;
+  });
+
+  return assumptionsJSON;
 }
 
 export function suppositionsToSuppositionsJSON(suppositions) {
@@ -824,6 +993,18 @@ export function metatheoremsToMetatheoremsJSON(metatheorems) {
   return metatheoremsJSON;
 }
 
+export function typePrefixesToTypePrefixesJSON(typePrefixes) {
+  const typePrefixesJSON = typePrefixes.map((typePrefix) => {
+    const typePrefixJSON = typePrefix.toJSON();
+
+    typePrefix = typePrefixJSON; ///
+
+    return typePrefix;
+  });
+
+  return typePrefixesJSON;
+}
+
 export function substitutionsToSubstitutionsJSON(substitutions) {
   const substitutionsJSON = substitutions.mapSubstitution((substitution) => {
     const substitutionJSON = substitution.toJSON();
@@ -844,4 +1025,14 @@ export function metavariablesToMetavariablesJSON(metavariables) {
   });
 
   return metavariablesJSON;
+}
+
+export function substitutionsToCSubstitutionsJSON(substitutiions) {
+  const substitutionsJSON = substitutiions.map((substitution) => {
+    const substitutionJSON = substitution.toJSON();
+
+    return substitutionJSON;
+  });
+
+  return substitutionsJSON;
 }

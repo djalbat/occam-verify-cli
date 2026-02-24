@@ -170,12 +170,6 @@ export default define(class Signature extends Element {
   static name = "Signature";
 
   static fromJSON(json, context) {
-    const terms = termsFromJSON(json, context),
-          signatureString = signatureStringFromTerms(terms),
-          string = signatureString, ///
-          node = null,
-          signature = new Signature(context, string, node, terms);
-
-    return signature;
+    debugger
   }
 });

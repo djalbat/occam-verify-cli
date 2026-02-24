@@ -2,6 +2,25 @@
 
 import Context from "../context";
 
+import { termsFromJSON,
+         framesFromJSON,
+         termsToTermsJSON,
+         framesToFramesJSON,
+         judgementsFromJSON,
+         equalitiesFromJSON,
+         statementsFromJSON,
+         assertionsFromJSON,
+         referencesFromJSON,
+         assumptionsFromJSON,
+         substitutionsFromJSON,
+         judgementsToJudgementsJSON,
+         equalitiesToEqualitiesJSON,
+         statementsToStatementsJSON,
+         assertionsToAssertionsJSON,
+         referencesToReferencesJSON,
+         assumptionsToAssumptionsJSON,
+         substitutionsToCSubstitutionsJSON } from "../utilities/json";
+
 export default class EphemeralContext extends Context {
   constructor(context, terms, frames, judgements, equalities, assertions, statements, references, assumptions, substitutions) {
     super(context);
@@ -447,6 +466,55 @@ export default class EphemeralContext extends Context {
           substitutionPresent = (substitution !== null);
 
     return substitutionPresent;
+  }
+
+  toJSON() {
+    const termsJSON = termsToTermsJSON(this.terms),
+          framesJSON = framesToFramesJSON(this.frames),
+          judgementsJSON = judgementsToJudgementsJSON(this.judgements),
+          equalitiesJSON = equalitiesToEqualitiesJSON(this.equalities),
+          statementsJSON = statementsToStatementsJSON(this.statements),
+          assertionsJSON = assertionsToAssertionsJSON(this.assertions),
+          referencesJSON = referencesToReferencesJSON(this.references),
+          assumptionsJSON = assumptionsToAssumptionsJSON(this.assumptions),
+          substitutionsJSON = substitutionsToCSubstitutionsJSON(this.substitutions),
+          terms = termsJSON, ///
+          frames = framesJSON, ///
+          judgements = judgementsJSON, ///
+          equalities = equalitiesJSON, ///
+          statements = statementsJSON, ///
+          assertions = assertionsJSON, ///
+          references = referencesJSON, ///
+          assumptions = assumptionsJSON, ///
+          substitutions = substitutionsJSON, ///
+          json = {
+            terms,
+            frames,
+            judgements,
+            equalities,
+            statements,
+            assertions,
+            references,
+            assumptions,
+            substitutions
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, context) {
+    const terms = termsFromJSON(json, context),
+          frames = framesFromJSON(json, context),
+          judgements = judgementsFromJSON(json, context),
+          equalities = equalitiesFromJSON(json, context),
+          statements = statementsFromJSON(json, context),
+          assertions = assertionsFromJSON(json, context),
+          references = referencesFromJSON(json, context),
+          assumptions = assumptionsFromJSON(json, context),
+          substitutions = substitutionsFromJSON(json, context),
+          emphemeralContext = new EphemeralContext(context, terms, frames, judgements, equalities, assertions, statements, references, assumptions, substitutions);
+
+    return emphemeralContext;
   }
 
   static fromNothing(context) {

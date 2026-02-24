@@ -3,6 +3,8 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
+import { instantiateLabel } from "../process/instantiate";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Label extends Element {
@@ -75,7 +77,9 @@ export default define(class Label extends Element {
   toJSON() {
     const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
           metavariable = metavariableJSON,  ///
+          string = this.getString(),
           json = {
+            string,
             metavariable
           };
 
@@ -85,11 +89,24 @@ export default define(class Label extends Element {
   static name = "Label";
 
   static fromJSON(json, context) {
-    const metavariable = metavariableFromJSON(json, context),
-          string = metavariable.getString(),
-          node = metavariable.getNode(),
-          label = new Label(context, string, node, metavariable);
+    debugger
 
-    return label;
+    const { string } = json,
+          node = nodeFromString(string, context),
+          metavariableNode = labelNode.getMetavariableNode(),
+          metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
+
+
   }
 });
+
+function nodeFromString(string, context) {
+  const node = literally((context) => {
+          const labelNode = instantiateLabel(string, context),
+                  node = labelNode; ///
+
+          return node;
+        }, context);
+
+  return node;
+}

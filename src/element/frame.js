@@ -363,20 +363,6 @@ export default define(class Frame extends Element {
   static name = "Frame";
 
   static fromJSON(json, context) {
-    let frame = null;
-
-    if (json !== null) {
-      const { Assumption } =elements,
-            assumption = Assumption.fromJSON(json, context),
-            assumptions = [
-              assumption
-            ],
-            string = null,
-            node = null;
-
-      frame = new Frame(string, node, assumptions);
-    }
-
-    return frame;
+    debugger
   }
 });

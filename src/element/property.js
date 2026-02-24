@@ -53,11 +53,6 @@ export default define(class Property extends Element {
   static name = "Property";
 
   static fromJSON(json, context) {
-    const { name, nominalTypeName } = json,
-          string = name, ///
-          node = null,
-          property = new Property(context, string, node, name, nominalTypeName);
-
-    return property;
+    debugger
   }
 });

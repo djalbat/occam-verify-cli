@@ -299,24 +299,7 @@ export default define(class Supposition extends ProofAssertion {
   static name = "Supposition";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context),
-          procedureCall = procedureCallFromJSON(json, context);
-
-    let string;
-
-    if (statement !== null) {
-      string = statement.getString();
-    }
-
-    if (procedureCall !== null) {
-      string = procedureCall.getString();
-    }
-
-    const node = null;
-
-    const supposition = new Supposition(context, string, node, statement, procedureCall);
-
-    return supposition;
+    debugger
   }
 });
 

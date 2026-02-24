@@ -202,6 +202,6 @@ export default define(class Variable extends Element {
   static name = "Variable";
 
   static fromJSON(json, context) {
-    ///
+    debugger
   }
 });

@@ -3,10 +3,11 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt } from "../utilities/context";
+import { attempt, literally } from "../utilities/context";
+import { instantiateConstructor } from "../process/instantiate";
 import { verifyTermAsConstructor } from "../process/verify";
 import { unifyTermWithConstructor } from "../process/unify";
-import { termFromJSON, termToTermJSON } from "../utilities/json";
+import { termFromJSON, termToTermJSON, ephemeralContextFromJSON } from "../utilities/json";
 
 export default define(class Constructor extends Element {
   constructor(context, string, node, term) {
@@ -124,9 +125,27 @@ export default define(class Constructor extends Element {
   static name = "Constructor";
 
   static fromJSON(json, context) {
-    const term = termFromJSON(json, context),
-          constructor = new Constructor(term);
+    const { string } = json,
+          node = nodeFromString(string, context),
+          term = termFromJSON(json, context),
+          ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
+    const constructor = new Constructor(context, string, node, term);
 
     return constructor;
   }
 });
+
+function nodeFromString(string, context) {
+  const { string } = json,
+        node = literally((context) => {
+          const constructorNode = instantiateConstructor(string, context),
+                node = constructorNode; ///
+
+          return node;
+        }, context);
+
+  return node;
+}

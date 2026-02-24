@@ -140,11 +140,6 @@ export default define(class Deduction extends Element {
   static name = "Deduction";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context),
-          string = statement.getString();
-
-    const deduction = new Deduction(context, string, statement);
-
-    return deduction;
+    debugger
   }
 });

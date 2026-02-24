@@ -58,11 +58,6 @@ export default define(class Parameter extends Element {
   static name = "Parameter";
 
   static fromJSON(json, context) {
-    const { name, identifier } = json,
-          string = null,
-          node = null,
-          parameter = new Parameter(context, string, node, name, identifier);
-
-    return parameter;
+    debugger
   }
 });

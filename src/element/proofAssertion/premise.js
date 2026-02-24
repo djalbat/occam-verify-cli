@@ -277,23 +277,6 @@ export default define(class Premise extends ProofAssertion {
   static name = "Premise";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context),
-          procedureCall = procedureCallFromJSON(json, context);
-
-    let string;
-
-    if (statement !== null) {
-      string = statement.getString();
-    }
-
-    if (procedureCall !== null) {
-      string = procedureCall.getString();
-    }
-
-    const node = null;
-
-    const premise = new Premise(context, string, node, statement, procedureCall);
-
-    return premise;
+    debugger
   }
 });

@@ -3,10 +3,11 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt } from "../utilities/context";
+import { attempt, literally } from "../utilities/context";
+import { instantiateCombinator } from "../process/instantiate";
 import { verifyStatementAsCombinator } from "../process/verify";
 import { unifyStatementWithCombinator } from "../process/unify";
-import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
+import { statementFromJSON, ephemeralContextFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export default define(class Combinator extends Element {
   constructor(context, string, node, statement) {
@@ -79,11 +80,23 @@ export default define(class Combinator extends Element {
   }
 
   toJSON() {
+    let json,
+        context;
+
+    context = this.getContext();
+
     const statementJSON = statementToStatementJSON(this.statement),
+          contextJSON = context.toJSON(),
           statement = statementJSON,  ///
-          json = {
-            statement
-          };
+          string = this.getString();
+
+    context = contextJSON;  ///
+
+    json = {
+      context,
+      string,
+      statement
+    };
 
     return json;
   }
@@ -91,7 +104,26 @@ export default define(class Combinator extends Element {
   static name = "Combinator";
 
   static fromJSON(json, context) {
-    debugger
+    const { string } = json,
+          node = nodeFromString(string, context),
+          statement = statementFromJSON(json, context),
+          ephemeralContext = ephemeralContextFromJSON(json, context);
 
+    context = ephemeralContext; ///
+
+    const combinator = new Combinator(context, string, node, statement);
+
+    return combinator;
   }
 });
+
+function nodeFromString(string, context) {
+  const node = literally((context) => {
+          const combinatorNode = instantiateCombinator(string, context),
+                node = combinatorNode;  ///
+
+          return node;
+        }, context);
+
+  return node;
+}

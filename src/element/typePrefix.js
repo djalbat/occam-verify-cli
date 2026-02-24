@@ -40,11 +40,6 @@ export default define(class TypePrefix extends Element {
   static name = "TypePrefix";
 
   static fromJSON(json, context) {
-    const { name } = json,
-          string = name,  ///
-          node = null,
-          typePrefix = new TypePrefix(context, string, node, name);
-
-    return typePrefix;
+    debugger
   }
 });

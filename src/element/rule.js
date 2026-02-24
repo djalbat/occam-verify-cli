@@ -10,6 +10,7 @@ import { labelsFromJSON,
          conclusionFromJSON,
          labelsToLabelsJSON,
          premisesToPremisesJSON,
+         ephemeralContextFromJSON,
          conclusionToConclusionJSON } from "../utilities/json";
 
 const { reverse, extract } = arrayUtilities,
@@ -307,16 +308,17 @@ export default define(class Rule extends Element {
   static name = "Rule";
 
   static fromJSON(json, context) {
-    let rule;
-
     const node = null,
           proof = null,
+          string = null,
           labels = labelsFromJSON(json, context),
           premises = premisesFromJSON(json, context),
           conclusion = conclusionFromJSON(json, context),
-          string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion);
+          ephemeralContext = ephemeralContextFromJSON(json, context);
 
-    rule = new Rule(context, string, node, labels, premises, conclusion, proof);
+    context = ephemeralContext; ///
+
+    const rule = new Rule(context, string, node, proof, labels, premises, conclusion);
 
     return rule;
   }

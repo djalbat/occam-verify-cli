@@ -5,10 +5,12 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
 import { EMPTY_STRING } from "../constants";
-import { typeToTypeJSON } from "../utilities/json";
 import { metaTypeToMetaTypeJSON } from "../utilities/json";
+import { instantiateMetavariable } from "../process/instantiate";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
+import { nameFromJSON, typeFromJSON, nameToNameJSON, metaTypeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 export default define(class Metavariable extends Element {
   constructor(context, string, node, name, type, metaType) {
@@ -438,11 +440,14 @@ export default define(class Metavariable extends Element {
   toJSON() {
     const metaTypeJSON = metaTypeToMetaTypeJSON(this.metaType),
           typeJSON = typeToTypeJSON(this.type),
+          nameJSON = nameToNameJSON(this.name),
           type = typeJSON,  ///
           metaType = metaTypeJSON,  ///
           string = this.getString(), ///
+          name = this.name,
           json = {
             string,
+            name,
             type,
             metaType
           };
@@ -453,6 +458,24 @@ export default define(class Metavariable extends Element {
   static name = "Metavariable";
 
   static fromJSON(json, context) {
-    debugger
+    const { string } = json,
+          node = nodeFromString(string, context),
+          name = nameFromJSON(json, context),
+          type = typeFromJSON(json, context),
+          metaType = metaTypeFromJSON(json, context),
+          metavariable = new Metavariable(context, string, node, name, type, metaType);
+
+    return metavariable;
   }
 });
+
+function nodeFromString(string, context) {
+  const node = literally((context) => {
+    const metavariableNode = instantiateMetavariable(string, context),
+          node = metavariableNode;  ///
+
+    return node;
+  }, context);
+
+  return node;
+}

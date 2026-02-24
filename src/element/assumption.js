@@ -336,17 +336,6 @@ export default define(class Assumption extends Element {
   static name = "Assumption";
 
   static fromJSON(json, context) {
-    let assumption = null;
-
-    if (json !== null) {
-      const string = null,
-            node = null,
-            statement = null,
-            reference = referenceFromJSON(json, context);
-
-      assumption = new Assumption(string, node, statement, reference)
-    }
-
-    return assumption;
+    debugger
   }
 });

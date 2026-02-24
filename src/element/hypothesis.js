@@ -99,17 +99,6 @@ export default define(class Hypothesis extends Element {
   static name = "Hypothesis";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context);
-
-    let string;
-
-    if (statement !== null) {
-      string = statement.getString();
-    }
-
-    const node = null,
-          hypothesis = new Hypothesis(context, string, node, statement);
-
-    return hypothesis;
+    debugger
   }
 });

@@ -314,16 +314,7 @@ export default define(class Type extends Element {
   static name = "Type";
 
   static fromJSON(json, context) {
-    const { name, prefixName, provisional } = json,
-          properties = propertiesFromJSON(json, context),
-          superTypes = superTypesFromJSON(json, context),
-          typeName = name,  ///
-          typePrefixName = null,
-          string = typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
-          node = null,
-          type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
-
-    return type;
+    debugger
   }
 
   static fromName(name, context) {

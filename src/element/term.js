@@ -4,10 +4,13 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
 import { validateTerms } from "../utilities/validation";
-import { typeToTypeJSON } from "../utilities/json";
+import { instantiateTerm } from "../process/instantiate";
+import { variablesFromTerm } from "../utilities/equivalence";
+import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
-const { filter, compress } = arrayUtilities;
+const { filter } = arrayUtilities;
 
 export default define(class Term extends Element {
   constructor(context, string, node, type) {
@@ -234,28 +237,22 @@ export default define(class Term extends Element {
   static name = "Term";
 
   static fromJSON(json, context) {
-    ///
+    const { string } = json,
+          node = nodeFromString(string, context),
+          type = typeFromJSON(json, context),
+          term = new Term(context, string, node, type);
+
+    return term;
   }
 });
 
-export function variablesFromTerm(term, context) {
-  const termNode = term.getNode(),
-        variableNodes = termNode.getVariableNodes(),
-        variables = variableNodes.map((variableNode) => {
-          const variableIdentifier = variableNode.getVariableIdentifier(),
-                variable = context.findVariableByVariableIdentifier(variableIdentifier);
+function nodeFromString(string, context) {
+  const node = literally((context) => {
+    const termNode = instantiateTerm(string, context),
+          node = termNode;  ///
 
-          return variable;
-        });
+    return node;
+  }, context);
 
-  compress(variables, (variableA, variableB) => {
-    const variableAEqualToVariableB = variableA.isEqualTo(variableB);
-
-    if (!variableAEqualToVariableB) {
-      return true;
-    }
-  });
-
-  return variables;
+  return node;
 }
-

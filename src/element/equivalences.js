@@ -5,7 +5,7 @@ import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
 import { EMPTY_STRING } from "../constants";
-import { variablesFromTerm } from "./term";
+import { variablesFromTerm } from "../utilities/equivalence";
 
 const { push, separate } = arrayUtilities;
 

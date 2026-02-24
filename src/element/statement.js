@@ -4,8 +4,10 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
+import { instantiateStatement } from "../process/instantiate";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
 const { match, backwardsSome } = arrayUtilities;
@@ -345,6 +347,21 @@ export default define(class Statement extends Element {
   static name = "Statement";
 
   static fromJSON(json, context) {
-    debugger
+    const { string } = json,
+          node = nodeFromString(string, context),
+          statement = new Statement(context, string, node);
+
+    return statement;
   }
 });
+
+function nodeFromString(string, context) {
+  const node = literally((context) => {
+          const statementNode = instantiateStatement(string, context),
+                node = statementNode; ///
+
+          return node;
+        }, context);
+
+  return node;
+}
