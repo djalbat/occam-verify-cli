@@ -82,7 +82,7 @@ export default define(class Combinator extends Element {
     const statementJSON = statementToStatementJSON(this.statement),
           statement = statementJSON,  ///
           json = {
-            statement,
+            statement
           };
 
     return json;
@@ -91,9 +91,7 @@ export default define(class Combinator extends Element {
   static name = "Combinator";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context),
-          combinator = new Combinator(statement);
+    debugger
 
-    return combinator;
   }
 });

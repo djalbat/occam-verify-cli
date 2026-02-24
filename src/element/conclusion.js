@@ -87,26 +87,10 @@ export  default define(class Conclusion extends Element {
   }
 
   toJSON() {
-    let frames,
-        terms;
-
-    frames = this.context.getFrames();
-
-    terms = this.context.getTerms();
-
     const statementJSON = statementToStatementJSON(this.statement),
-          framesJSON = framesToFramesJSON(frames),
-          termsJSON = termsToTermsJSON(terms);
-
-    frames = framesJSON;  ///
-
-    terms = termsJSON;  ///
-
-    const statement = statementJSON,  ///
+          statement = statementJSON,  ///
           json = {
-            statement,
-            frames,
-            terms
+            statement
           };
 
     return json;
@@ -115,14 +99,6 @@ export  default define(class Conclusion extends Element {
   static name = "Conclusion";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context),
-          node = null,
-          string = statement.getString();
-
-    context = ephemeralContext; ///
-
-    const conclusion = new Conclusion(context, string, node, statement);
-
-    return conclusion;
+    debugger
   }
 });

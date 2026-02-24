@@ -345,6 +345,6 @@ export default define(class Statement extends Element {
   static name = "Statement";
 
   static fromJSON(json, context) {
-    ///
+    debugger
   }
 });

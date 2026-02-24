@@ -11,7 +11,7 @@ export function FileContextFromFilePath(filePath) {
   let FileContext = null;
 
   const filePathFurtleFilePath = isFilePathFurtleFilePath(filePath),
-    filePathNominalFilePath = isFilePathNominalFilePath(filePath);
+        filePathNominalFilePath = isFilePathNominalFilePath(filePath);
 
   if (filePathFurtleFilePath) {
     FileContext = FurtleFileContext;  ///

@@ -453,6 +453,6 @@ export default define(class Metavariable extends Element {
   static name = "Metavariable";
 
   static fromJSON(json, context) {
-    ///
+    debugger
   }
 });

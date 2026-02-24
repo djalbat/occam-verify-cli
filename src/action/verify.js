@@ -8,7 +8,7 @@ import { releaseContextUtilities } from "occam-languages";
 import { FileContextFromFilePath } from "../utilities/fileContext";
 import { releaseContextFromDependency } from "../utilities/releaseContext";
 
-const { createReleaseContext, verifyReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
+const { createReleaseContext, verifyReleaseContext, initialiseReleaseContext, releaseContextFromJSON } = releaseContextUtilities;
 
 export default async function verifyAction(name, log) {
   const callback = async (context, filePath, lineIndex) => {
@@ -56,6 +56,40 @@ export default async function verifyAction(name, log) {
 
       return;
     }
+
+    let json = releaseContext.toJSON(),
+        entries = releaseContext.getEntries();
+
+    (() => {
+
+      let context;
+
+      const entriesJSON = entries.toJSON();
+
+      entries = entriesJSON;  ///
+
+      context = json; ///
+
+      json = {
+        name,
+        entries,
+        context
+      };
+
+      context = {
+        log,
+        callback
+      };
+
+      const releaseContext = releaseContextFromJSON(json, context),
+            releaseContexts = [
+              releaseContext
+            ];
+
+      releaseContext.initialise(releaseContexts, FileContextFromFilePath);
+
+    })();
+
 
   // }
   // catch (error) {

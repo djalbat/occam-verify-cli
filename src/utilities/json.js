@@ -544,6 +544,7 @@ export function metaTypeToMetaTypeJSON(metaType) {
   const metaTypeJSON = (metaType !== null) ?
                          metaType.toJSON() :
                            null;
+
   return metaTypeJSON;
 }
 
