@@ -5,7 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { instantiateLabel } from "../process/instantiate";
-import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
+import { metavariableToMetavariableJSON } from "../utilities/json";
+import { metavariableFromMetavariableNode } from "../utilities/element";
 
 export default define(class Label extends Element {
   constructor(context, string, node, metavariable) {
@@ -89,24 +90,35 @@ export default define(class Label extends Element {
   static name = "Label";
 
   static fromJSON(json, context) {
-    debugger
-
     const { string } = json,
-          node = nodeFromString(string, context),
-          metavariableNode = labelNode.getMetavariableNode(),
-          metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
+          metavariable = metavariableFromString(string, context),
+          labelNode = labelNodeFromMetavariable(metavariable),
+          node = labelNode, ///
+          label = new Label(context, string, node, metavariable);
 
-
+    return label;
   }
 });
 
-function nodeFromString(string, context) {
-  const node = literally((context) => {
-          const labelNode = instantiateLabel(string, context),
-                  node = labelNode; ///
+function labelNodeFromMetavariable(metavariable) {
+  const metavariableNode = metavariable.getNode(),
+        metavariableNodeParentNode = metavariableNode.getParentNode(),
+        labelNode = metavariableNodeParentNode; ///
 
-          return node;
-        }, context);
+    return labelNode;
+}
 
-  return node;
+function metavariableFromString(string, context) {
+  const metavariable = literally((context) => {
+    let metavariable;
+
+    const labelNode = instantiateLabel(string, context), ///
+          metavariableNode = labelNode.getMetavariableNode();
+
+    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+
+    return metavariable;
+  }, context);
+
+  return metavariable;
 }

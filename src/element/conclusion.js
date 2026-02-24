@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { attempt } from "../utilities/context";
-import { statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
+import { statementToStatementJSON } from "../utilities/json";
 
 export  default define(class Conclusion extends Element {
   constructor(context, string, node, statement) {
@@ -87,9 +87,20 @@ export  default define(class Conclusion extends Element {
   }
 
   toJSON() {
+    let context;
+
+    context = this.getContext();
+
+    const contextJSON = context.toJSON();
+
+    context = contextJSON;  ///
+
     const statementJSON = statementToStatementJSON(this.statement),
           statement = statementJSON,  ///
+          string = this.getString(),
           json = {
+            context,
+            string,
             statement
           };
 

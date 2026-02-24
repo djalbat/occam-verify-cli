@@ -357,11 +357,11 @@ export default define(class Statement extends Element {
 
 function nodeFromString(string, context) {
   const node = literally((context) => {
-          const statementNode = instantiateStatement(string, context),
-                node = statementNode; ///
+    const statementNode = instantiateStatement(string, context),
+          node = statementNode; ///
 
-          return node;
-        }, context);
+    return node;
+  }, context);
 
   return node;
 }

@@ -139,13 +139,12 @@ export default define(class Constructor extends Element {
 });
 
 function nodeFromString(string, context) {
-  const { string } = json,
-        node = literally((context) => {
-          const constructorNode = instantiateConstructor(string, context),
-                node = constructorNode; ///
+  const node = literally((context) => {
+    const constructorNode = instantiateConstructor(string, context),
+          node = constructorNode; ///
 
-          return node;
-        }, context);
+    return node;
+  }, context);
 
   return node;
 }

@@ -7,7 +7,12 @@ import { attempt, literally } from "../utilities/context";
 import { instantiateCombinator } from "../process/instantiate";
 import { verifyStatementAsCombinator } from "../process/verify";
 import { unifyStatementWithCombinator } from "../process/unify";
-import { statementFromJSON, ephemeralContextFromJSON, statementToStatementJSON } from "../utilities/json";
+import {
+  statementFromJSON,
+  ephemeralContextFromJSON,
+  statementToStatementJSON,
+  procedureCallToProcedureCallJSON
+} from "../utilities/json";
 
 export default define(class Combinator extends Element {
   constructor(context, string, node, statement) {
@@ -80,23 +85,22 @@ export default define(class Combinator extends Element {
   }
 
   toJSON() {
-    let json,
-        context;
+    let context;
 
     context = this.getContext();
 
-    const statementJSON = statementToStatementJSON(this.statement),
-          contextJSON = context.toJSON(),
-          statement = statementJSON,  ///
-          string = this.getString();
+    const contextJSON = context.toJSON();
 
     context = contextJSON;  ///
 
-    json = {
-      context,
-      string,
-      statement
-    };
+    const statementJSON = statementToStatementJSON(this.statement),
+          statement = statementJSON,  ///
+          string = this.getString(),
+          json = {
+            context,
+            string,
+            statement
+          };
 
     return json;
   }
@@ -119,11 +123,11 @@ export default define(class Combinator extends Element {
 
 function nodeFromString(string, context) {
   const node = literally((context) => {
-          const combinatorNode = instantiateCombinator(string, context),
-                node = combinatorNode;  ///
+    const combinatorNode = instantiateCombinator(string, context),
+          node = combinatorNode;  ///
 
-          return node;
-        }, context);
+    return node;
+  }, context);
 
   return node;
 }

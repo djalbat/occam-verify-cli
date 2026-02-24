@@ -3,8 +3,9 @@
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
-import { attempt, liminally } from "../../utilities/context";
-import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
+import { instantiatePremise } from "../../process/instantiate";
+import { attempt, liminally, literally } from "../../utilities/context";
+import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, ephemeralContextFromJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
 
 export default define(class Premise extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -262,11 +263,22 @@ export default define(class Premise extends ProofAssertion {
   }
 
   toJSON() {
+    let context;
+
+    context = this.getContext();
+
+    const contextJSON = context.toJSON();
+
+    context = contextJSON;  ///
+
     const procedureCallJSON = procedureCallToProcedureCallJSON(this.procedureCall),
           statementJSON = statementToStatementJSON(this.statement),
           procedureCall = procedureCallJSON,  ///
           statement = statementJSON,  ///
+          string = this.getString(),
           json = {
+            context,
+            string,
             statement,
             procedureCall
           };
@@ -277,6 +289,30 @@ export default define(class Premise extends ProofAssertion {
   static name = "Premise";
 
   static fromJSON(json, context) {
-    debugger
+    const { string } = json,
+          node = nodeFromString(string, context),
+          statement = statementFromJSON(json, context),
+          procedureCall = procedureCallFromJSON(json, context),
+          ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
+    const premise = new Premise(context, string, node, statement, procedureCall);
+
+    return premise;
   }
 });
+
+function nodeFromString(string, context) {
+  string = `${string}
+`;  ///
+
+  const node = literally((context) => {
+    const prmiseNode = instantiatePremise(string, context),
+          node = prmiseNode; ///
+
+    return node;
+  }, context);
+
+  return node;
+}

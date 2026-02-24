@@ -2,6 +2,7 @@
 
 import { ruleFromRuleName } from "../utilities/bnf";
 import { LABEL_RULE_NAME,
+         PREMISE_RULE_NAME,
          STATEMENT_RULE_NAME,
          REFERENCE_RULE_NAME,
          COMBINATOR_RULE_NAME,
@@ -14,6 +15,7 @@ import { LABEL_RULE_NAME,
          REFERENCE_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
 const labelPlaceholderRule = ruleFromRuleName(LABEL_RULE_NAME),
+      premisePlaceholderRule = ruleFromRuleName(PREMISE_RULE_NAME),
       statementPlaceholderRule = ruleFromRuleName(STATEMENT_RULE_NAME),
       referencePlaceholderRule = ruleFromRuleName(REFERENCE_RULE_NAME),
       combinatorPlaceholderRule = ruleFromRuleName(COMBINATOR_RULE_NAME),
@@ -26,6 +28,8 @@ const labelPlaceholderRule = ruleFromRuleName(LABEL_RULE_NAME),
       referenceSubstitutionPlaceholderRule = ruleFromRuleName(REFERENCE_SUBSTITUTION_RULE_NAME);
 
 export function instantiateLabel(string, context) { return instantiate(labelPlaceholderRule, string, context); }
+
+export function instantiatePremise(string, context) { return instantiate(premisePlaceholderRule, string, context); }
 
 export function instantiateStatement(string, context) { return instantiate(statementPlaceholderRule, string, context); }
 
