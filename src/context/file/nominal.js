@@ -66,24 +66,10 @@ export default class NominalFileContext extends FileContext {
   }
 
   getLexer() {
-    if (this.lexer === null) {
-      const combinedCustomGrammar = this.getCombinedCustomGrammar(),
-            nominalLexer = nominalLexerFromCombinedCustomGrammar(NominalLexer, combinedCustomGrammar);
-
-      this.lexer = nominalLexer; ///
-    }
-
     return this.lexer;
   }
 
   getParser() {
-    if (this.parser === null) {
-      const combinedCustomGrammar = this.getCombinedCustomGrammar(),
-            nominalParser = nominalParserFromCombinedCustomGrammar(NominalParser, combinedCustomGrammar);
-
-      this.parser = nominalParser; ///
-    }
-
     return this.parser;
   }
 
@@ -836,38 +822,6 @@ export default class NominalFileContext extends FileContext {
     ///
   }
 
-  initialise(json) {
-    const fileContext = this; ///
-
-    this.types = [];
-
-    typesFromJSON(json, this.types, fileContext);
-
-    this.rules = rulesFromJSON(json, fileContext);
-
-    this.axioms = axiomsFromJSON(json, fileContext);
-
-    this.lemmas = lemmasFromNothing();
-
-    this.theorems = theoremsFromJSON(json, fileContext);
-
-    this.variables = variablesFromJSON(json, fileContext);
-
-    this.metaLemmas = metaLemmasFromNothing();
-
-    this.conjectures = conjecturesFromJSON(json, fileContext);
-
-    this.combinators = combinatorsFromJSON(json, fileContext);
-
-    this.typePrefixes = typePrefixesFromJSON(json, fileContext);
-
-    this.constructors = constructorsFromJSON(json, fileContext);
-
-    this.metatheorems = metatheoremsFromJSON(json, fileContext);
-
-    this.metavariables = metavariablesFromJSON(json, fileContext);
-  }
-
   async verifyFile() {
     const node = this.getNode(),
           context = this, ///
@@ -920,8 +874,12 @@ export default class NominalFileContext extends FileContext {
   }
 
   static fromFile(file, context) {
-    const lexer = null,
-          parser = null,
+    const releaseContext = context, ///
+          combinedCustomGrammar = releaseContext.getCombinedCustomGrammar(),
+          nominalLexer = nominalLexerFromCombinedCustomGrammar(NominalLexer, combinedCustomGrammar),
+          nominalParser = nominalParserFromCombinedCustomGrammar(NominalParser, combinedCustomGrammar),
+          lexer = nominalLexer, ///
+          parser = nominalParser, ///
           types = [],
           rules = [],
           axioms = [],
@@ -940,23 +898,31 @@ export default class NominalFileContext extends FileContext {
     return nominalFileContext;
   }
 
-  static fromFilePath(filePath, context) {
-    const lexer = null,
-          parser = null,
-          types = null,
-          rules = null,
-          axioms = null,
-          lemmas = null,
-          theorems = null,
-          variables = null,
-          metaLemmas = null,
-          conjectures = null,
-          combinators = null,
-          typePrefixes = null,
-          constructors = null,
-          metatheorems = null,
-          metavariables = null,
-          nominalFileContext = FileContext.fromFilePath(NominalFileContext, filePath, lexer, parser, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
+  static fromJSON(json, context) {
+    const fileContext = this, ///
+          releaseContext = context, ///
+          combinedCustomGrammar = releaseContext.getCombinedCustomGrammar(),
+          nominalLexer = nominalLexerFromCombinedCustomGrammar(NominalLexer, combinedCustomGrammar),
+          nominalParser = nominalParserFromCombinedCustomGrammar(NominalParser, combinedCustomGrammar),
+          lexer = nominalLexer, ///
+          parser = nominalParser, ///
+          types = [];
+
+    typesFromJSON(json, types, fileContext);
+
+    const rules = rulesFromJSON(json, fileContext),
+          axioms = axiomsFromJSON(json, fileContext),
+          lemmas = lemmasFromNothing(),
+          theorems = theoremsFromJSON(json, fileContext),
+          variables = variablesFromJSON(json, fileContext),
+          metaLemmas = metaLemmasFromNothing(),
+          conjectures = conjecturesFromJSON(json, fileContext),
+          combinators = combinatorsFromJSON(json, fileContext),
+          typePrefixes = typePrefixesFromJSON(json, fileContext),
+          constructors = constructorsFromJSON(json, fileContext),
+          metatheorems = metatheoremsFromJSON(json, fileContext),
+          metavariables = metavariablesFromJSON(json, fileContext),
+          nominalFileContext = FileContext.fromJSON(NominalFileContext, json, lexer, parser, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
 
     return nominalFileContext;
   }

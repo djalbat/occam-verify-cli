@@ -86,8 +86,6 @@ export default async function verifyAction(name, log) {
               releaseContext
             ];
 
-      debugger
-
       releaseContext.initialise(releaseContexts, FileContextFromFilePath);
 
     })();
