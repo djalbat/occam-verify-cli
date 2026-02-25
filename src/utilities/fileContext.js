@@ -23,3 +23,7 @@ export function FileContextFromFilePath(filePath) {
 
   return FileContext;
 }
+
+export default {
+  FileContextFromFilePath
+};

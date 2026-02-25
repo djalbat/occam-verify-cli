@@ -3,12 +3,13 @@
 import "../preamble";
 
 import { Dependency } from "occam-model";
-import { releaseContextUtilities } from "occam-languages";
+import { verificationUtilities, releaseContextUtilities } from "occam-languages";
 
 import { FileContextFromFilePath } from "../utilities/fileContext";
 import { releaseContextFromDependency } from "../utilities/releaseContext";
 
-const { createReleaseContext, verifyReleaseContext, initialiseReleaseContext, releaseContextFromJSON } = releaseContextUtilities;
+const { releaseContextFromJSON } = releaseContextUtilities,
+      { createReleaseContext, verifyReleaseContext, initialiseReleaseContext } = verificationUtilities;
 
 export default async function verifyAction(name, log) {
   const callback = async (context, filePath, lineIndex) => {

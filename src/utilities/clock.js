@@ -17,3 +17,8 @@ export function startClock() {
 
   return now;
 }
+
+export default {
+  stopClock,
+  startClock
+};
