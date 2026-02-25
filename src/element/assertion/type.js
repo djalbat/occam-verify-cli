@@ -189,8 +189,6 @@ export default define(class TypeAssertion extends Assertion {
     }
   }
 
-  static name = "TypeAssertion";
-
   toJSON() {
     debugger
 
@@ -209,6 +207,8 @@ export default define(class TypeAssertion extends Assertion {
 
     return json;
   }
+
+  static name = "TypeAssertion";
 
   static fromJSON(json, context) {
     let typeAssertion = null;

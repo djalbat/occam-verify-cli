@@ -31,6 +31,32 @@ export default define(class Premise extends ProofAssertion {
     return stated;
   }
 
+  async verify(context) {
+    let verifies = false;
+
+    await this.break(context);
+
+    const premiseString = this.getString();
+
+    context.trace(`Verifying the '${premiseString}' premise...`);
+
+    attempt((context) => {
+      const validates = this.validate(context);
+
+      if (validates) {
+        this.setContext(context);
+
+        verifies = true;
+      }
+    }, context);
+
+    if (verifies) {
+      context.debug(`...verified the '${premiseString}' premise.`);
+    }
+
+    return verifies;
+  }
+
   validate(context) {
     let validates = false;
 
@@ -193,32 +219,6 @@ export default define(class Premise extends ProofAssertion {
     }
 
     return subproofUnifies;
-  }
-
-  async verify(context) {
-    let verifies = false;
-
-    await this.break(context);
-
-    const premiseString = this.getString();
-
-    context.trace(`Verifying the '${premiseString}' premise...`);
-
-    attempt((context) => {
-      const validates = this.validate(context);
-
-      if (validates) {
-        this.setContext(context);
-
-        verifies = true;
-      }
-    }, context);
-
-    if (verifies) {
-      context.debug(`...verified the '${premiseString}' premise.`);
-    }
-
-    return verifies;
   }
 
   async unifyIndependently(context) {

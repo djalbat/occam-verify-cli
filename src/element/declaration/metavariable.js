@@ -20,6 +20,32 @@ export default define(class MetavariableDeclaration extends Declaration {
     return this.metavariable;
   }
 
+  async verify() {
+    let verifies;
+
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const metavariableDeclarationString = this.getString(); ///
+
+    context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
+
+    const metavariableVerifies = this.verifyMetavariable();
+
+    if (metavariableVerifies) {
+      context.addMetavariable(this.metavariable);
+
+      verifies = true;
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`);
+    }
+
+    return verifies;
+  }
+
   verifyMetavariable() {
     let metavariableVerifies = false;
 
@@ -89,32 +115,6 @@ export default define(class MetavariableDeclaration extends Declaration {
     }
 
     return metavariableTypeVerified;
-  }
-
-  async verify() {
-    let verifies;
-
-    const context = this.getContext();
-
-    await this.break(context);
-
-    const metavariableDeclarationString = this.getString(); ///
-
-    context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
-
-    const metavariableVerifies = this.verifyMetavariable();
-
-    if (metavariableVerifies) {
-      context.addMetavariable(this.metavariable);
-
-      verifies = true;
-    }
-
-    if (verifies) {
-      context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`);
-    }
-
-    return verifies;
   }
 
   static name = "MetavariableDeclaration";

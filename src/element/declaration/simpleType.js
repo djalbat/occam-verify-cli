@@ -34,6 +34,40 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     return simpleTypeDeclarationNode;
   }
 
+  async verify() {
+    let verifies = false;
+
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const simpleTypeDeclarationString = this.getString();  ///
+
+    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`);
+
+    const typeVerifies = this.verifyType();
+
+    if (typeVerifies) {
+      const superTypesVerify = this.verifySuperTypes();
+
+      if (superTypesVerify) {
+        const typePrefixVerifies = this.verifyTypePrefix();
+
+        if (typePrefixVerifies) {
+          context.addType(this.type);
+
+          verifies = true;
+        }
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration.`);
+    }
+
+    return verifies;
+  }
+
   verifyType() {
     let typeVerifies = false;
 
@@ -166,40 +200,6 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     }
 
     return typePrefixVerifies;
-  }
-
-  async verify() {
-    let verifies = false;
-
-    const context = this.getContext();
-
-    await this.break(context);
-
-    const simpleTypeDeclarationString = this.getString();  ///
-
-    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`);
-
-    const typeVerifies = this.verifyType();
-
-    if (typeVerifies) {
-      const superTypesVerify = this.verifySuperTypes();
-
-      if (superTypesVerify) {
-        const typePrefixVerifies = this.verifyTypePrefix();
-
-        if (typePrefixVerifies) {
-          context.addType(this.type);
-
-          verifies = true;
-        }
-      }
-    }
-
-    if (verifies) {
-      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration.`);
-    }
-
-    return verifies;
   }
 
   static name = "SimpleTypeDeclaration";

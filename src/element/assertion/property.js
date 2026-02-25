@@ -193,8 +193,6 @@ export default define(class PropertyAssertion extends Assertion {
     context.addAssignment(assignment);
   }
 
-  static name = "PropertyAssertion";
-
   toJSON() {
     debugger
 
@@ -207,6 +205,8 @@ export default define(class PropertyAssertion extends Assertion {
 
     return json;
   }
+
+  static name = "PropertyAssertion";
 
   static fromJSON(json, context) {
     let proopertyAssertion = null;

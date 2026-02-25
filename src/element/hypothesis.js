@@ -23,6 +23,28 @@ export default define(class Hypothesis extends Element {
     return hypothesisNode;
   }
 
+  compareProofAssertion(proofAssertion, context) {
+    let comparesToProofAssertion = false;
+
+    const hypothesisString = this.getString(), ///
+          proofAssertionString = proofAssertion.getString();
+
+    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${proofAssertionString}' proof assertion...`);
+
+    const proofAssertionStatement = proofAssertion.getStatement(),
+          statementEqualToStepStatement = this.statement.isEqualTo(proofAssertionStatement);
+
+    if (statementEqualToStepStatement) {
+      comparesToProofAssertion = true;
+    }
+
+    if (comparesToProofAssertion) {
+      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${proofAssertionString}' proof assertion.`);
+    }
+
+    return comparesToProofAssertion;
+  }
+
   async verify(context) {
     let verifies = false;
 
@@ -62,28 +84,6 @@ export default define(class Hypothesis extends Element {
     }
 
     return verifies;
-  }
-
-  compareProofAssertion(proofAssertion, context) {
-    let comparesToProofAssertion = false;
-
-    const hypothesisString = this.getString(), ///
-          proofAssertionString = proofAssertion.getString();
-
-    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${proofAssertionString}' proof assertion...`);
-
-    const proofAssertionStatement = proofAssertion.getStatement(),
-          statementEqualToStepStatement = this.statement.isEqualTo(proofAssertionStatement);
-
-    if (statementEqualToStepStatement) {
-      comparesToProofAssertion = true;
-    }
-
-    if (comparesToProofAssertion) {
-      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${proofAssertionString}' proof assertion.`);
-    }
-
-    return comparesToProofAssertion;
   }
 
   toJSON() {

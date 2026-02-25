@@ -114,8 +114,6 @@ export default define(class SubproofAssertion extends Assertion {
     return subproofUnifies;
   }
 
-  static name = "SubproofAssertion";
-
   toJSON() {
     const { name } = this.constructor,
           statementJSON = statementsToStatementsJSON(this.statements),
@@ -129,6 +127,8 @@ export default define(class SubproofAssertion extends Assertion {
 
     return json;
   }
+
+  static name = "SubproofAssertion";
 
   static fromJSON(json, context) {
     let subproorAssertion = null;

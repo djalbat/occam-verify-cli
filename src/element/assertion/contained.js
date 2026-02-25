@@ -236,8 +236,6 @@ export default define(class ContainedAssertion extends Assertion {
     return unifiesIndependently;
   }
 
-  static name = "ContainedAssertion";
-
   toJSON() {
     debugger
 
@@ -250,6 +248,8 @@ export default define(class ContainedAssertion extends Assertion {
 
     return json;
   }
+
+  static name = "ContainedAssertion";
 
   static fromJSON(json, context) {
     let containedAssertion = null;

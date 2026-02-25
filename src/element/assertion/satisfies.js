@@ -154,8 +154,6 @@ export default define(class SatisfiesAssertion extends Assertion {
     return statementUnifies;
   }
 
-  static name = "SatisfiesAssertion";
-
   toJSON() {
     debugger
 
@@ -168,6 +166,8 @@ export default define(class SatisfiesAssertion extends Assertion {
 
     return json;
   }
+
+  static name = "SatisfiesAssertion";
 
   static fromJSON(json, context) {
     let satisfiesAssertion = null;

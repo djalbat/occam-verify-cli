@@ -66,6 +66,36 @@ export default define(class Step extends ProofAssertion {
     return comparesToTermAndPropertyRelation;
   }
 
+  async verify(context) {
+    let verifies = false;
+
+    await this.break(context);
+
+    const stepString = this.getString(); ///
+
+    context.trace(`Verifying the '${stepString}' step...`);
+
+    await asyncAttempt(async (context) => {
+      const validates = this.validate(context);
+
+      if (validates) {
+        const unifies = await this.unify(context);
+
+        if (unifies) {
+          this.setContext(context);
+
+          verifies = true;
+        }
+      }
+    }, context);
+
+    if (verifies) {
+      context.debug(`...verified the '${stepString}' step.`);
+    }
+
+    return verifies;
+  }
+
   validate(context) {
     let validates = false;
 
@@ -147,68 +177,6 @@ export default define(class Step extends ProofAssertion {
     return satisfiesAssertionValidates;
   }
 
-  unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
-    let unifiesWithSatisfiesAssertion = false;
-
-    const stepString = this.getString(), ///
-          satisfiesAssertionString = satisfiesAssertion.getString();
-
-    context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`);
-
-    const reference = satisfiesAssertion.getReference(),
-          axiom = context.findAxiomByReference(reference);
-
-    if (axiom !== null) {
-      const step = this,  ///
-            substitutions = [],
-            stepUnifies = axiom.unifyStep(step, substitutions, context);
-
-      if (stepUnifies) {
-        const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
-
-        if (substitutionsCompare) {
-          unifiesWithSatisfiesAssertion = true;
-        }
-      }
-    }
-
-    if (unifiesWithSatisfiesAssertion) {
-      context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`);
-    }
-
-    return unifiesWithSatisfiesAssertion;
-  }
-
-  async verify(context) {
-    let verifies = false;
-
-    await this.break(context);
-
-    const stepString = this.getString(); ///
-
-    context.trace(`Verifying the '${stepString}' step...`);
-
-    await asyncAttempt(async (context) => {
-      const validates = this.validate(context);
-
-      if (validates) {
-        const unifies = await this.unify(context);
-
-        if (unifies) {
-          this.setContext(context);
-
-          verifies = true;
-        }
-      }
-    }, context);
-
-    if (verifies) {
-      context.debug(`...verified the '${stepString}' step.`);
-    }
-
-    return verifies;
-  }
-
   async unify(context) {
     let unifies = false;
 
@@ -240,6 +208,38 @@ export default define(class Step extends ProofAssertion {
     }
 
     return unifies;
+  }
+
+  unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
+    let unifiesWithSatisfiesAssertion = false;
+
+    const stepString = this.getString(), ///
+          satisfiesAssertionString = satisfiesAssertion.getString();
+
+    context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`);
+
+    const reference = satisfiesAssertion.getReference(),
+          axiom = context.findAxiomByReference(reference);
+
+    if (axiom !== null) {
+      const step = this,  ///
+            substitutions = [],
+            stepUnifies = axiom.unifyStep(step, substitutions, context);
+
+      if (stepUnifies) {
+        const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
+
+        if (substitutionsCompare) {
+          unifiesWithSatisfiesAssertion = true;
+        }
+      }
+    }
+
+    if (unifiesWithSatisfiesAssertion) {
+      context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`);
+    }
+
+    return unifiesWithSatisfiesAssertion;
   }
 
   static name = "Step";

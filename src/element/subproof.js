@@ -54,6 +54,12 @@ export default define(class Subproof extends Element {
     return proofAssertion;
   }
 
+  compareStatement(statement, context) {
+    const statementUnifies = false;
+
+    return statementUnifies;
+  }
+
   async verify(context) {
     let verifies = false;
 
@@ -82,12 +88,6 @@ export default define(class Subproof extends Element {
     }, context);
 
     return verifies;
-  }
-
-  compareStatement(statement, context) {
-    const statementUnifies = false;
-
-    return statementUnifies;
   }
 
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {

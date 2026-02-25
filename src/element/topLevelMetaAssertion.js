@@ -53,25 +53,6 @@ export default class TopLevelMetaAssertion extends Element {
     return comparesToReference;
   }
 
-  verifyLabel() {
-    let labelVerifies;
-
-    const context = this.getContext(),
-          topLevelMetaAssertionString = this.getString(); ///
-
-    context.trace(`Verifiesing the '${topLevelMetaAssertionString}' top level meta assertion's label...`);
-
-    const nameOnly = true;
-
-    labelVerifies = this.label.verify(nameOnly);
-
-    if (labelVerifies) {
-      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's label.`);
-    }
-
-    return labelVerifies;
-  }
-
   async verify() {
     let verifies = false;
 
@@ -105,6 +86,25 @@ export default class TopLevelMetaAssertion extends Element {
     }
 
     return verifies;
+  }
+
+  verifyLabel() {
+    let labelVerifies;
+
+    const context = this.getContext(),
+          topLevelMetaAssertionString = this.getString(); ///
+
+    context.trace(`Verifiesing the '${topLevelMetaAssertionString}' top level meta assertion's label...`);
+
+    const nameOnly = true;
+
+    labelVerifies = this.label.verify(nameOnly);
+
+    if (labelVerifies) {
+      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's label.`);
+    }
+
+    return labelVerifies;
   }
 
   async verifyProof(context) {

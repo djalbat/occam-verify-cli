@@ -42,18 +42,6 @@ export default define(class Section extends Element {
     return sectionNode;
   }
 
-  verifyHypotheses() {
-    const hypothesesVerify = this.hypotheses.every((hypothesis) => {
-      const hypothesisVerifies = hypothesis.verify(this.context);
-
-      if (hypothesisVerifies) {
-        return true;
-      }
-    });
-
-    return hypothesesVerify;
-  }
-
   async verify() {
     let verifies = false;
 
@@ -80,6 +68,18 @@ export default define(class Section extends Element {
     }
 
     return verifies;
+  }
+
+  verifyHypotheses() {
+    const hypothesesVerify = this.hypotheses.every((hypothesis) => {
+      const hypothesisVerifies = hypothesis.verify(this.context);
+
+      if (hypothesisVerifies) {
+        return true;
+      }
+    });
+
+    return hypothesesVerify;
   }
 
   static name = "Section";

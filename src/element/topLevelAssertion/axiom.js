@@ -19,23 +19,6 @@ export default define(class Axiom extends TopLevelAssertion {
     return satisfiable;
   }
 
-  verifySignature() {
-    let signatureVerifies;
-
-    const satisfiable = this.isSatisfiable();
-
-    if (satisfiable) {
-      const context = this.getContext(),
-            signature = this.getSignature();
-
-      signatureVerifies = signature.verify(context);
-    } else {
-      signatureVerifies = true
-    }
-
-    return signatureVerifies;
-  }
-
   compareSignature(signature, substitutions, context) {
     let comparesToSignature = false;
 
@@ -57,6 +40,51 @@ export default define(class Axiom extends TopLevelAssertion {
     }
 
     return comparesToSignature;
+  }
+
+  async verify() {
+    let verifies;
+
+    const context = this.getContext();
+
+    await this.break(context);
+
+    const axiomString = this.getString(); ///
+
+    context.trace(`Verifying the '${axiomString}' axiom...`);
+
+    const signatureVerifies = this.verifySignature();
+
+    if (signatureVerifies) {
+      verifies = await super.verify();
+    }
+
+    if (verifies) {
+      const axiom = this; ///
+
+      context.addAxiom(axiom);
+
+      context.debug(`...verified the '${axiomString}' axiom.`);
+    }
+
+    return verifies;
+  }
+
+  verifySignature() {
+    let signatureVerifies;
+
+    const satisfiable = this.isSatisfiable();
+
+    if (satisfiable) {
+      const context = this.getContext(),
+            signature = this.getSignature();
+
+      signatureVerifies = signature.verify(context);
+    } else {
+      signatureVerifies = true
+    }
+
+    return signatureVerifies;
   }
 
   unifyStep(step, substitutions, context) {
@@ -237,34 +265,6 @@ export default define(class Axiom extends TopLevelAssertion {
     }
 
     return topLevelAssertionUnifies;
-  }
-
-  async verify() {
-    let verifies;
-
-    const context = this.getContext();
-
-    await this.break(context);
-
-    const axiomString = this.getString(); ///
-
-    context.trace(`Verifying the '${axiomString}' axiom...`);
-
-    const signatureVerifies = this.verifySignature();
-
-    if (signatureVerifies) {
-      verifies = await super.verify();
-    }
-
-    if (verifies) {
-      const axiom = this; ///
-
-      context.addAxiom(axiom);
-
-      context.debug(`...verified the '${axiomString}' axiom.`);
-    }
-
-    return verifies;
   }
 
   static name = "Axiom";

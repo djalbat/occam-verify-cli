@@ -30,6 +30,32 @@ export default define(class Supposition extends ProofAssertion {
     return stated;
   }
 
+  async verify(context) {
+    let verifies = false;
+
+    await this.break(context);
+
+    const suppositionString = this.getString(); ///
+
+    context.trace(`Verifying the '${suppositionString}' supposition...`);
+
+    attempt((context) => {
+      const validates = this.validate(context);
+
+      if (validates) {
+        this.setContext(context);
+
+        verifies = true;
+      }
+    }, context);
+
+    if (verifies) {
+      context.debug(`...verified the '${suppositionString}' supposition.`);
+    }
+
+    return verifies;
+  }
+
   validate(context) {
     let validates = false;
 
@@ -214,32 +240,6 @@ export default define(class Supposition extends ProofAssertion {
     }
 
     return subproofUnifies;
-  }
-
-  async verify(context) {
-    let verifies = false;
-
-    await this.break(context);
-
-    const suppositionString = this.getString(); ///
-
-    context.trace(`Verifying the '${suppositionString}' supposition...`);
-
-    attempt((context) => {
-      const validates = this.validate(context);
-
-      if (validates) {
-        this.setContext(context);
-
-        verifies = true;
-      }
-    }, context);
-
-    if (verifies) {
-      context.debug(`...verified the '${suppositionString}' supposition.`);
-    }
-
-    return verifies;
   }
 
   async unifyIndependently(context) {
