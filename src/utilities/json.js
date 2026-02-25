@@ -451,12 +451,17 @@ export function statementsFromJSON(json, context) {
 export function assertionsFromJSON(json, context) {
   let { assertions } = json;
 
-  const { Assertion } = elements,
+  const { TypeAssertion, DefinedAssertion, PropertyAssertion, SubproofAssertion, SatisfiesAssertion, ContainedAssertion } = elements,
         assertionsJSON = assertions; ///
 
   assertions = assertionsJSON.map((assertionJSON) => {
     const json = assertionJSON,  ///
-          assertion = Assertion.fromJSON(json, context);
+          assertion = TypeAssertion.fromJSON(json, context) ||
+                       DefinedAssertion.fromJSON(json, context) ||
+                       PropertyAssertion.fromJSON(json, context) ||
+                       SubproofAssertion.fromJSON(json, context) ||
+                       SatisfiesAssertion.fromJSON(json, context) ||
+                       ContainedAssertion.fromJSON(json, context);
 
     return assertion;
   });
@@ -467,12 +472,12 @@ export function assertionsFromJSON(json, context) {
 export function referencesFromJSON(json, context) {
   let { references } = json;
 
-  const { Assertion } = elements,
+  const { Reference } = elements,
         referencesJSON = references; ///
 
   references = referencesJSON.map((referenceJSON) => {
     const json = referenceJSON,  ///
-          reference = Assertion.fromJSON(json, context);
+          reference = Reference.fromJSON(json, context);
 
     return reference;
   });

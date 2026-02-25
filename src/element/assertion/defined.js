@@ -206,6 +206,31 @@ export default define(class DefinedAssertion extends Assertion {
   }
 
   static name = "DefinedAssertion";
+
+  toJSON() {
+    debugger
+
+    const { name } = this.constructor,
+          string = this.getString(),
+          json = {
+            name,
+            string
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, context) {
+    let definedAssertion = null;
+
+    const { name } = json;
+
+    if (this.name === name) {
+      debugger
+    }
+
+    return definedAssertion;
+  }
 });
 
 function validateWhenDerived(term, frame, negated, generalContext, specificContext) {

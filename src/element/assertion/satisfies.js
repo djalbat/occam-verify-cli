@@ -155,4 +155,29 @@ export default define(class SatisfiesAssertion extends Assertion {
   }
 
   static name = "SatisfiesAssertion";
+
+  toJSON() {
+    debugger
+
+    const { name } = this.constructor,
+          string = this.getString(),
+          json = {
+            name,
+            string
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, context) {
+    let satisfiesAssertion = null;
+
+    const { name } = json;
+
+    if (this.name === name) {
+      debugger
+    }
+
+    return satisfiesAssertion;
+  }
 });

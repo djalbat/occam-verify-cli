@@ -822,6 +822,15 @@ export default class NominalFileContext extends FileContext {
     ///
   }
 
+  async verifyFile() {
+    const node = this.getNode(),
+          context = this, ///
+          fileNode = node,  ///
+          fileVerifies = await verifyFile(fileNode, context);
+
+    return fileVerifies;
+  }
+
   initialise(json) {
     const fileContext = this; ///
 
@@ -842,15 +851,6 @@ export default class NominalFileContext extends FileContext {
     this.typePrefixes = typePrefixesFromJSON(json, fileContext);
     this.constructors = constructorsFromJSON(json, fileContext);
     this.metatheorems = metatheoremsFromJSON(json, fileContext);
-  }
-
-  async verifyFile() {
-    const node = this.getNode(),
-          context = this, ///
-          fileNode = node,  ///
-          fileVerifies = await verifyFile(fileNode, context);
-
-    return fileVerifies;
   }
 
   toJSON() {
@@ -927,19 +927,19 @@ export default class NominalFileContext extends FileContext {
           nominalParser = nominalParserFromCombinedCustomGrammar(NominalParser, combinedCustomGrammar),
           lexer = nominalLexer, ///
           parser = nominalParser, ///
-          types = [],
-          rules = [],
-          axioms = [],
-          lemmas = [],
-          theorems = [],
-          variables = [],
-          metaLemmas = [],
-          conjectures = [],
-          combinators = [],
-          typePrefixes = [],
-          constructors = [],
-          metatheorems = [],
-          metavariables = [],
+          types = null,
+          rules = null,
+          axioms = null,
+          lemmas = null,
+          theorems = null,
+          variables = null,
+          metaLemmas = null,
+          conjectures = null,
+          combinators = null,
+          typePrefixes = null,
+          constructors = null,
+          metatheorems = null,
+          metavariables = null,
           nominalFileContext = FileContext.fromJSON(NominalFileContext, json, lexer, parser, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
 
     nominalFileContext.initialise(json);

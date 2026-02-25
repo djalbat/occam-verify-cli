@@ -125,26 +125,21 @@ export default define(class Constructor extends Element {
   static name = "Constructor";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          node = nodeFromString(string, context),
-          term = termFromJSON(json, context),
-          ephemeralContext = ephemeralContextFromJSON(json, context);
+    const constructor = literally((context) => {
+      const { string } = json,
+            constructorNode = instantiateConstructor(string, context),
+            node = constructorNode, ///
+            term = termFromJSON(json, context),
+            ephemeralContext = ephemeralContextFromJSON(json, context);
 
-    context = ephemeralContext; ///
+      context = ephemeralContext; ///
 
-    const constructor = new Constructor(context, string, node, term);
+      const constructor = new Constructor(context, string, node, term);
+
+      return constructor;
+
+    }, context);
 
     return constructor;
   }
 });
-
-function nodeFromString(string, context) {
-  const node = literally((context) => {
-    const constructorNode = instantiateConstructor(string, context),
-          node = constructorNode; ///
-
-    return node;
-  }, context);
-
-  return node;
-}

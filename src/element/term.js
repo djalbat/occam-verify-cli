@@ -237,22 +237,17 @@ export default define(class Term extends Element {
   static name = "Term";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          node = nodeFromString(string, context),
-          type = typeFromJSON(json, context),
-          term = new Term(context, string, node, type);
+    const term = literally((context) => {
+      const { string } = json,
+            termNode = instantiateTerm(string, context),
+            node = termNode,  ///
+            type = typeFromJSON(json, context),
+            term = new Term(context, string, node, type);
+
+      return term;
+
+    }, context);
 
     return term;
   }
 });
-
-function nodeFromString(string, context) {
-  const node = literally((context) => {
-    const termNode = instantiateTerm(string, context),
-          node = termNode;  ///
-
-    return node;
-  }, context);
-
-  return node;
-}

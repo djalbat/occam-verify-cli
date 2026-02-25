@@ -458,24 +458,19 @@ export default define(class Metavariable extends Element {
   static name = "Metavariable";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          node = nodeFromString(string, context),
-          name = nameFromJSON(json, context),
-          type = typeFromJSON(json, context),
-          metaType = metaTypeFromJSON(json, context),
-          metavariable = new Metavariable(context, string, node, name, type, metaType);
+    const metavariable = literally((context) => {
+      const { string } = json,
+            metavariableNode = instantiateMetavariable(string, context),
+            node = metavariableNode,  ///
+            name = nameFromJSON(json, context),
+            type = typeFromJSON(json, context),
+            metaType = metaTypeFromJSON(json, context),
+            metavariable = new Metavariable(context, string, node, name, type, metaType);
+
+      return metavariable;
+
+    }, context);
 
     return metavariable;
   }
 });
-
-function nodeFromString(string, context) {
-  const node = literally((context) => {
-    const metavariableNode = instantiateMetavariable(string, context),
-          node = metavariableNode;  ///
-
-    return node;
-  }, context);
-
-  return node;
-}

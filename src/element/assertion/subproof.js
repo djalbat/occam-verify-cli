@@ -5,7 +5,10 @@ import { arrayUtilities } from "necessary";
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
+import { literally } from "../../utilities/context";
 import { unifyStatement } from "../../process/unify";
+import { statementsToStatementsJSON } from "../../utilities/json";
+import { instantiateSubproofAssertion } from "../../process/instantiate";
 
 const { match } = arrayUtilities;
 
@@ -112,5 +115,48 @@ export default define(class SubproofAssertion extends Assertion {
   }
 
   static name = "SubproofAssertion";
+
+  toJSON() {
+    const { name } = this.constructor,
+          statementJSON = statementsToStatementsJSON(this.statements),
+          statements = statementJSON, ///
+          string = this.getString(),
+          json = {
+            name,
+            string,
+            statements
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, context) {
+    let subproorAssertion = null;
+
+    const { name } = json;
+
+    if (this.name === name) {
+      subproorAssertion = literally((context) => {
+        const { string } = json,
+              subproofAssertionNode = instantiateSubproofAssertion(string, context),
+              statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),
+              node = subproofAssertionNode; ///
+
+        subproorAssertion = new SubproofAssertion(context, string, node, statements);
+      }, context);
+    }
+
+    return subproorAssertion;
+  }
 });
 
+function statementsFromSubproofAssertionNode(subproofAssertionNode, context) {
+  const statementNodes = subproofAssertionNode.getStatementNodes(),
+        statements = statementNodes.map((statemetNode) => {
+          const statement = context.findStatementByStatementNode(statemetNode);
+
+          return statement;
+        });
+
+  return statements;
+}

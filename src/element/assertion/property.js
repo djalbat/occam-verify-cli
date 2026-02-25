@@ -194,4 +194,29 @@ export default define(class PropertyAssertion extends Assertion {
   }
 
   static name = "PropertyAssertion";
+
+  toJSON() {
+    debugger
+
+    const { name } = this.constructor,
+          string = this.getString(),
+          json = {
+            name,
+            string
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, context) {
+    let proopertyAssertion = null;
+
+    const { name } = json;
+
+    if (this.name === name) {
+      debugger
+    }
+
+    return proopertyAssertion;
+  }
 });

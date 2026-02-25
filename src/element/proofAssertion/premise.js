@@ -289,30 +289,26 @@ export default define(class Premise extends ProofAssertion {
   static name = "Premise";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          node = nodeFromString(string, context),
-          statement = statementFromJSON(json, context),
-          procedureCall = procedureCallFromJSON(json, context),
-          ephemeralContext = ephemeralContextFromJSON(json, context);
+    const premise = literally((context) => {
+      let { string } = json;
 
-    context = ephemeralContext; ///
+      string = `${string}
+`;  ///
 
-    const premise = new Premise(context, string, node, statement, procedureCall);
+      const prmiseNode = instantiatePremise(string, context),
+            node = prmiseNode,  ///
+            statement = statementFromJSON(json, context),
+            procedureCall = procedureCallFromJSON(json, context),
+            ephemeralContext = ephemeralContextFromJSON(json, context);
+
+      context = ephemeralContext; ///
+
+      const premise = new Premise(context, string, node, statement, procedureCall);
+
+      return premise;
+
+    }, context);
 
     return premise;
   }
 });
-
-function nodeFromString(string, context) {
-  string = `${string}
-`;  ///
-
-  const node = literally((context) => {
-    const prmiseNode = instantiatePremise(string, context),
-          node = prmiseNode; ///
-
-    return node;
-  }, context);
-
-  return node;
-}

@@ -5,13 +5,7 @@ import { Element, asynchronousUtilities } from "occam-languages";
 
 import { define } from "../elements";
 import { asyncScope } from "../utilities/context";
-import { labelsFromJSON,
-         premisesFromJSON,
-         conclusionFromJSON,
-         labelsToLabelsJSON,
-         premisesToPremisesJSON,
-         ephemeralContextFromJSON,
-         conclusionToConclusionJSON } from "../utilities/json";
+import { labelsFromJSON, premisesFromJSON, conclusionFromJSON, labelsToLabelsJSON, premisesToPremisesJSON, conclusionToConclusionJSON } from "../utilities/json";
 
 const { reverse, extract } = arrayUtilities,
       { asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
@@ -314,11 +308,7 @@ export default define(class Rule extends Element {
           labels = labelsFromJSON(json, context),
           premises = premisesFromJSON(json, context),
           conclusion = conclusionFromJSON(json, context),
-          ephemeralContext = ephemeralContextFromJSON(json, context);
-
-    context = ephemeralContext; ///
-
-    const rule = new Rule(context, string, node, proof, labels, premises, conclusion);
+          rule = new Rule(context, string, node, proof, labels, premises, conclusion);
 
     return rule;
   }

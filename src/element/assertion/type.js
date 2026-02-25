@@ -4,6 +4,7 @@ import Assertion from "../assertion";
 
 import { define } from "../../elements";
 import { variableAssignmentFromTypeAssertion } from "../../process/assign";
+import {termToTermJSON} from "../../utilities/json";
 
 export default define(class TypeAssertion extends Assertion {
   constructor(context, string, node, term, type) {
@@ -189,4 +190,35 @@ export default define(class TypeAssertion extends Assertion {
   }
 
   static name = "TypeAssertion";
+
+  toJSON() {
+    debugger
+
+    const { name } = this.constructor,
+          termJSON = termToTermJSON(this.term),
+          typeJSON = typeToTypeJSON(this.type),
+          term = termJSON,  ///
+          type = typeJSON,  ///
+          string = this.getString(),
+          json = {
+            name,
+            term,
+            type,
+            string
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, context) {
+    let typeAssertion = null;
+
+    const { name } = json;
+
+    if (this.name === name) {
+      debugger
+    }
+
+    return typeAssertion;
+  }
 });

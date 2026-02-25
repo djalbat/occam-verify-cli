@@ -90,35 +90,23 @@ export default define(class Label extends Element {
   static name = "Label";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          metavariable = metavariableFromString(string, context),
-          labelNode = labelNodeFromMetavariable(metavariable),
-          node = labelNode, ///
-          label = new Label(context, string, node, metavariable);
+    const label = literally((context) => {
+      const { string } = json,
+            labelNode = instantiateLabel(string, context),
+            metavariable = metavariableFromLabelNode(labelNode, context),
+            node = labelNode, ///
+            label = new Label(context, string, node, metavariable);
+
+      return label;
+    }, context);
 
     return label;
   }
 });
 
-function labelNodeFromMetavariable(metavariable) {
-  const metavariableNode = metavariable.getNode(),
-        metavariableNodeParentNode = metavariableNode.getParentNode(),
-        labelNode = metavariableNodeParentNode; ///
-
-    return labelNode;
-}
-
-function metavariableFromString(string, context) {
-  const metavariable = literally((context) => {
-    let metavariable;
-
-    const labelNode = instantiateLabel(string, context), ///
-          metavariableNode = labelNode.getMetavariableNode();
-
-    metavariable = metavariableFromMetavariableNode(metavariableNode, context);
-
-    return metavariable;
-  }, context);
+function metavariableFromLabelNode(labelNode, context) {
+  const metavariableNode = labelNode.getMetavariableNode(),
+        metavariable = metavariableFromMetavariableNode(metavariableNode, context);
 
   return metavariable;
 }

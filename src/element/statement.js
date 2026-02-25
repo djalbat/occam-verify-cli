@@ -347,21 +347,16 @@ export default define(class Statement extends Element {
   static name = "Statement";
 
   static fromJSON(json, context) {
-    const { string } = json,
-          node = nodeFromString(string, context),
-          statement = new Statement(context, string, node);
+    const statement = literally((context) => {
+      const { string } = json,
+            statementNode = instantiateStatement(string, context),
+            node = statementNode, ///
+            statement = new Statement(context, string, node);
+
+      return statement;
+
+    }, context);
 
     return statement;
   }
 });
-
-function nodeFromString(string, context) {
-  const node = literally((context) => {
-    const statementNode = instantiateStatement(string, context),
-          node = statementNode; ///
-
-    return node;
-  }, context);
-
-  return node;
-}
