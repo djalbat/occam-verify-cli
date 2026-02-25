@@ -31,9 +31,7 @@ export async function releaseContextFromDependency(dependency, context) {
       const projectName = dependencyName, ///
             project = loadProject(projectName, projectsDirectoryPath);
 
-      if (project !== null) {
-        releaseContext = releaseContextFromProject(project, context);
-      }
+      releaseContext = releaseContextFromProject(project, context);
     }
   }
 
