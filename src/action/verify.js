@@ -3,13 +3,12 @@
 import "../preamble";
 
 import { Dependency } from "occam-model";
-import { verificationUtilities, releaseContextUtilities } from "occam-languages";
+import { verificationUtilities } from "occam-languages";
 
 import { FileContextFromFilePath } from "../utilities/fileContext";
 import { releaseContextFromDependency } from "../utilities/releaseContext";
 
-const { releaseContextFromJSON } = releaseContextUtilities,
-      { createReleaseContext, verifyReleaseContext, initialiseReleaseContext } = verificationUtilities;
+const { createReleaseContext, verifyReleaseContext, initialiseReleaseContext } = verificationUtilities;
 
 export default async function verifyAction(name, log) {
   const callback = async (context, filePath, lineIndex) => {
@@ -24,8 +23,7 @@ export default async function verifyAction(name, log) {
           releaseContextFromDependency
         }
 
-  // try {
-
+  try {
     const dependentNames = [],
           dependency = Dependency.fromName(name),
           success = await createReleaseContext(dependency, dependentNames, context);
@@ -57,43 +55,8 @@ export default async function verifyAction(name, log) {
 
       return;
     }
-
-    let json = releaseContext.toJSON(),
-        entries = releaseContext.getEntries();
-
-    (() => {
-
-      let context;
-
-      const entriesJSON = entries.toJSON();
-
-      entries = entriesJSON;  ///
-
-      context = json; ///
-
-      json = {
-        name,
-        entries,
-        context
-      };
-
-      context = {
-        log,
-        callback
-      };
-
-      const releaseContext = releaseContextFromJSON(json, context),
-            releaseContexts = [
-              releaseContext
-            ];
-
-      releaseContext.initialise(releaseContexts, FileContextFromFilePath);
-
-    })();
-
-
-  // }
-  // catch (error) {
-  //   log.error(error);
-  // }
+  }
+  catch (error) {
+    log.error(error);
+  }
 }
