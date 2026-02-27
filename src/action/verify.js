@@ -60,3 +60,13 @@ export default async function verifyAction(name, log) {
     log.error(error);
   }
 }
+
+/*
+
+iff
+⇒
+∧
+∨
+¬
+
+*/
