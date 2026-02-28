@@ -3,8 +3,9 @@
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
-import { attempt, liminally } from "../../utilities/context";
-import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
+import { instantiateSupposition } from "../../process/instantiate";
+import { attempt, liminally, literally } from "../../utilities/context";
+import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, ephemeralContextFromJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
 
 export default define(class Supposition extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -284,11 +285,22 @@ export default define(class Supposition extends ProofAssertion {
   }
 
   toJSON() {
+    let context;
+
+    context = this.getContext();
+
+    const contextJSON = context.toJSON();
+
+    context = contextJSON;  ///
+
     const procedureCallJSON = procedureCallToProcedureCallJSON(this.procedureCall),
           statementJSON = statementToStatementJSON(this.statement),
           procedureCall = procedureCallJSON,  ///
           statement = statementJSON,  ///
+          string = this.getString(),
           json = {
+            context,
+            string,
             statement,
             procedureCall
           };
@@ -299,7 +311,23 @@ export default define(class Supposition extends ProofAssertion {
   static name = "Supposition";
 
   static fromJSON(json, context) {
-    debugger
+    const premise = literally((context) => {
+      const { string } = json,
+            suppositionNode = instantiateSupposition(string, context),
+            node = suppositionNode,  ///
+            statement = statementFromJSON(json, context),
+            procedureCall = procedureCallFromJSON(json, context),
+            ephemeralContext = ephemeralContextFromJSON(json, context);
+
+      context = ephemeralContext; ///
+
+      const premise = new Supposition(context, string, node, statement, procedureCall);
+
+      return premise;
+
+    }, context);
+
+    return premise;
   }
 });
 

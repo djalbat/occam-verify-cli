@@ -3,8 +3,9 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt } from "../utilities/context";
-import { statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
+import { attempt, literally } from "../utilities/context";
+import { instantiateDeduction } from "../process/instantiate";
+import { statementToStatementJSON, ephemeralContextFromJSON } from "../utilities/json";
 
 export default define(class Deduction extends Element {
   constructor(context, string, node, statement) {
@@ -147,26 +148,21 @@ export default define(class Deduction extends Element {
   }
 
   toJSON() {
-    let frames,
-        terms;
+    let context;
 
-    frames = this.context.getFrames();
+    context = this.getContext();
 
-    terms = this.context.getTerms();
+    const contextJSON = context.toJSON();
+
+    context = contextJSON;  ///
 
     const statementJSON = statementToStatementJSON(this.statement),
-          framesJSON = framesToFramesJSON(frames),
-          termsJSON = termsToTermsJSON(terms);
-
-    frames = framesJSON;  ///
-
-    terms = termsJSON;  ///
-
-    const statement = statementJSON,  ///
+          statement = statementJSON,  ///
+          string = this.getString(),
           json = {
-            statement,
-            frames,
-            terms
+            context,
+            string,
+            statement
           };
 
     return json;
@@ -175,6 +171,20 @@ export default define(class Deduction extends Element {
   static name = "Deduction";
 
   static fromJSON(json, context) {
-    debugger
+    const duduction = literally((context) => {
+      const { string } = json,
+            duductionNode = instantiateDeduction(string, context),
+            node = duductionNode,  ///
+            statement = statementFromJSON(json, context),
+            ephemeralContext = ephemeralContextFromJSON(json, context);
+
+      context = ephemeralContext; ///
+
+      const duduction = new Deduction(context, string, node, statement);
+
+      return duduction;
+    }, context);
+
+    return duduction;
   }
 });
