@@ -136,7 +136,7 @@ export default define(class SubproofAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      subproorAssertion = literally((context) => {
+      literally((context) => {
         const { string } = json,
               subproofAssertionNode = instantiateSubproofAssertion(string, context),
               statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),

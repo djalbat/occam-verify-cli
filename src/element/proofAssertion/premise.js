@@ -290,12 +290,8 @@ export default define(class Premise extends ProofAssertion {
 
   static fromJSON(json, context) {
     const premise = literally((context) => {
-      let { string } = json;
-
-      string = `${string}
-`;  ///
-
-      const prmiseNode = instantiatePremise(string, context),
+      const { string } = json,
+            prmiseNode = instantiatePremise(string, context),
             node = prmiseNode,  ///
             statement = statementFromJSON(json, context),
             procedureCall = procedureCallFromJSON(json, context),

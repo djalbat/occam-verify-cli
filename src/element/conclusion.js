@@ -112,12 +112,8 @@ export  default define(class Conclusion extends Element {
 
   static fromJSON(json, context) {
     const conclusion = literally((context) => {
-      let { string } = json;
-
-      string = `${string}
-`;  ///
-
-      const conclusionNode = instantiateConclusion(string, context),
+      const { string } = json,
+            conclusionNode = instantiateConclusion(string, context),
             node = conclusionNode,  ///
             statement = statementFromJSON(json, context),
             ephemeralContext = ephemeralContextFromJSON(json, context);

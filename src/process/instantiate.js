@@ -33,7 +33,12 @@ const labelPlaceholderRule = ruleFromRuleName(LABEL_RULE_NAME),
 
 export function instantiateLabel(string, context) { return instantiate(labelPlaceholderRule, string, context); }
 
-export function instantiatePremise(string, context) { return instantiate(premisePlaceholderRule, string, context); }
+export function instantiatePremise(string, context) {
+  string = `${string}
+`;  ///
+
+  return instantiate(premisePlaceholderRule, string, context);
+}
 
 export function instantiateStatement(string, context) { return instantiate(statementPlaceholderRule, string, context); }
 
@@ -41,7 +46,12 @@ export function instantiateReference(string, context) { return instantiate(refer
 
 export function instantiateCombinator(string, context) { return instantiate(combinatorPlaceholderRule, string, context); }
 
-export function instantiateConclusion(string, context) { return instantiate(conclusionPlaceholderRule, string, context); }
+export function instantiateConclusion(string, context) {
+  string = `${string}
+`;  ///
+
+  return instantiate(conclusionPlaceholderRule, string, context);
+}
 
 export function instantiateConstructor(string, context) { return instantiate(constructorPlaceholderRule, string, context); }
 

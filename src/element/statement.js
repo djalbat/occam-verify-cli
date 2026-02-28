@@ -354,7 +354,6 @@ export default define(class Statement extends Element {
             statement = new Statement(context, string, node);
 
       return statement;
-
     }, context);
 
     return statement;
