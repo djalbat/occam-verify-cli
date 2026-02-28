@@ -29,36 +29,71 @@ export default define(class Deduction extends Element {
 
     await this.break(context);
 
-    const deductionString = this.getString();  ///
+    const duductionString = this.getString();  ///
 
-    context.trace(`Verifying the '${deductionString}' deduction...`);
+    context.trace(`Verifying the '${duductionString}' duduction...`);
 
-    if (this.statement !== null) {
-      attempt((context) => {
-        let statementValidates = false;
+    attempt((context) => {
+      const validates = this.validate(context);
 
-        const stated = true,
-              statement = this.statement.validate(stated, context);
+      if (validates) {
+        this.setContext(context);
 
-        if (statement !== null) {
-          statementValidates = true;
-        }
-
-        if (statementValidates) {
-          this.setContext(context);
-
-          verifies = true;
-        }
-      }, context);
-    } else {
-      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`);
-    }
+        verifies = true;
+      }
+    }, context);
 
     if (verifies) {
-      context.debug(`...verified the '${deductionString}' deduction.`);
+      context.debug(`...verified the '${duductionString}' duduction.`);
     }
 
     return verifies;
+  }
+
+  validate(context) {
+    let validates = false;
+
+    const duductionString = this.getString();  ///
+
+    context.trace(`Validating the '${duductionString}' duduction...`);
+
+    if (this.statement !== null) {
+      const statementValidates = this.validateStatement(context);
+
+      if (statementValidates) {
+        validates = true;
+      }
+    } else {
+      context.debug(`Unable to verify the '${duductionString}' duduction because it is nonsense.`);
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${duductionString}' duduction.`);
+    }
+
+    return validates;
+  }
+
+  validateStatement(context) {
+    let statementValidates;
+
+    const statementString = this.statement.getString(),
+          duductionnString = this.getString();  ///
+
+    context.trace(`Validating the '${duductionnString}' duductionn's '${statementString}' statement...`);
+
+    const stated = true,
+          statement = this.statement.validate(stated, context);
+
+    if (statement !== null) {
+      statementValidates = true;
+    }
+
+    if (statementValidates) {
+      context.trace(`...validated the '${duductionnString}' duductionn's '${statementString}' statement.`);
+    }
+
+    return statementValidates;
   }
 
   unifyStatement(statement, substitutions, context) {

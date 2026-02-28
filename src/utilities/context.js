@@ -6,14 +6,6 @@ import LiteralContext from "../context/literal";
 import EphemeralContext from "../context/ephemeral";
 import SyntheticContext from "../context/synthetic";
 
-export function scope(innerFunction, context) {
-  const scopedContext = ScopedContext.fromNothing(context);
-
-  context = scopedContext;  ///
-
-  return innerFunction(context);
-}
-
 export function attempt(innerFunction, context) {
   const ephemeralContext = EphemeralContext.fromNothing(context);
 

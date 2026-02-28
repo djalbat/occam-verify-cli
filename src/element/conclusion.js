@@ -34,32 +34,67 @@ export  default define(class Conclusion extends Element {
 
     context.trace(`Verifying the '${conclusionString}' conclusion...`);
 
-    if (this.statement !== null) {
-      attempt((context) => {
-        let statementValidates = false;
+    attempt((context) => {
+      const validates = this.validate(context);
 
-        const stated = true,
-              statement = this.statement.validate(stated, context);
+      if (validates) {
+        this.setContext(context);
 
-        if (statement !== null) {
-          statementValidates = true;
-        }
-
-        if (statementValidates) {
-          this.setContext(context);
-
-          verifies = true;
-        }
-      }, context);
-    } else {
-      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
-    }
+        verifies = true;
+      }
+    }, context);
 
     if (verifies) {
       context.debug(`...verified the '${conclusionString}' conclusion.`);
     }
 
     return verifies;
+  }
+
+  validate(context) {
+    let validates = false;
+
+    const conclusionString = this.getString();  ///
+
+    context.trace(`Validating the '${conclusionString}' conclusion...`);
+
+    if (this.statement !== null) {
+      const statementValidates = this.validateStatement(context);
+
+      if (statementValidates) {
+        validates = true;
+      }
+    } else {
+      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${conclusionString}' conclusion.`);
+    }
+
+    return validates;
+  }
+
+  validateStatement(context) {
+    let statementValidates;
+
+    const statementString = this.statement.getString(),
+          conclusionString = this.getString();  ///
+
+    context.trace(`Validating the '${conclusionString}' conclusion's '${statementString}' statement...`);
+
+    const stated = true,
+          statement = this.statement.validate(stated, context);
+
+    if (statement !== null) {
+      statementValidates = true;
+    }
+
+    if (statementValidates) {
+      context.trace(`...validated the '${conclusionString}' conclusion's '${statementString}' statement.`);
+    }
+
+    return statementValidates;
   }
 
   unifyStatement(statement, context) {

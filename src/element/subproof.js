@@ -63,7 +63,7 @@ export default define(class Subproof extends Element {
   async verify(context) {
     let verifies = false;
 
-    await asyncScope(async () => {
+    await asyncScope(async (context) => {
       const suppositionsVerify = await asyncEvery(this.suppositions, async (supposition) => {
         const suppositionVerifies = await supposition.verify(context);
 
