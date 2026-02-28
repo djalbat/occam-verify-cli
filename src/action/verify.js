@@ -26,9 +26,9 @@ export default async function verifyAction(name, log) {
   try {
     const dependentNames = [],
           dependency = Dependency.fromName(name),
-          success = await createReleaseContext(dependency, dependentNames, context);
+          releaseContextCreated = await createReleaseContext(dependency, dependentNames, context);
 
-    if (!success) {
+    if (!releaseContextCreated) {
       log.warning(`The '${name}' project or package cannot be created.`);
 
       return;
@@ -48,9 +48,9 @@ export default async function verifyAction(name, log) {
 
     const dependentName = null,
           dependentReleased = false,
-          releaseVerifies = await verifyReleaseContext(releaseName, dependentName, dependentReleased, releaseContextMap);
+          releaseContextVerifies = await verifyReleaseContext(releaseName, dependentName, dependentReleased, releaseContextMap);
 
-    if (!releaseVerifies) {
+    if (!releaseContextVerifies) {
       log.warning(`The '${name}' project or package cannot be verified.`);
 
       return;
@@ -60,13 +60,3 @@ export default async function verifyAction(name, log) {
     log.error(error);
   }
 }
-
-/*
-
-iff
-⇒
-∧
-∨
-¬
-
-*/
