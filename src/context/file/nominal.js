@@ -41,8 +41,8 @@ const { push, filter } = arrayUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class NominalFileContext extends FileContext {
-  constructor(context, filePath, tokens, node, lexer, parser, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
-    super(context, filePath, tokens, node);
+  constructor(context, fileContent, filePath, tokens, node, lexer, parser, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
+    super(context, fileContent, filePath, tokens, node);
 
     this.lexer = lexer;
     this.parser = parser;
