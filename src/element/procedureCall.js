@@ -83,7 +83,7 @@ export default define(class ProcedureCall extends Element {
     const procedureName = this.getProcedureName(),
           procedure = context.findProcedureByProcedureName(procedureName);
 
-    // try {
+    try {
       const primitives = this.findPrimitives(context),
             terms = termsFromPrimitives(primitives),
             term = await procedure.call(terms, context),
@@ -98,11 +98,11 @@ export default define(class ProcedureCall extends Element {
           unifiesIndependently = true;
         }
       }
-    // } catch (exception) {
-    //   const message = exception.getMessage();
-    //
-    //   context.info(message);
-    // }
+    } catch (exception) {
+      const message = exception.getMessage();
+
+      context.info(message);
+    }
 
     if (unifiesIndependently) {
       context.debug(`...unified the '${procedureCallString}' procedure call independently.`);
