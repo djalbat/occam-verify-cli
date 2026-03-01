@@ -28,13 +28,15 @@ export function nameFromJSON(json, context) {
 export function termFromJSON(json, context) {
   let { term } = json;
 
-  const termJSON = term;  ///
+  if (term !== null) {
+    const termJSON = term;  ///
 
-  json = termJSON;  ///
+    json = termJSON;  ///
 
-  const { Term } = elements;
+    const { Term } = elements;
 
-  term = Term.fromJSON(json, context);
+    term = Term.fromJSON(json, context);
+  }
 
   return term;
 }
@@ -54,6 +56,28 @@ export function typeFromJSON(json, context) {
   }
 
   return type;
+}
+
+export function frameFromJSON(json, context) {
+  let { frame } = json;
+
+  if (frame !== null) {
+    const frameJSON = frame;  ///
+
+    json = frameJSON;  ///
+
+    const { Frame } = elements;
+
+    frame = Frame.fromJSON(json, context);
+  }
+
+  return frame;
+}
+
+export function negatedFromJSON(json, context) {
+  const { negated } = json;
+
+  return negated;
 }
 
 export function metaTypeFromJSON(json, context) {
@@ -125,6 +149,16 @@ export function referenceFromJSON(json, context) {
   reference = Reference.fromJSON(json, context);
 
   return reference;
+}
+
+export function identifierFromJSON(json, context) {
+  let { identifier } = json;
+
+  const identifierJSON = identifier;  ///
+
+  identifier = identifierJSON;  ///
+
+  return identifier;
 }
 
 export function conclusionFromJSON(json, context) {
@@ -243,11 +277,11 @@ export function framesFromJSON(json, context) {
   let { frames } = json;
 
   const { Frame } = elements,
-        framesJSON = frames; ///
+    framesJSON = frames; ///
 
   frames = framesJSON.map((frameJSON) => {
     const json = frameJSON,  ///
-          frame = Frame.fromJSON(json, context);
+      frame = Frame.fromJSON(json, context);
 
     return frame;
   });
@@ -642,6 +676,22 @@ export function ephemeralContextFromJSON(json, context) {
   const emphemeralContext = EphemeralContext.fromJSON(json, context);
 
   return emphemeralContext;
+}
+
+export function propertyRelationsFromJSON(json, context) {
+  let { propertyRelations } = json;
+
+  const { PropertyRelation } = elements,
+        propertyRelationsJSON = propertyRelations; ///
+
+  propertyRelations = propertyRelationsJSON.map((propertyRelationJSON) => {
+    const json = propertyRelationJSON,  ///
+          propertyRelation = PropertyRelation.fromJSON(json, context);
+
+    return propertyRelation;
+  });
+
+  return propertyRelations;
 }
 
 export function nameToNameJSON(name) {

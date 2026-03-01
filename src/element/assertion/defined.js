@@ -3,8 +3,10 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { termToTermJSON, frameToFrameJSON, negatedToNegatedJSON } from "../../utilities/json";
+import { literally } from "../../utilities/context";
+import { instantiateDefinedAssertion } from "../../process/instantiate";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
+import { termFromJSON, frameFromJSON, negatedFromJSON, termToTermJSON, frameToFrameJSON, negatedToNegatedJSON } from "../../utilities/json";
 
 export default define(class DefinedAssertion extends Assertion {
   constructor(context, string, node, term, frame, negated) {
@@ -234,7 +236,16 @@ export default define(class DefinedAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      debugger
+      literally((context) => {
+        const { string } = json,
+              definedAssertionNode = instantiateDefinedAssertion(string, context),
+              node = definedAssertionNode,  ///
+              term = termFromJSON(json, context),
+              frame = frameFromJSON(json, context),
+              negated = negatedFromJSON(json, context);
+
+        definedAssertion = new DefinedAssertion(context, string, node, term, frame, negated);
+      }, context);
     }
 
     return definedAssertion;

@@ -3,16 +3,18 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
+import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { assumptionsStringFromAssumptions } from "../utilities/string";
-import { assumptionsToAssumptionsJSON, metavariableToMetavariableJSON } from "../utilities/json";
+import { assumptionsFromJSON, metavariableFromJSON, assumptionsToAssumptionsJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Frame extends Element {
-  constructor(context, string, node, assumptions, metavairable) {
+  constructor(context, string, node, assumptions, metavariable) {
     super(context, string, node);
 
     this.assumptions = assumptions;
-    this.metavariable = metavairable;
+    this.metavariable = metavariable;
   }
 
   getAssumptions() {
@@ -363,6 +365,17 @@ export default define(class Frame extends Element {
   static name = "Frame";
 
   static fromJSON(json, context) {
-    debugger
+    const frame = literally((context) => {
+      const { string } = json,
+            frameNode = instantiateFrame(string, context),
+            node = frameNode,  ///
+            assumptions = assumptionsFromJSON(json, context),
+            metavariable = metavariableFromJSON(json, context),
+            frame = new Frame(context, string, node, assumptions, metavariable);
+
+      return frame;
+    }, context);
+
+    return frame;
   }
 });

@@ -1,8 +1,12 @@
 "use strict";
 
 import { ruleFromRuleName } from "../utilities/bnf";
-import { LABEL_RULE_NAME,
+import { TERM_RULE_NAME,
+         FRAME_RULE_NAME,
+         LABEL_RULE_NAME,
          PREMISE_RULE_NAME,
+         VARIABLE_RULE_NAME,
+         PARAMETER_RULE_NAME,
          STATEMENT_RULE_NAME,
          REFERENCE_RULE_NAME,
          COMBINATOR_RULE_NAME,
@@ -10,14 +14,22 @@ import { LABEL_RULE_NAME,
          CONSTRUCTOR_RULE_NAME,
          EQUIVALENCE_RULE_NAME,
          METAVARIABLE_RULE_NAME,
+         PROCEDURE_CALL_RULE_NAME,
+         DEFINED_ASSERTION_RULE_NAME,
          TERM_SUBSTITUTION_RULE_NAME,
-         FRAME_SUBSTITUTION_RULE_NAME,
          SUBPROOF_ASSERTION_RULE_NAME,
+         FRAME_SUBSTITUTION_RULE_NAME,
+         PROCEDURE_REFERENCE_RULE_NAME,
+         CONTAINED_ASSERTION_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME,
          REFERENCE_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
-const labelPlaceholderRule = ruleFromRuleName(LABEL_RULE_NAME),
+const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
+      framePlaceholderRule = ruleFromRuleName(FRAME_RULE_NAME),
+      labelPlaceholderRule = ruleFromRuleName(LABEL_RULE_NAME),
       premisePlaceholderRule = ruleFromRuleName(PREMISE_RULE_NAME),
+      variablePlaceholderRule = ruleFromRuleName(VARIABLE_RULE_NAME),
+      parameterPlaceholderRule = ruleFromRuleName(PARAMETER_RULE_NAME),
       statementPlaceholderRule = ruleFromRuleName(STATEMENT_RULE_NAME),
       referencePlaceholderRule = ruleFromRuleName(REFERENCE_RULE_NAME),
       combinatorPlaceholderRule = ruleFromRuleName(COMBINATOR_RULE_NAME),
@@ -25,11 +37,19 @@ const labelPlaceholderRule = ruleFromRuleName(LABEL_RULE_NAME),
       constructorPlaceholderRule = ruleFromRuleName(CONSTRUCTOR_RULE_NAME),
       equivalencePlaceholderRule = ruleFromRuleName(EQUIVALENCE_RULE_NAME),
       metavariablePlaceholderRule = ruleFromRuleName(METAVARIABLE_RULE_NAME),
-      subproofAssertionlaceholderRule = ruleFromRuleName(SUBPROOF_ASSERTION_RULE_NAME),
+      procedureCalllaceholderRule = ruleFromRuleName(PROCEDURE_CALL_RULE_NAME),
+      definedAssertionPlaceholderRule = ruleFromRuleName(DEFINED_ASSERTION_RULE_NAME),
       termSubstitutionPlaceholderRule = ruleFromRuleName(TERM_SUBSTITUTION_RULE_NAME),
+      subproofAssertionlaceholderRule = ruleFromRuleName(SUBPROOF_ASSERTION_RULE_NAME),
       frameSubstitutionPlaceholderRule = ruleFromRuleName(FRAME_SUBSTITUTION_RULE_NAME),
+      procedureReferencelaceholderRule = ruleFromRuleName(PROCEDURE_REFERENCE_RULE_NAME),
+      containedAssertionPlaceholderRule = ruleFromRuleName(CONTAINED_ASSERTION_RULE_NAME),
       statementSubstitutionPlaceholderRule = ruleFromRuleName(STATEMENT_SUBSTITUTION_RULE_NAME),
       referenceSubstitutionPlaceholderRule = ruleFromRuleName(REFERENCE_SUBSTITUTION_RULE_NAME);
+
+export function instantiateTerm(string, context) { return instantiate(termPlaceholderRule, string, context); }
+
+export function instantiateFrame(string, context) { return instantiate(framePlaceholderRule, string, context); }
 
 export function instantiateLabel(string, context) { return instantiate(labelPlaceholderRule, string, context); }
 
@@ -39,6 +59,10 @@ export function instantiatePremise(string, context) {
 
   return instantiate(premisePlaceholderRule, string, context);
 }
+
+export function instantiateVariable(string, context) { return instantiate(variablePlaceholderRule, string, context); }
+
+export function instantiateParameter(string, context) { return instantiate(parameterPlaceholderRule, string, context); }
 
 export function instantiateStatement(string, context) { return instantiate(statementPlaceholderRule, string, context); }
 
@@ -59,11 +83,19 @@ export function instantiateEquivalence(string, context) { return instantiate(equ
 
 export function instantiateMetavariable(string, context) { return instantiate(metavariablePlaceholderRule, string, context); }
 
+export function instantiateProcedureCall(string, context) { return instantiate(procedureCalllaceholderRule, string, context); }
+
+export function instantiateDefinedAssertion(string, context) { return instantiate(definedAssertionPlaceholderRule, string, context); }
+
 export function instantiateTermSubstitution(string, context) { return instantiate(termSubstitutionPlaceholderRule, string, context); }
 
 export function instantiateSubproofAssertion(string, context) { return instantiate(subproofAssertionlaceholderRule, string, context); }
 
 export function instantiateFrameSubstitution(string, context) { return instantiate(frameSubstitutionPlaceholderRule, string, context); }
+
+export function instantiateProcedureReference(string, context) { return instantiate(procedureReferencelaceholderRule, string, context); }
+
+export function instantiateContainedAssertion(string, context) { return instantiate(containedAssertionPlaceholderRule, string, context); }
 
 export function instantiateStatementSubstitution(string, context) { return instantiate(statementSubstitutionPlaceholderRule, string, context); }
 

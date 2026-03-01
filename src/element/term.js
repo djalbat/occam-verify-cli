@@ -245,7 +245,6 @@ export default define(class Term extends Element {
             term = new Term(context, string, node, type);
 
       return term;
-
     }, context);
 
     return term;

@@ -203,7 +203,7 @@ export function typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, type
 export function procedureCallStringFromProcedureReferenceAndParameters(procedureReference, parameters) {
   const procedureReferenceName = procedureReference.getName(),
         parametersString = parametersStringFromParameters(parameters),
-        procedureCallString = `${procedureReferenceName}(${parametersString})`;
+        procedureCallString = `@${procedureReferenceName}(${parametersString})`;
 
   return procedureCallString;
 }

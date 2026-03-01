@@ -5,7 +5,14 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { typeToTypeJSON, identifierToIdentifierJSON, propertyRelationsToPropertyRelationsJSON } from "../utilities/json";
+import { literally } from "../utilities/context";
+import { instantiateVariable } from "../process/instantiate";
+import { typeFromJSON,
+         typeToTypeJSON,
+         identifierFromJSON,
+         propertyRelationsFromJSON,
+         identifierToIdentifierJSON,
+         propertyRelationsToPropertyRelationsJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {
   constructor(context, string, node, type, identifier, propertyRelations) {
@@ -208,6 +215,18 @@ export default define(class Variable extends Element {
   static name = "Variable";
 
   static fromJSON(json, context) {
-    debugger
+    const variable = literally((context) => {
+      const { string } = json,
+            variableNode = instantiateVariable(string, context),
+            node = variableNode,  ///
+            type = typeFromJSON(json, context),
+            identifier = identifierFromJSON(json, context),
+            propertyRelations = propertyRelationsFromJSON(json, context),
+            variable = new Variable(context, string, node, type, identifier, propertyRelations);
+
+      return variable;
+    }, context);
+
+    return variable;
   }
 });

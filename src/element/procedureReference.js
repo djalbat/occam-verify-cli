@@ -3,11 +3,14 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import {nameToNameJSON} from "../utilities/json";
+import { literally } from "../utilities/context";
+import { nameFromJSON, nameToNameJSON } from "../utilities/json";
+import { instantiateProcedureReference } from "../process/instantiate";
 
 export default define(class ProcedureReference extends Element {
   constructor(context, string, node, name) {
     super(context, string, node);
+
     this.name = name;
   }
 
@@ -43,6 +46,16 @@ export default define(class ProcedureReference extends Element {
   static name = "ProcedureReference";
 
   static fromJSON(json, context) {
-    debugger
+    const procedureReference = literally((context) => {
+      const { string } = json,
+            procedureReferenceNode = instantiateProcedureReference(string, context),
+            node = procedureReferenceNode,  ///
+            name = nameFromJSON(json, context),
+            procedureReference = new ProcedureReference(context, string, node, name);
+
+      return procedureReference;
+    }, context);
+
+    return procedureReference;
   }
 });

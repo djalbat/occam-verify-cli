@@ -311,7 +311,7 @@ export default define(class Supposition extends ProofAssertion {
   static name = "Supposition";
 
   static fromJSON(json, context) {
-    const premise = literally((context) => {
+    const supposition = literally((context) => {
       const { string } = json,
             suppositionNode = instantiateSupposition(string, context),
             node = suppositionNode,  ///
@@ -321,13 +321,13 @@ export default define(class Supposition extends ProofAssertion {
 
       context = ephemeralContext; ///
 
-      const premise = new Supposition(context, string, node, statement, procedureCall);
+      const supposition = new Supposition(context, string, node, statement, procedureCall);
 
-      return premise;
+      return supposition;
 
     }, context);
 
-    return premise;
+    return supposition;
   }
 });
 

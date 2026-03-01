@@ -3,7 +3,9 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { nameToNameJSON, identifierToIdentifierJSON } from "../utilities/json";
+import { literally } from "../utilities/context";
+import { instantiateParameter } from "../process/instantiate";
+import { nameFromJSON, nameToNameJSON, identifierFromJSON, identifierToIdentifierJSON } from "../utilities/json";
 
 export default define(class Parameter extends Element {
   constructor(context, string, node, name, identifier) {
@@ -65,6 +67,17 @@ export default define(class Parameter extends Element {
   static name = "Parameter";
 
   static fromJSON(json, context) {
-    debugger
+    const parameter = literally((context) => {
+      const { string } = json,
+            parameterNode = instantiateParameter(string, context),
+            node = parameterNode,  ///
+            name = nameFromJSON(json, context),
+            identifier = identifierFromJSON(json, context),
+            parameter = new Parameter(context, string, node, name, identifier);
+
+      return parameter;
+    }, context);
+
+    return parameter;
   }
 });
