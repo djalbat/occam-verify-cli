@@ -4,6 +4,7 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
+import { frameToFrameJSON } from "../../utilities/json";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
 import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
@@ -170,7 +171,36 @@ export default define(class FrameSubstitution extends Substitution {
     return replacementFrameValidates;
   }
 
+  toJSON() {
+    const { name } = this.constructor,
+          targetFrameJSON = frameToFrameJSON(this.targetFrame),
+          replacementFrameJSON = frameToFrameJSON(this.replacementFrame),
+          targetFrame = targetFrameJSON,  ///
+          replacementFrame = replacementFrameJSON,  ///
+          string = this.getString(),
+          json = {
+            name,
+            string,
+            targetFrame,
+            replacementFrame
+          };
+
+    return json;
+  }
+
   static name = "FrameSubstitution";
+
+  static fromJSON(json, context) {
+    let frameSubstitutionn = null;
+
+    const { name } = json;
+
+    if (this.name === name) {
+      debugger
+    }
+
+    return frameSubstitutionn;
+  }
 
   static fromStatement(statement, context) {
     const statementNode = statement.getNode(),

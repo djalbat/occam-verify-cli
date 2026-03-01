@@ -3,6 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
+import { termToTermJSON, frameToFrameJSON, negatedToNegatedJSON, statementToStatementJSON } from "../../utilities/json";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
 
 export default define(class ContainedAssertion extends Assertion {
@@ -237,13 +238,23 @@ export default define(class ContainedAssertion extends Assertion {
   }
 
   toJSON() {
-    debugger
-
     const { name } = this.constructor,
+          termJSON = termToTermJSON(this.term),
+          frameJSON = frameToFrameJSON(this.frame),
+          negatedJSON = negatedToNegatedJSON(this.negated),
+          statementJSON = statementToStatementJSON(this.statement),
+          term = termJSON,  ///
+          frame = frameJSON,  ///
+          negated = negatedJSON,  ///
+          statement = statementJSON,  ///
           string = this.getString(),
           json = {
             name,
-            string
+            string,
+            term,
+            frame,
+            negated,
+            statement
           };
 
     return json;

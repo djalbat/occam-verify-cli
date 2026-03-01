@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { typeToTypeJSON } from "../utilities/json";
+import { typeToTypeJSON, identifierToIdentifierJSON, propertyRelationsToPropertyRelationsJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {
   constructor(context, string, node, type, identifier, propertyRelations) {
@@ -189,11 +189,17 @@ export default define(class Variable extends Element {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          string = this.getString(), ///
+          identifierJSON = identifierToIdentifierJSON(this.identifier),
+          propertyRelationsJSON = propertyRelationsToPropertyRelationsJSON(this.propertyRelations),
           type = typeJSON,  ///
+          identifier = identifierJSON,  ///
+          propertyRelations = propertyRelationsJSON,  ///
+          string = this.getString(), ///
           json = {
+            string,
             type,
-            string
+            identifier,
+            propertyRelations
           };
 
     return json;

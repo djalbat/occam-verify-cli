@@ -4,11 +4,11 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
+import { statementToStatementJSON } from "../../utilities/json";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { liminally, literally, synthetically } from "../../utilities/context";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { statementToStatementJSON, metavariableToMetavariableJSON } from "../../utilities/json";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -321,15 +321,17 @@ export default define(class StatementSubstitution extends Substitution {
   }
 
   toJSON() {
-    const metavariableJSON = metavariableToMetavariableJSON(this.targetStatement),
-          statementJSON = statementToStatementJSON(this.replacementStatement),
-          metavariable = metavariableJSON,  ///
-          statement = statementJSON,  ///
-          string = this.getString(), ///
+    const { name } = this.constructor,
+          targetStatementJSON = statementToStatementJSON(this.targetStatement),
+          replacementStatementJSON = statementToStatementJSON(this.replacementStatement),
+          targetStatement = targetStatementJSON,  ///
+          replacementStatement = replacementStatementJSON,  ///
+          string = this.getString(),
           json = {
+            name,
             string,
-            statement,
-            metavariable
+            targetStatement,
+            replacementStatement
           };
 
     return json;
@@ -338,7 +340,15 @@ export default define(class StatementSubstitution extends Substitution {
   static name = "StatementSubstitution";
 
   static fromJSON(json, context) {
-    debugger
+    let statementSubstitutionn = null;
+
+    const { name } = json;
+
+    if (this.name === name) {
+      debugger
+    }
+
+    return statementSubstitutionn;
   }
 
   static fromStatementAndMetavariable(statement, metavariable, context) {

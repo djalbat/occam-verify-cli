@@ -3,6 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { nameToNameJSON, identifierToIdentifierJSON } from "../utilities/json";
 
 export default define(class Parameter extends Element {
   constructor(context, string, node, name, identifier) {
@@ -47,9 +48,15 @@ export default define(class Parameter extends Element {
   }
 
   toJSON() {
-    const name = this.name,
+    const nameJSON = nameToNameJSON(this.name),
+          identifierJSON = identifierToIdentifierJSON(this.identifier),
+          name = nameJSON,  ///
+          identifier = identifierJSON,  ///
+          string = this.getString(),
           json = {
-            name
+            string,
+            name,
+            identifier
           };
 
     return json;

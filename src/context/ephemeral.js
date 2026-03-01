@@ -19,7 +19,7 @@ import { termsFromJSON,
          assertionsToAssertionsJSON,
          referencesToReferencesJSON,
          assumptionsToAssumptionsJSON,
-         substitutionsToCSubstitutionsJSON } from "../utilities/json";
+         substitutionsToSubstitutionsJSON } from "../utilities/json";
 
 export default class EphemeralContext extends Context {
   constructor(context, terms, frames, judgements, equalities, assertions, statements, references, assumptions, substitutions) {
@@ -491,7 +491,7 @@ export default class EphemeralContext extends Context {
           assertionsJSON = assertionsToAssertionsJSON(this.assertions),
           referencesJSON = referencesToReferencesJSON(this.references),
           assumptionsJSON = assumptionsToAssumptionsJSON(this.assumptions),
-          substitutionsJSON = substitutionsToCSubstitutionsJSON(this.substitutions),
+          substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
           terms = termsJSON, ///
           frames = framesJSON, ///
           judgements = judgementsJSON, ///

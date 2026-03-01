@@ -4,6 +4,7 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
+import { statementToStatementJSON } from "../../utilities/json";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
@@ -162,6 +163,34 @@ export default define(class ReferenceSubstitution extends Substitution {
     }
 
     return replacementReferenceValidates;
+  }
+
+  toJSON() {
+    const { name } = this.constructor,
+          targetStatementJSON = statementToStatementJSON(this.targetStatement),
+          replacementStatementJSON = statementToStatementJSON(this.replacementStatement),
+          targetStatement = targetStatementJSON,  ///
+          replacementStatement = replacementStatementJSON,  ///
+          string = this.getString(),
+          json = {
+            name,
+            string,
+            targetStatement,
+            replacementStatement
+          };
+
+    return json;
+  }
+  static fromJSON(json, context) {
+    let referenceSubstitutionn = null;
+
+    const { name } = json;
+
+    if (this.name === name) {
+      debugger
+    }
+
+    return referenceSubstitutionn;
   }
 
   static name = "ReferenceSubstitution";

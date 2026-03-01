@@ -4,8 +4,8 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
-import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { assumptionsStringFromAssumptions } from "../utilities/string";
+import { assumptionsToAssumptionsJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Frame extends Element {
   constructor(context, string, node, assumptions, metavairable) {
@@ -346,16 +346,16 @@ export default define(class Frame extends Element {
   }
 
   toJSON() {
-    let json = null;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const assumption = this.getAssumption(),
-            assumptionJSON = assumption.toJSON();
-
-      json = assumptionJSON;  ///
-    }
+    const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
+          assumptionsJSON = assumptionsToAssumptionsJSON(this.assumptions),
+          metavariable = metavariableJSON,  ///
+          assumptions = assumptionsJSON,  ///
+          string = this.getString(),
+          json = {
+            string,
+            assumptions,
+            metavariable
+          };
 
     return json;
   }

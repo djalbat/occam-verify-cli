@@ -3,6 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { nameToNameJSON } from "../utilities/json";
 
 export default define(class MetaType extends Element {
   constructor(context, string, node, name) {
@@ -35,8 +36,11 @@ export default define(class MetaType extends Element {
   }
 
   toJSON() {
-    const name = this.name,
+    const nameJSON = nameToNameJSON(this.name),
+          string = this.getString(),
+          name = nameJSON,  ///
           json = {
+            string,
             name
           };
 

@@ -3,7 +3,7 @@
 import "../preamble";
 
 import { Dependency } from "occam-model";
-import { verificationUtilities } from "occam-languages";
+import { verificationUtilities, ReleaseContext } from "occam-languages";
 
 import { FileContextFromFilePath } from "../utilities/fileContext";
 import { releaseContextFromDependency } from "../utilities/releaseContext";
@@ -23,7 +23,7 @@ export default async function verifyAction(name, log) {
           releaseContextFromDependency
         }
 
-  try {
+  // try {
     const dependentNames = [],
           dependency = Dependency.fromName(name),
           releaseContextCreated = await createReleaseContext(dependency, dependentNames, context);
@@ -55,8 +55,19 @@ export default async function verifyAction(name, log) {
 
       return;
     }
-  }
-  catch (error) {
-    log.error(error);
-  }
+
+    const json = releaseContext.toJSON(),
+          entries = releaseContext.getEntries(),
+          customGrammar = releaseContext.getCustomGrammar(),
+          releaseContexts = [
+            releaseContext
+          ];
+
+    ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar).initialise(releaseContexts, FileContextFromFilePath);
+
+
+  // }
+  // catch (error) {
+  //   log.error(error);
+  // }
 }

@@ -114,9 +114,11 @@ export default define(class Constructor extends Element {
 
   toJSON() {
     const termJSON = termToTermJSON(this.term),
+          string = this.getString(),
           term = termJSON,  ///
           json = {
-            term
+            term,
+            string
           };
 
     return json;

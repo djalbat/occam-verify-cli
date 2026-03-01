@@ -290,7 +290,9 @@ export default define(class Rule extends Element {
           labels = labelsJSON,  ///
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///
+          string = this.getString(),
           json = {
+            string,
             labels,
             premises,
             conclusion

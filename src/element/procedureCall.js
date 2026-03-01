@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { termsUtilities } from "occam-furtle";
 
 import { define } from "../elements";
-import { parametersFromJSON, procedureReferenceFromJSON, parametersToParametersJSON, procedureReferenceToProcedureReferenceJSON } from "../utilities/json";
+import { parametersToParametersJSON, procedureReferenceToProcedureReferenceJSON } from "../utilities/json";
 
 const { termsFromPrimitives } = termsUtilities;
 
@@ -113,11 +113,14 @@ export default define(class ProcedureCall extends Element {
 
   toJSON() {
     const parametersJSON = parametersToParametersJSON(this.parameters),
-          procedureReference = procedureReferenceToProcedureReferenceJSON(this.procedureReference),
+          procedureReferenceJSON = procedureReferenceToProcedureReferenceJSON(this.procedureReference),
           parameters = parametersJSON,  ///
+          procedureReference = procedureReferenceJSON,  ///
+          string = this.getString(),
           json = {
-            procedureReference,
-            parameters
+            string,
+            parameters,
+            procedureReference
           };
 
     return json;

@@ -438,13 +438,13 @@ export default define(class Metavariable extends Element {
   }
 
   toJSON() {
-    const metaTypeJSON = metaTypeToMetaTypeJSON(this.metaType),
-          typeJSON = typeToTypeJSON(this.type),
+    const typeJSON = typeToTypeJSON(this.type),
           nameJSON = nameToNameJSON(this.name),
+          metaTypeJSON = metaTypeToMetaTypeJSON(this.metaType),
+          name = nameJSON,  ///
           type = typeJSON,  ///
           metaType = metaTypeJSON,  ///
           string = this.getString(), ///
-          name = this.name,
           json = {
             string,
             name,

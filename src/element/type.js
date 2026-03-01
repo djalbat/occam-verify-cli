@@ -5,8 +5,7 @@ import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
 import { baseTypeFromNothing } from "../utilities/type";
-import { typeStringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/string";
-import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
+import { nameToNameJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON, provisionalToProvisionalJSON } from "../utilities/json";
 
 const { push, first } = arrayUtilities;
 
@@ -293,18 +292,23 @@ export default define(class Type extends Element {
   }
 
   toJSON() {
-    const propertiesJSON = propertiesToPropertiesJSON(this.properties),
+    const nameJSON = nameToNameJSON(this.name),
+          prefixNameJSON = nameToNameJSON(this.prefixName),
+          propertiesJSON = propertiesToPropertiesJSON(this.properties),
           superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
-          provisional = this.provisional,
+          provisionalJSON = provisionalToProvisionalJSON(this.provisional),
+          name = nameJSON,  ///
+          prefixName = prefixNameJSON,  ///
           properties = propertiesJSON,  ///
           superTypes = superTypesJSON,  ///
-          name = this.name,
-          prefixName = this.prefixName,
+          provisional = provisionalJSON,  ///
+          string = this.getString(),
           json = {
+            string,
             name,
             prefixName,
-            superTypes,
             properties,
+            superTypes,
             provisional
           };
 

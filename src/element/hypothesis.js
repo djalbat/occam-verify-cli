@@ -89,7 +89,9 @@ export default define(class Hypothesis extends Element {
   toJSON() {
     const statementJSON = statementToStatementJSON(this.statement),
           statement = statementJSON,  ///
+          string = this.getString(),
           json = {
+            string,
             statement
           };
 

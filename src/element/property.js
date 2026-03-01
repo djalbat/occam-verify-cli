@@ -3,6 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import {nameToNameJSON} from "../utilities/json";
 
 export default define(class Property extends Element {
   constructor(context, string, node, name, nominalTypeName) {
@@ -40,9 +41,13 @@ export default define(class Property extends Element {
   }
 
   toJSON() {
-    const name = this.name, ///
-          nominalTypeName = this.nominalTypeName,  ///
+    const nominalTypeNameJSON = nameToNameJSON(this.nominalTypeName),
+          nameJSON = nameToNameJSON(this.name),
+          nominalTypeName = nominalTypeNameJSON,  ///
+          name = nameJSON,  ///
+          string = this.getString(),
           json = {
+            string,
             name,
             nominalTypeName
           };

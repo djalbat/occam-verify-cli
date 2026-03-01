@@ -319,18 +319,7 @@ export default define(class Assumption extends Element {
   }
 
   toJSON() {
-    let json = null;
-
-    const simple = this.isSimple();
-
-    if (simple) {
-      const reference = this, ///
-            referenceJSON = referenceToReferenceJSON(reference);
-
-      json = referenceJSON;  ///
-    }
-
-    return json;
+    debugger
   }
 
   static name = "Assumption";

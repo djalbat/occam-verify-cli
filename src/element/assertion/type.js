@@ -199,10 +199,10 @@ export default define(class TypeAssertion extends Assertion {
           type = typeJSON,  ///
           string = this.getString(),
           json = {
+            string,
             name,
             term,
-            type,
-            string
+            type
           };
 
     return json;

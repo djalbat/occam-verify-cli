@@ -5,9 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt } from "../utilities/context";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
-import { findMetaTypeByMetaTypeName } from "../metaTypes";
 import { unifyMetavariableIntrinsically } from "../process/unify";
-import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
+import { metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Reference extends Element {
   constructor(context, string, node, metavariable) {
@@ -294,7 +293,9 @@ export default define(class Reference extends Element {
   toJSON() {
     const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
           metavariable = metavariableJSON,  ///
+          string = this.getString(),
           json = {
+            string,
             metavariable
           };
 
