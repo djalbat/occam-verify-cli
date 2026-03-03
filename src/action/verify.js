@@ -8,7 +8,7 @@ import { verificationUtilities, ReleaseContext } from "occam-languages";
 import { FileContextFromFilePath } from "../utilities/fileContext";
 import { releaseContextFromDependency } from "../utilities/releaseContext";
 
-const { createReleaseContext, verifyReleaseContext, initialiseReleaseContext } = verificationUtilities;
+const { createReleaseContexts, verifyReleaseContexts, initialiseReleaseContexts } = verificationUtilities;
 
 export default async function verifyAction(name, log) {
   const callback = async (context, filePath, lineIndex) => {
@@ -24,9 +24,9 @@ export default async function verifyAction(name, log) {
         }
 
   // try {
-    const dependentNames = [],
-          dependency = Dependency.fromName(name),
-          releaseContextCreated = await createReleaseContext(dependency, dependentNames, context);
+
+    const dependency = Dependency.fromName(name),
+          releaseContextCreated = await createReleaseContexts(dependency, context);
 
     if (!releaseContextCreated) {
       log.warning(`The '${name}' project or package cannot be created.`);
@@ -44,13 +44,17 @@ export default async function verifyAction(name, log) {
       return;
     }
 
-    initialiseReleaseContext(dependency, context);
+    const releaseContextsInitialised = initialiseReleaseContexts(dependency, context);
 
-    const dependentName = null,
-          dependentReleased = false,
-          releaseContextVerifies = await verifyReleaseContext(releaseName, dependentName, dependentReleased, releaseContextMap);
+    if (!releaseContextsInitialised) {
+      log.warning(`The '${name}' project or package cannot be initialised.`);
 
-    if (!releaseContextVerifies) {
+      return;
+    }
+
+    const releaseContextsVerify = await verifyReleaseContexts(dependency, releaseContextMap);
+
+    if (!releaseContextsVerify) {
       log.warning(`The '${name}' project or package cannot be verified.`);
 
       return;
@@ -59,12 +63,13 @@ export default async function verifyAction(name, log) {
     const json = releaseContext.toJSON(),
           entries = releaseContext.getEntries(),
           customGrammar = releaseContext.getCustomGrammar(),
+          dependencyReleaseContexts = releaseContext.getDependencyReleaseContexts(),
           releaseContexts = [
-            releaseContext
+            releaseContext,
+            ...dependencyReleaseContexts
           ];
 
     ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar).initialise(releaseContexts, FileContextFromFilePath);
-
 
   // }
   // catch (error) {

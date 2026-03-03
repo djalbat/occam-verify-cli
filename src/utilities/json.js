@@ -47,12 +47,9 @@ export function typeFromJSON(json, context) {
   if (type !== null) {
     json = type;  ///
 
-    const { name, prefixName } = json,
-          nominalTypeName = (prefixName !== null) ?
-                               `${prefixName}${name}` :
-                                  name; ///
+    const { name, prefixName } = json;
 
-    type = context.findTypeByNominalTypeName(nominalTypeName);
+    type = findTypeByNameAndPrefixName(name, prefixName, context);
   }
 
   return type;
@@ -86,10 +83,9 @@ export function metaTypeFromJSON(json, context) {
   if (metaType !== null) {
     json = metaType;  ///
 
-    const { name } = json,
-          metaTypeName = name;  ///
+    const { name } = json;
 
-    metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
+    metaType = findMetaTypeByName(name, context);
   }
 
   return metaType;
@@ -407,10 +403,8 @@ export function superTypesFromJSON(json, context) {
   const superTypes = superTypesJSON.map((superTypeJSON) => {
           const json = superTypeJSON,  ///
                 { name, prefixName } = json,
-                nominalSuperTypeName = (prefixName !== null) ?
-                                         `${prefixName}${name}` :
-                                            name, ///
-                superType = context.findTypeByNominalTypeName(nominalSuperTypeName);
+                type = findTypeByNameAndPrefixName(name, prefixName, context),
+                superType = type; ///
 
           return superType;
         });
@@ -1088,4 +1082,20 @@ export function propertyRelationsToPropertyRelationsJSON(propertyRelations) {
   });
 
   return propertyRelationsJSON;
+}
+
+function findMetaTypeByName(name, context) {
+  const metaTypeName = name,  ///
+        metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
+
+  return metaType;
+}
+
+function findTypeByNameAndPrefixName(name, prefixName, context) {
+  const nominalTypeName = (prefixName !== null) ?
+                           `${prefixName}${name}` :
+                              name,
+        type = context.findTypeByNominalTypeName(nominalTypeName);
+
+  return type;
 }
