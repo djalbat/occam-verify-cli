@@ -3,30 +3,32 @@
 import "../preamble";
 
 import { Dependency } from "occam-model";
-import { verificationUtilities, ReleaseContext } from "occam-languages";
+import { arrayUtilities } from "necessary";
+import { verificationUtilities } from "occam-languages";
 
 import { FileContextFromFilePath } from "../utilities/fileContext";
 import { releaseContextFromDependency } from "../utilities/releaseContext";
 
-const { createReleaseContexts, verifyReleaseContexts, initialiseReleaseContexts } = verificationUtilities;
+const { last } = arrayUtilities,
+      { createReleaseContexts, verifyReleaseContexts, initialiseReleaseContexts } = verificationUtilities;
 
 export default async function verifyAction(name, log) {
   const callback = async (context, filePath, lineIndex) => {
           ///
         },
-        releaseContextMap = {},
+        releaseContexts = [],
+        dependency = Dependency.fromName(name),
         context = {
           log,
           callback,
-          releaseContextMap,
+          releaseContexts,
           FileContextFromFilePath,
           releaseContextFromDependency
         }
 
   // try {
 
-    const dependency = Dependency.fromName(name),
-          releaseContextCreated = await createReleaseContexts(dependency, context);
+    const releaseContextCreated = await createReleaseContexts(dependency, context);
 
     if (!releaseContextCreated) {
       log.warning(`The '${name}' project or package cannot be created.`);
@@ -34,8 +36,8 @@ export default async function verifyAction(name, log) {
       return;
     }
 
-    const releaseName = name, ///
-          releaseContext = releaseContextMap[releaseName],
+    const lastReleaseContext = last(releaseContexts),
+          releaseContext = lastReleaseContext,  ///
           released = releaseContext.isReleased();
 
     if (released) {
@@ -44,15 +46,9 @@ export default async function verifyAction(name, log) {
       return;
     }
 
-    const releaseContextsInitialised = initialiseReleaseContexts(dependency, context);
+    initialiseReleaseContexts(context);
 
-    if (!releaseContextsInitialised) {
-      log.warning(`The '${name}' project or package cannot be initialised.`);
-
-      return;
-    }
-
-    const releaseContextsVerify = await verifyReleaseContexts(dependency, releaseContextMap);
+    const releaseContextsVerify = await verifyReleaseContexts(dependency, context);
 
     if (!releaseContextsVerify) {
       log.warning(`The '${name}' project or package cannot be verified.`);
@@ -60,16 +56,16 @@ export default async function verifyAction(name, log) {
       return;
     }
 
-    const json = releaseContext.toJSON(),
-          entries = releaseContext.getEntries(),
-          customGrammar = releaseContext.getCustomGrammar(),
-          dependencyReleaseContexts = releaseContext.getDependencyReleaseContexts(),
-          releaseContexts = [
-            releaseContext,
-            ...dependencyReleaseContexts
-          ];
-
-    ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar).initialise(releaseContexts, FileContextFromFilePath);
+    // const json = releaseContext.toJSON(),
+    //       entries = releaseContext.getEntries(),
+    //       customGrammar = releaseContext.getCustomGrammar(),
+    //       dependencyReleaseContexts = releaseContext.getDependencyReleaseContexts(),
+    //       releaseContexts = [
+    //         releaseContext,
+    //         ...dependencyReleaseContexts
+    //       ];
+    //
+    // ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar).initialise(releaseContexts, FileContextFromFilePath);
 
   // }
   // catch (error) {
