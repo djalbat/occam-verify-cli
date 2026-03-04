@@ -271,4 +271,8 @@ export default define(class Equality extends Element {
   }
 
   static name = "Equality";
+
+  static fromJSON(json, context) {
+    debugger
+  }
 });

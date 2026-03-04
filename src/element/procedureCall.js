@@ -136,8 +136,11 @@ export default define(class ProcedureCall extends Element {
             procedureCallNode = instantiateProcedureCall(string, context),
             node = procedureCallNode,  ///
             parameters = parametersFromJSON(json, context),
-            procedureReference = procedureReferenceFromJSON(json, context),
-            procedureCall = new ProcedureCall(context, string, node, parameters, procedureReference);
+            procedureReference = procedureReferenceFromJSON(json, context);
+
+      context = null;
+
+      const procedureCall = new ProcedureCall(context, string, node, parameters, procedureReference);
 
       return procedureCall;
     }, context);

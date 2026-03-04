@@ -50,8 +50,11 @@ export default define(class ProcedureReference extends Element {
       const { string } = json,
             procedureReferenceNode = instantiateProcedureReference(string, context),
             node = procedureReferenceNode,  ///
-            name = nameFromJSON(json, context),
-            procedureReference = new ProcedureReference(context, string, node, name);
+            name = nameFromJSON(json, context);
+
+      context = null;
+
+      const procedureReference = new ProcedureReference(context, string, node, name);
 
       return procedureReference;
     }, context);

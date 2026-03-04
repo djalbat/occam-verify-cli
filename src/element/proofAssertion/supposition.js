@@ -324,7 +324,6 @@ export default define(class Supposition extends ProofAssertion {
       const supposition = new Supposition(context, string, node, statement, procedureCall);
 
       return supposition;
-
     }, context);
 
     return supposition;

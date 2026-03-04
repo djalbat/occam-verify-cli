@@ -55,30 +55,6 @@ export default define(class Rule extends Element {
     return comparesToMetavariableName;
   }
 
-  verifyLabels() {
-    let labelsVerify;
-
-    const context = this.getContext(),
-          ruleString = this.getString();  ///
-
-    context.trace(`Verifying the '${ruleString}' rule's labels...`);
-
-    labelsVerify = this.labels.every((label) => {
-      const nameOnly = true,
-            labelVerifies = label.verify(nameOnly);
-
-      if (labelVerifies) {
-        return true;
-      }
-    });
-
-    if (labelsVerify) {
-      context.debug(`...verified the '${ruleString}' rule's labels.`);
-    }
-
-    return labelsVerify;
-  }
-
   unifyStatementWithConclusion(statement, context) {
     let statementUnifiesWithConclusion = false;
 
@@ -141,6 +117,47 @@ export default define(class Rule extends Element {
     }
 
     return verifies;
+  }
+
+  verifyLabels() {
+    let labelsVerify;
+
+    const context = this.getContext(),
+          ruleString = this.getString();  ///
+
+    context.trace(`Verifying the '${ruleString}' rule's labels...`);
+
+    labelsVerify = this.labels.every((label) => {
+      const labelVerifies = this.verifyLabel(label);
+
+      if (labelVerifies) {
+        return true;
+      }
+    });
+
+    if (labelsVerify) {
+      context.debug(`...verified the '${ruleString}' rule's labels.`);
+    }
+
+    return labelsVerify;
+  }
+
+  verifyLabel(label) {
+    let labelVerifies;
+
+    const context = this.getContext(),
+          ruleString = this.getString(),  ///
+          labelString = label.getString();
+
+    context.trace(`Verifying the '${ruleString}' rule's '${labelString}' label...`);
+
+    labelVerifies = label.verify();
+
+    if (labelVerifies) {
+      context.debug(`...verified the '${ruleString}' rule's '${labelString}' label.`);
+    }
+
+    return labelVerifies;
   }
 
   async verifyProof(context) {

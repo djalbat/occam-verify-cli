@@ -221,8 +221,11 @@ export default define(class Variable extends Element {
             node = variableNode,  ///
             type = typeFromJSON(json, context),
             identifier = identifierFromJSON(json, context),
-            propertyRelations = propertyRelationsFromJSON(json, context),
-            variable = new Variable(context, string, node, type, identifier, propertyRelations);
+            propertyRelations = propertyRelationsFromJSON(json, context);
+
+      context = null;
+
+      const variable = new Variable(context, string, node, type, identifier, propertyRelations);
 
       return variable;
     }, context);

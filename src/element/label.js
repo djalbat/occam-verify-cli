@@ -42,7 +42,7 @@ export default define(class Label extends Element {
     return comparesToReference;
   }
 
-  verify(nameOnly) {
+  verify() {
     let verifies = false;
 
     const context = this.getContext(),
@@ -50,26 +50,46 @@ export default define(class Label extends Element {
 
     context.trace(`Verifying the '${labelString}' label...`);
 
-    let labelPresent;
+    const metavariableVerifies = this.verifyMetavariable();
 
-    if (nameOnly) {
-      const metavariableName = this.getMetavariableName();
+    if (metavariableVerifies) {
+      const metavariableName = this.getMetavariableName(),
+            labelPresent = context.isLabelPresentByMetavariableName(metavariableName);
 
-      labelPresent = context.isLabelPresentByMetavariableName(metavariableName);
-    } else {
-      const metavariable = this.getMetavariable();
-
-      labelPresent = context.isLabelPresentByMetavariable(metavariable);
-    }
-
-    if (labelPresent) {
-      context.debug(`The '${labelString}' label is already present.`);
-    } else {
-      verifies = true;
+      if (!labelPresent) {
+        verifies = true;
+      } else {
+        context.debug(`The '${labelString}' label is already present.`);
+      }
     }
 
     if (verifies) {
       context.debug(`...verified the '${labelString}' label.`);
+    }
+
+    return verifies;
+  }
+
+  verifyMetavariable() {
+    let verifies = false;
+
+    const context = this.getContext(),
+          labelString = this.getString(), ///
+          metavariableString = this.metavariable.getString();
+
+    context.trace(`Verifying the '${labelString}' label's '${metavariableString}' metavariable...`);
+
+    const metavariableName = this.getMetavariableName(),
+          metavariablePresent = context.isLabelPresentByMetavariableName(metavariableName);
+
+    if (!metavariablePresent) {
+      verifies = true;
+    } else {
+      context.debug(`The '${metavariableString}' metavariable is already present.`);
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${labelString}' label's '${metavariableString}' metavariable.`);
     }
 
     return verifies;

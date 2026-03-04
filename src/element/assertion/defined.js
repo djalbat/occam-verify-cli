@@ -244,6 +244,8 @@ export default define(class DefinedAssertion extends Assertion {
               frame = frameFromJSON(json, context),
               negated = negatedFromJSON(json, context);
 
+        context = null;
+
         definedAssertion = new DefinedAssertion(context, string, node, term, frame, negated);
       }, context);
     }

@@ -62,7 +62,9 @@ export default async function verifyAction(name, log) {
 
     releaseContexts.reverse();
 
-    ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar).initialise(releaseContexts, FileContextFromFilePath);
+    const releaseContxt = ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar);
+
+    releaseContxt.initialise(releaseContexts, FileContextFromFilePath);
 
   // }
   // catch (error) {

@@ -72,8 +72,11 @@ export default define(class Parameter extends Element {
             parameterNode = instantiateParameter(string, context),
             node = parameterNode,  ///
             name = nameFromJSON(json, context),
-            identifier = identifierFromJSON(json, context),
-            parameter = new Parameter(context, string, node, name, identifier);
+            identifier = identifierFromJSON(json, context);
+
+      context = null;
+
+      const parameter = new Parameter(context, string, node, name, identifier);
 
       return parameter;
     }, context);

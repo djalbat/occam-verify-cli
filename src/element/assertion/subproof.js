@@ -142,6 +142,8 @@ export default define(class SubproofAssertion extends Assertion {
               statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),
               node = subproofAssertionNode; ///
 
+        context = null;
+
         subproorAssertion = new SubproofAssertion(context, string, node, statements);
       }, context);
     }

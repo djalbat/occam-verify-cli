@@ -286,6 +286,8 @@ export default define(class ContainedAssertion extends Assertion {
               negated = negatedFromJSON(json, context),
               statement = statementFromJSON(json, context);
 
+        context = null;
+
         containedAssertion = new ContainedAssertion(context, string, node, term, frame, negated, statement);
       }, context);
     }

@@ -327,8 +327,11 @@ export default define(class Type extends Element {
           prefixName = null,
           superTypes = [],
           properties = [],
-          provisional = false,
-          type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
+          provisional = false;
+
+    context = null;
+
+    const type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
 
     return type;
   }

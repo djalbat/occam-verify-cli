@@ -122,30 +122,6 @@ export default class TopLevelAssertion extends Element {
     return correlatesToHypotheses;
   }
 
-  verifyLabels() {
-    let labelsVerify;
-
-    const context = this.getContext(),
-          topLevelAssertionString = this.getString();
-
-    context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's labels...`);
-
-    labelsVerify = this.labels.every((label) => {
-      const nameOnly = true,
-            labelVerifies = label.verify(nameOnly);
-
-      if (labelVerifies) {
-        return true;
-      }
-    });
-
-    if (labelsVerify) {
-      context.debug(`...verified the '${topLevelAssertionString}' top level assertion's labels.`);
-    }
-
-    return labelsVerify;
-  }
-
   unifyStatementWithDeduction(statement, context) {
     let statementUnifiesWithDeduction = false;
 
@@ -201,6 +177,47 @@ export default class TopLevelAssertion extends Element {
     }
 
     return verifies;
+  }
+
+  verifyLabels() {
+    let labelsVerify;
+
+    const context = this.getContext(),
+          topLevelAssertionString = this.getString();  ///
+
+    context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's labels...`);
+
+    labelsVerify = this.labels.every((label) => {
+      const labelVerifies = this.verifyLabel(label);
+
+      if (labelVerifies) {
+        return true;
+      }
+    });
+
+    if (labelsVerify) {
+      context.debug(`...verified the '${topLevelAssertionString}' top level assertion's labels.`);
+    }
+
+    return labelsVerify;
+  }
+
+  verifyLabel(label) {
+    let labelVerifies;
+
+    const context = this.getContext(),
+          labelString = label.getString(),
+          topLevelAssertionString = this.getString(); ///
+
+    context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's '${labelString}' label...`);
+
+    labelVerifies = label.verify();
+
+    if (labelVerifies) {
+      context.debug(`...verified the '${topLevelAssertionString}' top level assertion's '${labelString}' label.`);
+    }
+
+    return labelVerifies;
   }
 
   async verifyProof(context) {

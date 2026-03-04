@@ -472,13 +472,16 @@ export default class EphemeralContext extends Context {
     const context = this; ///
 
     this.terms = termsFromJSON(json, context);
-    this.frames = framesFromJSON(json, context);
-    this.judgements = judgementsFromJSON(json, context);
-    this.equalities = equalitiesFromJSON(json, context);
     this.statements = statementsFromJSON(json, context);
-    this.assertions = assertionsFromJSON(json, context);
     this.references = referencesFromJSON(json, context);
+
+    this.equalities = equalitiesFromJSON(json, context);
     this.assumptions = assumptionsFromJSON(json, context);
+
+    this.frames = framesFromJSON(json, context);
+
+    this.judgements = judgementsFromJSON(json, context);
+    this.assertions = assertionsFromJSON(json, context);
     this.substitutions = substitutionsFromJSON(json, context);
   }
 

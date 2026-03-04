@@ -350,8 +350,11 @@ export default define(class Statement extends Element {
     const statement = literally((context) => {
       const { string } = json,
             statementNode = instantiateStatement(string, context),
-            node = statementNode, ///
-            statement = new Statement(context, string, node);
+            node = statementNode; ///
+
+      context = null;
+
+      const statement = new Statement(context, string, node);
 
       return statement;
     }, context);

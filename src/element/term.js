@@ -241,8 +241,11 @@ export default define(class Term extends Element {
       const { string } = json,
             termNode = instantiateTerm(string, context),
             node = termNode,  ///
-            type = typeFromJSON(json, context),
-            term = new Term(context, string, node, type);
+            type = typeFromJSON(json, context);
+
+      context = null;
+
+      const term = new Term(context, string, node, type);
 
       return term;
     }, context);

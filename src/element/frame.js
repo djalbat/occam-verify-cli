@@ -7,7 +7,7 @@ import { literally } from "../utilities/context";
 import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { assumptionsStringFromAssumptions } from "../utilities/string";
-import { assumptionsFromJSON, metavariableFromJSON, assumptionsToAssumptionsJSON, metavariableToMetavariableJSON } from "../utilities/json";
+import { metavariableFromJSON, assumptionsToAssumptionsJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Frame extends Element {
   constructor(context, string, node, assumptions, metavariable) {
@@ -369,9 +369,12 @@ export default define(class Frame extends Element {
       const { string } = json,
             frameNode = instantiateFrame(string, context),
             node = frameNode,  ///
-            assumptions = assumptionsFromJSON(json, context),
-            metavariable = metavariableFromJSON(json, context),
-            frame = new Frame(context, string, node, assumptions, metavariable);
+            assumptions = assumptionsFromFrameNode(frameNode, context),
+            metavariable = metavariableFromJSON(json, context);
+
+      context = null;
+
+      const frame = new Frame(context, string, node, assumptions, metavariable);
 
       return frame;
     }, context);
@@ -379,3 +382,15 @@ export default define(class Frame extends Element {
     return frame;
   }
 });
+
+function assumptionsFromFrameNode(frameNode, context) {
+  const assumptionNodes = frameNode.getAssumptionNodes(),
+        assumptions = assumptionNodes.map((assumptionNode) => {
+          const assumption = context.findAssumptionByAssumptionNode(assumptionNode);
+
+          return assumption;
+        });
+
+  return assumptions;
+}
+

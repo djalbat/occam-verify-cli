@@ -2,6 +2,8 @@
 
 import { Element } from "occam-languages";
 
+import elements from "../elements";
+
 import { define } from "../elements";
 import { judgementAssignmentFromJudgement } from "../process/assign";
 
@@ -206,7 +208,15 @@ export default define(class Judgement extends Element {
     context.addAssignment(assignment);
   }
 
+  toJSON() {
+    debugger
+  }
+
   static name = "Judgement";
+
+  static fromJSON(json, context) {
+    debugger
+  }
 });
 
 function referenceFromMetavariable(metavariable, context) {

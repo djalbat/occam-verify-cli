@@ -277,7 +277,7 @@ export function framesFromJSON(json, context) {
 
   frames = framesJSON.map((frameJSON) => {
     const json = frameJSON,  ///
-      frame = Frame.fromJSON(json, context);
+          frame = Frame.fromJSON(json, context);
 
     return frame;
   });

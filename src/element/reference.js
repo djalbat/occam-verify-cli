@@ -3,10 +3,11 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt } from "../utilities/context";
+import { attempt, literally } from "../utilities/context";
+import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { unifyMetavariableIntrinsically } from "../process/unify";
-import { metavariableToMetavariableJSON } from "../utilities/json";
+import { metavariableFromJSON, metavariableToMetavariableJSON} from "../utilities/json";
 
 export default define(class Reference extends Element {
   constructor(context, string, node, metavariable) {
@@ -25,7 +26,6 @@ export default define(class Reference extends Element {
 
     return referenceNode;
   }
-
 
   getName() { return this.metavariable.getName(); }
 
@@ -305,6 +305,16 @@ export default define(class Reference extends Element {
   static name = "Reference";
 
   static fromJSON(json, context) {
-    debugger
+    const reference = literally((context) => {
+      const { string } = json,
+            referenceNode = instantiateReference(string, context),
+            node = referenceNode,  ///
+            metavariable = metavariableFromJSON(json, context),
+            reference = new Reference(context, string, node, metavariable);
+
+      return reference;
+    }, context);
+
+    return reference;
   }
 });

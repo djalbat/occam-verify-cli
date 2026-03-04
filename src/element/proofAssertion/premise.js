@@ -302,7 +302,6 @@ export default define(class Premise extends ProofAssertion {
       const premise = new Premise(context, string, node, statement, procedureCall);
 
       return premise;
-
     }, context);
 
     return premise;
