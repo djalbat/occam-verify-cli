@@ -4,7 +4,7 @@ import "../preamble";
 
 import { Dependency } from "occam-model";
 import { arrayUtilities } from "necessary";
-import { verificationUtilities } from "occam-languages";
+import { verificationUtilities, ReleaseContext } from "occam-languages";
 
 import { FileContextFromFilePath } from "../utilities/fileContext";
 import { releaseContextFromDependency } from "../utilities/releaseContext";
@@ -48,7 +48,7 @@ export default async function verifyAction(name, log) {
 
     initialiseReleaseContexts(context);
 
-    const releaseContextsVerify = await verifyReleaseContexts(dependency, context);
+    const releaseContextsVerify = await verifyReleaseContexts(context);
 
     if (!releaseContextsVerify) {
       log.warning(`The '${name}' project or package cannot be verified.`);
@@ -59,6 +59,8 @@ export default async function verifyAction(name, log) {
     const json = releaseContext.toJSON(),
           entries = releaseContext.getEntries(),
           customGrammar = releaseContext.getCustomGrammar();
+
+    releaseContexts.reverse();
 
     ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar).initialise(releaseContexts, FileContextFromFilePath);
 
