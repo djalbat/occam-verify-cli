@@ -56,16 +56,11 @@ export default async function verifyAction(name, log) {
       return;
     }
 
-    // const json = releaseContext.toJSON(),
-    //       entries = releaseContext.getEntries(),
-    //       customGrammar = releaseContext.getCustomGrammar(),
-    //       dependencyReleaseContexts = releaseContext.getDependencyReleaseContexts(),
-    //       releaseContexts = [
-    //         releaseContext,
-    //         ...dependencyReleaseContexts
-    //       ];
-    //
-    // ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar).initialise(releaseContexts, FileContextFromFilePath);
+    const json = releaseContext.toJSON(),
+          entries = releaseContext.getEntries(),
+          customGrammar = releaseContext.getCustomGrammar();
+
+    ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar).initialise(releaseContexts, FileContextFromFilePath);
 
   // }
   // catch (error) {
