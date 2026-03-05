@@ -35,26 +35,9 @@ export default define(class Signature extends Element {
 
     context.trace(`Verifying the '${signatureString}' signature...`);
 
-    const terms = [],
-          termsValidate = this.terms.every((term) => {
-            term = term.validate(context, () => { ///
-              const validatesForwards = true;
+    const validates = this.validate(context);
 
-              return validatesForwards;
-            });
-
-            const termValidates = (term !== null);
-
-            if (termValidates) {
-              terms.push(term);
-
-              return true;
-            }
-          });
-
-    if (termsValidate) {
-      this.terms = terms;
-
+    if (validates) {
       verifies = true;
     }
 
@@ -63,6 +46,78 @@ export default define(class Signature extends Element {
     }
 
     return verifies;
+  }
+
+  validate(context) {
+    let validates = false;
+
+    const signatureString = this.getString();  ///
+
+    context.trace(`Validating the '${signatureString}' signature...`);
+
+    const terms = [],
+          termsValidate = this.validateTerms(terms, context);
+
+    if (termsValidate) {
+      this.terms = terms;
+
+      validates = true;
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${signatureString}' signature.`);
+    }
+
+    return validates
+  }
+
+  validateTerm(term, terms, context) {
+    let termValidates = false;
+
+    const termString = term.getString(),
+          signatureString = this.getString();  ///
+
+    context.trace(`Validating the '${signatureString}' signature's '${termString}' term...`);
+
+    term = term.validate(context, () => { ///
+      const validatesForwards = true;
+
+      return validatesForwards;
+    });
+
+    if (term !== null) {
+      terms.push(term);
+
+      termValidates = true;
+    }
+
+    if (termValidates) {
+      context.debug(`...validated the '${signatureString}' signature's '${termString}' term.`);
+    }
+
+    return termValidates
+  }
+
+  validateTerms(terms, context) {
+    let termsValidate;
+
+    const signatureString = this.getString();  ///
+
+    context.trace(`Validating the '${signatureString}' signature's terms...`);
+
+    termsValidate = terms.every((term) => {
+      const termValidates = this.validateTerm(term, terms, context);
+
+      if (termValidates) {
+        return true;
+      }
+    })
+
+    if (termsValidate){
+      context.debug(`...validated the '${signatureString}' signature's terms.`);
+    }
+
+    return termsValidate
   }
 
   compare(signature, substitutions, generalContext, specificContext) {

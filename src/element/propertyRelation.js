@@ -3,21 +3,24 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
+import { instantiatePropertyRelation } from "../process/instantiate";
+import { propertyFromPropertyRelationNode } from "../utilities/element";
 
 export default define(class PropertyRelation extends Element {
-  constructor(context, string, node, property, term) {
+  constructor(context, string, node, term, property) {
     super(context, string, node);
 
-    this.property = property;
     this.term = term;
-  }
-
-  getProperty() {
-    return this.property;
+    this.property = property;
   }
 
   getTerm() {
     return this.term;
+  }
+
+  getProperty() {
+    return this.property;
   }
 
   getPropertyRelationNode() {
@@ -110,4 +113,38 @@ export default define(class PropertyRelation extends Element {
   }
 
   static name = "PropertyRelation";
+
+  toJSON() {
+    const string = this.getString(),
+          json = {
+            string
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, context) {
+    const propertyRelation = literally((context) => {
+      const { string } = json,
+            propertyRelationNode = instantiatePropertyRelation(string, context),
+            node = propertyRelationNode,  ///
+            term = termFromPropertyRelationNode(propertyRelationNode, context),
+            property = propertyFromPropertyRelationNode(propertyRelationNode, context);
+
+      context = null;
+
+      const propertyRelation = new PropertyRelation(context, string, node, term, property);
+
+      return propertyRelation;
+    }, context);
+
+    return propertyRelation;
+  }
 });
+
+function termFromPropertyRelationNode(propertyRelationNode, context) {
+  const termNode = propertyRelationNode.getTermNode(),
+        term = context.findTermByTermNode(termNode);
+
+  return term;
+}

@@ -614,12 +614,12 @@ export function propertyRelationFromPropertyRelationNode(propertyRelationNode, c
   const { PropertyRelation } = elements,
         node = propertyRelationNode,  ///
         string = context.nodeAsString(node),
-        property = propertyFromPropertyRelationNode(propertyRelationNode, context),
-        term = termFromPropertyRelationNode(propertyRelationNode, context);
+        term = termFromPropertyRelationNode(propertyRelationNode, context),
+        property = propertyFromPropertyRelationNode(propertyRelationNode, context);
 
   context = null;
 
-  const propertyRelation = new PropertyRelation(context, string, node, property, term);
+  const propertyRelation = new PropertyRelation(context, string, node, term, property);
 
   return propertyRelation;
 }
