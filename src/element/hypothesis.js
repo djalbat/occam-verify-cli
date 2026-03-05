@@ -3,7 +3,9 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
+import {literally} from "../utilities/context";
+import { instantiateHypothesis } from "../process/instantiate";
+import { statementFromHypothesisNode } from "../utilities/element";
 
 export default define(class Hypothesis extends Element {
   constructor(context, string, node, statement) {
@@ -87,12 +89,9 @@ export default define(class Hypothesis extends Element {
   }
 
   toJSON() {
-    const statementJSON = statementToStatementJSON(this.statement),
-          statement = statementJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
-            string,
-            statement
+            string
           };
 
     return json;
@@ -101,6 +100,19 @@ export default define(class Hypothesis extends Element {
   static name = "Hypothesis";
 
   static fromJSON(json, context) {
-    debugger
+    const hypothesis = literally((context) => {
+      const { string } = json,
+            hypothesisNode = instantiateHypothesis(string, context),
+            node = hypothesisNode,  ///
+            statement = statementFromHypothesisNode(hypothesisNode, context);
+
+      context = null;
+
+      const hypothesis = new Hypothesis(context, string, node, statement);
+
+      return hypothesis;
+    }, context);
+
+    return hypothesis;
   }
 });

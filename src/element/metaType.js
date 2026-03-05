@@ -58,7 +58,7 @@ export default define(class MetaType extends Element {
   }
 
   static fromName(name, context) {
-    const string = name,
+    const string = name,  ///
           node = null,
           metaType = new MetaType(context, string, node, name);
 

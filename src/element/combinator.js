@@ -5,18 +5,14 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateCombinator } from "../process/instantiate";
+import { ephemeralContextFromJSON } from "../utilities/json";
 import { verifyStatementAsCombinator } from "../process/verify";
+import { statementFromCombinatorNode } from "../utilities/element";
 import { unifyStatementWithCombinator } from "../process/unify";
-import {
-  statementFromJSON,
-  ephemeralContextFromJSON,
-  statementToStatementJSON,
-  procedureCallToProcedureCallJSON
-} from "../utilities/json";
 
 export default define(class Combinator extends Element {
   constructor(context, string, node, statement) {
-    super(context, string, node)
+    super(context, string, node);
 
     this.statement = statement;
   }
@@ -93,13 +89,10 @@ export default define(class Combinator extends Element {
 
     context = contextJSON;  ///
 
-    const statementJSON = statementToStatementJSON(this.statement),
-          statement = statementJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
             context,
-            string,
-            statement
+            string
           };
 
     return json;
@@ -112,7 +105,7 @@ export default define(class Combinator extends Element {
       const { string } = json,
             combinatorNode = instantiateCombinator(string, context),
             node = combinatorNode,  ///
-            statement = statementFromJSON(json, context),
+            statement = statementFromCombinatorNode(combinatorNode, context),
             ephemeralContext = ephemeralContextFromJSON(json, context);
 
       context = ephemeralContext; ///

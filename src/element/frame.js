@@ -6,8 +6,8 @@ import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
+import { metavariableFromFrameNode } from "../utilities/element";
 import { assumptionsStringFromAssumptions } from "../utilities/string";
-import { metavariableFromJSON, assumptionsToAssumptionsJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Frame extends Element {
   constructor(context, string, node, assumptions, metavariable) {
@@ -348,15 +348,9 @@ export default define(class Frame extends Element {
   }
 
   toJSON() {
-    const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
-          assumptionsJSON = assumptionsToAssumptionsJSON(this.assumptions),
-          metavariable = metavariableJSON,  ///
-          assumptions = assumptionsJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
-            string,
-            assumptions,
-            metavariable
+            string
           };
 
     return json;
@@ -370,7 +364,7 @@ export default define(class Frame extends Element {
             frameNode = instantiateFrame(string, context),
             node = frameNode,  ///
             assumptions = assumptionsFromFrameNode(frameNode, context),
-            metavariable = metavariableFromJSON(json, context);
+            metavariable = metavariableFromFrameNode(frameNode, context);
 
       context = null;
 

@@ -6,8 +6,8 @@ import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
+import { metavariableFromReferenceNode } from "../utilities/element";
 import { unifyMetavariableIntrinsically } from "../process/unify";
-import { metavariableFromJSON, metavariableToMetavariableJSON} from "../utilities/json";
 
 export default define(class Reference extends Element {
   constructor(context, string, node, metavariable) {
@@ -291,12 +291,9 @@ export default define(class Reference extends Element {
   }
 
   toJSON() {
-    const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
-          metavariable = metavariableJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
-            string,
-            metavariable
+            string
           };
 
     return json;
@@ -309,7 +306,7 @@ export default define(class Reference extends Element {
       const { string } = json,
             referenceNode = instantiateReference(string, context),
             node = referenceNode,  ///
-            metavariable = metavariableFromJSON(json, context),
+            metavariable = metavariableFromReferenceNode(referenceNode, context),
             reference = new Reference(context, string, node, metavariable);
 
       return reference;

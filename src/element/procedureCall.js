@@ -6,7 +6,7 @@ import { termsUtilities } from "occam-furtle";
 import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { instantiateProcedureCall } from "../process/instantiate";
-import { parametersFromJSON, parametersToParametersJSON, procedureReferenceFromJSON, procedureReferenceToProcedureReferenceJSON } from "../utilities/json";
+import { parametersFromProcedureCallNode, procedureReferenceFromProcedureCallNode } from "../utilities/element";
 
 const { termsFromPrimitives } = termsUtilities;
 
@@ -114,15 +114,9 @@ export default define(class ProcedureCall extends Element {
   }
 
   toJSON() {
-    const parametersJSON = parametersToParametersJSON(this.parameters),
-          procedureReferenceJSON = procedureReferenceToProcedureReferenceJSON(this.procedureReference),
-          parameters = parametersJSON,  ///
-          procedureReference = procedureReferenceJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
-            string,
-            parameters,
-            procedureReference
+            string
           };
 
     return json;
@@ -135,8 +129,8 @@ export default define(class ProcedureCall extends Element {
       const { string } = json,
             procedureCallNode = instantiateProcedureCall(string, context),
             node = procedureCallNode,  ///
-            parameters = parametersFromJSON(json, context),
-            procedureReference = procedureReferenceFromJSON(json, context);
+            parameters = parametersFromProcedureCallNode(json, context),
+            procedureReference = procedureReferenceFromProcedureCallNode(json, context);
 
       context = null;
 

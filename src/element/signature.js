@@ -4,8 +4,9 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { signatureStringFromTerms } from "../utilities/string";
-import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
+import { literally } from "../utilities/context";
+import { instantiateSignature } from "../process/instantiate";
+import { termsFromSignatureNode } from "../utilities/element";
 
 const { match, compare, correlate } = arrayUtilities;
 
@@ -158,10 +159,9 @@ export default define(class Signature extends Element {
   }
 
   toJSON() {
-    const termsJSON = termsToTermsJSON(this.terms),
-          terms = termsJSON,  ///
+    const string = this.getString(),
           json = {
-            terms
+            string
           };
 
     return json;
@@ -170,6 +170,16 @@ export default define(class Signature extends Element {
   static name = "Signature";
 
   static fromJSON(json, context) {
-    debugger
+    const signature = literally((context) => {
+      const { string } = json,
+            signatureNode = instantiateSignature(string, context),
+            node = signatureNode,  ///
+            terms = termsFromSignatureNode(signatureNode, context),
+            signature = new Signature(context, string, node, terms);
+
+      return signature;
+    }, context);
+
+    return signature;
   }
 });

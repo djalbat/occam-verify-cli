@@ -5,6 +5,8 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
+import { instantiateJudgement } from "../process/instantiate";
 import { judgementAssignmentFromJudgement } from "../process/assign";
 
 export default define(class Judgement extends Element {
@@ -209,15 +211,48 @@ export default define(class Judgement extends Element {
   }
 
   toJSON() {
-    debugger
+    const string = this.getString(),
+          json = {
+            string
+          };
+
+    return json;
   }
 
   static name = "Judgement";
 
   static fromJSON(json, context) {
-    debugger
+    const judgement = literally((context) => {
+      const { string } = json,
+            judgementNode = instantiateJudgement(string, context),
+            node = judgementNode,  ///
+            frame = frameFromJudgementNode(judgementNode, context),
+            assumption = assumptionFromJudgementNode(judgementNode, context);
+
+      context = null;
+
+      const judgement = new Judgement(context, string, node, frame, assumption);
+
+      return judgement;
+    }, context);
+
+    return judgement;
   }
 });
+
+function frameFromJudgementNode(judgementNode, context) {
+  const frameNode = judgementNode.getFrameNode(),
+        frame = context.findFrameByFrameNode(frameNode);
+
+  return frame;
+}
+
+function assumptionFromJudgementNode(judgementNode, context) {
+  const assumptionNode = judgementNode.getAssumptionNode(),
+        assumption = context.findAssumptionByAssumptionNode(assumptionNode);
+
+  return assumption;
+}
 
 function referenceFromMetavariable(metavariable, context) {
   const { Reference } = elements,

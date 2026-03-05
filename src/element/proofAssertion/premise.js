@@ -4,8 +4,9 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { instantiatePremise } from "../../process/instantiate";
+import { ephemeralContextFromJSON } from "../../utilities/json";
 import { attempt, liminally, literally } from "../../utilities/context";
-import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, ephemeralContextFromJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
+import { statementFromPremiseNode, procedureCallFromPremiseNode } from "../../utilities/element";
 
 export default define(class Premise extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -271,16 +272,10 @@ export default define(class Premise extends ProofAssertion {
 
     context = contextJSON;  ///
 
-    const procedureCallJSON = procedureCallToProcedureCallJSON(this.procedureCall),
-          statementJSON = statementToStatementJSON(this.statement),
-          procedureCall = procedureCallJSON,  ///
-          statement = statementJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
             context,
-            string,
-            statement,
-            procedureCall
+            string
           };
 
     return json;
@@ -291,10 +286,10 @@ export default define(class Premise extends ProofAssertion {
   static fromJSON(json, context) {
     const premise = literally((context) => {
       const { string } = json,
-            prmiseNode = instantiatePremise(string, context),
-            node = prmiseNode,  ///
-            statement = statementFromJSON(json, context),
-            procedureCall = procedureCallFromJSON(json, context),
+            premiseNode = instantiatePremise(string, context),
+            node = premiseNode,  ///
+            statement = statementFromPremiseNode(premiseNode, context),
+            procedureCall = procedureCallFromPremiseNode(premiseNode, context),
             ephemeralContext = ephemeralContextFromJSON(json, context);
 
       context = ephemeralContext; ///

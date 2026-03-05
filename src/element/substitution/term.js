@@ -4,7 +4,6 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
-import { termToTermJSON } from "../../utilities/json";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
@@ -182,16 +181,10 @@ export default define(class TermSubstitution extends Substitution {
 
   toJSON() {
     const { name } = this.constructor,
-          targetTermJSON = termToTermJSON(this.targetTerm),
-          replacementTermJSON = termToTermJSON(this.replacementTerm),
-          targetTerm = targetTermJSON,  ///
-          replacementTerm = replacementTermJSON,  ///
           string = this.getString(),
           json = {
             name,
-            string,
-            targetTerm,
-            replacementTerm
+            string
           };
 
     return json;

@@ -4,8 +4,8 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { literally } from "../utilities/context";
-import { nameFromJSON, nameToNameJSON } from "../utilities/json";
 import { instantiateProcedureReference } from "../process/instantiate";
+import { nameFromProcedureReferenceNode } from "../utilities/element";
 
 export default define(class ProcedureReference extends Element {
   constructor(context, string, node, name) {
@@ -32,12 +32,9 @@ export default define(class ProcedureReference extends Element {
   }
 
   toJSON() {
-    const nameJSON = nameToNameJSON(this.name),
-          name = nameJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
-            string,
-            name
+            string
           };
 
     return json;
@@ -50,7 +47,7 @@ export default define(class ProcedureReference extends Element {
       const { string } = json,
             procedureReferenceNode = instantiateProcedureReference(string, context),
             node = procedureReferenceNode,  ///
-            name = nameFromJSON(json, context);
+            name = nameFromProcedureReferenceNode(procedureReferenceNode, context);
 
       context = null;
 

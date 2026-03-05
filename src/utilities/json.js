@@ -198,6 +198,12 @@ export function procedureCallFromJSON(json, context) {
   return procedureCall;
 }
 
+export function nominalTypeNameFromJSON(json, context) {
+  const { nominalTypeName } = json;
+
+  return nominalTypeName;
+}
+
 export function procedureReferenceFromJSON(json, context) {
   let { procedureReference } = json;
 
@@ -796,6 +802,12 @@ export function procedureCallToProcedureCallJSON(procedureCall) {
                                 null;
 
   return procedureCallJSON;
+}
+
+export function nominalTypeNameToNominalTypeNameJSON(nominalTypeName) {
+  const nominalTypeNameJSON = nominalTypeName;  ///
+
+  return nominalTypeNameJSON;
 }
 
 export function procedureReferenceToProcedureReferenceJSON(procedureReference) {

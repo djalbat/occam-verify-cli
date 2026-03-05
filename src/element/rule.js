@@ -119,6 +119,24 @@ export default define(class Rule extends Element {
     return verifies;
   }
 
+  verifyLabel(label) {
+    let labelVerifies;
+
+    const context = this.getContext(),
+          ruleString = this.getString(),  ///
+          labelString = label.getString();
+
+    context.trace(`Verifying the '${ruleString}' rule's '${labelString}' label...`);
+
+    labelVerifies = label.verify();
+
+    if (labelVerifies) {
+      context.debug(`...verified the '${ruleString}' rule's '${labelString}' label.`);
+    }
+
+    return labelVerifies;
+  }
+
   verifyLabels() {
     let labelsVerify;
 
@@ -140,24 +158,6 @@ export default define(class Rule extends Element {
     }
 
     return labelsVerify;
-  }
-
-  verifyLabel(label) {
-    let labelVerifies;
-
-    const context = this.getContext(),
-          ruleString = this.getString(),  ///
-          labelString = label.getString();
-
-    context.trace(`Verifying the '${ruleString}' rule's '${labelString}' label...`);
-
-    labelVerifies = label.verify();
-
-    if (labelVerifies) {
-      context.debug(`...verified the '${ruleString}' rule's '${labelString}' label.`);
-    }
-
-    return labelVerifies;
   }
 
   async verifyProof(context) {

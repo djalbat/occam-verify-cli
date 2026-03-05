@@ -3,7 +3,9 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
 import { equateTerms } from "../process/equate";
+import { instantiateEquality } from "../process/instantiate";
 import { equalityAssignmentFromEquality, leftVariableAssignmentFromEquality, rightVariableAssignmentFromEquality } from "../process/assign";
 
 export default define(class Equality extends Element {
@@ -272,7 +274,44 @@ export default define(class Equality extends Element {
 
   static name = "Equality";
 
+  toJSON() {
+    const string = this.getString(),
+          json = {
+            string
+          };
+
+    return json;
+  }
+
   static fromJSON(json, context) {
-    debugger
+    const equality = literally((context) => {
+      const { string } = json,
+            equalityNode = instantiateEquality(string, context),
+            node = equalityNode,  ///
+            leftTerm = leftTermFromEqualityNode(equalityNode, context),
+            rightTerm = rightTermFromEqualityNode(equalityNode, context);
+
+      context = null;
+
+      const equality = new Equality(context, string, node, leftTerm, rightTerm);
+
+      return equality;
+    }, context);
+
+    return equality;
   }
 });
+
+function leftTermFromEqualityNode(equalityNode, context) {
+  const leftTermNode = equalityNode.getLeftTermNode(),
+        leftTerm = context.findTermByTermNode(leftTermNode);
+
+  return leftTerm;
+}
+
+function rightTermFromEqualityNode(equalityNode, context) {
+  const rightTermNode = equalityNode.getLeftTermNode(),
+        rightTerm = context.findTermByTermNode(rightTermNode);
+
+  return rightTerm;
+}

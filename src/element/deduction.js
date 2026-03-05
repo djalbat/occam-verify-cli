@@ -5,7 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateDeduction } from "../process/instantiate";
-import { statementToStatementJSON, ephemeralContextFromJSON } from "../utilities/json";
+import { ephemeralContextFromJSON } from "../utilities/json";
+import { statementFromDeductionNode } from "../utilities/element";
 
 export default define(class Deduction extends Element {
   constructor(context, string, node, statement) {
@@ -156,13 +157,10 @@ export default define(class Deduction extends Element {
 
     context = contextJSON;  ///
 
-    const statementJSON = statementToStatementJSON(this.statement),
-          statement = statementJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
             context,
-            string,
-            statement
+            string
           };
 
     return json;
@@ -173,9 +171,9 @@ export default define(class Deduction extends Element {
   static fromJSON(json, context) {
     const duduction = literally((context) => {
       const { string } = json,
-            duductionNode = instantiateDeduction(string, context),
-            node = duductionNode,  ///
-            statement = statementFromJSON(json, context),
+            deductionNode = instantiateDeduction(string, context),
+            node = deductionNode,  ///
+            statement = statementFromDeductionNode(deductionNode, context),
             ephemeralContext = ephemeralContextFromJSON(json, context);
 
       context = ephemeralContext; ///

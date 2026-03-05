@@ -13,6 +13,7 @@ import { equivalenceStringFromTerms,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
          topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
+import signature from "../element/signature";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -368,6 +369,19 @@ export function parameterFromParameterNode(parameterNode, context) {
   const parameter = new Parameter(context, string, node, name, identifier);
 
   return parameter;
+}
+
+export function signatureFromJSignatureNode(signatureNode, context) {
+  const { Signature } = elements,
+        node = signatureNode,
+        string = context.nodeAsString(node),
+        terms = termsFromSignatureNode(signatureNode, context);
+
+  context = null;
+
+  signature = new Signature(context, string, node, terms);
+
+  return signature;
 }
 
 export function hypothesisFromHypothesisNode(hypotheseNode, context) {
@@ -870,6 +884,12 @@ export function lemmaFromSectionNode(sectionNode, context) {
   return lemma;
 }
 
+export function nameFromPropertyNode(propertyNode, context) {
+  const name = propertyNode.getName();
+
+  return name;
+}
+
 export function statementFromStepNode(stepNode, context) {
   let statement = null;
 
@@ -894,6 +914,19 @@ export function referenceFromStepNode(stepNode, context) {
   return reference;
 }
 
+export function nameFromParaneterNode(parameterNode, context) {
+  const name = parameterNode.getName();
+
+  return name;
+}
+
+export function nameFromTypePrefixNode(typePrefixNode, context) {
+  const typePrefixName = typePrefixNode.getTypePrefixName(),
+        name = typePrefixName;  ///
+
+  return name;
+}
+
 export function superTypesFromTypeNode(typeNode, context) {
   const superTypes = null;
 
@@ -908,7 +941,7 @@ export function propertiesFromTypeNode(typeNode, context) {
 
 export function prefixNameFromTypeNode(typeNode, context) {
   const typePrefixName = typeNode.getTypePrefixName(),
-    prefixName = typePrefixName;  ///
+        prefixName = typePrefixName;  ///
 
   return prefixName;
 }
@@ -946,17 +979,17 @@ export function termsFromSignatureNode(signatureNode, context) {
   return terms;
 }
 
+export function provisionalFromTypeNode(typeNode, context) {
+  const provisional = null;
+
+  return provisional;
+}
+
 export function derivationFromProofNode(proofNode, context) {
   const derivationNode = proofNode.getDerivationNode(),
         derivation = derivationFromDerivationNode(derivationNode, context);
 
   return derivation;
-}
-
-export function provisionalFromTypeNode(typeNode, context) {
-  const provisional = null;
-
-  return provisional;
 }
 
 export function termFromConstructorNode(ocnstructorNode, context) {
@@ -997,6 +1030,13 @@ export function termsFromEquivalenceNode(equivalenceNode, context) {
         terms = termsFromTermNodes(termNodes, context);
 
   return terms;
+}
+
+export function nameFromMetavariableNode(metavariableNode, context) {
+  const metavaraibleName = metavariableNode.getMetavariableName(),
+        name = metavaraibleName;  ///
+
+  return name;
 }
 
 export function metavariableFromFrameNode(frameNode, context) {
@@ -1119,6 +1159,12 @@ export function assumptionFromJudgementNode(judgementNode, context) {
         assumption = assumptionFromAssumptionNode(assumptionNode, context);
 
   return assumption;
+}
+
+export function identifierFromParameterNode(parameterNode, context) {
+  const identifier = parameterNode.getIdentifier();
+
+  return identifier;
 }
 
 export function referenceFromAssumptionNode(assumptionNode, context) {
@@ -1260,6 +1306,13 @@ export function referenceFromMetavariableNode(metavariableNode, context) {
   }, context);
 }
 
+export function termFromJDefinedAssertionNode(definedAssertionNode, context) {
+  const termNode = definedAssertionNode.getTermNode(),
+        term = termFromTermNode(termNode, context);
+
+  return term
+}
+
 export function frameFromDefinedAssertionNode(definedAssertionNode, context) {
   let frame = null;
 
@@ -1301,6 +1354,13 @@ export function typeAssertionFromStatementNode(statementNode, context) {
   }
 
   return typeAssertion;
+}
+
+export function frameFromJDefinedAssertionNode(definedAssertionNode, context) {
+  const frameNode = definedAssertionNode.getFrameNode(),
+        frame = frameFromFrameNode(frameNode, context);
+
+  return frame
 }
 
 export function proofFromTopLevelAssertionNode(topLevelAsssertionNode, context) {
@@ -1385,6 +1445,12 @@ export function procedureCallFromSuppositionNode(suppositionNode, context) {
   return procedureCall;
 }
 
+export function negatedFromJDefinedAssertionNode(definedAssertionNode, context) {
+  const negated = definedAssertionNode.isNegated();
+
+  return negated
+}
+
 export function propertyFromPropertyRelationNode(propertyRelationNode, context) {
   const propertyNode = propertyRelationNode.getTermNode(),
         property = propertyFromPropertyNode(propertyNode, context);
@@ -1414,6 +1480,12 @@ export function termSubstitutionFromStatementNode(statementNode, context) {
   }
 
   return termSubstitution;
+}
+
+export function negatedFromContainedAssertionNode(containedAssertionNode, context) {
+  const negated = containedAssertionNode.isNegated();
+
+  return negated;
 }
 
 export function typeFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
@@ -1569,6 +1641,20 @@ export function hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, cont
   const ypotheses = [];
 
   return ypotheses;
+}
+
+export function signatureFromJSatisfiesAssertionNode(sasisfiesAssertionNode, context) {
+  const signatureNode = sasisfiesAssertionNode.getSignatureNode(),
+        signature = signatureFromJSignatureNode(signatureNode, context);
+
+  return signature;
+}
+
+export function referenceFromJSatisfiesAssertionNode(sasisfiesAssertionNode, context) {
+  const referenceNode = sasisfiesAssertionNode.getReferenceNode(),
+        reference = referenceFromReferenceNode(referenceNode, context);
+
+  return reference;
 }
 
 export function targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context) {

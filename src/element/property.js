@@ -3,7 +3,10 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import {nameToNameJSON} from "../utilities/json";
+import { literally } from "../utilities/context";
+import { instantiateProperty } from "../process/instantiate";
+import { nameFromPropertyNode } from "../utilities/element";
+import { nominalTypeNameFromJSON, nominalTypeNameToNominalTypeNameJSON } from "../utilities/json";
 
 export default define(class Property extends Element {
   constructor(context, string, node, name, nominalTypeName) {
@@ -41,14 +44,11 @@ export default define(class Property extends Element {
   }
 
   toJSON() {
-    const nominalTypeNameJSON = nameToNameJSON(this.nominalTypeName),
-          nameJSON = nameToNameJSON(this.name),
+    const nominalTypeNameJSON = nominalTypeNameToNominalTypeNameJSON(this.nominalTypeName),
           nominalTypeName = nominalTypeNameJSON,  ///
-          name = nameJSON,  ///
           string = this.getString(),
           json = {
             string,
-            name,
             nominalTypeName
           };
 
@@ -58,6 +58,20 @@ export default define(class Property extends Element {
   static name = "Property";
 
   static fromJSON(json, context) {
-    debugger
+    const property = literally((context) => {
+      const { string } = json,
+            propertyNode = instantiateProperty(string, context),
+            node = propertyNode,  ///
+            name = nameFromPropertyNode(propertyNode, context),
+            nominalTypeName = nominalTypeNameFromJSON(json);
+
+      context = null;
+
+      const property = new Property(context, string, node, name, nominalTypeName);
+
+      return property;
+    }, context);
+
+    return property;
   }
 });

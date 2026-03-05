@@ -9,8 +9,9 @@ import { literally } from "../utilities/context";
 import { EMPTY_STRING } from "../constants";
 import { metaTypeToMetaTypeJSON } from "../utilities/json";
 import { instantiateMetavariable } from "../process/instantiate";
+import { nameFromMetavariableNode } from "../utilities/element";
+import { typeFromJSON, metaTypeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
-import { nameFromJSON, typeFromJSON, nameToNameJSON, metaTypeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 export default define(class Metavariable extends Element {
   constructor(context, string, node, name, type, metaType) {
@@ -439,15 +440,12 @@ export default define(class Metavariable extends Element {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          nameJSON = nameToNameJSON(this.name),
           metaTypeJSON = metaTypeToMetaTypeJSON(this.metaType),
-          name = nameJSON,  ///
           type = typeJSON,  ///
           metaType = metaTypeJSON,  ///
           string = this.getString(), ///
           json = {
             string,
-            name,
             type,
             metaType
           };
@@ -462,13 +460,12 @@ export default define(class Metavariable extends Element {
       const { string } = json,
             metavariableNode = instantiateMetavariable(string, context),
             node = metavariableNode,  ///
-            name = nameFromJSON(json, context),
+            name = nameFromMetavariableNode(metavariableNode, context),
             type = typeFromJSON(json, context),
             metaType = metaTypeFromJSON(json, context),
             metavariable = new Metavariable(context, string, node, name, type, metaType);
 
       return metavariable;
-
     }, context);
 
     return metavariable;

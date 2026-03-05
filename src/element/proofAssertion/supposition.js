@@ -4,8 +4,9 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { instantiateSupposition } from "../../process/instantiate";
+import { ephemeralContextFromJSON } from "../../utilities/json";
 import { attempt, liminally, literally } from "../../utilities/context";
-import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, ephemeralContextFromJSON, procedureCallToProcedureCallJSON } from "../../utilities/json";
+import { statementFromSuppositionNode, procedureCallFromSuppositionNode } from "../../utilities/element";
 
 export default define(class Supposition extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -293,16 +294,10 @@ export default define(class Supposition extends ProofAssertion {
 
     context = contextJSON;  ///
 
-    const procedureCallJSON = procedureCallToProcedureCallJSON(this.procedureCall),
-          statementJSON = statementToStatementJSON(this.statement),
-          procedureCall = procedureCallJSON,  ///
-          statement = statementJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
             context,
-            string,
-            statement,
-            procedureCall
+            string
           };
 
     return json;
@@ -315,8 +310,8 @@ export default define(class Supposition extends ProofAssertion {
       const { string } = json,
             suppositionNode = instantiateSupposition(string, context),
             node = suppositionNode,  ///
-            statement = statementFromJSON(json, context),
-            procedureCall = procedureCallFromJSON(json, context),
+            statement = statementFromSuppositionNode(suppositionNode, context),
+            procedureCall = procedureCallFromSuppositionNode(suppositionNode, context),
             ephemeralContext = ephemeralContextFromJSON(json, context);
 
       context = ephemeralContext; ///

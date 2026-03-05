@@ -3,6 +3,9 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
+import { literally } from "../../utilities/context";
+import { instantiateSatisfiesAssertion } from "../../process/instantiate";
+import { signatureFromJSatisfiesAssertionNode, referenceFromJSatisfiesAssertionNode } from "../../utilities/element";
 
 export default define(class SatisfiesAssertion extends Assertion {
   constructor(context, string, node, signature, reference) {
@@ -155,8 +158,6 @@ export default define(class SatisfiesAssertion extends Assertion {
   }
 
   toJSON() {
-    debugger
-
     const { name } = this.constructor,
           string = this.getString(),
           json = {
@@ -175,7 +176,17 @@ export default define(class SatisfiesAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      debugger
+      literally((context) => {
+        const { string } = json,
+              definedAssertionNode = instantiateSatisfiesAssertion(string, context),
+              node = definedAssertionNode,  ///
+              signature = signatureFromJSatisfiesAssertionNode(definedAssertionNode, context),
+              reference = referenceFromJSatisfiesAssertionNode(definedAssertionNode, context);
+
+        context = null;
+
+        satisfiesAssertion = new SatisfiesAssertion(context, string, node, signature, reference);
+      }, context);
     }
 
     return satisfiesAssertion;

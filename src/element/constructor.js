@@ -6,8 +6,9 @@ import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateConstructor } from "../process/instantiate";
 import { verifyTermAsConstructor } from "../process/verify";
+import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
-import { termFromJSON, termToTermJSON, ephemeralContextFromJSON } from "../utilities/json";
+import { ephemeralContextFromJSON } from "../utilities/json";
 
 export default define(class Constructor extends Element {
   constructor(context, string, node, term) {
@@ -113,11 +114,17 @@ export default define(class Constructor extends Element {
   }
 
   toJSON() {
-    const termJSON = termToTermJSON(this.term),
-          string = this.getString(),
-          term = termJSON,  ///
+    let context;
+
+    context = this.getContext();
+
+    const contextJSON = context.toJSON();
+
+    context = contextJSON;  ///
+
+    const string = this.getString(),
           json = {
-            term,
+            context,
             string
           };
 
@@ -131,7 +138,7 @@ export default define(class Constructor extends Element {
       const { string } = json,
             constructorNode = instantiateConstructor(string, context),
             node = constructorNode, ///
-            term = termFromJSON(json, context),
+            term = termFromConstructorNode(constructorNode, context),
             ephemeralContext = ephemeralContextFromJSON(json, context);
 
       context = ephemeralContext; ///

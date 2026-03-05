@@ -5,8 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { instantiateLabel } from "../process/instantiate";
-import { metavariableToMetavariableJSON } from "../utilities/json";
-import { metavariableFromMetavariableNode } from "../utilities/element";
+import { metavariableFromLabelNode } from "../utilities/element";
 
 export default define(class Label extends Element {
   constructor(context, string, node, metavariable) {
@@ -80,7 +79,7 @@ export default define(class Label extends Element {
     context.trace(`Verifying the '${labelString}' label's '${metavariableString}' metavariable...`);
 
     const metavariableName = this.getMetavariableName(),
-          metavariablePresent = context.isLabelPresentByMetavariableName(metavariableName);
+          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
 
     if (!metavariablePresent) {
       verifies = true;
@@ -96,12 +95,9 @@ export default define(class Label extends Element {
   }
 
   toJSON() {
-    const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
-          metavariable = metavariableJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
-            string,
-            metavariable
+            string
           };
 
     return json;
@@ -123,10 +119,3 @@ export default define(class Label extends Element {
     return label;
   }
 });
-
-function metavariableFromLabelNode(labelNode, context) {
-  const metavariableNode = labelNode.getMetavariableNode(),
-        metavariable = metavariableFromMetavariableNode(metavariableNode, context);
-
-  return metavariable;
-}

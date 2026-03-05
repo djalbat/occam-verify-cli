@@ -6,11 +6,17 @@ import { TERM_RULE_NAME,
          LABEL_RULE_NAME,
          PREMISE_RULE_NAME,
          VARIABLE_RULE_NAME,
+         EQUALITY_RULE_NAME,
+         PROPERTY_RULE_NAME,
+         DEDUCTION_RULE_NAME,
          PARAMETER_RULE_NAME,
          STATEMENT_RULE_NAME,
          REFERENCE_RULE_NAME,
          COMBINATOR_RULE_NAME,
          CONCLUSION_RULE_NAME,
+         HYPOTHESIS_RULE_NAME,
+         TYPE_PREFIX_RULE_NAME,
+         SUPPOSITION_RULE_NAME,
          CONSTRUCTOR_RULE_NAME,
          EQUIVALENCE_RULE_NAME,
          METAVARIABLE_RULE_NAME,
@@ -21,6 +27,7 @@ import { TERM_RULE_NAME,
          FRAME_SUBSTITUTION_RULE_NAME,
          PROCEDURE_REFERENCE_RULE_NAME,
          CONTAINED_ASSERTION_RULE_NAME,
+         SATISFIES_ASSERTION_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME,
          REFERENCE_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
@@ -29,11 +36,17 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       labelPlaceholderRule = ruleFromRuleName(LABEL_RULE_NAME),
       premisePlaceholderRule = ruleFromRuleName(PREMISE_RULE_NAME),
       variablePlaceholderRule = ruleFromRuleName(VARIABLE_RULE_NAME),
+      equalityPlaceholderRule = ruleFromRuleName(EQUALITY_RULE_NAME),
+      propertyPlaceholderRule = ruleFromRuleName(PROPERTY_RULE_NAME),
+      deductionPlaceholderRule = ruleFromRuleName(DEDUCTION_RULE_NAME),
       parameterPlaceholderRule = ruleFromRuleName(PARAMETER_RULE_NAME),
       statementPlaceholderRule = ruleFromRuleName(STATEMENT_RULE_NAME),
       referencePlaceholderRule = ruleFromRuleName(REFERENCE_RULE_NAME),
       combinatorPlaceholderRule = ruleFromRuleName(COMBINATOR_RULE_NAME),
       conclusionPlaceholderRule = ruleFromRuleName(CONCLUSION_RULE_NAME),
+      hypothesisPlaceholderRule = ruleFromRuleName(HYPOTHESIS_RULE_NAME),
+      typePrefixPlaceholderRule = ruleFromRuleName(TYPE_PREFIX_RULE_NAME),
+      suppositionPlaceholderRule = ruleFromRuleName(SUPPOSITION_RULE_NAME),
       constructorPlaceholderRule = ruleFromRuleName(CONSTRUCTOR_RULE_NAME),
       equivalencePlaceholderRule = ruleFromRuleName(EQUIVALENCE_RULE_NAME),
       metavariablePlaceholderRule = ruleFromRuleName(METAVARIABLE_RULE_NAME),
@@ -44,14 +57,9 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       frameSubstitutionPlaceholderRule = ruleFromRuleName(FRAME_SUBSTITUTION_RULE_NAME),
       procedureReferencelaceholderRule = ruleFromRuleName(PROCEDURE_REFERENCE_RULE_NAME),
       containedAssertionPlaceholderRule = ruleFromRuleName(CONTAINED_ASSERTION_RULE_NAME),
+      satisfiesAssertionPlaceholderRule = ruleFromRuleName(SATISFIES_ASSERTION_RULE_NAME),
       statementSubstitutionPlaceholderRule = ruleFromRuleName(STATEMENT_SUBSTITUTION_RULE_NAME),
       referenceSubstitutionPlaceholderRule = ruleFromRuleName(REFERENCE_SUBSTITUTION_RULE_NAME);
-
-export function instantiateTerm(string, context) { return instantiate(termPlaceholderRule, string, context); }
-
-export function instantiateFrame(string, context) { return instantiate(framePlaceholderRule, string, context); }
-
-export function instantiateLabel(string, context) { return instantiate(labelPlaceholderRule, string, context); }
 
 export function instantiatePremise(string, context) {
   string = `${string}
@@ -60,7 +68,38 @@ export function instantiatePremise(string, context) {
   return instantiate(premisePlaceholderRule, string, context);
 }
 
+export function instantiateDeduction(string, context) {
+  string = `${string}
+`;  ///
+
+  return instantiate(deductionPlaceholderRule, string, context);
+}
+
+export function instantiateConclusion(string, context) {
+  string = `${string}
+`;  ///
+
+  return instantiate(conclusionPlaceholderRule, string, context);
+}
+
+export function instantiateSupposition(string, context) {
+  string = `${string}
+`;  ///
+
+  return instantiate(suppositionPlaceholderRule, string, context);
+}
+
+export function instantiateTerm(string, context) { return instantiate(termPlaceholderRule, string, context); }
+
+export function instantiateFrame(string, context) { return instantiate(framePlaceholderRule, string, context); }
+
+export function instantiateLabel(string, context) { return instantiate(labelPlaceholderRule, string, context); }
+
 export function instantiateVariable(string, context) { return instantiate(variablePlaceholderRule, string, context); }
+
+export function instantiateEquality(string, context) { return instantiate(equalityPlaceholderRule, string, context); }
+
+export function instantiateProperty(string, context) { return instantiate(propertyPlaceholderRule, string, context); }
 
 export function instantiateParameter(string, context) { return instantiate(parameterPlaceholderRule, string, context); }
 
@@ -70,12 +109,9 @@ export function instantiateReference(string, context) { return instantiate(refer
 
 export function instantiateCombinator(string, context) { return instantiate(combinatorPlaceholderRule, string, context); }
 
-export function instantiateConclusion(string, context) {
-  string = `${string}
-`;  ///
+export function instantiateHypothesis(string, context) { return instantiate(hypothesisPlaceholderRule, string, context); }
 
-  return instantiate(conclusionPlaceholderRule, string, context);
-}
+export function instantiateTypePrefix(string, context) { return instantiate(typePrefixPlaceholderRule, string, context); }
 
 export function instantiateConstructor(string, context) { return instantiate(constructorPlaceholderRule, string, context); }
 
@@ -96,6 +132,8 @@ export function instantiateFrameSubstitution(string, context) { return instantia
 export function instantiateProcedureReference(string, context) { return instantiate(procedureReferencelaceholderRule, string, context); }
 
 export function instantiateContainedAssertion(string, context) { return instantiate(containedAssertionPlaceholderRule, string, context); }
+
+export function instantiateSatisfiesAssertion(string, context) { return instantiate(satisfiesAssertionPlaceholderRule, string, context); }
 
 export function instantiateStatementSubstitution(string, context) { return instantiate(statementSubstitutionPlaceholderRule, string, context); }
 

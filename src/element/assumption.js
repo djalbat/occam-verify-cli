@@ -3,8 +3,9 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
+import { instantiateAssumption } from "../process/instantiate";
 import { unifyStatementIntrinsically } from "../process/unify";
-import { referenceFromJSON, referenceToReferenceJSON } from "../utilities/json";
 
 export default define(class Assumption extends Element {
   constructor(context, string, node, reference, statement) {
@@ -319,12 +320,45 @@ export default define(class Assumption extends Element {
   }
 
   toJSON() {
-    debugger
+    const string = this.getString(),
+          json = {
+            string
+          };
+
+    return json;
   }
 
   static name = "Assumption";
 
   static fromJSON(json, context) {
-    debugger
+    const assumption = literally((context) => {
+      const { string } = json,
+            assumptionNode = instantiateAssumption(string, context),
+            node = assumptionNode,  ///
+            reference = referenceFromAssumptionNode(assumptionNode, context),
+            statement = statementFromAssumptionNode(assumptionNode, context);
+
+      context = null; ///
+
+      const assumption = new Assumption(context, string, node, reference, statement);
+
+      return assumption;
+    }, context);
+
+    return assumption;
   }
 });
+
+function referenceFromAssumptionNode(assumptionNode, context) {
+  const metavariableNode = assumptionNode.getMetavariableNode(context),
+        reference = context.findReferenceByMetavariableNode(metavariableNode);
+
+  return reference;
+}
+
+function statementFromAssumptionNode(assumptionNode, context) {
+  const statementNode = assumptionNode.getStatementNode(),
+        statement = context.findStatementByStatementNode(statementNode);
+
+  return statement;
+}

@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { instantiateParameter } from "../process/instantiate";
-import { nameFromJSON, nameToNameJSON, identifierFromJSON, identifierToIdentifierJSON } from "../utilities/json";
+import { nameFromParaneterNode, identifierFromParameterNode } from "../utilities/element";
 
 export default define(class Parameter extends Element {
   constructor(context, string, node, name, identifier) {
@@ -50,15 +50,9 @@ export default define(class Parameter extends Element {
   }
 
   toJSON() {
-    const nameJSON = nameToNameJSON(this.name),
-          identifierJSON = identifierToIdentifierJSON(this.identifier),
-          name = nameJSON,  ///
-          identifier = identifierJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
-            string,
-            name,
-            identifier
+            string
           };
 
     return json;
@@ -71,8 +65,8 @@ export default define(class Parameter extends Element {
       const { string } = json,
             parameterNode = instantiateParameter(string, context),
             node = parameterNode,  ///
-            name = nameFromJSON(json, context),
-            identifier = identifierFromJSON(json, context);
+            name = nameFromParaneterNode(parameterNode, context),
+            identifier = identifierFromParameterNode(parameterNode, context);
 
       context = null;
 

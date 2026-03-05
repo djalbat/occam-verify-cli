@@ -7,20 +7,15 @@ import elements from "../elements";
 import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { instantiateVariable } from "../process/instantiate";
-import { typeFromJSON,
-         typeToTypeJSON,
-         identifierFromJSON,
-         propertyRelationsFromJSON,
-         identifierToIdentifierJSON,
-         propertyRelationsToPropertyRelationsJSON } from "../utilities/json";
+import { identifierFromVarialbeNode } from "../utilities/element";
+import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {
-  constructor(context, string, node, type, identifier, propertyRelations) {
+  constructor(context, string, node, type, identifier) {
     super(context, string, node);
 
     this.type = type;
     this.identifier = identifier;
-    this.propertyRelations = propertyRelations;
   }
 
   getIdentifier() {
@@ -29,10 +24,6 @@ export default define(class Variable extends Element {
 
   getType() {
     return this.type;
-  }
-
-  getPropertyRelations() {
-    return this.propertyRelations;
   }
 
   setType(type) {
@@ -196,17 +187,11 @@ export default define(class Variable extends Element {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          identifierJSON = identifierToIdentifierJSON(this.identifier),
-          propertyRelationsJSON = propertyRelationsToPropertyRelationsJSON(this.propertyRelations),
           type = typeJSON,  ///
-          identifier = identifierJSON,  ///
-          propertyRelations = propertyRelationsJSON,  ///
           string = this.getString(), ///
           json = {
             string,
-            type,
-            identifier,
-            propertyRelations
+            type
           };
 
     return json;
@@ -220,12 +205,11 @@ export default define(class Variable extends Element {
             variableNode = instantiateVariable(string, context),
             node = variableNode,  ///
             type = typeFromJSON(json, context),
-            identifier = identifierFromJSON(json, context),
-            propertyRelations = propertyRelationsFromJSON(json, context);
+            identifier = identifierFromVarialbeNode(variableNode, context);
 
       context = null;
 
-      const variable = new Variable(context, string, node, type, identifier, propertyRelations);
+      const variable = new Variable(context, string, node, type, identifier);
 
       return variable;
     }, context);

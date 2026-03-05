@@ -7,7 +7,6 @@ import Assertion from "../assertion";
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
 import { unifyStatement } from "../../process/unify";
-import { statementsToStatementsJSON } from "../../utilities/json";
 import { instantiateSubproofAssertion } from "../../process/instantiate";
 
 const { match } = arrayUtilities;
@@ -116,13 +115,10 @@ export default define(class SubproofAssertion extends Assertion {
 
   toJSON() {
     const { name } = this.constructor,
-          statementJSON = statementsToStatementsJSON(this.statements),
-          statements = statementJSON, ///
           string = this.getString(),
           json = {
             name,
-            string,
-            statements
+            string
           };
 
     return json;

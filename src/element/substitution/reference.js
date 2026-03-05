@@ -4,7 +4,6 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
-import { statementToStatementJSON } from "../../utilities/json";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
@@ -167,20 +166,17 @@ export default define(class ReferenceSubstitution extends Substitution {
 
   toJSON() {
     const { name } = this.constructor,
-          targetStatementJSON = statementToStatementJSON(this.targetStatement),
-          replacementStatementJSON = statementToStatementJSON(this.replacementStatement),
-          targetStatement = targetStatementJSON,  ///
-          replacementStatement = replacementStatementJSON,  ///
           string = this.getString(),
           json = {
             name,
-            string,
-            targetStatement,
-            replacementStatement
+            string
           };
 
     return json;
   }
+
+  static name = "ReferenceSubstitution";
+
   static fromJSON(json, context) {
     let referenceSubstitutionn = null;
 
@@ -192,8 +188,6 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     return referenceSubstitutionn;
   }
-
-  static name = "ReferenceSubstitution";
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {
     return literally((context) => {

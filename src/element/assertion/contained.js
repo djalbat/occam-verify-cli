@@ -5,15 +5,8 @@ import Assertion from "../assertion";
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
 import { instantiateContainedAssertion } from "../../process/instantiate";
-import { termFromJSON,
-         frameFromJSON,
-         negatedFromJSON,
-         termToTermJSON,
-         frameToFrameJSON,
-         statementFromJSON,
-         negatedToNegatedJSON,
-         statementToStatementJSON } from "../../utilities/json";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
+import { termFromContainedAssertionNode, frameFromContainedAssertionNode, negatedFromContainedAssertionNode, statementFromContainedAssertionNode } from "../../utilities/element";
 
 export default define(class ContainedAssertion extends Assertion {
   constructor(context, string, node, term, frame, negated, statement) {
@@ -248,22 +241,10 @@ export default define(class ContainedAssertion extends Assertion {
 
   toJSON() {
     const { name } = this.constructor,
-          termJSON = termToTermJSON(this.term),
-          frameJSON = frameToFrameJSON(this.frame),
-          negatedJSON = negatedToNegatedJSON(this.negated),
-          statementJSON = statementToStatementJSON(this.statement),
-          term = termJSON,  ///
-          frame = frameJSON,  ///
-          negated = negatedJSON,  ///
-          statement = statementJSON,  ///
           string = this.getString(),
           json = {
             name,
-            string,
-            term,
-            frame,
-            negated,
-            statement
+            string
           };
 
     return json;
@@ -281,10 +262,10 @@ export default define(class ContainedAssertion extends Assertion {
         const { string } = json,
               containedAssertionNode = instantiateContainedAssertion(string, context),
               node = containedAssertionNode,  ///
-              term = termFromJSON(json, context),
-              frame = frameFromJSON(json, context),
-              negated = negatedFromJSON(json, context),
-              statement = statementFromJSON(json, context);
+              term = termFromContainedAssertionNode(containedAssertionNode, context),
+              frame = frameFromContainedAssertionNode(containedAssertionNode, context),
+              negated = negatedFromContainedAssertionNode(containedAssertionNode, context),
+              statement = statementFromContainedAssertionNode(containedAssertionNode, context);
 
         context = null;
 

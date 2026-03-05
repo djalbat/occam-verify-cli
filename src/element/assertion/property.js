@@ -3,7 +3,10 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
+import { literally } from "../../utilities/context";
+import { instantiatePropertyAssertion } from "../../process/instantiate";
 import { variableAssignmentFromPrepertyAssertion } from "../../process/assign";
+import { termFromPropertyAssertionNode, propertyRelationFromPropertyAssertionNode } from "../../utilities/element";
 
 export default define(class PropertyAssertion extends Assertion {
   constructor(context, string, node, term, propertyRelation) {
@@ -194,8 +197,6 @@ export default define(class PropertyAssertion extends Assertion {
   }
 
   toJSON() {
-    debugger
-
     const { name } = this.constructor,
           string = this.getString(),
           json = {
@@ -209,14 +210,24 @@ export default define(class PropertyAssertion extends Assertion {
   static name = "PropertyAssertion";
 
   static fromJSON(json, context) {
-    let proopertyAssertion = null;
+    let propertyAssertion = null;
 
     const { name } = json;
 
     if (this.name === name) {
-      debugger
+      literally((context) => {
+        const { string } = json,
+              propertyAssertionNode = instantiatePropertyAssertion(string, context),
+              node = propertyAssertionNode,  ///
+              term = termFromPropertyAssertionNode(propertyAssertion, context),
+              propertyRelation = propertyRelationFromPropertyAssertionNode(propertyAssertionNode, context);
+
+        context = null;
+
+        propertyAssertion = new PropertyAssertion(context, string, node, term, propertyRelation);
+      }, context);
     }
 
-    return proopertyAssertion;
+    return propertyAssertion;
   }
 });

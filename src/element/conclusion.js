@@ -5,7 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateConclusion } from "../process/instantiate";
-import { statementFromJSON, ephemeralContextFromJSON, statementToStatementJSON } from "../utilities/json";
+import { statementFromConclusionNode } from "../utilities/element";
+import { ephemeralContextFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export  default define(class Conclusion extends Element {
   constructor(context, string, node, statement) {
@@ -131,13 +132,10 @@ export  default define(class Conclusion extends Element {
 
     context = contextJSON;  ///
 
-    const statementJSON = statementToStatementJSON(this.statement),
-          statement = statementJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
             context,
-            string,
-            statement
+            string
           };
 
     return json;
@@ -150,7 +148,7 @@ export  default define(class Conclusion extends Element {
       const { string } = json,
             conclusionNode = instantiateConclusion(string, context),
             node = conclusionNode,  ///
-            statement = statementFromJSON(json, context),
+            statement = statementFromConclusionNode(conclusionNode, context),
             ephemeralContext = ephemeralContextFromJSON(json, context);
 
       context = ephemeralContext; ///

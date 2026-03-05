@@ -4,7 +4,6 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
-import { statementToStatementJSON } from "../../utilities/json";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { liminally, literally, synthetically } from "../../utilities/context";
@@ -322,16 +321,10 @@ export default define(class StatementSubstitution extends Substitution {
 
   toJSON() {
     const { name } = this.constructor,
-          targetStatementJSON = statementToStatementJSON(this.targetStatement),
-          replacementStatementJSON = statementToStatementJSON(this.replacementStatement),
-          targetStatement = targetStatementJSON,  ///
-          replacementStatement = replacementStatementJSON,  ///
           string = this.getString(),
           json = {
             name,
-            string,
-            targetStatement,
-            replacementStatement
+            string
           };
 
     return json;

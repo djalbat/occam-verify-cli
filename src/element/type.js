@@ -4,8 +4,11 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
+import { literally } from "../utilities/context";
+import { instantiateType } from "../process/instantiate";
 import { baseTypeFromNothing } from "../utilities/type";
-import { nameToNameJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON, provisionalToProvisionalJSON } from "../utilities/json";
+import { superTypesFromJSON, superTypesToSuperTypesJSON } from "../utilities/json";
+import { nameFromTypeNode, prefixNameFromTypeNode, propertiesFromTypeNode, provisionalFromTypeNode } from "../utilities/element";
 
 const { push, first } = arrayUtilities;
 
@@ -292,24 +295,12 @@ export default define(class Type extends Element {
   }
 
   toJSON() {
-    const nameJSON = nameToNameJSON(this.name),
-          prefixNameJSON = nameToNameJSON(this.prefixName),
-          propertiesJSON = propertiesToPropertiesJSON(this.properties),
-          superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
-          provisionalJSON = provisionalToProvisionalJSON(this.provisional),
-          name = nameJSON,  ///
-          prefixName = prefixNameJSON,  ///
-          properties = propertiesJSON,  ///
-          superTypes = superTypesJSON,  ///
-          provisional = provisionalJSON,  ///
+    const superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
+          superTypes = superTypesJSON,
           string = this.getString(),
           json = {
             string,
-            name,
-            prefixName,
-            properties,
-            superTypes,
-            provisional
+            superTypes
           };
 
     return json;
@@ -318,7 +309,24 @@ export default define(class Type extends Element {
   static name = "Type";
 
   static fromJSON(json, context) {
-    debugger
+    const type = literally((context) => {
+      const { string } = json,
+            typeNode = instantiateType(string, context),
+            node = typeNode, ///
+            name = nameFromTypeNode(typeNode, context),
+            prefixName = prefixNameFromTypeNode(typeNode, context),
+            superTypes = superTypesFromJSON(json, context),
+            properties = propertiesFromTypeNode(typeNode, context),
+            provisional = provisionalFromTypeNode(typeNode, context);
+
+      context = null; ///
+
+      const type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
+
+      return type;
+    }, context);
+
+    return type;
   }
 
   static fromName(name, context) {

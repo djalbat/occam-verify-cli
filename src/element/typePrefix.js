@@ -3,7 +3,9 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import {nameToNameJSON} from "../utilities/json";
+import { literally } from "../utilities/context";
+import { instantiateTypePrefix } from "../process/instantiate";
+import { nameFromTypePrefixNode } from "../utilities/element";
 
 export default define(class TypePrefix extends Element {
   constructor(context, string, node, name) {
@@ -30,12 +32,9 @@ export default define(class TypePrefix extends Element {
   }
 
   toJSON() {
-    const nameJSON = nameToNameJSON(this.name),
-          name = nameJSON,  ///
-          string = this.getString(),
+    const string = this.getString(),
           json = {
-            string,
-            name
+            string
           };
 
     return json;
@@ -44,6 +43,19 @@ export default define(class TypePrefix extends Element {
   static name = "TypePrefix";
 
   static fromJSON(json, context) {
-    debugger
+    const typePrefix = literally((context) => {
+      const { string } = json,
+            typePrefixNode = instantiateTypePrefix(string, context),
+            node = typePrefixNode, ///
+            name = nameFromTypePrefixNode(typePrefixNode, context);
+
+      context = null; ///
+
+      const typePrefix = new TypePrefix(context, string, node, name);
+
+      return typePrefix;
+    }, context);
+
+    return typePrefix;
   }
 });
