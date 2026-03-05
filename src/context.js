@@ -146,7 +146,7 @@ export default class Context extends ContextBase {
 
   findFrameByFrameNode(frameNode) {
     const context = this.getContext(),
-          frame = context.findFrameByFrameNode(frameNode);
+      frame = context.findFrameByFrameNode(frameNode);
 
     return frame;
   }
@@ -177,6 +177,13 @@ export default class Context extends ContextBase {
           reference = context.findReferenceByReferenceNode(referenceNode);
 
     return reference;
+  }
+
+  findAssumptionByAssumptionNode(assumptionNode) {
+    const context = this.getContext(),
+          assumption = context.findAssumptionByAssumptionNode(assumptionNode);
+
+    return assumption;
   }
 
   findReferenceByMetavariableNode(metavariableNode) {

@@ -13,7 +13,6 @@ import { equivalenceStringFromTerms,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
          topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
-import signature from "../element/signature";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -379,7 +378,7 @@ export function signatureFromJSignatureNode(signatureNode, context) {
 
   context = null;
 
-  signature = new Signature(context, string, node, terms);
+  const signature = new Signature(context, string, node, terms);
 
   return signature;
 }
@@ -1307,8 +1306,13 @@ export function referenceFromMetavariableNode(metavariableNode, context) {
 }
 
 export function termFromJDefinedAssertionNode(definedAssertionNode, context) {
-  const termNode = definedAssertionNode.getTermNode(),
-        term = termFromTermNode(termNode, context);
+  let term = null;
+
+  const termNode = definedAssertionNode.getTermNode();
+
+  if (termNode !== null) {
+    term = termFromTermNode(termNode, context);
+  }
 
   return term
 }
@@ -1357,8 +1361,13 @@ export function typeAssertionFromStatementNode(statementNode, context) {
 }
 
 export function frameFromJDefinedAssertionNode(definedAssertionNode, context) {
-  const frameNode = definedAssertionNode.getFrameNode(),
-        frame = frameFromFrameNode(frameNode, context);
+  let frame = null;
+
+  const frameNode = definedAssertionNode.getFrameNode();
+
+  if (frameNode !== null) {
+    frame = frameFromFrameNode(frameNode, context);
+  }
 
   return frame
 }

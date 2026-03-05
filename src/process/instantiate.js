@@ -8,6 +8,7 @@ import { TERM_RULE_NAME,
          VARIABLE_RULE_NAME,
          EQUALITY_RULE_NAME,
          PROPERTY_RULE_NAME,
+         JUDGEMENT_RULE_NAME,
          DEDUCTION_RULE_NAME,
          PARAMETER_RULE_NAME,
          STATEMENT_RULE_NAME,
@@ -15,6 +16,7 @@ import { TERM_RULE_NAME,
          COMBINATOR_RULE_NAME,
          CONCLUSION_RULE_NAME,
          HYPOTHESIS_RULE_NAME,
+         ASSUMPTION_RULE_NAME,
          TYPE_PREFIX_RULE_NAME,
          SUPPOSITION_RULE_NAME,
          CONSTRUCTOR_RULE_NAME,
@@ -39,6 +41,7 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       variablePlaceholderRule = ruleFromRuleName(VARIABLE_RULE_NAME),
       equalityPlaceholderRule = ruleFromRuleName(EQUALITY_RULE_NAME),
       propertyPlaceholderRule = ruleFromRuleName(PROPERTY_RULE_NAME),
+      judgementlaceholderRule = ruleFromRuleName(JUDGEMENT_RULE_NAME),
       deductionPlaceholderRule = ruleFromRuleName(DEDUCTION_RULE_NAME),
       parameterPlaceholderRule = ruleFromRuleName(PARAMETER_RULE_NAME),
       statementPlaceholderRule = ruleFromRuleName(STATEMENT_RULE_NAME),
@@ -46,6 +49,7 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       combinatorPlaceholderRule = ruleFromRuleName(COMBINATOR_RULE_NAME),
       conclusionPlaceholderRule = ruleFromRuleName(CONCLUSION_RULE_NAME),
       hypothesisPlaceholderRule = ruleFromRuleName(HYPOTHESIS_RULE_NAME),
+      assumptionPlaceholderRule = ruleFromRuleName(ASSUMPTION_RULE_NAME),
       typePrefixPlaceholderRule = ruleFromRuleName(TYPE_PREFIX_RULE_NAME),
       suppositionPlaceholderRule = ruleFromRuleName(SUPPOSITION_RULE_NAME),
       constructorPlaceholderRule = ruleFromRuleName(CONSTRUCTOR_RULE_NAME),
@@ -103,6 +107,8 @@ export function instantiateEquality(string, context) { return instantiate(equali
 
 export function instantiateProperty(string, context) { return instantiate(propertyPlaceholderRule, string, context); }
 
+export function instantiateJudgement(string, context) { return instantiate(judgementlaceholderRule, string, context); }
+
 export function instantiateParameter(string, context) { return instantiate(parameterPlaceholderRule, string, context); }
 
 export function instantiateStatement(string, context) { return instantiate(statementPlaceholderRule, string, context); }
@@ -112,6 +118,8 @@ export function instantiateReference(string, context) { return instantiate(refer
 export function instantiateCombinator(string, context) { return instantiate(combinatorPlaceholderRule, string, context); }
 
 export function instantiateHypothesis(string, context) { return instantiate(hypothesisPlaceholderRule, string, context); }
+
+export function instantiateAssumption(string, context) { return instantiate(assumptionPlaceholderRule, string, context); }
 
 export function instantiateTypePrefix(string, context) { return instantiate(typePrefixPlaceholderRule, string, context); }
 

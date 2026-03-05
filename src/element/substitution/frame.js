@@ -4,8 +4,9 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
+import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { instantiateFrameSubstitution, instantiateFrameSubstitution } from "../../process/instantiate";
+import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(context, string, node, targetFrame, replacementFrame) {
