@@ -4,9 +4,8 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
-import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
+import { instantiateFrameSubstitution, instantiateFrameSubstitution } from "../../process/instantiate";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(context, string, node, targetFrame, replacementFrame) {
@@ -189,7 +188,17 @@ export default define(class FrameSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      debugger
+      literally((context) => {
+        const { string } = json,
+              frameSubstitutionNode = instantiateFrameSubstitution(string, context),
+              node = frameSubstitutionNode,  ///
+              targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
+              replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
+
+        context = null;
+
+        frameSubstitutionn = new FrameSubstitution(context, string, node, targetFrame, replacementFrame);
+      }, context);
     }
 
     return frameSubstitutionn;
@@ -213,3 +222,17 @@ export default define(class FrameSubstitution extends Substitution {
     }, context);
   }
 });
+
+function targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+  const targetFrameNode = frameSubstitutionNode.getTargetFrameNode(),
+        targetFrame = context.findFrameByFrameNode(targetFrameNode);
+
+  return targetFrame;
+}
+
+function replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+  const replacementFrameNode = frameSubstitutionNode.getReplacementFrameNode(),
+        replacementFrame = context.findFrameByFrameNode(replacementFrameNode);
+
+  return replacementFrame;
+}

@@ -183,7 +183,17 @@ export default define(class ReferenceSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      debugger
+      literally((context) => {
+        const { string } = json,
+              referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
+              node = referenceSubstitutionNode,  ///
+              targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
+              replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
+
+        context = null;
+
+        referenceSubstitutionn = new ReferenceSubstitution(context, string, node, targetReference, replacementReference);
+      }, context);
     }
 
     return referenceSubstitutionn;
@@ -200,3 +210,17 @@ export default define(class ReferenceSubstitution extends Substitution {
     }, context);
   }
 });
+
+function targetReferenceFromReferenceSubstitutionNode(frameSubstitutionNode, context) {
+  const targetReferenceNode = frameSubstitutionNode.getTargetReferenceNode(),
+        targetReference = context.findReferenceByReferenceNode(targetReferenceNode);
+
+  return targetReference;
+}
+
+function replacementReferenceFromReferenceSubstitutionNode(frameSubstitutionNode, context) {
+  const replacementReferenceNode = frameSubstitutionNode.getReplacementReferenceNode(),
+        replacementReference = context.findReferenceByReferenceNode(replacementReferenceNode);
+
+  return replacementReference;
+}

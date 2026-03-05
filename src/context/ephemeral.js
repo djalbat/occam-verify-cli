@@ -357,6 +357,18 @@ export default class EphemeralContext extends Context {
     return statement;
   }
 
+  findReferenceByReferenceNode(referenceNode) {
+    const reference = this.references.find((reference) => {
+      const referenceMatcheReferenceNode = reference.matchReferenceNode(referenceNode);
+
+      if (referenceMatcheReferenceNode) {
+        return true;
+      }
+    }) || null;
+
+    return reference;
+  }
+
   findAssertionByAssertionNode(assertionNode) {
     const assertion = this.assertions.find((assertion) => {
       const assertionNodeMatches = assertion.matchAssertionNode(assertionNode);

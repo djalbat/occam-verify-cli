@@ -5,8 +5,8 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
-import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
+import { instantiateFrameSubstitution, instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromStatementNode, termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 
 export default define(class TermSubstitution extends Substitution {
@@ -198,7 +198,17 @@ export default define(class TermSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      debugger
+      literally((context) => {
+        const { string } = json,
+              frameSubstitutionNode = instantiateFrameSubstitution(string, context),
+              node = frameSubstitutionNode,  ///
+              targetTerm = targetTermFromFrameSubstitutionNode(frameSubstitutionNode, context),
+              replacementTerm = replacementTermFromFrameSubstitutionNode(frameSubstitutionNode, context);
+
+        context = null;
+
+        termSubstitutionn = new TermSubstitution(context, string, node, targetTerm, replacementTerm);
+      }, context);
     }
 
     return termSubstitutionn;
@@ -224,3 +234,17 @@ export default define(class TermSubstitution extends Substitution {
     }, context);
   }
 });
+
+function targetTermFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+  const targetTermNode = frameSubstitutionNode.getTargetFrameNode(),
+        targetTerm = context.findFrameByFrameNode(targetTermNode);
+
+  return targetTerm;
+}
+
+function replacementTermFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+  const replacementTermNode = frameSubstitutionNode.getReplacementFrameNode(),
+        replacementTerm = context.findFrameByFrameNode(replacementTermNode);
+
+  return replacementTerm;
+}

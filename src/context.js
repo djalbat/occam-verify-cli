@@ -172,6 +172,13 @@ export default class Context extends ContextBase {
     return statement;
   }
 
+  findReferenceByReferenceNode(referenceNode) {
+    const context = this.getContext(),
+          reference = context.findReferenceByReferenceNode(referenceNode);
+
+    return reference;
+  }
+
   findReferenceByMetavariableNode(metavariableNode) {
     const context = this.getContext(),
           reference = context.findReferenceByMetavariableNode(metavariableNode);
