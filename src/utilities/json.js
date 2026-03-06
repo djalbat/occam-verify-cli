@@ -47,9 +47,10 @@ export function typeFromJSON(json, context) {
   if (type !== null) {
     json = type;  ///
 
-    const { name, prefixName } = json;
+    const { string } = json,
+          name = string;  ///
 
-    type = findTypeByNameAndPrefixName(name, prefixName, context);
+    type = findTypeByName(name, context);
   }
 
   return type;
@@ -83,7 +84,8 @@ export function metaTypeFromJSON(json, context) {
   if (metaType !== null) {
     json = metaType;  ///
 
-    const { name } = json;
+    const { string } = json,
+          name = string;  ///
 
     metaType = findMetaTypeByName(name, context);
   }
@@ -414,8 +416,9 @@ export function superTypesFromJSON(json, context) {
 
   const superTypes = superTypesJSON.map((superTypeJSON) => {
           const json = superTypeJSON,  ///
-                { name, prefixName } = json,
-                type = findTypeByNameAndPrefixName(name, prefixName, context),
+                { string } = json,
+                name = string,  ///
+                type = findTypeByName(name, context),
                 superType = type; ///
 
           return superType;
@@ -1102,18 +1105,16 @@ export function propertyRelationsToPropertyRelationsJSON(propertyRelations) {
   return propertyRelationsJSON;
 }
 
+function findTypeByName(name, context) {
+  const typeName = name,  ///
+        type = context.findTypeByTypeName(typeName);
+
+  return type;
+}
+
 function findMetaTypeByName(name, context) {
   const metaTypeName = name,  ///
         metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
   return metaType;
-}
-
-function findTypeByNameAndPrefixName(name, prefixName, context) {
-  const nominalTypeName = (prefixName !== null) ?
-                           `${prefixName}${name}` :
-                              name,
-        type = context.findTypeByNominalTypeName(nominalTypeName);
-
-  return type;
 }

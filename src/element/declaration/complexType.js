@@ -86,8 +86,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
 
     const typeName = this.type.getName(),
           includeRelease = true,
-          includeDependencies = false,
-          typePresent = context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
+          typePresent = context.isTypePresentByTypeName(typeName, includeRelease);
 
     if (typePresent) {
       context.debug(`The '${typeString}' type is already present.`);

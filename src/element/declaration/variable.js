@@ -27,9 +27,9 @@ export default define(class VariableDeclaration extends Declaration {
 
   getVariableDeclarationNode() {
     const node = this.getNode(),
-          typePrefixDeclarationNode = node; ///
+          variableDeclarationNode = node; ///
 
-    return typePrefixDeclarationNode;
+    return variableDeclarationNode;
   }
 
   async verify() {

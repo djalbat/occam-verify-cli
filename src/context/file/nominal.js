@@ -141,9 +141,9 @@ export default class NominalFileContext extends FileContext {
     return labels;
   }
 
-  getTypes(includeRelease = true, includeDependencies = true) {
+  getTypes(includeRelease = true) {
     const types = includeRelease ?
-                    this.context.getTypes(includeDependencies) :
+                    this.context.getTypes() :
                       this.types;
 
     return types;
@@ -555,8 +555,8 @@ export default class NominalFileContext extends FileContext {
     return topLevelMetaAssertions;
   }
 
-  findTypeByTypeName(typeName, includeRelease = true, includeDependencies = true) {
-    let types = this.getTypes(includeRelease, includeDependencies);
+  findTypeByTypeName(typeName) {
+    let types = this.getTypes();
 
     const baseType = baseTypeFromNothing();
 
@@ -746,8 +746,8 @@ export default class NominalFileContext extends FileContext {
     return topLevelMetaAssertionPresent;
   }
 
-  isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) {
-    const type = this.findTypeByTypeName(typeName, includeRelease, includeDependencies),
+  isTypePresentByTypeName(typeName, includeRelease = true) {
+    const type = this.findTypeByTypeName(typeName, includeRelease),
           typePresent = (type !== null);
 
     return typePresent;
@@ -831,26 +831,26 @@ export default class NominalFileContext extends FileContext {
     return fileVerifies;
   }
 
-  initialise(json) {
+  initialise() {
     const fileContext = this; ///
 
     this.types = [];
 
-    typesFromJSON(json, this.types, fileContext);
+    typesFromJSON(this.json, this.types, fileContext);
 
     this.lemmas = lemmasFromNothing();
     this.metaLemmas = metaLemmasFromNothing();
 
-    this.metavariables = metavariablesFromJSON(json, fileContext);
-    this.variables = variablesFromJSON(json, fileContext);
-    this.rules = rulesFromJSON(json, fileContext);
-    this.axioms = axiomsFromJSON(json, fileContext);
-    this.theorems = theoremsFromJSON(json, fileContext);
-    this.conjectures = conjecturesFromJSON(json, fileContext);
-    this.combinators = combinatorsFromJSON(json, fileContext);
-    this.typePrefixes = typePrefixesFromJSON(json, fileContext);
-    this.constructors = constructorsFromJSON(json, fileContext);
-    this.metatheorems = metatheoremsFromJSON(json, fileContext);
+    this.metavariables = metavariablesFromJSON(this.json, fileContext);
+    this.variables = variablesFromJSON(this.json, fileContext);
+    this.rules = rulesFromJSON(this.json, fileContext);
+    this.axioms = axiomsFromJSON(this.json, fileContext);
+    this.theorems = theoremsFromJSON(this.json, fileContext);
+    this.conjectures = conjecturesFromJSON(this.json, fileContext);
+    this.combinators = combinatorsFromJSON(this.json, fileContext);
+    this.typePrefixes = typePrefixesFromJSON(this.json, fileContext);
+    this.constructors = constructorsFromJSON(this.json, fileContext);
+    this.metatheorems = metatheoremsFromJSON(this.json, fileContext);
   }
 
   toJSON() {
@@ -941,8 +941,6 @@ export default class NominalFileContext extends FileContext {
           metatheorems = null,
           metavariables = null,
           nominalFileContext = FileContext.fromJSON(NominalFileContext, json, lexer, parser, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables, context);
-
-    nominalFileContext.initialise(json);
 
     return nominalFileContext;
   }

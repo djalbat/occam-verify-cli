@@ -83,8 +83,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
 
     const typeName = this.type.getName(),
           includeRelease = true,
-          includeDependencies = false,
-          typePresent = context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
+          typePresent = context.isTypePresentByTypeName(typeName, includeRelease);
 
     if (!typePresent) {
       const prefixedTypeName = typeName, ///
