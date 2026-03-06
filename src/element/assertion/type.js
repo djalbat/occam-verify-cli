@@ -4,9 +4,9 @@ import Assertion from "../assertion";
 
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
-import { typeFromJSON } from "../../utilities/json";
+import { instantiateTypeAssertion } from "../../process/instantiate";
 import { termFromTypeAssertionNode } from "../../utilities/element";
-import { instantiateSubproofAssertion } from "../../process/instantiate";
+import { typeFromJSON, typeToTypeJSON } from "../../utilities/json";
 import { variableAssignmentFromTypeAssertion } from "../../process/assign";
 
 export default define(class TypeAssertion extends Assertion {
@@ -216,7 +216,7 @@ export default define(class TypeAssertion extends Assertion {
     if (this.name === name) {
       literally((context) => {
         const { string } = json,
-              typeAssertionNode = instantiateSubproofAssertion(string, context),
+              typeAssertionNode = instantiateTypeAssertion(string, context),
               term = termFromTypeAssertionNode(typeAssertionNode, context),
               type = typeFromJSON(json, context),
               node = typeAssertionNode; ///

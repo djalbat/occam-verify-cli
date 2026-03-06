@@ -234,15 +234,13 @@ class CombinatorPass extends ZipPass {
 
         const type = context.findTypeByNominalTypeName(nominalTypeName);
 
-        if (type !== null) {
-          context = specificContext;  ///
+        context = specificContext;  ///
 
-          const term = termFromTermNode(termNode, context),
-                termValidatesGivenType = term.validateGivenType(type, context);
+        const term = termFromTermNode(termNode, context),
+              termValidatesGivenType = term.validateGivenType(type, context);
 
-          if (termValidatesGivenType) {
-            success = true;
-          }
+        if (termValidatesGivenType) {
+          success = true;
         }
 
         return success;

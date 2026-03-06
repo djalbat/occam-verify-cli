@@ -36,9 +36,9 @@ export default define(class Combinator extends Element {
     context.trace(`Verifying the '${combinatorString}' combinator...`);
 
     attempt((context) => {
-      const statementVerifiesAsCombinator = verifyStatementAsCombinator(this.statement, context);
+      const statementVerifies = this.verifyStatement(context);
 
-      if (statementVerifiesAsCombinator) {
+      if (statementVerifies) {
         this.setContext(context);
 
         verifies = true;
@@ -50,6 +50,27 @@ export default define(class Combinator extends Element {
     }
 
     return verifies;
+  }
+
+  verifyStatement(context) {
+    let statementVerifies = false;
+
+    const statementString = this.statement.getString(),
+          combinatorString = this.getString();  ///
+
+    context.trace(`Verifying the '${combinatorString}' combinator's '${statementString}' statement...`);
+
+    const statementVerifiesAsCombinator = verifyStatementAsCombinator(this.statement, context);
+
+    if (statementVerifiesAsCombinator) {
+      statementVerifies = true;
+    }
+
+    if (statementVerifies) {
+      context.debug(`...verified the '${combinatorString}' combinator's '${statementString}' statement.`);
+    }
+
+    return statementVerifies;
   }
 
   unifyStatement(statement, stated, context) {

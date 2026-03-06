@@ -482,7 +482,8 @@ export function constructorFromConstructorNode(constructorNode, context) {
         node = constructorNode, ///
         string = context.nodeAsString(node),
         term = termFromConstructorNode(constructorNode, context),
-        constructor = new Constructor(context, string, node, term);
+        type = typeFromConstructorNode(constructorNode, context),
+        constructor = new Constructor(context, string, node, term, type);
 
   return constructor;
 }
@@ -996,6 +997,12 @@ export function termFromConstructorNode(ocnstructorNode, context) {
         term = termFromTermNode(termNode, context);
 
   return term;
+}
+
+export function typeFromConstructorNode(ocnstructorNode, context) {
+  const type = null;
+
+  return type;
 }
 
 export function assumptionsFromFrameNode(frameNode, context) {

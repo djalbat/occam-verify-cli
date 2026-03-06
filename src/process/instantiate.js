@@ -23,6 +23,7 @@ import { TERM_RULE_NAME,
          CONSTRUCTOR_RULE_NAME,
          EQUIVALENCE_RULE_NAME,
          METAVARIABLE_RULE_NAME,
+         TYPE_ASSERTION_RULE_NAME,
          PROCEDURE_CALL_RULE_NAME,
          PROPERTY_RELATION_RULE_NAME,
          DEFINED_ASSERTION_RULE_NAME,
@@ -57,7 +58,8 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       constructorPlaceholderRule = ruleFromRuleName(CONSTRUCTOR_RULE_NAME),
       equivalencePlaceholderRule = ruleFromRuleName(EQUIVALENCE_RULE_NAME),
       metavariablePlaceholderRule = ruleFromRuleName(METAVARIABLE_RULE_NAME),
-      procedureCalllaceholderRule = ruleFromRuleName(PROCEDURE_CALL_RULE_NAME),
+      typeAssertionPlaceholderRule = ruleFromRuleName(TYPE_ASSERTION_RULE_NAME),
+      procedureCallPlaceholderRule = ruleFromRuleName(PROCEDURE_CALL_RULE_NAME),
       propertyRelationlaceholderRule = ruleFromRuleName(PROPERTY_RELATION_RULE_NAME),
       definedAssertionPlaceholderRule = ruleFromRuleName(DEFINED_ASSERTION_RULE_NAME),
       termSubstitutionPlaceholderRule = ruleFromRuleName(TERM_SUBSTITUTION_RULE_NAME),
@@ -133,7 +135,9 @@ export function instantiateEquivalence(string, context) { return instantiate(equ
 
 export function instantiateMetavariable(string, context) { return instantiate(metavariablePlaceholderRule, string, context); }
 
-export function instantiateProcedureCall(string, context) { return instantiate(procedureCalllaceholderRule, string, context); }
+export function instantiateTypeAssertion(string, context) { return instantiate(typeAssertionPlaceholderRule, string, context); }
+
+export function instantiateProcedureCall(string, context) { return instantiate(procedureCallPlaceholderRule, string, context); }
 
 export function instantiatePropertyRelation(string, context) { return instantiate(propertyRelationlaceholderRule, string, context); }
 

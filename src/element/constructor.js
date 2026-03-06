@@ -8,17 +8,22 @@ import { instantiateConstructor } from "../process/instantiate";
 import { verifyTermAsConstructor } from "../process/verify";
 import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
-import { termToTermJSON, ephemeralContextFromJSON } from "../utilities/json";
+import { typeFromJSON, termToTermJSON, typeToTypeJSON, ephemeralContextFromJSON } from "../utilities/json";
 
 export default define(class Constructor extends Element {
-  constructor(context, string, node, term) {
-    super(context, string, node);
+  constructor(context, string, node, term, type) {
+    super(context, string, node, type);
 
     this.term = term;
+    this.type = type;
   }
 
   getTerm() {
     return this.term;
+  }
+
+  getType() {
+    return this.type;
   }
 
   getConclusionNode() {
@@ -28,15 +33,12 @@ export default define(class Constructor extends Element {
     return constructorNode;
   }
 
-  getType() { return this.term.getType(); }
-
   getString(includeType = true) {
     let string;
 
     if (includeType) {
-      const type = this.getType(),
-            typeString = type.getString(),
-            termString = this.term.getString();
+      const termString = this.term.getString(),
+            typeString = this.type.getString();
 
       string = `${termString}.${typeString}`;
     } else {
@@ -46,7 +48,9 @@ export default define(class Constructor extends Element {
     return string;
   }
 
-  setType(type) { this.term.setType(type); }
+  setType(type) {
+    this.type = type;
+  }
 
   verify(context) {
     let verifies = false;
@@ -57,9 +61,9 @@ export default define(class Constructor extends Element {
     context.trace(`Verifying the '${constructorString}' constructor...`);
 
     attempt((context) => {
-      const termVerifiesAsConstructor = verifyTermAsConstructor(this.term, context);
+      const termVerifies = this.verifyTerm(context);
 
-      if (termVerifiesAsConstructor) {
+      if (termVerifies) {
         this.setContext(context);
 
         verifies = true;
@@ -71,6 +75,28 @@ export default define(class Constructor extends Element {
     }
 
     return verifies;
+  }
+
+  verifyTerm(context) {
+    let termVerifies = false;
+
+    const termString = this.term.getString(),
+          includeType = false,
+          constructorString = this.getString(includeType);
+
+    context.trace(`Verifying the '${constructorString}' constructor's '${termString}' term...`);
+
+    const termVerifiesAsConstructor = verifyTermAsConstructor(this.term, context);
+
+    if (termVerifiesAsConstructor) {
+      termVerifies = true;
+    }
+
+    if (termVerifies) {
+      context.debug(`...verified the '${constructorString}' constructor's '${termString}' term.`);
+    }
+
+    return termVerifies;
   }
 
   unifyTerm(term, context, validateForwards) {
@@ -95,9 +121,7 @@ export default define(class Constructor extends Element {
     if (termUnifiesWithConstructor) {
       let validatesForwards;
 
-      const type = this.getType();
-
-      term.setType(type);
+      term.setType(this.type);
 
       validatesForwards = validateForwards();
 
@@ -122,12 +146,15 @@ export default define(class Constructor extends Element {
 
     const includeType = false,
           termJSON = termToTermJSON(this.term),
+          typeJSON = typeToTypeJSON(this.type),
           string = this.getString(includeType),
           term = termJSON,  ///
+          type = typeJSON,  ///
           json = {
             context,
             string,
-            term
+            term,
+            type
           };
 
     return json;
@@ -141,11 +168,12 @@ export default define(class Constructor extends Element {
             constructorNode = instantiateConstructor(string, context),
             node = constructorNode, ///
             term = termFromConstructorNode(constructorNode, context),
+            type = typeFromJSON(json, context),
             ephemeralContext = ephemeralContextFromJSON(json, context);
 
       context = ephemeralContext; ///
 
-      const constructor = new Constructor(context, string, node, term);
+      const constructor = new Constructor(context, string, node, term, type);
 
       return constructor;
 
