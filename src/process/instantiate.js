@@ -2,6 +2,7 @@
 
 import { ruleFromRuleName } from "../utilities/bnf";
 import { TERM_RULE_NAME,
+         TYPE_RULE_NAME,
          FRAME_RULE_NAME,
          LABEL_RULE_NAME,
          PREMISE_RULE_NAME,
@@ -35,6 +36,7 @@ import { TERM_RULE_NAME,
          REFERENCE_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
 const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
+      typePlaceholderRule = ruleFromRuleName(TYPE_RULE_NAME),
       framePlaceholderRule = ruleFromRuleName(FRAME_RULE_NAME),
       labelPlaceholderRule = ruleFromRuleName(LABEL_RULE_NAME),
       premisePlaceholderRule = ruleFromRuleName(PREMISE_RULE_NAME),
@@ -96,6 +98,8 @@ export function instantiateSupposition(string, context) {
 }
 
 export function instantiateTerm(string, context) { return instantiate(termPlaceholderRule, string, context); }
+
+export function instantiateType(string, context) { return instantiate(typePlaceholderRule, string, context); }
 
 export function instantiateFrame(string, context) { return instantiate(framePlaceholderRule, string, context); }
 

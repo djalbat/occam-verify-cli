@@ -8,7 +8,7 @@ import { instantiateConstructor } from "../process/instantiate";
 import { verifyTermAsConstructor } from "../process/verify";
 import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
-import { ephemeralContextFromJSON } from "../utilities/json";
+import { termToTermJSON, ephemeralContextFromJSON } from "../utilities/json";
 
 export default define(class Constructor extends Element {
   constructor(context, string, node, term) {
@@ -30,20 +30,17 @@ export default define(class Constructor extends Element {
 
   getType() { return this.term.getType(); }
 
-  getString() {
+  getString(includeType = true) {
     let string;
 
-    const type = this.getType();
-
-    if (type === null) {
-      const termString = this.term.getString();
-
-      string = termString;  ///
-    } else {
-      const typeString = type.getString(),
+    if (includeType) {
+      const type = this.getType(),
+            typeString = type.getString(),
             termString = this.term.getString();
 
       string = `${termString}.${typeString}`;
+    } else {
+      string = super.getString();
     }
 
     return string;
@@ -54,7 +51,8 @@ export default define(class Constructor extends Element {
   verify(context) {
     let verifies = false;
 
-    const constructorString = this.getString();  ///
+    const includeType = false,
+          constructorString = this.getString(includeType);
 
     context.trace(`Verifying the '${constructorString}' constructor...`);
 
@@ -122,10 +120,14 @@ export default define(class Constructor extends Element {
 
     context = contextJSON;  ///
 
-    const string = this.getString(),
+    const includeType = false,
+          termJSON = termToTermJSON(this.term),
+          string = this.getString(includeType),
+          term = termJSON,  ///
           json = {
             context,
-            string
+            string,
+            term
           };
 
     return json;

@@ -54,9 +54,13 @@ export default define(class SimpleTypeDeclaration extends Declaration {
         const typePrefixVerifies = this.verifyTypePrefix();
 
         if (typePrefixVerifies) {
-          context.addType(this.type);
+          const propertiesVerifies = this.verifyProperties();
 
-          verifies = true;
+          if (propertiesVerifies) {
+            context.addType(this.type);
+
+            verifies = true;
+          }
         }
       }
     }
@@ -163,7 +167,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
 
       if (superTypesLength === 0) {
         const baseType = baseTypeFromNothing(),
-          superTyupe = baseType;  ///
+              superTyupe = baseType;  ///
 
         superTypes.push(superTyupe);
       }
@@ -182,8 +186,8 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     let typePrefixVerifies = false;
 
     const context = this.getContext(),
-          typeString = this.type.getString(),
-          simpleTypeDeclarationString = this.getString(); ///;
+      typeString = this.type.getString(),
+      simpleTypeDeclarationString = this.getString(); ///;
 
     context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type's prefix...`);
 
@@ -192,7 +196,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     if (!typePrefixed) {
       typePrefixVerifies = true;
     } else {
-      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type is prefixed.`);
+      context.debug(`The '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type is prefixed.`);
     }
 
     if (typePrefixVerifies) {
@@ -200,6 +204,26 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     }
 
     return typePrefixVerifies;
+  }
+
+  verifyProperties() {
+    let propertiesVerify = true;  ///
+
+    const context = this.getContext(),
+          typeString = this.type.getString(),
+          simpleTypeDeclarationString = this.getString(); ///;
+
+    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type's properties...`);
+
+    const properties = [];
+
+    this.type.setProperties(properties);
+
+    if (propertiesVerify) {
+      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type's properties.`);
+    }
+
+    return propertiesVerify;
   }
 
   static name = "SimpleTypeDeclaration";

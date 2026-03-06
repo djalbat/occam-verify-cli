@@ -7,8 +7,8 @@ import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { instantiateType } from "../process/instantiate";
 import { baseTypeFromNothing } from "../utilities/type";
-import { superTypesFromJSON, superTypesToSuperTypesJSON } from "../utilities/json";
-import { nameFromTypeNode, prefixNameFromTypeNode, propertiesFromTypeNode, provisionalFromTypeNode } from "../utilities/element";
+import { nameFromTypeNode, prefixNameFromTypeNode } from "../utilities/element";
+import { superTypesFromJSON, provisionalFromJSON, propertiesFromJSON, provisionalToProvisionalJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
 const { push, first } = arrayUtilities;
 
@@ -296,11 +296,17 @@ export default define(class Type extends Element {
 
   toJSON() {
     const superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
-          superTypes = superTypesJSON,
+          propertiesJSON = propertiesToPropertiesJSON(this.properties),
+          provisinoalJSOM = provisionalToProvisionalJSON(this.provisional),
+          superTypes = superTypesJSON,  ///
+          properties = propertiesJSON,  ///
+          provisional = provisinoalJSOM,  ///
           string = this.getString(),
           json = {
             string,
-            superTypes
+            superTypes,
+            properties,
+            provisional
           };
 
     return json;
@@ -316,8 +322,8 @@ export default define(class Type extends Element {
             name = nameFromTypeNode(typeNode, context),
             prefixName = prefixNameFromTypeNode(typeNode, context),
             superTypes = superTypesFromJSON(json, context),
-            properties = propertiesFromTypeNode(typeNode, context),
-            provisional = provisionalFromTypeNode(typeNode, context);
+            properties = propertiesFromJSON(json, context),
+            provisional = provisionalFromJSON(json);
 
       context = null; ///
 

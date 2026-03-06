@@ -104,7 +104,8 @@ export default define(class ConstructorDeclaration extends Declaration {
     let constructorVerifies;
 
     const context = this.getContext(),
-          constructorString = this.constructor.getString(),
+          includeType = false,
+          constructorString = this.constructor.getString(includeType),
           constructorDeclarationString = this.getString();  ///
 
     context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration's '${constructorString}' constructor...`);

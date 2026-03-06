@@ -227,8 +227,8 @@ export default define(class Term extends Element {
           string = this.getString(), ///
           type = typeJSON,  ///
           json = {
-            type,
-            string
+            string,
+            type
           };
 
     return json;

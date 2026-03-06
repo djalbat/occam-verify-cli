@@ -170,6 +170,12 @@ export function conclusionFromJSON(json, context) {
   return conclusion;
 }
 
+export function provisionalFromJSON(json, context) {
+  const { provisional } = json;
+
+  return provisional;
+}
+
 export function metavariableFromJSON(json, context) {
   let { metavariable } = json;
 
