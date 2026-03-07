@@ -257,7 +257,7 @@ export default define(class Assumption extends Element {
     return statementUnifies;
   }
 
-  unifyLabel(label, substitutions, generalContext, specificContext) {
+  unifyLabel(label, generalContext, specificContext) {
     let labelUnifiesWithReference;
 
     const context = generalContext, ///
@@ -266,7 +266,7 @@ export default define(class Assumption extends Element {
 
     context.trace(`Unifying the '${labelString}' label with the '${assumptionString}' assumption...`);
 
-    const labelUnifies = this.reference.unifyLabel(label, substitutions, context);
+    const labelUnifies = this.reference.unifyLabel(label, context);
 
     labelUnifiesWithReference = labelUnifies; ///
 

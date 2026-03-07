@@ -127,18 +127,12 @@ export default define(class SatisfiesAssertion extends Assertion {
           satisfiable = axiom.isSatisfiable();
 
     if (satisfiable) {
-      let substitutions;
-
-      substitutions = [];
-
-      const axiomComparesToSignature = axiom.compareSignature(this.signature, substitutions, context);
+      const axiomComparesToSignature = axiom.compareSignature(this.signature, context);
 
       if (axiomComparesToSignature) {
         const substitutionsB = substitutions; ///
 
-        substitutions = [];
-
-        statementUnifies = axiom.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
+        statementUnifies = axiom.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
 
         if (statementUnifies) {
           const substitutionsA = substitutions, ///

@@ -19,7 +19,7 @@ export default define(class Axiom extends TopLevelAssertion {
     return satisfiable;
   }
 
-  compareSignature(signature, substitutions, context) {
+  compareSignature(signature, context) {
     let comparesToSignature = false;
 
     const satisfiable = this.isSatisfiable();
@@ -36,7 +36,7 @@ export default define(class Axiom extends TopLevelAssertion {
 
       const generalContext = context;  ///
 
-      comparesToSignature = signatureA.compare(signatureB, substitutions, generalContext, specificContext);
+      comparesToSignature = signatureA.compare(signatureB, generalContext, specificContext);
     }
 
     return comparesToSignature;
@@ -87,7 +87,7 @@ export default define(class Axiom extends TopLevelAssertion {
     return signatureVerifies;
   }
 
-  unifyStep(step, substitutions, context) {
+  unifyStep(step, context) {
     let stepUnifies = false;
 
     context = step.getContext();
@@ -103,7 +103,7 @@ export default define(class Axiom extends TopLevelAssertion {
       context.trace(`Unable to unify the '${stepString}' step with the '${axiomString}' axiom because the axiom is not unconditional.`);
     } else {
       const statement = step.getStatement(),
-            statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
+            statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, context);
 
       if (statementUnifiesWithDeduction) {
         stepUnifies = true;
@@ -117,7 +117,7 @@ export default define(class Axiom extends TopLevelAssertion {
     return stepUnifies;
   }
 
-  unifySubproof(subproof, substitutions, context) {
+  unifySubproof(subproof, context) {
     let subproofUnifies = false;
 
     const axiomString = this.getString(),
@@ -131,11 +131,11 @@ export default define(class Axiom extends TopLevelAssertion {
       context.trace(`Unable to unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`);
     } else {
       const lastProofAssertion = subproof.getLastProofAssertion(),
-            lastProofAssertionUnifies = this.unifyLastProofAssertion(lastProofAssertion, substitutions, context);
+            lastProofAssertionUnifies = this.unifyLastProofAssertion(lastProofAssertion, context);
 
       if (lastProofAssertionUnifies) {
         const suppositions = subproof.getSuppositions(),
-              suppositionsUnify = this.unifySuppositions(suppositions, substitutions, context);
+              suppositionsUnify = this.unifySuppositions(suppositions, context);
 
         if (suppositionsUnify) {
           subproofUnifies = true;
@@ -150,7 +150,7 @@ export default define(class Axiom extends TopLevelAssertion {
     return subproofUnifies;
   }
 
-  unifyDeduction(deduction, substitutions, generalContext, specificContext) {
+  unifyDeduction(deduction, generalContext, specificContext) {
     let deductionUnifies;
 
     const specificDeduction = deduction;  ///
@@ -161,12 +161,12 @@ export default define(class Axiom extends TopLevelAssertion {
 
     deduction = specificDeduction;  ///
 
-    deductionUnifies = generalDeduction.unifyDeduction(deduction, substitutions, generalContext, specificContext);
+    deductionUnifies = generalDeduction.unifyDeduction(deduction, generalContext, specificContext);
 
     return deductionUnifies;
   }
 
-  unifySupposition(supposition, index, substitutions, generalContext, specificContext) {
+  unifySupposition(supposition, index, generalContext, specificContext) {
     let suppositionUnifies;
 
     const specificSupposition = supposition;  ///
@@ -177,12 +177,12 @@ export default define(class Axiom extends TopLevelAssertion {
 
     supposition = specificSupposition;  ///
 
-    suppositionUnifies = generalSupposition.unifySupposition(supposition, substitutions, generalContext, specificContext);
+    suppositionUnifies = generalSupposition.unifySupposition(supposition, generalContext, specificContext);
 
     return suppositionUnifies;
   }
 
-  unifySuppositions(suppositions, substitutions, generalContext, specificContext) {
+  unifySuppositions(suppositions, generalContext, specificContext) {
     let suppositionsUnify = false;
 
     const specificSuppositions = suppositions;  ///
@@ -197,7 +197,7 @@ export default define(class Axiom extends TopLevelAssertion {
       suppositions = specificSuppositions;  ///
 
       suppositionsUnify = suppositions.every((supposition, index) => {
-        const suppositionUnifies = this.unifySupposition(supposition, index, substitutions, generalContext, specificContext);
+        const suppositionUnifies = this.unifySupposition(supposition, index, generalContext, specificContext);
 
         if (suppositionUnifies) {
           return true;
@@ -208,7 +208,7 @@ export default define(class Axiom extends TopLevelAssertion {
     return suppositionsUnify;
   }
 
-  unifyLastProofAssertion(lastProofAssertion, substitutions, context) {
+  unifyLastProofAssertion(lastProofAssertion, context) {
     let lastProofAssertionUnifies = false;
 
     const axiomString = this.getString(),
@@ -217,7 +217,7 @@ export default define(class Axiom extends TopLevelAssertion {
     context.trace(`Unifying the '${lastProofAssertionString}' last proof assertion with the '${axiomString}' axiom...`)
 
     const statement = lastProofAssertion.getStatement(),
-          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
+          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, context);
 
     if (statementUnifiesWithDeduction) {
       lastProofAssertionUnifies = true;
@@ -230,7 +230,7 @@ export default define(class Axiom extends TopLevelAssertion {
     return lastProofAssertionUnifies;
   }
 
-  unifyTopLevelAssertion(topLevelAssertion, substitutions, context) {
+  unifyTopLevelAssertion(topLevelAssertion, context) {
     let topLevelAssertionUnifies = false;
 
     const axiomString = this.getString(),
@@ -250,11 +250,11 @@ export default define(class Axiom extends TopLevelAssertion {
       context = specificContext;  ///
 
       const deduction = topLevelAssertion.getDeduction(),
-            deductionUnifies = this.unifyDeduction(deduction, substitutions, generalContext, specificContext);
+            deductionUnifies = this.unifyDeduction(deduction, generalContext, specificContext);
 
       if (deductionUnifies) {
         const suppositions = topLevelAssertion.getSuppositions(),
-              suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+              suppositionsUnify = this.unifySuppositions(suppositions, generalContext, specificContext);
 
         topLevelAssertionUnifies = suppositionsUnify; ///
       }

@@ -112,8 +112,7 @@ async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfie
           const satisfiable = axiom.isSatisfiable();
 
           if (satisfiable) {
-            const substitutions = [],
-                  topLevelAssertionUnifies = axiom.unifyTopLevelAssertion(topLevelAssertion, substitutions, context);
+            const topLevelAssertionUnifies = axiom.unifyTopLevelAssertion(topLevelAssertion, context);
 
             if (topLevelAssertionUnifies) {
               const substitutionsCorrelates = satisfiesAssertion.correlateSubstitutions(substitutions, context);
@@ -155,19 +154,6 @@ async function unifyStatementWithTopLevelAssertion(statement, reference, satisfi
             statementAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
 
       if (statementAndSubproofOrProofAssertionsUnify) {
-        const metavariable = reference.getMetavariable();
-
-        debugger
-
-        // synthetically((context) => {
-        //   const { StatementSubstitution } = elements;
-        //
-        //   StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
-
-        // vaiddate
-        //
-        // }, generalContext, specificContext);
-
         statementUnifiesWithTopLevelAssertion = true;
       }
 

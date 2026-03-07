@@ -106,8 +106,7 @@ export default define(class Subproof extends Element {
 
       if (axiomSatisfiable) {
         const subproof = this,  ///
-              substitutions = [],
-              statementUnifies = axiom.unifySubproof(subproof, substitutions, context);
+              statementUnifies = axiom.unifySubproof(subproof, context);
 
         if (statementUnifies) {
           const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);

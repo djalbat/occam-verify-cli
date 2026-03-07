@@ -225,11 +225,10 @@ export default define(class Step extends ProofAssertion {
 
     if (axiom !== null) {
       const step = this,  ///
-            substitutions = [],
-            stepUnifies = axiom.unifyStep(step, substitutions, context);
+            stepUnifies = axiom.unifyStep(step, context);
 
       if (stepUnifies) {
-        const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
+        const substitutionsCompare = satisfiesAssertion.compareSubstitutions(context);
 
         if (substitutionsCompare) {
           unifiesWithSatisfiesAssertion = true;
