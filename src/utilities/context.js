@@ -46,14 +46,6 @@ export async function asyncScope(innerFunction, context) {
   return await innerFunction(context);
 }
 
-export async function asyncAttempt(innerFunction, context) {
-  const ephemeralContext = EphemeralContext.fromNothing(context);
-
-  context = ephemeralContext;  ///
-
-  return await innerFunction(context);
-}
-
 export async function asyncLiminally(innerFunction, context) {
   const liminalContext = LiminalContext.fromNothing(context);
 
@@ -61,4 +53,3 @@ export async function asyncLiminally(innerFunction, context) {
 
   return await innerFunction(context);
 }
-

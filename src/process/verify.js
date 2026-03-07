@@ -1,8 +1,7 @@
 "use strict";
 
-import { AsyncPass, SimplePass, queryUtilities } from "occam-languages"
+import { AsyncPass, queryUtilities } from "occam-languages"
 
-import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
 import { ruleFromRuleNode,
          errorFromErrorNode,
          axiomFromAxiomNode,
@@ -23,15 +22,12 @@ import { ruleFromRuleNode,
 const { nodeQuery } = queryUtilities;
 
 const ruleNodeQuery = nodeQuery("/rule"),
-      termNodeQuery = nodeQuery("/term"),
-      typeNodeQuery = nodeQuery("/type"),
       errorNodeQuery = nodeQuery("/error"),
       axiomNodeQuery = nodeQuery("/axiom"),
       lemmaNodeQuery = nodeQuery("/lemma"),
       sectionNodeQuery = nodeQuery("/section"),
       theoremNodeQuery = nodeQuery("/theorem"),
       metaLemmaNodeQuery = nodeQuery("/metaLemma"),
-      statementNodeQuery = nodeQuery("/statement"),
       conjectureNodeQuery = nodeQuery("/conjecture"),
       metatheoremNodeQuery = nodeQuery("/metatheorem"),
       variableDeclarationNodeQuery = nodeQuery("/variableDeclaration"),
@@ -287,141 +283,7 @@ class TopLevelPass extends AsyncPass {
   ];
 }
 
-class ConbinatorPass extends SimplePass {
-  run(statementNode, context) {
-    let success = false;
-
-    const nonTerminalNode = statementNode,  ///
-          childNodes = nonTerminalNode.getChildNodes(), ///
-          descended = this.descend(childNodes, context);
-
-    if (descended) {
-      success = true;
-    }
-
-    return success;
-  }
-
-  static maps = [
-    {
-      nodeQuery: statementNodeQuery,
-      run: (statementNode, context) => {
-        let success = false;
-
-        let statement;
-
-        const stated = true;
-
-        statement = statementFromStatementNode(statementNode, context);
-
-        statement = statement.validate(stated, context);
-
-        if (statement !== null) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      nodeQuery: termNodeQuery,
-      run: (termNode, context) => {
-        let success = false;
-
-        let term;
-
-        term = termFromTermNode(termNode, context);
-
-        term = term.validate(context, () => { ///
-          const validatesForwards = true;
-
-          return validatesForwards;
-        });
-
-        if (term !== null) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      nodeQuery: typeNodeQuery,
-      run: (typeNode, context) => {
-        let success = false;
-
-        const nominalTypeName = typeNode.getNominalTypeName(),
-              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
-
-        if (typePresent) {
-          success = true;
-        }
-
-        return success;
-      }
-    }
-  ];
-}
-
-class ConstructorPass extends SimplePass {
-  run(termNode, context) {
-    let success = false;
-
-    const nonTerminalNode = termNode,  ///
-          childNodes = nonTerminalNode.getChildNodes(), ///
-          descended = this.descend(childNodes, context);
-
-    if (descended) {
-      success = true;
-    }
-
-    return success;
-  }
-
-  static maps = [
-    {
-      nodeQuery: termNodeQuery,
-      run: (termNode, context) => {
-        let success = false;
-
-        let term;
-
-        term = termFromTermNode(termNode, context);
-
-        term = term.validate(context, () => { ///
-          const validatesForwards = true;
-
-          return validatesForwards;
-        });
-
-        if (term !== null) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      nodeQuery: typeNodeQuery,
-      run: (typeNode, context) => {
-        let success = false;
-
-        const nominalTypeName = typeNode.getNominalTypeName(),
-              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
-
-        if (typePresent) {
-          success = true;
-        }
-
-        return success;
-      }
-    }
-  ];
-}
-
-const topLevelPass = new TopLevelPass(),
-      combinatorPass = new ConbinatorPass(),
-      constructorPass = new ConstructorPass();
+const topLevelPass = new TopLevelPass();
 
 export async function verifyFile(fileNode, context) {
   let fileVerifies = false;
@@ -434,30 +296,4 @@ export async function verifyFile(fileNode, context) {
   }
 
   return fileVerifies;
-}
-
-export function verifyTermAsConstructor(term, context) {
-  let termVerifiesAsConstructor = false;
-
-  const termNode = term.getNode(),
-        success = constructorPass.run(termNode, context);
-
-  if (success) {
-    termVerifiesAsConstructor = true;
-  }
-
-  return termVerifiesAsConstructor;
-}
-
-export function verifyStatementAsCombinator(statement, context) {
-  let statementVerifiesAsCombinator = false;
-
-  const statementNode = statement.getNode(),
-        success = combinatorPass.run(statementNode, context);
-
-  if (success) {
-    statementVerifiesAsCombinator = true;
-  }
-
-  return statementVerifiesAsCombinator;
 }

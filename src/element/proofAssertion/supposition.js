@@ -37,60 +37,63 @@ export default define(class Supposition extends ProofAssertion {
 
     await this.break(context);
 
-    const suppositionString = this.getString(); ///
+    const suppositionString = this.getString();
 
     context.trace(`Verifying the '${suppositionString}' supposition...`);
 
-    attempt((context) => {
-      const supposition = this.validate(context);
+    const statement = this.getStatement(),
+          procedureCall = this.getProcedureCall();
 
-      if (supposition !== null) {
-        this.setContext(context);
+    if ((statement !== null) || (procedureCall !== null)) {
+      const validates = this.validate(context);
 
+      if (validates) {
         verifies = true;
       }
-    }, context);
-
-    if (verifies) {
-      context.debug(`...verified the '${suppositionString}' supposition.`);
+    } else {
+      context.debug(`Unable to validate the '${suppositionString}' supposition because it is nonsense.`);
     }
 
     return verifies;
   }
 
   validate(context) {
-    let supposition = false;
+    let validates = false;
 
     const suppositionString = this.getString(); ///
 
     context.trace(`Validatting the '${suppositionString}' supposition...`);
 
-    const statement = this.getStatement(),
-          procedureCall = this.getProcedureCall();
+    attempt((context) => {
+      const statement = this.getStatement(),
+            procedureCall = this.getProcedureCall();
 
-    if (false) {
-      ///
-    } else if (statement !== null) {
-      const statementValidates = this.validateStatement(context);
+      if (statement !== null) {
+        const statementValidates = this.validateStatement(context);
 
-      if (statementValidates) {
-        supposition = this; ///
+        if (statementValidates) {
+          this.setContext(context);
+
+          validates = true;
+        }
       }
-    } else if (procedureCall !== null) {
-      const procedureCallValidates = this.validateProcedureCall(context);
 
-      if (procedureCallValidates) {
-        supposition = this; ///
+      if (procedureCall !== null) {
+        const procedureCallValidates = this.validateProcedureCall(context);
+
+        if (procedureCallValidates) {
+          this.setContext(context);
+
+          validates = true;
+        }
       }
-    } else {
-      context.debug(`Unable to validate the '${suppositionString}' supposition because it is nonsense.`);
-    }
+    }, context);
 
-    if (supposition !== null) {
+    if (validates) {
       context.debug(`...validated the '${suppositionString}' supposition.`);
     }
 
-    return supposition;
+    return validates;
   }
 
   validateProcedureCall(context) {
@@ -176,7 +179,7 @@ export default define(class Supposition extends ProofAssertion {
   }
 
   unifyProofAssertion(proofAssertion, context) {
-    let proofAssertionUnifies;
+    let proofAssertionUnifies = false;
 
     const suppositionString = this.getString(), ///
           proofAssertionString = proofAssertion.getString();
@@ -186,18 +189,21 @@ export default define(class Supposition extends ProofAssertion {
     const proofAssertionContext = proofAssertion.getContext(),
           suppositionContext = this.getContext(),
           generalContext = suppositionContext, ///
-          specificContext = proofAssertionContext; ///
+          specificContext = proofAssertionContext,
+          statementUnifies = liminally((specificContext) => {
+            const statement = proofAssertion.getStatement(),
+              statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
 
-    proofAssertionUnifies = liminally((specificContext) => {
-      const statement = proofAssertion.getStatement(),
-            statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
+            if (statementUnifies) {
+              specificContext.commit(context);
 
-      if (statementUnifies) {
-        specificContext.commit(context);
+              return true;
+            }
+          }, specificContext);
 
-        return true;
-      }
-    }, specificContext);
+    if (statementUnifies) {
+      proofAssertionUnifies = true;
+    }
 
     if (proofAssertionUnifies) {
       context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition.`);

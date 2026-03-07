@@ -41,56 +41,59 @@ export default define(class Premise extends ProofAssertion {
 
     context.trace(`Verifying the '${premiseString}' premise...`);
 
-    attempt((context) => {
-      const premise = this.validate(context);
+    const statement = this.getStatement(),
+          procedureCall = this.getProcedureCall();
 
-      if (premise !== null) {
-        this.setContext(context);
+    if ((statement !== null) || (procedureCall !== null)) {
+      const validates = this.validate(context);
 
+      if (validates) {
         verifies = true;
       }
-    }, context);
-
-    if (verifies) {
-      context.debug(`...verified the '${premiseString}' premise.`);
+    } else {
+      context.debug(`Unable to validate the '${premiseString}' premise because it is nonsense.`);
     }
 
     return verifies;
   }
 
   validate(context) {
-    let premise = false;
+    let validates = false;
 
     const premiseString = this.getString(); ///
 
     context.trace(`Validatting the '${premiseString}' premise...`);
 
-    const statement = this.getStatement(),
-          procedureCall = this.getProcedureCall();
+    attempt((context) => {
+      const statement = this.getStatement(),
+            procedureCall = this.getProcedureCall();
 
-    if (false) {
-      ///
-    } else if (statement !== null) {
-      const statementValidates = this.validateStatement(context);
+      if (statement !== null) {
+        const statementValidates = this.validateStatement(context);
 
-      if (statementValidates) {
-        premise = this; ///
+        if (statementValidates) {
+          this.setContext(context);
+
+          validates = true;
+        }
       }
-    } else if (procedureCall !== null) {
-      const procedureCallValidates = this.validateProcedureCall(context);
 
-      if (procedureCallValidates) {
-        premise = this; ///
+      if (procedureCall !== null) {
+        const procedureCallValidates = this.validateProcedureCall(context);
+
+        if (procedureCallValidates) {
+          this.setContext(context);
+
+          validates = true;
+        }
       }
-    } else {
-      context.debug(`Unable to validate the '${premiseString}' premise because it is nonsense.`);
-    }
+    }, context);
 
-    if (premise !== null) {
+    if (validates) {
       context.debug(`...validated the '${premiseString}' premise.`);
     }
 
-    return premise;
+    return validates;
   }
 
   validateProcedureCall(context) {
@@ -154,7 +157,7 @@ export default define(class Premise extends ProofAssertion {
   }
 
   unifyProofAssertion(proofAssertion, context) {
-    let proofAssertionUnifies;
+    let proofAssertionUnifies = false;
 
     const premiseString = this.getString(), ///
           proofAssertionString = proofAssertion.getString();
@@ -164,18 +167,21 @@ export default define(class Premise extends ProofAssertion {
     const proofAssertionContext = proofAssertion.getContext(),
           premiseContext = this.getContext(),
           generalContext = premiseContext, ///
-          specificContext = proofAssertionContext; ///
+          specificContext = proofAssertionContext,
+          statementUnifies = liminally((specificContext) => {
+            const statement = proofAssertion.getStatement(),
+                  statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
 
-    proofAssertionUnifies = liminally((specificContext) => {
-      const statement = proofAssertion.getStatement(),
-            statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
+            if (statementUnifies) {
+              specificContext.commit(context);
 
-      if (statementUnifies) {
-        specificContext.commit(context);
+              return true;
+            }
+          }, specificContext);
 
-        return true;
-      }
-    }, specificContext);
+    if (statementUnifies) {
+      proofAssertionUnifies = true;
+    }
 
     if (proofAssertionUnifies) {
       context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${premiseString}' premise.`);

@@ -6,7 +6,7 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { unifyStatements } from "../../utilities/unification";
-import { asyncAttempt, asyncLiminally } from "../../utilities/context";
+import { attempt, asyncLiminally } from "../../utilities/context";
 import { propertyAssertionFromStatement } from "../../utilities/statement";
 
 const { asyncSome } = asynchronousUtilities;
@@ -75,19 +75,23 @@ export default define(class Step extends ProofAssertion {
 
     context.trace(`Verifying the '${stepString}' step...`);
 
-    await asyncAttempt(async (context) => {
-      const step = this.validate(context);
+    const statement = this.getStatement();
 
-      if (step !== null) {
-        const unifies = await this.unify(context);
+    if (statement !== null) {
+      const validates = this.validate(context);
 
-        if (unifies) {
-          this.setContext(context);
+      if (validates) {
+        context = this.getContext();
 
+        const unifiies = await this.unify(context);
+
+        if (unifiies) {
           verifies = true;
         }
       }
-    }, context);
+    } else {
+      context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`);
+    }
 
     if (verifies) {
       context.debug(`...verified the '${stepString}' step.`);
@@ -97,15 +101,13 @@ export default define(class Step extends ProofAssertion {
   }
 
   validate(context) {
-    let step = false;
+    let validates = false;
 
     const stepString = this.getString(); ///
 
     context.trace(`Validating the '${stepString}' step...`);
 
-    const statement = this.getStatement();
-
-    if (statement !== null) {
+    attempt((context) => {
       const referenceValidates = this.validateReference(context);
 
       if (referenceValidates) {
@@ -115,19 +117,19 @@ export default define(class Step extends ProofAssertion {
           const statementValidates = this.validateStatement(context);
 
           if (statementValidates) {
-            step = this;  ///
+            this.setContext(context);
+
+            validates = true;
           }
         }
       }
-    } else {
-      context.debug(`Unable to validate the '${stepString}' step because it is nonsense.`);
+    }, context);
+
+    if (validates) {
+      context.debug(`...validated the '${stepString}' step.`);
     }
 
-    if (step !== null) {
-      context.debug(`...validate the '${stepString}' step.`);
-    }
-
-    return step;
+    return validates;
   }
 
   validateReference(context) {

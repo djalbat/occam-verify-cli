@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt, literally } from "../utilities/context";
+import { literally } from "../utilities/context";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromReferenceNode } from "../utilities/element";
@@ -160,7 +160,7 @@ export default define(class Reference extends Element {
     const referenceString = this.getString(), ///
           metavariableString = this.metavariable.getString();
 
-    context.trace(`Validating the '${referenceString}' reference's '${metavariableString}' metavariable....'`);
+    context.trace(`Validating the '${referenceString}' reference's '${metavariableString}' metavariable...'`);
 
     const metaTypeName = REFERENCE_META_TYPE_NAME,
           referenceMetaType = context.findMetaTypeByMetaTypeName(metaTypeName),
@@ -249,13 +249,9 @@ export default define(class Reference extends Element {
 
     context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
 
-    const metavariableUnifiesIntrinsically = attempt((specificContext) => {
-      const generalMetavariable = this.metavariable,  ///
-            specificMetavariable = metavariable, ///
-            metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
-
-      return metavariableUnifiesIntrinsically;
-    }, specificContext);
+    const generalMetavariable = this.metavariable,  ///
+          specificMetavariable = metavariable, ///
+          metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
 
     if (metavariableUnifiesIntrinsically) {
       metavariableUnifies = true;

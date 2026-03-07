@@ -6,9 +6,9 @@ import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateCombinator } from "../process/instantiate";
 import { ephemeralContextFromJSON } from "../utilities/json";
-import { verifyStatementAsCombinator } from "../process/verify";
 import { statementFromCombinatorNode } from "../utilities/element";
 import { unifyStatementWithCombinator } from "../process/unify";
+import { validateStatementAsCombinator } from "../process/validate";
 
 export default define(class Combinator extends Element {
   constructor(context, string, node, statement) {
@@ -28,49 +28,49 @@ export default define(class Combinator extends Element {
     return combinatorNode;
   }
 
-  verify(context) {
-    let verifies = false;
+  validate(context) {
+    let validates = false;
 
     const combinatorString = this.getString();  ///
 
-    context.trace(`Verifying the '${combinatorString}' combinator...`);
+    context.trace(`Validating the '${combinatorString}' combinator...`);
 
     attempt((context) => {
-      const statementVerifies = this.verifyStatement(context);
+      const statementValidates = this.validateStatement(context);
 
-      if (statementVerifies) {
+      if (statementValidates) {
         this.setContext(context);
 
-        verifies = true;
+        validates = true;
       }
     }, context)
 
-    if (verifies) {
-      context.debug(`...verified the '${combinatorString}' combinator.`);
+    if (validates) {
+      context.debug(`...validated the '${combinatorString}' combinator.`);
     }
 
-    return verifies;
+    return validates;
   }
 
-  verifyStatement(context) {
-    let statementVerifies = false;
+  validateStatement(context) {
+    let statementValidates = false;
 
     const statementString = this.statement.getString(),
           combinatorString = this.getString();  ///
 
-    context.trace(`Verifying the '${combinatorString}' combinator's '${statementString}' statement...`);
+    context.trace(`Validating the '${combinatorString}' combinator's '${statementString}' statement...`);
 
-    const statementVerifiesAsCombinator = verifyStatementAsCombinator(this.statement, context);
+    const statementValidatesAsCombinator = validateStatementAsCombinator(this.statement, context);
 
-    if (statementVerifiesAsCombinator) {
-      statementVerifies = true;
+    if (statementValidatesAsCombinator) {
+      statementValidates = true;
     }
 
-    if (statementVerifies) {
-      context.debug(`...verified the '${combinatorString}' combinator's '${statementString}' statement.`);
+    if (statementValidates) {
+      context.debug(`...validated the '${combinatorString}' combinator's '${statementString}' statement.`);
     }
 
-    return statementVerifies;
+    return statementValidates;
   }
 
   unifyStatement(statement, stated, context) {

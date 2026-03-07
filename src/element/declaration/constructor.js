@@ -46,9 +46,9 @@ export default define(class ConstructorDeclaration extends Declaration {
     const typeVerified = this.verifyType();
 
     if (typeVerified) {
-      const constructorVerifies = this.verifyConstructor();
+      const constructorValidates = this.validateConstructor();
 
-      if (constructorVerifies) {
+      if (constructorValidates) {
         this.constructor.setType(this.type);
 
         context.addConstructor(this.constructor);
@@ -100,23 +100,23 @@ export default define(class ConstructorDeclaration extends Declaration {
     return typeVerifies;
   }
 
-  verifyConstructor() {
-    let constructorVerifies;
+  validateConstructor() {
+    let constructorValidates;
 
     const context = this.getContext(),
           includeType = false,
           constructorString = this.constructor.getString(includeType),
           constructorDeclarationString = this.getString();  ///
 
-    context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration's '${constructorString}' constructor...`);
+    context.trace(`Validating the '${constructorDeclarationString}' constructor declaration's '${constructorString}' constructor...`);
 
-    constructorVerifies = this.constructor.verify(context);
+    constructorValidates = this.constructor.validate(context);
 
-    if (constructorVerifies) {
-      context.debug(`...verified the '${constructorDeclarationString}' constructor declaration's '${constructorString}' constructor.`);
+    if (constructorValidates) {
+      context.debug(`...validated the '${constructorDeclarationString}' constructor declaration's '${constructorString}' constructor.`);
     }
 
-    return constructorVerifies;
+    return constructorValidates;
   }
 
   static name = "ConstructorDeclaration";

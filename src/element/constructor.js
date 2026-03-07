@@ -5,9 +5,9 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateConstructor } from "../process/instantiate";
-import { verifyTermAsConstructor } from "../process/verify";
 import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
+import { validateTermAsConstructor } from "../process/validate";
 import { typeFromJSON, termToTermJSON, typeToTypeJSON, ephemeralContextFromJSON } from "../utilities/json";
 
 export default define(class Constructor extends Element {
@@ -52,51 +52,51 @@ export default define(class Constructor extends Element {
     this.type = type;
   }
 
-  verify(context) {
-    let verifies = false;
+  validate(context) {
+    let validates = false;
 
     const includeType = false,
           constructorString = this.getString(includeType);
 
-    context.trace(`Verifying the '${constructorString}' constructor...`);
+    context.trace(`Validating the '${constructorString}' constructor...`);
 
     attempt((context) => {
-      const termVerifies = this.verifyTerm(context);
+      const termValidates = this.validateTerm(context);
 
-      if (termVerifies) {
+      if (termValidates) {
         this.setContext(context);
 
-        verifies = true;
+        validates = true;
       }
     }, context);
 
-    if (verifies) {
-      context.debug(`...verified the '${constructorString}' constructor.`);
+    if (validates) {
+      context.debug(`...validated the '${constructorString}' constructor.`);
     }
 
-    return verifies;
+    return validates;
   }
 
-  verifyTerm(context) {
-    let termVerifies = false;
+  validateTerm(context) {
+    let termValidates = false;
 
     const termString = this.term.getString(),
           includeType = false,
           constructorString = this.getString(includeType);
 
-    context.trace(`Verifying the '${constructorString}' constructor's '${termString}' term...`);
+    context.trace(`Validating the '${constructorString}' constructor's '${termString}' term...`);
 
-    const termVerifiesAsConstructor = verifyTermAsConstructor(this.term, context);
+    const termValidatesAsConstructor = validateTermAsConstructor(this.term, context);
 
-    if (termVerifiesAsConstructor) {
-      termVerifies = true;
+    if (termValidatesAsConstructor) {
+      termValidates = true;
     }
 
-    if (termVerifies) {
-      context.debug(`...verified the '${constructorString}' constructor's '${termString}' term.`);
+    if (termValidates) {
+      context.debug(`...validated the '${constructorString}' constructor's '${termString}' term.`);
     }
 
-    return termVerifies;
+    return termValidates;
   }
 
   unifyTerm(term, context, validateForwards) {

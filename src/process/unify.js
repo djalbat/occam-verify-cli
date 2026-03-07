@@ -1,6 +1,8 @@
 "use strict";
 
-import { ZipPass, queryUtilities } from "occam-languages";
+import { queryUtilities, ZipPass as ZipPassBase } from "occam-languages";
+
+import ZipPass from "../pass/zip";
 
 import { termFromTermNode, frameFromFrameNode, statementFromStatementNode } from "../utilities/element";
 
@@ -16,7 +18,7 @@ const typeNodeQuery = nodeQuery("/type"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       assumptionMetavariableNodeQuery = nodeQuery("/assumption/metavariable!");
 
-class MetaLevelPass extends ZipPass {
+class MetaLevelPass extends ZipPassBase {
   static maps = [
     {
       generalNodeQuery: assumptionMetavariableNodeQuery,
@@ -145,22 +147,6 @@ class MetaLevelPass extends ZipPass {
 }
 
 class CombinatorPass extends ZipPass {
-  run(combinatorStatementNode, statementNode, stated, generalContext, specificContext) {
-    let success = false;
-
-    const specificnonTerminalNode = statementNode,  ///
-          generalcnonTerminalNode = combinatorStatementNode,  ///
-          specificChildNodes = specificnonTerminalNode.getChildNodes(), ///
-          generalcChildNodes = generalcnonTerminalNode.getChildNodes(), ///
-          descended = this.descend(generalcChildNodes, specificChildNodes, stated, generalContext, specificContext);
-
-    if (descended) {
-      success = true;
-    }
-
-    return success;
-  }
-
   static maps = [
     {
       generalNodeQuery: metaTypeNodeQuery,
@@ -250,22 +236,6 @@ class CombinatorPass extends ZipPass {
 }
 
 class ConstructorPass extends ZipPass {
-  run(constructorTermNode, termNode, generalContext, specificContext) {
-    let success = false;
-
-    const specificnonTerminalNode = termNode,  ///
-          generalcnonTerminalNode = constructorTermNode,  ///
-          specificChildNodes = specificnonTerminalNode.getChildNodes(), ///
-          generalcChildNodes = generalcnonTerminalNode.getChildNodes(), ///
-          descended = this.descend(generalcChildNodes, specificChildNodes, generalContext, specificContext);
-
-    if (descended) {
-      success = true;
-    }
-
-    return success;
-  }
-
   static maps = [
     {
       generalNodeQuery: typeNodeQuery,

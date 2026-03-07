@@ -35,15 +35,15 @@ export  default define(class Conclusion extends Element {
 
     context.trace(`Verifying the '${conclusionString}' conclusion...`);
 
-    attempt((context) => {
-      const conclusion = this.validate(context);
+    if (this.statement !== null) {
+      const validates = this.validate(context);
 
-      if (conclusion !== null) {
-        this.setContext(context);
-
+      if (validates) {
         verifies = true;
       }
-    }, context);
+    } else {
+      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
+    }
 
     if (verifies) {
       context.debug(`...verified the '${conclusionString}' conclusion.`);
@@ -53,27 +53,27 @@ export  default define(class Conclusion extends Element {
   }
 
   validate(context) {
-    let conclusion = null;
+    let validates = false;
 
     const conclusionString = this.getString();  ///
 
     context.trace(`Validating the '${conclusionString}' conclusion...`);
 
-    if (this.statement !== null) {
+    attempt((context) => {
       const statementValidates = this.validateStatement(context);
 
       if (statementValidates) {
-        conclusion = this;  ///
-      }
-    } else {
-      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
-    }
+        this.setContext(context);
 
-    if (conclusion !== null) {
+        validates = true;
+      }
+    }, context);
+
+    if (validates) {
       context.debug(`...validated the '${conclusionString}' conclusion.`);
     }
 
-    return conclusion;
+    return validates;
   }
 
   validateStatement(context) {

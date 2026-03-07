@@ -35,15 +35,15 @@ export default define(class Deduction extends Element {
 
     context.trace(`Verifying the '${duductionString}' duduction...`);
 
-    attempt((context) => {
-      const deduction = this.validate(context);
+    if (this.statement !== null) {
+      const validates = this.validate(context);
 
-      if (deduction !== null) {
-        this.setContext(context);
-
+      if (validates) {
         verifies = true;
       }
-    }, context);
+    } else {
+      context.debug(`Unable to verify the '${duductionString}' duduction because it is nonsense.`);
+    }
 
     if (verifies) {
       context.debug(`...verified the '${duductionString}' duduction.`);
@@ -53,27 +53,27 @@ export default define(class Deduction extends Element {
   }
 
   validate(context) {
-    let deduction = null;
+    let validates = false;
 
     const duductionString = this.getString();  ///
 
     context.trace(`Validating the '${duductionString}' duduction...`);
 
-    if (this.statement !== null) {
+    attempt((context) => {
       const statementValidates = this.validateStatement(context);
 
       if (statementValidates) {
-        deduction = this; ///
-      }
-    } else {
-      context.debug(`Unable to verify the '${duductionString}' duduction because it is nonsense.`);
-    }
+        this.setContext(context);
 
-    if (deduction) {
+        validates = true;
+      }
+    }, context);
+
+    if (validates) {
       context.debug(`...validated the '${duductionString}' duduction.`);
     }
 
-    return deduction;
+    return validates;
   }
 
   validateStatement(context) {
