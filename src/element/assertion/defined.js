@@ -208,17 +208,6 @@ export default define(class DefinedAssertion extends Assertion {
     return unifiesIndependently;
   }
 
-  toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          json = {
-            name,
-            string
-          };
-
-    return json;
-  }
-
   static name = "DefinedAssertion";
 
   static fromJSON(json, context) {

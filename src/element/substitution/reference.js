@@ -164,17 +164,6 @@ export default define(class ReferenceSubstitution extends Substitution {
     return replacementReferenceValidates;
   }
 
-  toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          json = {
-            name,
-            string
-          };
-
-    return json;
-  }
-
   static name = "ReferenceSubstitution";
 
   static fromJSON(json, context) {

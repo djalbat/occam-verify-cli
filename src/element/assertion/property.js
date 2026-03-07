@@ -200,17 +200,6 @@ export default define(class PropertyAssertion extends Assertion {
     context.addAssignment(assignment);
   }
 
-  toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          json = {
-            name,
-            string
-          };
-
-    return json;
-  }
-
   static name = "PropertyAssertion";
 
   static fromJSON(json, context) {

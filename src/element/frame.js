@@ -6,23 +6,23 @@ import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
-import { metavariableFromFrameNode } from "../utilities/element";
+import { referenceFromFrameNode } from "../utilities/element";
 import { assumptionsStringFromAssumptions } from "../utilities/string";
 
 export default define(class Frame extends Element {
-  constructor(context, string, node, assumptions, metavariable) {
+  constructor(context, string, node, reference, assumptions) {
     super(context, string, node);
 
+    this.reference = reference;
     this.assumptions = assumptions;
-    this.metavariable = metavariable;
   }
 
   getAssumptions() {
     return this.assumptions;
   }
 
-  getMetavariable() {
-    return this.metavariable;
+  getReference() {
+    return this.reference;
   }
 
   getFrameNode() {
@@ -34,16 +34,28 @@ export default define(class Frame extends Element {
 
   getMetavariableName() {
     const frameNode = this.getFrameNode(),
-          metavariableName = frameNode.getMetavariableName();
+          referenceName = frameNode.getMetavariableName();
 
-    return metavariableName;
+    return referenceName;
   }
 
   getMetavariableNode() {
     const frameNode = this.getFrameNode(),
-          metavariableNode = frameNode.getMetavariableNode();
+          referenceNode = frameNode.getMetavariableNode();
 
-    return metavariableNode;
+    return referenceNode;
+  }
+
+  getMetavariable() {
+    let metavariable = null;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      metavariable = this.reference.getMetavariable();
+    }
+
+    return metavariable;
   }
 
   matchFrameNode(frameNode) {
@@ -184,10 +196,10 @@ export default define(class Frame extends Element {
     } else {
       let validates = false;
 
-      const assumptionsValidate = this.validateAssumptions(stated, context),
-            metavariablevalidates = this.validateMetavariable(stated, context);
+      const referenceValidates = this.validateReference(stated, context),
+            assumptionsValidate = this.validateAssumptions(stated, context);
 
-      if (assumptionsValidate && metavariablevalidates) {
+      if (referenceValidates && assumptionsValidate) {
         let validatesWhenStated = false,
             validatesWhenDerived = false;
 
@@ -252,6 +264,36 @@ export default define(class Frame extends Element {
     return validatesWhenDerived;
   }
 
+  validateReference(stated, context) {
+    let referenceValidates = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const frameString = this.getString(), ///
+            referenceString = this.reference.getString();
+
+      context.trace(`Validating the '${frameString}' frame's '${referenceString}' reference...`);
+
+      const metavariable = this.getMetavariable(),
+            metaTypeName = FRAME_META_TYPE_NAME,
+            frameMetaType = context.findMetaTypeByMetaTypeName(metaTypeName),
+            validatesGivenMetaType = metavariable.validateGivenMetaType(frameMetaType, context);
+
+      if (validatesGivenMetaType) {
+        referenceValidates = true;
+      }
+
+      if (referenceValidates) {
+        context.debug(`...validated the '${frameString}' frame's '${referenceString}' reference.`);
+      }
+    } else {
+      referenceValidates = true;
+    }
+
+    return referenceValidates;
+  }
+
   validateAssumption(assumption, context) {
     let assumptionValidates;
 
@@ -306,41 +348,6 @@ export default define(class Frame extends Element {
     return assumptionsValidate;
   }
 
-  validateMetavariable(stated, context) {
-    let metavariableValidates = false;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const frameString = this.getString(), ///
-            metavraibleString = this.metavariable.getString();
-
-      context.trace(`Validating the '${frameString}' frame's '${metavraibleString}' metavariable...`);
-
-      const metavariablePresent = context.isMetavariablePresent(this.metavariable);
-
-      if (metavariablePresent) {
-        const metaTypeName = FRAME_META_TYPE_NAME,
-              frameMetaType = context.findMetaTypeByMetaTypeName(metaTypeName),
-              metavariableValidateGivenMetaType = this.metavariable.validateGivenMetaType(frameMetaType, context);
-
-        if (metavariableValidateGivenMetaType) {
-          metavariableValidates = true;
-        }
-      } else {
-        context.debug(`The '${frameString}' frame's '${metavraibleString}' metavariable is not present.`);
-      }
-
-      if (metavariableValidates) {
-        context.debug(`...validated the '${frameString}' frame's '${metavraibleString}' metavariable.`);
-      }
-    } else {
-      metavariableValidates = true;
-    }
-
-    return metavariableValidates;
-  }
-
   validateGivenMetaType(metaType, stated, context) {
     let validatesGivenMetaType = false;
 
@@ -381,13 +388,13 @@ export default define(class Frame extends Element {
     const frame = literally((context) => {
       const { string } = json,
             frameNode = instantiateFrame(string, context),
-            node = frameNode,  ///
-            assumptions = assumptionsFromFrameNode(frameNode, context),
-            metavariable = metavariableFromFrameNode(frameNode, context);
+            node = frameNode, ///
+            reference = referenceFromFrameNode(frameNode, context),
+            assumptions = assumptionsFromFrameNode(frameNode, context);
 
       context = null;
 
-      const frame = new Frame(context, string, node, assumptions, metavariable);
+      const frame = new Frame(context, string, node, assumptions, reference);
 
       return frame;
     }, context);

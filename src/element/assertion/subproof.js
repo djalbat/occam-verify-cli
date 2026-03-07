@@ -113,17 +113,6 @@ export default define(class SubproofAssertion extends Assertion {
     return subproofUnifies;
   }
 
-  toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          json = {
-            name,
-            string
-          };
-
-    return json;
-  }
-
   static name = "SubproofAssertion";
 
   static fromJSON(json, context) {

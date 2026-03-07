@@ -37,4 +37,15 @@ export default class Assertion extends Element {
 
     return equalTo;
   }
+
+  toJSON() {
+    const { name } = this.constructor,
+          string = this.getString(),
+          json = {
+            name,
+            string
+          };
+
+    return json;
+  }
 }

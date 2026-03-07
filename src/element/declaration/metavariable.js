@@ -34,9 +34,15 @@ export default define(class MetavariableDeclaration extends Declaration {
     const metavariableVerifies = this.verifyMetavariable();
 
     if (metavariableVerifies) {
-      context.addMetavariable(this.metavariable);
+      const metavariableTypeVerified = this.verifyMetavariableType();
 
-      verifies = true;
+      if (metavariableTypeVerified) {
+        this.metavariable.setMetaType(this.metaType);
+
+        context.addMetavariable(this.metavariable);
+
+        verifies = true;
+      }
     }
 
     if (verifies) {
@@ -58,23 +64,17 @@ export default define(class MetavariableDeclaration extends Declaration {
     const metavariableNode = this.metavariable.getNode(), ///
           termNode = metavariableNode.getTermNode();
 
-    if (termNode !== null) {
-      context.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
-    } else {
+    if (termNode === null) {
       const metavariableName = this.metavariable.getName(),
             metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
 
-      if (metavariablePresent) {
-        context.debug(`The '${metavariableName}' metavariable is already present.`);
+      if (!metavariablePresent) {
+        metavariableVerifies = true;
       } else {
-        const metavariableTypeVerified = this.verifyMetavariableType();
-
-        if (metavariableTypeVerified) {
-          this.metavariable.setMetaType(this.metaType);
-
-          metavariableVerifies = true;
-        }
+        context.debug(`The '${metavariableName}' metavariable is already present.`);
       }
+    } else {
+      context.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
     }
 
     if (metavariableVerifies) {
@@ -101,12 +101,12 @@ export default define(class MetavariableDeclaration extends Declaration {
       const nominalTypeName = metavariableType.getNominalTypeName(),
             type = context.findTypeByNominalTypeName(nominalTypeName);
 
-      if (type !== null) {
-        context.debug(`The '${metavariableTypeString}' type is not present.`);
-      } else {
+      if (type === null) {
         this.metavariable.setType(type);
 
         metavariableTypeVerified = true;
+      } else {
+        context.debug(`The '${metavariableTypeString}' type is not present.`);
       }
 
       if (metavariableTypeVerified) {

@@ -179,17 +179,6 @@ export default define(class TermSubstitution extends Substitution {
     return replacementTermValidates;
   }
 
-  toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          json = {
-            name,
-            string
-          };
-
-    return json;
-  }
-
   static name = "TermSubstitution";
 
   static fromJSON(json, context) {

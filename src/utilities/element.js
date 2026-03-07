@@ -123,12 +123,12 @@ export function frameFromFrameNode(frameNode, context) {
   const { Frame } = elements,
         node = frameNode, ///
         string = context.nodeAsString(node),
-        assumptions = assumptionsFromFrameNode(frameNode, context),
-        metavariable = metavariableFromFrameNode(frameNode, context);
+        reference = referenceFromFrameNode(frameNode, context),
+        assumptions = assumptionsFromFrameNode(frameNode, context);
 
   context = null;
 
-  const frame = new Frame(context, string, node, assumptions, metavariable);
+  const frame = new Frame(context, string, node, reference, assumptions);
 
   return frame;
 }
@@ -530,6 +530,19 @@ export function metatheoremFromMetatheoremNode(metatheoremNode, context) {
         metatheorem = new Metatehorem(context, string, node, label, suppositions, deduction, proof, substitutions);
 
   return metatheorem;
+}
+
+export function referencesFromMetavariableNode(metavariableNode, context) {
+  const { Reference } = elements,
+        node = metavariableNode, ///
+        string = context.nodeAsString(node),
+        metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+
+  context = null;
+
+  const reference = new Reference(context, string, node, metavariable);
+
+  return reference
 }
 
 export function metavariableFromMetavariableNode(metavariableNode, context) {
@@ -951,6 +964,18 @@ export function conclusionFromRuleNode(ruleNode, context) {
         conclusion = conclusionFromConclusionNode(conclusionNode, context);
 
   return conclusion;
+}
+
+export function referenceFromFrameNode(frameNode, context) {
+  let reference = null;
+
+  const metavariableNode = frameNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    reference = referencesFromMetavariableNode(metavariableNode, context);
+  }
+
+  return reference;
 }
 
 export function theoremFromSectionNode(sectionNode, context) {

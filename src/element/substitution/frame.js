@@ -170,17 +170,6 @@ export default define(class FrameSubstitution extends Substitution {
     return replacementFrameValidates;
   }
 
-  toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          json = {
-            name,
-            string
-          };
-
-    return json;
-  }
-
   static name = "FrameSubstitution";
 
   static fromJSON(json, context) {

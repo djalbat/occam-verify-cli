@@ -362,7 +362,7 @@ export default class NominalFileContext extends FileContext {
     this.trace(`Added the '${metavariableString}' metavariable to the '${filePath}' file context.`)
   }
 
-  findMetavariable(metavariable) {
+  findMetavariable(metavariable, context) {
     const metavariables = this.getMetavariables(),
           specificMetavariable = metavariable;  ///
 

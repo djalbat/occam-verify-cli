@@ -239,17 +239,6 @@ export default define(class ContainedAssertion extends Assertion {
     return unifiesIndependently;
   }
 
-  toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          json = {
-            name,
-            string
-          };
-
-    return json;
-  }
-
   static name = "ContainedAssertion";
 
   static fromJSON(json, context) {

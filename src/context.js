@@ -108,14 +108,6 @@ export default class Context extends ContextBase {
     return subproofOrProofAssertions;
   }
 
-  findMetavariable(metavariable) {
-    const context = this.getContext();
-
-    metavariable = context.findMetavariable(metavariable);  ///
-
-    return metavariable;
-  }
-
   findRuleByReference(reference) {
     const context = this.getContext(),
           rule = context.findRuleByReference(reference);
@@ -269,14 +261,6 @@ export default class Context extends ContextBase {
           procedure = context.findProcedureByProcedureName(procedureName);
 
     return procedure;
-  }
-
-  isMetavariablePresent(metavariable) {
-    metavariable = this.findMetavariable(metavariable); ///
-
-    const metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
   }
 
   isLabelPresentByReference(reference) {
