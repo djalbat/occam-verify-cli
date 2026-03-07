@@ -199,20 +199,19 @@ export default define(class Term extends Element {
 
     context.trace(`Validating the '${termString}' term given the '${typeString}' type...`);
 
-    const validates = this.validate(context, () => {
-      let validatesForwards;
-
-      const typeEqualToOrSubTypeOfGivenTypeType = this.type.isEqualToOrSubTypeOf(type);
-
-      if (typeEqualToOrSubTypeOfGivenTypeType) {
-        validatesForwards = true;
-      }
+    const term = this.validate(context, () => {
+      const validatesForwards = true;
 
       return validatesForwards;
     });
 
-    if (validates) {
-      validatesGivenType = true;
+    if (term !== null) {
+      const termType = term.getType(),
+            termTypeEqualToOrSubTypeOfGivenTypeType = termType.isEqualToOrSubTypeOf(type);
+
+      if (termTypeEqualToOrSubTypeOfGivenTypeType) {
+        validatesGivenType = true;
+      }
     }
 
     if (validatesGivenType) {

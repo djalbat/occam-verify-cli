@@ -35,9 +35,9 @@ export default define(class Signature extends Element {
 
     context.trace(`Verifying the '${signatureString}' signature...`);
 
-    const validates = this.validate(context);
+    const signature = this.validate(context);
 
-    if (validates) {
+    if (signature !== null) {
       verifies = true;
     }
 
@@ -49,7 +49,7 @@ export default define(class Signature extends Element {
   }
 
   validate(context) {
-    let validates = false;
+    let signature = null;
 
     const signatureString = this.getString();  ///
 
@@ -61,14 +61,14 @@ export default define(class Signature extends Element {
     if (termsValidate) {
       this.terms = terms;
 
-      validates = true;
+      signature = this; ///
     }
 
-    if (validates) {
+    if (signature) {
       context.debug(`...validated the '${signatureString}' signature.`);
     }
 
-    return validates
+    return signature
   }
 
   validateTerm(term, terms, context) {

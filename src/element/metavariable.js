@@ -284,7 +284,6 @@ export default define(class Metavariable extends Element {
 
         if (referenceSubstitution !== null) {
           referenceUnifies = true;
-
         }
       }
     }

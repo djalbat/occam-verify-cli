@@ -109,7 +109,7 @@ export default define(class Rule extends Element {
     }, context);
 
     if (verifies) {
-      const rule = this;
+      const rule = this;  ///
 
       context.addRule(rule);
 

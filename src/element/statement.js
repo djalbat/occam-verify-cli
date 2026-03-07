@@ -220,9 +220,11 @@ export default define(class Statement extends Element {
     const metaTypeName = metaType.getName();
 
     if (metaTypeName === STATEMENT_META_TYPE_NAME) {
-      const validates = this.validate(stated, context)
+      const statement = this.validate(stated, context)
 
-      validatesGivenMetaType = validates; ///
+      if (statement !== null) {
+        validatesGivenMetaType = true;
+      }
     }
 
     if (validatesGivenMetaType) {

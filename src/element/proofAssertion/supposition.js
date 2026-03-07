@@ -42,9 +42,9 @@ export default define(class Supposition extends ProofAssertion {
     context.trace(`Verifying the '${suppositionString}' supposition...`);
 
     attempt((context) => {
-      const validates = this.validate(context);
+      const supposition = this.validate(context);
 
-      if (validates) {
+      if (supposition !== null) {
         this.setContext(context);
 
         verifies = true;
@@ -59,7 +59,7 @@ export default define(class Supposition extends ProofAssertion {
   }
 
   validate(context) {
-    let validates = false;
+    let supposition = false;
 
     const suppositionString = this.getString(); ///
 
@@ -74,23 +74,23 @@ export default define(class Supposition extends ProofAssertion {
       const statementValidates = this.validateStatement(context);
 
       if (statementValidates) {
-        validates = true;
+        supposition = this; ///
       }
     } else if (procedureCall !== null) {
       const procedureCallValidates = this.validateProcedureCall(context);
 
       if (procedureCallValidates) {
-        validates = true;
+        supposition = this; ///
       }
     } else {
       context.debug(`Unable to validate the '${suppositionString}' supposition because it is nonsense.`);
     }
 
-    if (validates) {
+    if (supposition !== null) {
       context.debug(`...validated the '${suppositionString}' supposition.`);
     }
 
-    return validates;
+    return supposition;
   }
 
   validateProcedureCall(context) {
@@ -101,7 +101,11 @@ export default define(class Supposition extends ProofAssertion {
 
     context.trace(`Validatting the '${suppositionString}' supposition's '${procedureCallString}' procedure call...`);
 
-    procedureCallValidates = this.procedureCall.validate(context);
+    const procedureCall = this.procedureCall.validate(context);
+
+    if (procedureCall !== null) {
+      procedureCallValidates =true;
+    }
 
     if (procedureCallValidates) {
       context.debug(`...validated the '${suppositionString}' supposition's '${procedureCallString}' procedure call.`);

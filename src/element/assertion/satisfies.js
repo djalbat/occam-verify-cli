@@ -77,9 +77,15 @@ export default define(class SatisfiesAssertion extends Assertion {
   }
 
   validateSignature(stated, context) {
-    const signatureVerifies = this.signature.validate(context);
+    let signatureValidates = false;
 
-    return signatureVerifies;
+    const signature = this.signature.validate(context);
+
+    if (signature !== null) {
+      signatureValidates = true;
+    }
+
+    return signatureValidates;
   }
 
   validateReference(stated, context) {

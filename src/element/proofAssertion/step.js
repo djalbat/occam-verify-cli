@@ -76,9 +76,9 @@ export default define(class Step extends ProofAssertion {
     context.trace(`Verifying the '${stepString}' step...`);
 
     await asyncAttempt(async (context) => {
-      const validates = this.validate(context);
+      const step = this.validate(context);
 
-      if (validates) {
+      if (step !== null) {
         const unifies = await this.unify(context);
 
         if (unifies) {
@@ -97,7 +97,7 @@ export default define(class Step extends ProofAssertion {
   }
 
   validate(context) {
-    let validates = false;
+    let step = false;
 
     const stepString = this.getString(); ///
 
@@ -115,7 +115,7 @@ export default define(class Step extends ProofAssertion {
           const statementValidates = this.validateStatement(context);
 
           if (statementValidates) {
-            validates = true;
+            step = this;  ///
           }
         }
       }
@@ -123,11 +123,11 @@ export default define(class Step extends ProofAssertion {
       context.debug(`Unable to validate the '${stepString}' step because it is nonsense.`);
     }
 
-    if (validates) {
+    if (step !== null) {
       context.debug(`...validate the '${stepString}' step.`);
     }
 
-    return validates;
+    return step;
   }
 
   validateReference(context) {

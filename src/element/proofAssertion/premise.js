@@ -42,9 +42,9 @@ export default define(class Premise extends ProofAssertion {
     context.trace(`Verifying the '${premiseString}' premise...`);
 
     attempt((context) => {
-      const validates = this.validate(context);
+      const premise = this.validate(context);
 
-      if (validates) {
+      if (premise !== null) {
         this.setContext(context);
 
         verifies = true;
@@ -59,7 +59,7 @@ export default define(class Premise extends ProofAssertion {
   }
 
   validate(context) {
-    let validates = false;
+    let premise = false;
 
     const premiseString = this.getString(); ///
 
@@ -74,23 +74,23 @@ export default define(class Premise extends ProofAssertion {
       const statementValidates = this.validateStatement(context);
 
       if (statementValidates) {
-        validates = true;
+        premise = this; ///
       }
     } else if (procedureCall !== null) {
       const procedureCallValidates = this.validateProcedureCall(context);
 
       if (procedureCallValidates) {
-        validates = true;
+        premise = this; ///
       }
     } else {
       context.debug(`Unable to validate the '${premiseString}' premise because it is nonsense.`);
     }
 
-    if (validates) {
+    if (premise !== null) {
       context.debug(`...validated the '${premiseString}' premise.`);
     }
 
-    return validates;
+    return premise;
   }
 
   validateProcedureCall(context) {
@@ -101,7 +101,11 @@ export default define(class Premise extends ProofAssertion {
 
     context.trace(`Validatting the '${premiseString}' premise's '${procedureCallString}' procedure call...`);
 
-    procedureCallValidates = this.procedureCall.validate(context);
+    const procedureCall = this.procedureCall.validate(context);
+
+    if (procedureCall !== null) {
+      procedureCallValidates = true;
+    }
 
     if (procedureCallValidates) {
       context.debug(`...validated the '${premiseString}' premise's '${procedureCallString}' procedure call.`);

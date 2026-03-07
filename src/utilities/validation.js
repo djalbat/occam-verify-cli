@@ -73,7 +73,7 @@ function unifyTermWithBracketedConstructor(term, context, validateForwards) {
 }
 
 function validateStatementAsMetavariable(statement, stated, context) {
-  let statementValidatesAsMetavariableAndSubstitution = false;
+  let statementValidatesAsMetavariable = false;
 
   const statementNode = statement.getNode(),
         metavariableNode = statementNode.getMetavariableNode();
@@ -87,7 +87,7 @@ function validateStatementAsMetavariable(statement, stated, context) {
           metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
     if (metavariable !== null) {
-      statementValidatesAsMetavariableAndSubstitution = true;
+      statementValidatesAsMetavariable = true;
 
       const { TermSubstitution, FrameSubstitution } = elements,
             frameSubstitution = FrameSubstitution.fromStatement(statement, context),
@@ -104,17 +104,17 @@ function validateStatementAsMetavariable(statement, stated, context) {
         substitution = substitution.validate(generalContext, specificContext);
 
         if (substitution === null) {
-          statementValidatesAsMetavariableAndSubstitution = false;
+          statementValidatesAsMetavariable = false;
         }
       }
     }
 
-    if (statementValidatesAsMetavariableAndSubstitution) {
+    if (statementValidatesAsMetavariable) {
       context.debug(`...validated the '${statementString}' statement as a metavariable.`);
     }
   }
 
-  return statementValidatesAsMetavariableAndSubstitution;
+  return statementValidatesAsMetavariable;
 }
 
 function unifyStatementWithCombinators(statement, stated, context) {

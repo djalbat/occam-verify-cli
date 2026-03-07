@@ -137,19 +137,23 @@ export default define(class PropertyAssertion extends Assertion {
   }
 
   validatePropertyRelation(stated, context) {
-    let propertyRelationVerifies;
+    let propertyRelationValidates = false;
 
     const propertyRelationString = this.propertyRelation.getString();
 
     context.trace(`Validating the '${propertyRelationString}' property relation...`);
 
-    propertyRelationVerifies = this.propertyRelation.validate(context);
+    const propertyRelation = this.propertyRelation.validate(context);
 
-    if (propertyRelationVerifies) {
+    if (propertyRelation !== null) {
+      propertyRelationValidates = true;
+    }
+
+    if (propertyRelationValidates) {
       context.debug(`...validated the '${propertyRelationString}' property relation.`);
     }
 
-    return propertyRelationVerifies;
+    return propertyRelationValidates;
   }
 
   validateWhenStated(context) {
