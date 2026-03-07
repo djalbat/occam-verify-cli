@@ -252,6 +252,25 @@ export default define(class Frame extends Element {
     return validatesWhenDerived;
   }
 
+  validateAssumption(assumption, context) {
+    let assumptionValidates;
+
+    const frameString = this.getString(), ///
+          assumptionstring = assumption.getString();
+
+    context.trace(`Validating the '${frameString}' frame's '${assumptionstring}' assumption.`);
+
+    const stated = true;  ///
+
+    assumptionValidates = assumption.validate(stated, context);
+
+    if (assumptionValidates) {
+      context.debug(`...validated the '${frameString}' frame's '${assumptionstring}' assumption.`);
+    }
+
+    return assumptionValidates;
+  }
+
   validateAssumptions(stated, context) {
     let assumptionsValidate;
 
@@ -261,14 +280,12 @@ export default define(class Frame extends Element {
       const frameString = this.getString(), ///
             assumptionsString = assumptionsStringFromAssumptions(this.assumptions);
 
-      context.trace(`Validating the '${assumptionsString}' assumptions of the '${frameString}' frame...`);
-
-      stated = true;  ///
+      context.trace(`Validating the '${frameString}' frame's '${assumptionsString}' assumptions...`);
 
       const assumptions = [];
 
       assumptionsValidate = this.assumptions.every((assumption) => {
-        const assumptionValidates = assumption.validate(stated, context);
+        const assumptionValidates = this.validateAssumption(assumption, context);
 
         if (assumptionValidates) {
           assumptions.push(assumption);
@@ -280,7 +297,7 @@ export default define(class Frame extends Element {
       if (assumptionsValidate) {
         this.assumptions = assumptions;
 
-        context.debug(`...validated the '${assumptionsString}' assumptions of the '${frameString}' frame.`);
+        context.debug(`...validated the '${frameString}' frame's '${assumptionsString}' assumptions.`);
       }
     } else {
       assumptionsValidate = true;
