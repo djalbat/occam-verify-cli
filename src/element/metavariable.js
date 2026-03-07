@@ -93,14 +93,14 @@ export default define(class Metavariable extends Element {
     context.trace(`Validating the '${metavariableString}' metavariable...`);
 
     const metavariable = this, ///
-          metavariablePresent = context.isMetavariablePresent(metavariable);
+          metavariablePresent = context.isMetavariablePresent(metavariable, context);
 
     if (metavariablePresent) {
       validates = true;
     }
 
     if (validates) {
-      context.debug(`...va;idated the '${metavariableString}' metavariable.`);
+      context.debug(`...validated the '${metavariableString}' metavariable.`);
     }
 
     return validates;
@@ -116,7 +116,7 @@ export default define(class Metavariable extends Element {
 
     let metavariable = this;  ///
 
-    metavariable = context.findMetavariable(metavariable);
+    metavariable = context.findMetavariable(metavariable, context);
 
     if (metavariable !== null) {
       const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);

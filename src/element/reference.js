@@ -165,7 +165,7 @@ export default define(class Reference extends Element {
     const metaTypeName = REFERENCE_META_TYPE_NAME,
           referenceMetaType = context.findMetaTypeByMetaTypeName(metaTypeName),
           metaType = referenceMetaType, ///
-          metavariable = context.findMetavariable(this.metavariable);
+          metavariable = context.findMetavariable(this.metavariable, context);
 
     if (metavariable !== null) {
       const metavariableValidatesGivenMetaType = metavariable.validateGivenMetaType(metaType, context);

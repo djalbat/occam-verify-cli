@@ -136,6 +136,18 @@ export default class Context extends ContextBase {
     return metaType;
   }
 
+  findMetavariable(metavariable, context) {
+    const childContext = context; ///
+
+    context = this.getContext();
+
+    const parentContext = context; ///
+
+    metavariable = parentContext.findMetavariable(metavariable, childContext);  ///
+
+    return metavariable;
+  }
+
   findTermByTermNode(termNode) {
     const context = this.getContext(),
           term = context.findTermByTermNode(termNode);
@@ -261,6 +273,14 @@ export default class Context extends ContextBase {
           procedure = context.findProcedureByProcedureName(procedureName);
 
     return procedure;
+  }
+
+  isMetavariablePresent(metavariable, context) {
+    metavariable = this.findMetavariable(metavariable, context);  ///
+
+    const metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
   }
 
   isLabelPresentByReference(reference) {

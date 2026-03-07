@@ -297,14 +297,6 @@ export default class EphemeralContext extends Context {
     }
   }
 
-  findMetavariable(metavariable) {
-    const context = this.getContext();
-
-    metavariable = context.findMetavariable(metavariable);  ///
-
-    return metavariable;
-  }
-
   findTermByTermNode(termNode) {
     const term = this.terms.find((term) => {
       const termNodeMatches = term.matchTermNode(termNode);
@@ -423,14 +415,6 @@ export default class EphemeralContext extends Context {
     }) || null;
 
     return substitution;
-  }
-
-  isMetavariablePresent(metavariable) {
-    metavariable = this.findMetavariable(metavariable); ///
-
-    const metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
   }
 
   isTermPresentByTermNode(termNode) {

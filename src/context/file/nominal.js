@@ -367,8 +367,7 @@ export default class NominalFileContext extends FileContext {
           specificMetavariable = metavariable;  ///
 
     metavariable = metavariables.find((metavariable) => {
-      const context = this, ///
-            generalMetavariable = metavariable, ///
+      const generalMetavariable = metavariable, ///
             metavariableUnifies = generalMetavariable.unifyMetavariable(specificMetavariable, context);
 
       if (metavariableUnifies) {
