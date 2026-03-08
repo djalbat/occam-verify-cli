@@ -549,11 +549,11 @@ export function metavariableFromMetavariableNode(metavariableNode, context) {
   const { Metavariable } = elements,
         node = metavariableNode,  ///
         string = context.nodeAsString(node),
-        metavariableName = metavariableNode.getMetavariableName(),
-        name = metavariableName,  ///
-        type = null,
+        name = nameFromMetavariableNode(metavariableNode, context),
+        term = termFromMetavariableNode(metavariableNode, context),
+        type = typeFromMetavariableNode(metavariableNode, context),
         metaType = null,
-        metavariable = new Metavariable(context, string, node, name, type, metaType);
+        metavariable = new Metavariable(context, string, node, name, term, type, metaType);
 
   return metavariable;
 }
@@ -1068,6 +1068,30 @@ export function nameFromMetavariableNode(metavariableNode, context) {
         name = metavaraibleName;  ///
 
   return name;
+}
+
+export function termFromMetavariableNode(metavariableNode, context) {
+  let term = null;
+
+  const termNode = metavariableNode.getTermNode();
+
+  if (termNode !== null) {
+    term = termFromTermNode(termNode, context);
+  }
+
+  return term;
+}
+
+export function typeFromMetavariableNode(metavariableNode, context) {
+  let type = null;
+
+  const typemNode = metavariableNode.getTypeNode();
+
+  if (typemNode !== null) {
+    type = typeFromTypeNode(typemNode, context);
+  }
+
+  return type;
 }
 
 export function metavariableFromFrameNode(frameNode, context) {

@@ -7,23 +7,27 @@ import elements from "../elements";
 import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { EMPTY_STRING } from "../constants";
-import { metaTypeToMetaTypeJSON } from "../utilities/json";
 import { instantiateMetavariable } from "../process/instantiate";
-import { nameFromMetavariableNode } from "../utilities/element";
-import { typeFromJSON, metaTypeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
+import { nameFromMetavariableNode, termFromMetavariableNode, typeFromMetavariableNode } from "../utilities/element";
 
 export default define(class Metavariable extends Element {
-  constructor(context, string, node, name, type, metaType) {
+  constructor(context, string, node, name, term, type, metaType) {
     super(context, string, node);
     
     this.name = name;
+    this.term = term;
     this.type = type;
     this.metaType = metaType;
   }
 
   getName() {
     return this.name;
+  }
+
+  getTerm() {
+    return this.term;
   }
 
   getType() {
@@ -34,27 +38,25 @@ export default define(class Metavariable extends Element {
     return this.metaType;
   }
 
-  setType(type) {
-    this.type = type;
-  }
-
   setMetaType(metaType) {
     this.metaType = metaType;
   }
 
   getMetavariableNode() {
     const node = this.getNode(),
-          metavarialbeNode = node;  ///
+          metavariableNode = node;  ///
 
-    return metavarialbeNode;
+    return metavariableNode;
   }
 
   getMetavariableName() {
-    const metavarialbeNode = this.getMetavariableNode(),
-          metavariableName = metavarialbeNode.getMetavariableName();
+    const metavariableNode = this.getMetavariableNode(),
+          metavariableName = metavariableNode.getMetavariableName();
 
     return metavariableName;
   }
+
+  isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
   compare(metavariable) {
     const metavariableName = metavariable.getName(),
@@ -63,8 +65,6 @@ export default define(class Metavariable extends Element {
 
     return comparesToMetavariable;
   }
-
-  isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
   compareMetavariableName(metavariableName) {
     const nameMetavariableName = (this.name === metavariableName),
@@ -85,6 +85,71 @@ export default define(class Metavariable extends Element {
     return metavariableNodeMatches;
   }
 
+  verify(context) {
+    let verifies = false;
+
+    const metavariableString = this.getString();
+
+    context.trace(`Verifying the '${metavariableString}' metavariable...`);
+
+    const termVerifies = this.verifyTerm(context);
+
+    if (termVerifies) {
+      const typeVerifies = this.verifyType(context);
+
+      if (typeVerifies) {
+        verifies = true;
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${metavariableString}' metavariable.`);
+    }
+
+    return verifies;
+  }
+
+  verifyTerm(context) {
+    let termVerifies = true;  ///
+
+    if (this.term !== null) {
+      const termString = this.term.getString(),
+            metavariableString = this.getString();
+
+      termVerifies = false;
+
+      context.trace(`A '${termString}' term is present in the '${metavariableString}' metavariable.`);
+    }
+
+    return termVerifies;
+  }
+
+  verifyType(context) {
+    let typeVerifies = true;  ///
+
+    if (this.type !== null) {
+      const typeString = this.type.getString(),
+            metavariableString = this.getString();
+
+      context.trace(`Verifying the '${metavariableString}' metavariable's '${typeString}' type...`);
+
+      const typeName = this.type.getName(),
+            typePresent = context.isTypePresentByTypeName(typeName);
+
+      if (!typePresent) {
+        typeVerifies = false;
+
+        context.error(`Type '${typeName}' is not present.`);
+      }
+
+      if (typeVerifies) {
+        context.debug(`...verifieds the '${metavariableString}' metavariable's '${typeString}' type.`);
+      }
+    }
+
+    return typeVerifies;
+  }
+
   validate(context) {
     let validates = false;
 
@@ -92,11 +157,23 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Validating the '${metavariableString}' metavariable...`);
 
-    const metavariable = this, ///
-          metavariablePresent = context.isMetavariablePresent(metavariable, context);
+    const termValidates = this.validateTerm(context);
 
-    if (metavariablePresent) {
-      validates = true;
+    if (termValidates) {
+      const typeValidates = this.validateType(context);
+
+      if (typeValidates) {
+        const metavariableName = this.name, ///
+              metavariable = context.findMetavariableByMetavariableName(metavariableName);
+
+        if (metavariable !== null) {
+          const metaType = metavariable.getMetaType();
+
+          this.metaType = metaType;
+        }
+
+        validates = true;
+      }
     }
 
     if (validates) {
@@ -104,6 +181,40 @@ export default define(class Metavariable extends Element {
     }
 
     return validates;
+  }
+
+  validateTerm(context) {
+    let termValidates = true;
+
+    if (this.term !== null) {
+      const termString = this.term.getString(),
+            metavariableString = this.getString();
+
+      context.trace(`Validating the '${metavariableString}' metavariable's '${termString}' term...`);
+
+      termValidates = this.term.validate(context);
+
+      if (termValidates) {
+        context.debug(`...validated the '${metavariableString}' metavariable's '${termString}' term.`);
+      }
+    }
+
+    return termValidates;
+  }
+
+  validateType(context) {
+    let typeValidates = true;  ///
+
+    if (this.type !== null) {
+      const typeString = this.type.getString(),
+            metavariableString = this.getString();
+
+      typeValidates = false;
+
+      context.trace(`A '${typeString}' type is present in the '${metavariableString}' metavariable.`);
+    }
+
+    return typeValidates;
   }
 
   validateGivenMetaType(metaType, context) {
@@ -114,9 +225,7 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Validating the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
 
-    let metavariable = this;  ///
-
-    metavariable = context.findMetavariable(metavariable, context);
+    const metavariable = this.validate(context);
 
     if (metavariable !== null) {
       const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);
@@ -438,14 +547,11 @@ export default define(class Metavariable extends Element {
   }
 
   toJSON() {
-    const typeJSON = typeToTypeJSON(this.type),
-          metaTypeJSON = metaTypeToMetaTypeJSON(this.metaType),
-          type = typeJSON,  ///
+    const metaTypeJSON = metaTypeToMetaTypeJSON(this.metaType),
           metaType = metaTypeJSON,  ///
           string = this.getString(), ///
           json = {
             string,
-            type,
             metaType
           };
 
@@ -460,9 +566,10 @@ export default define(class Metavariable extends Element {
             metavariableNode = instantiateMetavariable(string, context),
             node = metavariableNode,  ///
             name = nameFromMetavariableNode(metavariableNode, context),
-            type = typeFromJSON(json, context),
+            term = termFromMetavariableNode(metavariableNode, context),
+            type = typeFromMetavariableNode(metavariableNode, context),
             metaType = metaTypeFromJSON(json, context),
-            metavariable = new Metavariable(context, string, node, name, type, metaType);
+            metavariable = new Metavariable(context, string, node, name, term, type, metaType);
 
       return metavariable;
     }, context);

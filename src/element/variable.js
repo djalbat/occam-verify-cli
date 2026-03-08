@@ -95,31 +95,6 @@ export default define(class Variable extends Element {
     return validates;
   }
 
-  validateType(context) {
-    let typeValidates = false;
-
-    const typeString = this.type.getString();
-
-    context.trace(`Validating the '${typeString}' type...`);
-
-    const prefixedTypeName = this.type.getPrefixedName(),
-          type = context.findTypeByPrefixedTypeName(prefixedTypeName);
-
-    if (type === null) {
-      context.debug(`The '${typeString}' type is not present.`);
-    } else {
-      this.type = type; ///
-
-      typeValidates = true;
-    }
-
-    if (typeValidates) {
-      context.debug(`...validated the '${typeString}' type.`);
-    }
-
-    return typeValidates;
-  }
-
   unifyTerm(term, generalContext, specificContext) {
     let termUnifies = false;
 

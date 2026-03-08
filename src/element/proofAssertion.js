@@ -38,9 +38,7 @@ export default class ProofAssertion extends Element {
 
     const leftStatement = statement,  ///
           rightStatement = this.statement,  ///
-          leftStatementNode = leftStatement.getNode(),
-          rightStatementNode = rightStatement.getNode(),
-          statementsEquate = equateStatements(leftStatementNode, rightStatementNode, context);
+          statementsEquate = equateStatements(leftStatement, rightStatement, context);
 
     if (statementsEquate) {
       comparesToStatement = true;

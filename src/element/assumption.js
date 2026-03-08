@@ -150,7 +150,7 @@ export default define(class Assumption extends Element {
     let statementValidates = false;
 
     const assumptionString = this.getString(),  ///
-      statementString = this.statement.getString();
+          statementString = this.statement.getString();
 
     context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);
 
@@ -167,23 +167,6 @@ export default define(class Assumption extends Element {
     }
 
     return statementValidates;
-  }
-
-  validateReferenceAsMetavariable(stated, context) {
-    let referenceValidatesAsMetavariable;
-
-    const referenceString = this.reference.getString(),
-          assumptionString = this.getString(); ///
-
-    context.trace(`Validating the '${assumptionString}' assumption's '${referenceString}' reference as s metavariable...`);
-
-    referenceValidatesAsMetavariable = this.reference.validateAsMetavariable(context);
-
-    if (referenceValidatesAsMetavariable) {
-      context.debug(`...validated the '${assumptionString}' assumption's '${referenceString}' reference as a metavariable.`);
-    }
-
-    return referenceValidatesAsMetavariable;
   }
 
   validateWhenStated(context) {

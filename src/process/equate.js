@@ -63,10 +63,12 @@ class EquationalPass extends EquivalencePass {
 
 const equationalPass = new EquationalPass();
 
-export function equateTerms(leftTermNode, rightTermNode, context) {
+export function equateTerms(leftTerm, rightTerm, context) {
   let termsEquate;
 
-  const leftNode = leftTermNode, ///
+  const leftTermNode = leftTerm.getNode(),
+        rightTermNode = rightTerm.getNode(),
+        leftNode = leftTermNode, ///
         rightNode = rightTermNode, ///
         success = equationalPass.run(leftNode, rightNode, context);
 
@@ -75,10 +77,12 @@ export function equateTerms(leftTermNode, rightTermNode, context) {
   return termsEquate;
 }
 
-export function equateStatements(leftStatementNode, rightStatementNode, context) {
+export function equateStatements(leftStatement, rightStatement, context) {
   let statementsEquate;
 
-  const leftNode = leftStatementNode, ///
+  const leftStatementNode = leftStatement.getNode(),
+        rightStatementNode = rightStatement.getNode(),
+        leftNode = leftStatementNode, ///
         rightNode = rightStatementNode, ///
         success = equationalPass.run(leftNode, rightNode, context);
 

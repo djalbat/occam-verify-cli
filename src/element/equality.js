@@ -102,9 +102,7 @@ export default define(class Equality extends Element {
   isEqual(context) {
     let equal = false;
 
-    const leftTermNode = this.leftTerm.getNode(),
-          rightTermNode = this.rightTerm.getNode(),
-          termsEquate = equateTerms(leftTermNode, rightTermNode, context);
+    const termsEquate = equateTerms(this.leftTerm, this.rightTerm, context);
 
     if (termsEquate) {
       equal = true;

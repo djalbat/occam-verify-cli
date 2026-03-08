@@ -3,6 +3,7 @@
 import Declaration from "../declaration";
 
 import { define } from "../../elements";
+import { verifyMetavariable } from "../../process/verify";
 
 export default define(class MetavariableDeclaration extends Declaration {
   constructor(context, string, node, metaType, metavariable) {
@@ -34,11 +35,9 @@ export default define(class MetavariableDeclaration extends Declaration {
     const metavariableVerifies = this.verifyMetavariable();
 
     if (metavariableVerifies) {
-      const metavariableTypeVerified = this.verifyMetavariableType();
+      const metaTypeVerifies = this.verifyMetaType();
 
-      if (metavariableTypeVerified) {
-        this.metavariable.setMetaType(this.metaType);
-
+      if (metaTypeVerifies) {
         context.addMetavariable(this.metavariable);
 
         verifies = true;
@@ -52,6 +51,24 @@ export default define(class MetavariableDeclaration extends Declaration {
     return verifies;
   }
 
+  verifyMetaType() {
+    let metaTypeVerifies = true;
+
+    const context = this.getContext(),
+          metaTypeString = this.metaType.getString(),
+          metaTypeDeclarationString = this.getString(); ///
+
+    context.trace(`Verifying the '${metaTypeDeclarationString}' variable declaration's '${metaTypeString}' metaType...`);
+
+    this.metavariable.setMetaType(this.metaType);
+
+    if (metaTypeVerifies) {
+      context.debug(`...verified the '${metaTypeDeclarationString}' variable declaration's '${metaTypeString}' metaType.`);
+    }
+
+    return metaTypeVerifies;
+  }
+
   verifyMetavariable() {
     let metavariableVerifies = false;
 
@@ -61,20 +78,13 @@ export default define(class MetavariableDeclaration extends Declaration {
 
     context.trace(`Verifying the '${metavariableDeclarationString}' variable declaration's '${metavariableString}' metavariable...`);
 
-    const metavariableNode = this.metavariable.getNode(), ///
-          termNode = metavariableNode.getTermNode();
+    const metavariableName = this.metavariable.getName(),
+          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
 
-    if (termNode === null) {
-      const metavariableName = this.metavariable.getName(),
-            metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
-
-      if (!metavariablePresent) {
-        metavariableVerifies = true;
-      } else {
-        context.debug(`The '${metavariableName}' metavariable is already present.`);
-      }
+    if (!metavariablePresent) {
+      metavariableVerifies = this.metavariable.verify(context);
     } else {
-      context.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
+      context.debug(`The '${metavariableName}' metavariable is already present.`);
     }
 
     if (metavariableVerifies) {
@@ -82,39 +92,6 @@ export default define(class MetavariableDeclaration extends Declaration {
     }
 
     return metavariableVerifies;
-  }
-
-  verifyMetavariableType() {
-    let metavariableTypeVerified = false;
-
-    const context = this.getContext(),
-          metavariableType = this.metavariable.getType();
-
-    if (metavariableType === null) {
-      metavariableTypeVerified = true;
-    } else {
-      const metavariableTypeString = metavariableType.getString(),
-            metavariableDeclarationString = this.getString(); ///
-
-      context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration's '${metavariableTypeString}' metavariable type...`);
-
-      const nominalTypeName = metavariableType.getNominalTypeName(),
-            type = context.findTypeByNominalTypeName(nominalTypeName);
-
-      if (type === null) {
-        this.metavariable.setType(type);
-
-        metavariableTypeVerified = true;
-      } else {
-        context.debug(`The '${metavariableTypeString}' type is not present.`);
-      }
-
-      if (metavariableTypeVerified) {
-        context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration's '${metavariableTypeString}' metavariable type.`);
-      }
-    }
-
-    return metavariableTypeVerified;
   }
 
   static name = "MetavariableDeclaration";

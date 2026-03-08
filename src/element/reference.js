@@ -125,20 +125,25 @@ export default define(class Reference extends Element {
     } else {
       let validates = false;
 
-      if (!validates) {
-        const metavariableValidates = this.validateMetavariable(context);
+      const metavariableValidates = this.validateMetavariable(context);
 
-        if (metavariableValidates) {
-          validates = true;
+      if (metavariableValidates) {
+        if (!validates) {
+          const reference = this, ///
+                labelPresent = context.isLabelPresentByReference(reference);
+
+          if (labelPresent) {
+            validates = true;
+          }
         }
-      }
 
-      if (!validates) {
-        const reference = this, ///
-              labelPresent = context.isLabelPresentByReference(reference);
+        if (!validates) {
+          const reference = this, ///
+                metavariablePresent = context.isMetavariablePresentByReference(reference);
 
-        if (labelPresent) {
-          validates = true;
+          if (metavariablePresent) {
+            validates = true;
+          }
         }
       }
 
@@ -155,51 +160,20 @@ export default define(class Reference extends Element {
   }
 
   validateMetavariable(context) {
-    let metavariableValidates = false;
+    let metavariableValidates;
 
     const referenceString = this.getString(), ///
           metavariableString = this.metavariable.getString();
 
     context.trace(`Validating the '${referenceString}' reference's '${metavariableString}' metavariable...'`);
 
-    const metaTypeName = REFERENCE_META_TYPE_NAME,
-          referenceMetaType = context.findMetaTypeByMetaTypeName(metaTypeName),
-          metaType = referenceMetaType, ///
-          metavariable = context.findMetavariable(this.metavariable, context);
+    metavariableValidates = this.metavariable.validate(context);
 
-    if (metavariable !== null) {
-      const metavariableValidatesGivenMetaType = metavariable.validateGivenMetaType(metaType, context);
-
-      if (metavariableValidatesGivenMetaType) {
-        metavariableValidates = true;
-      }
-    } else {
-      context.debug(`The '${metavariableString}' metavariable is not present.`);
+    if (metavariableValidates) {
+      context.debug(`...validated the '${referenceString}' reference's '${metavariableString}' metavariable.'`);
     }
 
     return metavariableValidates;
-  }
-
-  validateAsMetavariable(context) {
-    let validatesAsMetavariable = false;
-
-    const referenceString = this.getString(); ///
-
-    context.trace(`Validating the '${referenceString}' reference as a metavaraible...`);
-
-    const metavariable = this.getMetavariable(),
-          metavariableName = metavariable.getName(),
-          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
-
-    if (metavariablePresent) {
-      validatesAsMetavariable = true;
-    }
-
-    if (validatesAsMetavariable) {
-      context.debug(`...validated the '${referenceString}' reference as a metavaraible.`);
-    }
-
-    return validatesAsMetavariable;
   }
 
   unifyLabel(label, context) {

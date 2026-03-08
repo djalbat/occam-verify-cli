@@ -394,7 +394,7 @@ export default define(class Frame extends Element {
 
       context = null;
 
-      const frame = new Frame(context, string, node, assumptions, reference);
+      const frame = new Frame(context, string, node, reference, assumptions);
 
       return frame;
     }, context);

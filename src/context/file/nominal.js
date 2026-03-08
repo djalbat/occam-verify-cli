@@ -498,13 +498,13 @@ export default class NominalFileContext extends FileContext {
 
   findMetatheoremByReference(reference) {
     const metatheorems = this.getMetatheorems(),
-      metatheorem = metatheorems.find((metatheorem) => {
-        const metatheoremComparesToReference = metatheorem.compareReference(reference);
+          metatheorem = metatheorems.find((metatheorem) => {
+            const metatheoremComparesToReference = metatheorem.compareReference(reference);
 
-        if (metatheoremComparesToReference) {
-          return true;
-        }
-      }) || null;
+            if (metatheoremComparesToReference) {
+              return true;
+            }
+          }) || null;
 
     return metatheorem;
   }

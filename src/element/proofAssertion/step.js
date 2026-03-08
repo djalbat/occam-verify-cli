@@ -133,7 +133,7 @@ export default define(class Step extends ProofAssertion {
   }
 
   validateReference(context) {
-    let referenceValidates = true;
+    let referenceValidates = true;  ///
 
     if (this.reference !== null) {
       const stepString = this.getString(),  ///
@@ -167,8 +167,8 @@ export default define(class Step extends ProofAssertion {
       const stated = true,
             satisfiesAssertion = this.satisfiesAssertion.validate(stated, context);
 
-      if (satisfiesAssertion !== null) {
-        satisfiesAssertionValidates = true;
+      if (satisfiesAssertion === null) {
+        satisfiesAssertionValidates = false;
       }
 
       if (satisfiesAssertionValidates) {
