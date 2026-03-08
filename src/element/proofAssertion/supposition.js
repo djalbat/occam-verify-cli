@@ -192,7 +192,7 @@ export default define(class Supposition extends ProofAssertion {
           specificContext = proofAssertionContext,
           statementUnifies = liminally((specificContext) => {
             const statement = proofAssertion.getStatement(),
-              statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
+                  statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
 
             if (statementUnifies) {
               specificContext.commit(context);

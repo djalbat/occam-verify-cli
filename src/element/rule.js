@@ -172,7 +172,7 @@ export default define(class Rule extends Element {
 
       const statement = this.conclusion.getStatement();
 
-      proofVerifies = this.proof.verify(statement, context);
+      proofVerifies = await this.proof.verify(statement, context);
 
       if (proofVerifies) {
         context.debug(`...verified the '${ruleString}' rule's proof.`);

@@ -8,13 +8,14 @@ import elements from "../elements";
 const { last } = arrayUtilities;
 
 class ScopedContext extends Context {
-  constructor(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions) {
+  constructor(context, variables, judgements, assignments, equivalences, substitutions, subproofOrProofAssertions) {
     super(context);
 
     this.variables = variables;
     this.judgements = judgements;
     this.assignments = assignments;
     this.equivalences = equivalences;
+    this.substitutions = substitutions;
     this.subproofOrProofAssertions = subproofOrProofAssertions;
   }
 
@@ -68,6 +69,10 @@ class ScopedContext extends Context {
     return equivalences;
   }
 
+  getSubstitutions() {
+    return this.substitutions;
+  }
+
   getSubproofOrProofAssertions() {
     let subproofOrProofAssertions;
 
@@ -107,6 +112,20 @@ class ScopedContext extends Context {
     }
 
     return lastProofAssertion;
+  }
+
+  hasScopedSubstitutions() {
+    let scopedSubstitutions;
+
+    if (this.substitutions !== null) {
+      scopedSubstitutions = true;
+    } else {
+      const context = this.getContext();
+
+      scopedSubstitutions = context.hasScopedSubstitutions();
+    }
+
+    return scopedSubstitutions;
   }
 
   addEquality(equality) {
@@ -153,6 +172,39 @@ class ScopedContext extends Context {
 
   addAssignment(assignment) {
     this.assignments.push(assignment);
+  }
+
+  addSubstitution(substitution, scoped = true) {
+    if (this.substitutions === null) {
+      const context = this.getContext();
+
+      context.addSubstitution(substitution);
+
+      return;
+    }
+
+    const context = this, ///
+          substitutionA = substitution, ///
+          substitutionString = substitution.getString();
+
+    context.trace(`Adding the '${substitutionString}' substitution to the scoped context...`);
+
+    const substitutionB = this.substitutions.find((substitution) => {
+      const substitutionB = substitution, ///
+            substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
+
+      if (substitutionAEqualToSubstitutionB) {
+        return true;
+      }
+    }) || null;
+
+    if (substitutionB !== null) {
+      context.debug(`The '${substitutionString}' substitution has already been added to the scoped context.`);
+    } else {
+      this.substitutions.push(substitution);
+
+      context.debug(`...added the '${substitutionString}' substitution to the scoped context.`);
+    }
   }
 
   assignAssignments() {
@@ -251,14 +303,14 @@ class ScopedContext extends Context {
     return comparesToTermAndPropertyRelation;
   }
 
-  static fromNothing(context) {
+  static fromSubstitutions(substitutions, context) {
     const { Equivalences } = elements,
           variables = [],
           judgements = [],
           assignments = [],
           equivalences = Equivalences.fromNothing(context),
           subproofOrProofAssertions = [],
-          scopedContext = new ScopedContext(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions);
+          scopedContext = new ScopedContext(context, variables, judgements, assignments, equivalences, substitutions, subproofOrProofAssertions);
 
     return scopedContext;
   }

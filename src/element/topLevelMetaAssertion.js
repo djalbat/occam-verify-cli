@@ -81,7 +81,7 @@ export default class TopLevelMetaAssertion extends Element {
           }
         }
       }
-    }, context);
+    }, this.substitutions, context);
 
     if (verifies) {
       context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion.`);
@@ -111,20 +111,16 @@ export default class TopLevelMetaAssertion extends Element {
   async verifyProof(context) {
     let proofVerifies;
 
-    if (this.proof === null) {
-      proofVerifies = true;
-    } else {
-      const topLevelMetaAssertionString = this.getString();  ///
+    const topLevelMetaAssertionString = this.getString();  ///
 
-      context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta-assertion's proof...`);
+    context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta-assertion's proof...`);
 
-      const statement = this.deduction.getStatement();
+    const statement = this.deduction.getStatement();
 
-      proofVerifies = this.proof.verify(statement, context);
+    proofVerifies = await this.proof.verify(statement, context);
 
-      if (proofVerifies) {
-        context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta-assertion's proof.`);
-      }
+    if (proofVerifies) {
+      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta-assertion's proof.`);
     }
 
     return proofVerifies;

@@ -188,22 +188,21 @@ export default define(class Step extends ProofAssertion {
 
     const statement = this.getStatement(),
           reference = this.getReference(),
-          satisfiesAssertion = this.getSatisfiesAssertion(),
-          statementUnifies = await asyncLiminally(async (context) => {
-            const statementUnifies = await asyncSome(unifyStatements, async (unifyStatement) => {
-              const statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
+          satisfiesAssertion = this.getSatisfiesAssertion();
 
-              if (statementUnifies) {
-                return true;
-              }
-            });
+    await asyncLiminally(async (context) => {
+      await asyncSome(unifyStatements, async (unifyStatement) => {
+        const statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
 
-            return statementUnifies;
-          }, context);
+        if (statementUnifies) {
+          context.commit();
 
-    if (statementUnifies) {
-      unifies = true;
-    }
+          unifies = true;
+
+          return true;
+        }
+      });
+    }, context);
 
     if (unifies) {
       context.debug(`...unified the '${stepString}' step.`);

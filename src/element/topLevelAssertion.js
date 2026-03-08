@@ -232,7 +232,7 @@ export default class TopLevelAssertion extends Element {
 
       const statement = this.deduction.getStatement();
 
-      proofVerifies = this.proof.verify(statement, context);
+      proofVerifies = await this.proof.verify(statement, context);
 
       if (proofVerifies) {
         context.debug(`...verified the '${topLevelAssertionString}' top level assertion's proof.`);

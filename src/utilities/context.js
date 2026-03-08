@@ -38,8 +38,14 @@ export function synthetically(innerFunction, contexts, context) {
   return innerFunction(context);
 }
 
-export async function asyncScope(innerFunction, context) {
-  const scopedContext = ScopedContext.fromNothing(context);
+export async function asyncScope(innerFunction, substitutions, context) {
+  if (context === undefined) {
+    context = substitutions;  ///
+
+    substitutions = null;
+  }
+
+  const scopedContext = ScopedContext.fromSubstitutions(substitutions, context);
 
   context = scopedContext;  ///
 

@@ -381,6 +381,13 @@ export default class Context extends ContextBase {
     return procedurePresent;
   }
 
+  hasScopedSubstitutions() {
+    const context = this.getContext(),
+          scopedSubstitutions = context.hasScopedSubstitutions();
+
+    return scopedSubstitutions;
+  }
+
   addTerm(term) {
     const context = this.getContext();
 
@@ -417,10 +424,10 @@ export default class Context extends ContextBase {
     context.addAssignment(assignment);
   }
 
-  addSubstitution(substitution) {
+  addSubstitution(substitution, scoped = false) {
     const context = this.getContext();
 
-    context.addSubstitution(substitution);
+    context.addSubstitution(substitution, scoped);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {

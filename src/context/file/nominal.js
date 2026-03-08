@@ -774,6 +774,12 @@ export default class NominalFileContext extends FileContext {
     return procedurePresent;
   }
 
+  hasScopedSubstitutions() {
+    const scopedSubstitutions = false; ///
+
+    return scopedSubstitutions;
+  }
+
   clear() {
     this.types = [];
     this.rules = [];

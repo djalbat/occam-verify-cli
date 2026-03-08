@@ -641,7 +641,7 @@ export function suppositionsFromJSON(json, context) {
 }
 
 export function substitutionsFromJSON(json, context) {
-  let { substitutions = [] } = json;  ///
+  let { substitutions } = json;  ///
 
   const { StatementSubstitution } = elements,
         substitutionsJSON = substitutions,  ///

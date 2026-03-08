@@ -2,6 +2,8 @@
 
 import { arrayUtilities } from "necessary";
 
+import elements from "../elements";
+
 import { equalityFromStatement,
          judgementFromStatement,
          typeAssertionFromStatement,
@@ -54,6 +56,20 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
             statementAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
 
       if (statementAndSubproofOrProofAssertionsUnify) {
+        statementUnifiesWithReference = true;
+      }
+    } else {
+      const scopedSubstitutions = context.hasScopedSubstitutions();
+
+      if (scopedSubstitutions) {
+        const { StatementSubstitution } = elements,
+              metavariable = reference.getMetavariable(),
+              statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
+              substitution = statementSubstitution, ///
+              scoped = true;
+
+        context.addSubstitution(substitution, scoped);
+
         statementUnifiesWithReference = true;
       }
     }

@@ -2,7 +2,6 @@
 
 import { equalityFromStatementNode,
          judgementFromStatementNode,
-         metavariableFromStatementNode,
          typeAssertionFromStatementNode,
          definedAssertionFromStatementNode,
          propertyAssertionFromStatementNode,

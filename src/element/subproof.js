@@ -64,22 +64,10 @@ export default define(class Subproof extends Element {
     let verifies = false;
 
     await asyncScope(async (context) => {
-      const suppositionsVerify = await asyncEvery(this.suppositions, async (supposition) => {
-        const suppositionVerifies = await supposition.verify(context);
-
-        if (suppositionVerifies) {
-          const subproofOrProofAssertion = supposition;  ////
-
-          context.assignAssignments(context);
-
-          context.addSubproofOrProofAssertion(subproofOrProofAssertion);
-
-          return true;
-        }
-      });
+      const suppositionsVerify = await this.verifySuppositions(context);
 
       if (suppositionsVerify) {
-        const subDerivationVerifies = await this.subDerivation.verify(context);
+        const subDerivationVerifies = await this.verifySubDerivation(context);
 
         if (subDerivationVerifies) {
           verifies = true;
@@ -88,6 +76,40 @@ export default define(class Subproof extends Element {
     }, context);
 
     return verifies;
+  }
+
+  async verifySupposition(supposition, context) {
+    const suppositionVerifies = await supposition.verify(context);
+
+    if (suppositionVerifies) {
+      const subproofOrProofAssertion = supposition;  ////
+
+      context.assignAssignments(context);
+
+      context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+    }
+
+    return suppositionVerifies;
+  }
+
+  async verifySuppositions(context) {
+    let suppositionsVerify;
+
+    suppositionsVerify = await asyncEvery(this.suppositions, async (supposition) => {
+      const suppositionVerifies = await this.verifySupposition(supposition, context);
+
+      if (suppositionVerifies) {
+        return true;
+      }
+    });
+
+    return suppositionsVerify;
+  }
+
+  async verifySubDerivation(context) {
+    const subDerivationVerifies = await this.subDerivation.verify(context);
+
+    return subDerivationVerifies;
   }
 
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {

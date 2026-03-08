@@ -529,7 +529,7 @@ export function metatheoremFromMetatheoremNode(metatheoremNode, context) {
         topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
         node = metatheoremNode, ///
         string = topLevelMetaAssertionString, ///
-        substitutions = null,
+        substitutions = substitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         metatheorem = new Metatheorem(context, string, node, label, suppositions, deduction, proof, substitutions);
 
   return metatheorem;
@@ -674,6 +674,12 @@ export function subproofAssertionFromSubproofAssertionNode(subproofAssertionNode
   const subproofAssertion = new SubproofAssertion(context, string, node, statements);
 
   return subproofAssertion;
+}
+
+export function substitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
+  const substitutions = [];
+
+  return substitutions;
 }
 
 export function containedAssertionFromContainedAssertionNode(containedAssertionNode, context) {

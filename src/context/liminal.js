@@ -60,7 +60,15 @@ export default class LiminalContext extends Context {
     return soleNonTrivialSubstitutions;
   }
 
-  addSubstitution(substitution) {
+  addSubstitution(substitution, scoped = false) {
+    if (scoped) {
+      const context = this.getContext();
+
+      context.addSubstitution(substitution, scoped);
+
+      return;
+    }
+
     const context = this, ///
           substitutionA = substitution, ///
           substitutionString = substitution.getString();
@@ -83,12 +91,6 @@ export default class LiminalContext extends Context {
 
       context.debug(`...added the '${substitutionString}' substitution to the liminal context.`);
     }
-  }
-
-  addSubstitutions(substitutions) {
-    substitutions.forEach((substitution) => {
-      this.addSubstitution(substitution);
-    });
   }
 
   resolveSubstitutions(generalContext, specificContext) {

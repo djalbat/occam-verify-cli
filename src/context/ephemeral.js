@@ -272,7 +272,15 @@ export default class EphemeralContext extends Context {
     }
   }
 
-  addSubstitution(substitution) {
+  addSubstitution(substitution, scoped = false) {
+    if (scoped) {
+      const context = this.getContext();
+
+      context.addSubstitution(substitution, scoped);
+
+      return;
+    }
+
     const context = this, ///
           substitutionA = substitution, ///
           substitutionString = substitution.getString();
@@ -295,6 +303,12 @@ export default class EphemeralContext extends Context {
 
       context.debug(`...added the '${substitutionString}' substitution to the ephemeral context.`);
     }
+  }
+
+  addSubstitutions(substitutions) {
+    substitutions.forEach((substitution) => {
+      this.addSubstitution(substitution);
+    });
   }
 
   findTermByTermNode(termNode) {
