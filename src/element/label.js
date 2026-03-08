@@ -61,17 +61,21 @@ export default define(class Label extends Element {
     const labelNode = this.getLabelNode(),
           labelPresent = context.isLabelPresentByLabelNode(labelNode);
 
-    const validates = this.validate();
+    if (!labelPresent) {
+      const validates = this.validate();
 
-    if (validates !== null) {
-      verifies = true;
+      if (validates !== null) {
+        verifies = true;
+      }
+    } else {
+      context.debug(`The '${labelString}' label is already present.`);
     }
 
     if (verifies) {
       context.debug(`...verified the '${labelString}' label.`);
     }
 
-    return validates;
+    return verifies;
   }
 
   validate() {
@@ -83,21 +87,14 @@ export default define(class Label extends Element {
     context.trace(`Validating the '${labelString}' label...`);
 
     attempt((context) => {
-      const statementValidates = this.validateStatement(context);
+      const metavariableValidates = this.validateMetavariable(context);
 
-      if (statementValidates) {
+      if (metavariableValidates) {
         this.setContext(context);
 
         validates = true;
       }
     }, context);
-
-
-    if (!labelPresent) {
-      verifies = true;
-    } else {
-      context.debug(`The '${labelString}' label is already present.`);
-    }
 
     if (validates) {
       context.debug(`...validated the '${labelString}' label.`);
