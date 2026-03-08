@@ -49,23 +49,15 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
 
     context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
 
-    const metavariableValidates = reference.validateMetavariable(context);
+    const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
-    if (metavariableValidates) {
-      const metavariable = reference.getMetavariable();
+    if (topLevelAssertion !== null) {
+      const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
+            statementAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
 
-      debugger
-
-      // synthetically((context) => {
-      //   const { StatementSubstitution } = elements;
-      //
-      //   StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
-
-      //  validate
-      //
-      // }, generalContext, specificContext);
-
-      statementUnifiesWithReference = true;
+      if (statementAndSubproofOrProofAssertionsUnify) {
+        statementUnifiesWithReference = true;
+      }
     }
 
     if (statementUnifiesWithReference) {
