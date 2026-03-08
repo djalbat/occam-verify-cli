@@ -47,13 +47,9 @@ export default define(class Frame extends Element {
   }
 
   matchFrameNode(frameNode) {
-    const frameNodeA = frameNode; ///
-
-    frameNode = this.getFrameNode();
-
-    const frameNodeB = frameNode, ///
-          frameNodeAAMatchesFrameBNodeB = frameNodeA.match(frameNodeB),
-          frameNodeMatches = frameNodeAAMatchesFrameBNodeB; ///
+    const node = frameNode, ///
+          nodeMatches = this.matchNode(node),
+          frameNodeMatches = nodeMatches; ///
 
     return frameNodeMatches;
   }

@@ -34,15 +34,11 @@ export default define(class Statement extends Element {
   }
 
   matchStatementNode(statementNode) {
-    const statementNodeA = statementNode; ///
+    const node = statementNode, ///
+          nodeMatches = this.matchNode(node),
+          statementNodeMatches = nodeMatches; ///
 
-    statementNode = this.getStatementNode();
-
-    const statementNodeB = statementNode, ///
-          statementNodeAAMatchesStatementBNodeB = statementNodeA.match(statementNodeB),
-          sdtatementNodeMatches = statementNodeAAMatchesStatementBNodeB; ///
-
-    return sdtatementNodeMatches;
+    return statementNodeMatches;
   }
 
   compareMetavariableName(metavariableName) {

@@ -11,13 +11,9 @@ export default class Assertion extends Element {
   }
 
   matchAssertionNode(assertionNode) {
-    const assertionNodeA = assertionNode; ///
-
-    assertionNode = this.getAssertionNode();
-
-    const assertionNodeB = assertionNode, ///
-          assertionNodeAAMatchesAssertionBNodeB = assertionNodeA.match(assertionNodeB),
-          assertionNodeMatches = assertionNodeAAMatchesAssertionBNodeB; ///
+    const node = assertionNode, ///
+          nodeMatches = this.matchNode(node),
+          assertionNodeMatches = nodeMatches; ///
 
     return assertionNodeMatches;
   }

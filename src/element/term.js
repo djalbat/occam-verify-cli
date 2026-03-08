@@ -42,13 +42,9 @@ export default define(class Term extends Element {
   }
 
   matchTermNode(termNode) {
-    const termNodeA = termNode; ///
-
-    termNode = this.getTermNode();
-
-    const termNodeB = termNode, ///
-          termNodeAAMatchesTermBNodeB = termNodeA.match(termNodeB),
-          termNodeMatches = termNodeAAMatchesTermBNodeB; ///
+    const node = termNode, ///
+          nodeMatches = this.matchNode(node),
+          termNodeMatches = nodeMatches; ///
 
     return termNodeMatches;
   }

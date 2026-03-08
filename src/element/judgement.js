@@ -44,13 +44,9 @@ export default define(class Judgement extends Element {
   compareMetavariableName(metavariableName) { return this.frame.compareMetavariableName(metavariableName); }
 
   matchJudgementNode(judgementNode) {
-    const judgementNodeA = judgementNode; ///
-
-    judgementNode = this.getJudgementNode();
-
-    const judgementNodeB = judgementNode, ///
-          judgementNodeAAMatchesJudgementBNodeB = judgementNodeA.match(judgementNodeB),
-          judgementNodeMatches = judgementNodeAAMatchesJudgementBNodeB; ///
+    const node = judgementNode, ///
+          nodeMatches = this.matchNode(node),
+          judgementNodeMatches = nodeMatches; ///
 
     return judgementNodeMatches;
   }

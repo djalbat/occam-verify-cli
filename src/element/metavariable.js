@@ -74,13 +74,9 @@ export default define(class Metavariable extends Element {
   }
 
   matchMetavariableNode(metavariableNode) {
-    const metavariableNodeA = metavariableNode; ///
-
-    metavariableNode = this.getMetavariableNode();  ///
-
-    const metavariableNodeB = metavariableNode, ///
-          metavariableNodeAMatchesMetavariableNodeB = metavariableNodeA.match(metavariableNodeB),
-          metavariableNodeMatches = metavariableNodeAMatchesMetavariableNodeB;  ///
+    const node = metavariableNode, ///
+          nodeMatches = this.matchNode(node),
+          metavariableNodeMatches = nodeMatches; ///
 
     return metavariableNodeMatches;
   }

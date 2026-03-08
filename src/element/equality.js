@@ -72,13 +72,9 @@ export default define(class Equality extends Element {
   }
 
   matchEqualityNode(equalityNode) {
-    const equalityNodeA = equalityNode; ///
-
-    equalityNode = this.getEqualityNode();
-
-    const equalityNodeB = equalityNode, ///
-          equalityNodeAAMatchesEqualityBNodeB = equalityNodeA.match(equalityNodeB),
-          equalityNodeMatches = equalityNodeAAMatchesEqualityBNodeB; ///
+    const node = equalityNode, ///
+          nodeMatches = this.matchNode(node),
+          equalityNodeMatches = nodeMatches; ///
 
     return equalityNodeMatches;
   }

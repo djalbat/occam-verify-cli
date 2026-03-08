@@ -23,13 +23,9 @@ export default class Substitution extends Element {
   }
 
   matchSubstitutionNode(substitutionNode) {
-    const substitutionNodeA = substitutionNode; ///
-
-    substitutionNode = this.getSubstitutionNode();
-
-    const substitutionNodeB = substitutionNode, ///
-          substitutionNodeAAMatchesSubstitutionBNodeB = substitutionNodeA.match(substitutionNodeB),
-          substitutionNodeMatches = substitutionNodeAAMatchesSubstitutionBNodeB; ///
+    const node = substitutionNode, ///
+          nodeMatches = this.matchNode(node),
+          substitutionNodeMatches = nodeMatches; ///
 
     return substitutionNodeMatches;
   }

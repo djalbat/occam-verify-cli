@@ -41,14 +41,10 @@ export default define(class Reference extends Element {
     return metavariableNode;
   }
 
-  matchReferenceNode(assertionNode) {
-    const assertionNodeA = assertionNode; ///
-
-    assertionNode = this.getReferenceNode();
-
-    const assertionNodeB = assertionNode, ///
-          assertionNodeAAMatchesReferenceBNodeB = assertionNodeA.match(assertionNodeB),
-          referenceNodeMatches = assertionNodeAAMatchesReferenceBNodeB; ///
+  matchReferenceNode(referenceNode) {
+    const node = referenceNode, ///
+          nodeMatches = this.matchNode(node),
+          referenceNodeMatches = nodeMatches; ///
 
     return referenceNodeMatches;
   }

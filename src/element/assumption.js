@@ -32,16 +32,12 @@ export default define(class Assumption extends Element {
 
   getMetavariable() { return this.reference.getMetavariable(); }
 
-  matchAssumptionNode(assumptionode) {
-    const assumptionodeA = assumptionode; ///
+  matchAssumptionNode(assumptionNode) {
+    const node = assumptionNode, ///
+          nodeMatches = this.matchNode(node),
+          assumptionNodeMatches = nodeMatches; ///
 
-    assumptionode = this.getAssumptionNode();
-
-    const assumptionodeB = assumptionode, ///
-          assumptionodeAAMatchesAssumptionBNodeB = assumptionodeA.match(assumptionodeB),
-          assumptionodeMatches = assumptionodeAAMatchesAssumptionBNodeB; ///
-
-    return assumptionodeMatches;
+    return assumptionNodeMatches;
   }
 
   compareSubstitution(substitution, context) {

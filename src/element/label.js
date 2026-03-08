@@ -31,13 +31,9 @@ export default define(class Label extends Element {
   getMetavariableNode() { return this.metavariable.getNode(); }
 
   matchLabelNode(labelNode) {
-    const labelNodeA = labelNode; ///
-
-    labelNode = this.getLabelNode();
-
-    const labelNodeB = labelNode, ///
-          labelNodeAMatchesLabelNodeB = labelNodeA.match(labelNodeB),
-          labelNodeMatches = labelNodeAMatchesLabelNodeB; ///
+    const node = labelNode, ///
+          nodeMatches = this.matchNode(node),
+          labelNodeMatches = nodeMatches; ///
 
     return labelNodeMatches;
   }
