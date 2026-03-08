@@ -4,6 +4,7 @@ import { queryUtilities, ZipPass as ZipPassBase } from "occam-languages";
 
 import ZipPass from "../pass/zip";
 
+import { FRAME_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { termFromTermNode, frameFromFrameNode, statementFromStatementNode } from "../utilities/element";
 
 const { nodeQuery } = queryUtilities;
@@ -155,22 +156,22 @@ class CombinatorPass extends ZipPass {
         let success = false;
 
         const metaTypeNode = generalMetaTypeNode, ///
-              statementNode = specificStatementNode; ///
+              metaTypeName = metaTypeNode.getMetaTypeName(),
+              metaTypeNameStatementMetaTypeName = (metaTypeName === STATEMENT_META_TYPE_NAME);
 
-        let context;
+        if (metaTypeNameStatementMetaTypeName) {
+          const context = specificContext,  ///
+                statementNode = specificStatementNode;  ///
 
-        context = generalContext; ///
+          let statement;
 
-        const metaTypeName = metaTypeNode.getMetaTypeName(),
-              metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
+          statement = statementFromStatementNode(statementNode, context);
 
-        context = specificContext;  ///
+          statement = statement.validate(stated, context);  ///
 
-        const statement = statementFromStatementNode(statementNode, context),
-              statementValidatesGivenType = statement.validateGivenMetaType(metaType, stated, context);
-
-        if (statementValidatesGivenType) {
-          success = true;
+          if (statement !== null) {
+            success = true;
+          }
         }
 
         return success;
@@ -183,22 +184,22 @@ class CombinatorPass extends ZipPass {
         let success = false;
 
         const metaTypeNode = generalMetaTypeNode, ///
-              frameNode = specificFrameNode; ///
+              metaTypeName = metaTypeNode.getMetaTypeName(),
+              metaTypeNameFrameMetaTypeName = (metaTypeName === FRAME_META_TYPE_NAME);
 
-        let context;
+        if (metaTypeNameFrameMetaTypeName) {
+          const context = specificContext,  ///
+                frameNode = specificFrameNode;  ///
 
-        context = generalContext; ///
+          let frame;
 
-        const metaTypeName = metaTypeNode.getMetaTypeName(),
-              metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
+          frame = frameFromFrameNode(frameNode, context);
 
-        context = specificContext;  ///
+          frame = frame.validate(stated, context);  ///
 
-        const frame = frameFromFrameNode(frameNode, context),
-              frameValidatesGivenMetaType = frame.validateGivenMetaType(metaType, stated, context);
-
-        if (frameValidatesGivenMetaType) {
-          success = true;
+          if (frame !== null) {
+            success = true;
+          }
         }
 
         return success;

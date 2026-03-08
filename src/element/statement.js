@@ -8,7 +8,6 @@ import { literally } from "../utilities/context";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
-import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
 const { match, backwardsSome } = arrayUtilities;
 
@@ -207,31 +206,6 @@ export default define(class Statement extends Element {
     }
 
     return statement;
-  }
-
-  validateGivenMetaType(metaType, stated, context) {
-    let validatesGivenMetaType = false;
-
-    const metaTypeString = metaType.getString(),
-          statementString = this.getString();  ///
-
-    context.trace(`Validating the '${statementString}' statement given the '${metaTypeString}' meta-type...`);
-
-    const metaTypeName = metaType.getName();
-
-    if (metaTypeName === STATEMENT_META_TYPE_NAME) {
-      const statement = this.validate(stated, context)
-
-      if (statement !== null) {
-        validatesGivenMetaType = true;
-      }
-    }
-
-    if (validatesGivenMetaType) {
-      context.debug(`...validated the '${statementString}' statement given the '${metaTypeString}' meta-type.`);
-    }
-
-    return validatesGivenMetaType;
   }
 
   unifySubproof(subproof, generalContext, specificContext) {

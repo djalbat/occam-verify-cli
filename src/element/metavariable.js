@@ -151,11 +151,13 @@ export default define(class Metavariable extends Element {
   }
 
   validate(context) {
-    let validates = false;
+    let metavariable = null;
 
     const metavariableString = this.getString(); ///
 
     context.trace(`Validating the '${metavariableString}' metavariable...`);
+
+    let validates = false;
 
     const termValidates = this.validateTerm(context);
 
@@ -177,10 +179,12 @@ export default define(class Metavariable extends Element {
     }
 
     if (validates) {
+      metavariable = this;  ///
+
       context.debug(`...validated the '${metavariableString}' metavariable.`);
     }
 
-    return validates;
+    return metavariable;
   }
 
   validateTerm(context) {
@@ -215,31 +219,6 @@ export default define(class Metavariable extends Element {
     }
 
     return typeValidates;
-  }
-
-  validateGivenMetaType(metaType, context) {
-    let validatesGivenMetaType = false;
-
-    const metaTypeString = metaType.getString(),
-          metavariableString = this.getString();  ///
-
-    context.trace(`Validating the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
-
-    const metavariable = this.validate(context);
-
-    if (metavariable !== null) {
-      const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);
-
-      if (metavariableMetaTypeEqualToMetaType) {
-        validatesGivenMetaType = true;
-      }
-    }
-
-    if (validatesGivenMetaType) {
-      context.debug(`...validated the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type.`);
-    }
-
-    return validatesGivenMetaType;
   }
 
   unifyFrame(frame, generalContext, specificContext) {

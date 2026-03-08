@@ -128,21 +128,37 @@ export default define(class Reference extends Element {
       const metavariableValidates = this.validateMetavariable(context);
 
       if (metavariableValidates) {
-        if (!validates) {
+        const referenceMetaTypeName = REFERENCE_META_TYPE_NAME,
+              referenceMetaType = context.findMetaTypeByMetaTypeName(referenceMetaTypeName),
+              metaType = this.metavariable.getMetaType();
+
+        if (metaType === null) {
           const reference = this, ///
                 labelPresent = context.isLabelPresentByReference(reference);
 
           if (labelPresent) {
             validates = true;
+          } else {
+            context.debug(`There is no label for the '${referenceString}' reference.`);
           }
-        }
+        } else {
+          const metavariableMetaTypeEqualToReferenceMetaType = this.metavariable.isMetaTypeEqualTo(referenceMetaType);
 
-        if (!validates) {
-          const reference = this, ///
-                metavariablePresent = context.isMetavariablePresentByReference(reference);
+          if (metavariableMetaTypeEqualToReferenceMetaType) {
+            const reference = this, ///
+                  metavariablePresent = context.isMetavariablePresentByReference(reference);
 
-          if (metavariablePresent) {
-            validates = true;
+            if (metavariablePresent) {
+              validates = true;
+            } else {
+              context.debug(`There is no metavariable for the '${referenceString}' reference.`);
+            }
+          } else {
+            const metaTypeString = metaType.getString(),
+                  metavariableString = this.metavariable.getString(),
+                  reerenceMetaTypeString = referenceMetaType.getString();
+
+            context.debug(`The '${referenceString}' reference's '${metavariableString}' metavariable's '${metaTypeString}' meta-type should be the '${reerenceMetaTypeString}' meta-type.`);
           }
         }
       }
@@ -160,14 +176,20 @@ export default define(class Reference extends Element {
   }
 
   validateMetavariable(context) {
-    let metavariableValidates;
+    let metavariableValidates = false;
 
     const referenceString = this.getString(), ///
           metavariableString = this.metavariable.getString();
 
     context.trace(`Validating the '${referenceString}' reference's '${metavariableString}' metavariable...'`);
 
-    metavariableValidates = this.metavariable.validate(context);
+    const metavariable = this.metavariable.validate(context);
+
+    if (metavariable !== null) {
+      this.metavariable = metavariable;
+
+      metavariableValidates = true;
+    }
 
     if (metavariableValidates) {
       context.debug(`...validated the '${referenceString}' reference's '${metavariableString}' metavariable.'`);
