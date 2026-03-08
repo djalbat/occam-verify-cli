@@ -520,7 +520,7 @@ export function equivalenceFromEquivalenceNode(equivalenceNode, context) {
 }
 
 export function metatheoremFromMetatheoremNode(metatheoremNode, context) {
-  const { Metatehorem } = elements,
+  const { Metatheorem } = elements,
         metaLemmaMetathoremNode = metatheoremNode,  ///
         proof = proofFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         label = labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
@@ -530,22 +530,9 @@ export function metatheoremFromMetatheoremNode(metatheoremNode, context) {
         node = metatheoremNode, ///
         string = topLevelMetaAssertionString, ///
         substitutions = null,
-        metatheorem = new Metatehorem(context, string, node, label, suppositions, deduction, proof, substitutions);
+        metatheorem = new Metatheorem(context, string, node, label, suppositions, deduction, proof, substitutions);
 
   return metatheorem;
-}
-
-export function referencesFromMetavariableNode(metavariableNode, context) {
-  const { Reference } = elements,
-        node = metavariableNode, ///
-        string = context.nodeAsString(node),
-        metavariable = metavariableFromMetavariableNode(metavariableNode, context);
-
-  context = null;
-
-  const reference = new Reference(context, string, node, metavariable);
-
-  return reference
 }
 
 export function metavariableFromMetavariableNode(metavariableNode, context) {

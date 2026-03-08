@@ -29,9 +29,9 @@ export default class Substitution extends Element {
 
     const substitutionNodeB = substitutionNode, ///
           substitutionNodeAAMatchesSubstitutionBNodeB = substitutionNodeA.match(substitutionNodeB),
-          equalTo = substitutionNodeAAMatchesSubstitutionBNodeB; ///
+          substitutionNodeMatches = substitutionNodeAAMatchesSubstitutionBNodeB; ///
 
-    return equalTo;
+    return substitutionNodeMatches;
   }
 
   findValidSubstiution(context) {

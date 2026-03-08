@@ -3,8 +3,9 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
 import { instantiateLabel } from "../process/instantiate";
+import { attempt, literally } from "../utilities/context";
+import { ephemeralContextFromJSON } from "../utilities/json";
 import { metavariableFromLabelNode } from "../utilities/element";
 
 export default define(class Label extends Element {
@@ -29,6 +30,18 @@ export default define(class Label extends Element {
 
   getMetavariableNode() { return this.metavariable.getNode(); }
 
+  matchLabelNode(labelNode) {
+    const labelNodeA = labelNode; ///
+
+    labelNode = this.getLabelNode();
+
+    const labelNodeB = labelNode, ///
+          labelNodeAMatchesLabelNodeB = labelNodeA.match(labelNodeB),
+          labelNodeMatches = labelNodeAMatchesLabelNodeB; ///
+
+    return labelNodeMatches;
+  }
+
   compareMetavariable(metavariable) { return this.metavariable.compare(metavariable); }
 
   compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
@@ -49,54 +62,89 @@ export default define(class Label extends Element {
 
     context.trace(`Verifying the '${labelString}' label...`);
 
-    const metavariableVerifies = this.verifyMetavariable();
+    const labelNode = this.getLabelNode(),
+          labelPresent = context.isLabelPresentByLabelNode(labelNode);
 
-    if (metavariableVerifies) {
-      const metavariableName = this.getMetavariableName(),
-            labelPresent = context.isLabelPresentByMetavariableName(metavariableName);
+    const validates = this.validate();
 
-      if (!labelPresent) {
-        verifies = true;
-      } else {
-        context.debug(`The '${labelString}' label is already present.`);
-      }
+    if (validates !== null) {
+      verifies = true;
     }
 
     if (verifies) {
       context.debug(`...verified the '${labelString}' label.`);
     }
 
-    return verifies;
+    return validates;
   }
 
-  verifyMetavariable() {
-    let verifies = false;
+  validate() {
+    let validates = false;
 
     const context = this.getContext(),
-          labelString = this.getString(), ///
-          metavariableString = this.metavariable.getString();
+          labelString = this.getString(); ///
 
-    context.trace(`Verifying the '${labelString}' label's '${metavariableString}' metavariable...`);
+    context.trace(`Validating the '${labelString}' label...`);
 
-    const metavariableName = this.getMetavariableName(),
-          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
+    attempt((context) => {
+      const statementValidates = this.validateStatement(context);
 
-    if (!metavariablePresent) {
+      if (statementValidates) {
+        this.setContext(context);
+
+        validates = true;
+      }
+    }, context);
+
+
+    if (!labelPresent) {
       verifies = true;
     } else {
-      context.debug(`The '${metavariableString}' metavariable is already present.`);
+      context.debug(`The '${labelString}' label is already present.`);
     }
 
-    if (verifies) {
-      context.debug(`...verified the '${labelString}' label's '${metavariableString}' metavariable.`);
+    if (validates) {
+      context.debug(`...validated the '${labelString}' label.`);
     }
 
-    return verifies;
+    return validates;
+  }
+
+  validateMetavariable(context) {
+    let metavariableValidates = false;
+
+    const labelString = this.getString(), ///
+          metavariableString = this.metavariable.getString();
+
+    context.trace(`Validating the '${labelString}' label's '${metavariableString}' metavariable...'`);
+
+    const metavariable = this.metavariable.validate(context);
+
+    if (metavariable !== null) {
+      this.metavariable = metavariable;
+
+      metavariableValidates = true;
+    }
+
+    if (metavariableValidates) {
+      context.debug(`...validated the '${labelString}' label's '${metavariableString}' metavariable.'`);
+    }
+
+    return metavariableValidates;
   }
 
   toJSON() {
+    let context;
+
+    context = this.getContext();
+
+    const contextJSON = context.toJSON();
+
+    context = contextJSON;  ///
+
     const string = this.getString(),
           json = {
+            context,
             string
           };
 
@@ -111,7 +159,11 @@ export default define(class Label extends Element {
             labelNode = instantiateLabel(string, context),
             metavariable = metavariableFromLabelNode(labelNode, context),
             node = labelNode, ///
-            label = new Label(context, string, node, metavariable);
+            ephemeralContext = ephemeralContextFromJSON(json, context);
+
+      context = ephemeralContext; ///
+
+      const label = new Label(context, string, node, metavariable);
 
       return label;
     }, context);

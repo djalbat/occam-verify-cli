@@ -89,7 +89,7 @@ export default define(class TermSubstitution extends Substitution {
     if (validSubstitution) {
       termSubstitution = validSubstitution; ///
 
-      context.debug(`...the '${termSubstitutionString}' term substitution is alrady valid.`);
+      context.debug(`...the '${termSubstitutionString}' term substitution is already valid.`);
     } else {
       let validates = false;
 

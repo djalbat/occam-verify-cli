@@ -378,19 +378,6 @@ export default class NominalFileContext extends FileContext {
     return metavariable;
   }
 
-  findLabelByMetavariable(metavariable) {
-    const labels = this.getLabels(),
-          label = labels.find((label) => {
-            const labelMetavariableComparesToMetavariable = label.compareMetavariable(metavariable);
-
-            if (labelMetavariableComparesToMetavariable) {
-              return true;
-            }
-          }) || null;
-
-    return label;
-  }
-
   findMetaTypeByMetaTypeName(metaTypeName) {
     const metaType = findMetaTypeByMetaTypeName(metaTypeName);
 
@@ -630,19 +617,6 @@ export default class NominalFileContext extends FileContext {
     return typePrefix;
   }
 
-  findLabelByMetavariableName(metavariableName) {
-    const labels = this.getLabels(),
-          label = labels.find((label) => {
-            const labelComparesToMetavariableName = label.compareMetavariableName(metavariableName);
-
-            if (labelComparesToMetavariableName) {
-              return true;
-            }
-          }) || null;
-
-    return label;
-  }
-
   findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
@@ -703,20 +677,26 @@ export default class NominalFileContext extends FileContext {
     return metavariablePresent;
   }
 
-  isLabelPresentByMetavariable(metavariable) {
-    const label = this.findLabelByMetavariable(metavariable),
-          labelPresent = (label !== null);
+  isLabelPresentByReference(reference) {
+    const labels = this.getLabels(),
+      labelPresent = labels.some((label) => {
+        const context = this, ///
+          labelUnifies = reference.unifyLabel(label, context);
+
+        if (labelUnifies) {
+          return true;
+        }
+      });
 
     return labelPresent;
   }
 
-  isLabelPresentByReference(reference) {
+  isLabelPresentByLabelNode(labelNode) {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
-            const context = this, ///
-                  labelUnifies = reference.unifyLabel(label, context);
+            const labelNodeMatches = label.matchLabelNode(labelNode);
 
-            if (labelUnifies) {
+            if (labelNodeMatches) {
               return true;
             }
           });
@@ -764,13 +744,6 @@ export default class NominalFileContext extends FileContext {
           typePresent = (type !== null);
 
     return typePresent;
-  }
-
-  isLabelPresentByMetavariableName(metavariableName) {
-    const label = this.findLabelByMetavariableName(metavariableName),
-          labelPresent = (label !== null);
-
-    return labelPresent;
   }
 
   isTypePrefixPresentByTypePrefixName(typePrefixName) {

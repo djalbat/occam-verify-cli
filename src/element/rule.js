@@ -182,6 +182,31 @@ export default define(class Rule extends Element {
     return proofVerifies;
   }
 
+  async verifyPremise(premise, context) {
+    let premiseVerifies;
+
+    const ruleString = this.getString(),  ///
+          premiseString = premise.getString();
+
+    context.trace(`Verifying the '${ruleString}' rule's '${premiseString}' premise...`);
+
+    premiseVerifies = await premise.verify(context)
+
+    if (premiseVerifies) {
+      const subproofOrProofAssertion = premise;  ////
+
+      context.assignAssignments();
+
+      context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+    }
+
+    if (premiseVerifies) {
+      context.debug(`...verified the '${ruleString}' rule's '${premiseString}' premise.`);
+    }
+
+    return premiseVerifies;
+  }
+
   async verifyPremises(context) {
     let premisesVerify;
 
@@ -190,15 +215,9 @@ export default define(class Rule extends Element {
     context.trace(`Verifying the '${ruleString}' rule's premises...`);
 
     premisesVerify = await asyncForwardsEvery(this.premises, async (premise) => {
-      const premiseVerifies = await premise.verify(context)
+      const premiseVerifies = await this.verifyPremise(premise, context);
 
       if (premiseVerifies) {
-        const subproofOrProofAssertion = premise;  ////
-
-        context.assignAssignments();
-
-        context.addSubproofOrProofAssertion(subproofOrProofAssertion);
-
         return true;
       }
     });

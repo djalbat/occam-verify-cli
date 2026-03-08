@@ -48,9 +48,9 @@ export default define(class Term extends Element {
 
     const termNodeB = termNode, ///
           termNodeAAMatchesTermBNodeB = termNodeA.match(termNodeB),
-          equalTo = termNodeAAMatchesTermBNodeB; ///
+          termNodeMatches = termNodeAAMatchesTermBNodeB; ///
 
-    return equalTo;
+    return termNodeMatches;
   }
 
   compareVariableIdentifier(variableIdentifier) {

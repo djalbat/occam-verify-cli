@@ -48,9 +48,9 @@ export default define(class Reference extends Element {
 
     const assertionNodeB = assertionNode, ///
           assertionNodeAAMatchesReferenceBNodeB = assertionNodeA.match(assertionNodeB),
-          equalTo = assertionNodeAAMatchesReferenceBNodeB; ///
+          referenceNodeMatches = assertionNodeAAMatchesReferenceBNodeB; ///
 
-    return equalTo;
+    return referenceNodeMatches;
   }
 
   findValidRefernece(context) {
@@ -121,7 +121,7 @@ export default define(class Reference extends Element {
     if (validRefernece !== null) {
       reference = validRefernece; ///
 
-      context.debug(`...the '${referenceString}' reference is alrady valid.`);
+      context.debug(`...the '${referenceString}' reference is already valid.`);
     } else {
       let validates = false;
 

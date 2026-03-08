@@ -1,8 +1,7 @@
 "use strict";
 
-import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
-import { asynchronousUtilities } from "occam-languages";
+import { Element, asynchronousUtilities } from "occam-languages";
 
 import { asyncScope } from "../utilities/context";
 import { topLevelAssertionStringFromLabelsSuppositionsAndDeduction } from "../utilities/string";
@@ -259,6 +258,31 @@ export default class TopLevelAssertion extends Element {
     return deductionVerifies;
   }
 
+  async verifySupposition(supposition, context) {
+    let suppositionVerifies;
+
+    const suppositionString = supposition.getString(),
+          topLevelAssertionString = this.getString();  ///
+
+    context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's '${suppositionString}' supposition...`);
+
+    suppositionVerifies = await supposition.verify(context)
+
+    if (suppositionVerifies) {
+      const subproofOrProofAssertion = supposition;  ////
+
+      context.assignAssignments();
+
+      context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+    }
+
+    if (suppositionVerifies) {
+      context.debug(`...verified the '${topLevelAssertionString}' top level assertion's '${suppositionString}' supposition.`);
+    }
+
+    return suppositionVerifies;
+  }
+
   async verifySuppositions(context) {
     let suppositionsVerify;
 
@@ -267,15 +291,9 @@ export default class TopLevelAssertion extends Element {
     context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's suppositions...`);
 
     suppositionsVerify = await asyncForwardsEvery(this.suppositions, async (supposition) => {
-      const suppositionVerifies = await supposition.verify(context)
+      const suppositionVerifies = await this.verifySupposition(supposition, context);
 
       if (suppositionVerifies) {
-        const subproofOrProofAssertion = supposition;  ////
-
-        context.assignAssignments();
-
-        context.addSubproofOrProofAssertion(subproofOrProofAssertion);
-
         return true;
       }
     });

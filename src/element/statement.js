@@ -40,9 +40,9 @@ export default define(class Statement extends Element {
 
     const statementNodeB = statementNode, ///
           statementNodeAAMatchesStatementBNodeB = statementNodeA.match(statementNodeB),
-          equalTo = statementNodeAAMatchesStatementBNodeB; ///
+          sdtatementNodeMatches = statementNodeAAMatchesStatementBNodeB; ///
 
-    return equalTo;
+    return sdtatementNodeMatches;
   }
 
   compareMetavariableName(metavariableName) {
@@ -185,7 +185,7 @@ export default define(class Statement extends Element {
     if (validStatement !== null) {
       statement = validStatement; ///
 
-      context.debug(`...the '${statementString}' statement is alrady valid.`);
+      context.debug(`...the '${statementString}' statement is already valid.`);
     } else {
       const validates = validateStatements.some((validateStatement) => {
         const statement = this, ///

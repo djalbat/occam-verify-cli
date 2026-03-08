@@ -304,6 +304,13 @@ export default class Context extends ContextBase {
     return termPresent;
   }
 
+  isLabelPresentByLabelNode(labelNode) {
+    const context = this.getContext(),
+          labelPresent = context.isLabelPresentByLabelNode(labelNode);
+
+    return labelPresent;
+  }
+
   isFramePresentByFrameNode(frameNode) {
     const context = this.getContext(),
           framePresent = context.isFramePresentByFrameNode(frameNode);

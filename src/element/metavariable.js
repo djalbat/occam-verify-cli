@@ -196,7 +196,11 @@ export default define(class Metavariable extends Element {
 
       context.trace(`Validating the '${metavariableString}' metavariable's '${termString}' term...`);
 
-      termValidates = this.term.validate(context);
+      termValidates = this.term.validate(context, () => {
+        const validatesForwards = true;
+
+        return validatesForwards;
+      });
 
       if (termValidates) {
         context.debug(`...validated the '${metavariableString}' metavariable's '${termString}' term.`);

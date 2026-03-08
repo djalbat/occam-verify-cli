@@ -1,6 +1,6 @@
 "use strict";
 
-import { Element } from "occam-languages";
+import { Element, asynchronousUtilities } from "occam-languages";
 
 import { asyncScope } from "../utilities/context";
 import { labelFromJSON,
@@ -11,6 +11,8 @@ import { labelFromJSON,
          deductionToDeductionJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
+
+const { asyncForwardsEvery } = asynchronousUtilities;
 
 export default class TopLevelMetaAssertion extends Element {
   constructor(context, string, node, label, suppositions, deduction, proof, substitutions) {
@@ -144,29 +146,48 @@ export default class TopLevelMetaAssertion extends Element {
     return deductionVerifies;
   }
 
+  async verifySupposition(supposition, context) {
+    let suppositionVerifies;
+
+    const suppositionString = supposition.getString(),
+          topLevelMetaAssertionString = this.getString();  ///
+
+    context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta-assertion's '${suppositionString}' supposition...`);
+
+    suppositionVerifies = await supposition.verify(context)
+
+    if (suppositionVerifies) {
+      const subproofOrProofAssertion = supposition;  ////
+
+      context.assignAssignments();
+
+      context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+    }
+
+    if (suppositionVerifies) {
+      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta-assertion's '${suppositionString}' supposition.`);
+    }
+
+    return suppositionVerifies;
+  }
+
   async verifySuppositions(context) {
     let suppositionsVerify;
 
     const topLevelMetaAssertionString = this.getString();  ///
 
-    context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta assertion's suppositions...`);
+    context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta-assertion's suppositions...`);
 
     suppositionsVerify = await asyncForwardsEvery(this.suppositions, async (supposition) => {
-      const suppositionVerifies = await supposition.verify(context)
+      const suppositionVerifies = await this.verifySupposition(supposition, context);
 
       if (suppositionVerifies) {
-        const subproofOrProofAssertion = supposition;  ////
-
-        context.assignAssignments();
-
-        context.addSubproofOrProofAssertion(subproofOrProofAssertion);
-
         return true;
       }
     });
 
     if (suppositionsVerify) {
-      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's suppositions.`);
+      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta-assertion's suppositions.`);
     }
 
     return suppositionsVerify;

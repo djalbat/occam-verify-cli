@@ -2,8 +2,6 @@
 
 import { arrayUtilities } from "necessary";
 
-import elements from "../elements";
-
 import { equalityFromStatement,
          judgementFromStatement,
          typeAssertionFromStatement,
