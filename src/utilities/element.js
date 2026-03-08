@@ -320,8 +320,11 @@ export function referenceFromReferenceNode(referenceNode, context) {
   const { Reference } = elements,
         node = referenceNode, ///
         string = context.nodeAsString(node),
-        metavariable = metavariableFromReferenceNode(referenceNode, context),
-        reference = new Reference(context, string, node, metavariable);
+        metavariable = metavariableFromReferenceNode(referenceNode, context);
+
+  context = null;
+
+  const reference = new Reference(context, string, node, metavariable);
 
   return reference;
 }

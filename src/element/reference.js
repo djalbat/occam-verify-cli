@@ -297,8 +297,11 @@ export default define(class Reference extends Element {
       const { string } = json,
             referenceNode = instantiateReference(string, context),
             node = referenceNode,  ///
-            metavariable = metavariableFromReferenceNode(referenceNode, context),
-            reference = new Reference(context, string, node, metavariable);
+            metavariable = metavariableFromReferenceNode(referenceNode, context);
+
+      context = null;
+
+      const reference = new Reference(context, string, node, metavariable);
 
       return reference;
     }, context);
