@@ -161,8 +161,11 @@ export default define(class Metavariable extends Element {
       const typeValidates = this.validateType(context);
 
       if (typeValidates) {
-        const metavariableName = this.name, ///
-              metavariable = context.findMetavariableByMetavariableName(metavariableName);
+        let metavariable;
+
+        metavariable = this;  ///
+
+        metavariable = context.findMetavariable(metavariable, context);  ///
 
         if (metavariable !== null) {
           const metaType = metavariable.getMetaType();
@@ -240,9 +243,9 @@ export default define(class Metavariable extends Element {
 
       if (simpleSubstitution !== null) {
         const substitution = simpleSubstitution,  ///
-              substitutionFrameEqualToFrame = substitution.isFrameEqualToFrame(frame);
+              substitutionFrameComparesToFrame = substitution.compareFrame(frame, context);
 
-        if (substitutionFrameEqualToFrame) {
+        if (substitutionFrameComparesToFrame) {
           frameUnifies = true;
         }
       } else {
@@ -291,7 +294,7 @@ export default define(class Metavariable extends Element {
       const metavariableName = metavariable.getName(),
             substitutionPresent = (substitution !== null) ?
                                     context.isSubstitutionPresentByMetavariableNameAndSubstitution(metavariableName, substitution) :
-                                      context.findSubstitutionByMetavariableName(metavariableName);
+                                      context.isSubstitutionPresentByMetavariableName(metavariableName);
 
       if (substitutionPresent) {
         substitution = (substitution !== null) ?
@@ -355,9 +358,9 @@ export default define(class Metavariable extends Element {
       if (simpleSubstitutionPresent) {
         const simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName),
               substitution = simpleSubstitution,  ///
-              substitutionReferenceEqualToReference = substitution.isReferenceEqualToReference(reference);
+              substitutionReferenceComparesToReference = substitution.compareReference(reference, context);
 
-        if (substitutionReferenceEqualToReference) {
+        if (substitutionReferenceComparesToReference) {
           referenceUnifies = true;
         }
       } else {

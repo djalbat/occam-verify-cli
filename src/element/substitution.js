@@ -96,42 +96,6 @@ export default class Substitution extends Element {
     return simple;
   }
 
-  isTermEqualToTerm(term) {
-    const termEqualToTerm = false;
-
-    return termEqualToTerm;
-  }
-
-  isFrameEqualToFrame(frame) {
-    const frameEqualToFrame = false;
-
-    return frameEqualToFrame;
-  }
-
-  isStatementEqualToStatement(statement) {
-    const statementEqualToStatement = false;
-
-    return statementEqualToStatement;
-  }
-
-  isReferenceEqualToReference(reference) {
-    const referenceEqualToReference = false;
-
-    return referenceEqualToReference;
-  }
-
-  compareTerm(term, context) {
-    const comparesToTerm = false;
-
-    return comparesToTerm;
-  }
-
-  compareStatement(statement) {
-    const comparesToStatement = false;
-
-    return comparesToStatement;
-  }
-
   compareParameter(parameter) {
     const comparesToParameter = false;
 

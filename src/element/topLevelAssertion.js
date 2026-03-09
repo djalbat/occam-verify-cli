@@ -245,14 +245,15 @@ export default class TopLevelAssertion extends Element {
   async verifyDeduction(context) {
     let deductionVerifies;
 
-    const topLevelAssertionString = this.getString(); ///
+    const deductionString = this.deduction.getString(),
+          topLevelAssertionString = this.getString(); ///
 
-    context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's deduction...`);
+    context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction...`);
 
     deductionVerifies = await this.deduction.verify(context);
 
     if (deductionVerifies) {
-      context.debug(`...verified the '${topLevelAssertionString}' top level assertion's deduction.`);
+      context.debug(`...verified the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction.`);
     }
 
     return deductionVerifies;

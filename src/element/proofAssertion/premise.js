@@ -165,7 +165,7 @@ export default define(class Premise extends ProofAssertion {
     context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${premiseString}' premise...`);
 
     const proofAssertionContext = proofAssertion.getContext(),
-          premiseContext = this.getContext(),
+          premiseContext = this.getContext(), ///
           generalContext = premiseContext, ///
           specificContext = proofAssertionContext,
           statementUnifies = liminally((specificContext) => {

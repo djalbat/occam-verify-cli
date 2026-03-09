@@ -232,14 +232,15 @@ export default define(class Rule extends Element {
   async verifyConclusion(context) {
     let conclusionVerifies;
 
-    const ruleString = this.getString();  ///
+    const ruleString = this.getString(),  ///
+          conclusionString = this.conclusion.getString();
 
-    context.trace(`Verifying the '${ruleString}' rule's conclusion...`);
+    context.trace(`Verifying the '${ruleString}' rule's '${conclusionString}' conclusion...`);
 
     conclusionVerifies = await this.conclusion.verify(context);
 
     if (conclusionVerifies) {
-      context.debug(`...verified the '${ruleString}' rule's conclusion.`);
+      context.debug(`...verified the '${ruleString}' rule's '${conclusionString}' conclusion.`);
     }
 
     return conclusionVerifies;

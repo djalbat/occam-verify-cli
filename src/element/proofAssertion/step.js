@@ -195,8 +195,6 @@ export default define(class Step extends ProofAssertion {
         const statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
 
         if (statementUnifies) {
-          context.commit();
-
           unifies = true;
 
           return true;

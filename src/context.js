@@ -290,13 +290,6 @@ export default class Context extends ContextBase {
     return labelPresent;
   }
 
-  isMetavariablePresentByReference(reference) {
-    const context = this.getContext(),
-          metavariablePresent = context.isMetavariablePresentByReference(reference);
-
-    return metavariablePresent;
-  }
-
   isTermPresentByTermNode(termNode) {
     const context = this.getContext(),
           termPresent = context.isTermPresentByTermNode(termNode);
@@ -381,11 +374,11 @@ export default class Context extends ContextBase {
     return procedurePresent;
   }
 
-  hasScopedSubstitutions() {
+  hasMetaLevelSubstitutions() {
     const context = this.getContext(),
-          scopedSubstitutions = context.hasScopedSubstitutions();
+          metaLevelSubstitutions = context.hasMetaLevelSubstitutions();
 
-    return scopedSubstitutions;
+    return metaLevelSubstitutions;
   }
 
   addTerm(term) {
@@ -424,10 +417,10 @@ export default class Context extends ContextBase {
     context.addAssignment(assignment);
   }
 
-  addSubstitution(substitution, scoped = false) {
+  addSubstitution(substitution, metaLevel = false) {
     const context = this.getContext();
 
-    context.addSubstitution(substitution, scoped);
+    context.addSubstitution(substitution, metaLevel);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {

@@ -259,59 +259,61 @@ export default define(class StatementSubstitution extends Substitution {
 
     const simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
 
-    context = this.getContext();
+    if (simpleSubstitution !== null) {
+      context = this.getContext();
 
-    const subtitution = liminally((context) => {
-      let substitution = null;
+      const subtitution = liminally((context) => {
+        let substitution = null;
 
-      const specificContext = context;  ///
-
-      context = simpleSubstitution.getContext();
-
-      const generalContext = context; ///
-
-      context = specificContext;  ///
-
-      const replacementStatementUnifies = simpleSubstitution.unifyReplacementStatement(this.replacementStatement, generalContext, specificContext);
-
-      if (replacementStatementUnifies) {
-        const nested = false,
-              soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution(nested);
-
-        substitution = soleNonTrivialSubstitution;  ///
-      }
-
-      return substitution;
-    }, context);
-
-    if (subtitution !== null) {
-      liminally((specificContext) => {
-        const contexts = [];
+        const specificContext = context;  ///
 
         context = simpleSubstitution.getContext();
 
-        contexts.push(context);
-
-        context = this.getContext();
-
-        contexts.push(context);
+        const generalContext = context; ///
 
         context = specificContext;  ///
 
-        synthetically((context) => {
-          const specificContext = context;  ///
+        const replacementStatementUnifies = simpleSubstitution.unifyReplacementStatement(this.replacementStatement, generalContext, specificContext);
 
-          context = this.substitution.getContext();
+        if (replacementStatementUnifies) {
+          const nested = false,
+                soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution(nested);
 
-          const generalContext = context; ///
+          substitution = soleNonTrivialSubstitution;  ///
+        }
 
-          this.unifySubstitution(subtitution, generalContext, specificContext);
-        }, contexts, context);
+        return substitution;
+      }, context);
 
-        specificContext.commit();
-      }, specificContext);
+      if (subtitution !== null) {
+        liminally((specificContext) => {
+          const contexts = [];
 
-      this.resolved = true;
+          context = simpleSubstitution.getContext();
+
+          contexts.push(context);
+
+          context = this.getContext();
+
+          contexts.push(context);
+
+          context = specificContext;  ///
+
+          synthetically((context) => {
+            const specificContext = context;  ///
+
+            context = this.substitution.getContext();
+
+            const generalContext = context; ///
+
+            this.unifySubstitution(subtitution, generalContext, specificContext);
+          }, contexts, context);
+
+          specificContext.commit();
+        }, specificContext);
+
+        this.resolved = true;
+      }
     }
 
     if (this.resolved) {

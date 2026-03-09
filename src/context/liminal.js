@@ -60,11 +60,11 @@ export default class LiminalContext extends Context {
     return soleNonTrivialSubstitutions;
   }
 
-  addSubstitution(substitution, scoped = false) {
-    if (scoped) {
+  addSubstitution(substitution, metaLevel = false) {
+    if (metaLevel) {
       const context = this.getContext();
 
-      context.addSubstitution(substitution, scoped);
+      context.addSubstitution(substitution, metaLevel);
 
       return;
     }
@@ -91,6 +91,12 @@ export default class LiminalContext extends Context {
 
       context.debug(`...added the '${substitutionString}' substitution to the liminal context.`);
     }
+  }
+
+  addSubstitutions(substitutions) {
+    substitutions.forEach((substitution) => {
+      this.addSubstitution(substitution);
+    });
   }
 
   resolveSubstitutions(generalContext, specificContext) {
@@ -229,6 +235,13 @@ export default class LiminalContext extends Context {
     }) || null;
 
     return substitution;
+  }
+
+  isSubstitutionPresentByMetavariableName(metavariableName) {
+    const substitution = this.findSubstitutionByMetavariableName(metavariableName),
+          substitutionPresent = (substitution !== null);
+
+    return substitutionPresent;
   }
 
   isSimpleSubstitutionPresentByMetavariableName(metavariableName) {

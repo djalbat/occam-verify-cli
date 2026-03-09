@@ -141,14 +141,7 @@ export default define(class Reference extends Element {
           const metavariableMetaTypeEqualToReferenceMetaType = this.metavariable.isMetaTypeEqualTo(referenceMetaType);
 
           if (metavariableMetaTypeEqualToReferenceMetaType) {
-            const reference = this, ///
-                  metavariablePresent = context.isMetavariablePresentByReference(reference);
-
-            if (metavariablePresent) {
-              validates = true;
-            } else {
-              context.debug(`There is no metavariable for the '${referenceString}' reference.`);
-            }
+            validates = true;
           } else {
             const metaTypeString = metaType.getString(),
                   metavariableString = this.metavariable.getString(),

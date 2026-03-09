@@ -114,18 +114,18 @@ class ScopedContext extends Context {
     return lastProofAssertion;
   }
 
-  hasScopedSubstitutions() {
-    let scopedSubstitutions;
+  hasMetaLevelSubstitutions() {
+    let metaLevelSubstitutions;
 
     if (this.substitutions !== null) {
-      scopedSubstitutions = true;
+      metaLevelSubstitutions = true;
     } else {
       const context = this.getContext();
 
-      scopedSubstitutions = context.hasScopedSubstitutions();
+      metaLevelSubstitutions = context.hasMetaLevelSubstitutions();
     }
 
-    return scopedSubstitutions;
+    return metaLevelSubstitutions;
   }
 
   addEquality(equality) {

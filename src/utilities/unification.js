@@ -59,16 +59,16 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
         statementUnifiesWithReference = true;
       }
     } else {
-      const scopedSubstitutions = context.hasScopedSubstitutions();
+      const metaLevelSubstitutions = context.hasMetaLevelSubstitutions();
 
-      if (scopedSubstitutions) {
+      if (metaLevelSubstitutions) {
         const { StatementSubstitution } = elements,
               metavariable = reference.getMetavariable(),
               statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
               substitution = statementSubstitution, ///
-              scoped = true;
+              metaLevel = true;
 
-        context.addSubstitution(substitution, scoped);
+        context.addSubstitution(substitution, metaLevel);
 
         statementUnifiesWithReference = true;
       }

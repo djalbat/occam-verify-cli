@@ -129,14 +129,15 @@ export default class TopLevelMetaAssertion extends Element {
   async verifyDeduction(context) {
     let deductionVerifies;
 
-    const topLevelMetaAssertionString = this.getString(); ///
+    const deductionString = this.deduction.getString(),
+          topLevelMetaAssertionString = this.getString(); ///
 
-    context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta assertion's deduction...`);
+    context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta assertion's '${deductionString}' deduction...`);
 
     deductionVerifies = await this.deduction.verify(context);
 
     if (deductionVerifies) {
-      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's deduction.`);
+      context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion's '${deductionString}' deduction.`);
     }
 
     return deductionVerifies;

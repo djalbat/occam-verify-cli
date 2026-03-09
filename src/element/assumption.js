@@ -172,7 +172,8 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' stated assumption...`);
 
-    const metavariablePresent = context.isMetavariablePresentByReference(this.reference);
+    const metavariable = this.reference.getMetavariable(),
+          metavariablePresent = context.isMetavariablePresent(metavariable, context);
 
     if (metavariablePresent) {
       validatesWhenStated = true;

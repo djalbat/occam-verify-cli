@@ -3,7 +3,6 @@
 import Declaration from "../declaration";
 
 import { define } from "../../elements";
-import { verifyMetavariable } from "../../process/verify";
 
 export default define(class MetavariableDeclaration extends Declaration {
   constructor(context, string, node, metaType, metavariable) {
