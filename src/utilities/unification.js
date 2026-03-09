@@ -68,6 +68,8 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
               substitution = statementSubstitution, ///
               metaLevel = true;
 
+        context = context.getContext(); ///
+
         context.addSubstitution(substitution, metaLevel);
 
         statementUnifiesWithReference = true;

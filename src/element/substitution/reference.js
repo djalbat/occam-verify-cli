@@ -200,15 +200,15 @@ export default define(class ReferenceSubstitution extends Substitution {
   }
 });
 
-function targetReferenceFromReferenceSubstitutionNode(frameSubstitutionNode, context) {
-  const targetReferenceNode = frameSubstitutionNode.getTargetReferenceNode(),
+function targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+  const targetReferenceNode = referenceSubstitutionNode.getTargetReferenceNode(),
         targetReference = context.findReferenceByReferenceNode(targetReferenceNode);
 
   return targetReference;
 }
 
-function replacementReferenceFromReferenceSubstitutionNode(frameSubstitutionNode, context) {
-  const replacementReferenceNode = frameSubstitutionNode.getReplacementReferenceNode(),
+function replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+  const replacementReferenceNode = referenceSubstitutionNode.getReplacementReferenceNode(),
         replacementReference = context.findReferenceByReferenceNode(replacementReferenceNode);
 
   return replacementReference;

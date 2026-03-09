@@ -5,9 +5,9 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
+import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { liminally, literally, synthetically } from "../../utilities/context";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { instantiateReferenceSubstitution, instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -331,10 +331,10 @@ export default define(class StatementSubstitution extends Substitution {
     if (this.name === name) {
       literally((context) => {
         const { string } = json,
-              referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
-              node = referenceSubstitutionNode,  ///
-              targetStatement = targetStatementFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
-              replacementStatement = replacementStatementFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
+              statementSubstitutionNode = instantiateStatementSubstitution(string, context),
+              node = statementSubstitutionNode,  ///
+              targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
+              replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
         context = null;
 
@@ -372,16 +372,16 @@ export default define(class StatementSubstitution extends Substitution {
   }
 });
 
-function targetStatementFromReferenceSubstitutionNode(frameSubstitutionNode, context) {
-  const targetStatementNode = frameSubstitutionNode.getTargetReferenceNode(),
-        targetStatement = context.findReferenceByReferenceNode(targetStatementNode);
+function targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const targetStatementNode = statementSubstitutionNode.getTargetStatementNode(),
+        targetStatement = context.findStatementByStatementNode(targetStatementNode);
 
   return targetStatement;
 }
 
-function replacementStatementFromReferenceSubstitutionNode(frameSubstitutionNode, context) {
-  const replacementStatementNode = frameSubstitutionNode.getReplacementReferenceNode(),
-        replacementStatement = context.findReferenceByReferenceNode(replacementStatementNode);
+function replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const replacementStatementNode = statementSubstitutionNode.getReplacementStatementNode(),
+        replacementStatement = context.findStatementByStatementNode(replacementStatementNode);
 
   return replacementStatement;
 }

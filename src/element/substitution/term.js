@@ -5,8 +5,8 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
+import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { instantiateFrameSubstitution, instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromStatementNode, termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 
 export default define(class TermSubstitution extends Substitution {
@@ -189,10 +189,10 @@ export default define(class TermSubstitution extends Substitution {
     if (this.name === name) {
       literally((context) => {
         const { string } = json,
-              frameSubstitutionNode = instantiateFrameSubstitution(string, context),
-              node = frameSubstitutionNode,  ///
-              targetTerm = targetTermFromFrameSubstitutionNode(frameSubstitutionNode, context),
-              replacementTerm = replacementTermFromFrameSubstitutionNode(frameSubstitutionNode, context);
+              termSubstitutionNode = instantiateTermSubstitution(string, context),
+              node = termSubstitutionNode,  ///
+              targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
+              replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
 
         context = null;
 
@@ -224,16 +224,16 @@ export default define(class TermSubstitution extends Substitution {
   }
 });
 
-function targetTermFromFrameSubstitutionNode(frameSubstitutionNode, context) {
-  const targetTermNode = frameSubstitutionNode.getTargetFrameNode(),
-        targetTerm = context.findFrameByFrameNode(targetTermNode);
+function targetTermFromTermSubstitutionNode(termSubstitutionNode, context) {
+  const targetTermNode = termSubstitutionNode.getTargetTermNode(),
+        targetTerm = context.findTermByTermNode(targetTermNode);
 
   return targetTerm;
 }
 
-function replacementTermFromFrameSubstitutionNode(frameSubstitutionNode, context) {
-  const replacementTermNode = frameSubstitutionNode.getReplacementFrameNode(),
-        replacementTerm = context.findFrameByFrameNode(replacementTermNode);
+function replacementTermFromTermSubstitutionNode(termSubstitutionNode, context) {
+  const replacementTermNode = termSubstitutionNode.getReplacementTermNode(),
+        replacementTerm = context.findTermByTermNode(replacementTermNode);
 
   return replacementTerm;
 }

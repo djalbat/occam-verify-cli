@@ -194,8 +194,7 @@ export default define(class Supposition extends ProofAssertion {
             const statement = proofAssertion.getStatement(),
                   statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
 
-            if (statementUnifies) {
-              specificContext.commit(context);
+            if (statementUnifies) {specificContext.commit(context);
 
               return true;
             }

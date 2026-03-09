@@ -165,8 +165,7 @@ export default define(class SatisfiesAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {
-        const { string } = json,
+      literally((context) => {const { string } = json,
               definedAssertionNode = instantiateSatisfiesAssertion(string, context),
               node = definedAssertionNode,  ///
               signature = signatureFromJSatisfiesAssertionNode(definedAssertionNode, context),
