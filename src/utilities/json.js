@@ -835,6 +835,12 @@ export function nominalTypeNameToNominalTypeNameJSON(nominalTypeName) {
   return nominalTypeNameJSON;
 }
 
+export function ephemeralContextToEphemeralContextJSON(ephemeralContext) {
+  const ephemeralContextJSON = ephemeralContext.toJSON();
+
+  return ephemeralContextJSON;
+}
+
 export function procedureReferenceToProcedureReferenceJSON(procedureReference) {
   const procedureReferenceJSON = procedureReference.toJSON();
 

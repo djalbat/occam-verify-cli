@@ -250,17 +250,12 @@ export default define(class Metavariable extends Element {
         }
       } else {
         const { FrameSubstitution } = elements,
-              metavariable = this; ///
+              metavariable = this,  ///
+              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
 
-        let frameSubstitution;
+        frameSubstitution.validate(generalContext, specificContext);
 
-        frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
-
-        frameSubstitution = frameSubstitution.validate(generalContext, specificContext);  ///
-
-        if (frameSubstitution !== null) {
-          frameUnifies = true;
-        }
+        frameUnifies = true;
       }
     }
 
@@ -323,11 +318,9 @@ export default define(class Metavariable extends Element {
           substitution.setContext(context);
         }
 
-        statementSubstitution = statementSubstitution.validate(generalContext, specificContext);  ///
+        statementSubstitution.validate(generalContext, specificContext);
 
-        if (statementSubstitution !== null) {
-          statementUnifies = true;
-        }
+        statementUnifies = true;
       }
     }
 
@@ -365,17 +358,12 @@ export default define(class Metavariable extends Element {
         }
       } else {
         const { ReferenceSubstitution } = elements,
-              metavariable = this; ///
+              metavariable = this,
+              referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
 
-        let referenceSubstitution;
+        referenceSubstitution.validate(generalContext, specificContext);
 
-        referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
-
-        referenceSubstitution = referenceSubstitution.validate(generalContext, specificContext);  ///
-
-        if (referenceSubstitution !== null) {
-          referenceUnifies = true;
-        }
+        referenceUnifies = true;
       }
     }
 

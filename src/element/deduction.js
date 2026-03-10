@@ -5,8 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateDeduction } from "../process/instantiate";
-import { ephemeralContextFromJSON } from "../utilities/json";
-import { statementFromDeductionNode } from "../utilities/element";
+import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export default define(class Deduction extends Element {
   constructor(context, string, node, statement) {
@@ -153,7 +152,9 @@ export default define(class Deduction extends Element {
 
     context = this.getContext();
 
-    const contextJSON = context.toJSON();
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
 
     context = contextJSON;  ///
 
@@ -169,16 +170,16 @@ export default define(class Deduction extends Element {
   static name = "Deduction";
 
   static fromJSON(json, context) {
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
     const duduction = literally((context) => {
       const { string } = json,
             deductionNode = instantiateDeduction(string, context),
             node = deductionNode,  ///
             statement = statementFromDeductionNode(deductionNode, context),
-            ephemeralContext = ephemeralContextFromJSON(json, context);
-
-      context = ephemeralContext; ///
-
-      const duduction = new Deduction(context, string, node, statement);
+            duduction = new Deduction(context, string, node, statement);
 
       return duduction;
     }, context);
@@ -186,3 +187,10 @@ export default define(class Deduction extends Element {
     return duduction;
   }
 });
+
+function statementFromDeductionNode(deductionNode, context) {
+  const statementNode = deductionNode.getStatementNode(),
+        statement = context.findStatementByStatementNode(statementNode);
+
+  return statement;
+}

@@ -5,10 +5,9 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateCombinator } from "../process/instantiate";
-import { ephemeralContextFromJSON } from "../utilities/json";
-import { statementFromCombinatorNode } from "../utilities/element";
 import { unifyStatementWithCombinator } from "../process/unify";
 import { validateStatementAsCombinator } from "../process/validate";
+import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export default define(class Combinator extends Element {
   constructor(context, string, node, statement) {
@@ -106,7 +105,9 @@ export default define(class Combinator extends Element {
 
     context = this.getContext();
 
-    const contextJSON = context.toJSON();
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
 
     context = contextJSON;  ///
 
@@ -122,16 +123,16 @@ export default define(class Combinator extends Element {
   static name = "Combinator";
 
   static fromJSON(json, context) {
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
     const combinator = literally((context) => {
       const { string } = json,
             combinatorNode = instantiateCombinator(string, context),
             node = combinatorNode,  ///
             statement = statementFromCombinatorNode(combinatorNode, context),
-            ephemeralContext = ephemeralContextFromJSON(json, context);
-
-      context = ephemeralContext; ///
-
-      const combinator = new Combinator(context, string, node, statement);
+            combinator = new Combinator(context, string, node, statement);
 
       return combinator;
     }, context);
@@ -139,3 +140,10 @@ export default define(class Combinator extends Element {
     return combinator;
   }
 });
+
+function statementFromCombinatorNode(combinatorNode, context) {
+  const statementNode = combinatorNode.getStatementNode(),
+        statement = context.findStatementByStatementNode(statementNode);
+
+  return statement;
+}

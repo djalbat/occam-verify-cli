@@ -6,7 +6,7 @@ import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateConclusion } from "../process/instantiate";
 import { statementFromConclusionNode } from "../utilities/element";
-import { ephemeralContextFromJSON, statementToStatementJSON } from "../utilities/json";
+import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export  default define(class Conclusion extends Element {
   constructor(context, string, node, statement) {
@@ -128,7 +128,9 @@ export  default define(class Conclusion extends Element {
 
     context = this.getContext();
 
-    const contextJSON = context.toJSON();
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
 
     context = contextJSON;  ///
 
@@ -144,16 +146,16 @@ export  default define(class Conclusion extends Element {
   static name = "Conclusion";
 
   static fromJSON(json, context) {
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
     const conclusion = literally((context) => {
       const { string } = json,
             conclusionNode = instantiateConclusion(string, context),
             node = conclusionNode,  ///
             statement = statementFromConclusionNode(conclusionNode, context),
-            ephemeralContext = ephemeralContextFromJSON(json, context);
-
-      context = ephemeralContext; ///
-
-      const conclusion = new Conclusion(context, string, node, statement);
+            conclusion = new Conclusion(context, string, node, statement);
 
       return conclusion;
     }, context);
@@ -161,3 +163,10 @@ export  default define(class Conclusion extends Element {
     return conclusion;
   }
 });
+
+function statementFromConclusionNode(conclusionNode, context) {
+  const statementNode = conclusionNode.getStatementNode(),
+        statement = context.findStatementByStatementNode(statementNode);
+
+  return statement;
+}

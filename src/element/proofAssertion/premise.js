@@ -4,9 +4,9 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { instantiatePremise } from "../../process/instantiate";
-import { ephemeralContextFromJSON } from "../../utilities/json";
+import { procedureCallFromPremiseNode } from "../../utilities/element";
 import { attempt, liminally, literally } from "../../utilities/context";
-import { statementFromPremiseNode, procedureCallFromPremiseNode } from "../../utilities/element";
+import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
 
 export default define(class Premise extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -278,7 +278,9 @@ export default define(class Premise extends ProofAssertion {
 
     context = this.getContext();
 
-    const contextJSON = context.toJSON();
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
 
     context = contextJSON;  ///
 
@@ -294,17 +296,17 @@ export default define(class Premise extends ProofAssertion {
   static name = "Premise";
 
   static fromJSON(json, context) {
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
     const premise = literally((context) => {
       const { string } = json,
             premiseNode = instantiatePremise(string, context),
             node = premiseNode,  ///
             statement = statementFromPremiseNode(premiseNode, context),
             procedureCall = procedureCallFromPremiseNode(premiseNode, context),
-            ephemeralContext = ephemeralContextFromJSON(json, context);
-
-      context = ephemeralContext; ///
-
-      const premise = new Premise(context, string, node, statement, procedureCall);
+            premise = new Premise(context, string, node, statement, procedureCall);
 
       return premise;
     }, context);
@@ -312,3 +314,10 @@ export default define(class Premise extends ProofAssertion {
     return premise;
   }
 });
+
+function statementFromPremiseNode(premiseNode, context) {
+  const statementNode = premiseNode.getStatementNode(),
+        statement = context.findStatementByStatementNode(statementNode);
+
+  return statement;
+}

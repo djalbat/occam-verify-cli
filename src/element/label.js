@@ -5,8 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiateLabel } from "../process/instantiate";
 import { attempt, literally } from "../utilities/context";
-import { ephemeralContextFromJSON } from "../utilities/json";
 import { metavariableFromLabelNode } from "../utilities/element";
+import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export default define(class Label extends Element {
   constructor(context, string, node, metavariable) {
@@ -131,7 +131,9 @@ export default define(class Label extends Element {
 
     context = this.getContext();
 
-    const contextJSON = context.toJSON();
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
 
     context = contextJSON;  ///
 
@@ -147,16 +149,16 @@ export default define(class Label extends Element {
   static name = "Label";
 
   static fromJSON(json, context) {
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
     const label = literally((context) => {
       const { string } = json,
             labelNode = instantiateLabel(string, context),
             metavariable = metavariableFromLabelNode(labelNode, context),
             node = labelNode, ///
-            ephemeralContext = ephemeralContextFromJSON(json, context);
-
-      context = ephemeralContext; ///
-
-      const label = new Label(context, string, node, metavariable);
+            label = new Label(context, string, node, metavariable);
 
       return label;
     }, context);

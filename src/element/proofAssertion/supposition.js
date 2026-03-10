@@ -3,10 +3,10 @@
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
-import { instantiateSupposition } from "../../process/instantiate";
-import { ephemeralContextFromJSON } from "../../utilities/json";
+import { instantiateSupposition} from "../../process/instantiate";
 import { attempt, liminally, literally } from "../../utilities/context";
 import { statementFromSuppositionNode, procedureCallFromSuppositionNode } from "../../utilities/element";
+import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
 
 export default define(class Supposition extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -299,7 +299,9 @@ export default define(class Supposition extends ProofAssertion {
 
     context = this.getContext();
 
-    const contextJSON = context.toJSON();
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
 
     context = contextJSON;  ///
 
@@ -315,17 +317,17 @@ export default define(class Supposition extends ProofAssertion {
   static name = "Supposition";
 
   static fromJSON(json, context) {
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
     const supposition = literally((context) => {
       const { string } = json,
             suppositionNode = instantiateSupposition(string, context),
             node = suppositionNode,  ///
             statement = statementFromSuppositionNode(suppositionNode, context),
             procedureCall = procedureCallFromSuppositionNode(suppositionNode, context),
-            ephemeralContext = ephemeralContextFromJSON(json, context);
-
-      context = ephemeralContext; ///
-
-      const supposition = new Supposition(context, string, node, statement, procedureCall);
+            supposition = new Supposition(context, string, node, statement, procedureCall);
 
       return supposition;
     }, context);

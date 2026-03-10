@@ -4,10 +4,10 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { literally } from "../../utilities/context";
-import { ephemeralContextFromJSON } from "../../utilities/json";
 import { instantiateMetaLevelSubstitution } from "../../process/instantiate";
+import { metaLevelSubstitutionFromMetaLevelSubstitutionNode } from "../../utilities/element";
 import { metaLevelSubstitutionStringFromStatementAndReference } from "../../utilities/string";
-import { targetReferenceFromMetaLevelSubstitutionNode, replacementStatementFromMetaLevelSubstitutionNode, metaLevelSubstitutionFromMetaLevelSubstitutionNode } from "../../utilities/element";
+import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
 
 export default define(class MetaLevelSubstitution extends Substitution {
   constructor(context, string, node, targetReference, replacementStatement) {
@@ -154,7 +154,9 @@ export default define(class MetaLevelSubstitution extends Substitution {
 
     context = this.getContext();
 
-    const contextJSON = context.toJSON();
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
 
     context = contextJSON;  ///
 
@@ -170,17 +172,17 @@ export default define(class MetaLevelSubstitution extends Substitution {
   static name = "MetaLevelSubstitution";
 
   static fromJSON(json, context) {
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
     const metaLevelSubstitution = literally((context) => {
       const { string } = json,
             metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context),
             targetReference = targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
             replacementStatement = replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
-            node = metaLevelSubstitutionNode, ///
-            ephemeralContext = ephemeralContextFromJSON(json, context);
-
-      context = ephemeralContext; ///
-
-      const metaLevelSubstitution = new MetaLevelSubstitution(context, string, node, targetReference, replacementStatement);
+            node = metaLevelSubstitutionNode,
+            metaLevelSubstitution = new MetaLevelSubstitution(context, string, node, targetReference, replacementStatement);
 
       return metaLevelSubstitution;
     }, context);

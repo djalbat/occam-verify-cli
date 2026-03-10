@@ -62,20 +62,14 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
       const metaLevelSubstitutions = context.hasMetaLevelSubstitutions();
 
       if (metaLevelSubstitutions) {
-        let metaLevelSubstitution;
-
-        const { MetaLevelSubstitution } = elements;
-
-        metaLevelSubstitution = MetaLevelSubstitution.fromStatementAndReference(statement, reference, context);
-
-        const generalContext = context, ///
+        const { MetaLevelSubstitution } = elements,
+              metaLevelSubstitution = MetaLevelSubstitution.fromStatementAndReference(statement, reference, context),
+              generalContext = context, ///
               specificContext = context;  ///
 
-        metaLevelSubstitution = metaLevelSubstitution.validate(generalContext, specificContext);  ///
+        metaLevelSubstitution.validate(generalContext, specificContext);
 
-        if (metaLevelSubstitution !== null) {
-          statementUnifiesWithReference = true;
-        }
+        statementUnifiesWithReference = true;
       }
     }
 

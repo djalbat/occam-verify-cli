@@ -5,10 +5,9 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateConstructor } from "../process/instantiate";
-import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
 import { validateTermAsConstructor } from "../process/validate";
-import { typeFromJSON, termToTermJSON, typeToTypeJSON, ephemeralContextFromJSON } from "../utilities/json";
+import { typeFromJSON, typeToTypeJSON, ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export default define(class Constructor extends Element {
   constructor(context, string, node, term, type) {
@@ -141,20 +140,19 @@ export default define(class Constructor extends Element {
 
     context = this.getContext();
 
-    const contextJSON = context.toJSON();
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
 
     context = contextJSON;  ///
 
     const includeType = false,
-          termJSON = termToTermJSON(this.term),
           typeJSON = typeToTypeJSON(this.type),
           string = this.getString(includeType),
-          term = termJSON,  ///
           type = typeJSON,  ///
           json = {
             context,
             string,
-            term,
             type
           };
 
@@ -164,22 +162,28 @@ export default define(class Constructor extends Element {
   static name = "Constructor";
 
   static fromJSON(json, context) {
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
     const constructor = literally((context) => {
       const { string } = json,
             constructorNode = instantiateConstructor(string, context),
             node = constructorNode, ///
             term = termFromConstructorNode(constructorNode, context),
             type = typeFromJSON(json, context),
-            ephemeralContext = ephemeralContextFromJSON(json, context);
-
-      context = ephemeralContext; ///
-
-      const constructor = new Constructor(context, string, node, term, type);
+            constructor = new Constructor(context, string, node, term, type);
 
       return constructor;
-
     }, context);
 
     return constructor;
   }
 });
+
+function termFromConstructorNode(constructorNode, context) {
+  const termNode = constructorNode.getTermNode(),
+        term = context.findTermByTermNode(termNode);
+
+  return term;
+}
