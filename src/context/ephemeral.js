@@ -297,6 +297,12 @@ export default class EphemeralContext extends Context {
     }
   }
 
+  retrieveEphemeralContext() {
+    const ephemeralContext = this;  ///
+
+    return ephemeralContext;
+  }
+
   findTermByTermNode(termNode) {
     const term = this.terms.find((term) => {
       const termNodeMatches = term.matchTermNode(termNode);
@@ -561,5 +567,9 @@ export default class EphemeralContext extends Context {
           emphemeralContext = new EphemeralContext(context, terms, frames, judgements, equalities, assertions, statements, references, assumptions, substitutions);
 
     return emphemeralContext;
+  }
+
+  static fromContext(context) {
+
   }
 }

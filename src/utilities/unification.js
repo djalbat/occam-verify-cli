@@ -74,8 +74,6 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
         metaLevelSubstitution = metaLevelSubstitution.validate(generalContext, specificContext);  ///
 
         if (metaLevelSubstitution !== null) {
-          context.addMetaLevelSubstitution(metaLevelSubstitution);
-
           statementUnifiesWithReference = true;
         }
       }

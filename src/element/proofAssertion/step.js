@@ -108,15 +108,15 @@ export default define(class Step extends ProofAssertion {
     context.trace(`Validating the '${stepString}' step...`);
 
     attempt((context) => {
-      const referenceValidates = this.validateReference(context);
+      const statementValidates = this.validateStatement(context);
 
-      if (referenceValidates) {
-        const satisfiesAssertioValidates = this.validateSatisfiesAssertion(context);
+      if (statementValidates) {
+        const referenceValidates = this.validateReference(context);
 
-        if (satisfiesAssertioValidates) {
-          const statementValidates = this.validateStatement(context);
+        if (referenceValidates) {
+          const satisfiesAssertioValidates = this.validateSatisfiesAssertion(context);
 
-          if (statementValidates) {
+          if (satisfiesAssertioValidates) {
             this.setContext(context);
 
             validates = true;

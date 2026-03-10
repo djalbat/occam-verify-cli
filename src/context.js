@@ -129,6 +129,13 @@ export default class Context extends ContextBase {
     return subproofOrProofAssertions;
   }
 
+  retrieveEphemeralContext() {
+    const context = this.getContext(),
+          ephemeralContext = context.retrieveEphemeralContext();
+
+    return ephemeralContext;
+  }
+
   findRuleByReference(reference) {
     const context = this.getContext(),
           rule = context.findRuleByReference(reference);
@@ -230,6 +237,13 @@ export default class Context extends ContextBase {
           substitution = context.findSubstitutionBySubstitutionNode(substitutionNode);
 
     return substitution;
+  }
+
+  findMetaLevelSubstitutionByMetaLevelSubstitutionNode(metaLevelSubstitutionNode) {
+    const context = this.getContext(),
+          metaLevelSubstitution = context.findMetaLevelSubstitutionByMetaLevelSubstitutionNode(metaLevelSubstitutionNode);
+
+    return metaLevelSubstitution;
   }
 
   findTypeByNominalTypeName(nominalTypeName) {

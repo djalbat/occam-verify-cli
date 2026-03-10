@@ -46,6 +46,22 @@ export default define(class MetaLevelSubstitution extends Substitution {
     return replacementNode;
   }
 
+  matchMetaLevelSubstitutionNode(metaLevelSubstitutionNode) {
+    const node = metaLevelSubstitutionNode, ///
+          nodeMatches = this.matchNode(node),
+          metaLevelSubstitutionNodeMatches = nodeMatches; ///
+
+    return metaLevelSubstitutionNodeMatches;
+  }
+
+  findValidMetaLevelSubstiution(context) {
+    const metaLevelSubstitutionNode = this.getMetaLevelSubstitutionNode(),
+          metaLevelSubstitution = context.findMetaLevelSubstitutionByMetaLevelSubstitutionNode(metaLevelSubstitutionNode),
+          validMetaLevelSubstitution = metaLevelSubstitution;  ///
+
+    return validMetaLevelSubstitution;
+  }
+
   validate(generalContext, specificContext) {
     let metaLevelSubstitution = null;
 
@@ -57,10 +73,10 @@ export default define(class MetaLevelSubstitution extends Substitution {
 
     context.trace(`Validating the '${metaLevelSubstitutionString}' meta-level substitution...`);
 
-    const validSubstitution = this.findValidSubstiution(context);
+    const validMetaLevelSubstitution = this.findValidMetaLevelSubstiution(context);
 
-    if (validSubstitution) {
-      metaLevelSubstitution = validSubstitution;  ///
+    if (validMetaLevelSubstitution) {
+      metaLevelSubstitution = validMetaLevelSubstitution;  ///
 
       context.debug(`...the '${metaLevelSubstitutionString}' meta-level substitution is already valid.`);
     } else {
@@ -77,11 +93,9 @@ export default define(class MetaLevelSubstitution extends Substitution {
       }
 
       if (validates) {
-        const substitution = this;  ///
+        metaLevelSubstitution = this; ///
 
-        metaLevelSubstitution = substitution; ///
-
-        context.addSubstitution(substitution);
+        context.addMetaLevelSubstitution(metaLevelSubstitution);
 
         context.debug(`...validated the '${metaLevelSubstitutionString}' meta-level substitution.`);
       }

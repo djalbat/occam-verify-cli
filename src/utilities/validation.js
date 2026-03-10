@@ -2,9 +2,11 @@
 
 import elements from "../elements";
 
+import { variableFromTerm } from "../utilities/term";
 import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
 import { equalityFromStatement,
          judgementFromStatement,
+         metavariableFromStatement,
          typeAssertionFromStatement,
          definedAssertionFromStatement,
          propertyAssertionFromStatement,
@@ -15,16 +17,16 @@ import { equalityFromStatement,
 function validateTermAsVariable(term, context, validateForwards) {
   let termValidatesAsVariable = false;
 
-  const termNode = term.getNode(),
-        variableNode = termNode.getVariableNode();
+  let variable;
 
-  if (variableNode !== null) {
+  variable = variableFromTerm(term, context);
+
+  if (variable !== null) {
     const termString = term.getString();
 
     context.trace(`Validating the '${termString}' term as a variable...`);
 
-    const variableIdentifier = variableNode.getVariableIdentifier(),
-          variable = context.findVariableByVariableIdentifier(variableIdentifier);
+    variable = variable.validate(context);
 
     if (variable !== null) {
       const type = variable.getType();
@@ -75,16 +77,16 @@ function unifyTermWithBracketedConstructor(term, context, validateForwards) {
 function validateStatementAsMetavariable(statement, stated, context) {
   let statementValidatesAsMetavariable = false;
 
-  const statementNode = statement.getNode(),
-        metavariableNode = statementNode.getMetavariableNode();
+  let metavariable;
 
-  if (metavariableNode !== null) {
+  metavariable = metavariableFromStatement(statement, context);
+
+  if (metavariable !== null) {
     const statementString = statement.getString();
 
     context.trace(`Validating the '${statementString}' statement as a metavariable...`);
 
-    const metavariableName = metavariableNode.getMetavariableName(),
-          metavariable = context.findMetavariableByMetavariableName(metavariableName);
+    metavariable = metavariable.validate(context);
 
     if (metavariable !== null) {
       statementValidatesAsMetavariable = true;

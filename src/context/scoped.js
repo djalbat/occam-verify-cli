@@ -187,9 +187,7 @@ class ScopedContext extends Context {
 
   addMetaLevelSubstitution(metaLevelSubstitution) {
     if (this.metaLevelSubstitutions === null) {
-      const context = this.getContext();
-
-      context.addMetaLevelSubstitution(metaLevelSubstitution);
+      super.addMetaLevelSubstitution(metaLevelSubstitution);
 
       return;
     }
@@ -252,6 +250,24 @@ class ScopedContext extends Context {
           }) || null;
 
     return variable;
+  }
+
+  findMetaLevelSubstitutionByMetaLevelSubstitutionNode(metaLevelSubstitutionNode) {
+    let metaLevelSubstitution;
+
+    if (this.metaLevelSubstitutions === null) {
+      metaLevelSubstitution = super.findMetaLevelSubstitutionByMetaLevelSubstitutionNode(metaLevelSubstitutionNode);
+    } else {
+      metaLevelSubstitution = this.metaLevelSubstitutions.find((metaLevelSubstitution) => {
+        const metaLevelSubstitutionNodeMatches = metaLevelSubstitution.matchMetaLevelSubstitutionNode(metaLevelSubstitutionNode);
+
+        if (metaLevelSubstitutionNodeMatches) {
+          return true;
+        }
+      }) || null;
+    }
+
+    return metaLevelSubstitution;
   }
 
   isTermGrounded(term) {

@@ -2,6 +2,7 @@
 
 import { equalityFromStatementNode,
          judgementFromStatementNode,
+         metavariableFromStatementNode,
          typeAssertionFromStatementNode,
          definedAssertionFromStatementNode,
          propertyAssertionFromStatementNode,
@@ -21,6 +22,13 @@ export function judgementFromStatement(statement, context) {
         judgement = judgementFromStatementNode(statementNode, context);
 
   return judgement;
+}
+
+export function metavariableFromStatement(statement, context) {
+  const statementNode = statement.getNode(),
+        metavariable = metavariableFromStatementNode(statementNode, context);
+
+  return metavariable;
 }
 
 export function typeAssertionFromStatement(statement, context) {

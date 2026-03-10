@@ -7,7 +7,7 @@ import elements from "../elements";
 import { define } from "../elements";
 import { literally } from "../utilities/context";
 import { instantiateVariable } from "../process/instantiate";
-import { identifierFromVarialbeNode } from "../utilities/element";
+import {identifierFromVarialbeNode, variableFromVariableNode} from "../utilities/element";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {
@@ -69,14 +69,17 @@ export default define(class Variable extends Element {
   }
 
   validate(context) {
-    let validates;
+    let variable = null;
 
     const variableString = this.getString(); ///
 
     context.trace(`Validating the '${variableString}' variable...`);
 
-    const variableIdentifier = this.identifier,
-          variable = context.findVariableByVariableIdentifier(variableIdentifier);
+    let validates = false;
+
+    const variableIdentifier = this.identifier;
+
+    variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
     if (variable !== null) {
       const type = variable.getType();
@@ -89,10 +92,12 @@ export default define(class Variable extends Element {
     }
 
     if (validates) {
+      variable = this;  ///
+
       context.debug(`...validated the '${variableString}' variable.`);
     }
 
-    return validates;
+    return variable;
   }
 
   unifyTerm(term, generalContext, specificContext) {

@@ -802,7 +802,7 @@ export function metaLevelSubstitutionFromMetaLevelSubstitutionNode(metaLevelSubs
         string = context.nodeAsString(node),
         targetReference = targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
         replacementStatement = replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
-        ephemeralContext = EphemeralContext.fromNothing(context);
+        ephemeralContext = context.retrieveEphemeralContext();
 
   context = ephemeralContext; ///
 
@@ -876,6 +876,18 @@ export function labelsFromRuleNode(ruleNode, context) {
         labels = labelsFromLabelNodes(labelNodes, context);
 
   return labels;
+}
+
+export function variableFromTermNode(termNode, context) {
+  let variable = null;
+
+  const variableNode = termNode.getVariableNode();
+
+  if (variableNode !== null) {
+    variable = variableFromVariableNode(variableNode, context);
+  }
+
+  return variable;
 }
 
 export function premisesFromRuleNode(ruleNode, context) {
