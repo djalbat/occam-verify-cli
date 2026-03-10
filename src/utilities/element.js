@@ -1952,7 +1952,7 @@ export function replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubst
 }
 
 export function metaLevelSubstitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
-  const metaLevelSubstitutions = []);
+  const metaLevelSubstitutions = [];
 
   return metaLevelSubstitutions;
 }
