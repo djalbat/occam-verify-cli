@@ -22,13 +22,13 @@ import { termsFromJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
 export default class EphemeralContext extends Context {
-  constructor(context, terms, frames, judgements, equalities, assertions, statements, references, assumptions, substitutions) {
+  constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, substitutions) {
     super(context);
 
     this.terms = terms;
     this.frames = frames;
-    this.judgements = judgements;
     this.equalities = equalities;
+    this.judgements = judgements;
     this.assertions = assertions;
     this.statements = statements;
     this.references = references;
@@ -327,18 +327,6 @@ export default class EphemeralContext extends Context {
     return frame;
   }
 
-  findJudgementByJudgementNode(judgementNode) {
-    const judgement = this.judgements.find((judgement) => {
-      const judgementNodeMatches = judgement.matchJudgementNode(judgementNode);
-
-      if (judgementNodeMatches) {
-        return true;
-      }
-    }) || null;
-
-    return judgement;
-  }
-
   findEqualityByEqualityNode(equalityNode) {
     const equality = this.equalities.find((equality) => {
       const equalityNodeMatches = equality.matchEqualityNode(equalityNode);
@@ -349,6 +337,18 @@ export default class EphemeralContext extends Context {
     }) || null;
 
     return equality;
+  }
+
+  findJudgementByJudgementNode(judgementNode) {
+    const judgement = this.judgements.find((judgement) => {
+      const judgementNodeMatches = judgement.matchJudgementNode(judgementNode);
+
+      if (judgementNodeMatches) {
+        return true;
+      }
+    }) || null;
+
+    return judgement;
   }
 
   findStatementByStatementNode(statementNode) {
@@ -540,14 +540,14 @@ export default class EphemeralContext extends Context {
   static fromJSON(json, context) {
     const terms = null,
           frames = null,
-          judgements = null,
           equalities = null,
+          judgements = null,
           statements = null,
           assertions = null,
           references = null,
           assumptions = null,
           substitutions = null,
-          emphemeralContext = new EphemeralContext(context, terms, frames, judgements, equalities, assertions, statements, references, assumptions, substitutions);
+          emphemeralContext = new EphemeralContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, substitutions);
 
     emphemeralContext.initialise(json);
 
@@ -557,19 +557,15 @@ export default class EphemeralContext extends Context {
   static fromNothing(context) {
     const terms = [],
           frames = [],
-          judgements = [],
           equalities = [],
+          judgements = [],
           statements = [],
           assertions = [],
           references = [],
           assumptions = [],
           substitutions = [],
-          emphemeralContext = new EphemeralContext(context, terms, frames, judgements, equalities, assertions, statements, references, assumptions, substitutions);
+          emphemeralContext = new EphemeralContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, substitutions);
 
     return emphemeralContext;
-  }
-
-  static fromContext(context) {
-
   }
 }

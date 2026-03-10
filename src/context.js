@@ -204,11 +204,11 @@ export default class Context extends ContextBase {
     return judgement;
   }
 
-  findStatementByStatementNode(statementNode) {
+  findAssertionByAssertionNode(assertionNode) {
     const context = this.getContext(),
-          statement = context.findStatementByStatementNode(statementNode);
+          assertion = context.findAssertionByAssertionNode(assertionNode);
 
-    return statement;
+    return assertion;
   }
 
   findReferenceByReferenceNode(referenceNode) {
@@ -216,6 +216,13 @@ export default class Context extends ContextBase {
           reference = context.findReferenceByReferenceNode(referenceNode);
 
     return reference;
+  }
+
+  findStatementByStatementNode(statementNode) {
+    const context = this.getContext(),
+          statement = context.findStatementByStatementNode(statementNode);
+
+    return statement;
   }
 
   findAssumptionByAssumptionNode(assumptionNode) {
