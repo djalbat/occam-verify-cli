@@ -5,6 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateCombinator } from "../process/instantiate";
+import { statementFromCombinatorNode } from "../utilities/element";
 import { unifyStatementWithCombinator } from "../process/unify";
 import { validateStatementAsCombinator } from "../process/validate";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
@@ -140,10 +141,3 @@ export default define(class Combinator extends Element {
     return combinator;
   }
 });
-
-function statementFromCombinatorNode(combinatorNode, context) {
-  const statementNode = combinatorNode.getStatementNode(),
-        statement = context.findStatementByStatementNode(statementNode);
-
-  return statement;
-}

@@ -5,6 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, literally } from "../utilities/context";
 import { instantiateConstructor } from "../process/instantiate";
+import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
 import { validateTermAsConstructor } from "../process/validate";
 import { typeFromJSON, typeToTypeJSON, ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
@@ -180,10 +181,3 @@ export default define(class Constructor extends Element {
     return constructor;
   }
 });
-
-function termFromConstructorNode(constructorNode, context) {
-  const termNode = constructorNode.getTermNode(),
-        term = context.findTermByTermNode(termNode);
-
-  return term;
-}
