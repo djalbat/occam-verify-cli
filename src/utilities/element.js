@@ -351,11 +351,11 @@ export function metaLemmaFromMetaLemmaNode(metaLemmaNode, context) {
         label = labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        metaLevelSubstitutions = metaLevelSubstitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
-        substitutions = null,
-        node = metaLemmaNode, ///
+        node = metaLemmaMetathoremNode, ///
         string = topLevelMetaAssertionString, ///
-        metaLemma = new MetaLemma(context, string, node, label, suppositions, deduction, proof, substitutions);
+        metaLemma = new MetaLemma(context, string, node, label, suppositions, deduction, proof, metaLevelSubstitutions);
 
   return metaLemma;
 }
@@ -527,11 +527,11 @@ export function metatheoremFromMetatheoremNode(metatheoremNode, context) {
         label = labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        metaLevelSubstitutions = metaLevelSubstitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
-        node = metatheoremNode, ///
+        node = metaLemmaMetathoremNode, ///
         string = topLevelMetaAssertionString, ///
-        substitutions = substitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
-        metatheorem = new Metatheorem(context, string, node, label, suppositions, deduction, proof, substitutions);
+        metatheorem = new Metatheorem(context, string, node, label, suppositions, deduction, proof, metaLevelSubstitutions);
 
   return metatheorem;
 }
@@ -1949,6 +1949,12 @@ export function replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubst
         replacementStatement = statementFromStatementNode(replacementStatementNode, context);
 
   return replacementStatement;
+}
+
+export function metaLevelSubstitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
+  const metaLevelSubstitutions = []);
+
+  return metaLevelSubstitutions;
 }
 
 export function termsFromTermNodes(termNodes, context) {

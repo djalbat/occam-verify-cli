@@ -3,26 +3,27 @@
 import { Element, asynchronousUtilities } from "occam-languages";
 
 import { asyncScope } from "../utilities/context";
+import { topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
 import { labelFromJSON,
          labelToLabelJSON,
          deductionFromJSON,
          suppositionsFromJSON,
-         substitutionsFromJSON,
          deductionToDeductionJSON,
          suppositionsToSuppositionsJSON,
-         substitutionsToSubstitutionsJSON } from "../utilities/json";
+         metaLevelSubstitutionsFromJSON,
+         metaLevelSubstitutionsToMetaLevelSubstitutionsJSON } from "../utilities/json";
 
 const { asyncForwardsEvery } = asynchronousUtilities;
 
 export default class TopLevelMetaAssertion extends Element {
-  constructor(context, string, node, label, suppositions, deduction, proof, substitutions) {
+  constructor(context, string, node, label, suppositions, deduction, proof, metaLevelSubstitutions) {
     super(context, string, node);
 
     this.label = label;
     this.suppositions = suppositions;
     this.deduction = deduction;
     this.proof = proof;
-    this.substitutions = substitutions;
+    this.metaLevelSubstitutions = metaLevelSubstitutions;
   }
 
   getLabel() {
@@ -42,7 +43,7 @@ export default class TopLevelMetaAssertion extends Element {
   }
 
   getSubstitutions() {
-    return this.substitutions;
+    return this.metaLevelSubstitutions;
   }
 
   getStatement() { return this.deduction.getStatement(); }
@@ -81,7 +82,7 @@ export default class TopLevelMetaAssertion extends Element {
           }
         }
       }
-    }, this.substitutions, context);
+    }, this.metaLevelSubstitutions, context);
 
     if (verifies) {
       context.debug(`...verified the '${topLevelMetaAssertionString}' top level meta assertion.`);
@@ -194,16 +195,16 @@ export default class TopLevelMetaAssertion extends Element {
     const labelJSON = labelToLabelJSON(this.label),
           deductionJSON = deductionToDeductionJSON(this.deduction),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
-          substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
+          metaLevelSubstitutionsJSON = metaLevelSubstitutionsToMetaLevelSubstitutionsJSON(this.metaLevelSubstitutions),
           label = labelJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
-          substitutions = substitutionsJSON,  ///
+          metaLevelSubstitutions = metaLevelSubstitutionsJSON,  ///
           json = {
             label,
             deduction,
             suppositions,
-            substitutions
+            metaLevelSubstitutions
           };
 
     return json;
@@ -213,11 +214,11 @@ export default class TopLevelMetaAssertion extends Element {
     const label = labelFromJSON(json, context),
           deduction = deductionFromJSON(json, context),
           suppositions = suppositionsFromJSON(json, context),
-          substitutions = substitutionsFromJSON(json, context),
+          metaLevelSubstitutions = metaLevelSubstitutionsFromJSON(json, context),
           node = null,
           proof = null,
-          string = topLevelMetaAssertionStringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
-          topLevelMetaAssertion = new Class(context, string, node, label, suppositions, deduction, proof, substitutions);
+          string = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
+          topLevelMetaAssertion = new Class(context, string, node, label, suppositions, deduction, proof, metaLevelSubstitutions);
 
     return topLevelMetaAssertion;
   }
