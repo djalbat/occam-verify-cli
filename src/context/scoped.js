@@ -8,15 +8,15 @@ import elements from "../elements";
 const { last } = arrayUtilities;
 
 class ScopedContext extends Context {
-  constructor(context, variables, judgements, assignments, equivalences, substitutions, subproofOrProofAssertions) {
+  constructor(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions, metaLevelSubstitutions) {
     super(context);
 
     this.variables = variables;
     this.judgements = judgements;
     this.assignments = assignments;
     this.equivalences = equivalences;
-    this.substitutions = substitutions;
     this.subproofOrProofAssertions = subproofOrProofAssertions;
+    this.metaLevelSubstitutions = metaLevelSubstitutions;
   }
 
   getVariables() {
@@ -69,10 +69,6 @@ class ScopedContext extends Context {
     return equivalences;
   }
 
-  getSubstitutions() {
-    return this.substitutions;
-  }
-
   getSubproofOrProofAssertions() {
     let subproofOrProofAssertions;
 
@@ -86,6 +82,10 @@ class ScopedContext extends Context {
     ];
 
     return subproofOrProofAssertions;
+  }
+
+  getMetaLevelSubstitutions() {
+    return this.metaLevelSubstitutions;
   }
 
   getProofAssertions() {
@@ -117,7 +117,7 @@ class ScopedContext extends Context {
   hasMetaLevelSubstitutions() {
     let metaLevelSubstitutions;
 
-    if (this.substitutions !== null) {
+    if (this.metaLevelSubstitutions !== null) {
       metaLevelSubstitutions = true;
     } else {
       const context = this.getContext();
@@ -174,47 +174,6 @@ class ScopedContext extends Context {
     this.assignments.push(assignment);
   }
 
-  addSubstitution(substitution, scoped = true) {
-    if (this.substitutions === null) {
-      const context = this.getContext();
-
-      context.addSubstitution(substitution);
-
-      return;
-    }
-
-    const context = this, ///
-          substitutionA = substitution, ///
-          substitutionString = substitution.getString();
-
-    context.trace(`Adding the '${substitutionString}' substitution to the scoped context...`);
-
-    const substitutionB = this.substitutions.find((substitution) => {
-      const substitutionB = substitution, ///
-            substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
-
-      if (substitutionAEqualToSubstitutionB) {
-        return true;
-      }
-    }) || null;
-
-    if (substitutionB !== null) {
-      context.debug(`The '${substitutionString}' substitution has already been added to the scoped context.`);
-    } else {
-      this.substitutions.push(substitution);
-
-      context.debug(`...added the '${substitutionString}' substitution to the scoped context.`);
-    }
-  }
-
-  assignAssignments() {
-    const context = this; ///
-
-    this.assignments.forEach((assignment) => {
-      assignment(context);
-    });
-  }
-
   addSubproofOrProofAssertion(subproofOrProofAssertion) {
     const context = this, ///
           subproofOrProofAssertionString = subproofOrProofAssertion.getString();
@@ -224,6 +183,47 @@ class ScopedContext extends Context {
     this.subproofOrProofAssertions.push(subproofOrProofAssertion);
 
     context.debug(`...added the '${subproofOrProofAssertionString}' subproof or proof assertion to the scoped context.`);
+  }
+
+  addMetaLevelSubstitution(metaLevelSubstitution) {
+    if (this.metaLevelSubstitutions === null) {
+      const context = this.getContext();
+
+      context.addMetaLevelSubstitution(metaLevelSubstitution);
+
+      return;
+    }
+
+    const context = this, ///
+          metaLevelSubstitutionA = metaLevelSubstitution, ///
+          metaLevelSubstitutionString = metaLevelSubstitution.getString();
+
+    context.trace(`Adding the '${metaLevelSubstitutionString}' meta-level substitution to the scoped context...`);
+
+    const metaLevelSubstitutionB = this.metaLevelSubstitutions.find((metaLevelSubstitution) => {
+      const metaLevelSubstitutionB = metaLevelSubstitution, ///
+            metaLevelSubstitutionAEqualToMetaLevelSubstitutionB = metaLevelSubstitutionA.isEqualTo(metaLevelSubstitutionB);
+
+      if (metaLevelSubstitutionAEqualToMetaLevelSubstitutionB) {
+        return true;
+      }
+    }) || null;
+
+    if (metaLevelSubstitutionB !== null) {
+      context.debug(`The '${metaLevelSubstitutionString}' meta-level substitution has already been added to the scoped context.`);
+    } else {
+      this.metaLevelSubstitutions.push(metaLevelSubstitution);
+
+      context.debug(`...added the '${metaLevelSubstitutionString}' substitution to the scoped context.`);
+    }
+  }
+
+  assignAssignments() {
+    const context = this; ///
+
+    this.assignments.forEach((assignment) => {
+      assignment(context);
+    });
   }
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
@@ -303,14 +303,14 @@ class ScopedContext extends Context {
     return comparesToTermAndPropertyRelation;
   }
 
-  static fromSubstitutions(substitutions, context) {
+  static fromMetaLevelSubstitutions(metaLevelSubstitutions, context) {
     const { Equivalences } = elements,
           variables = [],
           judgements = [],
           assignments = [],
           equivalences = Equivalences.fromNothing(context),
           subproofOrProofAssertions = [],
-          scopedContext = new ScopedContext(context, variables, judgements, assignments, equivalences, substitutions, subproofOrProofAssertions);
+          scopedContext = new ScopedContext(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions, metaLevelSubstitutions);
 
     return scopedContext;
   }

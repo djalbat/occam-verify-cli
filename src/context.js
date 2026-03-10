@@ -33,9 +33,16 @@ export default class Context extends ContextBase {
 
   getFrames() {
     const context = this.getContext(),
-          frames = context.getFrames();
+      frames = context.getFrames();
 
     return frames;
+  }
+
+  getJudgements() {
+    const context = this.getContext(),
+          judgements = context.getJudgements();
+
+    return judgements;
   }
 
   getEqualities() {
@@ -52,6 +59,13 @@ export default class Context extends ContextBase {
     return statements;
   }
 
+  getAssertions() {
+    const context = this.getContext(),
+          assertions = context.getAssertions();
+
+    return assertions;
+  }
+
   getReferences() {
     const context = this.getContext(),
           references = context.getReferences();
@@ -59,11 +73,11 @@ export default class Context extends ContextBase {
     return references;
   }
 
-  getEquivalences() {
+  getAssumptions() {
     const context = this.getContext(),
-          equivalences = context.getEquivalences();
+          assumptions = context.getAssumptions();
 
-    return equivalences;
+    return assumptions;
   }
 
   getSubstitutions() {
@@ -71,6 +85,13 @@ export default class Context extends ContextBase {
           substitutions = context.getSubstitutions();
 
     return substitutions;
+  }
+
+  getEquivalences() {
+    const context = this.getContext(),
+          equivalences = context.getEquivalences();
+
+    return equivalences;
   }
 
   getVariables(includeRelease) {
@@ -417,10 +438,16 @@ export default class Context extends ContextBase {
     context.addAssignment(assignment);
   }
 
-  addSubstitution(substitution, metaLevel = false) {
+  addSubstitution(substitution) {
     const context = this.getContext();
 
-    context.addSubstitution(substitution, metaLevel);
+    context.addSubstitution(substitution);
+  }
+
+  addMetaLevelSubstitution(metaLevelSubstitution) {
+    const context = this.getContext();
+
+    context.addMetaLevelSubstitution(metaLevelSubstitution);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {

@@ -184,20 +184,12 @@ export function frameSubstitutionStringFromFrameAndMetavariable(frame, metavaria
   return string;
 }
 
-export function typeStringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes) {
-  let typeString;
+export function metaLevelSubstitutionStringFromStatementAndReference(statement, reference) {
+  const statementString = statement.getString(),
+        referenceString = reference.getString(),
+        metaLevelSubstitutionString = `[${statementString} for ${referenceString}]`;
 
-  typeString = (typePrefixName !== null) ?
-                 `${typePrefixName}${typeName}`:
-                   typeName;
-
-  const superTypesString = superTypesStringFromSuperTypes(superTypes);
-
-  if (superTypesString !== null) {
-    typeString = `${typeString}:${superTypesString}`;
-  }
-
-  return typeString;
+  return metaLevelSubstitutionString;
 }
 
 export function procedureCallStringFromProcedureReferenceAndParameters(procedureReference, parameters) {

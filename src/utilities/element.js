@@ -13,6 +13,7 @@ import { equivalenceStringFromTerms,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
          topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
+import EphemeralContext from "../context/ephemeral";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -793,6 +794,21 @@ export function statementSubstitutionFromStatementSubstitutionNode(statementSubs
         statementSubstitution = new StatementSubstitution(context, string, node, resolved, substitution, targetStatement, replacementStatement);
 
   return statementSubstitution;
+}
+
+export function metaLevelSubstitutionFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context) {
+  const { MetaLevelSubstitution } = elements,
+        node = metaLevelSubstitutionNode,  ///
+        string = context.nodeAsString(node),
+        targetReference = targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
+        replacementStatement = replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
+        ephemeralContext = EphemeralContext.fromNothing(context);
+
+  context = ephemeralContext; ///
+
+  const metaLevelSubstitution = new MetaLevelSubstitution(context, string, node, targetReference, replacementStatement);
+
+  return metaLevelSubstitution;
 }
 
 export function constructorDeclarationFromConstructorDeclarationNode(constructorDeclarationNode, context) {
@@ -1859,7 +1875,14 @@ export function metavariableFromMetavariableDeclarationNode(metavariableDeclarat
 
 export function targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
   const targetReferenceNode = referenceSubstitutionNode.getTargetReferenceNode(),
-        targetRefernece = metavariableFromMetavariableNode(targetReferenceNode, context);
+        targetRefernece = referenceFromReferenceNode(targetReferenceNode, context);
+
+  return targetRefernece;
+}
+
+export function targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context) {
+  const targetReferenceNode = metaLevelSubstitutionNode.getTargetReferenceNode(),
+        targetRefernece = referenceFromReferenceNode(targetReferenceNode, context);
 
   return targetRefernece;
 }
@@ -1904,6 +1927,13 @@ export function replacementReferenceFromReferenceSubstitutionNode(referenceSubst
 
 export function replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context) {
   const replacementStatementNode = statementSubstitutionNode.getReplacementStatementNode(),
+        replacementStatement = statementFromStatementNode(replacementStatementNode, context);
+
+  return replacementStatement;
+}
+
+export function replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context) {
+  const replacementStatementNode = metaLevelSubstitutionNode.getReplacementStatementNode(),
         replacementStatement = statementFromStatementNode(replacementStatementNode, context);
 
   return replacementStatement;

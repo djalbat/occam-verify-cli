@@ -75,10 +75,11 @@ import SatisfiesAssertionNode from "./node/assertion/satisfies";
 import ParenthesisedLabelsNode from "./node/parenthesisedLabels"
 import PropertyDeclarationNode from "./node/declaration/property";
 import VariableDeclarationNode from "./node/declaration/variable";
-import ReferenceSubstitutionNode from "./node/substitution/reference";
-import StatementSubstitutionNode from "./node/substitution/statement";
 import SimpleTypeDeclarationNode from "./node/declaration/simpleType";
 import CombinatorDeclarationNode from "./node/declaration/combinator";
+import ReferenceSubstitutionNode from "./node/substitution/reference";
+import StatementSubstitutionNode from "./node/substitution/statement";
+import MetaLevelSubstitutionNode from "./node/substitution/metaLevel";
 import TypePrefixDeclarationNode from "./node/declaration/typePrefix";
 import ComplexTypeDeclarationNode from "./node/declaration/complexType";
 import DonstructorDeclarationNode from "./node/declaration/constructor";
@@ -160,9 +161,10 @@ import {
   PARENTHESISED_LABELS_RULE_NAME,
   PROPERTY_DECLARATION_RULE_NAME,
   VARIABLE_DECLARATION_RULE_NAME,
+  COMBINATOR_DECLARATION_RULE_NAME,
   REFERENCE_SUBSTITUTION_RULE_NAME,
   STATEMENT_SUBSTITUTION_RULE_NAME,
-  COMBINATOR_DECLARATION_RULE_NAME,
+  META_LEVEL_SUBSTITUTION_RULE_NAME,
   SIMPLE_TYPE_DECLARATION_RULE_NAME,
   CONSTRUCTOR_DECLARATION_RULE_NAME,
   TYPE_PREFIX_DECLARATION_RULE_NAME,
@@ -245,9 +247,10 @@ const NonTerminalNodeMap = {
   [PARENTHESISED_LABELS_RULE_NAME]: ParenthesisedLabelsNode,
   [VARIABLE_DECLARATION_RULE_NAME]: VariableDeclarationNode,
   [PROPERTY_DECLARATION_RULE_NAME]: PropertyDeclarationNode,
+  [COMBINATOR_DECLARATION_RULE_NAME]: CombinatorDeclarationNode,
   [STATEMENT_SUBSTITUTION_RULE_NAME]: StatementSubstitutionNode,
   [REFERENCE_SUBSTITUTION_RULE_NAME]: ReferenceSubstitutionNode,
-  [COMBINATOR_DECLARATION_RULE_NAME]: CombinatorDeclarationNode,
+  [META_LEVEL_SUBSTITUTION_RULE_NAME]: MetaLevelSubstitutionNode,
   [SIMPLE_TYPE_DECLARATION_RULE_NAME]: SimpleTypeDeclarationNode,
   [TYPE_PREFIX_DECLARATION_RULE_NAME]: TypePrefixDeclarationNode,
   [CONSTRUCTOR_DECLARATION_RULE_NAME]: DonstructorDeclarationNode,

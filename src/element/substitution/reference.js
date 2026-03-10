@@ -123,16 +123,10 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference subtitution's '${targetReferenceString}' target reference...`);
 
-    const targetReferenceSingular = this.targetReference.isSingular();
+    const targetReference = this.targetReference.validate(context);
 
-    if (targetReferenceSingular) {
-      const targetReference = this.targetReference.validate(context);
-
-      if (targetReference !== null) {
-        targetReferenceValidates = true;
-      }
-    } else {
-      context.debug(`The '${referenceSubstitutionString}' reference subtitution's '${targetReferenceString}' target reference is not singular.`);
+    if (targetReference !== null) {
+      targetReferenceValidates = true;
     }
 
     if (targetReferenceValidates) {

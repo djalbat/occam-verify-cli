@@ -57,6 +57,7 @@ import SimpleTypeDeclaration from "./element/declaration/simpleType";
 import StatementSubstitution from "./element/substitution/statement";
 import ReferenceSubstitution from "./element/substitution/reference";
 import CombinatorDeclaration from "./element/declaration/combinator";
+import MetaLevelSubstitution from "./element/substitution/metaLevel";
 import TypePrefixDeclaration from "./element/declaration/typePrefix";
 import ConstructorDeclaration from "./element/declaration/constructor";
 import ComplexTypeDeclaration from "./element/declaration/complexType";

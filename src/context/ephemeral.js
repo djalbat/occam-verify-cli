@@ -272,15 +272,7 @@ export default class EphemeralContext extends Context {
     }
   }
 
-  addSubstitution(substitution, metaLevel = false) {
-    if (metaLevel) {
-      const context = this.getContext();
-
-      context.addSubstitution(substitution, metaLevel);
-
-      return;
-    }
-
+  addSubstitution(substitution) {
     const context = this, ///
           substitutionA = substitution, ///
           substitutionString = substitution.getString();

@@ -60,15 +60,7 @@ export default class LiminalContext extends Context {
     return soleNonTrivialSubstitutions;
   }
 
-  addSubstitution(substitution, metaLevel = false) {
-    if (metaLevel) {
-      const context = this.getContext();
-
-      context.addSubstitution(substitution, metaLevel);
-
-      return;
-    }
-
+  addSubstitution(substitution) {
     const context = this, ///
           substitutionA = substitution, ///
           substitutionString = substitution.getString();
