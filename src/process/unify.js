@@ -285,9 +285,10 @@ class MetavariablePass extends ZipPass {
               type = generalContext.findTypeByNominalTypeName(nominalTypeName),
               context = specificContext, ///
               term = context.findTermByTermNode(termNode),
-              termValidatesGivenType = term.validateGivenType(type, context);
+              termType = term.getType(),
+              termTypeEqualToOrSubTypeOfGivenTypeType = termType.isEqualToOrSubTypeOf(type);
 
-        if (termValidatesGivenType) {
+        if (termTypeEqualToOrSubTypeOfGivenTypeType) {
           success = true;
         }
 

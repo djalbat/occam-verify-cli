@@ -669,14 +669,6 @@ export default class NominalFileContext extends FileContext {
     return procedure;
   }
 
-  isMetavariablePresent(metavariable) {
-    metavariable = this.findMetavariable(metavariable);
-
-    const metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
-  }
-
   isLabelPresentByReference(reference) {
     const labels = this.getLabels(),
       labelPresent = labels.some((label) => {

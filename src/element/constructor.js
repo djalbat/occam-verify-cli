@@ -122,6 +122,10 @@ export default define(class Constructor extends Element {
     if (termUnifiesWithConstructor) {
       let validatesForwards;
 
+      const typeString = this.type.getString();
+
+      context.trace(`Setting the '${termString}' term's type to the constructor's '${typeString}' type.`);
+
       term.setType(this.type);
 
       validatesForwards = validateForwards();

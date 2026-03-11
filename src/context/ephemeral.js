@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import Context from "../context";
 
 import { termsFromJSON,
@@ -20,6 +22,8 @@ import { termsFromJSON,
          referencesToReferencesJSON,
          assumptionsToAssumptionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
+
+const { extract } = arrayUtilities;
 
 export default class EphemeralContext extends Context {
   constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, substitutions) {
@@ -295,6 +299,25 @@ export default class EphemeralContext extends Context {
 
       context.debug(`...added the '${substitutionString}' substitution to the ephemeral context.`);
     }
+  }
+
+  removeTerm(term) {
+    const context = this,
+          termString = term.getString()
+
+    context.trace(`Removing the '${termString}' term from ths ephemeral context...`);
+
+    const termA = term;
+
+    extract(this.terms, (term) => {
+      const termB = term;
+
+      if (termA === termB) {
+        return true;
+      }
+    });
+
+    context.debug(`...removed the '${termString}' term from ths ephemeral context.`);
   }
 
   retrieveEphemeralContext() {

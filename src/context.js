@@ -402,6 +402,13 @@ export default class Context extends ContextBase {
     return judgementPresent;
   }
 
+  isMetavariablePresentByMetavariableName(metavariableName) {
+    const context = this.getContext(),
+          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
+
+    return metavariablePresent;
+  }
+
   isSubstitutionPresentBySubstitutionNode(substitutionNode) {
     const context = this.getContext(),
           substitutionPresent = context.isSubstitutionPresentBySubstitutionNode(substitutionNode);
@@ -475,5 +482,11 @@ export default class Context extends ContextBase {
     const context = this.getContext();
 
     context.addSubproofOrProofAssertion(subproofOrProofAssertion);
+  }
+
+  removeTerm(term) {
+    const context = this.getContext();
+
+    context.removeTerm(term);
   }
 }
