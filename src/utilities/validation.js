@@ -103,9 +103,11 @@ function validateStatementAsMetavariable(statement, stated, context) {
         const generalContext = context, ///
               specificContext = context;  ///
 
-        substitution.validate(generalContext, specificContext);
+        substitution = substitution.validate(generalContext, specificContext);
 
-        statementValidatesAsMetavariable = false;
+        if (substitution === null) {
+          statementValidatesAsMetavariable = false;
+        }
       }
     }
 

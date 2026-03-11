@@ -249,13 +249,19 @@ export default define(class Metavariable extends Element {
           frameUnifies = true;
         }
       } else {
-        const { FrameSubstitution } = elements,
-              metavariable = this,  ///
-              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
+        const { FrameSubstitution } = elements;
 
-        frameSubstitution.validate(generalContext, specificContext);
+        let frameSubstitution;
 
-        frameUnifies = true;
+        const metavariable = this;  ///
+
+        frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
+
+        frameSubstitution = frameSubstitution.validate(generalContext, specificContext);
+
+        if (frameSubstitution !== null) {
+          frameUnifies = true;
+        }
       }
     }
 
@@ -318,9 +324,11 @@ export default define(class Metavariable extends Element {
           substitution.setContext(context);
         }
 
-        statementSubstitution.validate(generalContext, specificContext);
+        statementSubstitution = statementSubstitution.validate(generalContext, specificContext);
 
-        statementUnifies = true;
+        if (statementSubstitution !== null) {
+          statementUnifies = true;
+        }
       }
     }
 
@@ -357,13 +365,19 @@ export default define(class Metavariable extends Element {
           referenceUnifies = true;
         }
       } else {
-        const { ReferenceSubstitution } = elements,
-              metavariable = this,
-              referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
+        const { ReferenceSubstitution } = elements;
 
-        referenceSubstitution.validate(generalContext, specificContext);
+        let referenceSubstitution;
 
-        referenceUnifies = true;
+        const metavariable = this;
+
+        referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
+
+        referenceSubstitution = referenceSubstitution.validate(generalContext, specificContext);  ///
+
+        if (referenceSubstitution !== null) {
+          referenceUnifies = true;
+        }
       }
     }
 
