@@ -130,10 +130,12 @@ export default define(class Metavariable extends Element {
       context.trace(`Verifying the '${metavariableString}' metavariable's '${typeString}' type...`);
 
       const typeName = this.type.getName(),
-            typePresent = context.isTypePresentByTypeName(typeName);
+            type = context.findTypeByTypeName(typeName);
 
-      if (!typePresent) {
-        typeVerifies = false;
+      if (type !== null) {
+        this.type = type;
+
+        typeVerifies = true;
 
         context.error(`Type '${typeName}' is not present.`);
       }
