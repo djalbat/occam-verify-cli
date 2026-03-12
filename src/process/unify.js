@@ -223,10 +223,13 @@ class CombinatorPass extends ZipPass {
 
         context = specificContext;  ///
 
-        const term = termFromTermNode(termNode, context),
-              termValidatesGivenType = term.validateGivenType(type, context);
+        let term;
 
-        if (termValidatesGivenType) {
+        term = termFromTermNode(termNode, context);
+
+        term = term.validateGivenType(type, context);
+
+        if (term !== null) {
           success = true;
         }
 
@@ -257,10 +260,13 @@ class ConstructorPass extends ZipPass {
         if (type !== null) {
           context = specificContext;  ///
 
-          const term = termFromTermNode(termNode, context),
-                termValidatesGivenType = term.validateGivenType(type, context);
+          let term;
 
-          if (termValidatesGivenType) {
+          term = termFromTermNode(termNode, context);
+
+          term = term.validateGivenType(type, context);
+
+          if (term !== null) {
             success = true;
           }
         }

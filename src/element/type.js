@@ -15,6 +15,7 @@ const { push, first } = arrayUtilities;
 export default define(class Type extends Element {
   constructor(context, string, node, name, prefixName, superTypes, properties, provisional) {
     super(context, string, node);
+
     this.name = name;
     this.prefixName = prefixName;
     this.superTypes = superTypes;

@@ -172,11 +172,19 @@ export default define(class Equality extends Element {
     let leftTerm,
         rightTerm;
 
-    leftTerm = this.leftTerm.validate(context, () => {
+    leftTerm = this.leftTerm.validate(context, (leftTerm) => {
         let validatesForwards = false;
 
-        rightTerm = this.rightTerm.validate(context, () => {
-          const validatesForwards = true;
+        rightTerm = this.rightTerm.validate(context, (rightTerm) => {
+          let validatesForwards = false;
+
+          const leftTermType = leftTerm.getType(),
+                rightTermType = rightTerm.getType(),
+                leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
+
+          if (leftTermTypeComparableToRightTermType) {
+            validatesForwards = true;
+          }
 
           return validatesForwards;
         });
@@ -189,17 +197,11 @@ export default define(class Equality extends Element {
       });
 
     if (leftTerm !== null) {
-      const leftTermType = leftTerm.getType(),
-            rightTermType = rightTerm.getType(),
-            leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
+      this.leftTerm = leftTerm;
 
-      if (leftTermTypeComparableToRightTermType) {
-        this.leftTerm = leftTerm;
+      this.rightTerm = rightTerm;
 
-        this.rightTerm = rightTerm;
-
-        termsValidate = true;
-      }
+      termsValidate = true;
     }
 
     if (termsValidate) {

@@ -121,7 +121,7 @@ export default define(class ReferenceSubstitution extends Substitution {
           targetReferenceString = this.targetReference.getString(),
           referenceSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${referenceSubstitutionString}' reference subtitution's '${targetReferenceString}' target reference...`);
+    context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${targetReferenceString}' target reference...`);
 
     const targetReference = this.targetReference.validate(context);
 
@@ -130,7 +130,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     }
 
     if (targetReferenceValidates) {
-      context.debug(`...validated the '${referenceSubstitutionString}' reference subtitution's '${targetReferenceString}' target reference...`);
+      context.debug(`...validated the '${referenceSubstitutionString}' reference substitution's '${targetReferenceString}' target reference...`);
     }
 
     return targetReferenceValidates;
@@ -143,7 +143,7 @@ export default define(class ReferenceSubstitution extends Substitution {
           replacementReferenceString = this.replacementReference.getString(),
           referenceSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${referenceSubstitutionString}' reference subtitution's '${replacementReferenceString}' replacement reference...`);
+    context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${replacementReferenceString}' replacement reference...`);
 
     const replacementReference = this.replacementReference.validate(context);
 
@@ -152,7 +152,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     }
 
     if (replacementReferenceValidates) {
-      context.debug(`...validated the '${referenceSubstitutionString}' reference subtitution's '${replacementReferenceString}' replacement reference.`);
+      context.debug(`...validated the '${referenceSubstitutionString}' reference substitution's '${replacementReferenceString}' replacement reference.`);
     }
 
     return replacementReferenceValidates;

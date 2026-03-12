@@ -79,7 +79,7 @@ export default define(class Signature extends Element {
 
     context.trace(`Validating the '${signatureString}' signature's '${termString}' term...`);
 
-    term = term.validate(context, () => { ///
+    term = term.validate(context, (term) => { ///
       const validatesForwards = true;
 
       return validatesForwards;

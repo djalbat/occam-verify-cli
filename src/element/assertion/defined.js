@@ -91,14 +91,14 @@ export default define(class DefinedAssertion extends Assertion {
       const termString = this.term.getString(), ///
             definedAssertionString = this.getString();  ///
 
-      context.trace(`Validating the '${definedAssertionString}' defined assertino's '${termString}' term...`);
+      context.trace(`Validating the '${definedAssertionString}' defined assertion's '${termString}' term...`);
 
       const termSingular = this.term.isSingular();
 
       if (!termSingular) {
         context.debug(`The '${termString}' term is not singular.`);
       } else {
-        const term = this.term.validate(context, () => {
+        const term = this.term.validate(context, (term) => {
                 const validatesForwards = true;
 
                 return validatesForwards;
@@ -111,7 +111,7 @@ export default define(class DefinedAssertion extends Assertion {
         }
 
         if (termValidates) {
-          context.debug(`...validates the'${definedAssertionString}' defined assertino's '${termString}' term.`);
+          context.debug(`...validates the'${definedAssertionString}' defined assertion's '${termString}' term.`);
         }
       }
     }
@@ -126,7 +126,7 @@ export default define(class DefinedAssertion extends Assertion {
       const frameString = this.frame.getString(), ///
             definedAssertionString = this.getString();  ///
 
-      context.trace(`Validating the'${definedAssertionString}' defined assertino's '${frameString}' frame...`);
+      context.trace(`Validating the'${definedAssertionString}' defined assertion's '${frameString}' frame...`);
 
       const frameSingular = this.frame.isSingular();
 
@@ -144,7 +144,7 @@ export default define(class DefinedAssertion extends Assertion {
         }
 
         if (frameValidates) {
-          context.debug(`...validates the'${definedAssertionString}' defined assertino's '${frameString}' frame.`);
+          context.debug(`...validates the'${definedAssertionString}' defined assertion's '${frameString}' frame.`);
         }
       }
     }

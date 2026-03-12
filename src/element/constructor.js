@@ -124,13 +124,15 @@ export default define(class Constructor extends Element {
 
       const typeString = this.type.getString();
 
-      context.trace(`Setting the '${termString}' term's type to the constructor's '${typeString}' type.`);
+      context.trace(`Setting the '${termString}' term's type to the '${constructorString}' constructor's '${typeString}' type.`);
 
       term.setType(this.type);
 
-      validatesForwards = validateForwards();
+      validatesForwards = validateForwards(term);
 
-      termUnifies = validatesForwards;  ///
+      if (validatesForwards) {
+        termUnifies = true;
+      }
     }
 
     if (termUnifies) {

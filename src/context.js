@@ -483,10 +483,4 @@ export default class Context extends ContextBase {
 
     context.addSubproofOrProofAssertion(subproofOrProofAssertion);
   }
-
-  removeTerm(term) {
-    const context = this.getContext();
-
-    context.removeTerm(term);
-  }
 }

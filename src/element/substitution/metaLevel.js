@@ -111,7 +111,7 @@ export default define(class MetaLevelSubstitution extends Substitution {
           targetReferenceString = this.targetReference.getString(),
           metaLevelSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${metaLevelSubstitutionString}' meta-level subtitution's '${targetReferenceString}' target reference...`);
+    context.trace(`Validating the '${metaLevelSubstitutionString}' meta-level substitution's '${targetReferenceString}' target reference...`);
 
     const targetReference = this.targetReference.validate(context);
 
@@ -120,7 +120,7 @@ export default define(class MetaLevelSubstitution extends Substitution {
     }
 
     if (targetReferenceValidates) {
-      context.debug(`...validated the '${metaLevelSubstitutionString}' meta-level subtitution's '${targetReferenceString}' target reference...`);
+      context.debug(`...validated the '${metaLevelSubstitutionString}' meta-level substitution's '${targetReferenceString}' target reference...`);
     }
 
     return targetReferenceValidates;
@@ -133,7 +133,7 @@ export default define(class MetaLevelSubstitution extends Substitution {
           replacementStatementString = this.replacementStatement.getString(),
           metaLevelSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${metaLevelSubstitutionString}' meta-level subtitution's '${replacementStatementString}' replacement statement...`);
+    context.trace(`Validating the '${metaLevelSubstitutionString}' meta-level substitution's '${replacementStatementString}' replacement statement...`);
 
     const stated = true,
       replacementStatement = this.replacementStatement.validate(stated, context);
@@ -143,7 +143,7 @@ export default define(class MetaLevelSubstitution extends Substitution {
     }
 
     if (replacementStatementValidates) {
-      context.debug(`...validated the '${metaLevelSubstitutionString}' meta-level subtitution's '${replacementStatementString}' replacement statement.`);
+      context.debug(`...validated the '${metaLevelSubstitutionString}' meta-level substitution's '${replacementStatementString}' replacement statement.`);
     }
 
     return replacementStatementValidates;

@@ -21,7 +21,7 @@ export default define(class Combinator extends Element {
     return this.statement;
   }
 
-  getConbinatorNode() {
+  getCombinatoryNode() {
     const node = this.getNode(),
           combinatorNode = node;  ///
 

@@ -117,13 +117,13 @@ export default define(class PropertyAssertion extends Assertion {
 
     context.trace(`Validating the '${termString}' term...`);
 
-    const term = this.term.validate(context, () => {
+    const term = this.term.validate(context, (term) => {
       const validatesForwards = true;
 
       return validatesForwards;
     });
 
-    if ((term !== null)) {
+    if (term !== null) {
       this.term = term;
 
       termValidates = true;

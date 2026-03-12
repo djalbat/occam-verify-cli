@@ -97,14 +97,14 @@ export default define(class ContainedAssertion extends Assertion {
       const termString = this.term.getString(),
             containedAssertionString = this.getString(); ///
 
-      context.trace(`Validating the '${containedAssertionString}' contained assertino's '${termString}' term...`);
+      context.trace(`Validating the '${containedAssertionString}' contained assertion's '${termString}' term...`);
 
       const termSingular = this.term.isSingular();
 
       if (!termSingular) {
         context.debug(`The '${termString}' term is not singular.`);
       } else {
-        const term = this.term.validate(context, () => {
+        const term = this.term.validate(context, (term) => {
           const validatesForwards = true;
 
           return validatesForwards;
@@ -117,7 +117,7 @@ export default define(class ContainedAssertion extends Assertion {
         }
 
         if (termValidates) {
-          context.debug(`...validated the '${containedAssertionString}' contained assertino's '${termString}' term.`);
+          context.debug(`...validated the '${containedAssertionString}' contained assertion's '${termString}' term.`);
         }
       }
     }
@@ -132,7 +132,7 @@ export default define(class ContainedAssertion extends Assertion {
       const frameString = this.frame.getString(),
             containedAssertionString = this.getString(); ///
 
-      context.trace(`Validating the '${containedAssertionString}' contained assertino's '${frameString}' frame...`);
+      context.trace(`Validating the '${containedAssertionString}' contained assertion's '${frameString}' frame...`);
 
       const frameSingular = this.frame.isSingular();
 
@@ -151,7 +151,7 @@ export default define(class ContainedAssertion extends Assertion {
       }
 
       if (frameValidates) {
-        context.debug(`...validated the '${containedAssertionString}' contained assertino's '${frameString}' frame.`);
+        context.debug(`...validated the '${containedAssertionString}' contained assertion's '${frameString}' frame.`);
       }
     }
 

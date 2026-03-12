@@ -158,12 +158,14 @@ export default define(class Term extends Element {
           valid = (validTerm !== null);
 
     if (valid) {
-      const validatesForward = validateForwards();
+      term = validTerm; ///
 
-      if (validatesForward) {
-        term = validTerm; ///
+      context.debug(`...the '${termString}' term is already valid.`);
 
-        context.debug(`...the '${termString}' term is already valid.`);
+      const validatesForward = validateForwards(term);
+
+      if (!validatesForward) {
+        term = null;
       }
     } else {
       const validates = validateTerms.some((validateTerm) => {  ///
@@ -188,21 +190,22 @@ export default define(class Term extends Element {
   }
 
   validateGivenType(type, context) {
-    let validatesGivenType = false;
+    let term;
 
     const typeString = type.getString(),
           termString = this.getString();  ///
 
     context.trace(`Validating the '${termString}' term given the '${typeString}' type...`);
 
-    const term = this.validate(context, () => {
+    let validatesGivenType = false;
+
+    term = this.validate(context, (term) => {
       let validatesForwards = false;
 
-      const term = this,  ///
-            termType = term.getType(),
-            termTypeEqualToOrSubTypeOfGivenTypeType = termType.isEqualToOrSubTypeOf(type);
+      const termType = term.getType(),
+            termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
 
-      if (termTypeEqualToOrSubTypeOfGivenTypeType) {
+      if (termTypeEqualToOrSubTypeOfType) {
         validatesForwards = true;
       }
 
@@ -217,7 +220,7 @@ export default define(class Term extends Element {
       context.debug(`...validated the '${termString}' term given the '${typeString}' type.`);
     }
 
-    return validatesGivenType;
+    return term;
   }
 
   toJSON() {

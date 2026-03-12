@@ -156,7 +156,7 @@ export default define(class StatementSubstitution extends Substitution {
           targetStatementString = this.targetStatement.getString(),
           statementSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement...`);
+    context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${targetStatementString}' target statement...`);
 
     const targetStatementSingular = this.targetStatement.isSingular();
 
@@ -168,11 +168,11 @@ export default define(class StatementSubstitution extends Substitution {
         targetStatementValidates = true;
       }
     } else {
-      context.debug(`The '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement is not singular.`);
+      context.debug(`The '${statementSubstitutionString}' statement substitution's '${targetStatementString}' target statement is not singular.`);
     }
 
     if (targetStatementValidates) {
-      context.debug(`...validated the '${statementSubstitutionString}' statement subtitution's '${targetStatementString}' target statement...`);
+      context.debug(`...validated the '${statementSubstitutionString}' statement substitution's '${targetStatementString}' target statement...`);
     }
 
     return targetStatementValidates;
@@ -185,7 +185,7 @@ export default define(class StatementSubstitution extends Substitution {
           replacementStatementString = this.replacementStatement.getString(),
           statementSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement...`);
+    context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${replacementStatementString}' replacement statement...`);
 
     const stated = true,
           replacementStatement = this.replacementStatement.validate(stated, context);
@@ -195,7 +195,7 @@ export default define(class StatementSubstitution extends Substitution {
     }
 
     if (replacementStatementValidates) {
-      context.debug(`...validated the '${statementSubstitutionString}' statement subtitution's '${replacementStatementString}' replacement statement.`);
+      context.debug(`...validated the '${statementSubstitutionString}' statement substitution's '${replacementStatementString}' replacement statement.`);
     }
 
     return replacementStatementValidates;
@@ -262,7 +262,7 @@ export default define(class StatementSubstitution extends Substitution {
     if (simpleSubstitution !== null) {
       context = this.getContext();
 
-      const subtitution = liminally((context) => {
+      const substitution = liminally((context) => {
         let substitution = null;
 
         const specificContext = context;  ///
@@ -285,7 +285,7 @@ export default define(class StatementSubstitution extends Substitution {
         return substitution;
       }, context);
 
-      if (subtitution !== null) {
+      if (substitution !== null) {
         liminally((specificContext) => {
           const contexts = [];
 
@@ -306,7 +306,7 @@ export default define(class StatementSubstitution extends Substitution {
 
             const generalContext = context; ///
 
-            this.unifySubstitution(subtitution, generalContext, specificContext);
+            this.unifySubstitution(substitution, generalContext, specificContext);
           }, contexts, context);
 
           specificContext.commit();

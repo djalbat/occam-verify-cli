@@ -82,7 +82,11 @@ export default define(class Variable extends Element {
     variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
     if (variable !== null) {
-      const type = variable.getType();
+      const type = variable.getType(),
+            typeString = type.getString(),
+            variableString = this.getString();  ///
+
+      context.trace(`Setting the '${variableString}' variable's type to the '${typeString}' type.`);
 
       this.type = type;
 

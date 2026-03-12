@@ -114,10 +114,10 @@ export default define(class TypeAssertion extends Assertion {
 
     context.trace(`Validating the '${typeAssertionString}' stated type assertion...`);
 
-    const term = this.term.validate(context, () => {
-      let validatesForwards;
+    const term = this.term.validate(context, (term) => {
+      let validatesForwards = false;
 
-      const termType = this.term.getType(),
+      const termType = term.getType(),
             typeEqualToOrSubTypeOfTermType = this.type.isEqualToOrSubTypeOf(termType);
 
       if (typeEqualToOrSubTypeOfTermType) {
@@ -147,10 +147,10 @@ export default define(class TypeAssertion extends Assertion {
 
     context.trace(`Validating the '${typeAssertionString}' derived type assertion...`);
 
-    const term = this.term.validate(context, () => {
+    const term = this.term.validate(context, (term) => {
       let validatesForwards = false;
 
-      const termType = this.term.getType(),
+      const termType = term.getType(),
             termTypeProvisional = termType.isProvisional();
 
       if (!termTypeProvisional) {

@@ -109,7 +109,7 @@ export default define(class Label extends Element {
     const labelString = this.getString(), ///
           metavariableString = this.metavariable.getString();
 
-    context.trace(`Validating the '${labelString}' label's '${metavariableString}' metavariable...'`);
+    context.trace(`Validating the '${labelString}' label's '${metavariableString}' metavariable...`);
 
     const metavariable = this.metavariable.validate(context);
 

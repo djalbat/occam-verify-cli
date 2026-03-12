@@ -29,11 +29,14 @@ function validateTermAsVariable(term, context, validateForwards) {
     variable = variable.validate(context);
 
     if (variable !== null) {
-      const type = variable.getType();
+      const type = variable.getType(),
+            typeString = type.getString();
+
+      context.trace(`Setting the '${termString}' term's type to the '${typeString}' type.`);
 
       term.setType(type);
 
-      const validatesForwards = validateForwards();
+      const validatesForwards = validateForwards(term);
 
       if (validatesForwards) {
         termValidatesAsVariable = true;

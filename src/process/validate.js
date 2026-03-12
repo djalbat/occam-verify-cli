@@ -11,7 +11,7 @@ const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type"),
       statementNodeQuery = nodeQuery("/statement");
 
-class ConbinatorPass extends SimplePass {
+class CombinatorPass extends SimplePass {
   run(statementNode, context) {
     let success = false;
 
@@ -56,7 +56,7 @@ class ConbinatorPass extends SimplePass {
 
         term = termFromTermNode(termNode, context);
 
-        term = term.validate(context, () => { ///
+        term = term.validate(context, (term) => { ///
           const validatesForwards = true;
 
           return validatesForwards;
@@ -112,7 +112,7 @@ class ConstructorPass extends SimplePass {
 
         term = termFromTermNode(termNode, context);
 
-        term = term.validate(context, () => { ///
+        term = term.validate(context, (term) => { ///
           const validatesForwards = true;
 
           return validatesForwards;
@@ -143,7 +143,7 @@ class ConstructorPass extends SimplePass {
   ];
 }
 
-const combinatorPass = new ConbinatorPass(),
+const combinatorPass = new CombinatorPass(),
       constructorPass = new ConstructorPass();
 
 export function validateTermAsConstructor(term, context) {

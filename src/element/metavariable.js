@@ -182,38 +182,29 @@ export default define(class Metavariable extends Element {
     let termValidates = true; ///
 
     if (this.term !== null) {
+      termValidates = false;
+
       const termString = this.term.getString(),
             metavariableString = this.getString();
 
       context.trace(`Validating the '${metavariableString}' metavariable's '${termString}' term...`);
 
-      termValidates = false;
-
       const metavariableName = this.getMetavariableName(),
-            metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
+            metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
-      let term;
+      let term = null;
 
-      if (metavariablePresent) {
-        term = this.term.validate(context, () => {
-          let validatesForwards = false;
+      if (metavariable !== null) {
+        const type = metavariable.getType(),
+              metavariableString = metavariable.getString();
 
-          context.addTerm(this.term);
-
-          const metavariable = this,
-                metavariablePresent = context.isMetavariablePresent(metavariable, context);
-
-          context.removeTerm(this.term);
-
-          if (metavariablePresent) {
-            validatesForwards = true;
-          }
-
-          return validatesForwards;
-        });
-
+        if (type !== null) {
+          term = this.term.validateGivenType(type, context);
+        } else {
+          context.trace(`The '${metavariableString}' metavariable does not have a type`);
+        }
       } else {
-        term = this.term.validate(context, () => {
+        term = this.term.validate(context, (term) => {
           const validatesForwards = true;
 
           return validatesForwards;
@@ -250,7 +241,7 @@ export default define(class Metavariable extends Element {
 
       this.metaType = metaType;
 
-      context.trace(`Setting the '${metavariableString}' metavariable's meta-type to '${metaTypeSTring}'.`);
+      context.trace(`Setting the '${metavariableString}' metavariable's meta-type to the '${metaTypeSTring}' meta-type.`);
     }
 
     if (termValidates) {
@@ -261,15 +252,22 @@ export default define(class Metavariable extends Element {
   }
 
   validateType(context) {
-    let typeValidates = true;  ///
+    let typeValidates = false;
 
-    if (this.type !== null) {
-      const typeString = this.type.getString(),
-            metavariableString = this.getString();
+    const metavariableString = this.getString();  ///
 
-      typeValidates = false;
+    context.trace(`Validating  the '${metavariableString}' metavariable's type...`);
+
+    if (this.type === null) {
+      typeValidates = true;
+    } else {
+      const typeString = this.type.getString();
 
       context.trace(`A '${typeString}' type is present in the '${metavariableString}' metavariable.`);
+    }
+
+    if (typeValidates) {
+      context.trace(`...validated  the '${metavariableString}' metavariable's type.`);
     }
 
     return typeValidates;

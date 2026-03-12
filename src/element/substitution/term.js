@@ -124,12 +124,12 @@ export default define(class TermSubstitution extends Substitution {
           targetTermString = this.targetTerm.getString(),
           termSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${termSubstitutionString}' term subtitution's '${targetTermString}' target term...`);
+    context.trace(`Validating the '${termSubstitutionString}' term substitution's '${targetTermString}' target term...`);
 
     const targetTermSingular = this.targetTerm.isSingular();
 
     if (targetTermSingular) {
-      const targetTerm = this.targetTerm.validate(context, () => {
+      const targetTerm = this.targetTerm.validate(context, (targetTerm) => {
         const validatesForwards = true;
 
         return validatesForwards;
@@ -141,11 +141,11 @@ export default define(class TermSubstitution extends Substitution {
         targetTermValidates = true;
       }
     } else {
-      context.debug(`The '${termSubstitutionString}' term subtitution's '${targetTermString}' target term is not singular.`);
+      context.debug(`The '${termSubstitutionString}' term substitution's '${targetTermString}' target term is not singular.`);
     }
 
     if (targetTermValidates) {
-      context.debug(`...validated the '${termSubstitutionString}' term subtitution's '${targetTermString}' target term...`);
+      context.debug(`...validated the '${termSubstitutionString}' term substitution's '${targetTermString}' target term...`);
     }
 
     return targetTermValidates;
@@ -158,9 +158,9 @@ export default define(class TermSubstitution extends Substitution {
           replacementTermString = this.replacementTerm.getString(),
           termSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${termSubstitutionString}' term subtitution's '${replacementTermString}' replacement term...`);
+    context.trace(`Validating the '${termSubstitutionString}' term substitution's '${replacementTermString}' replacement term...`);
 
-    const replacementTerm = this.replacementTerm.validate(context, () => {
+    const replacementTerm = this.replacementTerm.validate(context, (replacementTerm) => {
       const validatesForwards = true;
 
       return validatesForwards;
@@ -173,7 +173,7 @@ export default define(class TermSubstitution extends Substitution {
     }
 
     if (replacementTermValidates) {
-      context.debug(`...validated the '${termSubstitutionString}' term subtitution's '${replacementTermString}' replacement term...`);
+      context.debug(`...validated the '${termSubstitutionString}' term substitution's '${replacementTermString}' replacement term...`);
     }
 
     return replacementTermValidates;
