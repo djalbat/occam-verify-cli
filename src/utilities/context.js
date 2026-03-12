@@ -5,6 +5,7 @@ import LiminalContext from "../context/liminal";
 import LiteralContext from "../context/literal";
 import EphemeralContext from "../context/ephemeral";
 import SyntheticContext from "../context/synthetic";
+import BranchingContext from "../context/branching";
 
 export function attempt(innerFunction, context) {
   const ephemeralContext = EphemeralContext.fromNothing(context);
@@ -26,6 +27,14 @@ export function literally(innerFunction, context) {
   const literalContext = LiteralContext.fromNothing(context);
 
   context = literalContext;  ///
+
+  return innerFunction(context);
+}
+
+export function tentatively(innerFunction, context) {
+  const branchingContext = BranchingContext.fromNothing(context);
+
+  context = branchingContext;  ///
 
   return innerFunction(context);
 }

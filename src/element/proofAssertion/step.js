@@ -117,7 +117,7 @@ export default define(class Step extends ProofAssertion {
           const satisfiesAssertioValidates = this.validateSatisfiesAssertion(context);
 
           if (satisfiesAssertioValidates) {
-            this.setContext(context);
+            context.commit(this);
 
             validates = true;
           }

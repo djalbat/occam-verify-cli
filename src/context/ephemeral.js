@@ -72,6 +72,12 @@ export default class EphemeralContext extends Context {
     return this.substitutions;
   }
 
+  addTerms(terms) {
+    terms.forEach((term) => {
+      this.addTerm(term);
+    });
+  }
+
   addTerm(term) {
     const termA = term, ///
           context = this, ///
@@ -484,6 +490,12 @@ export default class EphemeralContext extends Context {
           substitutionPresent = (substitution !== null);
 
     return substitutionPresent;
+  }
+
+  commit(element) {
+    const context = this; ///
+
+    element.context = context;
   }
 
   initialise(json) {

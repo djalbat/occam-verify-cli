@@ -64,7 +64,7 @@ export default define(class Constructor extends Element {
       const termValidates = this.validateTerm(context);
 
       if (termValidates) {
-        this.setContext(context);
+        context.commit(this);
 
         validates = true;
       }

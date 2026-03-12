@@ -2,6 +2,7 @@
 
 import elements from "../elements";
 
+import { tentatively } from "./context";
 import { variableFromTerm } from "../utilities/term";
 import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
 import { equalityFromStatement,
@@ -57,9 +58,17 @@ function unifyTermWithConstructors(term, context, validateForwards) {
   const constructors = context.getConstructors();
 
   termUnifiesWithConstructors = constructors.some((constructor) => {
-    const unifiesWithConstructor = constructor.unifyTerm(term, context, validateForwards);
+    let termUnifies;
 
-    if (unifiesWithConstructor) {
+    tentatively((context) => {
+      termUnifies = constructor.unifyTerm(term, context, validateForwards);
+
+      if (termUnifies) {
+        context.commit();
+      }
+    }, context);
+
+    if (termUnifies) {
       return true;
     }
   });
