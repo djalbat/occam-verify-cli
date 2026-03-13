@@ -297,6 +297,11 @@ export default define(class Metavariable extends Element {
               substitutionFrameComparesToFrame = substitution.compareFrame(frame, context);
 
         if (substitutionFrameComparesToFrame) {
+          const frameSubstitution = substitution, ///
+                frameSubstitutionString = frameSubstitution.getString();
+
+          context.trace(`The '${frameSubstitutionString}' frame substitution is already present.`);
+
           frameUnifies = true;
         }
       } else {
@@ -356,6 +361,11 @@ export default define(class Metavariable extends Element {
         const substitutionComparesToStatement = substitution.compareStatement(statement, context);
 
         if (substitutionComparesToStatement) {
+          const statementSubstitution = substitution, //
+                statementSubstitutionString = statementSubstitution.getString();
+
+          context.trace(`The '${statementSubstitutionString}' statement substitution is already present.`);
+
           statementUnifies = true;
         }
       } else {
@@ -413,6 +423,11 @@ export default define(class Metavariable extends Element {
               substitutionReferenceComparesToReference = substitution.compareReference(reference, context);
 
         if (substitutionReferenceComparesToReference) {
+          const referenceSubstitution = substitution, ///
+                referenceSubstitutionString = referenceSubstitution.getString();
+
+          context.trace(`The '${referenceSubstitutionString}' reference substitution is already present.`);
+
           referenceUnifies = true;
         }
       } else {

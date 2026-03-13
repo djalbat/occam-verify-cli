@@ -201,30 +201,9 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementStatementValidates;
   }
 
-  unifyReplacementStatement(replacementStatement, generalContext, specificContext) {
-    let replacementStatemnentUnifies = false;
-
-    const context = specificContext,  ///
-          substitutionString = this.getString(),  ///
-          replacementStatementString = replacementStatement.getString(),
-          substitutionReplacementStatementString = this.replacementStatement.getString();  ///
-
-    context.trace(`Unifying the '${replacementStatementString}' replacement statement with the '${substitutionString}' substiution's '${substitutionReplacementStatementString}' replacement statement...`);
-
-    const statementUnifies = this.replacementStatement.unifyStatement(replacementStatement, generalContext, specificContext);
-
-    if (statementUnifies) {
-      replacementStatemnentUnifies = true;
-    }
-
-    if (replacementStatemnentUnifies) {
-      context.debug(`...unified the '${replacementStatementString}' replacement statement with the '${substitutionString}' substiution's '${substitutionReplacementStatementString}' replacement statement.`);
-    }
-
-    return replacementStatemnentUnifies;
-  }
-
   unifySubstitution(substitution, generalContext, specificContext) {
+    let substitutionUnifies;
+
     const context = specificContext,
           generalSubstitution = this.substitution,  ///
           specificSubstitution = substitution,  ///
@@ -233,7 +212,13 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
 
-    const substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, generalContext, specificContext);
+    reconcile((specificContext) => {
+      substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, generalContext, specificContext);
+
+      if (substitutionUnifies) {
+        specificContext.commit();
+      }
+    }, specificContext);
 
     if (substitutionUnifies) {
       context.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
@@ -242,74 +227,119 @@ export default define(class StatementSubstitution extends Substitution {
     return substitutionUnifies;
   }
 
-  resolve(generalContext, specificContext) {
+  uniffyComplexSubstitution(complexSubstitution, generalContext, specificContext) {
+    let substitution = null;
+
+    const context = specificContext, ///
+          simpleSubstitutionString = this.getString(),  ///
+          complexSubstitutionString = complexSubstitution.getString();  ///
+
+    context.trace(`Unifying the '${complexSubstitutionString}' complex substitution with the '${simpleSubstitutionString}' simple substitution...`);
+
+    let simpleSubstitutionUnifies = false;
+
+    reconcile((specificContext) => {
+      const replacementStatement = complexSubstitution.getReplacementStatement(),
+            replacementStatementUnifies = this.unifyReplacementStatement(replacementStatement, generalContext, specificContext);
+
+      if (replacementStatementUnifies) {
+        const nested = false,
+              context = specificContext,  ///
+              soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution(nested);
+
+        substitution = soleNonTrivialSubstitution;  ///
+      }
+    }, specificContext);
+
+    if (substitution !== null) {
+      simpleSubstitutionUnifies = true;
+    }
+
+    if (simpleSubstitutionUnifies) {
+      context.debug(`...unified the '${complexSubstitutionString}' complex substitution with the '${simpleSubstitutionString}' simple substitution.`);
+    }
+
+    return substitution;
+  }
+
+  unifyReplacementStatement(replacementStatement, generalContext, specificContext) {
+    let replacementStatemnentUnifies = false;
+
+    const context = specificContext,  ///
+          replacementStatementString = replacementStatement.getString(),
+          substitutionReplacementStatementString = this.replacementStatement.getString();  ///
+
+    context.trace(`Unifying the '${replacementStatementString}' replacement statement with the '${substitutionReplacementStatementString}' replacement statement...`);
+
+    const statementUnifies = this.replacementStatement.unifyStatement(replacementStatement, generalContext, specificContext);
+
+    if (statementUnifies) {
+      replacementStatemnentUnifies = true;
+    }
+
+    if (replacementStatemnentUnifies) {
+      context.debug(`...unified the '${replacementStatementString}' replacement statement with the '${substitutionReplacementStatementString}' replacement statement.`);
+    }
+
+    return replacementStatemnentUnifies;
+  }
+
+  unifyWithSipmleSubstitution(simpleSubstitution, generalContext, specificContext) {
+    let substitution;
+
+    const complexSubstitution = this; ///
+
     let context;
 
     context = this.getContext();
 
-    const substitutionString = this.getString(); ///
+    specificContext = context;  ///
+
+    context = simpleSubstitution.getContext();
+
+    generalContext = context; ///
+
+    substitution = simpleSubstitution.uniffyComplexSubstitution(complexSubstitution, generalContext, specificContext);
+
+    return substitution;
+  }
+
+  resolve(generalContext, specificContext) {
+    let resolved = false;
+
+    const context = specificContext,  ///
+          substitutionString = this.getString(); ///
 
     context.trace(`Resolving the ${substitutionString} substitution...`);
 
-    context = generalContext; ///
-
-    const metavariableName = this.getMetavariableName();
-
-    context = specificContext;  ///
-
-    const simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
+    const metavariableName = this.getMetavariableName(),
+          simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
 
     if (simpleSubstitution !== null) {
-      context = this.getContext();
-
-      const substitution = reconcile((context) => {
-        let substitution = null;
-
-        const specificContext = context;  ///
-
-        context = simpleSubstitution.getContext();
-
-        const generalContext = context; ///
-
-        context = specificContext;  ///
-
-        const replacementStatementUnifies = simpleSubstitution.unifyReplacementStatement(this.replacementStatement, generalContext, specificContext);
-
-        if (replacementStatementUnifies) {
-          const nested = false,
-                soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution(nested);
-
-          substitution = soleNonTrivialSubstitution;  ///
-        }
-
-        return substitution;
-      }, context);
+      const substitution = this.unifyWithSipmleSubstitution(simpleSubstitution, generalContext, specificContext); ///
 
       if (substitution !== null) {
-        reconcile((specificContext) => {
-          const complexContext = this.getContext(), ///
-                simpleContext = simpleSubstitution.getContext();  ///
+        const complexSubstitution = this, ///
+              simpleSubstitutionComplex = simpleSubstitution.getContext(),
+              complexSubstitutionContext = complexSubstitution.getContext();
 
-          context = specificContext;  ///
+        join((context) => {
+          const specificContext = context;  ///
 
-          join((context) => {
-            const specificContext = context;  ///
+          context = this.substitution.getContext();
 
-            context = this.substitution.getContext();
+          const generalContext = context; ///
 
-            const generalContext = context; ///
+          this.unifySubstitution(substitution, generalContext, specificContext);
+        }, complexSubstitutionContext, simpleSubstitutionComplex, context);
 
-            this.unifySubstitution(substitution, generalContext, specificContext);
-          }, complexContext, simpleContext, context);
-
-          specificContext.commit();
-        }, specificContext);
-
-        this.resolved = true;
+        resolved = true;
       }
     }
 
-    if (this.resolved) {
+    if (resolved) {
+      this.resolved = true;
+
       context.debug(`...resolved the '${substitutionString}' substitution.`);
     }
   }

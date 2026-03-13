@@ -13,6 +13,12 @@ export default class SyntheticContext extends Context {
     return this.contexts;
   }
 
+  addSubstitutions(substitutions) {
+    const context = this.getContext();
+
+    context.addSubstitutions(substitutions);
+  }
+
   findTermByTermNode(termNode) {
     let term = null;
 

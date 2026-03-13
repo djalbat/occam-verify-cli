@@ -304,6 +304,67 @@ class MetavariablePass extends ZipPass {
   ];
 }
 
+class SubstitutionPass extends ZipPass {
+  static maps = [
+    {
+      generalNodeQuery: frameAMetavariableNodeQuery,
+      specificNodeQuery: frameNodeQuery,
+      run: (generalFrameMetavariableNode, specificFrameNode, generalContext, specificContext) => {
+        let success = false;
+
+        const frameNode = specificFrameNode, ///
+              metavariableNode = generalFrameMetavariableNode,  ///
+              metavariableName = metavariableNode.getMetavariableName();
+
+        let context;
+
+        context = generalContext; ///
+
+        const metavariable = context.findMetavariableByMetavariableName(metavariableName);
+
+        context = specificContext;  ///
+
+        const frame = context.findFrameByFrameNode(frameNode),
+              frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
+
+        if (frameUnifies) {
+          success = true;
+        }
+
+        return success;
+      }
+    },
+    {
+      generalNodeQuery: termVariableNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      run: (generalTermVariableNode, specificTermNode, generalContext, specificContext) => {
+        let success = false;
+
+        const termNode = specificTermNode, ///
+              variableNode = generalTermVariableNode, ///
+              variableIdentifier = variableNode.getVariableIdentifier();
+
+        let context;
+
+        context = generalContext; ///
+
+        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
+
+        context = specificContext;  ///
+
+        const term = context.findTermByTermNode(termNode),
+              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
+
+        if (termUnifies) {
+          success = true;
+        }
+
+        return success;
+      }
+    }
+  ];
+}
+
 class IntrinsicLevelPass extends ZipPass {
   static maps = [
     {
@@ -341,6 +402,7 @@ const metaLevelPass = new MetaLevelPass(),
       combinatorPass = new CombinatorPass(),
       constructorPass = new ConstructorPass(),
       metavariablePass = new MetavariablePass(),
+      substitutionPass = new SubstitutionPass(),
       intrinsicLevelPass = new IntrinsicLevelPass();
 
 export function unifyStatement(generalStatement, specificStatement, generalContext, specificContext) {
@@ -366,7 +428,7 @@ export function unifySubstitution(generalSubstitution, specificSubstitution, gen
         specificSubstitutionNode = specificSubstitution.getNode(),
         generalNode = generalSubstitutionNode, ///
         specificNode = specificSubstitutionNode,  ///
-        success = metaLevelPass.run(generalNode, specificNode, generalContext, specificContext);
+        success = substitutionPass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     substitutionUnifies = true;

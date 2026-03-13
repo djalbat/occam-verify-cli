@@ -206,7 +206,7 @@ export default define(class ContainedAssertion extends Assertion {
     context.trace(`Validating the '${containedAssertionString}' derived contained assertion...`);
 
     const generalCotnext = null,
-          specificContext = context; ///
+          specificContext = context;  ///
 
     validatesWhenDerived = validateWhenDerived(this.term, this.frame, this.statement, this.negated, generalCotnext, specificContext);
 

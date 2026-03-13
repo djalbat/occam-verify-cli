@@ -126,6 +126,11 @@ export default define(class Variable extends Element {
       const substitutionComparesToTerm = substitution.compareTerm(term, context);
 
       if (substitutionComparesToTerm) {
+        const termSubstitution = substitution,  ///
+              termSubstitutionString = termSubstitution.getString();
+
+        context.trace(`The '${termSubstitutionString}' term substitution is already present.`);
+
         termUnifies = true;
       }
     } else {

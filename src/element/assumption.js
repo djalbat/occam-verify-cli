@@ -3,8 +3,8 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { instantiate } from "../utilities/context";
 import { instantiateAssumption } from "../process/instantiate";
+import { instantiate, reconcile } from "../utilities/context";
 import { unifyStatementIntrinsically } from "../process/unify";
 
 export default define(class Assumption extends Element {
@@ -179,7 +179,7 @@ export default define(class Assumption extends Element {
       validatesWhenStated = true;
     } else {
       const topLevelMetaAssertions = context.findTopLevelMetaAssertionsByReference(this.reference),
-            topLevelMetaAssertionsUnify = topLevelMetaAssertions.every((topLevelMetaAssertion) => {
+            topLevelMetaAssertionsUnify = topLevelMetaAssertions.some((topLevelMetaAssertion) => {
               const topLevelMetaAssertionUnifies = this.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
               if (topLevelMetaAssertionUnifies) {
@@ -269,11 +269,16 @@ export default define(class Assumption extends Element {
 
     context = topLevelMetaAssertion.getContext();  ///
 
-    const specificContext = context,  ///
-          labelSubstitutions = [],
-          label = topLevelMetaAssertion.getLabel(),
-          substitutions = labelSubstitutions, ///
-          labelUnifies = this.unifyLabel(label, substitutions, generalContext, specificContext);
+    const specificContext = context;  ///
+
+    let substitutions = null;
+
+    reconcile((context) => {
+      const label = topLevelMetaAssertion.getLabel(),
+            labelUnifies = this.unifyLabel(label, generalContext, specificContext);
+    }, context);
+
+    ///
 
     if (labelUnifies) {
       const statementSubstitutions = [],
@@ -291,8 +296,6 @@ export default define(class Assumption extends Element {
     }
 
     if (topLevelMetaAssertionUnifies) {
-      context = generalContext; ///
-
       context.trace(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);
     }
 
