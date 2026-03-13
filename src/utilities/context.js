@@ -30,7 +30,7 @@ export function attempt(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function resolve(innerFunction, context) {
+export function reconcile(innerFunction, context) {
   const liminalContext = LiminalContext.fromNothing(context);
 
   context = liminalContext;  ///
@@ -46,14 +46,6 @@ export function instantiate(innerFunction, context) {
   return innerFunction(context);
 }
 
-export async function asyncResolve(innerFunction, context) {
-  const liminalContext = LiminalContext.fromNothing(context);
-
-  context = liminalContext;  ///
-
-  return await innerFunction(context);
-}
-
 export async function asyncRestrict(innerFunction, metaLevelSubstitutions, context) {
   if (context === undefined) {
     context = metaLevelSubstitutions;  ///
@@ -64,6 +56,14 @@ export async function asyncRestrict(innerFunction, metaLevelSubstitutions, conte
   const scopedContext = ScopedContext.fromMetaLevelSubstitutions(metaLevelSubstitutions, context);
 
   context = scopedContext;  ///
+
+  return await innerFunction(context);
+}
+
+export async function asyncReconcile(innerFunction, context) {
+  const liminalContext = LiminalContext.fromNothing(context);
+
+  context = liminalContext;  ///
 
   return await innerFunction(context);
 }

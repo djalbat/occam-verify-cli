@@ -4,7 +4,7 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
-import { join, resolve, instantiate } from "../../utilities/context";
+import { join, reconcile, instantiate } from "../../utilities/context";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
@@ -262,7 +262,7 @@ export default define(class StatementSubstitution extends Substitution {
     if (simpleSubstitution !== null) {
       context = this.getContext();
 
-      const substitution = resolve((context) => {
+      const substitution = reconcile((context) => {
         let substitution = null;
 
         const specificContext = context;  ///
@@ -286,7 +286,7 @@ export default define(class StatementSubstitution extends Substitution {
       }, context);
 
       if (substitution !== null) {
-        resolve((specificContext) => {
+        reconcile((specificContext) => {
           const complexContext = this.getContext(), ///
                 simpleContext = simpleSubstitution.getContext();  ///
 
