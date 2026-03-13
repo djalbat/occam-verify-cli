@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateEquivalence } from "../process/instantiate";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
 import { equivalenceStringFromTerms } from "../utilities/string";
@@ -232,7 +232,7 @@ export default define(class Equivalence extends Element {
     const terms = equivalence.getTerms(),
           combinedTerms = this.combineTerms(terms);
 
-    return literally((context) => {
+    return instantiate((context) => {
       const terms = combinedTerms,  ///
             equivalenceString = equivalenceStringFromTerms(terms),
             string = equivalenceString,  ///
@@ -246,7 +246,7 @@ export default define(class Equivalence extends Element {
   static name = "Equivalence";
 
   static fromEquality(equality, context) {
-    return literally((context) => {
+    return instantiate((context) => {
       const terms = equality.getTerms(),
             equivalenceString = equivalenceStringFromTerms(terms),
             string = equivalenceString,  ///

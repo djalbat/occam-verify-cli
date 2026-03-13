@@ -150,6 +150,13 @@ export default class Context extends ContextBase {
     return topLevelAssertion;
   }
 
+  findTopLevelMetaAssertionsByReference(reference) {
+    const context = this.getContext(),
+          topLevelMetaAssertion = context.findTopLevelMetaAssertionsByReference(reference);
+
+    return topLevelMetaAssertion;
+  }
+
   findTypeByTypeName(metaTypeName) {
     const context = this.getContext(),
           type = context.findTypeByTypeName(metaTypeName);

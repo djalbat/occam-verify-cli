@@ -5,7 +5,7 @@ import { arrayUtilities } from "necessary";
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { unifyStatement } from "../../process/unify";
 import { instantiateSubproofAssertion } from "../../process/instantiate";
 
@@ -121,7 +121,7 @@ export default define(class SubproofAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {
+      instantiate((context) => {
         const { string } = json,
               subproofAssertionNode = instantiateSubproofAssertion(string, context),
               statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),

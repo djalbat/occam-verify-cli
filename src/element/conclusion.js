@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt, literally } from "../utilities/context";
+import { attempt, instantiate } from "../utilities/context";
 import { instantiateConclusion } from "../process/instantiate";
 import { statementFromConclusionNode } from "../utilities/element";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
@@ -150,7 +150,7 @@ export  default define(class Conclusion extends Element {
 
     context = ephemeralContext; ///
 
-    const conclusion = literally((context) => {
+    const conclusion = instantiate((context) => {
       const { string } = json,
             conclusionNode = instantiateConclusion(string, context),
             node = conclusionNode,  ///

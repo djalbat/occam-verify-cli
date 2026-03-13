@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateProperty } from "../process/instantiate";
 import { nameFromPropertyNode } from "../utilities/element";
 import { nominalTypeNameFromJSON, nominalTypeNameToNominalTypeNameJSON } from "../utilities/json";
@@ -58,7 +58,7 @@ export default define(class Property extends Element {
   static name = "Property";
 
   static fromJSON(json, context) {
-    const property = literally((context) => {
+    const property = instantiate((context) => {
       const { string } = json,
             propertyNode = instantiateProperty(string, context),
             node = propertyNode,  ///

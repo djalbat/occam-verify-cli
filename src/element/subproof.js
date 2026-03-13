@@ -3,7 +3,7 @@
 import { Element, asynchronousUtilities } from "occam-languages";
 
 import { define } from "../elements";
-import { asyncScope } from "../utilities/context";
+import { asyncRestrict } from "../utilities/context";
 
 const { asyncEvery } = asynchronousUtilities;
 
@@ -63,7 +63,7 @@ export default define(class Subproof extends Element {
   async verify(context) {
     let verifies = false;
 
-    await asyncScope(async (context) => {
+    await asyncRestrict(async (context) => {
       const suppositionsVerify = await this.verifySuppositions(context);
 
       if (suppositionsVerify) {

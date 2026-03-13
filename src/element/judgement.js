@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateJudgement } from "../process/instantiate";
 import { judgementAssignmentFromJudgement } from "../process/assign";
 
@@ -218,7 +218,7 @@ export default define(class Judgement extends Element {
   static name = "Judgement";
 
   static fromJSON(json, context) {
-    const judgement = literally((context) => {
+    const judgement = instantiate((context) => {
       const { string } = json,
             judgementNode = instantiateJudgement(string, context),
             node = judgementNode,  ///

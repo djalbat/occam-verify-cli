@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { equateTerms } from "../process/equate";
 import { instantiateEquality } from "../process/instantiate";
 import { equalityAssignmentFromEquality, leftVariableAssignmentFromEquality, rightVariableAssignmentFromEquality } from "../process/assign";
@@ -280,7 +280,7 @@ export default define(class Equality extends Element {
   }
 
   static fromJSON(json, context) {
-    const equality = literally((context) => {
+    const equality = instantiate((context) => {
       const { string } = json,
             equalityNode = instantiateEquality(string, context),
             node = equalityNode,  ///

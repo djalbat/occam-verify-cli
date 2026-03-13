@@ -3,7 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiateSatisfiesAssertion } from "../../process/instantiate";
 import { signatureFromJSatisfiesAssertionNode, referenceFromJSatisfiesAssertionNode } from "../../utilities/element";
 
@@ -165,7 +165,7 @@ export default define(class SatisfiesAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {const { string } = json,
+      instantiate((context) => {const { string } = json,
               definedAssertionNode = instantiateSatisfiesAssertion(string, context),
               node = definedAssertionNode,  ///
               signature = signatureFromJSatisfiesAssertionNode(definedAssertionNode, context),

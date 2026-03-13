@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt, literally } from "../utilities/context";
+import { attempt, instantiate } from "../utilities/context";
 import { instantiateConstructor } from "../process/instantiate";
 import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
@@ -173,7 +173,7 @@ export default define(class Constructor extends Element {
 
     context = ephemeralContext; ///
 
-    const constructor = literally((context) => {
+    const constructor = instantiate((context) => {
       const { string } = json,
             constructorNode = instantiateConstructor(string, context),
             node = constructorNode, ///

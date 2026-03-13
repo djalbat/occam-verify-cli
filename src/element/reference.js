@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromReferenceNode } from "../utilities/element";
@@ -282,7 +282,7 @@ export default define(class Reference extends Element {
   static name = "Reference";
 
   static fromJSON(json, context) {
-    const reference = literally((context) => {
+    const reference = instantiate((context) => {
       const { string } = json,
             referenceNode = instantiateReference(string, context),
             node = referenceNode,  ///

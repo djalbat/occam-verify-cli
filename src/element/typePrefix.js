@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateTypePrefix } from "../process/instantiate";
 import { nameFromTypePrefixNode } from "../utilities/element";
 
@@ -43,7 +43,7 @@ export default define(class TypePrefix extends Element {
   static name = "TypePrefix";
 
   static fromJSON(json, context) {
-    const typePrefix = literally((context) => {const { string } = json,
+    const typePrefix = instantiate((context) => {const { string } = json,
             typePrefixNode = instantiateTypePrefix(string, context),
             node = typePrefixNode, ///
             name = nameFromTypePrefixNode(typePrefixNode, context);

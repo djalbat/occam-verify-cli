@@ -2,7 +2,7 @@
 
 import elements from "../elements";
 
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { baseTypeFromNothing } from "../utilities/type";
 import { instantiateReference } from "../process/instantiate";
 import { equivalenceStringFromTerms,
@@ -1363,7 +1363,7 @@ export function metavariableFromReferenceNode(referenceNode, context) {
 export function referenceFromMetavariableNode(metavariableNode, context) {
   const metavariableString = context.nodeAsString(metavariableNode);
 
-  return literally((context) => {
+  return instantiate((context) => {
     const referenceString = metavariableString, ///
           string = referenceString,  ///
           referenceNode = instantiateReference(string, context),

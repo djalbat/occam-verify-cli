@@ -41,8 +41,9 @@ export default class SyntheticContext extends Context {
     return frame;
   }
 
-  static fromContexts(contexts, context) {
-    const syntheticContext = new SyntheticContext(context, contexts);
+  static fromContexts(...contexts) {
+    const context = contexts.pop(), ///
+          syntheticContext = new SyntheticContext(context, contexts);
 
     return syntheticContext;
   }

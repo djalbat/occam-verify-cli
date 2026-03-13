@@ -3,7 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiateDefinedAssertion } from "../../process/instantiate";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
 import { termFromJDefinedAssertionNode, frameFromJDefinedAssertionNode, negatedFromJDefinedAssertionNode } from "../../utilities/element";
@@ -216,7 +216,7 @@ export default define(class DefinedAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {
+      instantiate((context) => {
         const { string } = json,
               definedAssertionNode = instantiateDefinedAssertion(string, context),
               node = definedAssertionNode,  ///

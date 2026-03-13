@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { validateTerms } from "../utilities/validation";
 import { instantiateTerm } from "../process/instantiate";
 import { variablesFromTerm } from "../utilities/equivalence";
@@ -238,7 +238,7 @@ export default define(class Term extends Element {
   static name = "Term";
 
   static fromJSON(json, context) {
-    const term = literally((context) => {
+    const term = instantiate((context) => {
       const { string } = json,
             termNode = instantiateTerm(string, context),
             node = termNode,  ///

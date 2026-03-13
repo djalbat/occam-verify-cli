@@ -3,7 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
@@ -166,7 +166,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {
+      instantiate((context) => {
         const { string } = json,
               referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
               node = referenceSubstitutionNode,  ///
@@ -183,7 +183,7 @@ export default define(class ReferenceSubstitution extends Substitution {
   }
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {
-    return literally((context) => {
+    return instantiate((context) => {
       const referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
             string = referenceSubstitutionString,  ///
             referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),

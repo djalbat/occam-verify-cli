@@ -4,7 +4,7 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { instantiateSupposition} from "../../process/instantiate";
-import { attempt, liminally, literally } from "../../utilities/context";
+import { attempt, resolve, instantiate } from "../../utilities/context";
 import { statementFromSuppositionNode, procedureCallFromSuppositionNode } from "../../utilities/element";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
 
@@ -190,7 +190,7 @@ export default define(class Supposition extends ProofAssertion {
           suppositionContext = this.getContext(),
           generalContext = suppositionContext, ///
           specificContext = proofAssertionContext,
-          statementUnifies = liminally((specificContext) => {
+          statementUnifies = resolve((specificContext) => {
             const statement = proofAssertion.getStatement(),
                   statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
 
@@ -321,7 +321,7 @@ export default define(class Supposition extends ProofAssertion {
 
     context = ephemeralContext; ///
 
-    const supposition = literally((context) => {
+    const supposition = instantiate((context) => {
       const { string } = json,
             suppositionNode = instantiateSupposition(string, context),
             node = suppositionNode,  ///

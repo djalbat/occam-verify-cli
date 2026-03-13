@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt, literally } from "../utilities/context";
+import { attempt, instantiate } from "../utilities/context";
 import { instantiateCombinator } from "../process/instantiate";
 import { statementFromCombinatorNode } from "../utilities/element";
 import { unifyStatementWithCombinator } from "../process/unify";
@@ -128,7 +128,7 @@ export default define(class Combinator extends Element {
 
     context = ephemeralContext; ///
 
-    const combinator = literally((context) => {
+    const combinator = instantiate((context) => {
       const { string } = json,
             combinatorNode = instantiateCombinator(string, context),
             node = combinatorNode,  ///

@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateType } from "../process/instantiate";
 import { baseTypeFromNothing } from "../utilities/type";
 import { nameFromTypeNode, prefixNameFromTypeNode } from "../utilities/element";
@@ -316,7 +316,7 @@ export default define(class Type extends Element {
   static name = "Type";
 
   static fromJSON(json, context) {
-    const type = literally((context) => {
+    const type = instantiate((context) => {
       const { string } = json,
             typeNode = instantiateType(string, context),
             node = typeNode, ///

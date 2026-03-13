@@ -3,7 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiatePropertyAssertion } from "../../process/instantiate";
 import { variableAssignmentFromPrepertyAssertion } from "../../process/assign";
 import { termFromPropertyAssertionNode, propertyRelationFromPropertyAssertionNode } from "../../utilities/element";
@@ -208,7 +208,7 @@ export default define(class PropertyAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {
+      instantiate((context) => {
         const { string } = json,
               propertyAssertionNode = instantiatePropertyAssertion(string, context),
               node = propertyAssertionNode,  ///

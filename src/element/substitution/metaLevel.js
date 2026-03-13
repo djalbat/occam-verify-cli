@@ -3,7 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiateMetaLevelSubstitution } from "../../process/instantiate";
 import { metaLevelSubstitutionFromMetaLevelSubstitutionNode } from "../../utilities/element";
 import { metaLevelSubstitutionStringFromStatementAndReference } from "../../utilities/string";
@@ -176,7 +176,7 @@ export default define(class MetaLevelSubstitution extends Substitution {
 
     context = ephemeralContext; ///
 
-    const metaLevelSubstitution = literally((context) => {
+    const metaLevelSubstitution = instantiate((context) => {
       const { string } = json,
             metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context),
             targetReference = targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
@@ -191,7 +191,7 @@ export default define(class MetaLevelSubstitution extends Substitution {
   }
 
   static fromStatementAndReference(statement, reference, context) {
-    return literally((context) => {
+    return instantiate((context) => {
       const metaLevelSubstitutionString = metaLevelSubstitutionStringFromStatementAndReference(statement, reference),
             string = metaLevelSubstitutionString,  ///
             metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context),

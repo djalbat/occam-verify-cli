@@ -3,7 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
 import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
@@ -178,7 +178,7 @@ export default define(class FrameSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {
+      instantiate((context) => {
         const { string } = json,
               frameSubstitutionNode = instantiateFrameSubstitution(string, context),
               node = frameSubstitutionNode,  ///
@@ -202,7 +202,7 @@ export default define(class FrameSubstitution extends Substitution {
   }
 
   static fromFrameAndMetavariable(frame, metavariable, context) {
-    return literally((context) => {
+    return instantiate((context) => {
       const frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
             string = frameSubstitutionString,  ///
             frameSubstitutionNode = instantiateFrameSubstitution(string, context),

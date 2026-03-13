@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
@@ -319,7 +319,7 @@ export default define(class Statement extends Element {
   static name = "Statement";
 
   static fromJSON(json, context) {
-    const statement = literally((context) => {
+    const statement = instantiate((context) => {
       const { string } = json,
             statementNode = instantiateStatement(string, context),
             node = statementNode; ///

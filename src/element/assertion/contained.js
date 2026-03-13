@@ -3,7 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiateContainedAssertion } from "../../process/instantiate";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
 import { termFromContainedAssertionNode, frameFromContainedAssertionNode, negatedFromContainedAssertionNode, statementFromContainedAssertionNode } from "../../utilities/element";
@@ -247,7 +247,7 @@ export default define(class ContainedAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {
+      instantiate((context) => {
         const { string } = json,
               containedAssertionNode = instantiateContainedAssertion(string, context),
               node = containedAssertionNode,  ///

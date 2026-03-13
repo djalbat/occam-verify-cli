@@ -5,7 +5,7 @@ import ProofAssertion from "../proofAssertion";
 import { define } from "../../elements";
 import { instantiatePremise } from "../../process/instantiate";
 import { procedureCallFromPremiseNode } from "../../utilities/element";
-import { attempt, liminally, literally } from "../../utilities/context";
+import { attempt, resolve, instantiate } from "../../utilities/context";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
 
 export default define(class Premise extends ProofAssertion {
@@ -168,7 +168,7 @@ export default define(class Premise extends ProofAssertion {
           premiseContext = this.getContext(), ///
           generalContext = premiseContext, ///
           specificContext = proofAssertionContext,
-          statementUnifies = liminally((specificContext) => {
+          statementUnifies = resolve((specificContext) => {
             const statement = proofAssertion.getStatement(),
                   statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
 
@@ -300,7 +300,7 @@ export default define(class Premise extends ProofAssertion {
 
     context = ephemeralContext; ///
 
-    const premise = literally((context) => {
+    const premise = instantiate((context) => {
       const { string } = json,
             premiseNode = instantiatePremise(string, context),
             node = premiseNode,  ///

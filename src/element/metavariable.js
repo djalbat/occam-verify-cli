@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { EMPTY_STRING } from "../constants";
 import { instantiateMetavariable } from "../process/instantiate";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
@@ -596,7 +596,7 @@ export default define(class Metavariable extends Element {
   static name = "Metavariable";
 
   static fromJSON(json, context) {
-    const metavariable = literally((context) => {
+    const metavariable = instantiate((context) => {
       const { string } = json,
             metavariableNode = instantiateMetavariable(string, context),
             node = metavariableNode,  ///

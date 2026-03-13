@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateParameter } from "../process/instantiate";
 import { nameFromParaneterNode, identifierFromParameterNode } from "../utilities/element";
 
@@ -61,7 +61,7 @@ export default define(class Parameter extends Element {
   static name = "Parameter";
 
   static fromJSON(json, context) {
-    const parameter = literally((context) => {
+    const parameter = instantiate((context) => {
       const { string } = json,
             parameterNode = instantiateParameter(string, context),
             node = parameterNode,  ///

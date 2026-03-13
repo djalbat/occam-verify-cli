@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromFrameNode } from "../utilities/element";
@@ -343,7 +343,7 @@ export default define(class Frame extends Element {
   static name = "Frame";
 
   static fromJSON(json, context) {
-    const frame = literally((context) => {
+    const frame = instantiate((context) => {
       const { string } = json,
             frameNode = instantiateFrame(string, context),
             node = frameNode, ///

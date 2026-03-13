@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateSignature } from "../process/instantiate";
 import { termsFromSignatureNode } from "../utilities/element";
 
@@ -225,7 +225,7 @@ export default define(class Signature extends Element {
   static name = "Signature";
 
   static fromJSON(json, context) {
-    const signature = literally((context) => {
+    const signature = instantiate((context) => {
       const { string } = json,
             signatureNode = instantiateSignature(string, context),
             node = signatureNode,  ///

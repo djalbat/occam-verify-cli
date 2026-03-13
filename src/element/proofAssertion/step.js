@@ -6,7 +6,7 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { unifyStatements } from "../../utilities/unification";
-import { attempt, asyncLiminally } from "../../utilities/context";
+import { attempt, asyncResolve } from "../../utilities/context";
 import { propertyAssertionFromStatement } from "../../utilities/statement";
 
 const { asyncSome } = asynchronousUtilities;
@@ -190,7 +190,7 @@ export default define(class Step extends ProofAssertion {
           reference = this.getReference(),
           satisfiesAssertion = this.getSatisfiesAssertion();
 
-    await asyncLiminally(async (context) => {
+    await asyncResolve(async (context) => {
       await asyncSome(unifyStatements, async (unifyStatement) => {
         const statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
 

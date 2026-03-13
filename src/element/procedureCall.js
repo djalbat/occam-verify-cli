@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { termsUtilities } from "occam-furtle";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateProcedureCall } from "../process/instantiate";
 import { parametersFromProcedureCallNode, procedureReferenceFromProcedureCallNode } from "../utilities/element";
 
@@ -125,7 +125,7 @@ export default define(class ProcedureCall extends Element {
   static name = "ProcedureCall";
 
   static fromJSON(json, context) {
-    const procedureCall = literally((context) => {
+    const procedureCall = instantiate((context) => {
       const { string } = json,
             procedureCallNode = instantiateProcedureCall(string, context),
             node = procedureCallNode,  ///

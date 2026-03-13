@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt, literally } from "../utilities/context";
+import { attempt, instantiate } from "../utilities/context";
 import { instantiateDeduction } from "../process/instantiate";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
@@ -174,7 +174,7 @@ export default define(class Deduction extends Element {
 
     context = ephemeralContext; ///
 
-    const duduction = literally((context) => {
+    const duduction = instantiate((context) => {
       const { string } = json,
             deductionNode = instantiateDeduction(string, context),
             node = deductionNode,  ///

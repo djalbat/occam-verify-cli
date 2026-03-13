@@ -3,7 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { literally } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
@@ -187,7 +187,7 @@ export default define(class TermSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {
+      instantiate((context) => {
         const { string } = json,
               termSubstitutionNode = instantiateTermSubstitution(string, context),
               node = termSubstitutionNode,  ///
@@ -213,7 +213,7 @@ export default define(class TermSubstitution extends Substitution {
   static fromTermAndVariable(term, variable, context) {
     term = stripBracketsFromTerm(term, context); ///
 
-    return literally((context) => {
+    return instantiate((context) => {
       const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
             string = termSubstitutionString,  ///
             termSubstitutionNode = instantiateTermSubstitution(string, context),

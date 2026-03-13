@@ -4,9 +4,9 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
+import { join, resolve, instantiate } from "../../utilities/context";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
-import { liminally, literally, synthetically } from "../../utilities/context";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
@@ -262,7 +262,7 @@ export default define(class StatementSubstitution extends Substitution {
     if (simpleSubstitution !== null) {
       context = this.getContext();
 
-      const substitution = liminally((context) => {
+      const substitution = resolve((context) => {
         let substitution = null;
 
         const specificContext = context;  ///
@@ -286,20 +286,13 @@ export default define(class StatementSubstitution extends Substitution {
       }, context);
 
       if (substitution !== null) {
-        liminally((specificContext) => {
-          const contexts = [];
-
-          context = simpleSubstitution.getContext();
-
-          contexts.push(context);
-
-          context = this.getContext();
-
-          contexts.push(context);
+        resolve((specificContext) => {
+          const complexContext = this.getContext(), ///
+                simpleContext = simpleSubstitution.getContext();  ///
 
           context = specificContext;  ///
 
-          synthetically((context) => {
+          join((context) => {
             const specificContext = context;  ///
 
             context = this.substitution.getContext();
@@ -307,7 +300,7 @@ export default define(class StatementSubstitution extends Substitution {
             const generalContext = context; ///
 
             this.unifySubstitution(substitution, generalContext, specificContext);
-          }, contexts, context);
+          }, complexContext, simpleContext, context);
 
           specificContext.commit();
         }, specificContext);
@@ -329,7 +322,7 @@ export default define(class StatementSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      literally((context) => {
+      instantiate((context) => {
         const { string } = json,
               statementSubstitutionNode = instantiateStatementSubstitution(string, context),
               node = statementSubstitutionNode,  ///
@@ -348,7 +341,7 @@ export default define(class StatementSubstitution extends Substitution {
   static fromStatementAndMetavariable(statement, metavariable, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    return literally((context) => {
+    return instantiate((context) => {
       const statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable, context),
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),
@@ -361,7 +354,7 @@ export default define(class StatementSubstitution extends Substitution {
   static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    return literally((context) => {
+    return instantiate((context) => {
       const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
             string = statementSubstitutionString, ///
             statementSubstitutionNode = instantiateStatementSubstitution(string, context),

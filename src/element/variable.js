@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateVariable } from "../process/instantiate";
 import {identifierFromVarialbeNode, variableFromVariableNode} from "../utilities/element";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
@@ -184,7 +184,7 @@ export default define(class Variable extends Element {
   static name = "Variable";
 
   static fromJSON(json, context) {
-    const variable = literally((context) => {
+    const variable = instantiate((context) => {
       const { string } = json,
             variableNode = instantiateVariable(string, context),
             node = variableNode,  ///

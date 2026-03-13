@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiatePropertyRelation } from "../process/instantiate";
 import { propertyFromPropertyRelationNode } from "../utilities/element";
 
@@ -124,7 +124,7 @@ export default define(class PropertyRelation extends Element {
   }
 
   static fromJSON(json, context) {
-    const propertyRelation = literally((context) => {
+    const propertyRelation = instantiate((context) => {
       const { string } = json,
             propertyRelationNode = instantiatePropertyRelation(string, context),
             node = propertyRelationNode,  ///

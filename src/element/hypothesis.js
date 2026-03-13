@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import {literally} from "../utilities/context";
+import {instantiate} from "../utilities/context";
 import { instantiateHypothesis } from "../process/instantiate";
 import { statementFromHypothesisNode } from "../utilities/element";
 
@@ -100,7 +100,7 @@ export default define(class Hypothesis extends Element {
   static name = "Hypothesis";
 
   static fromJSON(json, context) {
-    const hypothesis = literally((context) => {
+    const hypothesis = instantiate((context) => {
       const { string } = json,
             hypothesisNode = instantiateHypothesis(string, context),
             node = hypothesisNode,  ///

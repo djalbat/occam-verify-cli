@@ -3,7 +3,7 @@
 import { arrayUtilities } from "necessary";
 import { Element, asynchronousUtilities } from "occam-languages";
 
-import { asyncScope } from "../utilities/context";
+import { asyncRestrict } from "../utilities/context";
 import { topLevelAssertionStringFromLabelsSuppositionsAndDeduction } from "../utilities/string";
 import { labelsFromJSON,
          deductionFromJSON,
@@ -152,7 +152,7 @@ export default class TopLevelAssertion extends Element {
 
     context.trace(`Verifying the '${topLevelAssertionString}' top level assertion...`);
 
-    await asyncScope(async (context) => {
+    await asyncRestrict(async (context) => {
       const labelsVerify = this.verifyLabels();
 
       if (labelsVerify) {

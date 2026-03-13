@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { literally } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateProcedureReference } from "../process/instantiate";
 import { nameFromProcedureReferenceNode } from "../utilities/element";
 
@@ -43,7 +43,7 @@ export default define(class ProcedureReference extends Element {
   static name = "ProcedureReference";
 
   static fromJSON(json, context) {
-    const procedureReference = literally((context) => {
+    const procedureReference = instantiate((context) => {
       const { string } = json,
             procedureReferenceNode = instantiateProcedureReference(string, context),
             node = procedureReferenceNode,  ///

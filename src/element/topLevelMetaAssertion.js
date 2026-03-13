@@ -2,7 +2,7 @@
 
 import { Element, asynchronousUtilities } from "occam-languages";
 
-import { asyncScope } from "../utilities/context";
+import { asyncRestrict } from "../utilities/context";
 import { topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
 import { labelFromJSON,
          labelToLabelJSON,
@@ -64,7 +64,7 @@ export default class TopLevelMetaAssertion extends Element {
 
     context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta assertion...`);
 
-    await asyncScope(async (context) => {
+    await asyncRestrict(async (context) => {
       const labelVerifies = this.verifyLabel();
 
       if (labelVerifies) {
