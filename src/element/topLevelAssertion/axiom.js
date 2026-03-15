@@ -218,7 +218,7 @@ export default define(class Axiom extends TopLevelAssertion {
     const axiomString = this.getString(), ///
           lastStepString = lastStep.getString();
 
-    context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`)
+    context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`);
 
     const statement = lastStep.getStatement(),
           statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, context);
@@ -228,7 +228,7 @@ export default define(class Axiom extends TopLevelAssertion {
     }
 
     if (lastStepUnifies) {
-      context.debug(`...unified the '${lastStepString}' last step with the '${axiomString}' axiom.`)
+      context.debug(`...unified the '${lastStepString}' last step with the '${axiomString}' axiom.`);
     }
 
     return lastStepUnifies;

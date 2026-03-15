@@ -4,10 +4,10 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { instantiate } from "../utilities/context";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
+import { reconcile, instantiate } from "../utilities/context";
 
 const { backwardsSome } = arrayUtilities;
 
@@ -244,6 +244,39 @@ export default define(class Statement extends Element {
     return subproofUnifies;
   }
 
+  unifyDeduction(deduction, generalContext, specificContext) {
+    let deductionUnifies = false;
+
+    const statementString = this.getString(),  ///
+          deductionString = deduction.getString(),
+          deductionStatement = deduction.getStatement(),
+          deductionStatementString = deductionStatement.getString();
+
+    let context;
+
+    context = specificContext;  ///
+
+    context.trace(`Unifying the '${deductionString}' deduction's '${deductionStatementString}' statement with the '${statementString}' statement...`);
+
+    context = deduction.getContext();
+
+    specificContext = context;  ///
+
+    reconcile((specificContext) => {
+      const deductionStatementUnfies = this.unifyStatement(deductionStatement, generalContext, specificContext);
+
+      if (deductionStatementUnfies) {
+        deductionUnifies = true;
+      }
+    }, specificContext);
+
+    if (deductionUnifies) {
+      context.debug(`...unified the '${deductionString}' deduction's '${deductionStatementString}' statement with the '${statementString}' statement.`);
+    }
+
+    return deductionUnifies;
+  }
+
   unifyStatement(statement, generalContext, specificContext) {
     let statementUnifies;
 
@@ -312,27 +345,24 @@ export default define(class Statement extends Element {
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement...`);
 
-    const statementNode = this.getStatementNode(),
-          subproofAssertionAssertionNode = statementNode.getSubproofAssertionNode(),
-          topLevelMetaAssertionUnconditional = topLevelMetaAssertion.isUnconditional();
+    const topLevelMetaAssertionUnconditional = topLevelMetaAssertion.isUnconditional();
 
-    if (subproofAssertionAssertionNode !== null) {
-      if (!topLevelMetaAssertionUnconditional) {
-        const statements = topLevelMetaAssertion.getStatements(),
-              statementsUnify = this.unifyStatements(statements, generalContext, specificContext);
+    if (topLevelMetaAssertionUnconditional) {
+      const deduction = topLevelMetaAssertion.getDeduction(),
+            deductionUnifies = this.unifyDeduction(deduction, generalContext, specificContext);
 
-        if (statementsUnify) {
-          topLevelMetaAssertionUnifies = true;
-        }
+      if (deductionUnifies) {
+        topLevelMetaAssertionUnifies = true;
       }
     } else {
-      if (topLevelMetaAssertionUnconditional) {
-        const statement = topLevelMetaAssertion.getStatement(),
-              statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
+      const statementNode = this.getStatementNode(),
+            subproofAssertionNode = statementNode.getSubproofAssertionNode();
 
-        if (statementUnifies) {
-          topLevelMetaAssertionUnifies = true;
-        }
+      if (subproofAssertionNode !== null) {
+        const context = generalContext, ///
+              subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
+
+        topLevelMetaAssertionUnifies = subproofAssertion.unifyTopLevelMetaAssertion(topLevelMetaAssertion, generalContext, specificContext);
       }
     }
 

@@ -31,9 +31,9 @@ export default define(class Deduction extends Element {
 
     await this.break(context);
 
-    const duductionString = this.getString();  ///
+    const deductionString = this.getString();  ///
 
-    context.trace(`Verifying the '${duductionString}' duduction...`);
+    context.trace(`Verifying the '${deductionString}' deduction...`);
 
     if (this.statement !== null) {
       const validates = this.validate(context);
@@ -42,11 +42,11 @@ export default define(class Deduction extends Element {
         verifies = true;
       }
     } else {
-      context.debug(`Unable to verify the '${duductionString}' duduction because it is nonsense.`);
+      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${duductionString}' duduction.`);
+      context.debug(`...verified the '${deductionString}' deduction.`);
     }
 
     return verifies;
@@ -55,9 +55,9 @@ export default define(class Deduction extends Element {
   validate(context) {
     let validates = false;
 
-    const duductionString = this.getString();  ///
+    const deductionString = this.getString();  ///
 
-    context.trace(`Validating the '${duductionString}' duduction...`);
+    context.trace(`Validating the '${deductionString}' deduction...`);
 
     attempt((context) => {
       const statementValidates = this.validateStatement(context);
@@ -70,7 +70,7 @@ export default define(class Deduction extends Element {
     }, context);
 
     if (validates) {
-      context.debug(`...validated the '${duductionString}' duduction.`);
+      context.debug(`...validated the '${deductionString}' deduction.`);
     }
 
     return validates;
@@ -80,9 +80,9 @@ export default define(class Deduction extends Element {
     let statementValidates;
 
     const statementString = this.statement.getString(),
-          duductionnString = this.getString();  ///
+          deductionnString = this.getString();  ///
 
-    context.trace(`Validating the '${duductionnString}' duductionn's '${statementString}' statement...`);
+    context.trace(`Validating the '${deductionnString}' deductionn's '${statementString}' statement...`);
 
     const stated = true,
           statement = this.statement.validate(stated, context);
@@ -92,7 +92,7 @@ export default define(class Deduction extends Element {
     }
 
     if (statementValidates) {
-      context.trace(`...validated the '${duductionnString}' duductionn's '${statementString}' statement.`);
+      context.trace(`...validated the '${deductionnString}' deductionn's '${statementString}' statement.`);
     }
 
     return statementValidates;
@@ -175,16 +175,16 @@ export default define(class Deduction extends Element {
 
     context = ephemeralContext; ///
 
-    const duduction = instantiate((context) => {
+    const deduction = instantiate((context) => {
       const { string } = json,
             deductionNode = instantiateDeduction(string, context),
             node = deductionNode,  ///
             statement = statementFromDeductionNode(deductionNode, context),
-            duduction = new Deduction(context, string, node, statement);
+            deduction = new Deduction(context, string, node, statement);
 
-      return duduction;
+      return deduction;
     }, context);
 
-    return duduction;
+    return deduction;
   }
 });
