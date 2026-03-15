@@ -473,9 +473,9 @@ export default class NominalFileContext extends FileContext {
     filter(metaLemmas, (metaLemma) => {
       const context = this, ///
             topLevelMetaAssertion = metaLemma, ///
-            topLevelMetaAssertionUnifies = reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+            topLevelMetaAssertionCompares = reference.compareTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-      if (topLevelMetaAssertionUnifies) {
+      if (topLevelMetaAssertionCompares) {
         return true;
       }
     });
@@ -502,9 +502,9 @@ export default class NominalFileContext extends FileContext {
     filter(metatheorems, (metatheorem) => {
       const context = this, ///
             topLevelMetaAssertion = metatheorem, ///
-            topLevelMetaAssertionUnifies = reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+            topLevelMetaAssertionCompares = reference.compareTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-      if (topLevelMetaAssertionUnifies) {
+      if (topLevelMetaAssertionCompares) {
         return true;
       }
     });

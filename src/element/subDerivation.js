@@ -26,11 +26,12 @@ export default define(class SubDerivation extends Element {
     return subDerivationNode;
   }
 
-  getLastProofAssertion() {
+  getLastStep() {
     const lastSubproofOrProofAssertion = last(this.subproofOrProofAssertions),
-          lastProofAssertion = lastSubproofOrProofAssertion;  ///
+          lastProofAssertion = lastSubproofOrProofAssertion,  ///
+          lastStep = lastProofAssertion;  ///
 
-    return lastProofAssertion;
+    return lastStep;
   }
 
   async verify(context) {

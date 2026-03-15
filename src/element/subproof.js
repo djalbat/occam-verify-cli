@@ -30,19 +30,19 @@ export default define(class Subproof extends Element {
     return subproofNode;
   }
 
-  getLastProofAssertion() { return this.subDerivation.getLastProofAssertion(); }
+  getLastStep() { return this.subDerivation.getLastStep(); }
 
   getStatements() {
-    const lastProofAssertion = this.getLastProofAssertion(),
+    const lastStep = this.getLastStep(),
           suppositionStatements = this.suppositions.map((supposition) => {
             const suppositionStatement = supposition.getStatement();
 
             return suppositionStatement;
           }),
-          lastProofAssertionStatement = lastProofAssertion.getStatement(),
+          lastStepStatement = lastStep.getStatement(),
           statements = [
             ...suppositionStatements,
-            lastProofAssertionStatement
+            lastStepStatement
           ];
 
     return statements;

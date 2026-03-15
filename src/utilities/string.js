@@ -168,10 +168,10 @@ export function sectionStringFromHypothesesTopLevelAssertion(hypotheses, axiom, 
 }
 
 export function subproofStringFromSuppositionsAndSubDerivation(suppositions, subDerivation) {
-  const lastProofAssertion = subDerivation.getLastProofAssertion(),
+  const lastStep = subDerivation.getLastStep(),
         suppositionsString = suppositionsStringFromSuppositions(suppositions),
-        lastProofAssertionString = lastProofAssertion.getString(),
-        subproofString = `[${suppositionsString}]...${lastProofAssertionString}`;
+        lastStepString = lastStep.getString(),
+        subproofString = `[${suppositionsString}]...${lastStepString}`;
 
   return subproofString;
 }

@@ -23,12 +23,12 @@ export default define(class Proof extends Element {
     return proofNode;
   }
 
-  getLastProofAssertion() { return this.derivation.getLastProofAssertion(); }
+  getLastStep() { return this.derivation.getLastStep(); }
 
   getStatement() {
-    const lastProofAssertion = this.getLastProofAssertion(),
-          lastProofAssertionStatement = lastProofAssertion.getStatement(),
-          statement = lastProofAssertionStatement; ///
+    const lastStep = this.getLastStep(),
+          lastStepStatement = lastStep.getStatement(),
+          statement = lastStepStatement; ///
 
     return statement;
   }
@@ -40,9 +40,9 @@ export default define(class Proof extends Element {
       const derivationVerifies = await this.derivation.verify(context);
 
       if (derivationVerifies) {
-        const lastProofAssertion = context.getLastProofAssertion();
+        const lastStep = context.getLastStep();
 
-        if (lastProofAssertion !== null) {
+        if (lastStep !== null) {
           const proof = this, ///
                 proofStatement = proof.getStatement(),
                 proofStatementEqualToStatement = proofStatement.isEqualTo(statement);

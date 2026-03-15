@@ -9,7 +9,7 @@ import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
 
-const { match, backwardsSome } = arrayUtilities;
+const { backwardsSome } = arrayUtilities;
 
 export default define(class Statement extends Element {
   getStatementNode() {
@@ -33,12 +33,62 @@ export default define(class Statement extends Element {
     return singular;
   }
 
+  isEqualTo(statement) {
+    const statementNode = statement.getNode(),
+          statementNodeMatches = this.matchStatementNode(statementNode),
+          equalTo = statementNodeMatches;  ///
+
+    return equalTo;
+  }
+
   matchStatementNode(statementNode) {
     const node = statementNode, ///
           nodeMatches = this.matchNode(node),
           statementNodeMatches = nodeMatches; ///
 
     return statementNodeMatches;
+  }
+
+  compareParameter(parameter) {
+    let comparesToParamter = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const parameterName = parameter.getName();
+
+      if (parameterName !== null) {
+        const metavariableName = this.getMetavariableName();
+
+        if (parameterName === metavariableName) {
+          comparesToParamter = true;
+        }
+      }
+    }
+
+    return comparesToParamter;
+  }
+
+  compareMetavariable(metavariable) {
+    let comparesToMetavariableName;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      let metavariableName;
+
+      metavariableName = metavariable.getName();
+
+      const metavariableNameA = metavariableName; ///
+
+      metavariableName = this.getMetavariableName();
+
+      const metavariableNameB = metavariableName; ///
+
+      comparesToMetavariableName = (metavariableNameA === metavariableNameB);
+    }
+
+    return comparesToMetavariableName;
   }
 
   compareMetavariableName(metavariableName) {
@@ -59,20 +109,27 @@ export default define(class Statement extends Element {
     return comparesToMetavariableName;
   }
 
+  compareSubproofOrProofAssertions(subproofOrProofAssertions, context) {
+    let comparesToSubproofOrProofAssertions;
+
+    comparesToSubproofOrProofAssertions = backwardsSome(subproofOrProofAssertions, (subproofOrProofAssertion) => {
+      const statement = this, ///
+            subproofOrProofAssertionComparesToStatement = subproofOrProofAssertion.compareStatement(statement, context);
+
+      if (subproofOrProofAssertionComparesToStatement) {
+        return true;
+      }
+    });
+
+    return comparesToSubproofOrProofAssertions;
+  }
+
   findValidStatment(context) {
     const statementNode = this.getStatementNode(),
           statement = context.findStatementByStatementNode(statementNode),
           validStatement = statement;  ///
 
     return validStatement;
-  }
-
-  isEqualTo(statement) {
-    const statementNode = statement.getNode(),
-          statementNodeMatches = this.matchStatementNode(statementNode),
-          equalTo = statementNodeMatches;  ///
-
-    return equalTo;
   }
 
   isTermContained(term, context) {
@@ -127,48 +184,6 @@ export default define(class Statement extends Element {
     return frameContained;
   }
 
-  compareParameter(parameter) {
-    let comparesToParamter = false;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const parameterName = parameter.getName();
-
-      if (parameterName !== null) {
-        const metavariableName = this.getMetavariableName();
-
-        if (parameterName === metavariableName) {
-          comparesToParamter = true;
-        }
-      }
-    }
-
-    return comparesToParamter;
-  }
-
-  compareMetavariable(metavariable) {
-    let comparesToMetavariableName;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      let metavariableName;
-
-      metavariableName = metavariable.getName();
-
-      const metavariableNameA = metavariableName; ///
-
-      metavariableName = this.getMetavariableName();
-
-      const metavariableNameB = metavariableName; ///
-
-      comparesToMetavariableName = (metavariableNameA === metavariableNameB);
-    }
-
-    return comparesToMetavariableName;
-  }
-
   validate(stated, context) {
     let statement = null;
 
@@ -208,34 +223,21 @@ export default define(class Statement extends Element {
     let subproofUnifies = false;
 
     const statementNode = this.getStatementNode(),
-          subproofAssertionNode = statementNode.getSubproofAssertionNode(),
-          assertionNode = subproofAssertionNode;  ///
+          subproofAssertionNode = statementNode.getSubproofAssertionNode();
 
-    if (assertionNode !== null) {
+    if (subproofAssertionNode !== null) {
       const context = generalContext, ///
-            assertion = context.findAssertionByAssertionNode(assertionNode),
-            subproofAssertion = assertion;  ///
+            subproofString = subproof.getString(),
+            statementString = this.getString();
 
-      const subproofString = subproof.getString(),
-            subproofAssertionString = subproofAssertion.getString();
+      context.trace(`Unifying the '${subproofString}' subproof with the '${statementString}' statement...`);
 
-      context.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
+      const subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
 
-      const subproofStatements = subproof.getStatements(),
-            subproofAssertionStatements = subproofAssertion.getStatements();
-
-      subproofUnifies = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
-        const generalStatement = subproofAssertionStatement,  ///
-              specificStatement = subproofStatement,  ///
-              statementUnifies = unifyStatement(generalStatement, specificStatement, generalContext, specificContext);
-
-        if (statementUnifies) {
-          return true;
-        }
-      });
+      subproofUnifies = subproofAssertion.unifySubproof(subproof, generalContext, specificContext);
 
       if (subproofUnifies) {
-        context.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
+        context.debug(`...unified the '${subproofString}' subproof with the '${statementString}' statement.`);
       }
     }
 
@@ -274,13 +276,22 @@ export default define(class Statement extends Element {
           definedAssertionNode = statementNode.getDefinedAssertionNode(),
           containedAssertionNode = statementNode.getContainedAssertionNode();
 
-    if ((definedAssertionNode !== null) || (containedAssertionNode !== null)) {
+    if (definedAssertionNode !== null) {
       const context = generalContext, ///
-            assertionNode = (definedAssertionNode || containedAssertionNode),
-            assertion = context.findAssertionByAssertionNode(assertionNode),
-            assertionUnifiesIndependently = assertion.unifyIndependently(generalContext, specificContext);
+            definedAssertion = context.findAssertionByAssertionNode(definedAssertionNode),
+            definedAssertionUnifiesIndependently = definedAssertion.unifyIndependently(generalContext, specificContext);
 
-      if (assertionUnifiesIndependently) {
+      if (definedAssertionUnifiesIndependently) {
+        unifiesIndependently = true;
+      }
+    }
+
+    if (containedAssertionNode !== null) {
+      const context = generalContext, ///
+            containedAssertion = context.findAssertionByAssertionNode(containedAssertionNode),
+            containedAssertionUnifiesIndependently = containedAssertion.unifyIndependently(generalContext, specificContext);
+
+      if (containedAssertionUnifiesIndependently) {
         unifiesIndependently = true;
       }
     }
@@ -292,19 +303,44 @@ export default define(class Statement extends Element {
     return unifiesIndependently;
   }
 
-  compareSubproofOrProofAssertions(subproofOrProofAssertions, context) {
-    let comparesToSubproofOrProofAssertions;
+  unifyTopLevelMetaAssertion(topLevelMetaAssertion, generalContext, specificContext) {
+    let topLevelMetaAssertionUnifies = false;
 
-    comparesToSubproofOrProofAssertions = backwardsSome(subproofOrProofAssertions, (subproofOrProofAssertion) => {
-      const statement = this, ///
-            subproofOrProofAssertionComparesToStatement = subproofOrProofAssertion.compareStatement(statement, context);
+    const context = specificContext,  ///
+          statementString = this.getString(), ///
+          topLevelMetaAssertionString = topLevelMetaAssertion.getString();
 
-      if (subproofOrProofAssertionComparesToStatement) {
-        return true;
+    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement...`);
+
+    const statementNode = this.getStatementNode(),
+          subproofAssertionAssertionNode = statementNode.getSubproofAssertionNode(),
+          topLevelMetaAssertionUnconditional = topLevelMetaAssertion.isUnconditional();
+
+    if (subproofAssertionAssertionNode !== null) {
+      if (!topLevelMetaAssertionUnconditional) {
+        const statements = topLevelMetaAssertion.getStatements(),
+              statementsUnify = this.unifyStatements(statements, generalContext, specificContext);
+
+        if (statementsUnify) {
+          topLevelMetaAssertionUnifies = true;
+        }
       }
-    });
+    } else {
+      if (topLevelMetaAssertionUnconditional) {
+        const statement = topLevelMetaAssertion.getStatement(),
+              statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
 
-    return comparesToSubproofOrProofAssertions;
+        if (statementUnifies) {
+          topLevelMetaAssertionUnifies = true;
+        }
+      }
+    }
+
+    if (topLevelMetaAssertionUnifies) {
+      context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement.`);
+    }
+
+    return topLevelMetaAssertionUnifies;
   }
 
   toJSON() {

@@ -101,17 +101,19 @@ class ScopedContext extends Context {
     return proofAssertions;
   }
 
-  getLastProofAssertion() {
-    let lastProofAssertion = null;
+  getLastStep() {
+    let lastStep = null;
 
     const proofAssertions = this.getProofAssertions(),
           proofAssertionsLength = proofAssertions.length;
 
     if (proofAssertionsLength > 0) {
-      lastProofAssertion = last(proofAssertions);
+      const lastProofAssertion = last(proofAssertions);
+
+      lastStep = lastProofAssertion;  ///
     }
 
-    return lastProofAssertion;
+    return lastStep;
   }
 
   hasMetaLevelSubstitutions() {

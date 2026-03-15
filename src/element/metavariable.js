@@ -338,8 +338,6 @@ export default define(class Metavariable extends Element {
                                   substitution.getString() :
                                     EMPTY_STRING;
 
-
-
     context.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
     const metavariable = this, ///

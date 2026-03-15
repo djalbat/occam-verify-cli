@@ -59,8 +59,6 @@ export default class TopLevelAssertion extends Element {
     this.hypotheses = hypotheses;
   }
 
-  getStatement() { return this.deduction.getStatement(); }
-
   isHypothetical() {
     const hypothesesLength = this.hypotheses.length,
           hypothetical = (hypothesesLength > 0);

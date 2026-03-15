@@ -163,10 +163,3 @@ export  default define(class Conclusion extends Element {
     return conclusion;
   }
 });
-
-function statementFromConclusionNode(conclusionNode, context) {
-  const statementNode = conclusionNode.getStatementNode(),
-        statement = context.findStatementByStatementNode(statementNode);
-
-  return statement;
-}

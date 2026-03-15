@@ -5,14 +5,13 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiateAssumption } from "../process/instantiate";
 import { instantiate, reconcile } from "../utilities/context";
-import { unifyStatementIntrinsically } from "../process/unify";
 
 export default define(class Assumption extends Element {
   constructor(context, string, node, reference, statement) {
     super(context, string, node);
 
-    this.statement = statement;
     this.reference = reference;
+    this.statement = statement;
   }
 
   getReference() {
@@ -166,7 +165,7 @@ export default define(class Assumption extends Element {
   }
 
   validateWhenStated(context) {
-    let validatesWhenStated;
+    let validatesWhenStated = false;
 
     const assumptionString = this.getString();  ///
 
@@ -179,15 +178,17 @@ export default define(class Assumption extends Element {
       validatesWhenStated = true;
     } else {
       const topLevelMetaAssertions = context.findTopLevelMetaAssertionsByReference(this.reference),
-            topLevelMetaAssertionsUnify = topLevelMetaAssertions.some((topLevelMetaAssertion) => {
-              const topLevelMetaAssertionUnifies = this.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+            topLevelMetaAssertionsCompare = topLevelMetaAssertions.some((topLevelMetaAssertion) => {
+              const topLevelMetaAssertionCompares = this.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-              if (topLevelMetaAssertionUnifies) {
+              if (topLevelMetaAssertionCompares) {
                 return true;
               }
             });
 
-      validatesWhenStated = topLevelMetaAssertionsUnify; ///
+      if (topLevelMetaAssertionsCompare) {
+        validatesWhenStated = true;
+      }
     }
 
     if (validatesWhenStated) {
@@ -198,7 +199,7 @@ export default define(class Assumption extends Element {
   }
 
   validateWhenDerived(context) {
-    let validatesWhenDerived;
+    let validatesWhenDerived = false;
 
     const assumptionString = this.getString();  ///
 
@@ -206,35 +207,15 @@ export default define(class Assumption extends Element {
 
     const topLevelMetaAssertionPresent = context.isTopLevelMetaAssertionPresentByReference(this.reference);
 
-    validatesWhenDerived = topLevelMetaAssertionPresent; ///
+    if (topLevelMetaAssertionPresent) {
+      validatesWhenDerived = true;
+    }
 
     if (validatesWhenDerived) {
       context.debug(`...validated the '${assumptionString}' derived assumption.`);
     }
 
     return validatesWhenDerived;
-  }
-
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnifies;
-
-    const context = generalContext,  ///
-          statementString = statement.getString(),
-          assumptionStatementString = this.statement.getString();
-
-    context.trace(`Unifying the '${statementString}' statement with the '${assumptionStatementString}' statement...`);
-
-    const generalStatement = this.statement,
-          specificStatement = statement,  ///
-          statementUUnifiesIntrinsically = unifyStatementIntrinsically(generalStatement, specificStatement, substitutions, generalContext, specificContext);
-
-    statementUnifies = statementUUnifiesIntrinsically;  ///
-
-    if (statementUnifies) {
-      context.debug(`...unified the '${statementString}' statement with the '${assumptionStatementString}' statement.`);
-    }
-
-    return statementUnifies;
   }
 
   unifyLabel(label, generalContext, specificContext) {
@@ -271,29 +252,14 @@ export default define(class Assumption extends Element {
 
     const specificContext = context;  ///
 
-    let substitutions = null;
-
-    reconcile((context) => {
+    reconcile((specificContext) => {
       const label = topLevelMetaAssertion.getLabel(),
             labelUnifies = this.unifyLabel(label, generalContext, specificContext);
-    }, context);
 
-    ///
-
-    if (labelUnifies) {
-      const statementSubstitutions = [],
-            statement = topLevelMetaAssertion.getStatement(),
-            substitutions = statementSubstitutions, ///
-            statementUUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-      if (statementUUnifies) {
-        const labelSubstitutionsCorrelateStatementSubstitutions = labelSubstitutions.correlateSubstitutions(statementSubstitutions);
-
-        if (labelSubstitutionsCorrelateStatementSubstitutions) {
-          topLevelMetaAssertionUnifies = true; ///
-        }
+      if (labelUnifies) {
+        topLevelMetaAssertionUnifies = this.statement.unifyTopLevelMetaAssertion(topLevelMetaAssertion, generalContext, specificContext);
       }
-    }
+    }, specificContext);
 
     if (topLevelMetaAssertionUnifies) {
       context.trace(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);

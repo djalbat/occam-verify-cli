@@ -46,7 +46,46 @@ export default class TopLevelMetaAssertion extends Element {
     return this.metaLevelSubstitutions;
   }
 
-  getStatement() { return this.deduction.getStatement(); }
+  getStatement() {
+    let statement = null;
+
+    const unconditional = this.isUnconditional();
+
+    if (unconditional) {
+      statement = this.deduction.getStatement();
+    }
+
+    return statement;
+  }
+
+  getStatements() {
+    let statements = null;
+
+    const unconditional = this.isUnconditional();
+
+    if (!unconditional) {
+      const suppositionStatements = this.suppositions.map((supposition) => {
+              const suppositionStatement = supposition.getStatement();
+
+              return suppositionStatement;
+            }),
+            deductionStatement = this.deduction.getStatement();
+
+      statements = [
+        ...suppositionStatements,
+        deductionStatement
+      ];
+    }
+
+    return statements;
+  }
+
+  isUnconditional() {
+    const suppositionsLength = this.suppositions.length,
+          unconditional = (suppositionsLength === 0);
+
+    return unconditional;
+  }
 
   compareReference(reference) {
     const label = this.getLabel(),

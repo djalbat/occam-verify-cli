@@ -5,6 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, instantiate } from "../utilities/context";
 import { instantiateDeduction } from "../process/instantiate";
+import { statementFromDeductionNode } from "../utilities/element";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export default define(class Deduction extends Element {
@@ -187,10 +188,3 @@ export default define(class Deduction extends Element {
     return duduction;
   }
 });
-
-function statementFromDeductionNode(deductionNode, context) {
-  const statementNode = deductionNode.getStatementNode(),
-        statement = context.findStatementByStatementNode(statementNode);
-
-  return statement;
-}

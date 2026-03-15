@@ -5,11 +5,11 @@ import { arrayUtilities } from "necessary";
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
+import { reconcile } from "../../utilities/context";
 import { instantiate } from "../../utilities/context";
-import { unifyStatement } from "../../process/unify";
 import { instantiateSubproofAssertion } from "../../process/instantiate";
 
-const { match } = arrayUtilities;
+const { last, front, backwardsEvery } = arrayUtilities;
 
 export default define(class SubproofAssertion extends Assertion {
   constructor(context, string, node, statements) {
@@ -20,6 +20,26 @@ export default define(class SubproofAssertion extends Assertion {
 
   getStatements() {
     return this.statements;
+  }
+
+  getLastStatement() {
+    const lastStatement = last(this.statements);
+
+    return lastStatement;
+  }
+
+  getSupposedStatement(index) {
+    const statement = this.statements[index],
+          supposedStatement = statement;  ///
+
+    return supposedStatement;
+  }
+
+  getSupposedStatements() {
+    const frontStatements = front(this.statements),
+          supposedStatements = frontStatements;  ///
+
+    return supposedStatements;
   }
 
   getSubproofAssertionNode() {
@@ -86,31 +106,121 @@ export default define(class SubproofAssertion extends Assertion {
   }
 
   unifySubproof(subproof, generalContext, specificContext) {
-    let subproofUnifies;
+    let subproofUnifies = false;
 
-    const subproofString = subproof.getString(),
-          subproofAssertionString = this.getString();  ///
+    const context = specificContext,  ///
+          subproofString = subproof.getString(),
+          subproofAssertionString = this.getString(); ///
 
-    specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
+    context.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
 
-    const subproofStatements = subproof.getStatements(),
-          subproofAssertionStatements = this.statements;  ///
+    const lastStep = subproof.getLastStep(),
+          lastStepUnifies = this.unifyLastStep(lastStep, generalContext, specificContext);
 
-    subproofUnifies = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
-      const generalStatement = subproofAssertionStatement,  ///
-            specificStatement = subproofStatement,  ///
-            statementUnifies = unifyStatement(generalStatement, specificStatement, generalContext, specificContext);
+    if (lastStepUnifies) {
+      const suppositions = subproof.getSuppositions(),
+            suppositionsUnify = this.unifySuppositions(suppositions, generalContext, specificContext);
 
-      if (statementUnifies) {
-        return true;
+      if (suppositionsUnify) {
+        subproofUnifies = true;
       }
-    });
+    }
 
     if (subproofUnifies) {
-      specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
+      context.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
     }
 
     return subproofUnifies;
+  }
+
+  unifyLastStep(lastStep, generalContext, specificContext) {
+    let lastStepUnifies = false;
+
+    const lastStatement = this.getLastStatement(),
+          lastStepString = lastStep.getString(),
+          lastStepStatement = lastStep.getStatement(),
+          lastStatementString = lastStatement.getString(),
+          lastStepStatementString = lastStepStatement.getString(),
+          subproofAssertionString = this.getString(); ///
+
+    let context;
+
+    context = specificContext;  ///
+
+    context.trace(`Unifying the '${lastStepString}' last step's '${lastStepStatementString}' statement with the '${subproofAssertionString}' subproof assertion's '${lastStatementString}' last statement...`)
+
+    context = lastStep.getContext();
+
+    specificContext = context;  ///
+
+    reconcile((specificContext) => {
+      const lastStepStatementUnifies = lastStatement.unifyStatement(lastStepStatement, generalContext, specificContext);
+
+      if (lastStepStatementUnifies) {
+        lastStepUnifies = true;
+      }
+    }, specificContext);
+
+    if (lastStepUnifies) {
+      context.debug(`...unified the '${lastStepString}' last step's '${lastStepStatementString}' statement with the '${subproofAssertionString}' subproof assertion's '${lastStatementString}' last statement.`)
+    }
+
+    return lastStepUnifies;
+  }
+
+  unifySupposition(supposition, index, generalContext, specificContext) {
+    let suppositionUnifies = false;
+
+    const supposedStatement = this.getSupposedStatement(index),
+          suppositionString = supposition.getString(),
+          suppositionStatement = supposition.getStatement(),
+          subproofAssertionString = this.getString(), ///
+          supposedStatementString = supposedStatement.getString(),
+          suppositionStatementString = suppositionStatement.getString();  ///
+
+    let context;
+
+    context = specificContext;  ///
+
+    context.trace(`Unifying the '${suppositionString}' supposition's '${suppositionStatementString}' statement with the '${subproofAssertionString}' subproof assertion's '${supposedStatementString}' supposed statement...`)
+
+    context = supposition.getContext();
+
+    specificContext = context;  ///
+
+    reconcile((specificContext) => {
+      const suppositionStatementUnifies = supposedStatement.unifyStatement(suppositionStatement, generalContext, specificContext);
+
+      if (suppositionStatementUnifies) {
+        suppositionUnifies = true;
+      }
+    }, specificContext);
+
+    if (suppositionUnifies) {
+      context.debug(`...unified the '${suppositionString}' supposition's '${suppositionStatementString}' statement with the '${subproofAssertionString}' subproof assertion's '${supposedStatementString}' supposed statement.`)
+    }
+
+    return suppositionUnifies;
+  }
+
+  unifySuppositions(suppositions, generalContext, specificContext) {
+    let suppositionsUnify = false;
+
+    const supposedStatements = this.getSupposedStatements(),
+          suppositionsLength = suppositions.length,
+          supposedStatementsLength = supposedStatements.length;
+
+    if (suppositionsLength === supposedStatementsLength) {
+      suppositionsUnify = backwardsEvery(suppositions, (supposition, index) => {
+        const suppositionUnifies = this.unifySupposition(supposition, index, generalContext, specificContext);
+
+        if (suppositionUnifies) {
+          return true;
+        }
+      });
+    }
+
+    return suppositionsUnify;
   }
 
   static name = "SubproofAssertion";

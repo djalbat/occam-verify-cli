@@ -1,8 +1,12 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import TopLevelAssertion from "../topLevelAssertion";
 
 import { define } from "../../elements";
+
+const { backwardsEvery } = arrayUtilities;
 
 export default define(class Axiom extends TopLevelAssertion {
   getAxiomNode() {
@@ -120,7 +124,7 @@ export default define(class Axiom extends TopLevelAssertion {
   unifySubproof(subproof, context) {
     let subproofUnifies = false;
 
-    const axiomString = this.getString(),
+    const axiomString = this.getString(), ///
           subproofString = subproof.getString();
 
     context.trace(`Unifying the '${subproofString}' subproof with the '${axiomString}' axiom...`);
@@ -130,10 +134,10 @@ export default define(class Axiom extends TopLevelAssertion {
     if (unconditional) {
       context.trace(`Unable to unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`);
     } else {
-      const lastProofAssertion = subproof.getLastProofAssertion(),
-            lastProofAssertionUnifies = this.unifyLastProofAssertion(lastProofAssertion, context);
+      const lastStep = subproof.getLastStep(),
+            lastStepUnifies = this.unifyLastStep(lastStep, context);
 
-      if (lastProofAssertionUnifies) {
+      if (lastStepUnifies) {
         const suppositions = subproof.getSuppositions(),
               suppositionsUnify = this.unifySuppositions(suppositions, context);
 
@@ -196,7 +200,7 @@ export default define(class Axiom extends TopLevelAssertion {
     if (generalSuppositionsLength === specificSuppositionsLength) {
       suppositions = specificSuppositions;  ///
 
-      suppositionsUnify = suppositions.every((supposition, index) => {
+      suppositionsUnify = backwardsEvery(suppositions, (supposition, index) => {
         const suppositionUnifies = this.unifySupposition(supposition, index, generalContext, specificContext);
 
         if (suppositionUnifies) {
@@ -208,32 +212,32 @@ export default define(class Axiom extends TopLevelAssertion {
     return suppositionsUnify;
   }
 
-  unifyLastProofAssertion(lastProofAssertion, context) {
-    let lastProofAssertionUnifies = false;
+  unifyLastStep(lastStep, context) {
+    let lastStepUnifies = false;
 
-    const axiomString = this.getString(),
-          lastProofAssertionString = lastProofAssertion.getString();
+    const axiomString = this.getString(), ///
+          lastStepString = lastStep.getString();
 
-    context.trace(`Unifying the '${lastProofAssertionString}' last proof assertion with the '${axiomString}' axiom...`)
+    context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`)
 
-    const statement = lastProofAssertion.getStatement(),
+    const statement = lastStep.getStatement(),
           statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, context);
 
     if (statementUnifiesWithDeduction) {
-      lastProofAssertionUnifies = true;
+      lastStepUnifies = true;
     }
 
-    if (lastProofAssertionUnifies) {
-      context.debug(`...unified the '${lastProofAssertionString}' last proof assertion with the '${axiomString}' axiom.`)
+    if (lastStepUnifies) {
+      context.debug(`...unified the '${lastStepString}' last step with the '${axiomString}' axiom.`)
     }
 
-    return lastProofAssertionUnifies;
+    return lastStepUnifies;
   }
 
   unifyTopLevelAssertion(topLevelAssertion, context) {
     let topLevelAssertionUnifies = false;
 
-    const axiomString = this.getString(),
+    const axiomString = this.getString(), ///
           topLevelAssertionString = topLevelAssertion.getString();
 
     context.trace(`Unifying the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom...`);
