@@ -1,7 +1,7 @@
 "use strict";
 
 import { releaseContextUtilities } from "occam-languages";
-import { fileSystemUtilities as occamFileSystemUtilities } from "occam-file-system";
+import { fileSystemUtilities as occamFileSystemUtilities } from "occam-server";
 import { pathUtilities, fileSystemUtilities as necessaryFileSystemUtilities } from "necessary";
 
 const { loadProject } = occamFileSystemUtilities,
