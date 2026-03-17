@@ -284,7 +284,7 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementStatemnentUnifies;
   }
 
-  unifyWithSipmleSubstitution(simpleSubstitution, generalContext, specificContext) {
+  unifyWithSimpleSubstitution(simpleSubstitution, generalContext, specificContext) {
     let substitution;
 
     const complexSubstitution = this; ///
@@ -316,7 +316,7 @@ export default define(class StatementSubstitution extends Substitution {
           simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
 
     if (simpleSubstitution !== null) {
-      const substitution = this.unifyWithSipmleSubstitution(simpleSubstitution, generalContext, specificContext); ///
+      const substitution = this.unifyWithSimpleSubstitution(simpleSubstitution, generalContext, specificContext); ///
 
       if (substitution !== null) {
         const complexSubstitution = this, ///

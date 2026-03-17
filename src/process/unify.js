@@ -466,22 +466,6 @@ export function unifyTermWithConstructor(term, constructor, generalContext, spec
   return termUnifiesWithConstructor;
 }
 
-export function unifyStatementIntrinsically(generalStatement, specificStatement, generalContext, specificContext) {
-  let statementUnifiesIntrinsically = false;
-
-  const generalStatementNode = generalStatement.getNode(),
-        specificStatementNode = specificStatement.getNode(),
-        generalNode = generalStatementNode, ///
-        specificNode = specificStatementNode, ///
-        success = intrinsicLevelPass.run(generalNode, specificNode, generalContext, specificContext);
-
-  if (success) {
-    statementUnifiesIntrinsically = true;
-  }
-
-  return statementUnifiesIntrinsically;
-}
-
 export function unifyStatementWithCombinator(statement, combinator, stated, generalContext, specificContext) {
   let statementUnifiesWithCombinator = false;
 

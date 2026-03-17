@@ -5,7 +5,7 @@ import ProofAssertion from "../proofAssertion";
 import { define } from "../../elements";
 import { instantiatePremise } from "../../process/instantiate";
 import { procedureCallFromPremiseNode } from "../../utilities/element";
-import { attempt, reconcile, instantiate } from "../../utilities/context";
+import { join, attempt, reconcile, instantiate } from "../../utilities/context";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
 
 export default define(class Premise extends ProofAssertion {
@@ -169,16 +169,18 @@ export default define(class Premise extends ProofAssertion {
           generalContext = premiseContext, ///
           specificContext = proofAssertionContext;  ///
 
-    reconcile((specificContext) => {
-      const statement = proofAssertion.getStatement(),
-            statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        const statement = proofAssertion.getStatement(),
+              statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
 
-      if (statementUnifies) {
-        specificContext.commit(context);
+        if (statementUnifies) {
+          specificContext.commit(context);
 
-        proofAssertionUnifies = true;
-      }
-    }, specificContext);
+          proofAssertionUnifies = true;
+        }
+      }, specificContext);
+    }, specificContext, context);
 
     if (proofAssertionUnifies) {
       context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${premiseString}' premise.`);
