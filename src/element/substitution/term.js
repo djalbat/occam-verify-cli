@@ -187,7 +187,7 @@ export default define(class TermSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {
+      termSubstitutionn = instantiate((context) => {
         const { string } = json,
               termSubstitutionNode = instantiateTermSubstitution(string, context),
               node = termSubstitutionNode,  ///
@@ -196,7 +196,9 @@ export default define(class TermSubstitution extends Substitution {
 
         context = null;
 
-        termSubstitutionn = new TermSubstitution(context, string, node, targetTerm, replacementTerm);
+        const termSubstitutionn = new TermSubstitution(context, string, node, targetTerm, replacementTerm);
+
+        return termSubstitutionn;
       }, context);
     }
 

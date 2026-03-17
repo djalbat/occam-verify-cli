@@ -176,7 +176,7 @@ export default define(class MetaLevelSubstitution extends Substitution {
 
     context = ephemeralContext; ///
 
-    const metaLevelSubstitution = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context),
             targetReference = targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
@@ -186,8 +186,6 @@ export default define(class MetaLevelSubstitution extends Substitution {
 
       return metaLevelSubstitution;
     }, context);
-
-    return metaLevelSubstitution;
   }
 
   static fromStatementAndReference(statement, reference, context) {

@@ -238,7 +238,7 @@ export default define(class Term extends Element {
   static name = "Term";
 
   static fromJSON(json, context) {
-    const term = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             termNode = instantiateTerm(string, context),
             node = termNode,  ///
@@ -250,7 +250,5 @@ export default define(class Term extends Element {
 
       return term;
     }, context);
-
-    return term;
   }
 });

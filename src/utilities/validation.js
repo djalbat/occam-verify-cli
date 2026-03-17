@@ -104,20 +104,28 @@ function validateStatementAsMetavariable(statement, stated, context) {
       statementValidatesAsMetavariable = true;
 
       const { TermSubstitution, FrameSubstitution } = elements,
-            frameSubstitution = FrameSubstitution.fromStatement(statement, context),
-            termSubstitution = TermSubstitution.fromStatement(statement, context);
+            generalContext = context, ///
+            specificContext = context;  ///
 
-      let substitution;
+      let termSubstitution,
+          frameSubstitution;
 
-      substitution = (termSubstitution || frameSubstitution);
+      termSubstitution = TermSubstitution.fromStatement(statement, context);
 
-      if (substitution !== null) {
-        const generalContext = context, ///
-              specificContext = context;  ///
+      if (termSubstitution !== null) {
+        termSubstitution = termSubstitution.validate(generalContext, specificContext);  ///
 
-        substitution = substitution.validate(generalContext, specificContext);
+        if (termSubstitution === null) {
+          statementValidatesAsMetavariable = false;
+        }
+      }
 
-        if (substitution === null) {
+      frameSubstitution = FrameSubstitution.fromStatement(statement, context);
+
+      if (frameSubstitution !== null) {
+        frameSubstitution = frameSubstitution.validate(generalContext, specificContext);  ///
+
+        if (frameSubstitution === null) {
           statementValidatesAsMetavariable = false;
         }
       }

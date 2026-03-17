@@ -316,7 +316,7 @@ export default define(class Type extends Element {
   static name = "Type";
 
   static fromJSON(json, context) {
-    const type = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             typeNode = instantiateType(string, context),
             node = typeNode, ///
@@ -332,8 +332,6 @@ export default define(class Type extends Element {
 
       return type;
     }, context);
-
-    return type;
   }
 
   static fromName(name, context) {

@@ -280,7 +280,7 @@ export default define(class Equality extends Element {
   }
 
   static fromJSON(json, context) {
-    const equality = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             equalityNode = instantiateEquality(string, context),
             node = equalityNode,  ///
@@ -293,8 +293,6 @@ export default define(class Equality extends Element {
 
       return equality;
     }, context);
-
-    return equality;
   }
 });
 

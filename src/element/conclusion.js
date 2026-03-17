@@ -150,7 +150,7 @@ export  default define(class Conclusion extends Element {
 
     context = ephemeralContext; ///
 
-    const conclusion = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             conclusionNode = instantiateConclusion(string, context),
             node = conclusionNode,  ///
@@ -159,7 +159,5 @@ export  default define(class Conclusion extends Element {
 
       return conclusion;
     }, context);
-
-    return conclusion;
   }
 });

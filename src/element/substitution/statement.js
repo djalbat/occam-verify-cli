@@ -352,7 +352,7 @@ export default define(class StatementSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {
+      statementSubstitutionn = instantiate((context) => {
         const { string } = json,
               statementSubstitutionNode = instantiateStatementSubstitution(string, context),
               node = statementSubstitutionNode,  ///
@@ -361,7 +361,9 @@ export default define(class StatementSubstitution extends Substitution {
 
         context = null;
 
-        statementSubstitutionn = new StatementSubstitution(context, string, node, targetStatement, replacementStatement);
+        const statementSubstitutionn = new StatementSubstitution(context, string, node, targetStatement, replacementStatement);
+
+        return statementSubstitutionn;
       }, context);
     }
 

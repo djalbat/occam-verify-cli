@@ -225,7 +225,7 @@ export default define(class Signature extends Element {
   static name = "Signature";
 
   static fromJSON(json, context) {
-    const signature = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             signatureNode = instantiateSignature(string, context),
             node = signatureNode,  ///
@@ -234,7 +234,5 @@ export default define(class Signature extends Element {
 
       return signature;
     }, context);
-
-    return signature;
   }
 });

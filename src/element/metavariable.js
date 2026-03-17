@@ -305,19 +305,13 @@ export default define(class Metavariable extends Element {
           frameUnifies = true;
         }
       } else {
-        const { FrameSubstitution } = elements;
+        const { FrameSubstitution } = elements,
+              metavariable = this,  ///
+              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
 
-        let frameSubstitution;
+        frameSubstitution.validate(generalContext, specificContext);
 
-        const metavariable = this;  ///
-
-        frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
-
-        frameSubstitution = frameSubstitution.validate(generalContext, specificContext);
-
-        if (frameSubstitution !== null) {
-          frameUnifies = true;
-        }
+        frameUnifies = true;
       }
     }
 
@@ -367,13 +361,10 @@ export default define(class Metavariable extends Element {
           statementUnifies = true;
         }
       } else {
-        const { StatementSubstitution } = elements;
-
-        let statementSubstitution;
-
-        statementSubstitution = (substitution !== null) ?
-                                  StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
-                                    StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+        const { StatementSubstitution } = elements,
+              statementSubstitution = (substitution !== null) ?
+                                        StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
+                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
 
         if (substitution !== null) {
           const context = generalContext; ///
@@ -383,11 +374,9 @@ export default define(class Metavariable extends Element {
           substitution.setContext(context);
         }
 
-        statementSubstitution = statementSubstitution.validate(generalContext, specificContext);
+        statementSubstitution.validate(generalContext, specificContext);
 
-        if (statementSubstitution !== null) {
-          statementUnifies = true;
-        }
+        statementUnifies = true;
       }
     }
 
@@ -429,19 +418,13 @@ export default define(class Metavariable extends Element {
           referenceUnifies = true;
         }
       } else {
-        const { ReferenceSubstitution } = elements;
+        const { ReferenceSubstitution } = elements,
+              metavariable = this,  ///
+              referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
 
-        let referenceSubstitution;
+        referenceSubstitution.validate(generalContext, specificContext);
 
-        const metavariable = this;
-
-        referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
-
-        referenceSubstitution = referenceSubstitution.validate(generalContext, specificContext);  ///
-
-        if (referenceSubstitution !== null) {
-          referenceUnifies = true;
-        }
+        referenceUnifies = true;
       }
     }
 
@@ -609,7 +592,7 @@ export default define(class Metavariable extends Element {
   static name = "Metavariable";
 
   static fromJSON(json, context) {
-    const metavariable = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             metavariableNode = instantiateMetavariable(string, context),
             node = metavariableNode,  ///
@@ -621,7 +604,5 @@ export default define(class Metavariable extends Element {
 
       return metavariable;
     }, context);
-
-    return metavariable;
   }
 });

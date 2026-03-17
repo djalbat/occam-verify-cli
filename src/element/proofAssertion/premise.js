@@ -292,7 +292,7 @@ export default define(class Premise extends ProofAssertion {
 
     context = ephemeralContext; ///
 
-    const premise = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             premiseNode = instantiatePremise(string, context),
             node = premiseNode,  ///
@@ -302,8 +302,6 @@ export default define(class Premise extends ProofAssertion {
 
       return premise;
     }, context);
-
-    return premise;
   }
 });
 

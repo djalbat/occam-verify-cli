@@ -43,7 +43,8 @@ export default define(class TypePrefix extends Element {
   static name = "TypePrefix";
 
   static fromJSON(json, context) {
-    const typePrefix = instantiate((context) => {const { string } = json,
+    return instantiate((context) => {
+      const { string } = json,
             typePrefixNode = instantiateTypePrefix(string, context),
             node = typePrefixNode, ///
             name = nameFromTypePrefixNode(typePrefixNode, context);
@@ -54,7 +55,5 @@ export default define(class TypePrefix extends Element {
 
       return typePrefix;
     }, context);
-
-    return typePrefix;
   }
 });

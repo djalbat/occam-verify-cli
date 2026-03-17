@@ -124,7 +124,7 @@ export default define(class PropertyRelation extends Element {
   }
 
   static fromJSON(json, context) {
-    const propertyRelation = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             propertyRelationNode = instantiatePropertyRelation(string, context),
             node = propertyRelationNode,  ///
@@ -137,8 +137,6 @@ export default define(class PropertyRelation extends Element {
 
       return propertyRelation;
     }, context);
-
-    return propertyRelation;
   }
 });
 

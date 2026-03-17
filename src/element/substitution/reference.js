@@ -166,7 +166,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {
+      referenceSubstitutionn = instantiate((context) => {
         const { string } = json,
               referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
               node = referenceSubstitutionNode,  ///
@@ -175,7 +175,9 @@ export default define(class ReferenceSubstitution extends Substitution {
 
         context = null;
 
-        referenceSubstitutionn = new ReferenceSubstitution(context, string, node, targetReference, replacementReference);
+        const referenceSubstitutionn = new ReferenceSubstitution(context, string, node, targetReference, replacementReference);
+
+        return referenceSubstitutionn;
       }, context);
     }
 

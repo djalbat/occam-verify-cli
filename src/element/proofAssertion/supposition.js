@@ -314,7 +314,7 @@ export default define(class Supposition extends ProofAssertion {
 
     context = ephemeralContext; ///
 
-    const supposition = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             suppositionNode = instantiateSupposition(string, context),
             node = suppositionNode,  ///
@@ -324,8 +324,6 @@ export default define(class Supposition extends ProofAssertion {
 
       return supposition;
     }, context);
-
-    return supposition;
   }
 });
 

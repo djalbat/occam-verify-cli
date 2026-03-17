@@ -58,7 +58,7 @@ export default define(class Property extends Element {
   static name = "Property";
 
   static fromJSON(json, context) {
-    const property = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             propertyNode = instantiateProperty(string, context),
             node = propertyNode,  ///
@@ -71,7 +71,5 @@ export default define(class Property extends Element {
 
       return property;
     }, context);
-
-    return property;
   }
 });

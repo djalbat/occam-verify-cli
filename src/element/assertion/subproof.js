@@ -299,7 +299,7 @@ export default define(class SubproofAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {
+      subproorAssertion = instantiate((context) => {
         const { string } = json,
               subproofAssertionNode = instantiateSubproofAssertion(string, context),
               statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),
@@ -307,7 +307,9 @@ export default define(class SubproofAssertion extends Assertion {
 
         context = null;
 
-        subproorAssertion = new SubproofAssertion(context, string, node, statements);
+        const subproorAssertion = new SubproofAssertion(context, string, node, statements);
+
+        return subproorAssertion;
       }, context);
     }
 

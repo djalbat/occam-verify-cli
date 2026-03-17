@@ -178,7 +178,7 @@ export default define(class FrameSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {
+      frameSubstitutionn = instantiate((context) => {
         const { string } = json,
               frameSubstitutionNode = instantiateFrameSubstitution(string, context),
               node = frameSubstitutionNode,  ///
@@ -187,7 +187,9 @@ export default define(class FrameSubstitution extends Substitution {
 
         context = null;
 
-        frameSubstitutionn = new FrameSubstitution(context, string, node, targetFrame, replacementFrame);
+        const frameSubstitutionn = new FrameSubstitution(context, string, node, targetFrame, replacementFrame);
+
+        return frameSubstitutionn;
       }, context);
     }
 

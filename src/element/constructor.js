@@ -173,7 +173,7 @@ export default define(class Constructor extends Element {
 
     context = ephemeralContext; ///
 
-    const constructor = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             constructorNode = instantiateConstructor(string, context),
             node = constructorNode, ///
@@ -183,7 +183,5 @@ export default define(class Constructor extends Element {
 
       return constructor;
     }, context);
-
-    return constructor;
   }
 });

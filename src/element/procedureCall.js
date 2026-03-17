@@ -125,7 +125,7 @@ export default define(class ProcedureCall extends Element {
   static name = "ProcedureCall";
 
   static fromJSON(json, context) {
-    const procedureCall = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             procedureCallNode = instantiateProcedureCall(string, context),
             node = procedureCallNode,  ///
@@ -138,7 +138,5 @@ export default define(class ProcedureCall extends Element {
 
       return procedureCall;
     }, context);
-
-    return procedureCall;
   }
 });

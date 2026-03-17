@@ -284,7 +284,7 @@ export default define(class Reference extends Element {
   static name = "Reference";
 
   static fromJSON(json, context) {
-    const reference = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             referenceNode = instantiateReference(string, context),
             node = referenceNode,  ///
@@ -296,7 +296,5 @@ export default define(class Reference extends Element {
 
       return reference;
     }, context);
-
-    return reference;
   }
 });

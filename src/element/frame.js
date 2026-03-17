@@ -343,7 +343,7 @@ export default define(class Frame extends Element {
   static name = "Frame";
 
   static fromJSON(json, context) {
-    const frame = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             frameNode = instantiateFrame(string, context),
             node = frameNode, ///
@@ -356,8 +356,6 @@ export default define(class Frame extends Element {
 
       return frame;
     }, context);
-
-    return frame;
   }
 });
 

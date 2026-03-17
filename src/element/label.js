@@ -153,7 +153,7 @@ export default define(class Label extends Element {
 
     context = ephemeralContext; ///
 
-    const label = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             labelNode = instantiateLabel(string, context),
             metavariable = metavariableFromLabelNode(labelNode, context),
@@ -162,7 +162,5 @@ export default define(class Label extends Element {
 
       return label;
     }, context);
-
-    return label;
   }
 });

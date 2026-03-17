@@ -218,7 +218,7 @@ export default define(class Judgement extends Element {
   static name = "Judgement";
 
   static fromJSON(json, context) {
-    const judgement = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             judgementNode = instantiateJudgement(string, context),
             node = judgementNode,  ///
@@ -231,8 +231,6 @@ export default define(class Judgement extends Element {
 
       return judgement;
     }, context);
-
-    return judgement;
   }
 });
 

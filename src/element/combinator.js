@@ -128,7 +128,7 @@ export default define(class Combinator extends Element {
 
     context = ephemeralContext; ///
 
-    const combinator = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             combinatorNode = instantiateCombinator(string, context),
             node = combinatorNode,  ///
@@ -137,7 +137,5 @@ export default define(class Combinator extends Element {
 
       return combinator;
     }, context);
-
-    return combinator;
   }
 });

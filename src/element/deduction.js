@@ -175,7 +175,7 @@ export default define(class Deduction extends Element {
 
     context = ephemeralContext; ///
 
-    const deduction = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             deductionNode = instantiateDeduction(string, context),
             node = deductionNode,  ///
@@ -184,7 +184,5 @@ export default define(class Deduction extends Element {
 
       return deduction;
     }, context);
-
-    return deduction;
   }
 });

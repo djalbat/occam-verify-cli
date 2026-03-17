@@ -153,17 +153,12 @@ export default define(class Variable extends Element {
             termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
 
       if (termTypeEqualToOrSubTypeOfVariableType) {
-        const { TermSubstitution } = elements;
+        const { TermSubstitution } = elements,
+              termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, context);
 
-        let termSubstitution;
+        termSubstitution.validate(generalContext, specificContext);
 
-        termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, context);
-
-        termSubstitution = termSubstitution.validate(generalContext, specificContext);  ///
-
-        if (termSubstitution !== null) {
-          termUnifies = true;
-        }
+        termUnifies = true;
       }
     }
 
@@ -189,7 +184,7 @@ export default define(class Variable extends Element {
   static name = "Variable";
 
   static fromJSON(json, context) {
-    const variable = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             variableNode = instantiateVariable(string, context),
             node = variableNode,  ///
@@ -202,7 +197,5 @@ export default define(class Variable extends Element {
 
       return variable;
     }, context);
-
-    return variable;
   }
 });

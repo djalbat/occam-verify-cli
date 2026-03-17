@@ -100,7 +100,7 @@ export default define(class Hypothesis extends Element {
   static name = "Hypothesis";
 
   static fromJSON(json, context) {
-    const hypothesis = instantiate((context) => {
+    return instantiate((context) => {
       const { string } = json,
             hypothesisNode = instantiateHypothesis(string, context),
             node = hypothesisNode,  ///
@@ -112,7 +112,5 @@ export default define(class Hypothesis extends Element {
 
       return hypothesis;
     }, context);
-
-    return hypothesis;
   }
 });
