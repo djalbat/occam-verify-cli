@@ -149,18 +149,20 @@ export default define(class Label extends Element {
   static name = "Label";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
-
-    context = ephemeralContext; ///
+    const ephemeralContext = ephemeralContextFromJSON(json, context),
+          sanitised = true;
 
     return instantiate((context) => {
       const { string } = json,
             labelNode = instantiateLabel(string, context),
-            metavariable = metavariableFromLabelNode(labelNode, context),
-            node = labelNode, ///
+            metavariable = metavariableFromLabelNode(labelNode, context);
+
+      context = ephemeralContext; ///
+
+      const node = labelNode, ///
             label = new Label(context, string, node, metavariable);
 
       return label;
-    }, context);
+    }, sanitised, context);
   }
 });

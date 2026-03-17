@@ -4,8 +4,8 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { instantiateSupposition} from "../../process/instantiate";
+import { procedureCallFromSuppositionNode } from "../../utilities/element";
 import { join, attempt, reconcile, instantiate } from "../../utilities/context";
-import { statementFromSuppositionNode, procedureCallFromSuppositionNode } from "../../utilities/element";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
 
 export default define(class Supposition extends ProofAssertion {
@@ -310,20 +310,28 @@ export default define(class Supposition extends ProofAssertion {
   static name = "Supposition";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
-
-    context = ephemeralContext; ///
+    const ephemeralContext = ephemeralContextFromJSON(json, context),
+          sanitised = true;
 
     return instantiate((context) => {
       const { string } = json,
             suppositionNode = instantiateSupposition(string, context),
-            node = suppositionNode,  ///
+            procedureCall = procedureCallFromSuppositionNode(suppositionNode, context);
+
+      context = ephemeralContext; ///
+
+      const node = suppositionNode,  ///
             statement = statementFromSuppositionNode(suppositionNode, context),
-            procedureCall = procedureCallFromSuppositionNode(suppositionNode, context),
             supposition = new Supposition(context, string, node, statement, procedureCall);
 
       return supposition;
-    }, context);
+    }, sanitised, context);
   }
 });
 
+function statementFromSuppositionNode(suppositionNode, context) {
+  const statementNode = suppositionNode.getStatementNode(),
+        statement = context.findStatementByStatementNode(statementNode);
+
+  return statement;
+}

@@ -5,7 +5,6 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { attempt, instantiate } from "../utilities/context";
 import { instantiateConclusion } from "../process/instantiate";
-import { statementFromConclusionNode } from "../utilities/element";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export  default define(class Conclusion extends Element {
@@ -146,18 +145,27 @@ export  default define(class Conclusion extends Element {
   static name = "Conclusion";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
-
-    context = ephemeralContext; ///
+    const ephemeralContext = ephemeralContextFromJSON(json, context),
+          sanitised = true;
 
     return instantiate((context) => {
       const { string } = json,
-            conclusionNode = instantiateConclusion(string, context),
-            node = conclusionNode,  ///
+            conclusionNode = instantiateConclusion(string, context);
+
+      context = ephemeralContext; ///
+
+      const node = conclusionNode,  ///
             statement = statementFromConclusionNode(conclusionNode, context),
             conclusion = new Conclusion(context, string, node, statement);
 
       return conclusion;
-    }, context);
+    }, sanitised, context);
   }
 });
+
+function statementFromConclusionNode(conclusionNode, context) {
+  const statementNode = conclusionNode.getStatementNode(),
+        statement = context.findStatementByStatementNode(statementNode);
+
+  return statement;
+}

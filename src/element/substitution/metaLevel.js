@@ -172,20 +172,22 @@ export default define(class MetaLevelSubstitution extends Substitution {
   static name = "MetaLevelSubstitution";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
-
-    context = ephemeralContext; ///
+    const ephemeralContext = ephemeralContextFromJSON(json, context),
+          sanitised = true;
 
     return instantiate((context) => {
       const { string } = json,
-            metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context),
+            metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context);
+
+      context = ephemeralContext; ///
+
+      const node = metaLevelSubstitutionNode, ///
             targetReference = targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
             replacementStatement = replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
-            node = metaLevelSubstitutionNode,
             metaLevelSubstitution = new MetaLevelSubstitution(context, string, node, targetReference, replacementStatement);
 
       return metaLevelSubstitution;
-    }, context);
+    }, sanitised, context);
   }
 
   static fromStatementAndReference(statement, reference, context) {

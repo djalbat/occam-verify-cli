@@ -51,9 +51,15 @@ export function reconcile(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function instantiate(innerFunction, context) {
+export function instantiate(innerFunction, sanitised, context) {
+  if (context === undefined) {
+    context = sanitised;
+
+    sanitised = false;
+  }
+
   const releaseContext = releaseContextFromContext(context),
-        sterilisedContext = sterilisedContextFromContext(context);
+        sanitisedContext = sanitisedContextFromContext(context);
 
   context = releaseContext; ///
 
@@ -63,12 +69,14 @@ export function instantiate(innerFunction, context) {
 
   const element = innerFunction(context);
 
-  context = element.getContext();
+  if (!sanitised) {
+    context = element.getContext();
 
-  if (context !== null) {
-    context = sterilisedContext;  ///
+    if (context !== null) {
+      context = sanitisedContext;  ///
 
-    element.setContext(context);
+      element.setContext(context);
+    }
   }
 
   return element;
@@ -96,7 +104,7 @@ export async function asyncReconcile(innerFunction, context) {
   return await innerFunction(context);
 }
 
-function sterilisedContextFromContext(context) {
+function sanitisedContextFromContext(context) {
   let contextExtraneousContext = isContextExtraneousContext(context);
 
   while (contextExtraneousContext) {
@@ -106,38 +114,23 @@ function sterilisedContextFromContext(context) {
   }
 
   const ephemeralContext = EphemeralContext.fromNothing(context),
-        sterilisedContext = ephemeralContext; ///
+        sanitisedContext = ephemeralContext; ///
 
-  return sterilisedContext;
+  return sanitisedContext;
 }
 
 function releaseContextFromContext(context) {
-  let contextFileContext = isContextFileContext(context);
+  let contextFileContext = context.isFileContext();
 
   while (!contextFileContext) {
     context = context.getContext();
 
-    contextFileContext = isContextFileContext(context);
+    contextFileContext = context.isFileContext();
   }
 
   const releaseContext = context;
 
   return releaseContext;
-}
-
-function isContextFileContext(context) {
-  const parentContext = context.getContext(), ///
-        parentContextReleaseContext = isContextReleaseContext(parentContext),
-        contextFileContext = parentContextReleaseContext; ///
-
-  return contextFileContext;
-}
-
-function isContextReleaseContext(context) {
-  const releaseContext = context.getReleaseContext(),
-        contextReleaseContext = (context === releaseContext);
-
-  return contextReleaseContext;
 }
 
 function isContextExtraneousContext(context) {

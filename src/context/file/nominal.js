@@ -378,11 +378,7 @@ export default class NominalFileContext extends FileContext {
     return metavariable;
   }
 
-  findMetaTypeByMetaTypeName(metaTypeName) {
-    const metaType = findMetaTypeByMetaTypeName(metaTypeName);
-
-    return metaType;
-  }
+  findMetaTypeByMetaTypeName(metaTypeName) { return findMetaTypeByMetaTypeName(metaTypeName); }
 
   findRuleByReference(reference) {
     const rules = this.getRules(),
