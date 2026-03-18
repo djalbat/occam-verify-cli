@@ -339,6 +339,13 @@ export default class Context extends ContextBase {
     return labelPresent;
   }
 
+  isTopLevelMetaAssertionPresentByReference(reference) {
+    const context = this.getContext(),
+          topLevelMetaAssertionPresent = context.isTopLevelMetaAssertionPresentByReference(reference);
+
+    return topLevelMetaAssertionPresent;
+  }
+
   isTermPresentByTermNode(termNode) {
     const context = this.getContext(),
           termPresent = context.isTermPresentByTermNode(termNode);
@@ -435,6 +442,12 @@ export default class Context extends ContextBase {
           metaLevelSubstitutions = context.hasMetaLevelSubstitutions();
 
     return metaLevelSubstitutions;
+  }
+
+  addTerms(terms) {
+    const context = this.getContext();
+
+    context.addTerms(terms);
   }
 
   addTerm(term) {
