@@ -5,8 +5,8 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { instantiate } from "../utilities/context";
 import { instantiateJudgement } from "../process/instantiate";
+import { reconcile, instantiate } from "../utilities/context";
 import { judgementAssignmentFromJudgement } from "../process/assign";
 
 export default define(class Judgement extends Element {
@@ -74,6 +74,10 @@ export default define(class Judgement extends Element {
       context.debug(`...the '${judgementString}' judgement is already valid.`);
     } else {
       let validates = false;
+
+      reconcile((context) => {
+
+      }, context);
 
       const frameValidates = this.validateFrame(stated, context);
 
@@ -179,7 +183,7 @@ export default define(class Judgement extends Element {
 
     const metavariable = this.assumption.getMetavariable(),
           reference = referenceFromMetavariable(metavariable, context),
-          topLevelMetaAssertion = context.findTopLevelMetaAssertionByReference(reference),
+          topLevelMetaAssertion = context.findTopLevelMetaAssertionByReference(reference, context),
           substitutions = topLevelMetaAssertion.getSubstitutions(),
           frameComparesToSubstitutions = this.frame.compareSubstitutions(substitutions, context);
 

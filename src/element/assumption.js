@@ -87,12 +87,12 @@ export default define(class Assumption extends Element {
     } else {
       let validates = false;
 
-      const referenceValidates = this.validateReference(stated, context);
+      const statementValidates = this.validateStatement(stated, context);
 
-      if (referenceValidates) {
-        const statementValidates = this.validateStatement(stated, context);
+      if (statementValidates) {
+        const referenceValidates = this.validateReference(stated, context);
 
-        if (statementValidates) {
+        if (referenceValidates) {
           let validatesWhenStated = false,
               validatesWhenDerived = false;
 
@@ -131,7 +131,25 @@ export default define(class Assumption extends Element {
     const reference = this.reference.validate(context);
 
     if (reference !== null) {
-      referenceValidates = true;
+      const metavariable = this.reference.getMetavariable(),
+            metavariablePresent = context.isMetavariablePresent(metavariable, context);
+
+      if (metavariablePresent) {
+        referenceValidates = true;
+      } else {
+        const topLevelMetaAssertions = context.findTopLevelMetaAssertionsByReference(this.reference, context),
+              topLevelMetaAssertionsCompare = topLevelMetaAssertions.some((topLevelMetaAssertion) => {
+                const topLevelMetaAssertionUnifies = this.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+
+                if (topLevelMetaAssertionUnifies) {
+                  return true;
+                }
+              });
+
+        if (topLevelMetaAssertionsCompare) {
+          referenceValidates = true;
+        }
+      }
     }
 
     if (referenceValidates) {
@@ -165,31 +183,13 @@ export default define(class Assumption extends Element {
   }
 
   validateWhenStated(context) {
-    let validatesWhenStated = false;
+    let validatesWhenStated;
 
     const assumptionString = this.getString();  ///
 
     context.trace(`Validating the '${assumptionString}' stated assumption...`);
 
-    const metavariable = this.reference.getMetavariable(),
-          metavariablePresent = context.isMetavariablePresent(metavariable, context);
-
-    if (metavariablePresent) {
-      validatesWhenStated = true;
-    } else {
-      const topLevelMetaAssertions = context.findTopLevelMetaAssertionsByReference(this.reference),
-            topLevelMetaAssertionsCompare = topLevelMetaAssertions.some((topLevelMetaAssertion) => {
-              const topLevelMetaAssertionCompares = this.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
-
-              if (topLevelMetaAssertionCompares) {
-                return true;
-              }
-            });
-
-      if (topLevelMetaAssertionsCompare) {
-        validatesWhenStated = true;
-      }
-    }
+    validatesWhenStated = true
 
     if (validatesWhenStated) {
       context.debug(`...validated the '${assumptionString}' stated assumption.`);
@@ -199,17 +199,13 @@ export default define(class Assumption extends Element {
   }
 
   validateWhenDerived(context) {
-    let validatesWhenDerived = false;
+    let validatesWhenDerived;
 
     const assumptionString = this.getString();  ///
 
     context.trace(`Validating the '${assumptionString}' derived assumption...`);
 
-    const topLevelMetaAssertionPresent = context.isTopLevelMetaAssertionPresentByReference(this.reference);
-
-    if (topLevelMetaAssertionPresent) {
-      validatesWhenDerived = true;
-    }
+    validatesWhenDerived = true;
 
     if (validatesWhenDerived) {
       context.debug(`...validated the '${assumptionString}' derived assumption.`);
@@ -258,6 +254,8 @@ export default define(class Assumption extends Element {
 
       if (labelUnifies) {
         topLevelMetaAssertionUnifies = this.statement.unifyTopLevelMetaAssertion(topLevelMetaAssertion, generalContext, specificContext);
+
+        specificContext.commit(context);
       }
     }, specificContext);
 

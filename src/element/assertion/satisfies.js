@@ -96,7 +96,7 @@ export default define(class SatisfiesAssertion extends Assertion {
 
     context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertino's '${referenceString}' reference...`);
 
-    const axiom = context.findAxiomByReference(this.reference, context);
+    const axiom = context.findAxiomByReference(this.reference);
 
     if (axiom !== null) {
       const axiomSatisfiable = axiom.isSatisfiable();

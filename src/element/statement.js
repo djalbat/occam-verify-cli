@@ -266,6 +266,8 @@ export default define(class Statement extends Element {
       const deductionStatementUnfies = this.unifyStatement(deductionStatement, generalContext, specificContext);
 
       if (deductionStatementUnfies) {
+        specificContext.commit();
+
         deductionUnifies = true;
       }
     }, specificContext);

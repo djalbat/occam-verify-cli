@@ -130,7 +130,7 @@ export default define(class Reference extends Element {
 
         if (metaType === null) {
           const reference = this, ///
-                labelPresent = context.isLabelPresentByReference(reference);
+                labelPresent = context.isLabelPresentByReference(reference, context);
 
           if (labelPresent) {
             validates = true;

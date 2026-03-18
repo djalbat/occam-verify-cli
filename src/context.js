@@ -136,23 +136,47 @@ export default class Context extends ContextBase {
     return ephemeralContext;
   }
 
-  findRuleByReference(reference) {
-    const context = this.getContext(),
-          rule = context.findRuleByReference(reference);
+  findMetavariable(metavariable, context) {
+    const childContext = context; ///
+
+    context = this.getContext();
+
+    const parentContext = context; ///
+
+    metavariable = parentContext.findMetavariable(metavariable, childContext);  ///
+
+    return metavariable;
+  }
+
+  findRuleByReference(reference, context) {
+    const childContext = context; ///
+
+    context = this.getContext();
+
+    const parentContext = context, ///
+          rule = parentContext.findRuleByReference(reference, childContext);
 
     return rule;
   }
 
-  findTopLevelAssertionByReference(reference) {
-    const context = this.getContext(),
-          topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+  findTopLevelAssertionByReference(reference, context) {
+    const childContext = context; ///
+
+    context = this.getContext();
+
+    const parentContext = context, ///
+          topLevelAssertion = parentContext.findTopLevelAssertionByReference(reference, childContext);
 
     return topLevelAssertion;
   }
 
-  findTopLevelMetaAssertionsByReference(reference) {
-    const context = this.getContext(),
-          topLevelMetaAssertion = context.findTopLevelMetaAssertionsByReference(reference);
+  findTopLevelMetaAssertionsByReference(reference, context) {
+    const childContext = context; ///
+
+    context = this.getContext();
+
+    const parentContext = context, ///
+          topLevelMetaAssertion = parentContext.findTopLevelMetaAssertionsByReference(reference, childContext);
 
     return topLevelMetaAssertion;
   }
@@ -169,18 +193,6 @@ export default class Context extends ContextBase {
           metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
     return metaType;
-  }
-
-  findMetavariable(metavariable, context) {
-    const childContext = context; ///
-
-    context = this.getContext();
-
-    const parentContext = context; ///
-
-    metavariable = parentContext.findMetavariable(metavariable, childContext);  ///
-
-    return metavariable;
   }
 
   findTermByTermNode(termNode) {
@@ -325,23 +337,34 @@ export default class Context extends ContextBase {
   }
 
   isMetavariablePresent(metavariable, context) {
-    metavariable = this.findMetavariable(metavariable, context);  ///
+    const childContext = context; ///
 
-    const metavariablePresent = (metavariable !== null);
+    context = this.getContext();
+
+    const parentContext = context,  ///
+          metavariablePresent = parentContext.isMetavariablePresent(metavariable, childContext);
 
     return metavariablePresent;
   }
 
-  isLabelPresentByReference(reference) {
-    const context = this.getContext(),
-          labelPresent = context.isLabelPresentByReference(reference);
+  isLabelPresentByReference(reference, context) {
+    const childContext = context; ///
+
+    context = this.getContext();
+
+    const parentContext = context, ///
+          labelPresent = parentContext.isLabelPresentByReference(reference, childContext);
 
     return labelPresent;
   }
 
-  isTopLevelMetaAssertionPresentByReference(reference) {
-    const context = this.getContext(),
-          topLevelMetaAssertionPresent = context.isTopLevelMetaAssertionPresentByReference(reference);
+  isTopLevelMetaAssertionPresentByReference(reference, context) {
+    const childContext = context; ///
+
+    context = this.getContext();
+
+    const parentContext = context, ///
+          topLevelMetaAssertionPresent = parentContext.isTopLevelMetaAssertionPresentByReference(reference, childContext);
 
     return topLevelMetaAssertionPresent;
   }

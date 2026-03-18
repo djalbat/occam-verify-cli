@@ -49,7 +49,7 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
 
     context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
 
-    const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+    const topLevelAssertion = context.findTopLevelAssertionByReference(reference, context);
 
     if (topLevelAssertion !== null) {
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
@@ -106,7 +106,7 @@ async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfie
         }
       });
     } else {
-      const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+      const topLevelAssertion = context.findTopLevelAssertionByReference(reference, context);
 
       if (topLevelAssertion !== null) {
         reference = satisfiesAssertion.getReference();
@@ -147,7 +147,7 @@ async function unifyStatementWithTopLevelAssertion(statement, reference, satisfi
   let statementUnifiesWithTopLevelAssertion = false;
 
   if (reference !== null) {
-    const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+    const topLevelAssertion = context.findTopLevelAssertionByReference(reference, context);
 
     if (topLevelAssertion !== null) {
       const statementString = statement.getString(),
