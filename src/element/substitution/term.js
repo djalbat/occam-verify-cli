@@ -3,9 +3,9 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { instantiate } from "../../utilities/context";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
+import { instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
 import { termSubstitutionFromStatementNode, termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 
@@ -214,6 +214,10 @@ export default define(class TermSubstitution extends Substitution {
 
   static fromTermAndVariable(term, variable, context) {
     term = stripBracketsFromTerm(term, context); ///
+
+    const santisedContext = sanitisedContextFromContext(context);
+
+    context = santisedContext;  ///
 
     return instantiate((context) => {
       const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),

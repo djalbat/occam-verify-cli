@@ -3,8 +3,8 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { instantiate } from "../../utilities/context";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
+import { instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
 
@@ -185,6 +185,10 @@ export default define(class ReferenceSubstitution extends Substitution {
   }
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {
+    const santisedContext = sanitisedContextFromContext(context);
+
+    context = santisedContext;  ///
+
     return instantiate((context) => {
       const referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
             string = referenceSubstitutionString,  ///

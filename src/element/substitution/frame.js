@@ -3,8 +3,8 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { instantiate } from "../../utilities/context";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
+import { instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
 import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 
@@ -204,6 +204,10 @@ export default define(class FrameSubstitution extends Substitution {
   }
 
   static fromFrameAndMetavariable(frame, metavariable, context) {
+    const santisedContext = sanitisedContextFromContext(context);
+
+    context = santisedContext;  ///
+
     return instantiate((context) => {
       const frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
             string = frameSubstitutionString,  ///

@@ -4,10 +4,10 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
-import { join, reconcile, instantiate } from "../../utilities/context";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
+import { join, reconcile, instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -373,6 +373,10 @@ export default define(class StatementSubstitution extends Substitution {
   static fromStatementAndMetavariable(statement, metavariable, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
+    const santisedContext = sanitisedContextFromContext(context);
+
+    context = santisedContext;  ///
+
     return instantiate((context) => {
       const statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable, context),
             string = statementSubstitutionString, ///
@@ -385,6 +389,10 @@ export default define(class StatementSubstitution extends Substitution {
 
   static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) {
     statement = stripBracketsFromStatement(statement, context); ///
+
+    const santisedContext = sanitisedContextFromContext(context);
+
+    context = santisedContext;  ///
 
     return instantiate((context) => {
       const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),

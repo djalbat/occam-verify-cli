@@ -3,8 +3,8 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { instantiate } from "../../utilities/context";
 import { instantiateMetaLevelSubstitution } from "../../process/instantiate";
+import { instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { metaLevelSubstitutionFromMetaLevelSubstitutionNode } from "../../utilities/element";
 import { metaLevelSubstitutionStringFromStatementAndReference } from "../../utilities/string";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
@@ -189,6 +189,10 @@ export default define(class MetaLevelSubstitution extends Substitution {
   }
 
   static fromStatementAndReference(statement, reference, context) {
+    const santisedContext = sanitisedContextFromContext(context);
+
+    context = santisedContext;  ///
+
     return instantiate((context) => {
       const metaLevelSubstitutionString = metaLevelSubstitutionStringFromStatementAndReference(statement, reference),
             string = metaLevelSubstitutionString,  ///

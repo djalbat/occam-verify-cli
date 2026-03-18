@@ -91,7 +91,7 @@ export async function asyncReconcile(innerFunction, context) {
   return await innerFunction(context);
 }
 
-function sanitisedContextFromContext(context) {
+export function sanitisedContextFromContext(context) {
   let contextExtraneousContext = isContextExtraneousContext(context);
 
   while (contextExtraneousContext) {
