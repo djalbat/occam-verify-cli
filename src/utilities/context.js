@@ -51,32 +51,19 @@ export function reconcile(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function instantiate(innerFunction, sanitised, context) {
-  if (context === undefined) {
-    context = sanitised;
-
-    sanitised = false;
-  }
-
-  const releaseContext = releaseContextFromContext(context),
-        sanitisedContext = sanitisedContextFromContext(context);
-
-  context = releaseContext; ///
-
+export function instantiate(innerFunction, context) {
   const literalContext = LiteralContext.fromNothing(context);
 
   context = literalContext;  ///
 
   const element = innerFunction(context);
 
-  if (!sanitised) {
-    context = element.getContext();
+  context = element.getContext();
 
-    if (context !== null) {
-      context = sanitisedContext;  ///
+  if (context !== null) {
+    context = context.getContext();
 
-      element.setContext(context);
-    }
+    element.setContext(context);
   }
 
   return element;
@@ -117,20 +104,6 @@ function sanitisedContextFromContext(context) {
         sanitisedContext = ephemeralContext; ///
 
   return sanitisedContext;
-}
-
-function releaseContextFromContext(context) {
-  let contextFileContext = context.isFileContext();
-
-  while (!contextFileContext) {
-    context = context.getContext();
-
-    contextFileContext = context.isFileContext();
-  }
-
-  const releaseContext = context;
-
-  return releaseContext;
 }
 
 function isContextExtraneousContext(context) {

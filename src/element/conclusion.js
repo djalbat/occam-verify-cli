@@ -145,21 +145,19 @@ export  default define(class Conclusion extends Element {
   static name = "Conclusion";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context),
-          sanitised = true;
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
 
     return instantiate((context) => {
       const { string } = json,
-            conclusionNode = instantiateConclusion(string, context);
-
-      context = ephemeralContext; ///
-
-      const node = conclusionNode,  ///
+            conclusionNode = instantiateConclusion(string, context),
+            node = conclusionNode,  ///
             statement = statementFromConclusionNode(conclusionNode, context),
             conclusion = new Conclusion(context, string, node, statement);
 
       return conclusion;
-    }, sanitised, context);
+    }, context);
   }
 });
 

@@ -1,8 +1,8 @@
 "use strict";
 
-import { Context, nodeUtilities } from "occam-languages";
+import { nodeUtilities } from "occam-languages";
 
-import { findMetaTypeByMetaTypeName } from "../metaTypes";
+import Context from "../context";
 
 const { nodeAsString, nodesAsString } = nodeUtilities;
 
@@ -46,8 +46,6 @@ export default class LiteralContext extends Context {
 
     return string;
   }
-
-  findMetaTypeByMetaTypeName(metaTypeName) { return findMetaTypeByMetaTypeName(metaTypeName); }
 
   static fromNothing(context) {
     const tokens = null,

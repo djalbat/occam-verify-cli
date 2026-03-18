@@ -170,21 +170,19 @@ export default define(class Deduction extends Element {
   static name = "Deduction";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context),
-          sanitised = true;
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
 
     return instantiate((context) => {
       const { string } = json,
-            deductionNode = instantiateDeduction(string, context);
-
-      context = ephemeralContext; ///
-
-      const node = deductionNode,  ///
+            deductionNode = instantiateDeduction(string, context),
+            node = deductionNode,  ///
             statement = statementFromDeductionNode(deductionNode, context),
             deduction = new Deduction(context, string, node, statement);
 
       return deduction;
-    }, sanitised, context);
+    }, context);
   }
 });
 

@@ -124,20 +124,18 @@ export default define(class Combinator extends Element {
   static name = "Combinator";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context),
-          sanitised = true;
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
 
     return instantiate((context) => {
       const { string } = json,
             combinatorNode = instantiateCombinator(string, context),
-            statement = statementFromCombinatorNode(combinatorNode, context);
-
-      context = ephemeralContext; ///
-
-      const node = combinatorNode,  ///
+            node = combinatorNode,  ///
+            statement = statementFromCombinatorNode(combinatorNode, context),
             combinator = new Combinator(context, string, node, statement);
 
       return combinator;
-    }, sanitised, context);
+    }, context);
   }
 });

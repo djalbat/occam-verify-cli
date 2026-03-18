@@ -169,21 +169,19 @@ export default define(class Constructor extends Element {
   static name = "Constructor";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context),
-          sanitised = true;
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
 
     return instantiate((context) => {
       const { string } = json,
             constructorNode = instantiateConstructor(string, context),
             node = constructorNode, ///
             term = termFromConstructorNode(constructorNode, context),
-            type = typeFromJSON(json, context);
-
-      context = ephemeralContext; ///
-
-      const constructor = new Constructor(context, string, node, term, type);
+            type = typeFromJSON(json, context),
+            constructor = new Constructor(context, string, node, term, type);
 
       return constructor;
-    }, sanitised, context);
+    }, context);
   }
 });

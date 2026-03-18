@@ -310,22 +310,20 @@ export default define(class Supposition extends ProofAssertion {
   static name = "Supposition";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context),
-          sanitised = true;
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
 
     return instantiate((context) => {
       const { string } = json,
             suppositionNode = instantiateSupposition(string, context),
-            procedureCall = procedureCallFromSuppositionNode(suppositionNode, context);
-
-      context = ephemeralContext; ///
-
-      const node = suppositionNode,  ///
+            node = suppositionNode,  ///
             statement = statementFromSuppositionNode(suppositionNode, context),
+            procedureCall = procedureCallFromSuppositionNode(suppositionNode, context),
             supposition = new Supposition(context, string, node, statement, procedureCall);
 
       return supposition;
-    }, sanitised, context);
+    }, context);
   }
 });
 
