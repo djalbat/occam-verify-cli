@@ -73,11 +73,8 @@ export default define(class FrameSubstitution extends Substitution {
   validate(generalContext, specificContext) {
     let frameSubstitution = null;
 
-    const context = this.getContext();
-
-    specificContext = context;  ///
-
-    const frameSubstitutionString = this.getString();  ///
+    const context = specificContext,  ///
+          frameSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${frameSubstitutionString}' frame substitution...`);
 
@@ -146,9 +143,9 @@ export default define(class FrameSubstitution extends Substitution {
   }
 
   validateReplacementFrame(generalContext, specificContext) {
-    let replacementFrameValidates;
+    let replacementFrameValidates = false;
 
-    const context = specificContext, ///
+    const context = this.getContext(),
           replacementFrameString = this.replacementFrame.getString(),
           frameSubstitutionString = this.getString();  ///
 

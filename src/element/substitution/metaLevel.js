@@ -65,11 +65,8 @@ export default define(class MetaLevelSubstitution extends Substitution {
   validate(generalContext, specificContext) {
     let metaLevelSubstitution = null;
 
-    const context = this.getContext();
-
-    specificContext = context;  ///
-
-    const metaLevelSubstitutionString = this.getString();  ///
+    const context = specificContext,  ///
+          metaLevelSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${metaLevelSubstitutionString}' meta-level substitution...`);
 
@@ -127,9 +124,9 @@ export default define(class MetaLevelSubstitution extends Substitution {
   }
 
   validateReplacementStatement(generalContext, specificContext) {
-    let replacementStatementValidates;
+    let replacementStatementValidates = false;
 
-    const context = specificContext,  ///
+    const context = this.getContext(),
           replacementStatementString = this.replacementStatement.getString(),
           metaLevelSubstitutionString = this.getString();  ///
 

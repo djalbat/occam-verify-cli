@@ -1,7 +1,7 @@
 "use strict";
 
 import ScopedContext from "../context/scoped";
-import nominalContext from "../context/nominal";
+import NominalContext from "../context/nominal";
 import LiteralContext from "../context/literal";
 import LiminalContext from "../context/liminal";
 import EphemeralContext from "../context/ephemeral";
@@ -10,6 +10,8 @@ import SyntheticContext from "../context/synthetic";
 
 export function nominally(innerFunction) {
   let context;
+
+  const nominalContext = NominalContext.fromNothing();
 
   context = nominalContext; ///
 
@@ -56,17 +58,7 @@ export function instantiate(innerFunction, context) {
 
   context = literalContext;  ///
 
-  const element = innerFunction(context);
-
-  context = element.getContext();
-
-  if (context !== null) {
-    context = context.getContext();
-
-    element.setContext(context);
-  }
-
-  return element;
+  return innerFunction(context);
 }
 
 export async function asyncRestrict(innerFunction, metaLevelSubstitutions, context) {

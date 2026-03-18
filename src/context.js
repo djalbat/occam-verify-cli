@@ -449,10 +449,28 @@ export default class Context extends ContextBase {
     context.addFrame(frame);
   }
 
+  addEquality(equality) {
+    const context = this.getContext();
+
+    context.addEquality(equality);
+  }
+
+  addJudgement(judgement) {
+    const context = this.getContext();
+
+    context.addJudgement(judgement);
+  }
+
   addStatement(statement) {
     const context = this.getContext();
 
     context.addStatement(statement);
+  }
+
+  addAssertion(assertion) {
+    const context = this.getContext();
+
+    context.addAssertion(assertion);
   }
 
   addReference(reference) {
@@ -461,10 +479,10 @@ export default class Context extends ContextBase {
     context.addReference(reference);
   }
 
-  addJudgement(judgement) {
+  addAssumption(assumption) {
     const context = this.getContext();
 
-    context.addJudgement(judgement);
+    context.addAssumption(assumption);
   }
 
   addAssignment(assignment) {

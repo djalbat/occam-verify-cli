@@ -108,11 +108,8 @@ export default define(class StatementSubstitution extends Substitution {
   validate(generalContext, specificContext) {
     let statementSubstitution = null;
 
-    const context = this.getContext();
-
-    specificContext = context;  ///
-
-    const statementSubstitutionString = this.getString();  ///
+    const context = specificContext,  ///
+          statementSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${statementSubstitutionString}' statement substitution...`);
 
@@ -179,9 +176,9 @@ export default define(class StatementSubstitution extends Substitution {
   }
 
   validateReplacementStatement(generalContext, specificContext) {
-    let replacementStatementValidates;
+    let replacementStatementValidates = false;
 
-    const context = specificContext,  ///
+    const context = this.getContext(),
           replacementStatementString = this.replacementStatement.getString(),
           statementSubstitutionString = this.getString();  ///
 

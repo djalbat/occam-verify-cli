@@ -14,7 +14,7 @@ const { nominalLexerFromNothing } = lexersUtilities,
 const nominalLexer = nominalLexerFromNothing(NominalLexer),
       nominalParser = nominalParserFromNothing(NominalParser); ///
 
-class NominalContext extends Context {
+export default class NominalContext extends Context {
   constructor(context, lexer, parser) {
     super(context);
 
@@ -41,7 +41,3 @@ class NominalContext extends Context {
     return nominalContext;
   }
 }
-
-const nominalContext = NominalContext.fromNothing();
-
-export default nominalContext;
