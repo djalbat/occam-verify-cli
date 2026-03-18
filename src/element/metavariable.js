@@ -486,11 +486,11 @@ export default define(class Metavariable extends Element {
         if (frameSingular) {
           const frameMetavariableName = frame.getMetavariableName(),
                 frameMetavariable = context.findMetavariableByMetavariableName(frameMetavariableName),
-                generalMetavariable = this, ///
-                specificMetavariable = frameMetavariable, ///
-                metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
+                frameMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(frameMetavariable, generalContext, specificContext);
 
-          frameMetavariableUnifies = metavariableUnifiesIntrinsically; ///
+          if (frameMetavariableUnifiesIntrinsically) {
+            frameMetavariableUnifies = true;
+          }
         }
       }
     }
@@ -522,11 +522,11 @@ export default define(class Metavariable extends Element {
         referenceMetavariableUnifies = true;
       } else {
         const referenceMetavariable = reference.getMetavariable(),
-              generalMetavariable = this, ///
-              specificMetavariable = referenceMetavariable, ///
-              metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
+              referenceMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(referenceMetavariable, generalContext, specificContext);
 
-        referenceMetavariableUnifies = metavariableUnifiesIntrinsically; ///
+        if (referenceMetavariableUnifiesIntrinsically) {
+          referenceMetavariableUnifies = true;
+        }
       }
     }
 
@@ -561,11 +561,11 @@ export default define(class Metavariable extends Element {
         if (statementSingular) {
           const statementMetavariableName = statement.getMetavariableName(),
                 statementMetavariable = context.findMetavariableByMetavariableName(statementMetavariableName),
-                generalMetavariable = this, ///
-                specificMetavariable = statementMetavariable, ///
-                metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
+                statementMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(statementMetavariable, generalContext, specificContext);
 
-          statementMetavariableUnifies = metavariableUnifiesIntrinsically; ///
+          if (statementMetavariableUnifiesIntrinsically) {
+            statementMetavariableUnifies = true;
+          }
         }
       }
     }
@@ -575,6 +575,26 @@ export default define(class Metavariable extends Element {
     }
 
     return statementMetavariableUnifies;
+  }
+
+  unifyMetavariableIntrinsically(metavariable, generalContext, specificContext) {
+    let metavariableUnifiesIntrinsically;
+
+    const context = specificContext,  ///
+          generalMetavariable = this, ///
+          specificMetavariable = metavariable,
+          generalMetavariableString = generalMetavariable.getString(),  ///
+          specificMetavariableString = specificMetavariable.getString();
+
+    context.trace(`Unifying the '${specificMetavariableString}' metavariable with the '${generalMetavariableString}' metavariable intrinsically...`);
+
+    metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
+
+    if (metavariableUnifiesIntrinsically) {
+      context.debug(`...unified the '${specificMetavariableString}' metavariable with the '${generalMetavariableString}' metavariable intrinsically.`);
+    }
+
+    return metavariableUnifiesIntrinsically;
   }
 
   toJSON() {

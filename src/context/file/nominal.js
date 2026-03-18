@@ -448,12 +448,11 @@ export default class NominalFileContext extends FileContext {
     return conjecture;
   }
 
-  findMetaLemmasByReference(reference) {
+  findMetaLemmasByReference(reference, context) {
     const metaLemmas = this.getMetaLemmas();
 
     filter(metaLemmas, (metaLemma) => {
-      const context = this, ///
-            topLevelMetaAssertion = metaLemma, ///
+      const topLevelMetaAssertion = metaLemma, ///
             topLevelMetaAssertionCompares = reference.compareTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
       if (topLevelMetaAssertionCompares) {
@@ -464,12 +463,11 @@ export default class NominalFileContext extends FileContext {
     return metaLemmas;
   }
 
-  findMetatheoremsByReference(reference) {
+  findMetatheoremsByReference(reference, context) {
     const metatheorems = this.getMetatheorems();
 
     filter(metatheorems, (metatheorem) => {
-      const context = this, ///
-            topLevelMetaAssertion = metatheorem, ///
+      const topLevelMetaAssertion = metatheorem, ///
             topLevelMetaAssertionCompares = reference.compareTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
       if (topLevelMetaAssertionCompares) {

@@ -3,11 +3,10 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { instantiate } from "../utilities/context";
 import { instantiateReference } from "../process/instantiate";
+import { reconcile, instantiate } from "../utilities/context";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromReferenceNode } from "../utilities/element";
-import { unifyMetavariableIntrinsically } from "../process/unify";
 
 export default define(class Reference extends Element {
   constructor(context, string, node, metavariable) {
@@ -65,6 +64,8 @@ export default define(class Reference extends Element {
     return equalTo;
   }
 
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+
   compareParameter(parameter) {
     let comparesToParamter = false;
 
@@ -103,7 +104,28 @@ export default define(class Reference extends Element {
 
   compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
 
-  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+  compareTopLevelMetaAssertion(topLevelMetaAssertion, context) {
+    let topLevelMetaAssertionCompares = false;
+
+    const reference = this, ///
+          referenceString = reference.getString(),
+          topLevelMetaAssertionString = topLevelMetaAssertion.getString();
+
+    context.trace(`Comparing the '${topLevelMetaAssertionString}' top level meta-assertion to the '${referenceString}' reference...`);
+
+    const label = topLevelMetaAssertion.getLabel(),
+          labelUnifies = this.unifyLabel(label, context);
+
+    if (labelUnifies) {
+      topLevelMetaAssertionCompares = true;
+    }
+
+    if (topLevelMetaAssertionCompares) {
+      context.trace(`...compared the '${topLevelMetaAssertionString}' top level meta-assertion to the '${referenceString}' reference.`);
+    }
+
+    return topLevelMetaAssertionCompares;
+  }
 
   validate(context) {
     let reference = null;
@@ -188,28 +210,29 @@ export default define(class Reference extends Element {
   }
 
   unifyLabel(label, context) {
-    let labelUnifies;
+    let labelUnifies = false;
 
-    const specificContext = context; ///
-
-    context = this.getContext();
-
-    const generalContext = context;  ///
-
-    context = specificContext;  ///
-
-    const reference = this, ///
-          labelString = label.getString(),
-          referenceString = reference.getString();
+    const labelString = label.getString(),
+          referenceString = this.getString(); ///
 
     context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
-    const labelMetavariable = label.getMetavariable(),
-          generalMetavariable = this.metavariable,  ///
-          specificMetavariable = labelMetavariable, ///
-          metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
+    const generalContext = context; ///
 
-    labelUnifies = metavariableUnifiesIntrinsically; ///
+    context = label.getContext();
+
+    const specificContext = context;  ///
+
+    context = generalContext; ///
+
+    reconcile((specificContext) => {
+      const metavariable = label.getMetavariable(),
+            metavariableUnifies = this.unifyMetavariable(metavariable, generalContext, specificContext);
+
+      if (metavariableUnifies) {
+        labelUnifies = true;
+      }
+    }, specificContext);
 
     if (labelUnifies) {
       context.debug(`...unified the '${labelString}' label with the '${referenceString}' reference.`);
@@ -218,25 +241,16 @@ export default define(class Reference extends Element {
     return labelUnifies;
   }
 
-  unifyMetavariable(metavariable, context) {
+  unifyMetavariable(metavariable, generalContext, specificContext) {
     let metavariableUnifies = false;
 
-    const specificContext = context; ///
-
-    context = this.getContext();
-
-    const generalContext = context;  ///
-
-    context = specificContext;  ///
-
-    const referenceString = this.getString(), ///
+    const context = generalContext, ///
+          referenceString = this.getString(), ///
           metavariableString = metavariable.getString();
 
     context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
 
-    const generalMetavariable = this.metavariable,  ///
-          specificMetavariable = metavariable, ///
-          metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext);
+    const metavariableUnifiesIntrinsically = this.metavariable.unifyMetavariableIntrinsically(metavariable, generalContext, specificContext);
 
     if (metavariableUnifiesIntrinsically) {
       metavariableUnifies = true;
@@ -247,29 +261,6 @@ export default define(class Reference extends Element {
     }
 
     return metavariableUnifies;
-  }
-
-  compareTopLevelMetaAssertion(topLevelMetaAssertion, context) {
-    let topLevelMetaAssertionCompares = false;
-
-    const reference = this, ///
-          referenceString = reference.getString(),
-          topLevelMetaAssertionString = topLevelMetaAssertion.getString();
-
-    context.trace(`Comparing the '${topLevelMetaAssertionString}' top level meta-assertion to the '${referenceString}' reference...`);
-
-    const label = topLevelMetaAssertion.getLabel(),
-          labelUnifies = this.unifyLabel(label, context);
-
-    if (labelUnifies) {
-      topLevelMetaAssertionCompares = true;
-    }
-
-    if (topLevelMetaAssertionCompares) {
-      context.trace(`...compared the '${topLevelMetaAssertionString}' top level meta-assertion to the '${referenceString}' reference.`);
-    }
-
-    return topLevelMetaAssertionCompares;
   }
 
   toJSON() {
