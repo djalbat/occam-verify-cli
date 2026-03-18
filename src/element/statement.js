@@ -338,43 +338,6 @@ export default define(class Statement extends Element {
     return unifiesIndependently;
   }
 
-  unifyTopLevelMetaAssertion(topLevelMetaAssertion, generalContext, specificContext) {
-    let topLevelMetaAssertionUnifies = false;
-
-    const context = specificContext,  ///
-          statementString = this.getString(), ///
-          topLevelMetaAssertionString = topLevelMetaAssertion.getString();
-
-    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement...`);
-
-    const topLevelMetaAssertionUnconditional = topLevelMetaAssertion.isUnconditional();
-
-    if (topLevelMetaAssertionUnconditional) {
-      const deduction = topLevelMetaAssertion.getDeduction(),
-            deductionUnifies = this.unifyDeduction(deduction, generalContext, specificContext);
-
-      if (deductionUnifies) {
-        topLevelMetaAssertionUnifies = true;
-      }
-    } else {
-      const statementNode = this.getStatementNode(),
-            subproofAssertionNode = statementNode.getSubproofAssertionNode();
-
-      if (subproofAssertionNode !== null) {
-        const context = generalContext, ///
-              subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
-
-        topLevelMetaAssertionUnifies = subproofAssertion.unifyTopLevelMetaAssertion(topLevelMetaAssertion, generalContext, specificContext);
-      }
-    }
-
-    if (topLevelMetaAssertionUnifies) {
-      context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement.`);
-    }
-
-    return topLevelMetaAssertionUnifies;
-  }
-
   toJSON() {
     const string = this.getString(),
           json = {

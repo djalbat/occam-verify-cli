@@ -123,8 +123,8 @@ export default define(class Assumption extends Element {
   validateReference(stated, context) {
     let referenceValidates = false;
 
-    const assumptionString = this.getString(),  ///
-          referenceString = this.reference.getString();
+    const referenceString = this.reference.getString(),
+          assumptionString = this.getString();  ///
 
     context.trace(`Validating the '${assumptionString}' assumption's '${referenceString}' reference...`);
 
@@ -214,26 +214,6 @@ export default define(class Assumption extends Element {
     return validatesWhenDerived;
   }
 
-  unifyLabel(label, generalContext, specificContext) {
-    let labelUnifiesWithReference;
-
-    const context = generalContext, ///
-          labelString = label.getString(),
-          assumptionString = this.getString();  //;/
-
-    context.trace(`Unifying the '${labelString}' label with the '${assumptionString}' assumption...`);
-
-    const labelUnifies = this.reference.unifyLabel(label, context);
-
-    labelUnifiesWithReference = labelUnifies; ///
-
-    if (labelUnifiesWithReference) {
-      context.debug(`...unified the '${labelString}' label with the '${assumptionString}' assumption.`);
-    }
-
-    return labelUnifiesWithReference;
-  }
-
   unifyTopLevelMetaAssertion(topLevelMetaAssertion, context) {
     let topLevelMetaAssertionUnifies = false;
 
@@ -242,20 +222,25 @@ export default define(class Assumption extends Element {
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);
 
-    const generalContext = context; ///
+    const specificContext = context; ///
 
     context = topLevelMetaAssertion.getContext();  ///
 
-    const specificContext = context;  ///
+    const generalContext = context;  ///
+
+    context = specificContext; ///
 
     reconcile((specificContext) => {
-      const label = topLevelMetaAssertion.getLabel(),
-            labelUnifies = this.unifyLabel(label, generalContext, specificContext);
+      const topLevelAssertionUnifiesWithReference = topLevelMetaAssertion.unifyWithReference(this.reference, generalContext, specificContext);
 
-      if (labelUnifies) {
-        topLevelMetaAssertionUnifies = this.statement.unifyTopLevelMetaAssertion(topLevelMetaAssertion, generalContext, specificContext);
+      if (topLevelAssertionUnifiesWithReference) {
+        const topLevelAssertionUnifiesWithStatement = topLevelMetaAssertion.unifyWithStatement(this.statement, generalContext, specificContext);
 
-        specificContext.commit(context);
+        if (topLevelAssertionUnifiesWithStatement) {
+          specificContext.commit(context);
+
+          topLevelMetaAssertionUnifies = true;
+        }
       }
     }, specificContext);
 

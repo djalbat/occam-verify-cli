@@ -230,6 +230,68 @@ export default class TopLevelMetaAssertion extends Element {
     return suppositionsVerify;
   }
 
+  unifyWithReference(reference, generalContext, specificContext) {
+    let unifiesWithReference = false;
+
+    const context = this.label.getContext(),
+          referenceString = reference.getString(), ///
+          topLevelMetaAssertionString = this.getString();
+
+    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference...`);
+
+    const metavariable = this.label.getMetavariable(),
+          metavariableUnifies = reference.unifyMetavariable(metavariable, generalContext, specificContext);
+
+    if (metavariableUnifies) {
+      unifiesWithReference = true;
+    }
+
+    if (unifiesWithReference) {
+      context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference.`);
+    }
+
+    return unifiesWithReference;
+  }
+
+  unifyWithStatement(statement, generalContext, specificContext) {
+    let unifiesWithStatement = false;
+
+    const context = specificContext,  ///
+          statementString = this.getString(), ///
+          topLevelMetaAssertionString = this.getString();
+
+    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement...`);
+
+    debugger
+
+    // const topLevelMetaAssertionUnconditional = topLevelMetaAssertion.isUnconditional();
+    //
+    // if (topLevelMetaAssertionUnconditional) {
+    //   const deduction = topLevelMetaAssertion.getDeduction(),
+    //     deductionUnifies = this.unifyDeduction(deduction, generalContext, specificContext);
+    //
+    //   if (deductionUnifies) {
+    //     unifiesWithStatement = true;
+    //   }
+    // } else {
+    //   const statementNode = this.getStatementNode(),
+    //     subproofAssertionNode = statementNode.getSubproofAssertionNode();
+    //
+    //   if (subproofAssertionNode !== null) {
+    //     const context = generalContext, ///
+    //       subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
+    //
+    //     unifiesWithStatement = subproofAssertion.unifyTopLevelMetaAssertion(topLevelMetaAssertion, generalContext, specificContext);
+    //   }
+    // }
+
+    if (unifiesWithStatement) {
+      context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement.`);
+    }
+
+    return unifiesWithStatement;
+  }
+
   toJSON() {
     const labelJSON = labelToLabelJSON(this.label),
           deductionJSON = deductionToDeductionJSON(this.deduction),
