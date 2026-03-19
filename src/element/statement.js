@@ -7,7 +7,7 @@ import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
-import { reconcile, instantiate } from "../utilities/context";
+import { join, reconcile, instantiate } from "../utilities/context";
 
 const { backwardsSome } = arrayUtilities;
 
@@ -244,36 +244,33 @@ export default define(class Statement extends Element {
     return subproofUnifies;
   }
 
-  unifyDeduction(deduction, generalContext, specificContext) {
+  unifyDeduction(deduction, context) {
     let deductionUnifies = false;
 
     const statementString = this.getString(),  ///
           deductionString = deduction.getString(),
-          deductionStatement = deduction.getStatement(),
-          deductionStatementString = deductionStatement.getString();
+          deductionContext = deduction.getContext(),
+          deductionStatement = deduction.getStatement();
 
-    let context;
+    context.trace(`Unifying the '${deductionString}' deduction with the '${statementString}' statement...`);
 
-    context = specificContext;  ///
+    const generalContext = context, ///
+          specificContext = deductionContext;  ///
 
-    context.trace(`Unifying the '${deductionString}' deduction's '${deductionStatementString}' statement with the '${statementString}' statement...`);
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        const deductionStatementUnifies = this.unifyStatement(deductionStatement, generalContext, specificContext);
 
-    context = deduction.getContext();
+        if (deductionStatementUnifies) {
+          specificContext.commit(context);
 
-    specificContext = context;  ///
-
-    reconcile((specificContext) => {
-      const deductionStatementUnfies = this.unifyStatement(deductionStatement, generalContext, specificContext);
-
-      if (deductionStatementUnfies) {
-        specificContext.commit();
-
-        deductionUnifies = true;
-      }
-    }, specificContext);
+          deductionUnifies = true;
+        }
+      }, specificContext);
+    }, specificContext, context);
 
     if (deductionUnifies) {
-      context.debug(`...unified the '${deductionString}' deduction's '${deductionStatementString}' statement with the '${statementString}' statement.`);
+      context.debug(`...unified the '${deductionString}' deduction with the '${statementString}' statement.`);
     }
 
     return deductionUnifies;
@@ -336,6 +333,41 @@ export default define(class Statement extends Element {
     }
 
     return unifiesIndependently;
+  }
+
+  unifyTopLevelMetaAssertion(topLevelMetaAssertion, context) {
+    let topLevelAssertionUnifies = false;
+
+    const statementString = this.getString(), ///
+          topLevelMetaAssertionString = topLevelMetaAssertion.getString();
+
+    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement...`);
+
+    const unconditional = topLevelMetaAssertion.isUnconditional();
+
+    if (unconditional) {
+      const deduction = topLevelMetaAssertion.getDeduction(),
+            deductionUnifies = this.unifyDeduction(deduction, context);
+
+      if (deductionUnifies) {
+        topLevelAssertionUnifies = true;
+      }
+    } else {
+      const statementNode = this.getStatementNode(),
+            subproofAssertionNode = statementNode.getSubproofAssertionNode();
+
+      if (subproofAssertionNode !== null) {
+        const subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
+
+        topLevelAssertionUnifies = subproofAssertion.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+      }
+    }
+
+    if (topLevelAssertionUnifies) {
+      context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement.`);
+    }
+
+    return topLevelAssertionUnifies;
   }
 
   toJSON() {

@@ -215,28 +215,24 @@ export default define(class Assumption extends Element {
   }
 
   unifyTopLevelMetaAssertion(topLevelMetaAssertion, context) {
-    let topLevelMetaAssertionUnifies = false;
+    let topLevelMetaAssertionUnifies;
 
     const assumptionString = this.getString(),  ///
           topLevelMetaAssertionString = topLevelMetaAssertion.getString();
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);
 
-    context = topLevelMetaAssertion.getContext();  ///
+    reconcile((context) => {
+      topLevelMetaAssertionUnifies = this.reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-    reconcile((specificContext) => {
-      const topLevelAssertionUnifiesWithReference = topLevelMetaAssertion.unifyWithReference(this.reference, context);
+      if (topLevelMetaAssertionUnifies) {
+        topLevelMetaAssertionUnifies = this.statement.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-      if (topLevelAssertionUnifiesWithReference) {
-        const topLevelAssertionUnifiesWithStatement = topLevelMetaAssertion.unifyWithStatement(this.statement, context);
-
-        if (topLevelAssertionUnifiesWithStatement) {
-          specificContext.commit(context);
-
-          topLevelMetaAssertionUnifies = true;
+        if (topLevelMetaAssertionUnifies) {
+          context.commit();
         }
       }
-    }, specificContext);
+    }, context);
 
     if (topLevelMetaAssertionUnifies) {
       context.trace(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);

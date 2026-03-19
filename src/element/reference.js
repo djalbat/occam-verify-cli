@@ -264,6 +264,39 @@ export default define(class Reference extends Element {
     return metavariableUnifies;
   }
 
+  unifyTopLevelMetaAssertion(topLevelMetaAssertion, context) {
+    let topLevelMetaAssertionUUnifies = false;
+
+    const label = topLevelMetaAssertion.getLabel(),
+          referenceString = this.getString(), ///
+          topLevelMetaAssertionString = topLevelMetaAssertion.getString();
+
+    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference...`);
+
+    const specificContext = context;  ///
+
+    context = label.getContext();
+
+    reconcile((context) => {
+      const metavariable = label.getMetavariable(),
+            metavariableUnifies = this.unifyMetavariable(metavariable, context);
+
+      if (metavariableUnifies) {
+        context.commit(specificContext);
+
+        topLevelMetaAssertionUUnifies = true;
+      }
+    }, context);
+
+    context = specificContext;  ///
+
+    if (topLevelMetaAssertionUUnifies) {
+      context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference.`);
+    }
+
+    return topLevelMetaAssertionUUnifies;
+  }
+
   toJSON() {
     let context;
 
