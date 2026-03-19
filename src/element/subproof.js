@@ -121,7 +121,7 @@ export default define(class Subproof extends Element {
     context.trace(`Unifying the '${subproofString}' subproof with the '${satisfiesAssertionString}' satisfies assertion...`)
 
     const reference = satisfiesAssertion.getReference(),
-          axiom = context.findAxiomByReference(reference, context);
+          axiom = context.findAxiomByReference(reference);
 
     if (axiom !== null) {
       const axiomSatisfiable = axiom.isSatisfiable();

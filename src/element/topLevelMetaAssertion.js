@@ -230,17 +230,16 @@ export default class TopLevelMetaAssertion extends Element {
     return suppositionsVerify;
   }
 
-  unifyWithReference(reference, generalContext, specificContext) {
+  unifyWithReference(reference, context) {
     let unifiesWithReference = false;
 
-    const context = this.label.getContext(),
-          referenceString = reference.getString(), ///
+    const referenceString = reference.getString(), ///
           topLevelMetaAssertionString = this.getString();
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference...`);
 
     const metavariable = this.label.getMetavariable(),
-          metavariableUnifies = reference.unifyMetavariable(metavariable, generalContext, specificContext);
+          metavariableUnifies = reference.unifyMetavariable(metavariable, context);
 
     if (metavariableUnifies) {
       unifiesWithReference = true;
@@ -253,11 +252,10 @@ export default class TopLevelMetaAssertion extends Element {
     return unifiesWithReference;
   }
 
-  unifyWithStatement(statement, generalContext, specificContext) {
+  unifyWithStatement(statement, context) {
     let unifiesWithStatement = false;
 
-    const context = specificContext,  ///
-          statementString = this.getString(), ///
+    const statementString = this.getString(), ///
           topLevelMetaAssertionString = this.getString();
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${statementString}' statement...`);

@@ -183,7 +183,7 @@ export default define(class Judgement extends Element {
 
     const metavariable = this.assumption.getMetavariable(),
           reference = referenceFromMetavariable(metavariable, context),
-          topLevelMetaAssertion = context.findTopLevelMetaAssertionByReference(reference, context),
+          topLevelMetaAssertion = context.findTopLevelMetaAssertionByReference(reference),
           substitutions = topLevelMetaAssertion.getSubstitutions(),
           frameComparesToSubstitutions = this.frame.compareSubstitutions(substitutions, context);
 

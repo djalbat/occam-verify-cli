@@ -448,12 +448,12 @@ export default class NominalFileContext extends FileContext {
     return conjecture;
   }
 
-  findMetaLemmasByReference(reference, context) {
+  findMetaLemmasByReference(reference) {
     const metaLemmas = this.getMetaLemmas();
 
     filter(metaLemmas, (metaLemma) => {
       const topLevelMetaAssertion = metaLemma, ///
-            topLevelMetaAssertionCompares = reference.compareTopLevelMetaAssertion(topLevelMetaAssertion, context);
+            topLevelMetaAssertionCompares = reference.compareTopLevelMetaAssertion(topLevelMetaAssertion);
 
       if (topLevelMetaAssertionCompares) {
         return true;
@@ -463,12 +463,12 @@ export default class NominalFileContext extends FileContext {
     return metaLemmas;
   }
 
-  findMetatheoremsByReference(reference, context) {
+  findMetatheoremsByReference(reference) {
     const metatheorems = this.getMetatheorems();
 
     filter(metatheorems, (metatheorem) => {
       const topLevelMetaAssertion = metatheorem, ///
-            topLevelMetaAssertionCompares = reference.compareTopLevelMetaAssertion(topLevelMetaAssertion, context);
+            topLevelMetaAssertionCompares = reference.compareTopLevelMetaAssertion(topLevelMetaAssertion);
 
       if (topLevelMetaAssertionCompares) {
         return true;
@@ -488,17 +488,17 @@ export default class NominalFileContext extends FileContext {
     return topLevelAssertion;
   }
 
-  findTopLevelMetaAssertionByReference(reference, context) {
-    const metaLemma = this.findMetaLemmaByReference(reference, context),
-          metatheorem = this.findMetatheoremByReference(reference, context),
+  findTopLevelMetaAssertionByReference(reference) {
+    const metaLemma = this.findMetaLemmaByReference(reference),
+          metatheorem = this.findMetatheoremByReference(reference),
           topLevelMetaAssertion = (metaLemma || metatheorem);  ///
 
     return topLevelMetaAssertion;
   }
 
-  findTopLevelMetaAssertionsByReference(reference, context) {
-    const metaLemmas = this.findMetaLemmasByReference(reference, context),
-          metatheorems = this.findMetatheoremsByReference(reference, context),
+  findTopLevelMetaAssertionsByReference(reference) {
+    const metaLemmas = this.findMetaLemmasByReference(reference),
+          metatheorems = this.findMetatheoremsByReference(reference),
           topLevelMetaAssertions = [
             ...metaLemmas,
             ...metatheorems
@@ -632,10 +632,10 @@ export default class NominalFileContext extends FileContext {
     return metavariablePresent;
   }
 
-  isLabelPresentByReference(reference, context) {
+  isLabelPresentByReference(reference) {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
-            const labelUnifies = reference.unifyLabel(label, context);
+            const labelUnifies = reference.unifyLabel(label);
 
             if (labelUnifies) {
               return true;
@@ -645,8 +645,8 @@ export default class NominalFileContext extends FileContext {
     return labelPresent;
   }
 
-  isTopLevelMetaAssertionPresentByReference(reference, context) {
-    const topLevelMetaAssertion = this.findTopLevelMetaAssertionByReference(reference, context),
+  isTopLevelMetaAssertionPresentByReference(reference) {
+    const topLevelMetaAssertion = this.findTopLevelMetaAssertionByReference(reference),
           topLevelMetaAssertionPresent = (topLevelMetaAssertion !== null);
 
     return topLevelMetaAssertionPresent;

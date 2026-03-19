@@ -2,9 +2,9 @@
 
 import elements from "../elements";
 
-import { instantiate } from "../utilities/context";
 import { baseTypeFromNothing } from "../utilities/type";
-import { instantiateReference } from "../process/instantiate";
+import { instantiateLabel, instantiateReference } from "../process/instantiate";
+import { instantiate, sanitisedContextFromContext } from "../utilities/context";
 import { equivalenceStringFromTerms,
          typeStringFromNominalTypeName,
          rulsStringFromLabelsPremisesAndConclusion,
@@ -13,7 +13,6 @@ import { equivalenceStringFromTerms,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
          topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
-import EphemeralContext from "../context/ephemeral";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -321,11 +320,8 @@ export function referenceFromReferenceNode(referenceNode, context) {
   const { Reference } = elements,
         node = referenceNode, ///
         string = context.nodeAsString(node),
-        metavariable = metavariableFromReferenceNode(referenceNode, context);
-
-  context = null;
-
-  const reference = new Reference(context, string, node, metavariable);
+        metavariable = metavariableFromReferenceNode(referenceNode, context),
+        reference = new Reference(context, string, node, metavariable);
 
   return reference;
 }
@@ -677,12 +673,6 @@ export function subproofAssertionFromSubproofAssertionNode(subproofAssertionNode
   return subproofAssertion;
 }
 
-export function substitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
-  const substitutions = [];
-
-  return substitutions;
-}
-
 export function containedAssertionFromContainedAssertionNode(containedAssertionNode, context) {
   const { ContainedAssertion } = elements,
         node = containedAssertionNode,  ///
@@ -945,7 +935,9 @@ export function referenceFromStepNode(stepNode, context) {
   const referenceNode = stepNode.getReferenceNode();
 
   if (referenceNode !== null) {
-    reference = referenceFromReferenceNode(referenceNode, context);
+    const referenceString = context.nodeAsString(referenceNode);
+
+    reference = referenceFromReferenceString(referenceString, context);
   }
 
   return reference;
@@ -1361,16 +1353,11 @@ export function metavariableFromReferenceNode(referenceNode, context) {
 }
 
 export function referenceFromMetavariableNode(metavariableNode, context) {
-  const metavariableString = context.nodeAsString(metavariableNode);
+  const metavariableString = context.nodeAsString(metavariableNode),
+        referenceString = metavariableString, ///
+        reference = referenceFromReferenceString(referenceString, context);
 
-  return instantiate((context) => {
-    const referenceString = metavariableString, ///
-          string = referenceString,  ///
-          referenceNode = instantiateReference(string, context),
-          reference = referenceFromReferenceNode(referenceNode, context);
-
-    return reference;
-  }, context);
+  return reference;
 }
 
 export function termFromJDefinedAssertionNode(definedAssertionNode, context) {
@@ -1607,7 +1594,8 @@ export function proofFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, cont
 
 export function labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
   const labelNode = metaLemmaMetathoremNode.getLabelNode(),
-        label = labelFromLabelNode(labelNode, context);
+        labelString = context.nodeAsString(labelNode),
+        label = labelFromLabelString(labelString, context);
 
   return label;
 }
@@ -1729,7 +1717,8 @@ export function signatureFromJSatisfiesAssertionNode(sasisfiesAssertionNode, con
 
 export function referenceFromJSatisfiesAssertionNode(sasisfiesAssertionNode, context) {
   const referenceNode = sasisfiesAssertionNode.getReferenceNode(),
-        reference = referenceFromReferenceNode(referenceNode, context);
+        referenceString = context.nodeAsString(referenceNode),
+        reference = referenceFromReferenceString(referenceString, context);
 
   return reference;
 }
@@ -1887,14 +1876,16 @@ export function metavariableFromMetavariableDeclarationNode(metavariableDeclarat
 
 export function targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
   const targetReferenceNode = referenceSubstitutionNode.getTargetReferenceNode(),
-        targetRefernece = referenceFromReferenceNode(targetReferenceNode, context);
+        targetReferenceString = context.nodeAsString(targetReferenceNode),
+        targetRefernece = referenceFromReferenceString(targetReferenceString, context);
 
   return targetRefernece;
 }
 
 export function targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context) {
   const targetReferenceNode = metaLevelSubstitutionNode.getTargetReferenceNode(),
-        targetRefernece = referenceFromReferenceNode(targetReferenceNode, context);
+        targetReferenceString = context.nodeAsString(targetReferenceNode),
+        targetRefernece = referenceFromReferenceString(targetReferenceString, context);
 
   return targetRefernece;
 }
@@ -1932,7 +1923,8 @@ export function frameSubstitutionFromStatementSubstitutionNode(statementSubstitu
 
 export function replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
   const replacementReferenceNode = referenceSubstitutionNode.getReplacementReferenceNode(),
-        replacementReference = referenceFromReferenceNode(replacementReferenceNode, context);
+        replacementReferenceString = context.nodeAsString(replacementReferenceNode),
+        replacementReference = referenceFromReferenceString(replacementReferenceString, context);
 
   return replacementReference;
 }
@@ -1980,7 +1972,8 @@ export function typesFromTypesNode(typesNode, context) {
 
 export function labelsFromLabelNodes(labelNodes, context) {
   const labels = labelNodes.map((labelNode) => {
-    const label = labelFromLabelNode(labelNode, context);
+    const labelString = context.nodeAsString(labelNode),
+          label = labelFromLabelString(labelString, context);
 
     return label;
   });
@@ -2068,4 +2061,32 @@ export function stepsOrSubproofsFromSubDerivationNode(subDerivationNode, context
         });
 
   return stepsOrSubproofs;
+}
+
+export function labelFromLabelString(labelString, context) {
+  const santisedContext = sanitisedContextFromContext(context);
+
+  context = santisedContext;  ///
+
+  return instantiate((context) => {
+    const string = labelString,  ///
+          labelNode = instantiateLabel(string, context),
+          label = labelFromLabelNode(labelNode, context);
+
+    return label;
+  }, context);
+}
+
+export function referenceFromReferenceString(referenceString, context) {
+  const santisedContext = sanitisedContextFromContext(context);
+
+  context = santisedContext;  ///
+
+  return instantiate((context) => {
+    const string = referenceString,  ///
+          referenceNode = instantiateReference(string, context),
+          reference = referenceFromReferenceNode(referenceNode, context);
+
+    return reference;
+  }, context);
 }

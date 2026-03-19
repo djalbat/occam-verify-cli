@@ -7,6 +7,7 @@ import { instantiateReference } from "../process/instantiate";
 import { reconcile, instantiate } from "../utilities/context";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromReferenceNode } from "../utilities/element";
+import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export default define(class Reference extends Element {
   constructor(context, string, node, metavariable) {
@@ -26,8 +27,6 @@ export default define(class Reference extends Element {
     return referenceNode;
   }
 
-  getName() { return this.metavariable.getName(); }
-
   getMetavariableName() {
     const metavariableName = this.metavariable.getName();
 
@@ -40,28 +39,20 @@ export default define(class Reference extends Element {
     return metavariableNode;
   }
 
-  matchReferenceNode(referenceNode) {
-    const node = referenceNode, ///
-          nodeMatches = this.matchNode(node),
-          referenceNodeMatches = nodeMatches; ///
-
-    return referenceNodeMatches;
-  }
-
-  findValidRefernece(context) {
-    const metavariableNode = this.getMetavariableNode(),
-          reference = context.findReferenceByMetavariableNode(metavariableNode),
-          validReference = reference;  ///
-
-    return validReference;
-  }
-
   isEqualTo(reference) {
     const referenceNode = reference.getNode(),
           referenceNodeMatches = this.matchReferenceNode(referenceNode),
           equalTo = referenceNodeMatches;  ///
 
     return equalTo;
+  }
+
+  matchReferenceNode(referenceNode) {
+    const node = referenceNode, ///
+          nodeMatches = this.matchNode(node),
+          referenceNodeMatches = nodeMatches; ///
+
+    return referenceNodeMatches;
   }
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
@@ -104,17 +95,17 @@ export default define(class Reference extends Element {
 
   compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
 
-  compareTopLevelMetaAssertion(topLevelMetaAssertion, context) {
+  compareTopLevelMetaAssertion(topLevelMetaAssertion) {
     let topLevelMetaAssertionCompares = false;
 
-    const reference = this, ///
-          referenceString = reference.getString(),
+    const context = this.getContext(),
+          referenceString = this.getString(), ///
           topLevelMetaAssertionString = topLevelMetaAssertion.getString();
 
     context.trace(`Comparing the '${topLevelMetaAssertionString}' top level meta-assertion to the '${referenceString}' reference...`);
 
     const label = topLevelMetaAssertion.getLabel(),
-          labelUnifies = this.unifyLabel(label, context);
+          labelUnifies = this.unifyLabel(label);
 
     if (labelUnifies) {
       topLevelMetaAssertionCompares = true;
@@ -125,6 +116,14 @@ export default define(class Reference extends Element {
     }
 
     return topLevelMetaAssertionCompares;
+  }
+
+  findValidRefernece(context) {
+    const metavariableNode = this.getMetavariableNode(),
+          reference = context.findReferenceByMetavariableNode(metavariableNode),
+          validReference = reference;  ///
+
+    return validReference;
   }
 
   validate(context) {
@@ -152,7 +151,7 @@ export default define(class Reference extends Element {
 
         if (metaType === null) {
           const reference = this, ///
-                labelPresent = context.isLabelPresentByReference(reference, context);
+                labelPresent = context.isLabelPresentByReference(reference);
 
           if (labelPresent) {
             validates = true;
@@ -192,6 +191,8 @@ export default define(class Reference extends Element {
     const referenceString = this.getString(), ///
           metavariableString = this.metavariable.getString();
 
+    context = this.getContext();
+
     context.trace(`Validating the '${referenceString}' reference's '${metavariableString}' metavariable...'`);
 
     const metavariable = this.metavariable.validate(context);
@@ -209,30 +210,23 @@ export default define(class Reference extends Element {
     return metavariableValidates;
   }
 
-  unifyLabel(label, context) {
+  unifyLabel(label) {
     let labelUnifies = false;
 
-    const labelString = label.getString(),
+    const context = label.getContext(),
+          labelString = label.getString(),
           referenceString = this.getString(); ///
 
     context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
-    const generalContext = context; ///
-
-    context = label.getContext();
-
-    const specificContext = context;  ///
-
-    context = generalContext; ///
-
-    reconcile((specificContext) => {
+    reconcile((context) => {
       const metavariable = label.getMetavariable(),
-            metavariableUnifies = this.unifyMetavariable(metavariable, generalContext, specificContext);
+            metavariableUnifies = this.unifyMetavariable(metavariable, context);
 
       if (metavariableUnifies) {
         labelUnifies = true;
       }
-    }, specificContext);
+    }, context);
 
     if (labelUnifies) {
       context.debug(`...unified the '${labelString}' label with the '${referenceString}' reference.`);
@@ -241,14 +235,21 @@ export default define(class Reference extends Element {
     return labelUnifies;
   }
 
-  unifyMetavariable(metavariable, generalContext, specificContext) {
+  unifyMetavariable(metavariable, context) {
     let metavariableUnifies = false;
 
-    const context = generalContext, ///
-          referenceString = this.getString(), ///
+    const referenceString = this.getString(), ///
           metavariableString = metavariable.getString();
 
     context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
+
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context; ///
+
+    context = specificContext;  ///
 
     const metavariableUnifiesIntrinsically = this.metavariable.unifyMetavariableIntrinsically(metavariable, generalContext, specificContext);
 
@@ -264,8 +265,19 @@ export default define(class Reference extends Element {
   }
 
   toJSON() {
+    let context;
+
+    context = this.getContext();
+
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
+
+    context = contextJSON;  ///
+
     const string = this.getString(),
           json = {
+            context,
             string
           };
 
@@ -275,15 +287,16 @@ export default define(class Reference extends Element {
   static name = "Reference";
 
   static fromJSON(json, context) {
+    const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+    context = ephemeralContext; ///
+
     return instantiate((context) => {
       const { string } = json,
             referenceNode = instantiateReference(string, context),
             node = referenceNode,  ///
-            metavariable = metavariableFromReferenceNode(referenceNode, context);
-
-      context = null;
-
-      const reference = new Reference(context, string, node, metavariable);
+            metavariable = metavariableFromReferenceNode(referenceNode, context),
+            reference = new Reference(context, string, node, metavariable);
 
       return reference;
     }, context);

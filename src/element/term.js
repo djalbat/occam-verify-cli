@@ -41,40 +41,6 @@ export default define(class Term extends Element {
     return variableIdentifier;
   }
 
-  matchTermNode(termNode) {
-    const node = termNode, ///
-          nodeMatches = this.matchNode(node),
-          termNodeMatches = nodeMatches; ///
-
-    return termNodeMatches;
-  }
-
-  compareVariableIdentifier(variableIdentifier) {
-    let comparesToVariableIdentifier = false;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const variableIdentifierA = variableIdentifier; ///
-
-      variableIdentifier = this.getVariableIdentifier();
-
-      const variableIdentifierB = variableIdentifier;
-
-      comparesToVariableIdentifier = (variableIdentifierA === variableIdentifierB);
-    }
-
-    return comparesToVariableIdentifier;
-  }
-
-  findValidTerm(context) {
-    const termNode = this.getTermNode(),
-          term = context.findTermByTermNode(termNode),
-          validTerm = term; ///
-
-    return validTerm;
-  }
-
   isEqualTo(term) {
     const termNode = term.getNode(),
           termNodeMatches = this.matchTermNode(termNode),
@@ -127,6 +93,14 @@ export default define(class Term extends Element {
     return implicitlyGrounded;
   }
 
+  matchTermNode(termNode) {
+    const node = termNode, ///
+          nodeMatches = this.matchNode(node),
+          termNodeMatches = nodeMatches; ///
+
+    return termNodeMatches;
+  }
+
   compareParameter(parameter) {
     let comparesToParamter = false;
 
@@ -145,6 +119,32 @@ export default define(class Term extends Element {
     }
 
     return comparesToParamter;
+  }
+
+  compareVariableIdentifier(variableIdentifier) {
+    let comparesToVariableIdentifier = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const variableIdentifierA = variableIdentifier; ///
+
+      variableIdentifier = this.getVariableIdentifier();
+
+      const variableIdentifierB = variableIdentifier;
+
+      comparesToVariableIdentifier = (variableIdentifierA === variableIdentifierB);
+    }
+
+    return comparesToVariableIdentifier;
+  }
+
+  findValidTerm(context) {
+    const termNode = this.getTermNode(),
+          term = context.findTermByTermNode(termNode),
+          validTerm = term; ///
+
+    return validTerm;
   }
 
   validate(context, validateForwards) {

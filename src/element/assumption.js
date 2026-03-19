@@ -137,7 +137,7 @@ export default define(class Assumption extends Element {
       if (metavariablePresent) {
         referenceValidates = true;
       } else {
-        const topLevelMetaAssertions = context.findTopLevelMetaAssertionsByReference(this.reference, context),
+        const topLevelMetaAssertions = context.findTopLevelMetaAssertionsByReference(this.reference),
               topLevelMetaAssertionsCompare = topLevelMetaAssertions.some((topLevelMetaAssertion) => {
                 const topLevelMetaAssertionUnifies = this.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
@@ -222,19 +222,13 @@ export default define(class Assumption extends Element {
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);
 
-    const specificContext = context; ///
-
     context = topLevelMetaAssertion.getContext();  ///
 
-    const generalContext = context;  ///
-
-    context = specificContext; ///
-
     reconcile((specificContext) => {
-      const topLevelAssertionUnifiesWithReference = topLevelMetaAssertion.unifyWithReference(this.reference, generalContext, specificContext);
+      const topLevelAssertionUnifiesWithReference = topLevelMetaAssertion.unifyWithReference(this.reference, context);
 
       if (topLevelAssertionUnifiesWithReference) {
-        const topLevelAssertionUnifiesWithStatement = topLevelMetaAssertion.unifyWithStatement(this.statement, generalContext, specificContext);
+        const topLevelAssertionUnifiesWithStatement = topLevelMetaAssertion.unifyWithStatement(this.statement, context);
 
         if (topLevelAssertionUnifiesWithStatement) {
           specificContext.commit(context);

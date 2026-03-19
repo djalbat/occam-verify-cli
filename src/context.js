@@ -148,35 +148,23 @@ export default class Context extends ContextBase {
     return metavariable;
   }
 
-  findRuleByReference(reference, context) {
-    const childContext = context; ///
-
-    context = this.getContext();
-
-    const parentContext = context, ///
-          rule = parentContext.findRuleByReference(reference, childContext);
+  findRuleByReference(reference) {
+    const context = this.getContext(),
+          rule = context.findRuleByReference(reference);
 
     return rule;
   }
 
-  findTopLevelAssertionByReference(reference, context) {
-    const childContext = context; ///
-
-    context = this.getContext();
-
-    const parentContext = context, ///
-          topLevelAssertion = parentContext.findTopLevelAssertionByReference(reference, childContext);
+  findTopLevelAssertionByReference(reference) {
+    const context = this.getContext(),
+          topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
     return topLevelAssertion;
   }
 
-  findTopLevelMetaAssertionsByReference(reference, context) {
-    const childContext = context; ///
-
-    context = this.getContext();
-
-    const parentContext = context, ///
-          topLevelMetaAssertion = parentContext.findTopLevelMetaAssertionsByReference(reference, childContext);
+  findTopLevelMetaAssertionsByReference(reference) {
+    const context = this.getContext(),
+          topLevelMetaAssertion = context.findTopLevelMetaAssertionsByReference(reference);
 
     return topLevelMetaAssertion;
   }
@@ -347,24 +335,16 @@ export default class Context extends ContextBase {
     return metavariablePresent;
   }
 
-  isLabelPresentByReference(reference, context) {
-    const childContext = context; ///
-
-    context = this.getContext();
-
-    const parentContext = context, ///
-          labelPresent = parentContext.isLabelPresentByReference(reference, childContext);
+  isLabelPresentByReference(reference) {
+    const context = this.getContext(),
+          labelPresent = context.isLabelPresentByReference(reference);
 
     return labelPresent;
   }
 
-  isTopLevelMetaAssertionPresentByReference(reference, context) {
-    const childContext = context; ///
-
-    context = this.getContext();
-
-    const parentContext = context, ///
-          topLevelMetaAssertionPresent = parentContext.isTopLevelMetaAssertionPresentByReference(reference, childContext);
+  isTopLevelMetaAssertionPresentByReference(reference) {
+    const context = this.getContext(),
+          topLevelMetaAssertionPresent = context.isTopLevelMetaAssertionPresentByReference(reference);
 
     return topLevelMetaAssertionPresent;
   }
