@@ -4,8 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateConclusion } from "../process/instantiate";
-import { attempt, descend, instantiate } from "../utilities/context";
-import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
+import { attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
 
 export  default define(class Conclusion extends Element {
   constructor(context, string, node, statement) {
@@ -125,41 +124,36 @@ export  default define(class Conclusion extends Element {
   }
 
   toJSON() {
-    let context;
+    const context = this.getContext();
 
-    context = this.getContext();
+    return serialise((context) => {
+      const string = this.getString(),
+            json = {
+              context,
+              string
+            };
 
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
-
-    context = contextJSON;  ///
-
-    const string = this.getString(),
-          json = {
-            context,
-            string
-          };
-
-    return json;
+      return json;
+    }, context);
   }
 
   static name = "Conclusion";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
+    let conclusion;
 
-    context = ephemeralContext; ///
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              conclusionNode = instantiateConclusion(string, context),
+              node = conclusionNode,  ///
+              statement = statementFromConclusionNode(conclusionNode, context);
 
-    return instantiate((context) => {
-      const { string } = json,
-            conclusionNode = instantiateConclusion(string, context),
-            node = conclusionNode,  ///
-            statement = statementFromConclusionNode(conclusionNode, context),
-            conclusion = new Conclusion(context, string, node, statement);
+        conclusion = new Conclusion(context, string, node, statement);
+      }, context);
+    }, json, context);
 
-      return conclusion;
-    }, context);
+    return conclusion;
   }
 });
 

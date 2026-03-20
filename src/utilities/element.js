@@ -3,8 +3,8 @@
 import elements from "../elements";
 
 import { baseTypeFromNothing } from "../utilities/type";
+import { simplify, instantiate,} from "../utilities/context";
 import { instantiateLabel, instantiateReference } from "../process/instantiate";
-import { instantiate, sanitisedContextFromContext } from "../utilities/context";
 import { equivalenceStringFromTerms,
          typeStringFromNominalTypeName,
          rulsStringFromLabelsPremisesAndConclusion,
@@ -2071,29 +2071,31 @@ export function stepsOrSubproofsFromSubDerivationNode(subDerivationNode, context
 }
 
 export function labelFromLabelString(labelString, context) {
-  const santisedContext = sanitisedContextFromContext(context);
+  let label;
 
-  context = santisedContext;  ///
+  simplify((context) => {
+    instantiate((context) => {
+      const string = labelString,  ///
+            labelNode = instantiateLabel(string, context);
 
-  return instantiate((context) => {
-    const string = labelString,  ///
-          labelNode = instantiateLabel(string, context),
-          label = labelFromLabelNode(labelNode, context);
-
-    return label;
+      label = labelFromLabelNode(labelNode, context);
+    }, context);
   }, context);
+
+  return label;
 }
 
 export function referenceFromReferenceString(referenceString, context) {
-  const santisedContext = sanitisedContextFromContext(context);
+  let reference;
 
-  context = santisedContext;  ///
+  simplify((context) => {
+    instantiate((context) => {
+      const string = referenceString,  ///
+            referenceNode = instantiateReference(string, context);
 
-  return instantiate((context) => {
-    const string = referenceString,  ///
-          referenceNode = instantiateReference(string, context),
-          reference = referenceFromReferenceNode(referenceNode, context);
-
-    return reference;
+      reference = referenceFromReferenceNode(referenceNode, context);
+    }, context);
   }, context);
+
+  return reference;
 }

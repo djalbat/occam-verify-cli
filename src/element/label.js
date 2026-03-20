@@ -4,9 +4,8 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateLabel } from "../process/instantiate";
-import { attempt, instantiate } from "../utilities/context";
 import { metavariableFromLabelNode } from "../utilities/element";
-import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
+import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Label extends Element {
   constructor(context, string, node, metavariable) {
@@ -38,10 +37,6 @@ export default define(class Label extends Element {
     return labelNodeMatches;
   }
 
-  compareMetavariable(metavariable) { return this.metavariable.compare(metavariable); }
-
-  compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
-
   compareReference(reference) {
     const metavariable = reference.getMetavariable(),
           metavariableComparesToMetavariable = this.compareMetavariable(metavariable),
@@ -49,6 +44,10 @@ export default define(class Label extends Element {
 
     return comparesToReference;
   }
+
+  compareMetavariable(metavariable) { return this.metavariable.compare(metavariable); }
+
+  compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
 
   verify() {
     let verifies = false;
@@ -127,40 +126,35 @@ export default define(class Label extends Element {
   }
 
   toJSON() {
-    let context;
+    const context = this.getContext();
 
-    context = this.getContext();
+    return serialise((context) => {
+      const string = this.getString(),
+            json = {
+              context,
+              string
+            };
 
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
-
-    context = contextJSON;  ///
-
-    const string = this.getString(),
-          json = {
-            context,
-            string
-          };
-
-    return json;
+      return json;
+    }, context);
   }
 
   static name = "Label";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
+    let label;
 
-    context = ephemeralContext; ///
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              labelNode = instantiateLabel(string, context),
+              node = labelNode, ///
+              metavariable = metavariableFromLabelNode(labelNode, context);
 
-    return instantiate((context) => {
-      const { string } = json,
-            labelNode = instantiateLabel(string, context),
-            node = labelNode, ///
-            metavariable = metavariableFromLabelNode(labelNode, context),
-            label = new Label(context, string, node, metavariable);
+        label = new Label(context, string, node, metavariable);
+      }, context);
+    }, json, context);
 
-      return label;
-    }, context);
+    return label;
   }
 });

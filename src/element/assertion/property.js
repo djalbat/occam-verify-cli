@@ -207,7 +207,7 @@ export default define(class PropertyAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      propertyAssertion = instantiate((context) => {
+      instantiate((context) => {
         const { string } = json,
               propertyAssertionNode = instantiatePropertyAssertion(string, context),
               node = propertyAssertionNode,  ///
@@ -216,9 +216,7 @@ export default define(class PropertyAssertion extends Assertion {
 
         context = null;
 
-        const propertyAssertion = new PropertyAssertion(context, string, node, term, propertyRelation);
-
-        return propertyAssertion;
+        propertyAssertion = new PropertyAssertion(context, string, node, term, propertyRelation);
       }, context);
     }
 

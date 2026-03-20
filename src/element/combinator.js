@@ -3,12 +3,11 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt, instantiate } from "../utilities/context";
 import { instantiateCombinator } from "../process/instantiate";
 import { statementFromCombinatorNode } from "../utilities/element";
 import { unifyStatementWithCombinator } from "../process/unify";
 import { validateStatementAsCombinator } from "../process/validate";
-import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
+import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Combinator extends Element {
   constructor(context, string, node, statement) {
@@ -102,40 +101,35 @@ export default define(class Combinator extends Element {
   }
 
   toJSON() {
-    let context;
+    const context = this.getContext();
 
-    context = this.getContext();
+    return serialise((context) => {
+      const string = this.getString(),
+            json = {
+              context,
+              string
+            };
 
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
-
-    context = contextJSON;  ///
-
-    const string = this.getString(),
-          json = {
-            context,
-            string
-          };
-
-    return json;
+      return json;
+    }, context);
   }
 
   static name = "Combinator";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
+    let combinator;
 
-    context = ephemeralContext; ///
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              combinatorNode = instantiateCombinator(string, context),
+              node = combinatorNode,  ///
+              statement = statementFromCombinatorNode(combinatorNode, context);
 
-    return instantiate((context) => {
-      const { string } = json,
-            combinatorNode = instantiateCombinator(string, context),
-            node = combinatorNode,  ///
-            statement = statementFromCombinatorNode(combinatorNode, context),
-            combinator = new Combinator(context, string, node, statement);
+        combinator = new Combinator(context, string, node, statement);
+      }, context);
+    }, json, context);
 
-      return combinator;
-    }, context);
+    return combinator;
   }
 });

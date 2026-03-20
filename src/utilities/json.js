@@ -56,6 +56,19 @@ export function typeFromJSON(json, context) {
   return type;
 }
 
+export function labelFromJSON(json, context) {
+  let { label } = json;
+
+  const { Label } = elements,
+    labelJSON = label;  ///
+
+  json = labelJSON; ///
+
+  label = Label.fromJSON(json, context);
+
+  return label;
+}
+
 export function frameFromJSON(json, context) {
   let { frame } = json;
 
@@ -268,19 +281,6 @@ export function rulesFromJSON(json, context) {
   });
 
   return rules;
-}
-
-export function labelFromJSON(json, context) {
-  let { label } = json;
-
-  const { Label } = elements,
-        labelJSON = label;  ///
-
-  json = labelJSON; ///
-
-  label = Label.fromJSON(json, context);
-
-  return label;
 }
 
 export function framesFromJSON(json, context) {

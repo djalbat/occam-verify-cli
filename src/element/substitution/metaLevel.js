@@ -4,10 +4,9 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { instantiateMetaLevelSubstitution } from "../../process/instantiate";
-import { descend, instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { metaLevelSubstitutionFromMetaLevelSubstitutionNode } from "../../utilities/element";
 import { metaLevelSubstitutionStringFromStatementAndReference } from "../../utilities/string";
-import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
+import { descend, simplify, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class MetaLevelSubstitution extends Substitution {
   constructor(context, string, node, targetReference, replacementStatement) {
@@ -149,57 +148,53 @@ export default define(class MetaLevelSubstitution extends Substitution {
   }
 
   toJSON() {
-    let context;
+    const context = this.getContext();
 
-    context = this.getContext();
+    return serialise((context) => {
+      const string = this.getString(),
+            json = {
+              context,
+              string
+            };
 
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
-
-    context = contextJSON;  ///
-
-    const string = this.getString(),
-          json = {
-            context,
-            string
-          };
-
-    return json;
+      return json;
+    }, context);
   }
 
   static name = "MetaLevelSubstitution";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
+    let metaLevelSubstitution;
 
-    context = ephemeralContext; ///
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context),
+              node = metaLevelSubstitutionNode, ///
+              targetReference = targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
+              replacementStatement = replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context);
 
-    return instantiate((context) => {
-      const { string } = json,
-            metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context),
-            node = metaLevelSubstitutionNode, ///
-            targetReference = targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
-            replacementStatement = replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
-            metaLevelSubstitution = new MetaLevelSubstitution(context, string, node, targetReference, replacementStatement);
+        metaLevelSubstitution = new MetaLevelSubstitution(context, string, node, targetReference, replacementStatement);
+      }, context);
+    }, json, context);
 
-      return metaLevelSubstitution;
-    }, context);
+    return metaLevelSubstitution;
   }
 
   static fromStatementAndReference(statement, reference, context) {
-    const santisedContext = sanitisedContextFromContext(context);
+    let metaLevelSubstitution;
 
-    context = santisedContext;  ///
+    simplify((context) => {
+      instantiate((context) => {
+        const metaLevelSubstitutionString = metaLevelSubstitutionStringFromStatementAndReference(statement, reference),
+              string = metaLevelSubstitutionString,  ///
+              metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context);
 
-    return instantiate((context) => {
-      const metaLevelSubstitutionString = metaLevelSubstitutionStringFromStatementAndReference(statement, reference),
-            string = metaLevelSubstitutionString,  ///
-            metaLevelSubstitutionNode = instantiateMetaLevelSubstitution(string, context),
-            metaLevelSubstitution = metaLevelSubstitutionFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context);
-
-      return metaLevelSubstitution;
+        metaLevelSubstitution = metaLevelSubstitutionFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context);
+      }, context);
     }, context);
+
+    return metaLevelSubstitution;
   }
 });
 

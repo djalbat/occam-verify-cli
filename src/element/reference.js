@@ -4,9 +4,8 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateReference } from "../process/instantiate";
-import { reconcile, instantiate } from "../utilities/context";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
-import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
+import { serialise, reconcile, unserialise, instantiate } from "../utilities/context";
 import { metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 
 export default define(class Reference extends Element {
@@ -305,41 +304,36 @@ export default define(class Reference extends Element {
   }
 
   toJSON() {
-    let context;
+    const context = this.getContext();
 
-    context = this.getContext();
+    return serialise((context) => {
+      const string = this.getString(),
+            json = {
+              context,
+              string
+            };
 
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
-
-    context = contextJSON;  ///
-
-    const string = this.getString(),
-          json = {
-            context,
-            string
-          };
-
-    return json;
+      return json;
+    }, context);
   }
 
   static name = "Reference";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
+    let reference;
 
-    context = ephemeralContext; ///
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              referenceNode = instantiateReference(string, context),
+              node = referenceNode,  ///
+              metavariable = metavariableFromReferenceNode(referenceNode, context),
+              topLevelMetaAssertion = topLevelMetaAssertionFromReferenceNode(referenceNode, context);
 
-    return instantiate((context) => {
-      const { string } = json,
-            referenceNode = instantiateReference(string, context),
-            node = referenceNode,  ///
-            metavariable = metavariableFromReferenceNode(referenceNode, context),
-            topLevelMetaAssertion = topLevelMetaAssertionFromReferenceNode(referenceNode, context),
-            reference = new Reference(context, string, node, metavariable, topLevelMetaAssertion);
+        reference = new Reference(context, string, node, metavariable, topLevelMetaAssertion);
+      }, context);
+    }, json, context);
 
-      return reference;
-    }, context);
+    return reference;
   }
 });

@@ -3,8 +3,8 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
+import { simplify, instantiate } from "../../utilities/context";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
-import { instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
 
@@ -163,7 +163,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      referenceSubstitutionn = instantiate((context) => {
+      instantiate((context) => {
         const { string } = json,
               referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
               node = referenceSubstitutionNode,  ///
@@ -172,9 +172,7 @@ export default define(class ReferenceSubstitution extends Substitution {
 
         context = null;
 
-        const referenceSubstitutionn = new ReferenceSubstitution(context, string, node, targetReference, replacementReference);
-
-        return referenceSubstitutionn;
+        referenceSubstitutionn = new ReferenceSubstitution(context, string, node, targetReference, replacementReference);
       }, context);
     }
 
@@ -182,18 +180,19 @@ export default define(class ReferenceSubstitution extends Substitution {
   }
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {
-    const santisedContext = sanitisedContextFromContext(context);
+    let referenceSubstitution;
 
-    context = santisedContext;  ///
+    simplify((context) => {
+      instantiate((context) => {
+        const referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
+              string = referenceSubstitutionString,  ///
+              referenceSubstitutionNode = instantiateReferenceSubstitution(string, context);
 
-    return instantiate((context) => {
-      const referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
-            string = referenceSubstitutionString,  ///
-            referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
-            referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
-
-      return referenceSubstitution;
+        referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
+      }, context);
     }, context);
+
+    return referenceSubstitution;
   }
 });
 

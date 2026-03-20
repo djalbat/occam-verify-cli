@@ -3,12 +3,12 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt, instantiate } from "../utilities/context";
 import { instantiateConstructor } from "../process/instantiate";
 import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
 import { validateTermAsConstructor } from "../process/validate";
-import { typeFromJSON, typeToTypeJSON, ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
+import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Constructor extends Element {
   constructor(context, string, node, term, type) {
@@ -143,45 +143,40 @@ export default define(class Constructor extends Element {
   }
 
   toJSON() {
-    let context;
+    const context = this.getContext();
 
-    context = this.getContext();
+    return serialise((context) => {
+      const includeType = false,
+            typeJSON = typeToTypeJSON(this.type),
+            string = this.getString(includeType),
+            type = typeJSON,  ///
+            json = {
+              context,
+              string,
+              type
+            };
 
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
-
-    context = contextJSON;  ///
-
-    const includeType = false,
-          typeJSON = typeToTypeJSON(this.type),
-          string = this.getString(includeType),
-          type = typeJSON,  ///
-          json = {
-            context,
-            string,
-            type
-          };
-
-    return json;
+      return json;
+    }, context);
   }
 
   static name = "Constructor";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
+    let constructor;
 
-    context = ephemeralContext; ///
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              constructorNode = instantiateConstructor(string, context),
+              node = constructorNode, ///
+              term = termFromConstructorNode(constructorNode, context),
+              type = typeFromJSON(json, context);
 
-    return instantiate((context) => {
-      const { string } = json,
-            constructorNode = instantiateConstructor(string, context),
-            node = constructorNode, ///
-            term = termFromConstructorNode(constructorNode, context),
-            type = typeFromJSON(json, context),
-            constructor = new Constructor(context, string, node, term, type);
+        constructor = new Constructor(context, string, node, term, type);
+      }, context);
+    }, json, context);
 
-      return constructor;
-    }, context);
+    return constructor;
   }
 });

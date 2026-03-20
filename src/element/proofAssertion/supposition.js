@@ -5,8 +5,7 @@ import ProofAssertion from "../proofAssertion";
 import { define } from "../../elements";
 import { instantiateSupposition} from "../../process/instantiate";
 import { procedureCallFromSuppositionNode } from "../../utilities/element";
-import { join, attempt, reconcile, instantiate } from "../../utilities/context";
-import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
+import { join, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class Supposition extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -288,42 +287,37 @@ export default define(class Supposition extends ProofAssertion {
   }
 
   toJSON() {
-    let context;
+    const context = this.getContext();
 
-    context = this.getContext();
+    return serialise((context) => {
+      const string = this.getString(),
+            json = {
+              context,
+              string
+            };
 
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
-
-    context = contextJSON;  ///
-
-    const string = this.getString(),
-          json = {
-            context,
-            string
-          };
-
-    return json;
+      return json;
+    }, context);
   }
 
   static name = "Supposition";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
+    let supposition;
 
-    context = ephemeralContext; ///
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              suppositionNode = instantiateSupposition(string, context),
+              node = suppositionNode,  ///
+              statement = statementFromSuppositionNode(suppositionNode, context),
+              procedureCall = procedureCallFromSuppositionNode(suppositionNode, context);
 
-    return instantiate((context) => {
-      const { string } = json,
-            suppositionNode = instantiateSupposition(string, context),
-            node = suppositionNode,  ///
-            statement = statementFromSuppositionNode(suppositionNode, context),
-            procedureCall = procedureCallFromSuppositionNode(suppositionNode, context),
-            supposition = new Supposition(context, string, node, statement, procedureCall);
+        supposition = new Supposition(context, string, node, statement, procedureCall);
+      }, context);
+    }, json, context);
 
-      return supposition;
-    }, context);
+    return supposition;
   }
 });
 

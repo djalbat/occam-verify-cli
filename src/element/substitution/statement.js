@@ -6,8 +6,8 @@ import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
+import { join, simplify, descend, reconcile, instantiate } from "../../utilities/context";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, descend, reconcile, instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -348,7 +348,7 @@ export default define(class StatementSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      statementSubstitutionn = instantiate((context) => {
+      instantiate((context) => {
         const { string } = json,
               statementSubstitutionNode = instantiateStatementSubstitution(string, context),
               node = statementSubstitutionNode,  ///
@@ -357,9 +357,7 @@ export default define(class StatementSubstitution extends Substitution {
 
         context = null;
 
-        const statementSubstitutionn = new StatementSubstitution(context, string, node, targetStatement, replacementStatement);
-
-        return statementSubstitutionn;
+        statementSubstitutionn = new StatementSubstitution(context, string, node, targetStatement, replacementStatement);
       }, context);
     }
 
@@ -369,35 +367,37 @@ export default define(class StatementSubstitution extends Substitution {
   static fromStatementAndMetavariable(statement, metavariable, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    const santisedContext = sanitisedContextFromContext(context);
+    let statementSubstitution;
 
-    context = santisedContext;  ///
+    simplify((context) => {
+      instantiate((context) => {
+        const statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable, context),
+              string = statementSubstitutionString, ///
+              statementSubstitutionNode = instantiateStatementSubstitution(string, context);
 
-    return instantiate((context) => {
-      const statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable, context),
-            string = statementSubstitutionString, ///
-            statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-            statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
-
-      return statementSubstitution;
+        statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
+      }, context);
     }, context);
+
+    return statementSubstitution;
   }
 
   static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    const santisedContext = sanitisedContextFromContext(context);
+    let statementSubstitution;
 
-    context = santisedContext;  ///
+    simplify((context) => {
+      instantiate((context) => {
+        const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
+              string = statementSubstitutionString, ///
+              statementSubstitutionNode = instantiateStatementSubstitution(string, context);
 
-    return instantiate((context) => {
-      const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
-            string = statementSubstitutionString, ///
-            statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-            statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
-
-      return statementSubstitution;
+        statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
+      }, context);
     }, context);
+
+    return statementSubstitution;
   }
 });
 

@@ -249,7 +249,7 @@ export default define(class ContainedAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      containedAssertion = instantiate((context) => {
+      instantiate((context) => {
         const { string } = json,
               containedAssertionNode = instantiateContainedAssertion(string, context),
               node = containedAssertionNode,  ///
@@ -260,9 +260,7 @@ export default define(class ContainedAssertion extends Assertion {
 
         context = null;
 
-        const containedAssertion = new ContainedAssertion(context, string, node, term, frame, negated, statement);
-
-        return containedAssertion;
+        containedAssertion = new ContainedAssertion(context, string, node, term, frame, negated, statement);
       }, context);
     }
 

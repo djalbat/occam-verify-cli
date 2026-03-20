@@ -5,8 +5,7 @@ import ProofAssertion from "../proofAssertion";
 import { define } from "../../elements";
 import { instantiatePremise } from "../../process/instantiate";
 import { procedureCallFromPremiseNode } from "../../utilities/element";
-import { join, attempt, reconcile, instantiate } from "../../utilities/context";
-import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
+import { join, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class Premise extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -266,42 +265,37 @@ export default define(class Premise extends ProofAssertion {
   }
 
   toJSON() {
-    let context;
+    const context = this.getContext();
 
-    context = this.getContext();
+    return serialise((context) => {
+      const string = this.getString(),
+            json = {
+              context,
+              string
+            };
 
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
-
-    context = contextJSON;  ///
-
-    const string = this.getString(),
-          json = {
-            context,
-            string
-          };
-
-    return json;
+      return json;
+    }, context);
   }
 
   static name = "Premise";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
+    let premise;
 
-    context = ephemeralContext; ///
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              premiseNode = instantiatePremise(string, context),
+              node = premiseNode,  ///
+              statement = statementFromPremiseNode(premiseNode, context),
+              procedureCall = procedureCallFromPremiseNode(premiseNode, context);
 
-    return instantiate((context) => {
-      const { string } = json,
-            premiseNode = instantiatePremise(string, context),
-            node = premiseNode,  ///
-            statement = statementFromPremiseNode(premiseNode, context),
-            procedureCall = procedureCallFromPremiseNode(premiseNode, context),
-            premise = new Premise(context, string, node, statement, procedureCall);
+        premise = new Premise(context, string, node, statement, procedureCall);
+      }, context);
+    }, json, context);
 
-      return premise;
-    }, context);
+    return premise;
   }
 });
 

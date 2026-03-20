@@ -217,7 +217,7 @@ export default define(class DefinedAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      definedAssertion = instantiate((context) => {
+      instantiate((context) => {
         const { string } = json,
               definedAssertionNode = instantiateDefinedAssertion(string, context),
               node = definedAssertionNode,  ///
@@ -227,9 +227,7 @@ export default define(class DefinedAssertion extends Assertion {
 
         context = null;
 
-        const definedAssertion = new DefinedAssertion(context, string, node, term, frame, negated);
-
-        return definedAssertion;
+        definedAssertion = new DefinedAssertion(context, string, node, term, frame, negated);
       }, context);
     }
 

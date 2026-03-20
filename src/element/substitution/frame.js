@@ -4,8 +4,8 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
+import { descend, simplify, instantiate } from "../../utilities/context";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { descend, instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 
 export default define(class FrameSubstitution extends Substitution {
@@ -179,7 +179,7 @@ export default define(class FrameSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      frameSubstitutionn = instantiate((context) => {
+      instantiate((context) => {
         const { string } = json,
               frameSubstitutionNode = instantiateFrameSubstitution(string, context),
               node = frameSubstitutionNode,  ///
@@ -188,9 +188,7 @@ export default define(class FrameSubstitution extends Substitution {
 
         context = null;
 
-        const frameSubstitutionn = new FrameSubstitution(context, string, node, targetFrame, replacementFrame);
-
-        return frameSubstitutionn;
+        frameSubstitutionn = new FrameSubstitution(context, string, node, targetFrame, replacementFrame);
       }, context);
     }
 
@@ -205,18 +203,19 @@ export default define(class FrameSubstitution extends Substitution {
   }
 
   static fromFrameAndMetavariable(frame, metavariable, context) {
-    const santisedContext = sanitisedContextFromContext(context);
+    let frameSubstitution
 
-    context = santisedContext;  ///
+    simplify((context) => {
+      instantiate((context) => {
+        const frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
+              string = frameSubstitutionString,  ///
+              frameSubstitutionNode = instantiateFrameSubstitution(string, context);
 
-    return instantiate((context) => {
-      const frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
-            string = frameSubstitutionString,  ///
-            frameSubstitutionNode = instantiateFrameSubstitution(string, context),
-            frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
-
-      return frameSubstitution;
+        frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+      }, context);
     }, context);
+
+    return frameSubstitution;
   }
 });
 

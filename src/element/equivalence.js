@@ -4,11 +4,11 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
+import { simplify, instantiate } from "../utilities/context";
 import { instantiateEquivalence } from "../process/instantiate";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
 import { equivalenceStringFromTerms } from "../utilities/string";
 import { equivalenceFromEquivalenceNode } from "../utilities/element";
-import { instantiate, sanitisedContextFromContext } from "../utilities/context";
 
 const { compress } = arrayUtilities;
 
@@ -246,18 +246,19 @@ export default define(class Equivalence extends Element {
   static name = "Equivalence";
 
   static fromEquality(equality, context) {
-    const santisedContext = sanitisedContextFromContext(context);
+    let equivalence;
 
-    context = santisedContext;  ///
+    simplify((context) => {
+      instantiate((context) => {
+        const terms = equality.getTerms(),
+              equivalenceString = equivalenceStringFromTerms(terms),
+              string = equivalenceString,  ///
+              equivalenceNode = instantiateEquivalence(string, context);
 
-    return instantiate((context) => {
-      const terms = equality.getTerms(),
-            equivalenceString = equivalenceStringFromTerms(terms),
-            string = equivalenceString,  ///
-            equivalenceNode = instantiateEquivalence(string, context),
-            equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
-
-      return equivalence;
+        equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
+      }, context);
     }, context);
+
+    return equivalence;
   }
 });

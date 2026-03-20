@@ -210,7 +210,7 @@ export default define(class TypeAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      typeAssertion = instantiate((context) => {
+      instantiate((context) => {
         const { string } = json,
               typeAssertionNode = instantiateTypeAssertion(string, context),
               term = termFromTypeAssertionNode(typeAssertionNode, context),
@@ -219,9 +219,7 @@ export default define(class TypeAssertion extends Assertion {
 
         context = null;
 
-        const typeAssertion = new TypeAssertion(context, string, node, term, type);
-
-        return typeAssertion;
+        typeAssertion = new TypeAssertion(context, string, node, term, type);
       }, context);
     }
 

@@ -3,9 +3,9 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
+import { simplify, instantiate } from "../../utilities/context";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
-import { instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
 import { termSubstitutionFromStatementNode, termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 
@@ -184,7 +184,7 @@ export default define(class TermSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      termSubstitutionn = instantiate((context) => {
+      instantiate((context) => {
         const { string } = json,
               termSubstitutionNode = instantiateTermSubstitution(string, context),
               node = termSubstitutionNode,  ///
@@ -193,9 +193,7 @@ export default define(class TermSubstitution extends Substitution {
 
         context = null;
 
-        const termSubstitutionn = new TermSubstitution(context, string, node, targetTerm, replacementTerm);
-
-        return termSubstitutionn;
+        termSubstitutionn = new TermSubstitution(context, string, node, targetTerm, replacementTerm);
       }, context);
     }
 
@@ -212,18 +210,19 @@ export default define(class TermSubstitution extends Substitution {
   static fromTermAndVariable(term, variable, context) {
     term = stripBracketsFromTerm(term, context); ///
 
-    const santisedContext = sanitisedContextFromContext(context);
+    let termSubstitution;
 
-    context = santisedContext;  ///
+    simplify((context) => {
+      instantiate((context) => {
+        const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
+              string = termSubstitutionString,  ///
+              termSubstitutionNode = instantiateTermSubstitution(string, context);
 
-    return instantiate((context) => {
-      const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
-            string = termSubstitutionString,  ///
-            termSubstitutionNode = instantiateTermSubstitution(string, context),
-            termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
-
-      return termSubstitution;
+        termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
+      }, context);
     }, context);
+
+    return termSubstitution;
   }
 });
 

@@ -4,8 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateDeduction } from "../process/instantiate";
-import { attempt, descend, instantiate } from "../utilities/context";
-import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
+import { attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Deduction extends Element {
   constructor(context, string, node, statement) {
@@ -150,41 +149,36 @@ export default define(class Deduction extends Element {
   }
 
   toJSON() {
-    let context;
+    const context = this.getContext();
 
-    context = this.getContext();
+    return serialise((context) => {
+      const string = this.getString(),
+            json = {
+              context,
+              string
+            };
 
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
-
-    context = contextJSON;  ///
-
-    const string = this.getString(),
-          json = {
-            context,
-            string
-          };
-
-    return json;
+      return json;
+    }, context);
   }
 
   static name = "Deduction";
 
   static fromJSON(json, context) {
-    const ephemeralContext = ephemeralContextFromJSON(json, context);
+    let deduction;
 
-    context = ephemeralContext; ///
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              deductionNode = instantiateDeduction(string, context),
+              node = deductionNode,  ///
+              statement = statementFromDeductionNode(deductionNode, context);
 
-    return instantiate((context) => {
-      const { string } = json,
-            deductionNode = instantiateDeduction(string, context),
-            node = deductionNode,  ///
-            statement = statementFromDeductionNode(deductionNode, context),
-            deduction = new Deduction(context, string, node, statement);
+        deduction = new Deduction(context, string, node, statement);
+      }, context);
+    }, json, context);
 
-      return deduction;
-    }, context);
+    return deduction;
   }
 });
 

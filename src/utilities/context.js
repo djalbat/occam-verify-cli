@@ -9,19 +9,7 @@ import EphemeralContext from "../context/ephemeral";
 import BranchingContext from "../context/branching";
 import SyntheticContext from "../context/synthetic";
 
-export function nominally(innerFunction) {
-  let context;
-
-  const nominalContext = NominalContext.fromNothing();
-
-  context = nominalContext; ///
-
-  const literalContext = LiteralContext.fromNothing(context);
-
-  context = literalContext;  ///
-
-  return innerFunction(context);
-}
+import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export function join(innerFunction, ...contexts) {
   const syntheticContext = SyntheticContext.fromContexts(...contexts),
@@ -70,6 +58,54 @@ export function instantiate(innerFunction, context) {
   return innerFunction(context);
 }
 
+export function nominally(innerFunction) {
+  let context;
+
+  const nominalContext = NominalContext.fromNothing();
+
+  context = nominalContext; ///
+
+  const literalContext = LiteralContext.fromNothing(context);
+
+  context = literalContext;  ///
+
+  return innerFunction(context);
+}
+
+export function simplify(innerFunction, context) {
+  let contextExtraneousContext = isContextExtraneousContext(context);
+
+  while (contextExtraneousContext) {
+    context = context.getContext();
+
+    contextExtraneousContext = isContextExtraneousContext(context);
+  }
+
+  const ephemeralContext = EphemeralContext.fromNothing(context);
+
+  context = ephemeralContext; ///
+
+  return innerFunction(context);
+}
+
+export function serialise(innerFunction, context) {
+  const ephemeralContext = context, ///
+        ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+        contextJSON = ephemeralContextJSON; ///
+
+  context = contextJSON;  ///
+
+  return innerFunction(context);
+}
+
+export function unserialise(innerFunction, json, context) {
+  const ephemeralContext = ephemeralContextFromJSON(json, context);
+
+  context = ephemeralContext; ///
+
+  return innerFunction(json, context);
+}
+
 export async function asyncRestrict(innerFunction, metaLevelSubstitutions, context) {
   if (context === undefined) {
     context = metaLevelSubstitutions;  ///
@@ -90,21 +126,6 @@ export async function asyncReconcile(innerFunction, context) {
   context = liminalContext;  ///
 
   return await innerFunction(context);
-}
-
-export function sanitisedContextFromContext(context) {
-  let contextExtraneousContext = isContextExtraneousContext(context);
-
-  while (contextExtraneousContext) {
-    context = context.getContext();
-
-    contextExtraneousContext = isContextExtraneousContext(context);
-  }
-
-  const ephemeralContext = EphemeralContext.fromNothing(context),
-        sanitisedContext = ephemeralContext; ///
-
-  return sanitisedContext;
 }
 
 function isContextExtraneousContext(context) {
