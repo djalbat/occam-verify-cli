@@ -447,6 +447,13 @@ export default class Context extends ContextBase {
     return metaLevelSubstitutions;
   }
 
+  isStated() {
+    const context = this.getContext(),
+          stated = context.isStated();
+
+    return stated;
+  }
+
   addTerms(terms) {
     const context = this.getContext();
 

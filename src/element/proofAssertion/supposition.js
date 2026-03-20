@@ -5,7 +5,7 @@ import ProofAssertion from "../proofAssertion";
 import { define } from "../../elements";
 import { instantiateSupposition} from "../../process/instantiate";
 import { procedureCallFromSuppositionNode } from "../../utilities/element";
-import { join, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
+import { join, declare, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class Supposition extends ProofAssertion {
   constructor(context, string, node, statement, procedureCall) {
@@ -57,29 +57,31 @@ export default define(class Supposition extends ProofAssertion {
 
     context.trace(`Validatting the '${suppositionString}' supposition...`);
 
-    attempt((context) => {
-      const statement = this.getStatement(),
-            procedureCall = this.getProcedureCall();
+    declare((context) => {
+      attempt((context) => {
+        const statement = this.getStatement(),
+              procedureCall = this.getProcedureCall();
 
-      if (statement !== null) {
-        const statementValidates = this.validateStatement(context);
+        if (statement !== null) {
+          const statementValidates = this.validateStatement(context);
 
-        if (statementValidates) {
-          context.commit(this);
+          if (statementValidates) {
+            context.commit(this);
 
-          validates = true;
+            validates = true;
+          }
         }
-      }
 
-      if (procedureCall !== null) {
-        const procedureCallValidates = this.validateProcedureCall(context);
+        if (procedureCall !== null) {
+          const procedureCallValidates = this.validateProcedureCall(context);
 
-        if (procedureCallValidates) {
-          context.commit(this);
+          if (procedureCallValidates) {
+            context.commit(this);
 
-          validates = true;
+            validates = true;
+          }
         }
-      }
+      }, context);
     }, context);
 
     if (validates) {

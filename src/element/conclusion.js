@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateConclusion } from "../process/instantiate";
-import { attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
+import { declare, attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
 
 export  default define(class Conclusion extends Element {
   constructor(context, string, node, statement) {
@@ -57,14 +57,16 @@ export  default define(class Conclusion extends Element {
 
     context.trace(`Validating the '${conclusionString}' conclusion...`);
 
-    attempt((context) => {
-      const statementValidates = this.validateStatement(context);
+    declare((context) => {
+      attempt((context) => {
+        const statementValidates = this.validateStatement(context);
 
-      if (statementValidates) {
-        context.commit(this);
+        if (statementValidates) {
+          context.commit(this);
 
-        validates = true;
-      }
+          validates = true;
+        }
+      }, context);
     }, context);
 
     if (validates) {

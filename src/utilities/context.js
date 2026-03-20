@@ -2,9 +2,11 @@
 
 import ProofContext from "../context/proof";
 import NestedContext from "../context/nested";
+import TheticContext from "../context/thetic";
 import NominalContext from "../context/nominal";
 import LiteralContext from "../context/literal";
 import LiminalContext from "../context/liminal";
+import IllativeContext from "../context/illative";
 import EphemeralContext from "../context/ephemeral";
 import BranchingContext from "../context/branching";
 import SyntheticContext from "../context/synthetic";
@@ -22,6 +24,22 @@ export function choose(innerFunction, context) {
   const branchingContext = BranchingContext.fromNothing(context);
 
   context = branchingContext;  ///
+
+  return innerFunction(context);
+}
+
+export function derive(innerFunction, context) {
+  const illativeContext = IllativeContext.fromNothing(context);
+
+  context = illativeContext;  ///
+
+  return innerFunction(context);
+}
+
+export function declare(innerFunction, context) {
+  const theticContext = TheticContext.fromNothing(context);
+
+  context = theticContext;  ///
 
   return innerFunction(context);
 }
@@ -131,11 +149,20 @@ export async function asyncReconcile(innerFunction, context) {
 }
 
 function isContextExtraneousContext(context) {
-  const contextLiminalContext = (context instanceof LiminalContext),
+  const contextNestedContxt = (context instanceof NestedContext),
+        contextTheticContext = (context instanceof TheticContext),
+        contextLiminalContext = (context instanceof LiminalContext),
+        contextIllativeContext = (context instanceof IllativeContext),
         contextEphemeralContext = (context instanceof EphemeralContext),
         contextBranchingContext = (context instanceof BranchingContext),
         contextSyntheticContext = (context instanceof SyntheticContext),
-        contextExtraneousContext = (contextLiminalContext || contextEphemeralContext || contextBranchingContext || contextSyntheticContext);
+        contextExtraneousContext = ( contextNestedContxt
+                                  || contextTheticContext
+                                  || contextLiminalContext
+                                  || contextIllativeContext
+                                  || contextEphemeralContext
+                                  || contextBranchingContext
+                                  || contextSyntheticContext );
 
   return contextExtraneousContext;
 }
