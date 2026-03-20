@@ -194,10 +194,9 @@ export default define(class PropertyAssertion extends Assertion {
     }
 
     const propertyAssertion = this, ///
-          variableAssigment = variableAssignmentFromPrepertyAssertion(propertyAssertion, context),
-          assignment = variableAssigment; ///
+          variableAssigment = variableAssignmentFromPrepertyAssertion(propertyAssertion, context);
 
-    context.addAssignment(assignment);
+    context.addAssignment(variableAssigment);
   }
 
   static name = "PropertyAssertion";

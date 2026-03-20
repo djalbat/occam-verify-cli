@@ -6,7 +6,7 @@ import Assertion from "../assertion";
 
 import { define } from "../../elements";
 import { reconcile } from "../../utilities/context";
-import { join, instantiate } from "../../utilities/context";
+import { join, descend, instantiate } from "../../utilities/context";
 import { instantiateSubproofAssertion } from "../../process/instantiate";
 
 const { last, front, backwardsEvery } = arrayUtilities;
@@ -86,16 +86,18 @@ export default define(class SubproofAssertion extends Assertion {
   }
 
   validateStatements(stated, context) {
-    stated = true;  ///
-
-    const statementsValidate = this.statements.map((statement) => {
+    const statementsValidate = this.statements.every((statement) => {
       let statementValidates = false;
 
-      statement = statement.validate(stated, context);  ///
+      descend((context) => {
+        const stated = true;  ///
 
-      if (statement !== null) {
-        statementValidates = true;
-      }
+        statement = statement.validate(stated, context);  ///
+
+        if (statement !== null) {
+          statementValidates = true;
+        }
+      }, context);
 
       if (statementValidates) {
         return true;

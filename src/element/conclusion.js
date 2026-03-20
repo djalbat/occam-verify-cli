@@ -3,8 +3,8 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt, instantiate } from "../utilities/context";
 import { instantiateConclusion } from "../process/instantiate";
+import { attempt, descend, instantiate } from "../utilities/context";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export  default define(class Conclusion extends Element {
@@ -76,19 +76,21 @@ export  default define(class Conclusion extends Element {
   }
 
   validateStatement(context) {
-    let statementValidates;
+    let statementValidates = false;
 
     const statementString = this.statement.getString(),
           conclusionString = this.getString();  ///
 
     context.trace(`Validating the '${conclusionString}' conclusion's '${statementString}' statement...`);
 
-    const stated = true,
-          statement = this.statement.validate(stated, context);
+    descend((context) => {
+      const stated = true,  ///
+            statement = this.statement.validate(stated, context);
 
-    if (statement !== null) {
-      statementValidates = true;
-    }
+      if (statement !== null) {
+        statementValidates = true;
+      }
+    }, context);
 
     if (statementValidates) {
       context.trace(`...validated the '${conclusionString}' conclusion's '${statementString}' statement.`);

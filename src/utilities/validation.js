@@ -2,7 +2,7 @@
 
 import elements from "../elements";
 
-import { choose } from "./context";
+import { choose, descend } from "./context";
 import { variableFromTerm } from "../utilities/term";
 import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
 import { equalityFromStatement,
@@ -53,11 +53,11 @@ function validateTermAsVariable(term, context, validateForwards) {
 }
 
 function unifyTermWithConstructors(term, context, validateForwards) {
-  let termUnifiesWithConstructors;
+  let termUnifiesWithConstructors = false;
 
   const constructors = context.getConstructors();
 
-  termUnifiesWithConstructors = constructors.some((constructor) => {
+  constructors.some((constructor) => {
     let termUnifies;
 
     choose((context) => {
@@ -69,6 +69,8 @@ function unifyTermWithConstructors(term, context, validateForwards) {
     }, context);
 
     if (termUnifies) {
+      termUnifiesWithConstructors = true;
+
       return true;
     }
   });
@@ -140,25 +142,35 @@ function validateStatementAsMetavariable(statement, stated, context) {
 }
 
 function unifyStatementWithCombinators(statement, stated, context) {
-  stated = true;  ///
+  let statementUnifiesWithCombinators = false;
 
-  const combinators = context.getCombinators(),
-        statementUnifiesWithCombinators = combinators.some((combinator) => {
-          const unifiesWithCombinator = combinator.unifyStatement(statement, stated, context);
+  const combinators = context.getCombinators();
 
-          if (unifiesWithCombinator) {
-            return true;
-          }
-        });
+  combinators.some((combinator) => {
+    let statementUnifies;
+
+    descend((context) => {
+      const stated = true;  ///
+
+      statementUnifies = combinator.unifyStatement(statement, stated, context);
+    }, context);
+
+    if (statementUnifies) {
+      statementUnifiesWithCombinators = true;
+
+      return true;
+    }
+  });
 
   return statementUnifiesWithCombinators;
 }
 
 function unifyStatementWithBracketedCombinator(statement, stated, context) {
-  stated = true;  ///
+  let statementUnifiesWithBracketedCombinator;
 
-  const bracketedCombinator = bracketedCombinatorFromNothing(),
-        statementUnifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, stated, context);
+  const bracketedCombinator = bracketedCombinatorFromNothing();
+
+  statementUnifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, stated, context);
 
   return statementUnifiesWithBracketedCombinator;
 }

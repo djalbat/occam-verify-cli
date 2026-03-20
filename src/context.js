@@ -192,7 +192,7 @@ export default class Context extends ContextBase {
 
   findFrameByFrameNode(frameNode) {
     const context = this.getContext(),
-      frame = context.findFrameByFrameNode(frameNode);
+          frame = context.findFrameByFrameNode(frameNode);
 
     return frame;
   }
@@ -445,6 +445,13 @@ export default class Context extends ContextBase {
           metaLevelSubstitutions = context.hasMetaLevelSubstitutions();
 
     return metaLevelSubstitutions;
+  }
+
+  isNested() {
+    const context = this.getContext(),
+          nested = context.isNested();
+
+    return nested;
   }
 
   addTerms(terms) {

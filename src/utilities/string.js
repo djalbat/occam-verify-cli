@@ -108,13 +108,27 @@ export function suppositionsStringFromSuppositions(suppositions) {
     const suppositionString = supposition.getString();
 
     suppositionsString = (suppositionsString === null) ?
-                           suppositionString: ///
-                            `${suppositionsString}, ${suppositionString}`;
+                            suppositionString: ///
+                             `${suppositionsString}, ${suppositionString}`;
 
     return suppositionsString;
   }, null);
 
   return suppositionsString;
+}
+
+export function metaLevelSubstitutionsStringFromMetaLevelSubstitutions(metaLevelSubstitutions) {
+  const metaLevelSubstitutionsString = metaLevelSubstitutions.reduce((metaLevelSubstitutionsString, metaLevelSubstitution) => {
+    const metaLevelSubstitutionString = metaLevelSubstitution.getString();
+
+    metaLevelSubstitutionsString = (metaLevelSubstitutionsString === null) ?
+                                     metaLevelSubstitutionString: ///
+                                      `${metaLevelSubstitutionsString}, ${metaLevelSubstitutionString}`;
+
+    return metaLevelSubstitutionsString;
+  }, null);
+
+  return metaLevelSubstitutionsString;
 }
 
 export function signatureStringFromTerms(terms) {

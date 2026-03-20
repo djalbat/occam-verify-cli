@@ -3,11 +3,11 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { instantiate } from "../utilities/context";
 import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromFrameNode } from "../utilities/element";
-import { assumptionsStringFromAssumptions } from "../utilities/string";
+import { descend, reconcile, instantiate } from "../utilities/context";
+import { assumptionsStringFromAssumptions, metaLevelSubstitutionsStringFromMetaLevelSubstitutions } from "../utilities/string";
 
 export default define(class Frame extends Element {
   constructor(context, string, node, assumptions, metavariable) {
@@ -97,17 +97,17 @@ export default define(class Frame extends Element {
     return comparesToParamter;
   }
 
-  compareSubstitution(substitution, context) {
-    let comparesToSubstitution = false;
+  compareMetaLevelSubstitution(metaLevelSubstitution, context) {
+    let comparesToMetaLevelSubstitution = false;
 
     const frameString = this.getString(),  ///
-          substitutionString = substitution.getString();
+          metaLevelSubstitutioString = metaLevelSubstitution.getString();
 
-    context.trace(`Comparing the '${frameString}' frame to the '${substitutionString}' substitution...`);
+    context.trace(`Comparing the '${frameString}' frame to the '${metaLevelSubstitutioString}' meta-level substitutio...`);
 
-    if (!comparesToSubstitution) {
-      comparesToSubstitution = this.assumptions.some((assumption) => {
-        const assumptionComparesToSubstitution = assumption.compareSubstitution(substitution, context);
+    if (!comparesToMetaLevelSubstitution) {
+      comparesToMetaLevelSubstitution = this.assumptions.some((assumption) => {
+        const assumptionComparesToSubstitution = assumption.compareMetaLevelSubstitution(metaLevelSubstitution, context);
 
         if (assumptionComparesToSubstitution) {
           return true;
@@ -115,34 +115,34 @@ export default define(class Frame extends Element {
       });
     }
 
-    if (comparesToSubstitution) {
-      context.debug(`...compared the the '${frameString}' frame to the '${substitutionString}' substitutions.`);
+    if (comparesToMetaLevelSubstitution) {
+      context.debug(`...compared the the '${frameString}' frame to the '${metaLevelSubstitutioString}' meta-Level-substituution.`);
     }
 
-    return comparesToSubstitution;
+    return comparesToMetaLevelSubstitution;
   }
 
-  compareSubstitutions(substitutions, context) {
-    let comparesToSubstitutions;
+  compareMetaLevelSubstitutions(metaLevelSubstitutions, context) {
+    let comparesToMetaLevelSubstitutions;
 
     const frameString = this.getString(),  ///
-          substitutionsString = substitutions.asString();
+          metaLevelSubstitutionsString = metaLevelSubstitutionsStringFromMetaLevelSubstitutions(metaLevelSubstitutions);
 
-    context.trace(`Comparing the '${frameString}' frame to the '${substitutionsString}' substitutions...`);
+    context.trace(`Comparing the '${frameString}' frame to the '${metaLevelSubstitutionsString}' meta-level substitutio...`);
 
-    comparesToSubstitutions = substitutions.every((substitution) => {
-      const compaaresToSubstitution = this.compareSubstitution(substitution, context);
+    comparesToMetaLevelSubstitutions = metaLevelSubstitutions.every((metaLevelSubstitution) => {
+      const compaaresToMetaLevelSubstitution = this.compareMetaLevelSubstitution(metaLevelSubstitution, context);
 
-      if (compaaresToSubstitution) {
+      if (compaaresToMetaLevelSubstitution) {
         return true;
       }
     });
 
-    if (comparesToSubstitutions) {
-      context.debug(`...compared the '${frameString}' frame to the '${substitutionsString}' substitutions.`);
+    if (comparesToMetaLevelSubstitutions) {
+      context.debug(`...compared the '${frameString}' frame to the '${metaLevelSubstitutionsString}' metaLevelSubstitutions.`);
     }
 
-    return comparesToSubstitutions;
+    return comparesToMetaLevelSubstitutions;
   }
 
   compareMetavariableName(metavariableName) {
@@ -251,17 +251,27 @@ export default define(class Frame extends Element {
     return validatesWhenDerived;
   }
 
-  validateAssumption(assumption, context) {
-    let assumptionValidates;
+  validateAssumption(assumption, assumptions, context) {
+    let assumptionValidates = false;
 
     const frameString = this.getString(), ///
           assumptionstring = assumption.getString();
 
     context.trace(`Validating the '${frameString}' frame's '${assumptionstring}' assumption.`);
 
-    const stated = true;  ///
+    reconcile((context) => {
+      descend((context) => {
+        const stated = true;  ///
 
-    assumptionValidates = assumption.validate(stated, context);
+        assumption = assumption.validate(stated, context);  ///
+
+        if (assumption !== null) {
+          assumptions.push(assumption);
+
+          assumptionValidates = true;
+        }
+      }, context);
+    }, context);
 
     if (assumptionValidates) {
       context.debug(`...validated the '${frameString}' frame's '${assumptionstring}' assumption.`);
@@ -284,11 +294,9 @@ export default define(class Frame extends Element {
       const assumptions = [];
 
       assumptionsValidate = this.assumptions.every((assumption) => {
-        const assumptionValidates = this.validateAssumption(assumption, context);
+        const assumptionValidates = this.validateAssumption(assumption, assumptions, context);
 
         if (assumptionValidates) {
-          assumptions.push(assumption);
-
           return true;
         }
       });

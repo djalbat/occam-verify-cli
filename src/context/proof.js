@@ -7,7 +7,7 @@ import elements from "../elements";
 
 const { last } = arrayUtilities;
 
-class ScopedContext extends Context {
+class ProofContext extends Context {
   constructor(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions, metaLevelSubstitutions) {
     super(context);
 
@@ -218,6 +218,61 @@ class ScopedContext extends Context {
     }
   }
 
+  compareTermAndPropertyRelation(term, propertyRelation) {
+    const context = this, ///
+          proofAssertions = this.getProofAssertions(),
+          comparesToTermAndPropertyRelation = proofAssertions.some((proofAssertion) => {
+            const comparesToTermAndPropertyRelation = proofAssertion.compareTermAndPropertyRelation(term, propertyRelation, context);
+
+            if (comparesToTermAndPropertyRelation) {
+              return true;
+            }
+          });
+
+    return comparesToTermAndPropertyRelation;
+  }
+
+  isNested() {
+    const nested = false;
+
+    return nested;
+  }
+
+  isTermGrounded(term) {
+    const context = this, ///
+          equivalences = this.getEquivalences(),
+          groundedTerms = [],
+          definedVariables = [];
+
+    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
+
+    const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
+        const groundedTermNode = groundedTerm.getNode(),
+              groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
+
+            if (groundedTermNodeMatches) {
+              return true;
+            }
+          }),
+          termGrounded = termMatchesGroundedTerm; ///
+
+    return termGrounded;
+  }
+
+  isJudgementPresentByMetavariableName(metavariableName) {
+    const judgement = this.findJudgementByMetavariableName(metavariableName),
+          judgementPresent = (judgement !== null);
+
+    return judgementPresent;
+  }
+
+  isVariablePresentByVariableIdentifier(variableIdentifier) {
+    const variable = this.findVariableByVariableIdentifier(variableIdentifier),
+          variablePresent = (variable !== null);
+
+    return variablePresent;
+  }
+
   assignAssignments() {
     const context = this; ///
 
@@ -272,55 +327,6 @@ class ScopedContext extends Context {
     return metaLevelSubstitution;
   }
 
-  isTermGrounded(term) {
-    const context = this, ///
-          equivalences = this.getEquivalences(),
-          groundedTerms = [],
-          definedVariables = [];
-
-    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
-
-    const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
-        const groundedTermNode = groundedTerm.getNode(),
-              groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
-
-            if (groundedTermNodeMatches) {
-              return true;
-            }
-          }),
-          termGrounded = termMatchesGroundedTerm; ///
-
-    return termGrounded;
-  }
-
-  isJudgementPresentByMetavariableName(metavariableName) {
-    const judgement = this.findJudgementByMetavariableName(metavariableName),
-          judgementPresent = (judgement !== null);
-
-    return judgementPresent;
-  }
-
-  isVariablePresentByVariableIdentifier(variableIdentifier) {
-    const variable = this.findVariableByVariableIdentifier(variableIdentifier),
-          variablePresent = (variable !== null);
-
-    return variablePresent;
-  }
-
-  compareTermAndPropertyRelation(term, propertyRelation) {
-    const context = this, ///
-          proofAssertions = this.getProofAssertions(),
-          comparesToTermAndPropertyRelation = proofAssertions.some((proofAssertion) => {
-            const comparesToTermAndPropertyRelation = proofAssertion.compareTermAndPropertyRelation(term, propertyRelation, context);
-
-            if (comparesToTermAndPropertyRelation) {
-              return true;
-            }
-          });
-
-    return comparesToTermAndPropertyRelation;
-  }
-
   static fromMetaLevelSubstitutions(metaLevelSubstitutions, context) {
     const { Equivalences } = elements,
           variables = [],
@@ -328,10 +334,10 @@ class ScopedContext extends Context {
           assignments = [],
           equivalences = Equivalences.fromNothing(context),
           subproofOrProofAssertions = [],
-          scopedContext = new ScopedContext(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions, metaLevelSubstitutions);
+          proofContext = new ProofContext(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions, metaLevelSubstitutions);
 
-    return scopedContext;
+    return proofContext;
   }
 }
 
-export default ScopedContext;
+export default ProofContext;

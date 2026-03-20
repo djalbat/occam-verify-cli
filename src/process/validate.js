@@ -4,6 +4,7 @@ import { SimplePass } from "occam-languages";
 import { queryUtilities } from "occam-languages";
 
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
+import {descend} from "../utilities/context";
 
 const { nodeQuery } = queryUtilities;
 
@@ -32,17 +33,19 @@ class CombinatorPass extends SimplePass {
       run: (statementNode, context) => {
         let success = false;
 
-        let statement;
+        descend((context) => {
+          let statement;
 
-        const stated = true;
+          statement = statementFromStatementNode(statementNode, context);
 
-        statement = statementFromStatementNode(statementNode, context);
+          const stated = true;  ///
 
-        statement = statement.validate(stated, context);
+          statement = statement.validate(stated, context);
 
-        if (statement !== null) {
-          success = true;
-        }
+          if (statement !== null) {
+            success = true;
+          }
+        }, context);
 
         return success;
       }

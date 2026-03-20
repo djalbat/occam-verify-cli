@@ -6,18 +6,23 @@ import { define } from "../elements";
 import { instantiateReference } from "../process/instantiate";
 import { reconcile, instantiate } from "../utilities/context";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
-import { metavariableFromReferenceNode } from "../utilities/element";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
+import { metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 
 export default define(class Reference extends Element {
-  constructor(context, string, node, metavariable) {
+  constructor(context, string, node, metavariable, topLevelMetaAssertion) {
     super(context, string, node);
 
     this.metavariable = metavariable;
+    this.topLevelMetaAssertion = topLevelMetaAssertion;
   }
 
   getMetavariable() {
     return this.metavariable;
+  }
+
+  getTopLevelMetaAssertion() {
+    return this.topLevelMetaAssertion;
   }
 
   getReferenceNode() {
@@ -133,10 +138,10 @@ export default define(class Reference extends Element {
 
     context.trace(`Validating the '${referenceString}' reference...`);
 
-    const validRefernece = this.findValidRefernece(context);
+    const validReference = this.findValidRefernece(context);
 
-    if (validRefernece !== null) {
-      reference = validRefernece; ///
+    if (validReference !== null) {
+      reference = validReference; ///
 
       context.debug(`...the '${referenceString}' reference is already valid.`);
     } else {
@@ -282,6 +287,8 @@ export default define(class Reference extends Element {
             metavariableUnifies = this.unifyMetavariable(metavariable, context);
 
       if (metavariableUnifies) {
+        this.topLevelMetaAssertion = topLevelMetaAssertion;
+
         context.commit(specificContext);
 
         topLevelMetaAssertionUUnifies = true;
@@ -329,7 +336,8 @@ export default define(class Reference extends Element {
             referenceNode = instantiateReference(string, context),
             node = referenceNode,  ///
             metavariable = metavariableFromReferenceNode(referenceNode, context),
-            reference = new Reference(context, string, node, metavariable);
+            topLevelMetaAssertion = topLevelMetaAssertionFromReferenceNode(referenceNode, context),
+            reference = new Reference(context, string, node, metavariable, topLevelMetaAssertion);
 
       return reference;
     }, context);

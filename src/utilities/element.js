@@ -321,7 +321,8 @@ export function referenceFromReferenceNode(referenceNode, context) {
         node = referenceNode, ///
         string = context.nodeAsString(node),
         metavariable = metavariableFromReferenceNode(referenceNode, context),
-        reference = new Reference(context, string, node, metavariable);
+        topLevelMetaAssertion = topLevelMetaAssertionFromReferenceNode(referenceNode, context),
+        reference = new Reference(context, string, node, metavariable, topLevelMetaAssertion);
 
   return reference;
 }
@@ -1741,6 +1742,12 @@ export function resolvedFromStatementSubstitutionNode(statementSubstitutionNode,
   const resolved = statementSubstitutionNode.isResolved();
 
   return resolved;
+}
+
+export function topLevelMetaAssertionFromReferenceNode(referenceNode, context) {
+  const topLevelMetaAssertion = null;
+
+  return topLevelMetaAssertion;
 }
 
 export function deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {

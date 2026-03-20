@@ -4,7 +4,7 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { instantiateMetaLevelSubstitution } from "../../process/instantiate";
-import { instantiate, sanitisedContextFromContext } from "../../utilities/context";
+import { descend, instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { metaLevelSubstitutionFromMetaLevelSubstitutionNode } from "../../utilities/element";
 import { metaLevelSubstitutionStringFromStatementAndReference } from "../../utilities/string";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../../utilities/json";
@@ -132,12 +132,14 @@ export default define(class MetaLevelSubstitution extends Substitution {
 
     context.trace(`Validating the '${metaLevelSubstitutionString}' meta-level substitution's '${replacementStatementString}' replacement statement...`);
 
-    const stated = true,
-      replacementStatement = this.replacementStatement.validate(stated, context);
+    descend((context) => {
+      const stated = true,  ///
+            replacementStatement = this.replacementStatement.validate(stated, context);
 
-    if (replacementStatement !== null) {
-      replacementStatementValidates = true;
-    }
+      if (replacementStatement !== null) {
+        replacementStatementValidates = true;
+      }
+    }, context);
 
     if (replacementStatementValidates) {
       context.debug(`...validated the '${metaLevelSubstitutionString}' meta-level substitution's '${replacementStatementString}' replacement statement.`);

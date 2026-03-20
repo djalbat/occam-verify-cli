@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import {instantiate} from "../utilities/context";
+import {descend, instantiate} from "../utilities/context";
 import { instantiateHypothesis } from "../process/instantiate";
 import { statementFromHypothesisNode } from "../utilities/element";
 
@@ -61,12 +61,14 @@ export default define(class Hypothesis extends Element {
     } else if (this.statement !== null) {
       let statementValidates = false;
 
-      const stated = true,
-            statement = this.statement.validate(stated, context);
+      descend((context) => {
+        const stated = true,  ///
+              statement = this.statement.validate(stated, context);
 
-      if (statement !== null) {
-        statementValidates = true;
-      }
+        if (statement !== null) {
+          statementValidates = true;
+        }
+      }, context);
 
       if (statementValidates) {
         const subproofOrProofAssertion = this;  ///

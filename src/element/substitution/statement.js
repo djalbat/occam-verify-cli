@@ -7,7 +7,7 @@ import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, reconcile, instantiate, sanitisedContextFromContext } from "../../utilities/context";
+import { join, descend, reconcile, instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -158,12 +158,14 @@ export default define(class StatementSubstitution extends Substitution {
     const targetStatementSingular = this.targetStatement.isSingular();
 
     if (targetStatementSingular) {
-      const stated = true,
-            targetStatement = this.targetStatement.validate(stated, context);
+      descend((context) => {
+        const stated = true,  ///
+              targetStatement = this.targetStatement.validate(stated, context);
 
-      if (targetStatement !== null) {
-        targetStatementValidates = true;
-      }
+        if (targetStatement !== null) {
+          targetStatementValidates = true;
+        }
+      }, context);
     } else {
       context.debug(`The '${statementSubstitutionString}' statement substitution's '${targetStatementString}' target statement is not singular.`);
     }
@@ -184,12 +186,14 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${replacementStatementString}' replacement statement...`);
 
-    const stated = true,
-          replacementStatement = this.replacementStatement.validate(stated, context);
+    descend((context) => {
+      const stated = true,  ///
+            replacementStatement = this.replacementStatement.validate(stated, context);
 
-    if (replacementStatement !== null) {
-      replacementStatementValidates = true;
-    }
+      if (replacementStatement !== null) {
+        replacementStatementValidates = true;
+      }
+    }, context);
 
     if (replacementStatementValidates) {
       context.debug(`...validated the '${statementSubstitutionString}' statement substitution's '${replacementStatementString}' replacement statement.`);

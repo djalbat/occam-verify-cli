@@ -9,6 +9,7 @@ import { equalityFromStatement,
          typeAssertionFromStatement,
          propertyAssertionFromStatement,
          satisfiesAssertionFromStatement } from "../utilities/statement";
+import {descend} from "./context";
 
 const { backwardsSome } = arrayUtilities;
 
@@ -91,9 +92,11 @@ async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfie
 
     context.trace(`Unifying the '${statementString}' statement as a satisfies assertion...`);
 
-    const stated = true;
+    descend((context) => {
+      const stated = true;  ///
 
-    satisfiesAssertion.verifySignature(stated, context);
+      satisfiesAssertion.verifySignature(stated, context);
+    }, context);
 
     if (reference === null) {
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions();

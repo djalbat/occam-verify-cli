@@ -23,7 +23,9 @@ export function judgementAssignmentFromJudgement(judgement, context) {
 }
 
 export function leftVariableAssignmentFromEquality(equality, context) {
-  let leftVariableAssignment = null;
+  let leftVariableAssignment = (contxt) => {
+    ///
+  };
 
   const leftTermNode = equality.getLeftTermNode(),
         singularVariableNode = leftTermNode.getSingularVariableNode();
@@ -39,7 +41,9 @@ export function leftVariableAssignmentFromEquality(equality, context) {
 }
 
 export function rightVariableAssignmentFromEquality(equality, context) {
-  let rightVariableAssignment = null;
+  let rightVariableAssignment = (context) => {
+    ///
+  };
 
   const rightTermNode = equality.getRightTermNode(),
         singularVariableNode = rightTermNode.getSingularVariableNode();
@@ -55,7 +59,9 @@ export function rightVariableAssignmentFromEquality(equality, context) {
 }
 
 export function variableAssignmentFromTypeAssertion(typeAssertion, context) {
-  let variableAssignment = null;
+  let variableAssignment = (context) => {
+    ///
+  };
 
   const term = typeAssertion.getTerm(),
         termSingular = term.isSingular();

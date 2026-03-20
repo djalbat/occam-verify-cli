@@ -185,11 +185,7 @@ export default define(class TypeAssertion extends Assertion {
     const typeAssertion = this, ///
           variableAssigment = variableAssignmentFromTypeAssertion(typeAssertion, context);
 
-    if (variableAssigment !== null) {
-      const assignment = variableAssigment;  ///
-
-      context.addAssignment(assignment);
-    }
+    context.addAssignment(variableAssigment);
   }
 
   toJSON() {

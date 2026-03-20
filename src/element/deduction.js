@@ -3,8 +3,8 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { attempt, instantiate } from "../utilities/context";
 import { instantiateDeduction } from "../process/instantiate";
+import { attempt, descend, instantiate } from "../utilities/context";
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export default define(class Deduction extends Element {
@@ -76,19 +76,21 @@ export default define(class Deduction extends Element {
   }
 
   validateStatement(context) {
-    let statementValidates;
+    let statementValidates = false;
 
     const statementString = this.statement.getString(),
           deductionnString = this.getString();  ///
 
     context.trace(`Validating the '${deductionnString}' deductionn's '${statementString}' statement...`);
 
-    const stated = true,
-          statement = this.statement.validate(stated, context);
+    descend((context) => {
+      const stated = true,  ///
+            statement = this.statement.validate(stated, context);
 
-    if (statement !== null) {
-      statementValidates = true;
-    }
+      if (statement !== null) {
+        statementValidates = true;
+      }
+    }, context);
 
     if (statementValidates) {
       context.trace(`...validated the '${deductionnString}' deductionn's '${statementString}' statement.`);

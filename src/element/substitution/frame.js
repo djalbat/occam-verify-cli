@@ -4,8 +4,8 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
-import { instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
+import { descend, instantiate, sanitisedContextFromContext } from "../../utilities/context";
 import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 
 export default define(class FrameSubstitution extends Substitution {
@@ -123,14 +123,16 @@ export default define(class FrameSubstitution extends Substitution {
     const targetFrameSingular = this.targetFrame.isSingular();
 
     if (targetFrameSingular) {
-      const stated = true,
-            tragetFrame = this.targetFrame.validate(stated, context);
+      descend((context) => {
+        const stated = true,  ///
+              tragetFrame = this.targetFrame.validate(stated, context);
 
-      if (tragetFrame !== null) {
-        this.targetFrame = tragetFrame;
+        if (tragetFrame !== null) {
+          this.targetFrame = tragetFrame;
 
-        targetFrameValidates = true;
-      }
+          targetFrameValidates = true;
+        }
+      }, context);
     } else {
       context.debug(`The '${frameSubstitutionString}' frame substitution's '${targetFrameString}' target frame is not singular.`);
     }
@@ -151,14 +153,16 @@ export default define(class FrameSubstitution extends Substitution {
 
     context.trace(`Validating the '${frameSubstitutionString}' frame substitution's '${replacementFrameString}' replacement frame...`);
 
-    const stated = true,
-          replacementFrame = this.replacementFrame.validate(stated, context);
+    descend((context) => {
+      const stated = true,  ///
+            replacementFrame = this.replacementFrame.validate(stated, context);
 
-    if (replacementFrame !== null) {
-      this.replacementFrame = replacementFrame;
+      if (replacementFrame !== null) {
+        this.replacementFrame = replacementFrame;
 
-      replacementFrameValidates = true;
-    }
+        replacementFrameValidates = true;
+      }
+    }, context);
 
     if (replacementFrameValidates) {
       context.debug(`...validated the '${frameSubstitutionString}' frame substitution's '${replacementFrameString}' replacement frame.`);

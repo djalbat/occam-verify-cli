@@ -3,8 +3,8 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { descend, instantiate } from "../utilities/context";
 import { instantiateAssumption } from "../process/instantiate";
-import { instantiate, reconcile } from "../utilities/context";
 
 export default define(class Assumption extends Element {
   constructor(context, string, node, reference, statement) {
@@ -30,6 +30,8 @@ export default define(class Assumption extends Element {
   }
 
   getMetavariable() { return this.reference.getMetavariable(); }
+
+  getTopLevelMetaAssertion() { return this.reference.getTopLevelMetaAssertion(); }
 
   matchAssumptionNode(assumptionNode) {
     const node = assumptionNode, ///
@@ -153,7 +155,7 @@ export default define(class Assumption extends Element {
     }
 
     if (referenceValidates) {
-      context.debug(`...validated the '${assumptionString}' assumption's '${referenceString}' statement.`);
+      context.debug(`...validated the '${assumptionString}' assumption's '${referenceString}' reference.`);
     }
 
     return referenceValidates;
@@ -167,13 +169,14 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);
 
-    stated = true;  ///
+    descend((context) => {
+      const stated = true,  ///
+            statement = this.statement.validate(stated, context);
 
-    const statement = this.statement.validate(stated, context);
-
-    if (statement !== null) {
-      statementValidates = true;
-    }
+      if (statement !== null) {
+        statementValidates = true;
+      }
+    }, context);
 
     if (statementValidates) {
       context.debug(`...validated the '${assumptionString}' assumption's '${statementString}' statement.`);
@@ -199,13 +202,19 @@ export default define(class Assumption extends Element {
   }
 
   validateWhenDerived(context) {
-    let validatesWhenDerived;
+    let validatesWhenDerived = false;
 
     const assumptionString = this.getString();  ///
 
     context.trace(`Validating the '${assumptionString}' derived assumption...`);
 
-    validatesWhenDerived = true;
+    const topLevelMetaAssertion = this.getTopLevelMetaAssertion();
+
+    if (topLevelMetaAssertion !== null) {
+      validatesWhenDerived = true;
+    } else {
+      context.debug(`The '${assumptionString}' asumption did not unify a top level meta-assumption.`);
+    }
 
     if (validatesWhenDerived) {
       context.debug(`...validated the '${assumptionString}' derived assumption.`);
@@ -222,17 +231,11 @@ export default define(class Assumption extends Element {
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);
 
-    reconcile((context) => {
-      topLevelMetaAssertionUnifies = this.reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+    topLevelMetaAssertionUnifies = this.reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-      if (topLevelMetaAssertionUnifies) {
-        topLevelMetaAssertionUnifies = this.statement.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
-
-        if (topLevelMetaAssertionUnifies) {
-          context.commit();
-        }
-      }
-    }, context);
+    if (topLevelMetaAssertionUnifies) {
+      topLevelMetaAssertionUnifies = this.statement.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+    }
 
     if (topLevelMetaAssertionUnifies) {
       context.trace(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);

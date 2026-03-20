@@ -2,8 +2,6 @@
 
 import { Element } from "occam-languages";
 
-import elements from "../elements";
-
 import { define } from "../elements";
 import { instantiateJudgement } from "../process/instantiate";
 import { reconcile, instantiate } from "../utilities/context";
@@ -41,8 +39,6 @@ export default define(class Judgement extends Element {
 
   getMetavariable() { return this.frame.getMetavariable(); }
 
-  compareMetavariableName(metavariableName) { return this.frame.compareMetavariableName(metavariableName); }
-
   matchJudgementNode(judgementNode) {
     const node = judgementNode, ///
           nodeMatches = this.matchNode(node),
@@ -50,6 +46,8 @@ export default define(class Judgement extends Element {
 
     return judgementNodeMatches;
   }
+
+  compareMetavariableName(metavariableName) { return this.frame.compareMetavariableName(metavariableName); }
 
   findValidJudgement(context) {
     const judgementNode = this.getJudgementNode(),
@@ -76,34 +74,34 @@ export default define(class Judgement extends Element {
       let validates = false;
 
       reconcile((context) => {
+        const frameValidates = this.validateFrame(stated, context);
 
-      }, context);
+        if (frameValidates) {
+          const assumptionValidates = this.validateAssumption(stated, context);
 
-      const frameValidates = this.validateFrame(stated, context);
+          if (assumptionValidates) {
+            let validatesWhenStated = false,
+                validatesWhenDerived = false;
 
-      if (frameValidates) {
-        const assumptionValidates = this.validateAssumption(stated, context);
+            if (stated) {
+              validatesWhenStated = this.validateWhenStated(context);
+            } else {
+              validatesWhenDerived = this.validateWhenDerived(context);
+            }
 
-        if (assumptionValidates) {
-          let validatesWhenStated = false,
-              validatesWhenDerived = false;
-
-          if (stated) {
-            validatesWhenStated = this.validateWhenStated(context);
-          } else {
-            validatesWhenDerived = this.validateWhenDerived(context);
-          }
-
-          if (validatesWhenStated || validatesWhenDerived) {
-            validates = true;
+            if (validatesWhenStated || validatesWhenDerived) {
+              validates = true;
+            }
           }
         }
-      }
+      }, context);
 
       if (validates) {
         judgement = this; ///
 
-        context.addJudgement(judgement)
+        this.assign(stated, context);
+
+        context.addJudgement(judgement);
 
         context.debug(`...validated the '${judgementString}' judgement.`);
       }
@@ -181,11 +179,9 @@ export default define(class Judgement extends Element {
 
     context.trace(`Validating the '${judgementString}' derived judgement...`);
 
-    const metavariable = this.assumption.getMetavariable(),
-          reference = referenceFromMetavariable(metavariable, context),
-          topLevelMetaAssertion = context.findTopLevelMetaAssertionByReference(reference),
-          substitutions = topLevelMetaAssertion.getSubstitutions(),
-          frameComparesToSubstitutions = this.frame.compareSubstitutions(substitutions, context);
+    const topLevelMetaAssertion = this.assumption.getTopLevelMetaAssertion(),
+          metaLevelSubstitutions = topLevelMetaAssertion.getMetaLevelSubstitutions(),
+          frameComparesToSubstitutions = this.frame.compareMetaLevelSubstitutions(metaLevelSubstitutions, context);
 
     if (frameComparesToSubstitutions) {
       validatesWhenDerived = true;
@@ -204,10 +200,9 @@ export default define(class Judgement extends Element {
     }
 
     const judgement = this, ///
-          judgementAssignment = judgementAssignmentFromJudgement(judgement, context),
-          assignment = judgementAssignment; ///
+          judgementAssignment = judgementAssignmentFromJudgement(judgement, context);
 
-    context.addAssignment(assignment);
+    context.addAssignment(judgementAssignment);
   }
 
   toJSON() {
@@ -251,12 +246,3 @@ function assumptionFromJudgementNode(judgementNode, context) {
 
   return assumption;
 }
-
-function referenceFromMetavariable(metavariable, context) {
-  const { Reference } = elements,
-        metavariableNode = metavariable.getNode(),
-        reference = Reference.fromMetavariableNode(metavariableNode, context);
-
-  return reference;
-}
-

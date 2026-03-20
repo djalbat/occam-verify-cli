@@ -249,23 +249,11 @@ export default define(class Equality extends Element {
           leftVariableAssignment = leftVariableAssignmentFromEquality(equality, context),
           rightVariableAssignment = rightVariableAssignmentFromEquality(equality, context);
 
-    let assignment;
+    context.addAssignment(equalityAssignment);
 
-    assignment = equalityAssignment; ///
+    context.addAssignment(leftVariableAssignment);
 
-    context.addAssignment(assignment);
-
-    if (leftVariableAssignment !== null) {
-      assignment = leftVariableAssignment;  ///
-
-      context.addAssignment(assignment);
-    }
-
-    if (rightVariableAssignment !== null) {
-      assignment = rightVariableAssignment;  ///
-
-      context.addAssignment(assignment);
-    }
+    context.addAssignment(rightVariableAssignment);
   }
 
   static name = "Equality";

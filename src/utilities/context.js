@@ -1,6 +1,7 @@
 "use strict";
 
-import ScopedContext from "../context/scoped";
+import ProofContext from "../context/proof";
+import NestedContext from "../context/nested";
 import NominalContext from "../context/nominal";
 import LiteralContext from "../context/literal";
 import LiminalContext from "../context/liminal";
@@ -37,6 +38,14 @@ export function choose(innerFunction, context) {
   return innerFunction(context);
 }
 
+export function descend(innerFunction, context) {
+  const nestedContext = NestedContext.fromNothing(context);
+
+  context = nestedContext;  ///
+
+  return innerFunction(context);
+}
+
 export function attempt(innerFunction, context) {
   const ephemeralContext = EphemeralContext.fromNothing(context);
 
@@ -68,9 +77,9 @@ export async function asyncRestrict(innerFunction, metaLevelSubstitutions, conte
     metaLevelSubstitutions = null;
   }
 
-  const scopedContext = ScopedContext.fromMetaLevelSubstitutions(metaLevelSubstitutions, context);
+  const proofcontext = ProofContext.fromMetaLevelSubstitutions(metaLevelSubstitutions, context);
 
-  context = scopedContext;  ///
+  context = proofcontext;  ///
 
   return await innerFunction(context);
 }

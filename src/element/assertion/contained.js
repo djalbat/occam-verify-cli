@@ -3,7 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { instantiate } from "../../utilities/context";
+import { descend, instantiate } from "../../utilities/context";
 import { instantiateContainedAssertion } from "../../process/instantiate";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
 import { termFromContainedAssertionNode, frameFromContainedAssertionNode, negatedFromContainedAssertionNode, statementFromContainedAssertionNode } from "../../utilities/element";
@@ -136,18 +136,19 @@ export default define(class ContainedAssertion extends Assertion {
 
       const frameSingular = this.frame.isSingular();
 
-      if (!frameSingular) {
-        context.debug(`The '${frameString}' frame is not singular.`);
+      if (frameSingular) {
+        descend((context) => {
+          const stated = true,  ///
+                frame = this.frame.validate(stated, context);
+
+          if (frame !== null) {
+            this.frame = frame;
+
+            frameValidates = true;
+          }
+        }, context);
       } else {
-        stated = true;  ///
-
-        const frame = this.frame.validate(stated, context);
-
-        if (frame !== null) {
-          this.frame = frame;
-
-          frameValidates = true;
-        }
+        context.debug(`The '${frameString}' frame is not singular.`);
       }
 
       if (frameValidates) {
@@ -166,13 +167,14 @@ export default define(class ContainedAssertion extends Assertion {
 
       context.trace(`Validating the '${statementString}' statement...`);
 
-      stated = true;  ///
+      descend((context) => {
+        const stated = true,  ///
+              statement = this.statement.validate(stated, context);
 
-      const statement = this.statement.validate(stated, context);
-
-      if (statement !== null) {
-        statementValidates = true;
-      }
+        if (statement !== null) {
+          statementValidates = true;
+        }
+      }, context);
 
       if (statementValidates) {
         context.debug(`...validated the '${statementString}' statement.`);

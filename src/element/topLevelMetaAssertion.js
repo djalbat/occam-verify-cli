@@ -42,7 +42,7 @@ export default class TopLevelMetaAssertion extends Element {
     return this.proof;
   }
 
-  getSubstitutions() {
+  getMetaLevelSubstitutions() {
     return this.metaLevelSubstitutions;
   }
 
