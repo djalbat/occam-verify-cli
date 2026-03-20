@@ -260,9 +260,7 @@ export default define(class Frame extends Element {
     context.trace(`Validating the '${frameString}' frame's '${assumptionstring}' assumption.`);
 
     reconcile((context) => {
-      descend((context) => {
-        const stated = true;  ///
-
+      descend((stated, context) => {
         assumption = assumption.validate(stated, context);  ///
 
         if (assumption !== null) {

@@ -447,13 +447,6 @@ export default class Context extends ContextBase {
     return metaLevelSubstitutions;
   }
 
-  isNested() {
-    const context = this.getContext(),
-          nested = context.isNested();
-
-    return nested;
-  }
-
   addTerms(terms) {
     const context = this.getContext();
 

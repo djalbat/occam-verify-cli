@@ -137,9 +137,8 @@ export default define(class ContainedAssertion extends Assertion {
       const frameSingular = this.frame.isSingular();
 
       if (frameSingular) {
-        descend((context) => {
-          const stated = true,  ///
-                frame = this.frame.validate(stated, context);
+        descend((stated, context) => {
+          const frame = this.frame.validate(stated, context);
 
           if (frame !== null) {
             this.frame = frame;
@@ -167,9 +166,8 @@ export default define(class ContainedAssertion extends Assertion {
 
       context.trace(`Validating the '${statementString}' statement...`);
 
-      descend((context) => {
-        const stated = true,  ///
-              statement = this.statement.validate(stated, context);
+      descend((stated, context) => {
+        const statement = this.statement.validate(stated, context);
 
         if (statement !== null) {
           statementValidates = true;

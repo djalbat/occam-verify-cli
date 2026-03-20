@@ -31,7 +31,9 @@ export function descend(innerFunction, context) {
 
   context = nestedContext;  ///
 
-  return innerFunction(context);
+  const stated = true;
+
+  return innerFunction(stated, context);
 }
 
 export function attempt(innerFunction, context) {
@@ -113,9 +115,9 @@ export async function asyncRestrict(innerFunction, metaLevelSubstitutions, conte
     metaLevelSubstitutions = null;
   }
 
-  const proofcontext = ProofContext.fromMetaLevelSubstitutions(metaLevelSubstitutions, context);
+  const proofContext = ProofContext.fromMetaLevelSubstitutions(metaLevelSubstitutions, context);
 
-  context = proofcontext;  ///
+  context = proofContext;  ///
 
   return await innerFunction(context);
 }

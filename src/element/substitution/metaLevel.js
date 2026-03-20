@@ -131,9 +131,8 @@ export default define(class MetaLevelSubstitution extends Substitution {
 
     context.trace(`Validating the '${metaLevelSubstitutionString}' meta-level substitution's '${replacementStatementString}' replacement statement...`);
 
-    descend((context) => {
-      const stated = true,  ///
-            replacementStatement = this.replacementStatement.validate(stated, context);
+    descend((stated, context) => {
+      const replacementStatement = this.replacementStatement.validate(stated, context);
 
       if (replacementStatement !== null) {
         replacementStatementValidates = true;

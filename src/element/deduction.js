@@ -82,9 +82,8 @@ export default define(class Deduction extends Element {
 
     context.trace(`Validating the '${deductionnString}' deductionn's '${statementString}' statement...`);
 
-    descend((context) => {
-      const stated = true,  ///
-            statement = this.statement.validate(stated, context);
+    descend((stated, context) => {
+      const statement = this.statement.validate(stated, context);
 
       if (statement !== null) {
         statementValidates = true;

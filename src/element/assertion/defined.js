@@ -131,9 +131,8 @@ export default define(class DefinedAssertion extends Assertion {
       const frameSingular = this.frame.isSingular();
 
       if (frameSingular) {
-        descend((context) => {
-          const stated = true,  ///
-                frame = this.frame.validate(stated, context);
+        descend((stated, context) => {
+          const frame = this.frame.validate(stated, context);
 
           if (frame !== null) {
             this.frame = frame;

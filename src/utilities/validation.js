@@ -149,9 +149,7 @@ function unifyStatementWithCombinators(statement, stated, context) {
   combinators.some((combinator) => {
     let statementUnifies;
 
-    descend((context) => {
-      const stated = true;  ///
-
+    descend((stated, context) => {
       statementUnifies = combinator.unifyStatement(statement, stated, context);
     }, context);
 

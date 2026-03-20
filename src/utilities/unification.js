@@ -92,9 +92,7 @@ async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfie
 
     context.trace(`Unifying the '${statementString}' statement as a satisfies assertion...`);
 
-    descend((context) => {
-      const stated = true;  ///
-
+    descend((stated, context) => {
       satisfiesAssertion.verifySignature(stated, context);
     }, context);
 

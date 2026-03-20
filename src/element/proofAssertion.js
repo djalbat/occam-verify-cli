@@ -51,28 +51,6 @@ export default class ProofAssertion extends Element {
     return comparesToStatement;
   }
 
-  validateStatement(context) {
-    let statementValidates = false;
-
-    const statementString = this.statement.getString(),
-          proofAssertionString = this.getString();  ///
-
-    context.trace(`Validating the '${proofAssertionString}' proof assertion's '${statementString}' statement... `);
-
-    const stated = this.isStated(),
-          statement = this.statement.validate(stated, context);
-
-    if (statement !== null) {
-      statementValidates = true;
-    }
-
-    if (statementValidates) {
-      context.debug(`...validated the '${proofAssertionString}' proof assertion's '${statementString}' statement. `);
-    }
-
-    return statementValidates;
-  }
-
   unifyStatement(statement, generalContext, specificContext) {
     let statementUnifies = false;
 

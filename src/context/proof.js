@@ -232,12 +232,6 @@ class ProofContext extends Context {
     return comparesToTermAndPropertyRelation;
   }
 
-  isNested() {
-    const nested = false;
-
-    return nested;
-  }
-
   isTermGrounded(term) {
     const context = this, ///
           equivalences = this.getEquivalences(),

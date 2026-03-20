@@ -25,12 +25,6 @@ export default define(class Premise extends ProofAssertion {
     return premiseNode;
   }
 
-  isStated() {
-    const stated = true; ///
-
-    return stated;
-  }
-
   async verify(context) {
     let verifies = false;
 
@@ -93,6 +87,32 @@ export default define(class Premise extends ProofAssertion {
     }
 
     return validates;
+  }
+
+  validateStatement(context) {
+    let statementValidates = false;
+
+    const premiseString = this.getString();
+
+    context.trace(`Validating the '${premiseString}' premise's statsement... `);
+
+    let statement;
+
+    const stated = true;
+
+    statement = this.getStatement();
+
+    statement = statement.validate(stated, context);  ///
+
+    if (statement !== null) {
+      statementValidates = true;
+    }
+
+    if (statementValidates) {
+      context.debug(`...validated the '${premiseString}' premise's statement. `);
+    }
+
+    return statementValidates;
   }
 
   validateProcedureCall(context) {

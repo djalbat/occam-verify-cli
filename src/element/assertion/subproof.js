@@ -89,9 +89,7 @@ export default define(class SubproofAssertion extends Assertion {
     const statementsValidate = this.statements.every((statement) => {
       let statementValidates = false;
 
-      descend((context) => {
-        const stated = true;  ///
-
+      descend((stated, context) => {
         statement = statement.validate(stated, context);  ///
 
         if (statement !== null) {

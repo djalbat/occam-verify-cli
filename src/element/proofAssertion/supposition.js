@@ -25,12 +25,6 @@ export default define(class Supposition extends ProofAssertion {
     return suppositionNode;
   }
 
-  isStated() {
-    const stated = true; ///
-
-    return stated;
-  }
-
   async verify(context) {
     let verifies = false;
 
@@ -93,6 +87,32 @@ export default define(class Supposition extends ProofAssertion {
     }
 
     return validates;
+  }
+
+  validateStatement(context) {
+    let statementValidates = false;
+
+    const suppositionString = this.getString();
+
+    context.trace(`Validating the '${suppositionString}' supposition's statement... `);
+
+    let statement;
+
+    const stated = true;
+
+    statement = this.getStatement();
+
+    statement = statement.validate(stated, context);  ///
+
+    if (statement !== null) {
+      statementValidates = true;
+    }
+
+    if (statementValidates) {
+      context.debug(`...validated the '${suppositionString}' supposition statement. `);
+    }
+
+    return statementValidates;
   }
 
   validateProcedureCall(context) {

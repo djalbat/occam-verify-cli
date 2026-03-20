@@ -3,10 +3,8 @@
 import Context from "../context";
 
 export default class NestedContext extends Context {
-  isNested() {
-    const nested = true;
-
-    return nested;
+  addAssignment(assignment) {
+    ///
   }
 
   static fromNothing(context) {

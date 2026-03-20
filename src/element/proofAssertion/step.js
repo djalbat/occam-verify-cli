@@ -46,13 +46,6 @@ export default define(class Step extends ProofAssertion {
     return qualified;
   }
 
-  isStated() {
-    const qualified = this.isQualified(),
-          stated = qualified; ///
-
-    return stated;
-  }
-
   compareTermAndPropertyRelation(term, propertyRelation, context) {
     let comparesToTermAndPropertyRelation = false;
 
@@ -155,6 +148,32 @@ export default define(class Step extends ProofAssertion {
     return referenceValidates;
   }
 
+  validateStatement(context) {
+    let statementValidates = false;
+
+    const stepString = this.getString();
+
+    context.trace(`Validating the '${stepString}' step's statement... `);
+
+    let statement;
+
+    const stated = false;
+
+    statement = this.getStatement();
+
+    statement = statement.validate(stated, context);  ///
+
+    if (statement !== null) {
+      statementValidates = true;
+    }
+
+    if (statementValidates) {
+      context.debug(`...validated the '${stepString}' step statement. `);
+    }
+
+    return statementValidates;
+  }
+
   validateSatisfiesAssertion(context) {
     let satisfiesAssertionValidates = true;  ///
 
@@ -164,9 +183,8 @@ export default define(class Step extends ProofAssertion {
 
       context.trace(`Validating the '${stepString}' step's '${satisfiesAssertionString}' satisfies assertion... `);
 
-      descend((context) => {
-        const stated = true,  ///
-              satisfiesAssertion = this.satisfiesAssertion.validate(stated, context);
+      descend((stated, context) => {
+        const satisfiesAssertion = this.satisfiesAssertion.validate(stated, context);
 
         if (satisfiesAssertion === null) {
           satisfiesAssertionValidates = false;

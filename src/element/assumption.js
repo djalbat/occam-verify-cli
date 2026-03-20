@@ -169,9 +169,8 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);
 
-    descend((context) => {
-      const stated = true,  ///
-            statement = this.statement.validate(stated, context);
+    descend((stated, context) => {
+      const statement = this.statement.validate(stated, context);
 
       if (statement !== null) {
         statementValidates = true;
