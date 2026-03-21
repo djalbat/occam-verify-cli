@@ -3,8 +3,10 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { descend, instantiate } from "../utilities/context";
 import { instantiateAssumption } from "../process/instantiate";
+import { descend, simplify, instantiate } from "../utilities/context";
+import { assumptionFromAssumptionNode } from "../utilities/element";
+import { assumptionStringFromStatementAndReference } from "../utilities/string";
 
 export default define(class Assumption extends Element {
   constructor(context, string, node, reference, statement) {
@@ -41,39 +43,42 @@ export default define(class Assumption extends Element {
     return assumptionNodeMatches;
   }
 
-  compareMetaLevelSubstitution(metaLevelSubstitution, context) {
-    let comparesToMetaLevelSubstitution = false;
+  compareAssumption(assumption, context) {
+    let comparesToAssumption = false;
 
-    const assumptionString = this.getString(),  ///
-          metaLevelSubstitutionString = metaLevelSubstitution.getString();
+    const assumptionA = this,
+          assumptionB = assumption; ///
 
-    context.trace(`Comparing the '${assumptionString}' assumption to the '${metaLevelSubstitutionString}' meta-level substitution...`);
+    const assumptionAString = assumptionA.getString(),  ///
+          assumptionBString = assumptionB.getString();
+
+    context.trace(`Comparing the '${assumptionAString}' assumption to the '${assumptionBString}' assumption...`);
 
     debugger
 
-    if (comparesToMetaLevelSubstitution) {
-      context.debug(`...compared the '${assumptionString}' assumption to the '${metaLevelSubstitutionString}' meta-level substitution.`);
+    if (comparesToAssumption) {
+      context.debug(`...compared the '${assumptionAString}' assumption to the '${assumptionBString}' assumption.`);
     }
 
-    return comparesToMetaLevelSubstitution;
+    return comparesToAssumption;
   }
 
-  findValidAssumption(context) {
+  findValidAssumption(context, metaLevel = false) {
     const assumptionNode = this.getAssumptionNode(),
-          assumption = context.findAssumptionByAssumptionNode(assumptionNode),
+          assumption = context.findAssumptionByAssumptionNode(assumptionNode, metaLevel),
           validAssumption = assumption;  ///
 
     return validAssumption;
   }
 
-  validate(context) {
+  validate(context, metaLevel = false) {
     let assumption = null;
 
     const assumptionString = this.getString();  ///
 
     context.trace(`Validating the '${assumptionString}' assumption...`);
 
-    const validAssumption = this.findValidAssumption(context);
+    const validAssumption = this.findValidAssumption(context, metaLevel);
 
     if (validAssumption) {
       assumption = validAssumption; ///
@@ -108,7 +113,7 @@ export default define(class Assumption extends Element {
       if (validates) {
         assumption = this;  ///
 
-        context.addAssumption(assumption);
+        context.addAssumption(assumption, metaLevel);
 
         context.debug(`...validated the '${assumptionString}' assumption.`);
       }
@@ -261,6 +266,22 @@ export default define(class Assumption extends Element {
       const assumption = new Assumption(context, string, node, reference, statement);
 
       return assumption;
+    }, context);
+
+    return assumption;
+  }
+
+  static fromStatementAndReference(statement, reference, context) {
+    let assumption;
+
+    simplify((context) => {
+      instantiate((context) => {
+        const assumptionString = assumptionStringFromStatementAndReference(statement, reference),
+              string = assumptionString,  ///
+              assumptionNode = instantiateAssumption(string, context);
+
+        assumption = assumptionFromAssumptionNode(assumptionNode, context);
+      }, context);
     }, context);
 
     return assumption;

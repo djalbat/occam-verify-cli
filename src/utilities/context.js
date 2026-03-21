@@ -124,14 +124,14 @@ export function unserialise(innerFunction, json, context) {
   return innerFunction(json, context);
 }
 
-export async function asyncRestrict(innerFunction, metaLevelSubstitutions, context) {
+export async function asyncRestrict(innerFunction, assumptions, context) {
   if (context === undefined) {
-    context = metaLevelSubstitutions;  ///
+    context = assumptions;  ///
 
-    metaLevelSubstitutions = null;
+    assumptions = null;
   }
 
-  const proofContext = ProofContext.fromMetaLevelSubstitutions(metaLevelSubstitutions, context);
+  const proofContext = ProofContext.fromAssumptions(assumptions, context);
 
   context = proofContext;  ///
 

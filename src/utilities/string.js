@@ -117,20 +117,6 @@ export function suppositionsStringFromSuppositions(suppositions) {
   return suppositionsString;
 }
 
-export function metaLevelSubstitutionsStringFromMetaLevelSubstitutions(metaLevelSubstitutions) {
-  const metaLevelSubstitutionsString = metaLevelSubstitutions.reduce((metaLevelSubstitutionsString, metaLevelSubstitution) => {
-    const metaLevelSubstitutionString = metaLevelSubstitution.getString();
-
-    metaLevelSubstitutionsString = (metaLevelSubstitutionsString === null) ?
-                                     metaLevelSubstitutionString: ///
-                                      `${metaLevelSubstitutionsString}, ${metaLevelSubstitutionString}`;
-
-    return metaLevelSubstitutionsString;
-  }, null);
-
-  return metaLevelSubstitutionsString;
-}
-
 export function signatureStringFromTerms(terms) {
   const termsString = termsStringFromTerms(terms),
         signatureString = `[${termsString}]`;
@@ -149,6 +135,14 @@ export function typeStringFromNominalTypeName(nominalTypeName) {
   const typeString = nominalTypeName;  ///
 
   return typeString;
+}
+
+export function assumptionStringFromStatementAndReference(statement, reference) {
+  const statementString = statement.getString(),
+        referneceString = reference.getString(),
+        assumptionString = `${referneceString} :: ${statementString}`;
+
+  return assumptionString;
 }
 
 export function termSubstitutionStringFromTermAndVariable(term, variable) {
@@ -196,14 +190,6 @@ export function frameSubstitutionStringFromFrameAndMetavariable(frame, metavaria
         string = `[${frameString} for [${metavariableString}]]`;
 
   return string;
-}
-
-export function metaLevelSubstitutionStringFromStatementAndReference(statement, reference) {
-  const statementString = statement.getString(),
-        referenceString = reference.getString(),
-        metaLevelSubstitutionString = `[${statementString} for ${referenceString}]`;
-
-  return metaLevelSubstitutionString;
 }
 
 export function procedureCallStringFromProcedureReferenceAndParameters(procedureReference, parameters) {

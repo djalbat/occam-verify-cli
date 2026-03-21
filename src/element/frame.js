@@ -7,7 +7,7 @@ import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromFrameNode } from "../utilities/element";
 import { descend, reconcile, instantiate } from "../utilities/context";
-import { assumptionsStringFromAssumptions, metaLevelSubstitutionsStringFromMetaLevelSubstitutions } from "../utilities/string";
+import { assumptionsStringFromAssumptions } from "../utilities/string";
 
 export default define(class Frame extends Element {
   constructor(context, string, node, assumptions, metavariable) {
@@ -119,54 +119,54 @@ export default define(class Frame extends Element {
     return comparesToMetavariableName;
   }
 
-  compareMetaLevelSubstitution(metaLevelSubstitution, context) {
-    let comparesToMetaLevelSubstitution;
+  compareAssumption(assumption, context) {
+    let comparesToAssumption;
 
     const frameString = this.getString(),  ///
-          metaLevelSubstitutionString = metaLevelSubstitution.getString();
+          assumptionString = assumption.getString();
 
-    context.trace(`Comparing the '${frameString}' frame to the '${metaLevelSubstitutionString}' meta-level substitution...`);
+    context.trace(`Comparing the '${frameString}' frame to the '${assumptionString}' assumption...`);
 
     const metavariableNode = this.metavariable.getNode(),
           judgements = context.findJudgementsByMetavariableNode(metavariableNode),
           assumptions = assumptionsFromJudgements(judgements);
 
-    comparesToMetaLevelSubstitution = assumptions.some((assumption) => {
-      const assumptionComparesToSubstitution = assumption.compareMetaLevelSubstitution(metaLevelSubstitution, context);
+    comparesToAssumption = assumptions.some((assumption) => {
+      const assumptionComparesToSubstitution = assumption.compareAssumption(assumption, context);
 
       if (assumptionComparesToSubstitution) {
         return true;
       }
     });
 
-    if (comparesToMetaLevelSubstitution) {
-      context.debug(`...compared the '${frameString}' frame to the '${metaLevelSubstitutionString}' meta-level substitution.`);
+    if (comparesToAssumption) {
+      context.debug(`...compared the '${frameString}' frame to the '${assumptionString}' assumption.`);
     }
 
-    return comparesToMetaLevelSubstitution;
+    return comparesToAssumption;
   }
 
-  compareMetaLevelSubstitutions(metaLevelSubstitutions, context) {
-    let comparesToMetaLevelSubstitutions;
+  compareAssumptions(assumptions, context) {
+    let comparesToAssumptions;
 
     const frameString = this.getString(),  ///
-          metaLevelSubstitutionsString = metaLevelSubstitutionsStringFromMetaLevelSubstitutions(metaLevelSubstitutions);
+          assumptionsString = assumptionsStringFromAssumptions(assumptions);
 
-    context.trace(`Comparing the '${frameString}' frame to the '${metaLevelSubstitutionsString}' meta-level substitution...`);
+    context.trace(`Comparing the '${frameString}' frame to the '${assumptionsString}' assumption...`);
 
-    comparesToMetaLevelSubstitutions = metaLevelSubstitutions.every((metaLevelSubstitution) => {
-      const compaaresToMetaLevelSubstitution = this.compareMetaLevelSubstitution(metaLevelSubstitution, context);
+    comparesToAssumptions = assumptions.every((assumption) => {
+      const compaaresToAssumption = this.compareAssumption(assumption, context);
 
-      if (compaaresToMetaLevelSubstitution) {
+      if (compaaresToAssumption) {
         return true;
       }
     });
 
-    if (comparesToMetaLevelSubstitutions) {
-      context.debug(`...compared the '${frameString}' frame to the '${metaLevelSubstitutionsString}' metaLevelSubstitutions.`);
+    if (comparesToAssumptions) {
+      context.debug(`...compared the '${frameString}' frame to the '${assumptionsString}' assumptions.`);
     }
 
-    return comparesToMetaLevelSubstitutions;
+    return comparesToAssumptions;
   }
 
   findValidFrame(context) {

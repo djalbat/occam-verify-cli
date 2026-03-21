@@ -8,15 +8,19 @@ import elements from "../elements";
 const { last, filter } = arrayUtilities;
 
 class ProofContext extends Context {
-  constructor(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions, metaLevelSubstitutions) {
+  constructor(context, assumptions, variables, judgements, assignments, equivalences, subproofOrProofAssertions) {
     super(context);
 
+    this.assumptions = assumptions;
     this.variables = variables;
     this.judgements = judgements;
     this.assignments = assignments;
     this.equivalences = equivalences;
     this.subproofOrProofAssertions = subproofOrProofAssertions;
-    this.metaLevelSubstitutions = metaLevelSubstitutions;
+  }
+
+  getAssumptions() {
+    return this.assumptions;
   }
 
   getVariables() {
@@ -84,10 +88,6 @@ class ProofContext extends Context {
     return subproofOrProofAssertions;
   }
 
-  getMetaLevelSubstitutions() {
-    return this.metaLevelSubstitutions;
-  }
-
   getProofAssertions() {
     const subproofOrProofAssertions = this.getSubproofOrProofAssertions(),
           proofAssertions = subproofOrProofAssertions.filter((subproofOrProofAssertion) => {
@@ -116,18 +116,20 @@ class ProofContext extends Context {
     return lastStep;
   }
 
-  hasMetaLevelSubstitutions() {
-    let metaLevelSubstitutions;
+  hasAssumptions(metaLevel = true) {
+    let assumptions = false;
 
-    if (this.metaLevelSubstitutions !== null) {
-      metaLevelSubstitutions = true;
-    } else {
-      const context = this.getContext();
+    if (metaLevel) {
+      if (this.assumptions !== null) {
+        assumptions = true;
+      } else {
+        const context = this.getContext();
 
-      metaLevelSubstitutions = context.hasMetaLevelSubstitutions();
+        assumptions = context.hasAssumptions(metaLevel);
+      }
     }
 
-    return metaLevelSubstitutions;
+    return assumptions;
   }
 
   addEquality(equality) {
@@ -184,34 +186,34 @@ class ProofContext extends Context {
     });
   }
 
-  addMetaLevelSubstitution(metaLevelSubstitution) {
-    if (this.metaLevelSubstitutions === null) {
-      super.addMetaLevelSubstitution(metaLevelSubstitution);
+  addAssumption(assumption, metaLevel = true) {
+    if (this.assumptions === null) {
+      super.addAssumption(assumption, metaLevel);
 
       return;
     }
 
     const context = this, ///
-          metaLevelSubstitutionA = metaLevelSubstitution, ///
-          metaLevelSubstitutionString = metaLevelSubstitution.getString();
+          assumptionA = assumption, ///
+          assumptionString = assumption.getString();
 
-    context.trace(`Adding the '${metaLevelSubstitutionString}' meta-level substitution to the proof context...`);
+    context.trace(`Adding the '${assumptionString}' assumption to the proof context...`);
 
-    const metaLevelSubstitutionB = this.metaLevelSubstitutions.find((metaLevelSubstitution) => {
-      const metaLevelSubstitutionB = metaLevelSubstitution, ///
-            metaLevelSubstitutionAEqualToMetaLevelSubstitutionB = metaLevelSubstitutionA.isEqualTo(metaLevelSubstitutionB);
+    const assumptionB = this.assumptions.find((assumption) => {
+      const assumptionB = assumption, ///
+            assumptionAEqualToAssumptionB = assumptionA.isEqualTo(assumptionB);
 
-      if (metaLevelSubstitutionAEqualToMetaLevelSubstitutionB) {
+      if (assumptionAEqualToAssumptionB) {
         return true;
       }
     }) || null;
 
-    if (metaLevelSubstitutionB !== null) {
-      context.debug(`The '${metaLevelSubstitutionString}' meta-level substitution has already been added to the proof context.`);
+    if (assumptionB !== null) {
+      context.debug(`The '${assumptionString}' assumption has already been added to the proof context.`);
     } else {
-      this.metaLevelSubstitutions.push(metaLevelSubstitution);
+      this.assumptions.push(assumption);
 
-      context.debug(`...added the '${metaLevelSubstitutionString}' substitution to the proof context.`);
+      context.debug(`...added the '${assumptionString}' substitution to the proof context.`);
     }
   }
 
@@ -242,6 +244,26 @@ class ProofContext extends Context {
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
 
+  findAssumptionByAssumptionNode(assumptionNode, metaLevel = true) {
+    let assumption = null;
+
+    if (metaLevel) {
+      if (this.assumptions === null) {
+        assumption = super.findAssumptionByAssumptionNode(assumptionNode, metaLevel);
+      } else {
+        assumption = this.assumptions.find((assumption) => {
+          const assumptionNodeMatches = assumption.matchAssumptionNode(assumptionNode);
+
+          if (assumptionNodeMatches) {
+            return true;
+          }
+        }) || null;
+      }
+    }
+
+    return assumption;
+  }
+
   findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
@@ -266,24 +288,6 @@ class ProofContext extends Context {
           }) || null;
 
     return variable;
-  }
-
-  findMetaLevelSubstitutionByMetaLevelSubstitutionNode(metaLevelSubstitutionNode) {
-    let metaLevelSubstitution;
-
-    if (this.metaLevelSubstitutions === null) {
-      metaLevelSubstitution = super.findMetaLevelSubstitutionByMetaLevelSubstitutionNode(metaLevelSubstitutionNode);
-    } else {
-      metaLevelSubstitution = this.metaLevelSubstitutions.find((metaLevelSubstitution) => {
-        const metaLevelSubstitutionNodeMatches = metaLevelSubstitution.matchMetaLevelSubstitutionNode(metaLevelSubstitutionNode);
-
-        if (metaLevelSubstitutionNodeMatches) {
-          return true;
-        }
-      }) || null;
-    }
-
-    return metaLevelSubstitution;
   }
 
   findJudgementsByMetavariableNode(metavariableNode) {
@@ -335,14 +339,14 @@ class ProofContext extends Context {
     return termGrounded;
   }
 
-  static fromMetaLevelSubstitutions(metaLevelSubstitutions, context) {
+  static fromAssumptions(assumptions, context) {
     const { Equivalences } = elements,
           variables = [],
           judgements = [],
           assignments = [],
           equivalences = Equivalences.fromNothing(context),
           subproofOrProofAssertions = [],
-          proofContext = new ProofContext(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions, metaLevelSubstitutions);
+          proofContext = new ProofContext(context, assumptions, variables, judgements, assignments, equivalences, subproofOrProofAssertions);
 
     return proofContext;
   }

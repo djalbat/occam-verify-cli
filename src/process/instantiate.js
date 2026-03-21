@@ -34,8 +34,7 @@ import { TERM_RULE_NAME,
          CONTAINED_ASSERTION_RULE_NAME,
          SATISFIES_ASSERTION_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME,
-         REFERENCE_SUBSTITUTION_RULE_NAME,
-         META_LEVEL_SUBSTITUTION_RULE_NAME } from "../ruleNames";
+         REFERENCE_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
 const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       typePlaceholderRule = ruleFromRuleName(TYPE_RULE_NAME),
@@ -70,8 +69,7 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       containedAssertionPlaceholderRule = ruleFromRuleName(CONTAINED_ASSERTION_RULE_NAME),
       satisfiesAssertionPlaceholderRule = ruleFromRuleName(SATISFIES_ASSERTION_RULE_NAME),
       statementSubstitutionPlaceholderRule = ruleFromRuleName(STATEMENT_SUBSTITUTION_RULE_NAME),
-      referenceSubstitutionPlaceholderRule = ruleFromRuleName(REFERENCE_SUBSTITUTION_RULE_NAME),
-      metaLevelSubstitutionPlaceholderRule = ruleFromRuleName(META_LEVEL_SUBSTITUTION_RULE_NAME);
+      referenceSubstitutionPlaceholderRule = ruleFromRuleName(REFERENCE_SUBSTITUTION_RULE_NAME);
 
 export function instantiatePremise(string, context) {
   string = `${string}
@@ -160,8 +158,6 @@ export function instantiateSatisfiesAssertion(string, context) { return instanti
 export function instantiateStatementSubstitution(string, context) { return instantiate(statementSubstitutionPlaceholderRule, string, context); }
 
 export function instantiateReferenceSubstitution(string, context) { return instantiate(referenceSubstitutionPlaceholderRule, string, context); }
-
-export function instantiateMetaLevelSubstitution(string, context) { return instantiate(metaLevelSubstitutionPlaceholderRule, string, context); }
 
 function instantiate(placeholderRule, string, context) {
   let node;

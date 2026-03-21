@@ -185,8 +185,8 @@ export default define(class Judgement extends Element {
     context.trace(`Validating the '${judgementString}' derived judgement...`);
 
     const topLevelMetaAssertion = this.assumption.getTopLevelMetaAssertion(),
-          metaLevelSubstitutions = topLevelMetaAssertion.getMetaLevelSubstitutions(),
-          frameComparesToSubstitutions = this.frame.compareMetaLevelSubstitutions(metaLevelSubstitutions, context);
+          assumptions = topLevelMetaAssertion.getAssumptions(),
+          frameComparesToSubstitutions = this.frame.compareAssumptions(assumptions, context);
 
     if (frameComparesToSubstitutions) {
       validatesWhenDerived = true;

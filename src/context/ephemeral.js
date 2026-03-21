@@ -253,7 +253,15 @@ export default class EphemeralContext extends Context {
     }
   }
 
-  addAssumption(assumption) {
+  addAssumption(assumption, metaLevel = false) {
+    if (metaLevel) {
+      const context = this.getContext();
+
+      context.addAssumption(assumption, metaLevel);
+
+      return;
+    }
+
     const context = this, ///
           assumptionA = assumption, ///
           assumptionString = assumption.getString();
@@ -393,14 +401,22 @@ export default class EphemeralContext extends Context {
     return assertion;
   }
 
-  findAssumptionByAssumptionNode(assumptionNode) {
-    const assumption = this.assumptions.find((assumption) => {
-      const assumptionNodeMatches = assumption.matchAssumptionNode(assumptionNode);
+  findAssumptionByAssumptionNode(assumptionNode, metaLevel = false) {
+    let assumption;
 
-      if (assumptionNodeMatches) {
-        return true;
-      }
-    }) || null;
+    if (metaLevel) {
+      const context = this.getContext();
+
+      assumption = context.findAssumptionByAssumptionNode(assumptionNode, metaLevel);
+    } else {
+      assumption = this.assumptions.find((assumption) => {
+        const assumptionNodeMatches = assumption.matchAssumptionNode(assumptionNode);
+
+        if (assumptionNodeMatches) {
+          return true;
+        }
+      }) || null;
+    }
 
     return assumption;
   }
@@ -471,8 +487,8 @@ export default class EphemeralContext extends Context {
     return assertionPresent;
   }
 
-  isAssumptionPresentByAssumptionNode(assumptionNode) {
-    const assumption = this.findAssumptionByAssumptionNode(assumptionNode),
+  isAssumptionPresentByAssumptionNode(assumptionNode, metaLevel = false) {
+    const assumption = this.findAssumptionByAssumptionNode(assumptionNode, metaLevel),
           assumptionPresent = (assumption !== null);
 
     return assumptionPresent;

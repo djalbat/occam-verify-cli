@@ -348,11 +348,11 @@ export function metaLemmaFromMetaLemmaNode(metaLemmaNode, context) {
         label = labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
-        metaLevelSubstitutions = metaLevelSubstitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        assumptions = assumptionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
         node = metaLemmaMetathoremNode, ///
         string = topLevelMetaAssertionString, ///
-        metaLemma = new MetaLemma(context, string, node, label, suppositions, deduction, proof, metaLevelSubstitutions);
+        metaLemma = new MetaLemma(context, string, node, label, suppositions, deduction, proof, assumptions);
 
   return metaLemma;
 }
@@ -437,20 +437,6 @@ export function conclusionFromConclusionNode(conclusionNode, context) {
   return conclusion;
 }
 
-export function assumptionFromAssumptionNode(assumptionNode, context) {
-  const { Assumption } = elements,
-        node = assumptionNode, ///
-        string = context.nodeAsString(node),
-        reference = referenceFromAssumptionNode(assumptionNode, context),
-        statement = statementFromAssumptionNode(assumptionNode, context);
-
-  context = null;
-
-  const assumption = new Assumption(context, string, node, reference, statement);
-
-  return assumption;
-}
-
 export function derivationFromDerivationNode(derivationNode, context) {
   const { Derivation } = elements,
         node = derivationNode,  ///
@@ -476,6 +462,20 @@ export function typePrefixFromTypePrefixNode(typePrefixNode, context) {
   const typePrefix = new TypePrefix(context, string, node, term, type);
 
   return typePrefix;
+}
+
+export function assumptionFromAssumptionNode(assumptionNode, context) {
+  const { Assumption } = elements,
+        node = assumptionNode,  ///
+        string = context.nodeAsString(node),
+        reference = referenceFromAssumptionNode(assumptionNode, context),
+        statement = statementFromAssumptionNode(assumptionNode, context);
+
+  context = null;
+
+  const assumption = new Assumption(context, string, node, reference, statement);
+
+  return assumption;
 }
 
 export function constructorFromConstructorNode(constructorNode, context) {
@@ -525,11 +525,11 @@ export function metatheoremFromMetatheoremNode(metatheoremNode, context) {
         label = labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
-        metaLevelSubstitutions = metaLevelSubstitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
+        assumptions = assumptionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
         node = metaLemmaMetathoremNode, ///
         string = topLevelMetaAssertionString, ///
-        metatheorem = new Metatheorem(context, string, node, label, suppositions, deduction, proof, metaLevelSubstitutions);
+        metatheorem = new Metatheorem(context, string, node, label, suppositions, deduction, proof, assumptions);
 
   return metatheorem;
 }
@@ -786,21 +786,6 @@ export function statementSubstitutionFromStatementSubstitutionNode(statementSubs
         statementSubstitution = new StatementSubstitution(context, string, node, resolved, substitution, targetStatement, replacementStatement);
 
   return statementSubstitution;
-}
-
-export function metaLevelSubstitutionFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context) {
-  const { MetaLevelSubstitution } = elements,
-        node = metaLevelSubstitutionNode,  ///
-        string = context.nodeAsString(node),
-        targetReference = targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
-        replacementStatement = replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context),
-        ephemeralContext = context.retrieveEphemeralContext();
-
-  context = ephemeralContext; ///
-
-  const metaLevelSubstitution = new MetaLevelSubstitution(context, string, node, targetReference, replacementStatement);
-
-  return metaLevelSubstitution;
 }
 
 export function constructorDeclarationFromConstructorDeclarationNode(constructorDeclarationNode, context) {
@@ -1813,6 +1798,12 @@ export function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationN
   return metaType;
 }
 
+export function assumptionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
+  const assumptions = [];
+
+  return assumptions;
+}
+
 export function provisionalFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
   const provisional = simpleTypeDeclarationNode.isProvisional();
 
@@ -1891,17 +1882,9 @@ export function metavariableFromMetavariableDeclarationNode(metavariableDeclarat
 export function targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
   const targetReferenceNode = referenceSubstitutionNode.getTargetReferenceNode(),
         targetReferenceString = context.nodeAsString(targetReferenceNode),
-        targetRefernece = referenceFromReferenceString(targetReferenceString, context);
+        targetReference = referenceFromReferenceString(targetReferenceString, context);
 
-  return targetRefernece;
-}
-
-export function targetReferenceFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context) {
-  const targetReferenceNode = metaLevelSubstitutionNode.getTargetReferenceNode(),
-        targetReferenceString = context.nodeAsString(targetReferenceNode),
-        targetRefernece = referenceFromReferenceString(targetReferenceString, context);
-
-  return targetRefernece;
+  return targetReference;
 }
 
 export function targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context) {
@@ -1948,19 +1931,6 @@ export function replacementStatementFromStatementSubstitutionNode(statementSubst
         replacementStatement = statementFromStatementNode(replacementStatementNode, context);
 
   return replacementStatement;
-}
-
-export function replacementStatementFromMetaLevelSubstitutionNode(metaLevelSubstitutionNode, context) {
-  const replacementStatementNode = metaLevelSubstitutionNode.getReplacementStatementNode(),
-        replacementStatement = statementFromStatementNode(replacementStatementNode, context);
-
-  return replacementStatement;
-}
-
-export function metaLevelSubstitutionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
-  const metaLevelSubstitutions = [];
-
-  return metaLevelSubstitutions;
 }
 
 export function termsFromTermNodes(termNodes, context) {

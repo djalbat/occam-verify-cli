@@ -703,22 +703,6 @@ export function propertyRelationsFromJSON(json, context) {
   return propertyRelations;
 }
 
-export function metaLevelSubstitutionsFromJSON(json, context) {
-  let { metaLevelSubstitutions } = json;  ///
-
-  const { MetaLevelSubstitution } = elements,
-        metaLevelSubstitutionsJSON = metaLevelSubstitutions; ///
-
-  metaLevelSubstitutions = metaLevelSubstitutionsJSON.map((metaLevelSubstitutionJSON) => {
-    const json = metaLevelSubstitutionJSON,  ///
-          metaLevelSubstitution = MetaLevelSubstitution.fromJSON(json, context);
-
-    return metaLevelSubstitution;
-  });
-
-  return metaLevelSubstitutions;
-}
-
 export function nameToNameJSON(name) {
   const nameJSON = name;  ///
 
@@ -1125,16 +1109,6 @@ export function propertyRelationsToPropertyRelationsJSON(propertyRelations) {
   });
 
   return propertyRelationsJSON;
-}
-
-export function metaLevelSubstitutionsToMetaLevelSubstitutionsJSON(metaLevelSubstitutions) {
-  const metaLevelSubstitutionsJSON = metaLevelSubstitutions.map((metaLevelSubstitution) => {
-    const metaLevelSubstitutionJSON = metaLevelSubstitution.toJSON();
-
-    return metaLevelSubstitutionJSON;
-  });
-
-  return metaLevelSubstitutionsJSON;
 }
 
 function findTypeByName(name, context) {

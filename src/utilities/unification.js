@@ -55,15 +55,14 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
         statementUnifiesWithReference = true;
       }
     } else {
-      const metaLevelSubstitutions = context.hasMetaLevelSubstitutions();
+      const metaLevel = true,
+            assumptions = context.hasAssumptions(metaLevel);
 
-      if (metaLevelSubstitutions) {
-        const { MetaLevelSubstitution } = elements,
-              metaLevelSubstitution = MetaLevelSubstitution.fromStatementAndReference(statement, reference, context),
-              generalContext = context, ///
-              specificContext = context;  ///
+      if (assumptions) {
+        const { Assumption } = elements,
+              assumption = Assumption.fromStatementAndReference(statement, reference, context);
 
-        metaLevelSubstitution.validate(generalContext, specificContext);
+        assumption.validate(context, metaLevel);
 
         statementUnifiesWithReference = true;
       }

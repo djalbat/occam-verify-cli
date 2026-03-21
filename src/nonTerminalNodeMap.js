@@ -79,7 +79,6 @@ import SimpleTypeDeclarationNode from "./node/declaration/simpleType";
 import CombinatorDeclarationNode from "./node/declaration/combinator";
 import ReferenceSubstitutionNode from "./node/substitution/reference";
 import StatementSubstitutionNode from "./node/substitution/statement";
-import MetaLevelSubstitutionNode from "./node/substitution/metaLevel";
 import TypePrefixDeclarationNode from "./node/declaration/typePrefix";
 import ComplexTypeDeclarationNode from "./node/declaration/complexType";
 import DonstructorDeclarationNode from "./node/declaration/constructor";
@@ -164,7 +163,6 @@ import {
   COMBINATOR_DECLARATION_RULE_NAME,
   REFERENCE_SUBSTITUTION_RULE_NAME,
   STATEMENT_SUBSTITUTION_RULE_NAME,
-  META_LEVEL_SUBSTITUTION_RULE_NAME,
   SIMPLE_TYPE_DECLARATION_RULE_NAME,
   CONSTRUCTOR_DECLARATION_RULE_NAME,
   TYPE_PREFIX_DECLARATION_RULE_NAME,
@@ -250,7 +248,6 @@ const NonTerminalNodeMap = {
   [COMBINATOR_DECLARATION_RULE_NAME]: CombinatorDeclarationNode,
   [STATEMENT_SUBSTITUTION_RULE_NAME]: StatementSubstitutionNode,
   [REFERENCE_SUBSTITUTION_RULE_NAME]: ReferenceSubstitutionNode,
-  [META_LEVEL_SUBSTITUTION_RULE_NAME]: MetaLevelSubstitutionNode,
   [SIMPLE_TYPE_DECLARATION_RULE_NAME]: SimpleTypeDeclarationNode,
   [TYPE_PREFIX_DECLARATION_RULE_NAME]: TypePrefixDeclarationNode,
   [CONSTRUCTOR_DECLARATION_RULE_NAME]: DonstructorDeclarationNode,
