@@ -58,16 +58,16 @@ export default define(class DefinedAssertion extends Assertion {
       if (termValidates || frameValidates) {
         const stated = context.isStated();
 
-        let verifiesWhenStated = false,
-            verifiesWhenDerived = false;
+        let validatesWhenStated = false,
+            validatesWhenDerived = false;
 
         if (stated) {
-          verifiesWhenStated = this.validateWhenStated(context);
+          validatesWhenStated = this.validateWhenStated(context);
         } else {
-          verifiesWhenDerived = this.validateWhenDerived(context);
+          validatesWhenDerived = this.validateWhenDerived(context);
         }
 
-        if (verifiesWhenStated || verifiesWhenDerived) {
+        if (validatesWhenStated || validatesWhenDerived) {
           validates = true;
         }
       }
@@ -155,23 +155,23 @@ export default define(class DefinedAssertion extends Assertion {
   }
 
   validateWhenStated(context) {
-    let verifiesWhenStated;
+    let validatesWhenStated;
 
     const definedAssertionString = this.getString(); ///
 
     context.trace(`Validating the '${definedAssertionString}' stated defined assertion...`);
 
-    verifiesWhenStated = true;
+    validatesWhenStated = true;
 
-    if (verifiesWhenStated) {
+    if (validatesWhenStated) {
       context.debug(`...validates the '${definedAssertionString}' stated defined assertion.`);
     }
 
-    return verifiesWhenStated;
+    return validatesWhenStated;
   }
 
   validateWhenDerived(context) {
-    let verifiesWhenDerived;
+    let validatesWhenDerived;
 
     const definedAssertionString = this.getString(); ///
 
@@ -180,17 +180,17 @@ export default define(class DefinedAssertion extends Assertion {
     const generalContext = null,
           specificContext = context;  ///
 
-    verifiesWhenDerived = validateWhenDerived(this.term, this.frame, this.negated, generalContext, specificContext);
+    validatesWhenDerived = validateWhenDerived(this.term, this.frame, this.negated, generalContext, specificContext);
 
-    if (verifiesWhenDerived) {
+    if (validatesWhenDerived) {
       context.debug(`...validates the '${definedAssertionString}' derived defined assertion.`);
     }
 
-    return verifiesWhenDerived;
+    return validatesWhenDerived;
   }
 
   unifyIndependently(generalContext, specificContext) {
-    let unifiesIndependently;
+    let unifiesIndependently = false;
 
     const context = specificContext, ///
           definedAssertionString = this.getString(); ///
@@ -199,9 +199,11 @@ export default define(class DefinedAssertion extends Assertion {
 
     const term = termFromTermAndSubstitutions(this.term, generalContext, specificContext),
           frame = frameFromFrameAndSubstitutions(this.frame, generalContext, specificContext),
-          verifiesWhenDerived = validateWhenDerived(term, frame, this.negated, generalContext, specificContext);
+          validatesWhenDerived = validateWhenDerived(term, frame, this.negated, generalContext, specificContext);
 
-    unifiesIndependently = verifiesWhenDerived; ///
+    if (validatesWhenDerived) {
+      unifiesIndependently = true;
+    }
 
     if (unifiesIndependently) {
       context.debug(`...unified the '${definedAssertionString}' defined assertion independently.`);
@@ -244,7 +246,7 @@ export default define(class DefinedAssertion extends Assertion {
 });
 
 function validateWhenDerived(term, frame, negated, generalContext, specificContext) {
-  let verifiesWhenDerived = false;
+  let validatesWhenDerived = false;
 
   const context = specificContext;  ///
 
@@ -254,11 +256,11 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
           variableDefined = isVariableDefined(variable, context);
 
     if (!negated && variableDefined) {
-      verifiesWhenDerived = true;
+      validatesWhenDerived = true;
     }
 
     if (negated && !variableDefined) {
-      verifiesWhenDerived = true;
+      validatesWhenDerived = true;
     }
   }
 
@@ -268,15 +270,15 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
           metavariableDefined = isMetavariableDefined(metavariable, context);
 
     if (!negated && metavariableDefined) {
-      verifiesWhenDerived = true;
+      validatesWhenDerived = true;
     }
 
     if (negated && !metavariableDefined) {
-      verifiesWhenDerived = true;
+      validatesWhenDerived = true;
     }
   }
 
-  return verifiesWhenDerived;
+  return validatesWhenDerived;
 }
 
 function isVariableDefined(variable, context) {

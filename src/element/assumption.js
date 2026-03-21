@@ -208,7 +208,6 @@ export default define(class Assumption extends Element {
     const assumptionString = this.getString();  ///
 
     context.trace(`Validating the '${assumptionString}' derived assumption...`);
-
     const topLevelMetaAssertion = this.getTopLevelMetaAssertion();
 
     if (topLevelMetaAssertion !== null) {
