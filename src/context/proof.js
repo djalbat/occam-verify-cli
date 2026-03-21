@@ -187,6 +187,10 @@ class ProofContext extends Context {
   }
 
   addAssumption(assumption, metaLevel = true) {
+    if (!metaLevel) {
+      return;
+    }
+
     if (this.assumptions === null) {
       super.addAssumption(assumption, metaLevel);
 

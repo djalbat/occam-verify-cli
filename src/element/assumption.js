@@ -35,6 +35,14 @@ export default define(class Assumption extends Element {
 
   getTopLevelMetaAssertion() { return this.reference.getTopLevelMetaAssertion(); }
 
+  isEqualTo(assumption) {
+    const assumptionNode = assumption.getNode(),
+          assumptionNodeMatches = this.matchAssumptionNode(assumptionNode),
+          equalTo = assumptionNodeMatches;  ///
+
+    return equalTo;
+  }
+
   matchAssumptionNode(assumptionNode) {
     const node = assumptionNode, ///
           nodeMatches = this.matchNode(node),
@@ -46,7 +54,7 @@ export default define(class Assumption extends Element {
   compareAssumption(assumption, context) {
     let comparesToAssumption = false;
 
-    const assumptionA = this,
+    const assumptionA = this, ///
           assumptionB = assumption; ///
 
     const assumptionAString = assumptionA.getString(),  ///
