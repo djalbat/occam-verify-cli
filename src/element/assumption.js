@@ -41,28 +41,21 @@ export default define(class Assumption extends Element {
     return assumptionNodeMatches;
   }
 
-  compareSubstitution(substitution, context) {
-    let comparesToSubstituion = false;
+  compareMetaLevelSubstitution(metaLevelSubstitution, context) {
+    let comparesToMetaLevelSubstitution = false;
 
     const assumptionString = this.getString(),  ///
-          substitutionString = substitution.getString();
+          metaLevelSubstitutionString = metaLevelSubstitution.getString();
 
-    context.trace(`Comparing the '${assumptionString}' assumption to the '${substitutionString}' substitution...`);
+    context.trace(`Comparing the '${assumptionString}' assumption to the '${metaLevelSubstitutionString}' meta-level substitution...`);
 
-    const statement = substitution.getStatement(),
-          metavariableName = substitution.getMetavariableName(),
-          statementEqualToStatement = this.statement.isEqualTo(statement),
-          referenceMetavariableComparesToMetavariable = this.reference.compareMetavariableName(metavariableName);
+    debugger
 
-    if (statementEqualToStatement && referenceMetavariableComparesToMetavariable) {
-      comparesToSubstituion = true;
+    if (comparesToMetaLevelSubstitution) {
+      context.debug(`...compared the '${assumptionString}' assumption to the '${metaLevelSubstitutionString}' meta-level substitution.`);
     }
 
-    if (comparesToSubstituion) {
-      context.debug(`...compared the '${substitutionString}' assumption to the '${assumptionString}' substitution.`);
-    }
-
-    return comparesToSubstituion;
+    return comparesToMetaLevelSubstitution;
   }
 
   findValidAssumption(context) {
