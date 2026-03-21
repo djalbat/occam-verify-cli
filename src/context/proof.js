@@ -5,7 +5,7 @@ import { arrayUtilities } from "necessary";
 import Context from "../context";
 import elements from "../elements";
 
-const { last } = arrayUtilities;
+const { last, filter } = arrayUtilities;
 
 class ProofContext extends Context {
   constructor(context, variables, judgements, assignments, equivalences, subproofOrProofAssertions, metaLevelSubstitutions) {
@@ -240,41 +240,6 @@ class ProofContext extends Context {
     return comparesToTermAndPropertyRelation;
   }
 
-  isTermGrounded(term) {
-    const context = this, ///
-          equivalences = this.getEquivalences(),
-          groundedTerms = [],
-          definedVariables = [];
-
-    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
-
-    const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
-        const groundedTermNode = groundedTerm.getNode(),
-              groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
-
-            if (groundedTermNodeMatches) {
-              return true;
-            }
-          }),
-          termGrounded = termMatchesGroundedTerm; ///
-
-    return termGrounded;
-  }
-
-  isJudgementPresentByMetavariableName(metavariableName) {
-    const judgement = this.findJudgementByMetavariableName(metavariableName),
-          judgementPresent = (judgement !== null);
-
-    return judgementPresent;
-  }
-
-  isVariablePresentByVariableIdentifier(variableIdentifier) {
-    const variable = this.findVariableByVariableIdentifier(variableIdentifier),
-          variablePresent = (variable !== null);
-
-    return variablePresent;
-  }
-
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
 
   findJudgementByMetavariableName(metavariableName) {
@@ -319,6 +284,55 @@ class ProofContext extends Context {
     }
 
     return metaLevelSubstitution;
+  }
+
+  findJudgementsByMetavariableNode(metavariableNode) {
+    const judgements = this.getJudgements();
+
+    filter(judgements, (judgement) => {
+      const metavariableNodeMatches = judgement.matchMetavariableNode(metavariableNode);
+
+      if (metavariableNodeMatches) {
+        return true;
+      }
+    });
+
+    return judgements;
+  }
+
+  isJudgementPresentByMetavariableName(metavariableName) {
+    const judgement = this.findJudgementByMetavariableName(metavariableName),
+          judgementPresent = (judgement !== null);
+
+    return judgementPresent;
+  }
+
+  isVariablePresentByVariableIdentifier(variableIdentifier) {
+    const variable = this.findVariableByVariableIdentifier(variableIdentifier),
+          variablePresent = (variable !== null);
+
+    return variablePresent;
+  }
+
+  isTermGrounded(term) {
+    const context = this, ///
+          equivalences = this.getEquivalences(),
+          groundedTerms = [],
+          definedVariables = [];
+
+    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
+
+    const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
+            const groundedTermNode = groundedTerm.getNode(),
+                  groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
+
+            if (groundedTermNodeMatches) {
+              return true;
+            }
+          }),
+          termGrounded = termMatchesGroundedTerm; ///
+
+    return termGrounded;
   }
 
   static fromMetaLevelSubstitutions(metaLevelSubstitutions, context) {

@@ -46,22 +46,6 @@ export default define(class Frame extends Element {
     return metavariableName;
   }
 
-  matchFrameNode(frameNode) {
-    const node = frameNode, ///
-          nodeMatches = this.matchNode(node),
-          frameNodeMatches = nodeMatches; ///
-
-    return frameNodeMatches;
-  }
-
-  findValidFrame(context) {
-    const frameNode = this.getFrameNode(),
-          frame = context.findFrameByFrameNode(frameNode),
-          validFrame = frame; ///
-
-    return validFrame;
-  }
-
   isEqualTo(frame) {
     const frameNode = frame.getNode(),
           frameNodeMatches = this.matchFrameNode(frameNode),
@@ -75,6 +59,26 @@ export default define(class Frame extends Element {
           singular = frameNode.isSingular();
 
     return singular;
+  }
+
+  matchFrameNode(frameNode) {
+    const node = frameNode, ///
+          nodeMatches = this.matchNode(node),
+          frameNodeMatches = nodeMatches; ///
+
+    return frameNodeMatches;
+  }
+
+  matchMetavariableNode(metavariableNode) {
+    let metavariableNodeMatches = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      metavariableNodeMatches = this.metavariable.matchMetavariableNode(metavariableNode);
+    }
+
+    return metavariableNodeMatches;
   }
 
   compareParameter(parameter) {
@@ -97,54 +101,6 @@ export default define(class Frame extends Element {
     return comparesToParamter;
   }
 
-  compareMetaLevelSubstitution(metaLevelSubstitution, context) {
-    let comparesToMetaLevelSubstitution = false;
-
-    const frameString = this.getString(),  ///
-          metaLevelSubstitutioString = metaLevelSubstitution.getString();
-
-    context.trace(`Comparing the '${frameString}' frame to the '${metaLevelSubstitutioString}' meta-level substitutio...`);
-
-    if (!comparesToMetaLevelSubstitution) {
-      comparesToMetaLevelSubstitution = this.assumptions.some((assumption) => {
-        const assumptionComparesToSubstitution = assumption.compareMetaLevelSubstitution(metaLevelSubstitution, context);
-
-        if (assumptionComparesToSubstitution) {
-          return true;
-        }
-      });
-    }
-
-    if (comparesToMetaLevelSubstitution) {
-      context.debug(`...compared the the '${frameString}' frame to the '${metaLevelSubstitutioString}' meta-Level-substituution.`);
-    }
-
-    return comparesToMetaLevelSubstitution;
-  }
-
-  compareMetaLevelSubstitutions(metaLevelSubstitutions, context) {
-    let comparesToMetaLevelSubstitutions;
-
-    const frameString = this.getString(),  ///
-          metaLevelSubstitutionsString = metaLevelSubstitutionsStringFromMetaLevelSubstitutions(metaLevelSubstitutions);
-
-    context.trace(`Comparing the '${frameString}' frame to the '${metaLevelSubstitutionsString}' meta-level substitutio...`);
-
-    comparesToMetaLevelSubstitutions = metaLevelSubstitutions.every((metaLevelSubstitution) => {
-      const compaaresToMetaLevelSubstitution = this.compareMetaLevelSubstitution(metaLevelSubstitution, context);
-
-      if (compaaresToMetaLevelSubstitution) {
-        return true;
-      }
-    });
-
-    if (comparesToMetaLevelSubstitutions) {
-      context.debug(`...compared the '${frameString}' frame to the '${metaLevelSubstitutionsString}' metaLevelSubstitutions.`);
-    }
-
-    return comparesToMetaLevelSubstitutions;
-  }
-
   compareMetavariableName(metavariableName) {
     let comparesToMetavariableName = false;
 
@@ -161,6 +117,64 @@ export default define(class Frame extends Element {
     }
 
     return comparesToMetavariableName;
+  }
+
+  compareMetaLevelSubstitution(metaLevelSubstitution, context) {
+    let comparesToMetaLevelSubstitution;
+
+    const frameString = this.getString(),  ///
+          metaLevelSubstitutionString = metaLevelSubstitution.getString();
+
+    context.trace(`Comparing the '${frameString}' frame to the '${metaLevelSubstitutionString}' meta-level substitution...`);
+
+    const metavariableNode = this.metavariable.getNode(),
+          judgements = context.findJudgementsByMetavariableNode(metavariableNode),
+          assumptions = assumptionsFromJudgements(judgements);
+
+    comparesToMetaLevelSubstitution = assumptions.some((assumption) => {
+      const assumptionComparesToSubstitution = assumption.compareMetaLevelSubstitution(metaLevelSubstitution, context);
+
+      if (assumptionComparesToSubstitution) {
+        return true;
+      }
+    });
+
+    if (comparesToMetaLevelSubstitution) {
+      context.debug(`...compared the '${frameString}' frame to the '${metaLevelSubstitutionString}' meta-level substitution.`);
+    }
+
+    return comparesToMetaLevelSubstitution;
+  }
+
+  compareMetaLevelSubstitutions(metaLevelSubstitutions, context) {
+    let comparesToMetaLevelSubstitutions;
+
+    const frameString = this.getString(),  ///
+          metaLevelSubstitutionsString = metaLevelSubstitutionsStringFromMetaLevelSubstitutions(metaLevelSubstitutions);
+
+    context.trace(`Comparing the '${frameString}' frame to the '${metaLevelSubstitutionsString}' meta-level substitution...`);
+
+    comparesToMetaLevelSubstitutions = metaLevelSubstitutions.every((metaLevelSubstitution) => {
+      const compaaresToMetaLevelSubstitution = this.compareMetaLevelSubstitution(metaLevelSubstitution, context);
+
+      if (compaaresToMetaLevelSubstitution) {
+        return true;
+      }
+    });
+
+    if (comparesToMetaLevelSubstitutions) {
+      context.debug(`...compared the '${frameString}' frame to the '${metaLevelSubstitutionsString}' metaLevelSubstitutions.`);
+    }
+
+    return comparesToMetaLevelSubstitutions;
+  }
+
+  findValidFrame(context) {
+    const frameNode = this.getFrameNode(),
+          frame = context.findFrameByFrameNode(frameNode),
+          validFrame = frame; ///
+
+    return validFrame;
   }
 
   validate(context) {
@@ -378,3 +392,12 @@ function assumptionsFromFrameNode(frameNode, context) {
   return assumptions;
 }
 
+function assumptionsFromJudgements(judgements) {
+  const assumptions = judgements.map((judgement) => {
+    const assumption = judgement.getAssumption();
+
+    return assumption;
+  });
+
+  return assumptions;
+}

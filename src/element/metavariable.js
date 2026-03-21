@@ -58,6 +58,14 @@ export default define(class Metavariable extends Element {
 
   isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
+  matchMetavariableNode(metavariableNode) {
+    const node = metavariableNode, ///
+          nodeMatches = this.matchNode(node),
+          metavariableNodeMatches = nodeMatches; ///
+
+    return metavariableNodeMatches;
+  }
+
   compare(metavariable) {
     const metavariableName = metavariable.getName(),
           comparesToMetavariableName = this.compareMetavariableName(metavariableName),
@@ -71,14 +79,6 @@ export default define(class Metavariable extends Element {
           comparesToMetavariableName = nameMetavariableName;  ///
 
     return comparesToMetavariableName;
-  }
-
-  matchMetavariableNode(metavariableNode) {
-    const node = metavariableNode, ///
-          nodeMatches = this.matchNode(node),
-          metavariableNodeMatches = nodeMatches; ///
-
-    return metavariableNodeMatches;
   }
 
   verify(context) {

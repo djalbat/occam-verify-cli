@@ -20,7 +20,7 @@ export default define(class Judgement extends Element {
     return this.frame;
   }
 
-  getDeclaration() {
+  getAssumption() {
     return this.assumption;
   }
 
@@ -47,6 +47,8 @@ export default define(class Judgement extends Element {
 
     return judgementNodeMatches;
   }
+
+  matchMetavariableNode(metavariableNode) { return this.frame.matchMetavariableNode(metavariableNode); }
 
   compareMetavariableName(metavariableName) { return this.frame.compareMetavariableName(metavariableName); }
 
