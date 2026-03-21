@@ -7,6 +7,12 @@ export default class NestedContext extends Context {
     ///
   }
 
+  isStated() {
+    const stated = true;
+
+    return stated;
+  }
+
   static fromNothing(context) {
     const nestedContext = new NestedContext(context);
 

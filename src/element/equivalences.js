@@ -203,8 +203,11 @@ export default define(class Equivalences extends Element {
   static fromNothing(context) {
     const string = EMPTY_STRING,
           node = null,
-          array = [],
-          equivalences = new Equivalences(context, string, node, array);
+          array = [];
+
+    context = null;
+
+    const equivalences = new Equivalences(context, string, node, array);
 
     return equivalences;
   }
