@@ -7,8 +7,8 @@ import elements from "../elements";
 import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiateVariable } from "../process/instantiate";
-import {identifierFromVarialbeNode, variableFromVariableNode} from "../utilities/element";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { variableFromTermNode, identifierFromVarialbeNode } from "../utilities/element";
 
 export default define(class Variable extends Element {
   constructor(context, string, node, type, identifier) {
@@ -197,5 +197,12 @@ export default define(class Variable extends Element {
 
       return variable;
     }, context);
+  }
+
+  static fromTerm(term, context) {
+    const termNode = term.getNode(),
+          variable = variableFromTermNode(termNode, context);
+
+    return variable;
   }
 });

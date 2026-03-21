@@ -41,7 +41,7 @@ export default define(class ContainedAssertion extends Assertion {
     return containedAssertionNode;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let containedAssertion = null;
 
     const containedAssertionString = this.getString(); ///
@@ -57,11 +57,13 @@ export default define(class ContainedAssertion extends Assertion {
     } else {
       let validates = false;
 
-      const termValidates = this.validateTerm(stated, context),
-            frameValidates = this.validateFrame(stated, context),
-            statementValidates = this.validateStatement(stated, context)
+      const termValidates = this.validateTerm(context),
+            frameValidates = this.validateFrame(context),
+            statementValidates = this.validateStatement(context)
 
       if (termValidates || frameValidates || statementValidates) {
+        const stated = context.isStated();
+
         let validatesWhenStated = false,
             validatesWhenDerived = false;
 
@@ -90,7 +92,7 @@ export default define(class ContainedAssertion extends Assertion {
     return containedAssertion;
   }
 
-  validateTerm(stated, context) {
+  validateTerm(context) {
     let termValidates = false;
 
     if (this.term !== null) {
@@ -125,7 +127,7 @@ export default define(class ContainedAssertion extends Assertion {
     return termValidates;
   }
 
-  validateFrame(stated, context) {
+  validateFrame(context) {
     let frameValidates = false;
 
     if (this.frame !== null) {
@@ -137,8 +139,8 @@ export default define(class ContainedAssertion extends Assertion {
       const frameSingular = this.frame.isSingular();
 
       if (frameSingular) {
-        descend((stated, context) => {
-          const frame = this.frame.validate(stated, context);
+        descend((context) => {
+          const frame = this.frame.validate(context);
 
           if (frame !== null) {
             this.frame = frame;
@@ -158,7 +160,7 @@ export default define(class ContainedAssertion extends Assertion {
     return frameValidates;
   }
 
-  validateStatement(stated, context) {
+  validateStatement(context) {
     let statementValidates = false;
 
     if (this.statement !== null) {
@@ -166,8 +168,8 @@ export default define(class ContainedAssertion extends Assertion {
 
       context.trace(`Validating the '${statementString}' statement...`);
 
-      descend((stated, context) => {
-        const statement = this.statement.validate(stated, context);
+      descend((context) => {
+        const statement = this.statement.validate(context);
 
         if (statement !== null) {
           statementValidates = true;

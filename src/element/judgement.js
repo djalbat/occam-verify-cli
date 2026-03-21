@@ -57,7 +57,7 @@ export default define(class Judgement extends Element {
     return validJudgemenet;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let judgement = null;
 
     const judgementString = this.getString();  ///
@@ -74,12 +74,14 @@ export default define(class Judgement extends Element {
       let validates = false;
 
       reconcile((context) => {
-        const frameValidates = this.validateFrame(stated, context);
+        const frameValidates = this.validateFrame(context);
 
         if (frameValidates) {
-          const assumptionValidates = this.validateAssumption(stated, context);
+          const assumptionValidates = this.validateAssumption(context);
 
           if (assumptionValidates) {
+            const stated = context.isStated();
+
             let validatesWhenStated = false,
                 validatesWhenDerived = false;
 
@@ -99,7 +101,7 @@ export default define(class Judgement extends Element {
       if (validates) {
         judgement = this; ///
 
-        this.assign(stated, context);
+        this.assign(context);
 
         context.addJudgement(judgement);
 
@@ -110,7 +112,7 @@ export default define(class Judgement extends Element {
     return judgement;
   }
 
-  validateFrame(stated, context) {
+  validateFrame(context) {
     let frameValidates = false;
 
     const frameString = this.frame.getString(),
@@ -118,7 +120,7 @@ export default define(class Judgement extends Element {
 
     context.trace(`Validating the '${judgementString}' judgement's '${frameString}' frame...`);
 
-    const frame = this.frame.validate(stated, context);
+    const frame = this.frame.validate(context);
 
     if (frame !== null) {
       this.frame = frame;
@@ -133,7 +135,7 @@ export default define(class Judgement extends Element {
     return frameValidates;
   }
 
-  validateAssumption(stated, context) {
+  validateAssumption(context) {
     let assumptionValidates = false;
 
     const assumptionString = this.assumption.getString(),
@@ -141,7 +143,7 @@ export default define(class Judgement extends Element {
 
     context.trace(`Validating the '${judgementString}' judgement's '${assumptionString}' assumption...`);
 
-    const assumption = this.assumption.validate(stated, context);
+    const assumption = this.assumption.validate(context);
 
     if (assumption !== null) {
       this.assumption = assumption;
@@ -194,7 +196,9 @@ export default define(class Judgement extends Element {
     return validatesWhenDerived;
   }
 
-  assign(stated, context) {
+  assign(context) {
+    const stated = context.isStated();
+
     if (!stated) {
       return;
     }

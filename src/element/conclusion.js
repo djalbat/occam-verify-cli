@@ -6,7 +6,7 @@ import { define } from "../elements";
 import { instantiateConclusion } from "../process/instantiate";
 import { declare, attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
 
-export  default define(class Conclusion extends Element {
+export default define(class Conclusion extends Element {
   constructor(context, string, node, statement) {
     super(context, string, node);
 
@@ -84,8 +84,8 @@ export  default define(class Conclusion extends Element {
 
     context.trace(`Validating the '${conclusionString}' conclusion's '${statementString}' statement...`);
 
-    descend((stated, context) => {
-      const statement = this.statement.validate(stated, context);
+    descend((context) => {
+      const statement = this.statement.validate(context);
 
       if (statement !== null) {
         statementValidates = true;

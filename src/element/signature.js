@@ -3,6 +3,8 @@
 import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
+import elements from "../elements";
+
 import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiateSignature } from "../process/instantiate";
@@ -125,9 +127,10 @@ export default define(class Signature extends Element {
           termsA = this.terms,  ///
           termsB = terms, ///
           matches = match(termsA, termsB, (termA, termB) => {
-            const term = termB, ///
+            const { Variable } = elements,
+                  term = termB, ///
                   context = generalContext, ///
-                  variable = variableFromTerm(term, context);
+                  variable = Variable.fromTerm(term, context);
 
             if (variable !== null) {
               const term = termA, ///

@@ -163,7 +163,7 @@ export default define(class Frame extends Element {
     return comparesToMetavariableName;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let frame = null;
 
     const frameString = this.getString();  ///
@@ -180,12 +180,14 @@ export default define(class Frame extends Element {
     } else {
       let validates = false;
 
-      const metavariableValidates = this.validatMetavariable(stated, context);
+      const metavariableValidates = this.validatMetavariable(context);
 
       if (metavariableValidates) {
-        const assumptionsValidate = this.validateAssumptions(stated, context);
+        const assumptionsValidate = this.validateAssumptions(context);
 
         if (assumptionsValidate) {
+          const stated = context.isStated();
+
           let validatesWhenStated = false,
               validatesWhenDerived = false;
 
@@ -260,8 +262,8 @@ export default define(class Frame extends Element {
     context.trace(`Validating the '${frameString}' frame's '${assumptionstring}' assumption.`);
 
     reconcile((context) => {
-      descend((stated, context) => {
-        assumption = assumption.validate(stated, context);  ///
+      descend((context) => {
+        assumption = assumption.validate(context);  ///
 
         if (assumption !== null) {
           assumptions.push(assumption);
@@ -278,7 +280,7 @@ export default define(class Frame extends Element {
     return assumptionValidates;
   }
 
-  validateAssumptions(stated, context) {
+  validateAssumptions(context) {
     let assumptionsValidate;
 
     const singular = this.isSingular();
@@ -311,7 +313,7 @@ export default define(class Frame extends Element {
     return assumptionsValidate;
   }
 
-  validatMetavariable(stated, context) {
+  validatMetavariable(context) {
     let metavariableValidates = false;
 
     const singular = this.isSingular();

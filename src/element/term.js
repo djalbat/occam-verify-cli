@@ -101,6 +101,14 @@ export default define(class Term extends Element {
     return termNodeMatches;
   }
 
+  compareTerm(term) {
+    const termNode = term.getNode(),
+          termNodeMatches = this.matchNode(termNode),
+          comparesTo = termNodeMatches; ///
+
+    return comparesTo;
+  }
+
   compareParameter(parameter) {
     let comparesToParamter = false;
 

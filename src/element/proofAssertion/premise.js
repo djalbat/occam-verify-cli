@@ -100,11 +100,9 @@ export default define(class Premise extends ProofAssertion {
 
     let statement;
 
-    const stated = true;
-
     statement = this.getStatement();
 
-    statement = statement.validate(stated, context);  ///
+    statement = statement.validate(context);  ///
 
     if (statement !== null) {
       statementValidates = true;

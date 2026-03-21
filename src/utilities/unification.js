@@ -4,12 +4,11 @@ import { arrayUtilities } from "necessary";
 
 import elements from "../elements";
 
-import { equalityFromStatement,
-         judgementFromStatement,
+import { descend } from "./context";
+import { judgementFromStatement,
          typeAssertionFromStatement,
          propertyAssertionFromStatement,
          satisfiesAssertionFromStatement } from "../utilities/statement";
-import {descend} from "./context";
 
 const { backwardsSome } = arrayUtilities;
 
@@ -92,8 +91,8 @@ async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfie
 
     context.trace(`Unifying the '${statementString}' statement as a satisfies assertion...`);
 
-    descend((stated, context) => {
-      satisfiesAssertion.verifySignature(stated, context);
+    descend((context) => {
+      satisfiesAssertion.verifySignature(context);
     }, context);
 
     if (reference === null) {
@@ -176,7 +175,8 @@ async function unifyStatementAsEquality(statement, reference, satisfiesAssertion
   let statementUnifiesAEquality = false;
 
   if (reference === null) {
-    const equality = equalityFromStatement(statement, context);
+    const { Equality } = elements,
+          equality = Equality.fromStatement(statement, context);
 
     if (equality !== null) {
       const statementString = statement.getString();

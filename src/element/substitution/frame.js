@@ -123,8 +123,8 @@ export default define(class FrameSubstitution extends Substitution {
     const targetFrameSingular = this.targetFrame.isSingular();
 
     if (targetFrameSingular) {
-      descend((stated, context) => {
-        const tragetFrame = this.targetFrame.validate(stated, context);
+      descend((context) => {
+        const tragetFrame = this.targetFrame.validate(context);
 
         if (tragetFrame !== null) {
           this.targetFrame = tragetFrame;
@@ -152,8 +152,8 @@ export default define(class FrameSubstitution extends Substitution {
 
     context.trace(`Validating the '${frameSubstitutionString}' frame substitution's '${replacementFrameString}' replacement frame...`);
 
-    descend((stated, context) => {
-      const replacementFrame = this.replacementFrame.validate(stated, context);
+    descend((context) => {
+      const replacementFrame = this.replacementFrame.validate(context);
 
       if (replacementFrame !== null) {
         this.replacementFrame = replacementFrame;

@@ -66,8 +66,6 @@ export default define(class Supposition extends ProofAssertion {
           const statementValidates = this.validateStatement(context);
 
           if (statementValidates) {
-            context.commit(this);
-
             validates = true;
           }
         }
@@ -76,10 +74,12 @@ export default define(class Supposition extends ProofAssertion {
           const procedureCallValidates = this.validateProcedureCall(context);
 
           if (procedureCallValidates) {
-            context.commit(this);
-
             validates = true;
           }
+        }
+
+        if (validates) {
+          context.commit(this);
         }
       }, context);
     }, context);
@@ -100,11 +100,9 @@ export default define(class Supposition extends ProofAssertion {
 
     let statement;
 
-    const stated = true;
-
     statement = this.getStatement();
 
-    statement = statement.validate(stated, context);  ///
+    statement = statement.validate(context);  ///
 
     if (statement !== null) {
       statementValidates = true;

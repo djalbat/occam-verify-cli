@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { simplify, instantiate } from "../utilities/context";
+import { instantiate } from "../utilities/context";
 import { instantiateEquivalence } from "../process/instantiate";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
 import { equivalenceStringFromTerms } from "../utilities/string";
@@ -13,14 +13,27 @@ import { equivalenceFromEquivalenceNode } from "../utilities/element";
 const { compress } = arrayUtilities;
 
 export default define(class Equivalence extends Element {
-  constructor(context, string, node, terms) {
+  constructor(context, string, node, type, terms) {
     super(context, string, node);
 
+    this.type = type;
     this.terms = terms;
+  }
+
+  getType() {
+    return this.type;
   }
 
   getTerms() {
     return this.terms;
+  }
+
+  setType(type) {
+    this.type = type;
+  }
+
+  setTerms(terms) {
+    this.terms = terms;
   }
 
   getEquivalenceNode() {
@@ -28,26 +41,6 @@ export default define(class Equivalence extends Element {
           equivalenceNode = node; ///
 
     return equivalenceNode;
-  }
-
-  getType() {
-    const type = this.terms.reduce((type, term) => {
-      const termType = term.getType();
-
-      if (type === null) {
-        type = termType;  ///
-      } else {
-        const termTypeSubTypeOfType = termType.isSubTypeOf(type);
-
-        if (termTypeSubTypeOfType) {
-          type = termType;  ///
-        }
-      }
-
-      return type;
-    }, null);
-
-    return type;
   }
 
   getGroundedTerms(definedVariables, groundedTerms, context) {
@@ -133,20 +126,6 @@ export default define(class Equivalence extends Element {
     return implicitlyGrounded;
   }
 
-  compareTerm(term) {
-    const termA = term, ///
-          comparesToTerm = this.someTerm((term) => {
-            const termB = term, ///
-                  termAEqualToTermB = termA.isEqualTo(termB);
-
-            if (termAEqualToTermB) {
-              return true;
-            }
-          });
-
-    return comparesToTerm;
-  }
-
   matchTermNode(termNode) {
     termNode = stripBracketsFromTermNode(termNode); ///
 
@@ -173,36 +152,31 @@ export default define(class Equivalence extends Element {
     return termNodesMatch;
   }
 
-  matchVariableNode(variableNode) {
-    const variableNodeA = variableNode, ///
-          variableNodeMatches = this.someTerm((term) => {
-            const termNode = term.getNode(),
-                  singularVariableNode = termNode.getSingularVariableNode();
-
-            if (singularVariableNode !== null) {
-              const variableNodeB = singularVariableNode, ///
-                    variableNodeAMatchesVariableNodeB = variableNodeA.match(variableNodeB);
-
-              if (variableNodeAMatchesVariableNodeB) {
-                return true;
-              }
-            }
-          });
-
-    return variableNodeMatches;
-  }
-
   someTerm(callback) { return this.terms.some(callback); }
 
   everyTerm(callback) { return this.terms.every(callback); }
+
+  compareTerm(term) {
+    const termA = term, ///
+          comparesToTerm = this.someTerm((term) => {
+            const termB = term, ///
+                  termAComparesToTermB = termA.compareTerm(termB);
+
+            if (termAComparesToTermB) {
+              return true;
+            }
+          });
+
+    return comparesToTerm;
+  }
 
   someOtherTerm(term, callback) {
     const termA = term, ///
           terms = this.terms.filter((term) => {
             const termB = term, ///
-                  termAEqualToTermB = termA.isEqualTo(termB);
+                  termAComparesToTermB = termA.compareTerm(termB);
 
-            if (!termAEqualToTermB) {
+            if (!termAComparesToTermB) {
               return true;
             }
           }),
@@ -218,9 +192,9 @@ export default define(class Equivalence extends Element {
     ];
 
     compress(combinedTerms, (combinedTermA, combinedTermB) => {
-      const combinedTermAEqualToCombinedTermB = combinedTermA.isEqualTo(combinedTermB);
+      const combinedTermAComparesToCombinedTermB = combinedTermA.compareTerm(combinedTermB);
 
-      if (!combinedTermAEqualToCombinedTermB) {
+      if (!combinedTermAComparesToCombinedTermB) {
         return true;
       }
     });
@@ -229,18 +203,32 @@ export default define(class Equivalence extends Element {
   }
 
   mergedWith(equivalence, context) {
-    const terms = equivalence.getTerms(),
+    let type;
+
+    type = equivalence.getType();
+
+    const types = [
+            this.type,
+            type
+          ],
+          terms = equivalence.getTerms(),
+          combinedType = combinedTypeFromTypes(types),
           combinedTerms = this.combineTerms(terms);
 
-    return instantiate((context) => {
+    type = combinedType;  ///
+
+    instantiate((context) => {
       const terms = combinedTerms,  ///
             equivalenceString = equivalenceStringFromTerms(terms),
             string = equivalenceString,  ///
-            equivalenceNode = instantiateEquivalence(string, context),
-            equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
+            equivalenceNode = instantiateEquivalence(string, context);
 
-      return equivalence;
+      equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
     }, context);
+
+    equivalence.setType(type);
+
+    return equivalence;
   }
 
   static name = "Equivalence";
@@ -248,17 +236,37 @@ export default define(class Equivalence extends Element {
   static fromEquality(equality, context) {
     let equivalence;
 
-    simplify((context) => {
-      instantiate((context) => {
-        const terms = equality.getTerms(),
-              equivalenceString = equivalenceStringFromTerms(terms),
-              string = equivalenceString,  ///
-              equivalenceNode = instantiateEquivalence(string, context);
+    const type = equality.getType();
 
-        equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
-      }, context);
+    instantiate((context) => {
+      const terms = equality.getTerms(),
+            equivalenceString = equivalenceStringFromTerms(terms),
+            string = equivalenceString,  ///
+            equivalenceNode = instantiateEquivalence(string, context);
+
+      equivalence = equivalenceFromEquivalenceNode(equivalenceNode, context);
     }, context);
+
+    equivalence.setType(type);
 
     return equivalence;
   }
 });
+
+function combinedTypeFromTypes(types) {
+  const combinedType = types.reduce((combinedType, type) => {
+    if (combinedType === null) {
+      combinedType = type;  ///
+    } else {
+      const typeSubTypeOfCombinedType = type.isSubTypeOf(combinedType);
+
+      if (typeSubTypeOfCombinedType) {
+        combinedType = type;  ///
+      }
+    }
+
+    return combinedType;
+  }, null);
+
+  return combinedType;
+}

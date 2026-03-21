@@ -34,7 +34,7 @@ export default define(class SatisfiesAssertion extends Assertion {
 
   correlateSubstitutions(substitutions, context) { return this.signature.correlateSubstitutions(substitutions, context); }
 
-  validate(stated, context) {
+  validate(context) {
     let satisfiesAssertion = null;
 
     const satisfiesAssertionString = this.getString(); ///
@@ -50,10 +50,10 @@ export default define(class SatisfiesAssertion extends Assertion {
     } else {
       let validates = true;
 
-      const signatureVerifies = this.validateSignature(stated, context);
+      const signatureVerifies = this.validateSignature(context);
 
       if (signatureVerifies) {
-        const referenceVerifies = this.validateReference(stated, context);
+        const referenceVerifies = this.validateReference(context);
 
         if (referenceVerifies) {
           validates = true;
@@ -76,7 +76,7 @@ export default define(class SatisfiesAssertion extends Assertion {
     return satisfiesAssertion;
   }
 
-  validateSignature(stated, context) {
+  validateSignature(context) {
     let signatureValidates = false;
 
     const signature = this.signature.validate(context);
@@ -88,7 +88,7 @@ export default define(class SatisfiesAssertion extends Assertion {
     return signatureValidates;
   }
 
-  validateReference(stated, context) {
+  validateReference(context) {
     let referenceVerifies = false;
 
     const referenceString = this.reference.getString(),

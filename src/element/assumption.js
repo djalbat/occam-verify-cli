@@ -73,7 +73,7 @@ export default define(class Assumption extends Element {
     return validAssumption;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let assumption = null;
 
     const assumptionString = this.getString();  ///
@@ -89,12 +89,14 @@ export default define(class Assumption extends Element {
     } else {
       let validates = false;
 
-      const statementValidates = this.validateStatement(stated, context);
+      const statementValidates = this.validateStatement(context);
 
       if (statementValidates) {
-        const referenceValidates = this.validateReference(stated, context);
+        const referenceValidates = this.validateReference(context);
 
         if (referenceValidates) {
+          const stated = context.isStated();
+
           let validatesWhenStated = false,
               validatesWhenDerived = false;
 
@@ -122,7 +124,7 @@ export default define(class Assumption extends Element {
     return assumption;
   }
 
-  validateReference(stated, context) {
+  validateReference(context) {
     let referenceValidates = false;
 
     const referenceString = this.reference.getString(),
@@ -161,7 +163,7 @@ export default define(class Assumption extends Element {
     return referenceValidates;
   }
 
-  validateStatement(stated, context) {
+  validateStatement(context) {
     let statementValidates = false;
 
     const assumptionString = this.getString(),  ///
@@ -169,8 +171,8 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);
 
-    descend((stated, context) => {
-      const statement = this.statement.validate(stated, context);
+    descend((context) => {
+      const statement = this.statement.validate(context);
 
       if (statement !== null) {
         statementValidates = true;

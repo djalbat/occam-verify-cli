@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateDeduction } from "../process/instantiate";
-import {attempt, descend, serialise, unserialise, instantiate, declare} from "../utilities/context";
+import { declare, attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Deduction extends Element {
   constructor(context, string, node, statement) {
@@ -84,8 +84,8 @@ export default define(class Deduction extends Element {
 
     context.trace(`Validating the '${deductionnString}' deductionn's '${statementString}' statement...`);
 
-    descend((stated, context) => {
-      const statement = this.statement.validate(stated, context);
+    descend((context) => {
+      const statement = this.statement.validate(context);
 
       if (statement !== null) {
         statementValidates = true;

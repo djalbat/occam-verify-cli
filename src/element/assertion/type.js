@@ -32,7 +32,7 @@ export default define(class TypeAssertion extends Assertion {
     return typeAssertionNode;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let typeAssertion = null;
 
     const typeAssertionString = this.getString();  ///
@@ -51,6 +51,8 @@ export default define(class TypeAssertion extends Assertion {
       const typeValidates = this.validateType(context);
 
       if (typeValidates) {
+        const stated = context.isStated();
+
         let validatesWhenStated = false,
             validatesWhenDerived = false;
 
@@ -70,7 +72,7 @@ export default define(class TypeAssertion extends Assertion {
 
         typeAssertion = assertion;  ///
 
-        this.assign(stated, context);
+        this.assign(context);
 
         context.addAssertion(assertion);
 
@@ -177,7 +179,9 @@ export default define(class TypeAssertion extends Assertion {
     return validatesWhenDerived;
   }
 
-  assign(stated, context) {
+  assign(context) {
+    const stated = context.isStated();
+
     if (!stated) {
       return;
     }

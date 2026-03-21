@@ -57,7 +57,7 @@ export default define(class PropertyAssertion extends Assertion {
     return comparesToTermAndPropertyRelation;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let propertyAssertion = null;
 
     const propertyAssertionString = this.getString(); ///
@@ -73,12 +73,14 @@ export default define(class PropertyAssertion extends Assertion {
     } else {
       let validates = false;
 
-      const termValidates = this.validateTerm(stated, context);
+      const termValidates = this.validateTerm(context);
 
       if (termValidates) {
-        const propertyRelationVerifies = this.validatePropertyRelation(stated, context);
+        const propertyRelationVerifies = this.validatePropertyRelation(context);
 
         if (propertyRelationVerifies) {
+          const stated = context.isStated();
+
           let validatesWhenStated = false,
               validatesWhenDerived = false;
 
@@ -99,7 +101,7 @@ export default define(class PropertyAssertion extends Assertion {
 
         propertyAssertion = assertion;  ///
 
-        this.assign(stated, context);
+        this.assign(context);
 
         context.addAssertion(assertion);
 
@@ -110,7 +112,7 @@ export default define(class PropertyAssertion extends Assertion {
     return propertyAssertion;
   }
 
-  validateTerm(stated, context) {
+  validateTerm(context) {
     let termValidates = false;
 
     const termString = this.term.getString();
@@ -136,7 +138,7 @@ export default define(class PropertyAssertion extends Assertion {
     return termValidates;
   }
 
-  validatePropertyRelation(stated, context) {
+  validatePropertyRelation(context) {
     let propertyRelationValidates = false;
 
     const propertyRelationString = this.propertyRelation.getString();
@@ -188,7 +190,9 @@ export default define(class PropertyAssertion extends Assertion {
     return validatesWhenDerived;
   }
 
-  assign(stated, context) {
+  assign(context) {
+    const stated = context.isStated();
+
     if (!stated) {
       return;
     }

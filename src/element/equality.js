@@ -6,6 +6,7 @@ import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { equateTerms } from "../process/equate";
 import { instantiateEquality } from "../process/instantiate";
+import { equalityFromStatementNode } from "../utilities/element";
 import { equalityAssignmentFromEquality, leftVariableAssignmentFromEquality, rightVariableAssignmentFromEquality } from "../process/assign";
 
 export default define(class Equality extends Element {
@@ -115,7 +116,7 @@ export default define(class Equality extends Element {
     return validEquality;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let equality = null;
 
     const equalityString = this.getString(); ///
@@ -134,6 +135,8 @@ export default define(class Equality extends Element {
       const termsValidate = this.validateTerms(context);
 
       if (termsValidate) {
+        const stated = context.isStated();
+
         let validatesWhenStated = false,
             validatesWhenDerived = false;
 
@@ -151,7 +154,7 @@ export default define(class Equality extends Element {
       if (validates) {
         equality = this;  ///
 
-        this.assign(stated, context);
+        this.assign(context);
 
         context.addEquality(equality);
 
@@ -243,7 +246,7 @@ export default define(class Equality extends Element {
     return validatesWhenDerived;
   }
 
-  assign(stated, context) {
+  assign(context) {
     const equality = this,  ///
           equalityAssignment = equalityAssignmentFromEquality(equality, context),
           leftVariableAssignment = leftVariableAssignmentFromEquality(equality, context),
@@ -281,6 +284,13 @@ export default define(class Equality extends Element {
 
       return equality;
     }, context);
+  }
+
+  static fromStatement(statement, context) {
+    const statementNode = statement.getNode(),
+          equality = equalityFromStatementNode(statementNode, context);
+
+    return equality;
   }
 });
 

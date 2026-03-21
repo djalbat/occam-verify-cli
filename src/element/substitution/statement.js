@@ -158,8 +158,8 @@ export default define(class StatementSubstitution extends Substitution {
     const targetStatementSingular = this.targetStatement.isSingular();
 
     if (targetStatementSingular) {
-      descend((stated, context) => {
-        const targetStatement = this.targetStatement.validate(stated, context);
+      descend((context) => {
+        const targetStatement = this.targetStatement.validate(context);
 
         if (targetStatement !== null) {
           targetStatementValidates = true;
@@ -185,8 +185,8 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${replacementStatementString}' replacement statement...`);
 
-    descend((stated, context) => {
-      const replacementStatement = this.replacementStatement.validate(stated, context);
+    descend((context) => {
+      const replacementStatement = this.replacementStatement.validate(context);
 
       if (replacementStatement !== null) {
         replacementStatementValidates = true;

@@ -33,12 +33,12 @@ class CombinatorPass extends SimplePass {
       run: (statementNode, context) => {
         let success = false;
 
-        descend((stated, context) => {
+        descend((context) => {
           let statement;
 
           statement = statementFromStatementNode(statementNode, context);
 
-          statement = statement.validate(stated, context);  ///
+          statement = statement.validate(context);  ///
 
           if (statement !== null) {
             success = true;

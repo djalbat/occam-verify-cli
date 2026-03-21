@@ -1,7 +1,6 @@
 "use strict";
 
-import { equalityFromStatementNode,
-         judgementFromStatementNode,
+import { judgementFromStatementNode,
          metavariableFromStatementNode,
          typeAssertionFromStatementNode,
          definedAssertionFromStatementNode,
@@ -9,13 +8,6 @@ import { equalityFromStatementNode,
          subproofAssertionFromStatementNode,
          containedAssertionFromStatementNode,
          satisfiesAssertionFromStatementNode } from "../utilities/element";
-
-export function equalityFromStatement(statement, context) {
-  const statementNode = statement.getNode(),
-        equality = equalityFromStatementNode(statementNode, context);
-
-  return equality;
-}
 
 export function judgementFromStatement(statement, context) {
   const statementNode = statement.getNode(),

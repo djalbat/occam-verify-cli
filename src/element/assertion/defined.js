@@ -36,7 +36,7 @@ export default define(class DefinedAssertion extends Assertion {
     return definedAssertionNode;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let definedAssertion = null;
 
     const definedAssertionString = this.getString(); ///
@@ -52,10 +52,12 @@ export default define(class DefinedAssertion extends Assertion {
     } else {
       let validates = false;
 
-      const termValidates = this.validateTerm(stated, context),
-            frameValidates = this.validateFrame(stated, context);
+      const termValidates = this.validateTerm(context),
+            frameValidates = this.validateFrame(context);
 
       if (termValidates || frameValidates) {
+        const stated = context.isStated();
+
         let verifiesWhenStated = false,
             verifiesWhenDerived = false;
 
@@ -84,7 +86,7 @@ export default define(class DefinedAssertion extends Assertion {
     return definedAssertion;
   }
 
-  validateTerm(stated, context) {
+  validateTerm(context) {
     let termValidates = false;
 
     if (this.term !== null) {
@@ -119,7 +121,7 @@ export default define(class DefinedAssertion extends Assertion {
     return termValidates;
   }
 
-  validateFrame(stated, context) {
+  validateFrame(context) {
     let frameValidates = false;
 
     if (this.frame !== null) {
@@ -131,8 +133,8 @@ export default define(class DefinedAssertion extends Assertion {
       const frameSingular = this.frame.isSingular();
 
       if (frameSingular) {
-        descend((stated, context) => {
-          const frame = this.frame.validate(stated, context);
+        descend((context) => {
+          const frame = this.frame.validate(context);
 
           if (frame !== null) {
             this.frame = frame;

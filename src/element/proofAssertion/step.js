@@ -159,11 +159,9 @@ export default define(class Step extends ProofAssertion {
 
     let statement;
 
-    const stated = false;
-
     statement = this.getStatement();
 
-    statement = statement.validate(stated, context);  ///
+    statement = statement.validate(context);  ///
 
     if (statement !== null) {
       statementValidates = true;
@@ -185,8 +183,8 @@ export default define(class Step extends ProofAssertion {
 
       context.trace(`Validating the '${stepString}' step's '${satisfiesAssertionString}' satisfies assertion... `);
 
-      descend((stated, context) => {
-        const satisfiesAssertion = this.satisfiesAssertion.validate(stated, context);
+      descend((context) => {
+        const satisfiesAssertion = this.satisfiesAssertion.validate(context);
 
         if (satisfiesAssertion === null) {
           satisfiesAssertionValidates = false;

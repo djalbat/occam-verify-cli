@@ -49,9 +49,7 @@ export function descend(innerFunction, context) {
 
   context = nestedContext;  ///
 
-  const stated = true;
-
-  return innerFunction(stated, context);
+  return innerFunction(context);
 }
 
 export function attempt(innerFunction, context) {
@@ -149,17 +147,11 @@ export async function asyncReconcile(innerFunction, context) {
 }
 
 function isContextExtraneousContext(context) {
-  const contextNestedContxt = (context instanceof NestedContext),
-        contextTheticContext = (context instanceof TheticContext),
-        contextLiminalContext = (context instanceof LiminalContext),
-        contextIllativeContext = (context instanceof IllativeContext),
+  const contextLiminalContext = (context instanceof LiminalContext),
         contextEphemeralContext = (context instanceof EphemeralContext),
         contextBranchingContext = (context instanceof BranchingContext),
         contextSyntheticContext = (context instanceof SyntheticContext),
-        contextExtraneousContext = ( contextNestedContxt
-                                  || contextTheticContext
-                                  || contextLiminalContext
-                                  || contextIllativeContext
+        contextExtraneousContext = ( contextLiminalContext
                                   || contextEphemeralContext
                                   || contextBranchingContext
                                   || contextSyntheticContext );

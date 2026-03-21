@@ -61,8 +61,8 @@ export default define(class Hypothesis extends Element {
     } else if (this.statement !== null) {
       let statementValidates = false;
 
-      descend((stated, context) => {
-        const statement = this.statement.validate(stated, context);
+      descend((context) => {
+        const statement = this.statement.validate(context);
 
         if (statement !== null) {
           statementValidates = true;

@@ -49,7 +49,7 @@ export default define(class SubproofAssertion extends Assertion {
     return subproofAssertionNode;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let subproofAssertion = null;
 
     const subproofAssertionString = this.getString();  ///
@@ -65,7 +65,7 @@ export default define(class SubproofAssertion extends Assertion {
     } else {
       let validates = false;
 
-      const statementsValidate = this.validateStatements(stated, context);
+      const statementsValidate = this.validateStatements(context);
 
       if (statementsValidate) {
         validates = true;
@@ -85,12 +85,12 @@ export default define(class SubproofAssertion extends Assertion {
     return subproofAssertion;
   }
 
-  validateStatements(stated, context) {
+  validateStatements(context) {
     const statementsValidate = this.statements.every((statement) => {
       let statementValidates = false;
 
-      descend((stated, context) => {
-        statement = statement.validate(stated, context);  ///
+      descend((context) => {
+        statement = statement.validate(context);  ///
 
         if (statement !== null) {
           statementValidates = true;

@@ -184,7 +184,7 @@ export default define(class Statement extends Element {
     return frameContained;
   }
 
-  validate(stated, context) {
+  validate(context) {
     let statement = null;
 
     const statementString = this.getString();  ///
@@ -200,7 +200,7 @@ export default define(class Statement extends Element {
     } else {
       const validates = validateStatements.some((validateStatement) => {
         const statement = this, ///
-              statementValidates = validateStatement(statement, stated, context);
+              statementValidates = validateStatement(statement, context);
 
         if (statementValidates) {
           return true;

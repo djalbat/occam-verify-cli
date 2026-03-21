@@ -134,7 +134,7 @@ class ProofContext extends Context {
     const context = this, ///
           equalityString = equality.getString();
 
-    context.trace(`Adding the '${equalityString}' equality to the scoped context...`);
+    context.trace(`Adding the '${equalityString}' equality to the proof context...`);
 
     const equalityRelfexive = equality.isReflexive();
 
@@ -144,9 +144,9 @@ class ProofContext extends Context {
 
       this.equivalences = this.equivalences.mergedWithEquivalence(equivalence, context);
 
-      context.debug(`...added the '${equalityString}' equality to the scoped context.`);
+      context.debug(`...added the '${equalityString}' equality to the proof context.`);
     } else {
-      context.debug(`The '${equalityString}' equality is reflexive and will not added to the scoped context.`);
+      context.debug(`The reflexive '${equalityString}' equality has not been added to the proof context.`);
     }
   }
 
@@ -154,37 +154,34 @@ class ProofContext extends Context {
     const context = this, ///
           variableString = variable.getString();
 
-    context.trace(`Adding the '${variableString}' variable to the scoped context...`);
+    context.trace(`Adding the '${variableString}' variable to the proof context...`);
 
     this.variables.push(variable);
 
-    context.debug(`...added the '${variableString}' variable to the scoped context.`);
+    context.debug(`...added the '${variableString}' variable to the proof context.`);
   }
 
   addJudgement(judgement) {
     const context = this, ///
           judgementString = judgement.getString();
 
-    context.trace(`Adding the '${judgementString}' judgement to the scoped context...`);
+    context.trace(`Adding the '${judgementString}' judgement to the proof context...`);
 
     this.judgements.push(judgement);
 
-    context.debug(`...added the '${judgementString}' judgement to the scoped context.`);
+    context.debug(`...added the '${judgementString}' judgement to the proof context.`);
   }
 
   addAssignment(assignment) {
     this.assignments.push(assignment);
   }
 
-  addSubproofOrProofAssertion(subproofOrProofAssertion) {
-    const context = this, ///
-          subproofOrProofAssertionString = subproofOrProofAssertion.getString();
+  assignAssignments() {
+    const context = this; ///
 
-    context.trace(`Adding the '${subproofOrProofAssertionString}' subproof or proof assertion to the scoped context...`);
-
-    this.subproofOrProofAssertions.push(subproofOrProofAssertion);
-
-    context.debug(`...added the '${subproofOrProofAssertionString}' subproof or proof assertion to the scoped context.`);
+    this.assignments.forEach((assignment) => {
+      assignment(context);
+    });
   }
 
   addMetaLevelSubstitution(metaLevelSubstitution) {
@@ -198,7 +195,7 @@ class ProofContext extends Context {
           metaLevelSubstitutionA = metaLevelSubstitution, ///
           metaLevelSubstitutionString = metaLevelSubstitution.getString();
 
-    context.trace(`Adding the '${metaLevelSubstitutionString}' meta-level substitution to the scoped context...`);
+    context.trace(`Adding the '${metaLevelSubstitutionString}' meta-level substitution to the proof context...`);
 
     const metaLevelSubstitutionB = this.metaLevelSubstitutions.find((metaLevelSubstitution) => {
       const metaLevelSubstitutionB = metaLevelSubstitution, ///
@@ -210,12 +207,23 @@ class ProofContext extends Context {
     }) || null;
 
     if (metaLevelSubstitutionB !== null) {
-      context.debug(`The '${metaLevelSubstitutionString}' meta-level substitution has already been added to the scoped context.`);
+      context.debug(`The '${metaLevelSubstitutionString}' meta-level substitution has already been added to the proof context.`);
     } else {
       this.metaLevelSubstitutions.push(metaLevelSubstitution);
 
-      context.debug(`...added the '${metaLevelSubstitutionString}' substitution to the scoped context.`);
+      context.debug(`...added the '${metaLevelSubstitutionString}' substitution to the proof context.`);
     }
+  }
+
+  addSubproofOrProofAssertion(subproofOrProofAssertion) {
+    const context = this, ///
+          subproofOrProofAssertionString = subproofOrProofAssertion.getString();
+
+    context.trace(`Adding the '${subproofOrProofAssertionString}' subproof or proof assertion to the proof context...`);
+
+    this.subproofOrProofAssertions.push(subproofOrProofAssertion);
+
+    context.debug(`...added the '${subproofOrProofAssertionString}' subproof or proof assertion to the proof context.`);
   }
 
   compareTermAndPropertyRelation(term, propertyRelation) {
@@ -265,14 +273,6 @@ class ProofContext extends Context {
           variablePresent = (variable !== null);
 
     return variablePresent;
-  }
-
-  assignAssignments() {
-    const context = this; ///
-
-    this.assignments.forEach((assignment) => {
-      assignment(context);
-    });
   }
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
