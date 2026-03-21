@@ -5,7 +5,7 @@ import Assertion from "../assertion";
 import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
 import { instantiateSatisfiesAssertion } from "../../process/instantiate";
-import { signatureFromJSatisfiesAssertionNode, referenceFromJSatisfiesAssertionNode } from "../../utilities/element";
+import { signatureFromJSatisfiesAssertionNode, referenceFromJSatisfiesAssertionNode, satisfiesAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class SatisfiesAssertion extends Assertion {
   constructor(context, string, node, signature, reference) {
@@ -176,6 +176,13 @@ export default define(class SatisfiesAssertion extends Assertion {
         satisfiesAssertion = new SatisfiesAssertion(context, string, node, signature, reference);
       }, context);
     }
+
+    return satisfiesAssertion;
+  }
+
+  static fromStatement(statement, context) {
+    const statementNode = statement.getNode(),
+          satisfiesAssertion = satisfiesAssertionFromStatementNode(statementNode, context);
 
     return satisfiesAssertion;
   }

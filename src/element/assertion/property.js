@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
 import { instantiatePropertyAssertion } from "../../process/instantiate";
 import { variableAssignmentFromPrepertyAssertion } from "../../process/assign";
-import { termFromPropertyAssertionNode, propertyRelationFromPropertyAssertionNode } from "../../utilities/element";
+import { termFromPropertyAssertionNode, propertyAssertionFromStatementNode, propertyRelationFromPropertyAssertionNode } from "../../utilities/element";
 
 export default define(class PropertyAssertion extends Assertion {
   constructor(context, string, node, term, propertyRelation) {
@@ -223,6 +223,13 @@ export default define(class PropertyAssertion extends Assertion {
         propertyAssertion = new PropertyAssertion(context, string, node, term, propertyRelation);
       }, context);
     }
+
+    return propertyAssertion;
+  }
+
+  static fromStatement(statement, context) {
+    const statementNode = statement.getNode(),
+          propertyAssertion = propertyAssertionFromStatementNode(statementNode, context);
 
     return propertyAssertion;
   }

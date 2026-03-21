@@ -5,6 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiateJudgement } from "../process/instantiate";
 import { reconcile, instantiate } from "../utilities/context";
+import { judgementFromStatementNode } from "../utilities/element";
 import { judgementAssignmentFromJudgement } from "../process/assign";
 
 export default define(class Judgement extends Element {
@@ -234,6 +235,13 @@ export default define(class Judgement extends Element {
 
       return judgement;
     }, context);
+  }
+
+  static fromStatement(statement, context) {
+    const statementNode = statement.getNode(),
+          judgement = judgementFromStatementNode(statementNode, context);
+
+    return judgement;
   }
 });
 

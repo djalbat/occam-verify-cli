@@ -2,11 +2,11 @@
 
 import { asynchronousUtilities } from "occam-languages";
 
+import elements from "../../elements";
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { unifyStatements } from "../../utilities/unification";
-import { propertyAssertionFromStatement } from "../../utilities/statement";
 import { derive, attempt, descend, asyncReconcile } from "../../utilities/context";
 
 const { asyncSome } = asynchronousUtilities;
@@ -49,8 +49,9 @@ export default define(class Step extends ProofAssertion {
   compareTermAndPropertyRelation(term, propertyRelation, context) {
     let comparesToTermAndPropertyRelation = false;
 
-    const statement = this.getStatement(),
-          propertyAssertion = propertyAssertionFromStatement(statement, context);
+    const { PropertyAssertion } = elements,
+          statement = this.getStatement(),
+          propertyAssertion = PropertyAssertion.fromStatement(statement, context);
 
     if (propertyAssertion !== null) {
       comparesToTermAndPropertyRelation = propertyAssertion.compareTermAndPropertyRelation(term, propertyRelation, context);

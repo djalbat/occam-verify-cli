@@ -5,9 +5,9 @@ import Assertion from "../assertion";
 import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
 import { instantiateTypeAssertion } from "../../process/instantiate";
-import { termFromTypeAssertionNode } from "../../utilities/element";
 import { typeFromJSON, typeToTypeJSON } from "../../utilities/json";
 import { variableAssignmentFromTypeAssertion } from "../../process/assign";
+import { termFromTypeAssertionNode, typeAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class TypeAssertion extends Assertion {
   constructor(context, string, node, term, type) {
@@ -226,6 +226,13 @@ export default define(class TypeAssertion extends Assertion {
         typeAssertion = new TypeAssertion(context, string, node, term, type);
       }, context);
     }
+
+    return typeAssertion;
+  }
+
+  static fromStatement(statement, context) {
+    const statementNode = statement.getNode(),
+          typeAssertion = typeAssertionFromStatementNode(statementNode, context);
 
     return typeAssertion;
   }

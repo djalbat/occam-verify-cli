@@ -5,10 +5,6 @@ import { arrayUtilities } from "necessary";
 import elements from "../elements";
 
 import { descend } from "./context";
-import { judgementFromStatement,
-         typeAssertionFromStatement,
-         propertyAssertionFromStatement,
-         satisfiesAssertionFromStatement } from "../utilities/statement";
 
 const { backwardsSome } = arrayUtilities;
 
@@ -84,7 +80,9 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
 async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAssertion, context) {
   let statementUnifiesAsSatisfiesAssertion = false;
 
-  satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
+  const { SatisfiesAssertion } = elements;
+
+  satisfiesAssertion = SatisfiesAssertion.fromStatement(statement, context);
 
   if (satisfiesAssertion !== null) {
     const statementString = statement.getString();
@@ -202,7 +200,8 @@ async function unifyStatementAsJudgement(statement, reference, satisfiesAssertio
   let statementUnifiesAsJudgement = false;
 
   if (reference === null) {
-    const judgement = judgementFromStatement(statement, context);
+    const { Judgement } = elements,
+          judgement = Judgement.fromStatement(statement, context);
 
     if (judgement !== null) {
       const statementString = statement.getString();
@@ -224,7 +223,8 @@ async function unifyStatementAsTypeAssertion(statement, reference, satisfiesAsse
   let statementUnifiesAsTypeAssertion = false;
 
   if (reference === null) {
-    const typeAssertion = typeAssertionFromStatement(statement, context);
+    const { TypeAssertion } = elements,
+          typeAssertion = TypeAssertion.fromStatement(statement, context);
 
     if (typeAssertion !== null) {
       const statementString = statement.getString();
@@ -244,7 +244,8 @@ async function unifyStatementAsPropertyAssertion(statement, reference, satisfies
   let statementUnifiesAsPropertyAssertion = false;
 
   if (reference === null) {
-    const propertyAssertion = propertyAssertionFromStatement(statement, context);
+    const { PropertyAssertion } = elements,
+          propertyAssertion = PropertyAssertion.fromStatement(statement, context);
 
     if (propertyAssertion !== null) {
       const statementString = statement.getString();

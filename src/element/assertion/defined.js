@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { descend, instantiate } from "../../utilities/context";
 import { instantiateDefinedAssertion } from "../../process/instantiate";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
-import { termFromJDefinedAssertionNode, frameFromJDefinedAssertionNode, negatedFromJDefinedAssertionNode } from "../../utilities/element";
+import { termFromJDefinedAssertionNode, frameFromJDefinedAssertionNode, negatedFromJDefinedAssertionNode, definedAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class DefinedAssertion extends Assertion {
   constructor(context, string, node, term, frame, negated) {
@@ -231,6 +231,13 @@ export default define(class DefinedAssertion extends Assertion {
         definedAssertion = new DefinedAssertion(context, string, node, term, frame, negated);
       }, context);
     }
+
+    return definedAssertion;
+  }
+
+  static fromStatement(statement, context) {
+    const statementNode = statement.getNode(),
+          definedAssertion = definedAssertionFromStatementNode(statementNode, context);
 
     return definedAssertion;
   }

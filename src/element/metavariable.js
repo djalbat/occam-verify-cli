@@ -10,7 +10,7 @@ import { EMPTY_STRING } from "../constants";
 import { instantiateMetavariable } from "../process/instantiate";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
-import { nameFromMetavariableNode, termFromMetavariableNode, typeFromMetavariableNode } from "../utilities/element";
+import { nameFromMetavariableNode, termFromMetavariableNode, typeFromMetavariableNode, metavariableFromStatementNode } from "../utilities/element";
 
 export default define(class Metavariable extends Element {
   constructor(context, string, node, name, term, type, metaType) {
@@ -624,5 +624,12 @@ export default define(class Metavariable extends Element {
 
       return metavariable;
     }, context);
+  }
+
+  static fromStatement(statement, context) {
+    const statementNode = statement.getNode(),
+          metavariable = metavariableFromStatementNode(statementNode, context);
+
+    return metavariable;
   }
 });

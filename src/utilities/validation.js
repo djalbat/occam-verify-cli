@@ -4,14 +4,6 @@ import elements from "../elements";
 
 import { choose, descend } from "./context";
 import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
-import { judgementFromStatement,
-         metavariableFromStatement,
-         typeAssertionFromStatement,
-         definedAssertionFromStatement,
-         propertyAssertionFromStatement,
-         subproofAssertionFromStatement,
-         containedAssertionFromStatement,
-         satisfiesAssertionFromStatement } from "../utilities/statement";
 
 function validateTermAsVariable(term, context, validateForwards) {
   let termValidatesAsVariable = false;
@@ -91,9 +83,11 @@ function unifyTermWithBracketedConstructor(term, context, validateForwards) {
 function validateStatementAsMetavariable(statement, context) {
   let statementValidatesAsMetavariable = false;
 
+  const { Metavariable } = elements;
+
   let metavariable;
 
-  metavariable = metavariableFromStatement(statement, context);
+  metavariable = Metavariable.fromStatement(statement, context);
 
   if (metavariable !== null) {
     const statementString = statement.getString();
@@ -206,7 +200,9 @@ function validateStatementAsJudgement(statement, context) {
 
   let judgement;
 
-  judgement = judgementFromStatement(statement, context);
+  const { Judgement } = elements;
+
+  judgement = Judgement.fromStatement(statement, context);
 
   if (judgement !== null) {
     const statementString = statement.getString();
@@ -230,9 +226,11 @@ function validateStatementAsJudgement(statement, context) {
 function validateStatementAsTypeAssertion(statement, context) {
   let validatesStatementAsTypeAssertion = false;
 
+  const { TypeAssertion } = elements;
+
   let typeAssertion;
 
-  typeAssertion = typeAssertionFromStatement(statement, context);
+  typeAssertion = TypeAssertion.fromStatement(statement, context);
 
   if (typeAssertion !== null) {
     const statementString = statement.getString();
@@ -256,9 +254,11 @@ function validateStatementAsTypeAssertion(statement, context) {
 function validateStatementAsDefinedAssertion(statement, context) {
   let validatesStatementAsDefinedAssertion = false;
 
+  const { DefinedAssertion } = elements;
+
   let definedAssertion;
 
-  definedAssertion = definedAssertionFromStatement(statement, context);
+  definedAssertion = DefinedAssertion.fromStatement(statement, context);
 
   if (definedAssertion !== null) {
     const statementString = statement.getString();
@@ -282,9 +282,11 @@ function validateStatementAsDefinedAssertion(statement, context) {
 function validateStatementAsPropertyAssertion(statement, context) {
   let statementValidatesAsPropertyAssertion = false;
 
+  const { PropertyAssertion } = elements;
+
   let propertyAssertion;
 
-  propertyAssertion = propertyAssertionFromStatement(statement, context);
+  propertyAssertion = PropertyAssertion.fromStatement(statement, context);
 
   if (propertyAssertion !== null) {
     const statementString = statement.getString();
@@ -308,9 +310,11 @@ function validateStatementAsPropertyAssertion(statement, context) {
 function validateStatementAsSubproofAssertion(statement, context) {
   let statementValidatesAsSubproofAssertion = false;
 
+  const { SubproofAssertion } = elements;
+
   let subproofAssertion;
 
-  subproofAssertion = subproofAssertionFromStatement(statement, context);
+  subproofAssertion = SubproofAssertion.fromStatement(statement, context);
 
   if (subproofAssertion !== null) {
     const statementString = statement.getString();
@@ -334,9 +338,11 @@ function validateStatementAsSubproofAssertion(statement, context) {
 function validateStatementAsContainedAssertion(statement, context) {
   let validatesStatementAsContainedAssertion = false;
 
+  const { ContainedAssertion } = elements;
+
   let containedAssertion;
 
-  containedAssertion = containedAssertionFromStatement(statement, context);
+  containedAssertion = ContainedAssertion.fromStatement(statement, context);
 
   if (containedAssertion !== null) {
     const statementString = statement.getString();
@@ -360,9 +366,11 @@ function validateStatementAsContainedAssertion(statement, context) {
 function validateStatementAsSatisfiesAssertion(statement, context) {
   let validatesAStatementsSatisfiesAssertion = false;
 
+  const { SatisfiesAssertion } = elements;
+
   let satisfiesAssertion;
 
-  satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
+  satisfiesAssertion = SatisfiesAssertion.fromStatement(statement, context);
 
   if (satisfiesAssertion !== null) {
     const statementString = statement.getString();

@@ -6,7 +6,11 @@ import { define } from "../../elements";
 import { descend, instantiate } from "../../utilities/context";
 import { instantiateContainedAssertion } from "../../process/instantiate";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
-import { termFromContainedAssertionNode, frameFromContainedAssertionNode, negatedFromContainedAssertionNode, statementFromContainedAssertionNode } from "../../utilities/element";
+import { termFromContainedAssertionNode,
+         frameFromContainedAssertionNode,
+         negatedFromContainedAssertionNode,
+         statementFromContainedAssertionNode,
+         containedAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class ContainedAssertion extends Assertion {
   constructor(context, string, node, term, frame, negated, statement) {
@@ -263,6 +267,13 @@ export default define(class ContainedAssertion extends Assertion {
         containedAssertion = new ContainedAssertion(context, string, node, term, frame, negated, statement);
       }, context);
     }
+
+    return containedAssertion;
+  }
+
+  static fromStatement(statement, context) {
+    const statementNode = statement.getNode(),
+          containedAssertion = containedAssertionFromStatementNode(statementNode, context);
 
     return containedAssertion;
   }

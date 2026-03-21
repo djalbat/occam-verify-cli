@@ -8,6 +8,7 @@ import { define } from "../../elements";
 import { reconcile } from "../../utilities/context";
 import { join, descend, instantiate } from "../../utilities/context";
 import { instantiateSubproofAssertion } from "../../process/instantiate";
+import { subproofAssertionFromStatementNode } from "../../utilities/element";
 
 const { last, front, backwardsEvery } = arrayUtilities;
 
@@ -309,6 +310,13 @@ export default define(class SubproofAssertion extends Assertion {
     }
 
     return subproorAssertion;
+  }
+
+  static fromStatement(statement, context) {
+    const statementNode = statement.getNode(),
+          subproofAssertion = subproofAssertionFromStatementNode(statementNode, context);
+
+    return subproofAssertion;
   }
 });
 
