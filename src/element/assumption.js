@@ -131,7 +131,7 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' assumption's '${referenceString}' reference...`);
 
-    const reference = this.reference.validate();
+    const reference = this.reference.validate(context);
 
     if (reference !== null) {
       const metavariable = this.reference.getMetavariable(),
@@ -152,10 +152,6 @@ export default define(class Assumption extends Element {
         if (topLevelMetaAssertionsCompare) {
           referenceValidates = true;
         }
-      }
-
-      if (referenceValidates) {
-        context.addReference(reference);
       }
     }
 

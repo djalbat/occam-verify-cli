@@ -53,6 +53,12 @@ export function descend(innerFunction, context) {
 }
 
 export function attempt(innerFunction, context) {
+  const contextEphemeralContext = (context instanceof EphemeralContext);
+
+  if (contextEphemeralContext) {
+    context = context.getContext();
+  }
+
   const ephemeralContext = EphemeralContext.fromNothing(context);
 
   context = ephemeralContext;  ///

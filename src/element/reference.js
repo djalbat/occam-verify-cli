@@ -123,60 +123,79 @@ export default define(class Reference extends Element {
     return topLevelMetaAssertionCompares;
   }
 
-  validate() {
-    let referennce = null;
+  findValidReference(context) {
+    const referenceNode = this.getReferenceNode(),
+          reference = context.findReferenceByReferenceNode(referenceNode),
+          validReference = reference;  ///
 
-    const context = this.getContext(),
-          referenceString = this.getString(); ///
+    return validReference;
+  }
+
+  validate(context) {
+    let reference = null;
+
+    const referenceString = this.getString(); ///
 
     context.trace(`Validating the '${referenceString}' reference...`);
 
-    let validates;
+    let validates = false;
 
-    attempt((context) => {
-      const metavariableValidates = this.validateMetavariable(context);
+    const validReference = this.findValidReference(context);
 
-      if (metavariableValidates) {
-        const referenceMetaTypeName = REFERENCE_META_TYPE_NAME,
-              referenceMetaType = context.findMetaTypeByMetaTypeName(referenceMetaTypeName),
-              metaType = this.metavariable.getMetaType();
+    if (validReference) {
+      reference = validReference;  ///
 
-        if (metaType === null) {
-          const reference = this, ///
-                labelPresent = context.isLabelPresentByReference(reference);
+      context.debug(`...the '${referenceString}' reference is already valid.`);
+    } else {
+      const context = this.getContext();
 
-          if (labelPresent) {
-            validates = true;
+      attempt((context) => {
+        const metavariableValidates = this.validateMetavariable(context);
+
+        if (metavariableValidates) {
+          const referenceMetaTypeName = REFERENCE_META_TYPE_NAME,
+                referenceMetaType = context.findMetaTypeByMetaTypeName(referenceMetaTypeName),
+                metaType = this.metavariable.getMetaType();
+
+          if (metaType === null) {
+            const reference = this, ///
+                  labelPresent = context.isLabelPresentByReference(reference);
+
+            if (labelPresent) {
+              validates = true;
+            } else {
+              context.debug(`There is no label for the '${referenceString}' reference.`);
+            }
           } else {
-            context.debug(`There is no label for the '${referenceString}' reference.`);
-          }
-        } else {
-          const metavariableMetaTypeEqualToReferenceMetaType = this.metavariable.isMetaTypeEqualTo(referenceMetaType);
+            const metavariableMetaTypeEqualToReferenceMetaType = this.metavariable.isMetaTypeEqualTo(referenceMetaType);
 
-          if (metavariableMetaTypeEqualToReferenceMetaType) {
-            validates = true;
-          } else {
-            const metaTypeString = metaType.getString(),
-                  metavariableString = this.metavariable.getString(),
-                  referenceMetaTypeString = referenceMetaType.getString();
+            if (metavariableMetaTypeEqualToReferenceMetaType) {
+              validates = true;
+            } else {
+              const metaTypeString = metaType.getString(),
+                    metavariableString = this.metavariable.getString(),
+                    referenceMetaTypeString = referenceMetaType.getString();
 
-            context.debug(`The '${referenceString}' reference's '${metavariableString}' metavariable's '${metaTypeString}' meta-type should be the '${referenceMetaTypeString}' meta-type.`);
+              context.debug(`The '${referenceString}' reference's '${metavariableString}' metavariable's '${metaTypeString}' meta-type should be the '${referenceMetaTypeString}' meta-type.`);
+            }
           }
         }
-      }
 
-      if (validates) {
-        context.commit(this);
-      }
-    }, context);
+        if (validates) {
+          context.commit(this);
+        }
+      }, context);
+    }
 
     if (validates) {
-      referennce = this;  ///
+      reference = this;  ///
+
+      context.addReference(reference);
 
       context.debug(`...validated the '${referenceString}' reference.`);
     }
 
-    return referennce;
+    return reference;
   }
 
   validateMetavariable(context) {
@@ -338,5 +357,3 @@ export default define(class Reference extends Element {
     return reference;
   }
 });
-
-let counter = 0;

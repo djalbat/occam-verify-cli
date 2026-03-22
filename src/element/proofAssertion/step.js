@@ -137,7 +137,7 @@ export default define(class Step extends ProofAssertion {
 
       context.trace(`Validating the '${stepString}' step's '${referenceString}' reference... `);
 
-      const reference = this.reference.validate();
+      const reference = this.reference.validate(context);
 
       if (reference === null) {
         referenceValidates = false;

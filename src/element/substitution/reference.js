@@ -120,11 +120,9 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${targetReferenceString}' target reference...`);
 
-    const targetReference = this.targetReference.validate();
+    const targetReference = this.targetReference.validate(context);
 
     if (targetReference !== null) {
-      context.addReference(targetReference);
-
       targetReferenceValidates = true;
     }
 
@@ -144,11 +142,9 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${replacementReferenceString}' replacement reference...`);
 
-    const replacementReference = this.replacementReference.validate();
+    const replacementReference = this.replacementReference.validate(context);
 
     if (replacementReference !== null) {
-      context.addReference(replacementReference);
-
       replacementReferenceValidates = true;
     }
 
