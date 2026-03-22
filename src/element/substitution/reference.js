@@ -114,15 +114,17 @@ export default define(class ReferenceSubstitution extends Substitution {
   validateTargetReference(generalContext, specificContext) {
     let targetReferenceValidates = false;
 
-    const context = generalContext, ///
+    const context = specificContext, ///
           targetReferenceString = this.targetReference.getString(),
           referenceSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${targetReferenceString}' target reference...`);
 
-    const targetReference = this.targetReference.validate(context);
+    const targetReference = this.targetReference.validate();
 
     if (targetReference !== null) {
+      context.addReference(targetReference);
+
       targetReferenceValidates = true;
     }
 
@@ -142,9 +144,11 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${replacementReferenceString}' replacement reference...`);
 
-    const replacementReference = this.replacementReference.validate(context);
+    const replacementReference = this.replacementReference.validate();
 
     if (replacementReference !== null) {
+      context.addReference(replacementReference);
+
       replacementReferenceValidates = true;
     }
 

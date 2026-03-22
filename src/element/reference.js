@@ -5,7 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
-import { serialise, reconcile, unserialise, instantiate } from "../utilities/context";
+import { referenceFromReferenceNode } from "../utilities/element";
+import { attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
 import { metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 
 export default define(class Reference extends Element {
@@ -122,30 +123,17 @@ export default define(class Reference extends Element {
     return topLevelMetaAssertionCompares;
   }
 
-  findValidRefernece(context) {
-    const metavariableNode = this.getMetavariableNode(),
-          reference = context.findReferenceByMetavariableNode(metavariableNode),
-          validReference = reference;  ///
+  validate() {
+    let referennce = null;
 
-    return validReference;
-  }
-
-  validate(context) {
-    let reference = null;
-
-    const referenceString = this.getString(); ///
+    const context = this.getContext(),
+          referenceString = this.getString(); ///
 
     context.trace(`Validating the '${referenceString}' reference...`);
 
-    const validReference = this.findValidRefernece(context);
+    let validates;
 
-    if (validReference !== null) {
-      reference = validReference; ///
-
-      context.debug(`...the '${referenceString}' reference is already valid.`);
-    } else {
-      let validates = false;
-
+    attempt((context) => {
       const metavariableValidates = this.validateMetavariable(context);
 
       if (metavariableValidates) {
@@ -170,23 +158,25 @@ export default define(class Reference extends Element {
           } else {
             const metaTypeString = metaType.getString(),
                   metavariableString = this.metavariable.getString(),
-                  reerenceMetaTypeString = referenceMetaType.getString();
+                  referenceMetaTypeString = referenceMetaType.getString();
 
-            context.debug(`The '${referenceString}' reference's '${metavariableString}' metavariable's '${metaTypeString}' meta-type should be the '${reerenceMetaTypeString}' meta-type.`);
+            context.debug(`The '${referenceString}' reference's '${metavariableString}' metavariable's '${metaTypeString}' meta-type should be the '${referenceMetaTypeString}' meta-type.`);
           }
         }
       }
 
       if (validates) {
-        reference = this; ///
-
-        context.addReference(reference);
-
-        context.debug(`...validated the '${referenceString}' reference.`);
+        context.commit(this);
       }
+    }, context);
+
+    if (validates) {
+      referennce = this;  ///
+
+      context.debug(`...validated the '${referenceString}' reference.`);
     }
 
-    return reference;
+    return referennce;
   }
 
   validateMetavariable(context) {
@@ -194,8 +184,6 @@ export default define(class Reference extends Element {
 
     const referenceString = this.getString(), ///
           metavariableString = this.metavariable.getString();
-
-    context = this.getContext();
 
     context.trace(`Validating the '${referenceString}' reference's '${metavariableString}' metavariable...'`);
 
@@ -336,4 +324,19 @@ export default define(class Reference extends Element {
 
     return reference;
   }
+
+  static fromReferenceString(referenceString, context) {
+    let reference;
+
+    instantiate((context) => {
+      const string = referenceString,  ///
+            referenceNode = instantiateReference(string, context);
+
+      reference = referenceFromReferenceNode(referenceNode, context);
+    }, context);
+
+    return reference;
+  }
 });
+
+let counter = 0;

@@ -215,7 +215,7 @@ class ProofContext extends Context {
     } else {
       this.assumptions.push(assumption);
 
-      context.debug(`...added the '${assumptionString}' substitution to the proof context.`);
+      context.debug(`...added the '${assumptionString}' assumption to the proof context.`);
     }
   }
 
@@ -245,10 +245,6 @@ class ProofContext extends Context {
   }
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
-
-  findJudgementByJudgementNode(judgementNode) {
-    debugger
-  }
 
   findAssumptionByAssumptionNode(assumptionNode, metaLevel = true) {
     let assumption = null;

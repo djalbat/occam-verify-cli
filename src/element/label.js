@@ -4,6 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateLabel } from "../process/instantiate";
+import { labelFromLabelNode } from "../utilities/element";
 import { metavariableFromLabelNode } from "../utilities/element";
 import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
@@ -154,6 +155,19 @@ export default define(class Label extends Element {
         label = new Label(context, string, node, metavariable);
       }, context);
     }, json, context);
+
+    return label;
+  }
+
+  static fromLabelString(labelString, context) {
+    let label;
+
+    instantiate((context) => {
+      const string = labelString,  ///
+            labelNode = instantiateLabel(string, context);
+
+      label = labelFromLabelNode(labelNode, context);
+    }, context);
 
     return label;
   }

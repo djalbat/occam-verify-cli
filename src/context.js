@@ -211,13 +211,6 @@ export default class Context extends ContextBase {
     return assertion;
   }
 
-  findReferenceByReferenceNode(referenceNode) {
-    const context = this.getContext(),
-          reference = context.findReferenceByReferenceNode(referenceNode);
-
-    return reference;
-  }
-
   findStatementByStatementNode(statementNode) {
     const context = this.getContext(),
           statement = context.findStatementByStatementNode(statementNode);

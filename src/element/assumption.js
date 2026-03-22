@@ -44,6 +44,12 @@ export default define(class Assumption extends Element {
     return equalTo;
   }
 
+  isMetaLevel() {
+    const metaLevel = (this.context !== null);
+
+    return metaLevel;
+  }
+
   matchAssumptionNode(assumptionNode) {
     const node = assumptionNode, ///
           nodeMatches = this.matchNode(node),
@@ -60,8 +66,10 @@ export default define(class Assumption extends Element {
     return validAssumption;
   }
 
-  validate(context, metaLevel = false) {
+  validate(context) {
     let assumption = null;
+
+    const metaLevel = this.isMetaLevel();
 
     if (metaLevel) {
       context = this.getContext();
@@ -123,7 +131,7 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' assumption's '${referenceString}' reference...`);
 
-    const reference = this.reference.validate(context);
+    const reference = this.reference.validate();
 
     if (reference !== null) {
       const metavariable = this.reference.getMetavariable(),
@@ -144,6 +152,10 @@ export default define(class Assumption extends Element {
         if (topLevelMetaAssertionsCompare) {
           referenceValidates = true;
         }
+      }
+
+      if (referenceValidates) {
+        context.addReference(reference);
       }
     }
 
