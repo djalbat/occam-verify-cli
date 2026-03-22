@@ -38,7 +38,7 @@ export default define(class ProcedureCall extends Element {
   findPrimitives(context) {
     const substitutions = context.getSubstitutions(),
           primitives = this.parameters.map((parameter) => {
-            const primitive = parameter.findPrimitive(substitutions);
+            const primitive = parameter.findPrimitive(substitutions, context);
 
             return primitive;
           });

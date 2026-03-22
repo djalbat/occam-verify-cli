@@ -6,9 +6,8 @@ import { primitiveUtilities } from "occam-furtle";
 const { primitiveFromNode } =primitiveUtilities;
 
 export default class Substitution extends Element {
-  getPrimitive() {
-    const context = this.getContext(),
-          replacementNode = this.getReplacementNode(),
+  getPrimitive(context) {
+    const replacementNode = this.getReplacementNode(),
           node = replacementNode, ///
           primitive = primitiveFromNode(node, context);
 

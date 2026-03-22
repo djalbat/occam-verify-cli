@@ -511,7 +511,7 @@ export default class EphemeralContext extends Context {
   commit(element) {
     const context = this; ///
 
-    element.context = context;
+    element.setContext(context);
   }
 
   initialise(json) {

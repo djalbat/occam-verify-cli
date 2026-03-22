@@ -151,7 +151,7 @@ export default define(class TermSubstitution extends Substitution {
   validateReplacementTerm(generalContext, specificContext) {
     let replacementTermValidates = false;
 
-    const context = this.getContext(),
+    const context = specificContext,  ///
           replacementTermString = this.replacementTerm.getString(),
           termSubstitutionString = this.getString();  ///
 

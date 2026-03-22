@@ -179,7 +179,7 @@ export default define(class StatementSubstitution extends Substitution {
   validateReplacementStatement(generalContext, specificContext) {
     let replacementStatementValidates = false;
 
-    const context = this.getContext(),
+    const context = specificContext,  ///
           replacementStatementString = this.replacementStatement.getString(),
           statementSubstitutionString = this.getString();  ///
 
@@ -352,8 +352,6 @@ export default define(class StatementSubstitution extends Substitution {
               node = statementSubstitutionNode,  ///
               targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
               replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context);
-
-        context = null;
 
         statementSubstitutionn = new StatementSubstitution(context, string, node, targetStatement, replacementStatement);
       }, context);

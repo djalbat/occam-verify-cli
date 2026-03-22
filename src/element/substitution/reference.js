@@ -114,7 +114,7 @@ export default define(class ReferenceSubstitution extends Substitution {
   validateTargetReference(generalContext, specificContext) {
     let targetReferenceValidates = false;
 
-    const context = specificContext, ///
+    const context = generalContext, ///
           targetReferenceString = this.targetReference.getString(),
           referenceSubstitutionString = this.getString();  ///
 
@@ -138,7 +138,7 @@ export default define(class ReferenceSubstitution extends Substitution {
   validateReplacementReference(generalContext, specificContext) {
     let replacementReferenceValidates = false;
 
-    const context = this.getContext(),
+    const context = specificContext,  ///
           replacementReferenceString = this.replacementReference.getString(),
           referenceSubstitutionString = this.getString();  ///
 

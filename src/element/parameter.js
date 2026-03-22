@@ -30,20 +30,20 @@ export default define(class Parameter extends Element {
     return parameterNode;
   }
 
-  findPrimitive(substitutions) {
+  findPrimitive(substitutions, context) {
     let primitive = null;
 
     const parameter = this, ///
           substitution = substitutions.find((substitution) => {
-            const substitutionComparesToParamter = substitution.compareParameter(parameter);
+            const substitutionComparesToParameter = substitution.compareParameter(parameter);
 
-            if (substitutionComparesToParamter) {
+            if (substitutionComparesToParameter) {
               return true;
             }
           }) || null;
 
     if (substitution !== null) {
-      primitive = substitution.getPrimitive();
+      primitive = substitution.getPrimitive(context);
     }
 
     return primitive;
