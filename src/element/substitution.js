@@ -29,7 +29,7 @@ export default class Substitution extends Element {
     return substitutionNodeMatches;
   }
 
-  findValidSubstiution(context) {
+  findValidSubstitution(context) {
     const substitutionNode = this.getSubstitutionNode(),
           substitution = context.findSubstitutionBySubstitutionNode(substitutionNode),
           validSubstitution = substitution;  ///

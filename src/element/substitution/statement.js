@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
-import { join, descend, reconcile, instantiate } from "../../utilities/context";
+import { join, attempt, descend, reconcile, instantiate } from "../../utilities/context";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
@@ -113,34 +113,43 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Validating the '${statementSubstitutionString}' statement substitution...`);
 
-    const validSubstitution = this.findValidSubstiution(context);
+    let validates = false;
+
+    const validSubstitution = this.findValidSubstitution(context);
 
     if (validSubstitution) {
       statementSubstitution = validSubstitution;  ///
 
       context.debug(`...the '${statementSubstitutionString}' statement substitution is already valid.`);
     } else {
-      let validates = false;
+      const context = this.getContext(),
+            specificContext = context;  ///
 
-      const targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
+      attempt((specificContext) => {
+        const targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
 
-      if (targetStatementValidates) {
-        const replacementStatementValidates = this.validateReplacementStatement(generalContext, specificContext);
+        if (targetStatementValidates) {
+          const replacementStatementValidates = this.validateReplacementStatement(generalContext, specificContext);
 
-        if (replacementStatementValidates) {
-          validates = true;
+          if (replacementStatementValidates) {
+            validates = true;
+          }
         }
-      }
 
-      if (validates) {
-        const substitution = this;  ///
+        if (validates) {
+          specificContext.commit(this);
+        }
+      }, specificContext);
+    }
 
-        statementSubstitution = substitution; ///
+    if (validates) {
+      const substitution = this;  ///
 
-        context.addSubstitution(substitution);
+      statementSubstitution = substitution; ///
 
-        context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
-      }
+      context.addSubstitution(substitution);
+
+      context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
     }
 
     return statementSubstitution;

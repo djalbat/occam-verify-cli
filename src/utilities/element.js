@@ -629,11 +629,8 @@ export function termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, c
         node = termSubstitutionNode,  ///
         string = context.nodeAsString(node),
         targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
-        replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
-
-  context = null;
-
-  const termSubstitution = new TermSubstitution(context, string, node, targetTerm, replacementTerm);
+        replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context),
+        termSubstitution = new TermSubstitution(context, string, node, targetTerm, replacementTerm);
 
   return termSubstitution;
 }
@@ -643,11 +640,8 @@ export function frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode
         node = frameSubstitutionNode,  ///
         string = context.nodeAsString(node),
         targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
-        replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
-
-  context = null;
-
-  const frameSubstitution = new FrameSubstitution(context, string, node, targetFrame, replacementFrame);
+        replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
+        frameSubstitution = new FrameSubstitution(context, string, node, targetFrame, replacementFrame);
 
   return frameSubstitution;
 }
@@ -773,11 +767,8 @@ export function referenceSubstitutionFromReferenceSubstitutionNode(referenceSubs
         node = referenceSubstitutionNode,  ///
         string = context.nodeAsString(node),
         targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
-        replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
-
-  context = null;
-
-  const referenceSubstitution = new ReferenceSubstitution(context, string, node, targetReference, replacementReference);
+        replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
+        referenceSubstitution = new ReferenceSubstitution(context, string, node, targetReference, replacementReference);
 
   return referenceSubstitution;
 }
