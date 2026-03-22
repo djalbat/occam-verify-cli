@@ -116,20 +116,18 @@ class ProofContext extends Context {
     return lastStep;
   }
 
-  hasAssumptions(metaLevel = true) {
-    let assumptions = false;
+  isMetaLevel() {
+    let metaLevel = false;
 
-    if (metaLevel) {
-      if (this.assumptions !== null) {
-        assumptions = true;
-      } else {
-        const context = this.getContext();
+    if (this.assumptions !== null) {
+      metaLevel = true;
+    } else {
+      const context = this.getContext();
 
-        assumptions = context.hasAssumptions(metaLevel);
-      }
+      metaLevel = context.isMetaLevel();
     }
 
-    return assumptions;
+    return metaLevel;
   }
 
   addEquality(equality) {

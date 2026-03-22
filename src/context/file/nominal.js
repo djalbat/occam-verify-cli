@@ -714,10 +714,10 @@ export default class NominalFileContext extends FileContext {
     return procedurePresent;
   }
 
-  hasAssumptions(metaLevel = true) {
-    const assumptions = false;
+  isMetaLevel() {
+    const metaLEvel = false;
 
-    return assumptions;
+    return metaLEvel;
   }
 
   clear() {

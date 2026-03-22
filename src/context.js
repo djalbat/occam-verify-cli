@@ -426,6 +426,20 @@ export default class Context extends ContextBase {
     return substitutionPresent;
   }
 
+  isSubstitutionPresentByMetavariableNameAndSubstitution(metavariableName, substitution) {
+    const context = this.getContext(),
+          substitutionPresent = context.isSubstitutionPresentByMetavariableNameAndSubstitution(metavariableName, substitution);
+
+    return substitutionPresent;
+  }
+
+  isSubstitutionPresentByMetavariableName(metavariableName) {
+    const context = this.getContext(),
+          substitutionPresent = context.isSubstitutionPresentByMetavariableName(metavariableName);
+
+    return substitutionPresent;
+  }
+
   isProcedurePresentByProcedureName(procedureName) {
     const context = this.getContext(),
           procedurePresent = context.isProcedurePresentByProcedureName(procedureName);
@@ -433,11 +447,11 @@ export default class Context extends ContextBase {
     return procedurePresent;
   }
 
-  hasAssumptions(metaLevel = false) {
+  isMetaLevel() {
     const context = this.getContext(),
-          assumptions = context.hasAssumptions(metaLevel);
+          metaLevel = context.isMetaLevel();
 
-    return assumptions;
+    return metaLevel;
   }
 
   isStated() {

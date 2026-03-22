@@ -14,8 +14,9 @@ const typeNodeQuery = nodeQuery("/type"),
       frameNodeQuery = nodeQuery("/frame"),
       metaTypeNodeQuery = nodeQuery("/metaType"),
       statementNodeQuery = nodeQuery("/statement"),
+      metavariableNodeQuery = nodeQuery("/metavariable"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
-      frameAMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
+      frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       assumptionMetavariableNodeQuery = nodeQuery("/assumption/metavariable!");
 
@@ -89,7 +90,7 @@ class MetaLevelPass extends ZipPassBase {
       }
     },
     {
-      generalNodeQuery: frameAMetavariableNodeQuery,
+      generalNodeQuery: frameMetavariableNodeQuery,
       specificNodeQuery: frameNodeQuery,
       run: (generalFrameMetavariableNode, specificFrameNode, generalContext, specificContext) => {
         let success = false;
@@ -110,6 +111,98 @@ class MetaLevelPass extends ZipPassBase {
               frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
 
         if (frameUnifies) {
+          success = true;
+        }
+
+        return success;
+      }
+    },
+    {
+      generalNodeQuery: termVariableNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      run: (generalTermVariableNode, specificTermNode, generalContext, specificContext) => {
+        let success = false;
+
+        const termNode = specificTermNode, ///
+              variableNode = generalTermVariableNode, ///
+              variableIdentifier = variableNode.getVariableIdentifier();
+
+        let context;
+
+        context = generalContext; ///
+
+        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
+
+        context = specificContext;  ///
+
+        const term = context.findTermByTermNode(termNode),
+              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
+
+        if (termUnifies) {
+          success = true;
+        }
+
+        return success;
+      }
+    }
+  ];
+}
+
+class AssumptionPass extends ZipPass {
+  static maps = [
+    {
+      generalNodeQuery: metavariableNodeQuery,
+      specificNodeQuery: metavariableNodeQuery,
+      run: (generalMetavariableNode, specificMetavariableNode, generalContext, specificContext) => {
+        let success = false;
+
+        let context,
+            metavariableNode;
+
+        context = generalContext; ///
+
+        metavariableNode = generalMetavariableNode;  ///
+
+        const metavariableName = metavariableNode.getMetavariableName(),
+              metavariable = context.findMetavariableByMetavariableName(metavariableName);
+
+        context = specificContext;  ///
+
+        metavariableNode = specificMetavariableNode; ///
+
+        const reference = context.findReferenceByMetavariableNode(metavariableNode),
+              referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
+
+        if (referenceUnifies) {
+          success = true;
+        }
+
+        return success;
+      }
+    },
+    {
+      generalNodeQuery: statementMetavariableNodeQuery,
+      specificNodeQuery: statementNodeQuery,
+      run: (generalStatementMetavariableNode, specificStatementNode, generalContext, specificContext) => {
+        let success = false;
+
+        const statementNode = specificStatementNode, ///
+              metavariableNode = generalStatementMetavariableNode,  ///
+              metavariableName = metavariableNode.getMetavariableName();
+
+        let context;
+
+        context = generalContext; ///
+
+        const metavariable = context.findMetavariableByMetavariableName(metavariableName);
+
+        context = specificContext;  ///
+
+        const statement = context.findStatementByStatementNode(statementNode),
+              substitution = null,
+              statementUnifies = metavariable.unifyStatement(statement, substitution, generalContext, specificContext);
+
+        if (statementUnifies) {
           success = true;
         }
 
@@ -307,7 +400,7 @@ class MetavariablePass extends ZipPass {
 class SubstitutionPass extends ZipPass {
   static maps = [
     {
-      generalNodeQuery: frameAMetavariableNodeQuery,
+      generalNodeQuery: frameMetavariableNodeQuery,
       specificNodeQuery: frameNodeQuery,
       run: (generalFrameMetavariableNode, specificFrameNode, generalContext, specificContext) => {
         let success = false;
@@ -399,6 +492,7 @@ class IntrinsicLevelPass extends ZipPass {
 }
 
 const metaLevelPass = new MetaLevelPass(),
+      assumptionPass = new AssumptionPass(),
       combinatorPass = new CombinatorPass(),
       constructorPass = new ConstructorPass(),
       metavariablePass = new MetavariablePass(),
@@ -421,14 +515,30 @@ export function unifyStatement(generalStatement, specificStatement, generalConte
   return statementUnifies;
 }
 
+export function unifyAssumption(generalAssumption, specificAssumption, generalContext, specificContext) {
+  let assumptionUnifies = false;
+
+  const generalAssumptionNode = generalAssumption.getNode(),
+        specificAssumptionNode = specificAssumption.getNode(),
+        generalNode = generalAssumptionNode, ///
+        specificNode = specificAssumptionNode,  ///
+        success = assumptionPass.run(generalNode, specificNode, generalContext, specificContext);
+
+  if (success) {
+    assumptionUnifies = true;
+  }
+
+  return assumptionUnifies;
+}
+
 export function unifySubstitution(generalSubstitution, specificSubstitution, generalContext, specificContext) {
   let substitutionUnifies = false;
 
   const generalSubstitutionNode = generalSubstitution.getNode(),
-        specificSubstitutionNode = specificSubstitution.getNode(),
-        generalNode = generalSubstitutionNode, ///
-        specificNode = specificSubstitutionNode,  ///
-        success = substitutionPass.run(generalNode, specificNode, generalContext, specificContext);
+    specificSubstitutionNode = specificSubstitution.getNode(),
+    generalNode = generalSubstitutionNode, ///
+    specificNode = specificSubstitutionNode,  ///
+    success = substitutionPass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     substitutionUnifies = true;

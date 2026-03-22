@@ -40,6 +40,8 @@ export default define(class Judgement extends Element {
 
   getMetavariable() { return this.frame.getMetavariable(); }
 
+  getMetavariableNode() { return this.frame.getMetavariableNode(); }
+
   matchJudgementNode(judgementNode) {
     const node = judgementNode, ///
           nodeMatches = this.matchNode(node),
@@ -185,12 +187,38 @@ export default define(class Judgement extends Element {
     context.trace(`Validating the '${judgementString}' derived judgement...`);
 
     const topLevelMetaAssertion = this.assumption.getTopLevelMetaAssertion(),
-          assumptions = topLevelMetaAssertion.getAssumptions(),
-          frameComparesToSubstitutions = this.frame.compareAssumptions(assumptions, context);
+          metavariableNode = this.getMetavariableNode(),
+          judgements = context.findJudgementsByMetavariableNode(metavariableNode);
 
-    if (frameComparesToSubstitutions) {
-      validatesWhenDerived = true;
-    }
+    let assumptions;
+
+    assumptions = topLevelMetaAssertion.getAssumptions();
+
+    const specificAssumptions = assumptions; ///
+
+    assumptions = assumptionsFromJudgements(judgements);
+
+    const generalAssumptions = assumptions;  ///
+
+    reconcile((context) => {
+      const specificAssumptionsUnify = specificAssumptions.every((specificAssumption) => {
+        const specificAssumptionUnifies = generalAssumptions.some((generalAssumption) => {
+          const specificAssumptionUnifies = generalAssumption.unifyAssumption(specificAssumption, context);
+
+          if (specificAssumptionUnifies) {
+            return true;
+          }
+        });
+
+        if (specificAssumptionUnifies) {
+          return true;
+        }
+      });
+
+      if (specificAssumptionsUnify) {
+        validatesWhenDerived = true;
+      }
+    }, context);
 
     if (validatesWhenDerived) {
       context.debug(`...validated the '${judgementString}' derived judgement.`);
@@ -252,6 +280,16 @@ function frameFromJudgementNode(judgementNode, context) {
         frame = context.findFrameByFrameNode(frameNode);
 
   return frame;
+}
+
+function assumptionsFromJudgements(judgements) {
+  const assumptions = judgements.map((judgement) => {
+    const assumption = judgement.getAssumption();
+
+    return assumption;
+  });
+
+  return assumptions;
 }
 
 function assumptionFromJudgementNode(judgementNode, context) {

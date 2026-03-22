@@ -3,9 +3,10 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { unifyAssumption } from "../process/unify";
 import { instantiateAssumption } from "../process/instantiate";
-import { descend, simplify, instantiate } from "../utilities/context";
 import { assumptionFromAssumptionNode } from "../utilities/element";
+import { descend, simplify, reconcile, instantiate } from "../utilities/context";
 import { assumptionStringFromStatementAndReference } from "../utilities/string";
 
 export default define(class Assumption extends Element {
@@ -51,26 +52,6 @@ export default define(class Assumption extends Element {
     return assumptionNodeMatches;
   }
 
-  compareAssumption(assumption, context) {
-    let comparesToAssumption = false;
-
-    const assumptionA = this, ///
-          assumptionB = assumption; ///
-
-    const assumptionAString = assumptionA.getString(),  ///
-          assumptionBString = assumptionB.getString();
-
-    context.trace(`Comparing the '${assumptionAString}' assumption to the '${assumptionBString}' assumption...`);
-
-    debugger
-
-    if (comparesToAssumption) {
-      context.debug(`...compared the '${assumptionAString}' assumption to the '${assumptionBString}' assumption.`);
-    }
-
-    return comparesToAssumption;
-  }
-
   findValidAssumption(context, metaLevel = false) {
     const assumptionNode = this.getAssumptionNode(),
           assumption = context.findAssumptionByAssumptionNode(assumptionNode, metaLevel),
@@ -81,6 +62,10 @@ export default define(class Assumption extends Element {
 
   validate(context, metaLevel = false) {
     let assumption = null;
+
+    if (metaLevel) {
+      context = this.getContext();
+    }
 
     const assumptionString = this.getString();  ///
 
@@ -229,6 +214,40 @@ export default define(class Assumption extends Element {
     return validatesWhenDerived;
   }
 
+  unifyAssumption(assumption, context) {
+    let assumptionUnifies;
+
+    const generalAssumption = this, ///
+          specificAssumption = assumption,  ///
+          generalAssumptionString = generalAssumption.getString(),
+          specificAssumptionString = specificAssumption.getString();
+
+    context.trace(`Unifying the '${specificAssumptionString}' assumption with the '${generalAssumptionString}' assumption...`);
+
+    const generalContext = context;  ///
+
+    context = assumption.getContext();
+
+    const specificContext = context; ///
+
+    reconcile((generalContext) => {
+      assumptionUnifies = unifyAssumption(generalAssumption, specificAssumption, generalContext, specificContext);
+
+      if (assumptionUnifies) {
+        generalContext.commit();
+      }
+
+    }, generalContext);
+
+    context = specificContext;  ///
+
+    if (assumptionUnifies) {
+      context.debug(`...unified the '${specificAssumptionString}' assumption with the '${generalAssumptionString}' assumption.`);
+    }
+
+    return assumptionUnifies;
+  }
+
   unifyTopLevelMetaAssertion(topLevelMetaAssertion, context) {
     let topLevelMetaAssertionUnifies;
 
@@ -289,6 +308,8 @@ export default define(class Assumption extends Element {
               assumptionNode = instantiateAssumption(string, context);
 
         assumption = assumptionFromAssumptionNode(assumptionNode, context);
+
+        assumption.setContext(context);
       }, context);
     }, context);
 

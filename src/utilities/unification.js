@@ -55,10 +55,9 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
         statementUnifiesWithReference = true;
       }
     } else {
-      const metaLevel = true,
-            assumptions = context.hasAssumptions(metaLevel);
+      const metaLevel = context.isMetaLevel();
 
-      if (assumptions) {
+      if (metaLevel) {
         descend((context) => {
           const { Assumption } = elements,
                 assumption = Assumption.fromStatementAndReference(statement, reference, context);

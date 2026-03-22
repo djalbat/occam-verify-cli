@@ -119,56 +119,6 @@ export default define(class Frame extends Element {
     return comparesToMetavariableName;
   }
 
-  compareAssumption(assumption, context) {
-    let comparesToAssumption;
-
-    const frameString = this.getString(),  ///
-          assumptionString = assumption.getString();
-
-    context.trace(`Comparing the '${frameString}' frame to the '${assumptionString}' assumption...`);
-
-    const metavariableNode = this.metavariable.getNode(),
-          judgements = context.findJudgementsByMetavariableNode(metavariableNode),
-          assumptions = assumptionsFromJudgements(judgements);
-
-    comparesToAssumption = assumptions.some((assumption) => {
-      const assumptionComparesToSubstitution = assumption.compareAssumption(assumption, context);
-
-      if (assumptionComparesToSubstitution) {
-        return true;
-      }
-    });
-
-    if (comparesToAssumption) {
-      context.debug(`...compared the '${frameString}' frame to the '${assumptionString}' assumption.`);
-    }
-
-    return comparesToAssumption;
-  }
-
-  compareAssumptions(assumptions, context) {
-    let comparesToAssumptions;
-
-    const frameString = this.getString(),  ///
-          assumptionsString = assumptionsStringFromAssumptions(assumptions);
-
-    context.trace(`Comparing the '${frameString}' frame to the '${assumptionsString}' assumption...`);
-
-    comparesToAssumptions = assumptions.every((assumption) => {
-      const compaaresToAssumption = this.compareAssumption(assumption, context);
-
-      if (compaaresToAssumption) {
-        return true;
-      }
-    });
-
-    if (comparesToAssumptions) {
-      context.debug(`...compared the '${frameString}' frame to the '${assumptionsString}' assumptions.`);
-    }
-
-    return comparesToAssumptions;
-  }
-
   findValidFrame(context) {
     const frameNode = this.getFrameNode(),
           frame = context.findFrameByFrameNode(frameNode),
@@ -388,16 +338,6 @@ function assumptionsFromFrameNode(frameNode, context) {
 
           return assumption;
         });
-
-  return assumptions;
-}
-
-function assumptionsFromJudgements(judgements) {
-  const assumptions = judgements.map((judgement) => {
-    const assumption = judgement.getAssumption();
-
-    return assumption;
-  });
 
   return assumptions;
 }

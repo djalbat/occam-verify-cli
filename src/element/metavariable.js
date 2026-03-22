@@ -290,11 +290,10 @@ export default define(class Metavariable extends Element {
       frameUnifies = true;
     } else {
       const metavariableName = this.getMetavariableName(),
-            simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
+            substitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
 
-      if (simpleSubstitution !== null) {
-        const substitution = simpleSubstitution,  ///
-              substitutionFrameComparesToFrame = substitution.compareFrame(frame, context);
+      if (substitution !== null) {
+        const substitutionFrameComparesToFrame = substitution.compareFrame(frame, context);
 
         if (substitutionFrameComparesToFrame) {
           const frameSubstitution = substitution, ///
@@ -402,12 +401,10 @@ export default define(class Metavariable extends Element {
       referenceUnifies = true;
     } else {
       const metavariableName = this.getMetavariableName(),
-            simpleSubstitutionPresent = context.isSimpleSubstitutionPresentByMetavariableName(metavariableName);
+            substitution = context.findSubstitutionByMetavariableName(metavariableName);
 
-      if (simpleSubstitutionPresent) {
-        const simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName),
-              substitution = simpleSubstitution,  ///
-              substitutionReferenceComparesToReference = substitution.compareReference(reference, context);
+      if (substitution !== null) {
+        const substitutionReferenceComparesToReference = substitution.compareReference(reference, context);
 
         if (substitutionReferenceComparesToReference) {
           const referenceSubstitution = substitution, ///
