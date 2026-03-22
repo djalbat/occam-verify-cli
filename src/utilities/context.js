@@ -91,13 +91,7 @@ export function nominally(innerFunction) {
 }
 
 export function simplify(innerFunction, context) {
-  let contextExtraneousContext = isContextExtraneousContext(context);
-
-  while (contextExtraneousContext) {
-    context = context.getContext();
-
-    contextExtraneousContext = isContextExtraneousContext(context);
-  }
+  context = removeExtraneousContexts(context);
 
   const ephemeralContext = EphemeralContext.fromNothing(context);
 
@@ -157,4 +151,42 @@ function isContextExtraneousContext(context) {
                                   || contextSyntheticContext );
 
   return contextExtraneousContext;
+}
+
+function removeExtraneousContexts(context) {
+  context = trimExtraneousContexts(context);
+
+  const firstContext = context; ///
+
+  let currentContext = context; ///
+
+  while (currentContext !== null) {
+    context = currentContext.getContext();
+
+    context = trimExtraneousContexts(context);
+
+    currentContext.setContext(context);
+
+    currentContext = context; ///
+  }
+
+  context = firstContext; ///
+
+  return context;
+}
+
+function trimExtraneousContexts(context) {
+  let contextExtraneousContext = isContextExtraneousContext(context);
+
+  while (contextExtraneousContext) {
+    context = context.getContext();
+
+    if (context === null) {
+      break;
+    }
+
+    contextExtraneousContext = isContextExtraneousContext(context);
+  }
+
+  return context;
 }

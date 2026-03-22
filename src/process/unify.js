@@ -151,6 +151,35 @@ class MetaLevelPass extends ZipPassBase {
 class AssumptionPass extends ZipPass {
   static maps = [
     {
+      generalNodeQuery: statementMetavariableNodeQuery,
+      specificNodeQuery: statementNodeQuery,
+      run: (generalStatementMetavariableNode, specificStatementNode, generalContext, specificContext) => {
+        let success = false;
+
+        const statementNode = specificStatementNode, ///
+              metavariableNode = generalStatementMetavariableNode,  ///
+              metavariableName = metavariableNode.getMetavariableName();
+
+        let context;
+
+        context = generalContext; ///
+
+        const metavariable = context.findMetavariableByMetavariableName(metavariableName);
+
+        context = specificContext;  ///
+
+        const statement = context.findStatementByStatementNode(statementNode),
+              substitution = null,
+              statementUnifies = metavariable.unifyStatement(statement, substitution, generalContext, specificContext);
+
+        if (statementUnifies) {
+          success = true;
+        }
+
+        return success;
+      }
+    },
+    {
       generalNodeQuery: metavariableNodeQuery,
       specificNodeQuery: metavariableNodeQuery,
       run: (generalMetavariableNode, specificMetavariableNode, generalContext, specificContext) => {
@@ -174,35 +203,6 @@ class AssumptionPass extends ZipPass {
               referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
 
         if (referenceUnifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      generalNodeQuery: statementMetavariableNodeQuery,
-      specificNodeQuery: statementNodeQuery,
-      run: (generalStatementMetavariableNode, specificStatementNode, generalContext, specificContext) => {
-        let success = false;
-
-        const statementNode = specificStatementNode, ///
-              metavariableNode = generalStatementMetavariableNode,  ///
-              metavariableName = metavariableNode.getMetavariableName();
-
-        let context;
-
-        context = generalContext; ///
-
-        const metavariable = context.findMetavariableByMetavariableName(metavariableName);
-
-        context = specificContext;  ///
-
-        const statement = context.findStatementByStatementNode(statementNode),
-              substitution = null,
-              statementUnifies = metavariable.unifyStatement(statement, substitution, generalContext, specificContext);
-
-        if (statementUnifies) {
           success = true;
         }
 

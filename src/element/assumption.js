@@ -6,8 +6,8 @@ import { define } from "../elements";
 import { unifyAssumption } from "../process/unify";
 import { instantiateAssumption } from "../process/instantiate";
 import { assumptionFromAssumptionNode } from "../utilities/element";
-import { descend, simplify, reconcile, instantiate } from "../utilities/context";
 import { assumptionStringFromStatementAndReference } from "../utilities/string";
+import { join, descend, simplify, reconcile, instantiate } from "../utilities/context";
 
 export default define(class Assumption extends Element {
   constructor(context, string, node, reference, statement) {
@@ -214,32 +214,31 @@ export default define(class Assumption extends Element {
     return validatesWhenDerived;
   }
 
-  unifyAssumption(assumption, context) {
+  unifyAssumption(assumption, generalContext, specificContext) {
     let assumptionUnifies;
 
-    const generalAssumption = this, ///
+    const context = specificContext,  ///
+          generalAssumption = this, ///
           specificAssumption = assumption,  ///
           generalAssumptionString = generalAssumption.getString(),
           specificAssumptionString = specificAssumption.getString();
 
     context.trace(`Unifying the '${specificAssumptionString}' assumption with the '${generalAssumptionString}' assumption...`);
 
-    const generalContext = context;  ///
+    const assumptionContext = assumption.getContext();
 
-    context = assumption.getContext();
+    specificContext = assumptionContext;  ///
 
-    const specificContext = context; ///
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        assumptionUnifies = unifyAssumption(generalAssumption, specificAssumption, generalContext, specificContext);
 
-    reconcile((generalContext) => {
-      assumptionUnifies = unifyAssumption(generalAssumption, specificAssumption, generalContext, specificContext);
+        if (assumptionUnifies) {
+          specificContext.commit(context);
+        }
 
-      if (assumptionUnifies) {
-        generalContext.commit();
-      }
-
-    }, generalContext);
-
-    context = specificContext;  ///
+      }, specificContext);
+    }, specificContext, context);
 
     if (assumptionUnifies) {
       context.debug(`...unified the '${specificAssumptionString}' assumption with the '${generalAssumptionString}' assumption.`);

@@ -203,7 +203,9 @@ export default define(class Judgement extends Element {
     reconcile((context) => {
       const specificAssumptionsUnify = specificAssumptions.every((specificAssumption) => {
         const specificAssumptionUnifies = generalAssumptions.some((generalAssumption) => {
-          const specificAssumptionUnifies = generalAssumption.unifyAssumption(specificAssumption, context);
+          const generalContext = context, ///
+                specificContext = context,  ///
+                specificAssumptionUnifies = generalAssumption.unifyAssumption(specificAssumption, generalContext, specificContext);
 
           if (specificAssumptionUnifies) {
             return true;
