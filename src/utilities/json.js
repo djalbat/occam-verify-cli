@@ -2,6 +2,7 @@
 
 import elements from "../elements";
 import EphemeralContext from "../context/ephemeral";
+import Substitution from "../element/substitution";
 
 export function lemmasFromNothing() {
   const lemmas = [];
@@ -643,13 +644,11 @@ export function suppositionsFromJSON(json, context) {
 export function substitutionsFromJSON(json, context) {
   let { substitutions } = json;  ///
 
-  const { StatementSubstitution } = elements,
-        substitutionsJSON = substitutions, ///
-        Substitution = StatementSubstitution; ///
+  const substitutionsJSON = substitutions; ///
 
   substitutions = substitutionsJSON.map((substitutionJSON) => {
     const json = substitutionJSON,  ///
-          substitution = Substitution.fromJSON(json, context);
+          substitution = substitutionFromSubstitutionJSON(json, context);
 
     return substitution;
   });
@@ -829,6 +828,16 @@ export function procedureReferenceToProcedureReferenceJSON(procedureReference) {
   const procedureReferenceJSON = procedureReference.toJSON();
 
   return procedureReferenceJSON;
+}
+
+export function substitutionFromSubstitutionJSON(json, context) {
+  const { TermSubstitution, FrameSubstitution, StatementSubstitution, ReferenceSubstitution } = elements,
+        substitution = TermSubstitution.fromJSON(json, context) ||
+                       FrameSubstitution.fromJSON(json, context) ||
+                       StatementSubstitution.fromJSON(json, context) ||
+                       ReferenceSubstitution.fromJSON(json, context);
+
+  return substitution;
 }
 
 export function termsToTermsJSON(terms) {
