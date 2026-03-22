@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
-import { join, simplify, descend, reconcile, instantiate } from "../../utilities/context";
+import { join, descend, reconcile, instantiate } from "../../utilities/context";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
@@ -367,14 +367,12 @@ export default define(class StatementSubstitution extends Substitution {
 
     let statementSubstitution;
 
-    simplify((context) => {
-      instantiate((context) => {
-        const statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable, context),
-              string = statementSubstitutionString, ///
-              statementSubstitutionNode = instantiateStatementSubstitution(string, context);
+    instantiate((context) => {
+      const statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable, context),
+            string = statementSubstitutionString, ///
+            statementSubstitutionNode = instantiateStatementSubstitution(string, context);
 
-        statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
-      }, context);
+      statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
     }, context);
 
     return statementSubstitution;
@@ -385,14 +383,12 @@ export default define(class StatementSubstitution extends Substitution {
 
     let statementSubstitution;
 
-    simplify((context) => {
-      instantiate((context) => {
-        const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
-              string = statementSubstitutionString, ///
-              statementSubstitutionNode = instantiateStatementSubstitution(string, context);
+    instantiate((context) => {
+      const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
+            string = statementSubstitutionString, ///
+            statementSubstitutionNode = instantiateStatementSubstitution(string, context);
 
-        statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
-      }, context);
+      statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
     }, context);
 
     return statementSubstitution;

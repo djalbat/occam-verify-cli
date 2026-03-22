@@ -6,8 +6,8 @@ import { define } from "../elements";
 import { unifyAssumption } from "../process/unify";
 import { instantiateAssumption } from "../process/instantiate";
 import { assumptionFromAssumptionNode } from "../utilities/element";
+import { join, descend, reconcile, instantiate } from "../utilities/context";
 import { assumptionStringFromStatementAndReference } from "../utilities/string";
-import { join, descend, simplify, reconcile, instantiate } from "../utilities/context";
 
 export default define(class Assumption extends Element {
   constructor(context, string, node, reference, statement) {
@@ -300,16 +300,14 @@ export default define(class Assumption extends Element {
   static fromStatementAndReference(statement, reference, context) {
     let assumption;
 
-    simplify((context) => {
-      instantiate((context) => {
-        const assumptionString = assumptionStringFromStatementAndReference(statement, reference),
-              string = assumptionString,  ///
-              assumptionNode = instantiateAssumption(string, context);
+    instantiate((context) => {
+      const assumptionString = assumptionStringFromStatementAndReference(statement, reference),
+            string = assumptionString,  ///
+            assumptionNode = instantiateAssumption(string, context);
 
-        assumption = assumptionFromAssumptionNode(assumptionNode, context);
+      assumption = assumptionFromAssumptionNode(assumptionNode, context);
 
-        assumption.setContext(context);
-      }, context);
+      assumption.setContext(context);
     }, context);
 
     return assumption;

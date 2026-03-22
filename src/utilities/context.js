@@ -90,16 +90,6 @@ export function nominally(innerFunction) {
   return innerFunction(context);
 }
 
-export function simplify(innerFunction, context) {
-  context = removeExtraneousContexts(context);
-
-  const ephemeralContext = EphemeralContext.fromNothing(context);
-
-  context = ephemeralContext; ///
-
-  return innerFunction(context);
-}
-
 export function serialise(innerFunction, context) {
   const ephemeralContext = context, ///
         ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
@@ -138,55 +128,4 @@ export async function asyncReconcile(innerFunction, context) {
   context = liminalContext;  ///
 
   return await innerFunction(context);
-}
-
-function isContextExtraneousContext(context) {
-  const contextLiminalContext = (context instanceof LiminalContext),
-        contextEphemeralContext = (context instanceof EphemeralContext),
-        contextBranchingContext = (context instanceof BranchingContext),
-        contextSyntheticContext = (context instanceof SyntheticContext),
-        contextExtraneousContext = ( contextLiminalContext
-                                  || contextEphemeralContext
-                                  || contextBranchingContext
-                                  || contextSyntheticContext );
-
-  return contextExtraneousContext;
-}
-
-function removeExtraneousContexts(context) {
-  context = trimExtraneousContexts(context);
-
-  const firstContext = context; ///
-
-  let currentContext = context; ///
-
-  while (currentContext !== null) {
-    context = currentContext.getContext();
-
-    context = trimExtraneousContexts(context);
-
-    currentContext.setContext(context);
-
-    currentContext = context; ///
-  }
-
-  context = firstContext; ///
-
-  return context;
-}
-
-function trimExtraneousContexts(context) {
-  let contextExtraneousContext = isContextExtraneousContext(context);
-
-  while (contextExtraneousContext) {
-    context = context.getContext();
-
-    if (context === null) {
-      break;
-    }
-
-    contextExtraneousContext = isContextExtraneousContext(context);
-  }
-
-  return context;
 }

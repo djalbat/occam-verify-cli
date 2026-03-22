@@ -2,8 +2,8 @@
 
 import elements from "../elements";
 
+import { instantiate,} from "../utilities/context";
 import { baseTypeFromNothing } from "../utilities/type";
-import { simplify, instantiate,} from "../utilities/context";
 import { instantiateLabel, instantiateReference } from "../process/instantiate";
 import { equivalenceStringFromTerms,
          typeStringFromNominalTypeName,
@@ -2050,13 +2050,11 @@ export function stepsOrSubproofsFromSubDerivationNode(subDerivationNode, context
 export function labelFromLabelString(labelString, context) {
   let label;
 
-  simplify((context) => {
-    instantiate((context) => {
-      const string = labelString,  ///
-            labelNode = instantiateLabel(string, context);
+  instantiate((context) => {
+    const string = labelString,  ///
+          labelNode = instantiateLabel(string, context);
 
-      label = labelFromLabelNode(labelNode, context);
-    }, context);
+    label = labelFromLabelNode(labelNode, context);
   }, context);
 
   return label;
@@ -2065,13 +2063,11 @@ export function labelFromLabelString(labelString, context) {
 export function referenceFromReferenceString(referenceString, context) {
   let reference;
 
-  simplify((context) => {
-    instantiate((context) => {
-      const string = referenceString,  ///
-            referenceNode = instantiateReference(string, context);
+  instantiate((context) => {
+    const string = referenceString,  ///
+          referenceNode = instantiateReference(string, context);
 
-      reference = referenceFromReferenceNode(referenceNode, context);
-    }, context);
+    reference = referenceFromReferenceNode(referenceNode, context);
   }, context);
 
   return reference;

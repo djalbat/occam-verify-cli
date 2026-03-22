@@ -3,7 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { simplify, instantiate } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
@@ -212,14 +212,12 @@ export default define(class TermSubstitution extends Substitution {
 
     let termSubstitution;
 
-    simplify((context) => {
-      instantiate((context) => {
-        const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
-              string = termSubstitutionString,  ///
-              termSubstitutionNode = instantiateTermSubstitution(string, context);
+    instantiate((context) => {
+      const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
+            string = termSubstitutionString,  ///
+            termSubstitutionNode = instantiateTermSubstitution(string, context);
 
-        termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
-      }, context);
+      termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
     }, context);
 
     return termSubstitution;

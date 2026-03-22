@@ -246,6 +246,10 @@ class ProofContext extends Context {
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
 
+  findJudgementByJudgementNode(judgementNode) {
+    debugger
+  }
+
   findAssumptionByAssumptionNode(assumptionNode, metaLevel = true) {
     let assumption = null;
 

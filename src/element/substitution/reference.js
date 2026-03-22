@@ -3,7 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { simplify, instantiate } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
@@ -182,14 +182,12 @@ export default define(class ReferenceSubstitution extends Substitution {
   static fromReferenceAndMetavariable(reference, metavariable, context) {
     let referenceSubstitution;
 
-    simplify((context) => {
-      instantiate((context) => {
-        const referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
-              string = referenceSubstitutionString,  ///
-              referenceSubstitutionNode = instantiateReferenceSubstitution(string, context);
+    instantiate((context) => {
+      const referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
+            string = referenceSubstitutionString,  ///
+            referenceSubstitutionNode = instantiateReferenceSubstitution(string, context);
 
-        referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
-      }, context);
+      referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
     }, context);
 
     return referenceSubstitution;
