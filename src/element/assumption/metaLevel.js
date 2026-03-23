@@ -5,8 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../../elements";
 import { attempt, descend, instantiate } from "../../utilities/context";
 import { instantiateMetaLevelAssumption } from "../../process/instantiate";
-import { metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
 import { metaLevelAssumptionStringFromStatementAndReference } from "../../utilities/string";
+import { referenceFromMetaLevelAssumptionNode, statementFromMetaLevelAssumptionNode, metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
 
 export default define(class MetaLevelAssumption extends Element {
   constructor(context, string, node, reference, statement) {
@@ -239,17 +239,3 @@ export default define(class MetaLevelAssumption extends Element {
     return metaLevelAssumption;
   }
 });
-
-function referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context) {
-  const metavariableNode = metaLevelAssumptionNode.getMetavariableNode(context),
-        reference = context.findReferenceByMetavariableNode(metavariableNode);
-
-  return reference;
-}
-
-function statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context) {
-  const statementNode = metaLevelAssumptionNode.getStatementNode(),
-        statement = context.findStatementByStatementNode(statementNode);
-
-  return statement;
-}

@@ -197,9 +197,7 @@ export default define(class Judgement extends Element {
     reconcile((context) => {
       const metaLevelAssumptionsUnify = metaLevelAssumptions.every((metaLevelAssumption) => {
         const metaLevelAssumptionUnifies = assumptions.some((assumption) => {
-          const generalContext = context, ///
-                specificContext = context,  ///
-                metaLevelAssumptionUnifies = assumption.unifyMetaLevelAssumption(metaLevelAssumption, generalContext, specificContext);
+          const metaLevelAssumptionUnifies = assumption.unifyMetaLevelAssumption(metaLevelAssumption, context);
 
           if (metaLevelAssumptionUnifies) {
             return true;

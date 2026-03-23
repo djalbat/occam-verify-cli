@@ -209,18 +209,18 @@ export default define(class Assumption extends Element {
     return validatesWhenDerived;
   }
 
-  unifyMetaLevelAssumption(metaLevelAssumption, generalContext, specificContext) {
+  unifyMetaLevelAssumption(metaLevelAssumption, context) {
     let metaLevelAssumptionUnifies;
 
-    const context = specificContext,  ///
-          assumptionString = this.getString(),  ///
+    const assumptionString = this.getString(),  ///
           metaLevelAssumptionString = metaLevelAssumption.getString();
 
     context.trace(`Unifying the '${metaLevelAssumptionString}' meta-level assumption with the '${assumptionString}' assumption...`);
 
-    const metaLevelAssumptionContext = metaLevelAssumption.getContext();
-
-    specificContext = metaLevelAssumptionContext;  ///
+    const metaLevelAssumptionContext = metaLevelAssumption.getContext(),
+          assumptionContext = this.getContext(),
+          generalContext = assumptionContext, ///
+          specificContext = metaLevelAssumptionContext;  ///
 
     join((specificContext) => {
       reconcile((specificContext) => {
@@ -286,11 +286,8 @@ export default define(class Assumption extends Element {
             assumptionNode = instantiateAssumption(string, context),
             node = assumptionNode,  ///
             reference = referenceFromAssumptionNode(assumptionNode, context),
-            statement = statementFromAssumptionNode(assumptionNode, context);
-
-      context = null; ///
-
-      const assumption = new Assumption(context, string, node, reference, statement);
+            statement = statementFromAssumptionNode(assumptionNode, context),
+            assumption = new Assumption(context, string, node, reference, statement);
 
       return assumption;
     }, context);

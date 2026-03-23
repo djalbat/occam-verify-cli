@@ -132,7 +132,11 @@ export default define(class StatementSubstitution extends Substitution {
           const replacementStatementValidates = this.validateReplacementStatement(generalContext, specificContext);
 
           if (replacementStatementValidates) {
-            validates = true;
+            const substitutionValidates = this.validateSubstitution(generalContext, specificContext);
+
+            if (substitutionValidates) {
+              validates = true;
+            }
           }
         }
 
@@ -153,6 +157,34 @@ export default define(class StatementSubstitution extends Substitution {
     }
 
     return statementSubstitution;
+  }
+
+  validateSubstitution(generalContext, specificContext) {
+    let substitutionValidates = true;
+
+    if (this.substitution !== null) {
+      const context = specificContext,  ///
+            substitutionString = this.substitution.getString(),
+            statementSubstitutionString = this.getString();
+
+      context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${substitutionString}' substitution...`);
+
+      specificContext = generalContext; ///
+
+      const substitution = this.substitution.validate(generalContext, specificContext);
+
+      if (substitution !== null) {
+        this.substitution = substitution;
+
+        substitutionValidates = true;
+      }
+
+      if (substitutionValidates) {
+        context.debug(`...validatewd the '${statementSubstitutionString}' statement substitution's '${substitutionString}' substitution.`);
+      }
+    }
+
+    return substitutionValidates;
   }
 
   validateTargetStatement(generalContext, specificContext) {

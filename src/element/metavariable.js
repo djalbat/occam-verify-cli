@@ -365,14 +365,6 @@ export default define(class Metavariable extends Element {
                                         StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
                                           StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
 
-        if (substitution !== null) {
-          const context = generalContext; ///
-
-          substitution = statementSubstitution.getSubstitution();
-
-          substitution.setContext(context);
-        }
-
         statementSubstitution.validate(generalContext, specificContext);
 
         statementUnifies = true;

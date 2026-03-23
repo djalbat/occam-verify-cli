@@ -30,21 +30,24 @@ class MetaLevelPass extends ZipPassBase {
         let success = false;
 
         let context,
+            reference,
             metavariableNode;
 
         context = generalContext; ///
 
         metavariableNode = generalAssumptionMetavariableNode;  ///
 
-        const metavariableName = metavariableNode.getMetavariableName(),
-              metavariable = context.findMetavariableByMetavariableName(metavariableName);
+        reference = context.findReferenceByMetavariableNode(metavariableNode);
+
+        const metavariable = reference.getMetavariable();
 
         context = specificContext;  ///
 
         metavariableNode = specificAssumptionMetavariableNode; ///
 
-        const reference = context.findReferenceByMetavariableNode(metavariableNode),
-              referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
+        reference = context.findReferenceByMetavariableNode(metavariableNode);
+
+        const referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
 
         if (referenceUnifies) {
           success = true;
@@ -187,21 +190,24 @@ class AssumptionPass extends ZipPass {
         let success = false;
 
         let context,
+            reference,
             metavariableNode;
 
         context = generalContext; ///
 
         metavariableNode = generalMetavariableNode;  ///
 
-        const metavariableName = metavariableNode.getMetavariableName(),
-              metavariable = context.findMetavariableByMetavariableName(metavariableName);
+        reference = context.findReferenceByMetavariableNode(metavariableNode);
+
+        const metavariable = reference.getMetavariable();
 
         context = specificContext;  ///
 
         metavariableNode = specificReferenceMetavariableNode; ///
 
-        const reference = context.findReferenceByMetavariableNode(metavariableNode),
-              referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
+        reference = context.findReferenceByMetavariableNode(metavariableNode);
+
+        const referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
 
         if (referenceUnifies) {
           success = true;

@@ -467,11 +467,8 @@ export function assumptionFromAssumptionNode(assumptionNode, context) {
         node = assumptionNode,  ///
         string = context.nodeAsString(node),
         reference = referenceFromAssumptionNode(assumptionNode, context),
-        statement = statementFromAssumptionNode(assumptionNode, context);
-
-  context = null;
-
-  const assumption = new Assumption(context, string, node, reference, statement);
+        statement = statementFromAssumptionNode(assumptionNode, context),
+        assumption = new Assumption(context, string, node, reference, statement);
 
   return assumption;
 }
