@@ -17,6 +17,7 @@ const typeNodeQuery = nodeQuery("/type"),
       metavariableNodeQuery = nodeQuery("/metavariable"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
+      referenceMetavariableNodeQuery = nodeQuery("/reference/metavariable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       assumptionMetavariableNodeQuery = nodeQuery("/assumption/metavariable!");
 
@@ -181,8 +182,8 @@ class AssumptionPass extends ZipPass {
     },
     {
       generalNodeQuery: metavariableNodeQuery,
-      specificNodeQuery: metavariableNodeQuery,
-      run: (generalMetavariableNode, specificMetavariableNode, generalContext, specificContext) => {
+      specificNodeQuery: referenceMetavariableNodeQuery,
+      run: (generalMetavariableNode, specificReferenceMetavariableNode, generalContext, specificContext) => {
         let success = false;
 
         let context,
@@ -197,40 +198,12 @@ class AssumptionPass extends ZipPass {
 
         context = specificContext;  ///
 
-        metavariableNode = specificMetavariableNode; ///
+        metavariableNode = specificReferenceMetavariableNode; ///
 
         const reference = context.findReferenceByMetavariableNode(metavariableNode),
               referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
 
         if (referenceUnifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      generalNodeQuery: termVariableNodeQuery,
-      specificNodeQuery: termNodeQuery,
-      run: (generalTermVariableNode, specificTermNode, generalContext, specificContext) => {
-        let success = false;
-
-        const termNode = specificTermNode, ///
-              variableNode = generalTermVariableNode, ///
-              variableIdentifier = variableNode.getVariableIdentifier();
-
-        let context;
-
-        context = generalContext; ///
-
-        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
-
-        context = specificContext;  ///
-
-        const term = context.findTermByTermNode(termNode),
-              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
-
-        if (termUnifies) {
           success = true;
         }
 

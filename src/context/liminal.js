@@ -4,6 +4,7 @@ import { arrayUtilities } from "necessary";
 import { metavariableNamesFromSubstitutions } from "../utilities/substitutions";
 
 import Context from "../context";
+import elements from "../elements";
 
 const { find, first } = arrayUtilities;
 
@@ -33,31 +34,35 @@ export default class LiminalContext extends Context {
     return substitutions;
   }
 
-  getNonTrivialSubstitutions(nested = true) {
-    const nonTrivialSubstitutions = this.findSubstitutions((substitution) => {
-          const substitutionNonTrivial = substitution.isNonTrivial();
+  getSoleSubstitution(nested = true) {
+    let soleSubstitution = null;
 
-          if (substitutionNonTrivial) {
-            return true;
-          }
-        }, nested);
+    const substitutions = this.getSubstitutions(nested),
+          substitutionsLength = substitutions.length;
 
-    return nonTrivialSubstitutions;
+    if (substitutionsLength === 1) {
+      const firstSubstitution = first(substitutions);
+
+      soleSubstitution = firstSubstitution; ///
+    }
+
+    return soleSubstitution;
   }
 
   getSoleNonTrivialSubstitution(nested = true) {
-    let soleNonTrivialSubstitutions = null;
+    let soleNonTrivialSubstitution = null;
 
-    const nonTrivialSubstitutions = this.getNonTrivialSubstitutions(nested),
-          nonTrivialSubstitutionsLength = nonTrivialSubstitutions.length;
+    const soleSubstitution = this.getSoleSubstitution(nested);
 
-    if (nonTrivialSubstitutionsLength === 1) {
-      const firstNonTrivkalSubstitution = first(nonTrivialSubstitutions);
+    if (soleSubstitution !== null) {
+      const soleSubstitutionNonTrivial = soleSubstitution.isNonTrivial();
 
-      soleNonTrivialSubstitutions = firstNonTrivkalSubstitution; ///
+      if (soleSubstitutionNonTrivial) {
+        soleNonTrivialSubstitution = soleSubstitution;  ///
+      }
     }
 
-    return soleNonTrivialSubstitutions;
+    return soleNonTrivialSubstitution;
   }
 
   addSubstitution(substitution) {
@@ -130,12 +135,45 @@ export default class LiminalContext extends Context {
     return resolved;
   }
 
+  isEmpty() {
+    const substitutionsLength = this.substitutions.length,
+          empty = (substitutionsLength === 0);
+
+    return empty;
+  }
+
+  qualify(assumption, metaLevelAssumption) {
+    let qualifies = false;
+
+    const empty = this.isEmpty();
+
+    if (empty) {
+      qualifies = true;
+    } else {
+      const nested = false,
+            soleSubstitution = this.getSoleSubstitution(nested);
+
+      if (soleSubstitution !== null) {
+        const { ReferenceSubstitution } = elements,
+              context = this,
+              referenceSubstitution = ReferenceSubstitution.fromAssumptionAndMetaLevelAssumption(assumption, metaLevelAssumption, context),
+              soleSubstitutionCompares = referenceSubstitution.compareSubstitution(soleSubstitution);
+
+        if (soleSubstitutionCompares) {
+          qualifies = true;
+        }
+      }
+    }
+
+    return qualifies;
+  }
+
   commit(context) {
     if (context === undefined) {
       context = this.getContext();
     }
 
-    context.debug(`Commiting the limiinal context`);
+    context.debug(`Committing the limiinal context`);
 
     context.addSubstitutions(this.substitutions);
   }

@@ -218,19 +218,25 @@ export default define(class Assumption extends Element {
 
     context.trace(`Unifying the '${metaLevelAssumptionString}' meta-level assumption with the '${assumptionString}' assumption...`);
 
-    const metaLevelAssumptinContext = metaLevelAssumption.getContext();
+    const metaLevelAssumptionContext = metaLevelAssumption.getContext();
 
-    specificContext = metaLevelAssumptinContext;  ///
+    specificContext = metaLevelAssumptionContext;  ///
 
     join((specificContext) => {
       reconcile((specificContext) => {
         const generalAssumption = this, ///
-              specificAssumptinon = metaLevelAssumption;  ///
+              specificAssumption = metaLevelAssumption,  ///
+              assumptionUnifies = unifyAssumption(generalAssumption, specificAssumption, generalContext, specificContext);
 
-        metaLevelAssumptionUnifies = unifyAssumption(generalAssumption, specificAssumptinon, generalContext, specificContext);
+        if (assumptionUnifies) {
+          const assumption = this,  ///
+                specificContextQualifies = specificContext.qualify(assumption, metaLevelAssumption);
 
-        if (metaLevelAssumptionUnifies) {
-          specificContext.commit(context);
+          if (specificContextQualifies) {
+            specificContext.commit(context);
+
+            metaLevelAssumptionUnifies = true;
+          }
         }
       }, specificContext);
     }, specificContext, context);

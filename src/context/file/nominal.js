@@ -609,6 +609,12 @@ export default class NominalFileContext extends FileContext {
     return metavariable;
   }
 
+  findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode) {
+    const metaLevelAssumption = null;
+
+    return metaLevelAssumption;
+  }
+
   findProcedureByProcedureName(procedureName) {
     const procedures = this.getProcedures(),
           procedure = procedures.find((procedure) => {

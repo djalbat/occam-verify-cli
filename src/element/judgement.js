@@ -42,6 +42,8 @@ export default define(class Judgement extends Element {
 
   getMetavariableNode() { return this.frame.getMetavariableNode(); }
 
+  getTopLevelMetaAssertion() { return this.assumption.getTopLevelMetaAssertion(); }
+
   matchJudgementNode(judgementNode) {
     const node = judgementNode, ///
           nodeMatches = this.matchNode(node),
@@ -186,10 +188,10 @@ export default define(class Judgement extends Element {
 
     context.trace(`Validating the '${judgementString}' derived judgement...`);
 
-    const topLevelMetaAssertion = this.assumption.getTopLevelMetaAssertion(),
-          metavariableNode = this.getMetavariableNode(),
-          judgements = context.findJudgementsByMetavariableNode(metavariableNode),
+    const metavariableNode = this.getMetavariableNode(),
+          topLevelMetaAssertion = this.getTopLevelMetaAssertion(),
           metaLevelAssumptions = topLevelMetaAssertion.getMetaLevelAssumptions(),
+          judgements = context.findJudgementsByMetavariableNode(metavariableNode),
           assumptions = assumptionsFromJudgements(judgements);
 
     reconcile((context) => {

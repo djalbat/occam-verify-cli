@@ -70,6 +70,23 @@ export default define(class ReferenceSubstitution extends Substitution {
     return comparesToParameter;
   }
 
+  compareSubstitution(substitution) {
+    let substitutionCompares = false;
+
+    const substitutionReferenceSubstitution = (substitution instanceof ReferenceSubstitution);
+
+    if (substitutionReferenceSubstitution) {
+      const substitutionNode = substitution.getNode(),
+            substitutionNodeMatches = this.matchNode(substitutionNode);
+
+      if (substitutionNodeMatches) {
+        substitutionCompares = true;
+      }
+    }
+
+    return substitutionCompares;
+  }
+
   validate(generalContext, specificContext) {
     let referenceSubstitution = null;
 
@@ -191,6 +208,22 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     instantiate((context) => {
       const referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
+            string = referenceSubstitutionString,  ///
+            referenceSubstitutionNode = instantiateReferenceSubstitution(string, context);
+
+      referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
+    }, context);
+
+    return referenceSubstitution;
+  }
+
+  static fromAssumptionAndMetaLevelAssumption(assumption, metaLevelAssumption, context) {
+    let referenceSubstitution;
+
+    instantiate((context) => {
+      const reference = metaLevelAssumption.getReference(),
+            metavariable = assumption.getMetavariable(),
+            referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
             string = referenceSubstitutionString,  ///
             referenceSubstitutionNode = instantiateReferenceSubstitution(string, context);
 
