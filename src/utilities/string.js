@@ -117,6 +117,20 @@ export function suppositionsStringFromSuppositions(suppositions) {
   return suppositionsString;
 }
 
+export function metalevelAssumptionsStringFromMetaLevelAssumptions(metaLevelAssumptions) {
+  const metaLevelAssumptionsString = metaLevelAssumptions.reduce((metaLevelAssumptionsString, metaLevelAssumption) => {
+    const metaLevelAssumptionString = metaLevelAssumption.getString();
+
+    metaLevelAssumptionsString = (metaLevelAssumptionsString === null) ?
+                                   metaLevelAssumptionString: ///
+                                    `${metaLevelAssumptionsString}, ${metaLevelAssumptionString}`;
+
+    return metaLevelAssumptionsString;
+  }, null);
+
+  return metaLevelAssumptionsString;
+}
+
 export function signatureStringFromTerms(terms) {
   const termsString = termsStringFromTerms(terms),
         signatureString = `[${termsString}]`;
@@ -135,14 +149,6 @@ export function typeStringFromNominalTypeName(nominalTypeName) {
   const typeString = nominalTypeName;  ///
 
   return typeString;
-}
-
-export function assumptionStringFromStatementAndReference(statement, reference) {
-  const statementString = statement.getString(),
-        referneceString = reference.getString(),
-        assumptionString = `${referneceString} :: ${statementString}`;
-
-  return assumptionString;
 }
 
 export function termSubstitutionStringFromTermAndVariable(term, variable) {
@@ -192,6 +198,14 @@ export function frameSubstitutionStringFromFrameAndMetavariable(frame, metavaria
   return string;
 }
 
+export function metaLevelAssumptionStringFromStatementAndReference(statement, reference) {
+  const statementString = statement.getString(),
+        referneceString = reference.getString(),
+        metaLevelAssumptionString = `${referneceString} :: ${statementString}`;
+
+  return metaLevelAssumptionString;
+}
+
 export function procedureCallStringFromProcedureReferenceAndParameters(procedureReference, parameters) {
   const procedureReferenceName = procedureReference.getName(),
         parametersString = parametersStringFromParameters(parameters),
@@ -236,17 +250,6 @@ export function topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels
   return topLevelAssertionString;
 }
 
-export function topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction) {
-  const suppositionsString = suppositionsStringFromSuppositions(suppositions),
-        deductionString = deduction.getString(),
-        labelString = label.getString(),
-        topLevelMetaAssertionString = (suppositionsString !== null) ?
-                                       `${labelString} :: [${suppositionsString}]...${deductionString}` :
-                                         `${labelString} :: ${deductionString}`;
-
-  return topLevelMetaAssertionString;
-}
-
 export function statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution) {
   const statementString = statement.getString(),
         metavariableString = metavariable.getString(),
@@ -254,4 +257,16 @@ export function statementSubstitutionStringFromStatementMetavariableAndSubstitut
         statementSubstitutionString = `[${statementString} for ${metavariableString}${substitutionString}]`;
 
   return statementSubstitutionString;
+}
+
+export function topLevelMetaAssertionStringFromLabelSuppositionsDeductionAndMetaLevelAssumptions(label, suppositions, deduction, metaLevelAssumptions) {
+  const labelString = label.getString(),
+        deductionString = deduction.getString(),
+        suppositionsString = suppositionsStringFromSuppositions(suppositions),
+        metalevelAssumptionsString = metalevelAssumptionsStringFromMetaLevelAssumptions(metaLevelAssumptions),
+        topLevelMetaAssertionString = (suppositionsString !== null) ?
+                                       `${labelString} :: [${suppositionsString}]...${deductionString} ${metalevelAssumptionsString}` :
+                                         `${labelString} :: ${deductionString} ${metalevelAssumptionsString}`;
+
+  return topLevelMetaAssertionString;
 }

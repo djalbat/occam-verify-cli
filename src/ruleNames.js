@@ -75,6 +75,7 @@ export const SATISFIES_ASSERTION_RULE_NAME = "satisfiesAssertion";
 export const PARENTHESISED_LABELS_RULE_NAME = "parenthesisedLabels";
 export const PROPERTY_DECLARATION_RULE_NAME = "propertyDeclaration";
 export const VARIABLE_DECLARATION_RULE_NAME = "variableDeclaration";
+export const META_LEVEL_ASSUMPTION_RULE_NAME = "metaLevelAssumption";
 export const COMBINATOR_DECLARATION_RULE_NAME = "combinatorDeclaration";
 export const STATEMENT_SUBSTITUTION_RULE_NAME = "statementSubstitution";
 export const REFERENCE_SUBSTITUTION_RULE_NAME = "referenceSubstitution";

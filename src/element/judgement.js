@@ -188,36 +188,28 @@ export default define(class Judgement extends Element {
 
     const topLevelMetaAssertion = this.assumption.getTopLevelMetaAssertion(),
           metavariableNode = this.getMetavariableNode(),
-          judgements = context.findJudgementsByMetavariableNode(metavariableNode);
-
-    let assumptions;
-
-    assumptions = topLevelMetaAssertion.getAssumptions();
-
-    const specificAssumptions = assumptions; ///
-
-    assumptions = assumptionsFromJudgements(judgements);
-
-    const generalAssumptions = assumptions;  ///
+          judgements = context.findJudgementsByMetavariableNode(metavariableNode),
+          metaLevelAssumptions = topLevelMetaAssertion.getMetaLevelAssumptions(),
+          assumptions = assumptionsFromJudgements(judgements);
 
     reconcile((context) => {
-      const specificAssumptionsUnify = specificAssumptions.every((specificAssumption) => {
-        const specificAssumptionUnifies = generalAssumptions.some((generalAssumption) => {
+      const metaLevelAssumptionsUnify = metaLevelAssumptions.every((metaLevelAssumption) => {
+        const metaLevelAssumptionUnifies = assumptions.some((assumption) => {
           const generalContext = context, ///
                 specificContext = context,  ///
-                specificAssumptionUnifies = generalAssumption.unifyAssumption(specificAssumption, generalContext, specificContext);
+                metaLevelAssumptionUnifies = assumption.unifyMetaLevelAssumption(metaLevelAssumption, generalContext, specificContext);
 
-          if (specificAssumptionUnifies) {
+          if (metaLevelAssumptionUnifies) {
             return true;
           }
         });
 
-        if (specificAssumptionUnifies) {
+        if (metaLevelAssumptionUnifies) {
           return true;
         }
       });
 
-      if (specificAssumptionsUnify) {
+      if (metaLevelAssumptionsUnify) {
         validatesWhenDerived = true;
       }
     }, context);

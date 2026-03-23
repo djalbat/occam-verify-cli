@@ -50,6 +50,7 @@ import PropertyAssertion from "./element/assertion/property";
 import ProcedureReference from "./element/procedureReference";
 import ContainedAssertion from "./element/assertion/contained";
 import SatisfiesAssertion from "./element/assertion/satisfies";
+import MetaLevelAssumption from "./element/assumption/metaLevel";
 import VariableDeclaration from "./element/declaration/variable";
 import BracketedCombinator from "./element/combinator/bracketed";
 import BracketedConstructor from "./element/constructor/bracketed";

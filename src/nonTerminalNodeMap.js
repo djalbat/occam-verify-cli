@@ -75,6 +75,7 @@ import SatisfiesAssertionNode from "./node/assertion/satisfies";
 import ParenthesisedLabelsNode from "./node/parenthesisedLabels"
 import PropertyDeclarationNode from "./node/declaration/property";
 import VariableDeclarationNode from "./node/declaration/variable";
+import MetaLevelAssumptionpNode from "./node/assumption/metaLevel";
 import SimpleTypeDeclarationNode from "./node/declaration/simpleType";
 import CombinatorDeclarationNode from "./node/declaration/combinator";
 import ReferenceSubstitutionNode from "./node/substitution/reference";
@@ -160,6 +161,7 @@ import {
   PARENTHESISED_LABELS_RULE_NAME,
   PROPERTY_DECLARATION_RULE_NAME,
   VARIABLE_DECLARATION_RULE_NAME,
+  META_LEVEL_ASSUMPTION_RULE_NAME,
   COMBINATOR_DECLARATION_RULE_NAME,
   REFERENCE_SUBSTITUTION_RULE_NAME,
   STATEMENT_SUBSTITUTION_RULE_NAME,
@@ -245,6 +247,7 @@ const NonTerminalNodeMap = {
   [PARENTHESISED_LABELS_RULE_NAME]: ParenthesisedLabelsNode,
   [VARIABLE_DECLARATION_RULE_NAME]: VariableDeclarationNode,
   [PROPERTY_DECLARATION_RULE_NAME]: PropertyDeclarationNode,
+  [META_LEVEL_ASSUMPTION_RULE_NAME]: MetaLevelAssumptionpNode,
   [COMBINATOR_DECLARATION_RULE_NAME]: CombinatorDeclarationNode,
   [STATEMENT_SUBSTITUTION_RULE_NAME]: StatementSubstitutionNode,
   [REFERENCE_SUBSTITUTION_RULE_NAME]: ReferenceSubstitutionNode,

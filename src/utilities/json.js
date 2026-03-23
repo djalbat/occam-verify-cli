@@ -565,7 +565,7 @@ export function assumptionsFromJSON(json, context) {
   let { assumptions } = json;
 
   const { Assumption } = elements,
-        assumptionsJSON = assumptions; ///
+    assumptionsJSON = assumptions; ///
 
   assumptions = assumptionsJSON.map((assumptionJSON) => {
     const json = assumptionJSON,  ///
@@ -700,6 +700,22 @@ export function propertyRelationsFromJSON(json, context) {
   });
 
   return propertyRelations;
+}
+
+export function metaLevelAssumptionsFromJSON(json, context) {
+  let { metaLevelAssumptions } = json;
+
+  const { MetaLevelAssumption } = elements,
+        metaLevelAssumptionsJSON = metaLevelAssumptions; ///
+
+  metaLevelAssumptions = metaLevelAssumptionsJSON.map((metaLevelAssumptionJSON) => {
+    const json = metaLevelAssumptionJSON,  ///
+          metaLevelAssumption = MetaLevelAssumption.fromJSON(json, context);
+
+    return metaLevelAssumption;
+  });
+
+  return metaLevelAssumptions;
 }
 
 export function nameToNameJSON(name) {
@@ -1118,6 +1134,16 @@ export function propertyRelationsToPropertyRelationsJSON(propertyRelations) {
   });
 
   return propertyRelationsJSON;
+}
+
+export function metaLevelAssumptionsToMetaLevelAssumptionsJSON(metaLevelAssumptions) {
+  const metaLevelAssumptionsJSON = metaLevelAssumptions.map((metaLevelAssumption) => {
+    const metaLevelAssumptionJSON = metaLevelAssumption.toJSON();
+
+    return metaLevelAssumptionJSON;
+  });
+
+  return metaLevelAssumptionsJSON;
 }
 
 function findTypeByName(name, context) {

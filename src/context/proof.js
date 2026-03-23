@@ -8,19 +8,15 @@ import elements from "../elements";
 const { last, filter } = arrayUtilities;
 
 class ProofContext extends Context {
-  constructor(context, assumptions, variables, judgements, assignments, equivalences, subproofOrProofAssertions) {
+  constructor(context, variables, judgements, assignments, equivalences, metaLevelAssumptions, subproofOrProofAssertions) {
     super(context);
 
-    this.assumptions = assumptions;
     this.variables = variables;
     this.judgements = judgements;
     this.assignments = assignments;
     this.equivalences = equivalences;
+    this.metaLevelAssumptions = metaLevelAssumptions;
     this.subproofOrProofAssertions = subproofOrProofAssertions;
-  }
-
-  getAssumptions() {
-    return this.assumptions;
   }
 
   getVariables() {
@@ -73,6 +69,10 @@ class ProofContext extends Context {
     return equivalences;
   }
 
+  getMetaLevelAssumptions() {
+    return this.metaLevelAssumptions;
+  }
+
   getSubproofOrProofAssertions() {
     let subproofOrProofAssertions;
 
@@ -119,7 +119,7 @@ class ProofContext extends Context {
   isMetaLevel() {
     let metaLevel = false;
 
-    if (this.assumptions !== null) {
+    if (this.metaLevelAssumptiona !== null) {
       metaLevel = true;
     } else {
       const context = this.getContext();
@@ -184,38 +184,34 @@ class ProofContext extends Context {
     });
   }
 
-  addAssumption(assumption, metaLevel = true) {
-    if (!metaLevel) {
-      return;
-    }
-
-    if (this.assumptions === null) {
-      super.addAssumption(assumption, metaLevel);
+  addMetaLevelAssumption(metaLevelAssumption) {
+    if (this.metaLevelAssumptions === null) {
+      super.addMetaLevelAssumption(metaLevelAssumption);
 
       return;
     }
 
     const context = this, ///
-          assumptionA = assumption, ///
-          assumptionString = assumption.getString();
+          metaLevelAssumptionA = metaLevelAssumption, ///
+          metaLevelAssumptionString = metaLevelAssumption.getString();
 
-    context.trace(`Adding the '${assumptionString}' assumption to the proof context...`);
+    context.trace(`Adding the '${metaLevelAssumptionString}' meta-level assumption to the proof context...`);
 
-    const assumptionB = this.assumptions.find((assumption) => {
-      const assumptionB = assumption, ///
-            assumptionAEqualToAssumptionB = assumptionA.isEqualTo(assumptionB);
+    const metaLevelAssumptionB = this.metaLevelAssumptions.find((metaLevelAssumption) => {
+      const metaLevelAssumptionB = metaLevelAssumption, ///
+            metaLevelAssumptionAEqualToAssumptionB = metaLevelAssumptionA.isEqualTo(metaLevelAssumptionB);
 
-      if (assumptionAEqualToAssumptionB) {
+      if (metaLevelAssumptionAEqualToAssumptionB) {
         return true;
       }
     }) || null;
 
-    if (assumptionB !== null) {
-      context.debug(`The '${assumptionString}' assumption has already been added to the proof context.`);
+    if (metaLevelAssumptionB !== null) {
+      context.debug(`The '${metaLevelAssumptionString}' metaLevelAssumption has already been added to the proof context.`);
     } else {
-      this.assumptions.push(assumption);
+      this.metaLevelAssumptions.push(metaLevelAssumption);
 
-      context.debug(`...added the '${assumptionString}' assumption to the proof context.`);
+      context.debug(`...added the '${metaLevelAssumptionString}' meta-level assumption to the proof context.`);
     }
   }
 
@@ -245,26 +241,6 @@ class ProofContext extends Context {
   }
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
-
-  findAssumptionByAssumptionNode(assumptionNode, metaLevel = true) {
-    let assumption = null;
-
-    if (metaLevel) {
-      if (this.assumptions === null) {
-        assumption = super.findAssumptionByAssumptionNode(assumptionNode, metaLevel);
-      } else {
-        assumption = this.assumptions.find((assumption) => {
-          const assumptionNodeMatches = assumption.matchAssumptionNode(assumptionNode);
-
-          if (assumptionNodeMatches) {
-            return true;
-          }
-        }) || null;
-      }
-    }
-
-    return assumption;
-  }
 
   findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
@@ -306,6 +282,24 @@ class ProofContext extends Context {
     return judgements;
   }
 
+  findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode) {
+    let metaLevelAssumption;
+
+    if (this.metaLevelAssumptions === null) {
+      metaLevelAssumption = super.findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode);
+    } else {
+      metaLevelAssumption = this.metaLevelAssumptions.find((metaLevelAssumption) => {
+        const metaLevelAssumptionNodeMatches = metaLevelAssumption.matchMetaLevelAssumptionNode(metaLevelAssumptionNode);
+
+        if (metaLevelAssumptionNodeMatches) {
+          return true;
+        }
+      }) || null;
+    }
+
+    return metaLevelAssumption;
+  }
+
   isJudgementPresentByMetavariableName(metavariableName) {
     const judgement = this.findJudgementByMetavariableName(metavariableName),
           judgementPresent = (judgement !== null);
@@ -341,14 +335,14 @@ class ProofContext extends Context {
     return termGrounded;
   }
 
-  static fromAssumptions(assumptions, context) {
+  static fromMetaLevelAssumptions(metaLevelAssumptions, context) {
     const { Equivalences } = elements,
           variables = [],
           judgements = [],
           assignments = [],
           equivalences = Equivalences.fromNothing(context),
           subproofOrProofAssertions = [],
-          proofContext = new ProofContext(context, assumptions, variables, judgements, assignments, equivalences, subproofOrProofAssertions);
+          proofContext = new ProofContext(context, variables, judgements, assignments, equivalences, metaLevelAssumptions, subproofOrProofAssertions);
 
     return proofContext;
   }

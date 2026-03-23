@@ -253,6 +253,13 @@ export default class Context extends ContextBase {
     return substitution;
   }
 
+  findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode) {
+    const context = this.getContext(),
+          metaLevelAssumption = context.findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode);
+
+    return metaLevelAssumption;
+  }
+
   findTypeByNominalTypeName(nominalTypeName) {
     const context = this.getContext(),
           type = context.findTypeByNominalTypeName(nominalTypeName);
@@ -509,10 +516,10 @@ export default class Context extends ContextBase {
     context.addReference(reference);
   }
 
-  addAssumption(assumption, metaLevel = false) {
+  addAssumption(assumption) {
     const context = this.getContext();
 
-    context.addAssumption(assumption, metaLevel);
+    context.addAssumption(assumption);
   }
 
   addAssignment(assignment) {
@@ -525,6 +532,12 @@ export default class Context extends ContextBase {
     const context = this.getContext();
 
     context.addSubstitution(substitution);
+  }
+
+  addMetaLevelAssumption(metaLevelAssumption) {
+    const context = this.getContext();
+
+    context.addMetaLevelAssumption(metaLevelAssumption);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {

@@ -253,15 +253,7 @@ export default class EphemeralContext extends Context {
     }
   }
 
-  addAssumption(assumption, metaLevel = false) {
-    if (metaLevel) {
-      const context = this.getContext();
-
-      context.addAssumption(assumption, metaLevel);
-
-      return;
-    }
-
+  addAssumption(assumption) {
     const context = this, ///
           assumptionA = assumption, ///
           assumptionString = assumption.getString();

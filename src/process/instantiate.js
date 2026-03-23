@@ -33,6 +33,7 @@ import { TERM_RULE_NAME,
          PROCEDURE_REFERENCE_RULE_NAME,
          CONTAINED_ASSERTION_RULE_NAME,
          SATISFIES_ASSERTION_RULE_NAME,
+         META_LEVEL_ASSUMPTION_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME,
          REFERENCE_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
@@ -68,6 +69,7 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       procedureReferencelaceholderRule = ruleFromRuleName(PROCEDURE_REFERENCE_RULE_NAME),
       containedAssertionPlaceholderRule = ruleFromRuleName(CONTAINED_ASSERTION_RULE_NAME),
       satisfiesAssertionPlaceholderRule = ruleFromRuleName(SATISFIES_ASSERTION_RULE_NAME),
+      metaLevelAssumptionPlaceholderRule = ruleFromRuleName(META_LEVEL_ASSUMPTION_RULE_NAME),
       statementSubstitutionPlaceholderRule = ruleFromRuleName(STATEMENT_SUBSTITUTION_RULE_NAME),
       referenceSubstitutionPlaceholderRule = ruleFromRuleName(REFERENCE_SUBSTITUTION_RULE_NAME);
 
@@ -154,6 +156,8 @@ export function instantiateProcedureReference(string, context) { return instanti
 export function instantiateContainedAssertion(string, context) { return instantiate(containedAssertionPlaceholderRule, string, context); }
 
 export function instantiateSatisfiesAssertion(string, context) { return instantiate(satisfiesAssertionPlaceholderRule, string, context); }
+
+export function instantiateMetaLevelAssumption(string, context) { return instantiate(metaLevelAssumptionPlaceholderRule, string, context); }
 
 export function instantiateStatementSubstitution(string, context) { return instantiate(statementSubstitutionPlaceholderRule, string, context); }
 
