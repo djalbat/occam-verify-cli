@@ -224,20 +224,30 @@ export default define(class Reference extends Element {
   unifyLabel(label) {
     let labelUnifies = false;
 
-    const context = label.getContext(),
-          labelString = label.getString(),
+    let context;
+
+    const labelString = label.getString(),
+          labelContext = label.getContext(),
           referenceString = this.getString(); ///
+
+    context = labelContext; ///
 
     context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
-    reconcile((context) => {
+    const specificContext = labelContext;  ///
+
+    context = this.getContext();
+
+    const generalContext = context; ///
+
+    reconcile((specificContext) => {
       const metavariable = label.getMetavariable(),
-            metavariableUnifies = this.unifyMetavariable(metavariable, context);
+            metavariableUnifies = this.unifyMetavariable(metavariable, generalContext, specificContext);
 
       if (metavariableUnifies) {
         labelUnifies = true;
       }
-    }, context);
+    }, specificContext);
 
     if (labelUnifies) {
       context.debug(`...unified the '${labelString}' label with the '${referenceString}' reference.`);
@@ -246,21 +256,14 @@ export default define(class Reference extends Element {
     return labelUnifies;
   }
 
-  unifyMetavariable(metavariable, context) {
+  unifyMetavariable(metavariable, generalContext, specificContext) {
     let metavariableUnifies = false;
 
-    const referenceString = this.getString(), ///
+    const context = specificContext,  ///
+          referenceString = this.getString(), ///
           metavariableString = metavariable.getString();
 
     context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
-
-    const specificContext = context;  ///
-
-    context = this.getContext();
-
-    const generalContext = context; ///
-
-    context = specificContext;  ///
 
     const metavariableUnifiesIntrinsically = this.metavariable.unifyMetavariableIntrinsically(metavariable, generalContext, specificContext);
 
@@ -279,29 +282,33 @@ export default define(class Reference extends Element {
     let topLevelMetaAssertionUUnifies = false;
 
     const label = topLevelMetaAssertion.getLabel(),
+          labelContext = label.getContext(),
           referenceString = this.getString(), ///
+          temporaryContext = context, ///
           topLevelMetaAssertionString = topLevelMetaAssertion.getString();
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference...`);
 
-    const specificContext = context;  ///
+    const specificContext = labelContext; ///
 
-    context = label.getContext();
+    context = this.getContext();
 
-    reconcile((context) => {
+    const generalContext = context; ///
+
+    context = temporaryContext; ///
+
+    reconcile((specificContext) => {
       const metavariable = label.getMetavariable(),
-            metavariableUnifies = this.unifyMetavariable(metavariable, context);
+            metavariableUnifies = this.unifyMetavariable(metavariable, generalContext, specificContext);
 
       if (metavariableUnifies) {
         this.topLevelMetaAssertion = topLevelMetaAssertion;
 
-        context.commit(specificContext);
+        specificContext.commit(context);
 
         topLevelMetaAssertionUUnifies = true;
       }
-    }, context);
-
-    context = specificContext;  ///
+    }, specificContext);
 
     if (topLevelMetaAssertionUUnifies) {
       context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference.`);

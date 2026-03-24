@@ -3,7 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { descend, instantiate } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiateDefinedAssertion } from "../../process/instantiate";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
 import { termFromJDefinedAssertionNode, frameFromJDefinedAssertionNode, negatedFromJDefinedAssertionNode, definedAssertionFromStatementNode } from "../../utilities/element";
@@ -133,15 +133,13 @@ export default define(class DefinedAssertion extends Assertion {
       const frameSingular = this.frame.isSingular();
 
       if (frameSingular) {
-        descend((context) => {
-          const frame = this.frame.validate(context);
+        const frame = this.frame.validate(context);
 
-          if (frame !== null) {
-            this.frame = frame;
+        if (frame !== null) {
+          this.frame = frame;
 
-            frameValidates = true;
-          }
-        }, context);
+          frameValidates = true;
+        }
       } else {
         context.debug(`The '${frameString}' frame is not singular.`);
       }

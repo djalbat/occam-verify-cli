@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { unifyAssumption } from "../process/unify";
 import { instantiateAssumption } from "../process/instantiate";
-import { join, descend, reconcile, instantiate } from "../utilities/context";
+import { join, reconcile, instantiate } from "../utilities/context";
 
 export default define(class Assumption extends Element {
   constructor(context, string, node, reference, statement) {
@@ -156,13 +156,11 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);
 
-    descend((context) => {
-      const statement = this.statement.validate(context);
+    const statement = this.statement.validate(context);
 
-      if (statement !== null) {
-        statementValidates = true;
-      }
-    }, context);
+    if (statement !== null) {
+      statementValidates = true;
+    }
 
     if (statementValidates) {
       context.debug(`...validated the '${assumptionString}' assumption's '${statementString}' statement.`);

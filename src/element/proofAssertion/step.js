@@ -7,7 +7,7 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { unifyStatements } from "../../utilities/unification";
-import { derive, attempt, descend, asyncReconcile } from "../../utilities/context";
+import { derive, attempt, asyncReconcile } from "../../utilities/context";
 
 const { asyncSome } = asynchronousUtilities;
 
@@ -184,13 +184,11 @@ export default define(class Step extends ProofAssertion {
 
       context.trace(`Validating the '${stepString}' step's '${satisfiesAssertionString}' satisfies assertion... `);
 
-      descend((context) => {
-        const satisfiesAssertion = this.satisfiesAssertion.validate(context);
+      const satisfiesAssertion = this.satisfiesAssertion.validate(context);
 
-        if (satisfiesAssertion === null) {
-          satisfiesAssertionValidates = false;
-        }
-      }, context);
+      if (satisfiesAssertion === null) {
+        satisfiesAssertionValidates = false;
+      }
 
       if (satisfiesAssertionValidates) {
         context.debug(`...validating the '${stepString}' step's '${satisfiesAssertionString}' satisfies assertion. `);

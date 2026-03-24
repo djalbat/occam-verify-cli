@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import {descend, instantiate} from "../utilities/context";
+import { descend, instantiate } from "../utilities/context";
 import { instantiateHypothesis } from "../process/instantiate";
 import { statementFromHypothesisNode } from "../utilities/element";
 

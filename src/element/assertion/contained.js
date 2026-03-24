@@ -3,7 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { descend, instantiate } from "../../utilities/context";
+import { instantiate } from "../../utilities/context";
 import { instantiateContainedAssertion } from "../../process/instantiate";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
 import { termFromContainedAssertionNode,
@@ -143,15 +143,13 @@ export default define(class ContainedAssertion extends Assertion {
       const frameSingular = this.frame.isSingular();
 
       if (frameSingular) {
-        descend((context) => {
-          const frame = this.frame.validate(context);
+        const frame = this.frame.validate(context);
 
-          if (frame !== null) {
-            this.frame = frame;
+        if (frame !== null) {
+          this.frame = frame;
 
-            frameValidates = true;
-          }
-        }, context);
+          frameValidates = true;
+        }
       } else {
         context.debug(`The '${frameString}' frame is not singular.`);
       }
@@ -172,13 +170,11 @@ export default define(class ContainedAssertion extends Assertion {
 
       context.trace(`Validating the '${statementString}' statement...`);
 
-      descend((context) => {
-        const statement = this.statement.validate(context);
+      const statement = this.statement.validate(context);
 
-        if (statement !== null) {
-          statementValidates = true;
-        }
-      }, context);
+      if (statement !== null) {
+        statementValidates = true;
+      }
 
       if (statementValidates) {
         context.debug(`...validated the '${statementString}' statement.`);

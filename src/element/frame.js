@@ -3,10 +3,10 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { instantiate } from "../utilities/context";
 import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromFrameNode } from "../utilities/element";
-import { descend, reconcile, instantiate } from "../utilities/context";
 import { assumptionsStringFromAssumptions } from "../utilities/string";
 
 export default define(class Frame extends Element {
@@ -225,17 +225,13 @@ export default define(class Frame extends Element {
 
     context.trace(`Validating the '${frameString}' frame's '${assumptionstring}' assumption.`);
 
-    reconcile((context) => {
-      descend((context) => {
-        assumption = assumption.validate(context);  ///
+    assumption = assumption.validate(context);  ///
 
-        if (assumption !== null) {
-          assumptions.push(assumption);
+    if (assumption !== null) {
+      assumptions.push(assumption);
 
-          assumptionValidates = true;
-        }
-      }, context);
-    }, context);
+      assumptionValidates = true;
+    }
 
     if (assumptionValidates) {
       context.debug(`...validated the '${frameString}' frame's '${assumptionstring}' assumption.`);
@@ -247,9 +243,9 @@ export default define(class Frame extends Element {
   validateAssumptions(context) {
     let assumptionsValidate;
 
-    const singular = this.isSingular();
+    const assumptionsLength = this.assumptions.length;
 
-    if (!singular) {
+    if (assumptionsLength) {
       const frameString = this.getString(), ///
             assumptionsString = assumptionsStringFromAssumptions(this.assumptions);
 
@@ -278,11 +274,11 @@ export default define(class Frame extends Element {
   }
 
   validatMetavariable(context) {
-    let metavariableValidates = false;
+    let metavariableValidates = true; ///
 
-    const singular = this.isSingular();
+    if (this.metavariable !== null) {
+      metavariableValidates = false;
 
-    if (singular) {
       const frameString = this.getString(), ///
             metavariableString = this.metavariable.getString();
 
@@ -296,8 +292,6 @@ export default define(class Frame extends Element {
       if (metavariableMetaTypeEqualToFrameMetaType) {
         metavariableValidates = true;
       }
-    } else {
-      metavariableValidates = true;
     }
 
     return metavariableValidates;

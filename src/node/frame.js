@@ -11,7 +11,12 @@ export default class FrameNode extends NonTerminalNode {
     const metavariableNode = this.getMetavariableNode();
 
     if (metavariableNode !== null) {
-      singular = true;
+      const assumptionNodes = this.getAssumptionNodes(),
+            assumptionNodesLength = assumptionNodes.length;
+
+      if (assumptionNodesLength === 0) {
+        singular = true;
+      }
     }
 
     return singular;
