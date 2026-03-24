@@ -38,6 +38,8 @@ export default define(class Judgement extends Element {
     return singular;
   }
 
+  getAssumptions() { return this.frame.getAssumptions(); }
+
   getMetavariable() { return this.frame.getMetavariable(); }
 
   getMetavariableNode() { return this.frame.getMetavariableNode(); }
@@ -191,8 +193,13 @@ export default define(class Judgement extends Element {
     const metavariableNode = this.getMetavariableNode(),
           topLevelMetaAssertion = this.getTopLevelMetaAssertion(),
           metaLevelAssumptions = topLevelMetaAssertion.getMetaLevelAssumptions(),
-          judgements = context.findJudgementsByMetavariableNode(metavariableNode),
-          assumptions = assumptionsFromJudgements(judgements);
+          judgements = context.findJudgementsByMetavariableNode(metavariableNode);
+
+    let assumptions;
+
+    assumptions = this.getAssumptions();
+
+    assumptions = assumptionsFromJudgements(judgements, assumptions);
 
     reconcile((context) => {
       const metaLevelAssumptionsUnify = metaLevelAssumptions.every((metaLevelAssumption) => {
@@ -276,11 +283,11 @@ function frameFromJudgementNode(judgementNode, context) {
   return frame;
 }
 
-function assumptionsFromJudgements(judgements) {
-  const assumptions = judgements.map((judgement) => {
+function assumptionsFromJudgements(judgements, assumptions = []) {
+  judgements.map((judgement) => {
     const assumption = judgement.getAssumption();
 
-    return assumption;
+    assumptions.push(assumption);
   });
 
   return assumptions;
