@@ -246,6 +246,13 @@ export default class Context extends ContextBase {
     return judgement;
   }
 
+  findMetavariableByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+          metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
+
+    return metavariable;
+  }
+
   findSubstitutionBySubstitutionNode(substitutionNode) {
     const context = this.getContext(),
           substitution = context.findSubstitutionBySubstitutionNode(substitutionNode);
@@ -426,6 +433,13 @@ export default class Context extends ContextBase {
     return metavariablePresent;
   }
 
+  isMetavariablePresentByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+          metavariablePresent = context.isMetavariablePresentByMetavariableNode(metavariableNode);
+
+    return metavariablePresent;
+  }
+
   isSubstitutionPresentBySubstitutionNode(substitutionNode) {
     const context = this.getContext(),
           substitutionPresent = context.isSubstitutionPresentBySubstitutionNode(substitutionNode);
@@ -526,6 +540,12 @@ export default class Context extends ContextBase {
     const context = this.getContext();
 
     context.addAssignment(assignment);
+  }
+
+  addMetavariable(metavariable) {
+    const context = this.getContext();
+
+    context.addMetavariable(metavariable);
   }
 
   addSubstitution(substitution) {

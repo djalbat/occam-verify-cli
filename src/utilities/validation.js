@@ -94,9 +94,9 @@ function validateStatementAsMetavariable(statement, context) {
 
     context.trace(`Validating the '${statementString}' statement as a metavariable...`);
 
-    const declared = true;  ///
+    const strict = true;  ///
 
-    metavariable = metavariable.validate(declared, context);
+    metavariable = metavariable.validate(strict, context);
 
     if (metavariable !== null) {
       statementValidatesAsMetavariable = true;

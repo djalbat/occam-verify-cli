@@ -68,8 +68,7 @@ class MetaLevelPass extends ZipPassBase {
         context = generalContext; ///
 
         const metavariableNode = generalStatementMetavariableNode,  ///
-              metavariableName = metavariableNode.getMetavariableName(),
-              metavariable = context.findMetavariableByMetavariableName(metavariableName),
+              metavariable = context.findMetavariableByMetavariableNode(metavariableNode),
               metavariableNodeParentNode = metavariableNode.getParentNode();
 
         statementNode = metavariableNodeParentNode; ///
@@ -100,14 +99,13 @@ class MetaLevelPass extends ZipPassBase {
         let success = false;
 
         const frameNode = specificFrameNode, ///
-              metavariableNode = generalFrameMetavariableNode,  ///
-              metavariableName = metavariableNode.getMetavariableName();
+              metavariableNode = generalFrameMetavariableNode;
 
         let context;
 
         context = generalContext; ///
 
-        const metavariable = context.findMetavariableByMetavariableName(metavariableName);
+        const metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
 
         context = specificContext;  ///
 
@@ -161,14 +159,13 @@ class AssumptionPass extends ZipPass {
         let success = false;
 
         const statementNode = specificStatementNode, ///
-              metavariableNode = generalStatementMetavariableNode,  ///
-              metavariableName = metavariableNode.getMetavariableName();
+              metavariableNode = generalStatementMetavariableNode;  ///
 
         let context;
 
         context = generalContext; ///
 
-        const metavariable = context.findMetavariableByMetavariableName(metavariableName);
+        const metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
 
         context = specificContext;  ///
 
@@ -385,14 +382,13 @@ class SubstitutionPass extends ZipPass {
         let success = false;
 
         const frameNode = specificFrameNode, ///
-              metavariableNode = generalFrameMetavariableNode,  ///
-              metavariableName = metavariableNode.getMetavariableName();
+              metavariableNode = generalFrameMetavariableNode;  ///
 
         let context;
 
         context = generalContext; ///
 
-        const metavariable = context.findMetavariableByMetavariableName(metavariableName);
+        const metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
 
         context = specificContext;  ///
 

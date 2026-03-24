@@ -210,13 +210,6 @@ export function theoremFromTheoremNode(theoremNode, context) {
   return theorem;
 }
 
-export function metaTypeFromMetaTypeNode(metaTypeNode, context) {
-  const metaTypeName = metaTypeNode.getMetaTypeName(),
-        metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
-
-  return metaType;
-}
-
 export function propertyFromPropertyNode(propertyNode, context) {
   const { Property } = elements,
         node = propertyNode, ///
@@ -1080,7 +1073,7 @@ export function termFromMetavariableNode(metavariableNode, context) {
   const termNode = metavariableNode.getTermNode();
 
   if (termNode !== null) {
-    term = termFromTermNode(termNode, context);
+    term = context.findTermByTermNode(termNode);
   }
 
   return term;
@@ -1813,8 +1806,8 @@ export function combinatorFromCombinatorDeclarationNode(combinatorDeclarationNod
 }
 
 export function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
-  const metaTypeNode = metavariableDeclarationNode.getMetaTypeNode(),
-        metaType = metaTypeFromMetaTypeNode(metaTypeNode, context);
+  const metaTypeName = metavariableDeclarationNode.getMetaTypeName(),
+        metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
   return metaType;
 }

@@ -5,11 +5,11 @@ import DeclarationNode from "../../node/declaration";
 import { META_TYPE_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
 
 export default class MetavariableDeclarationNode extends DeclarationNode {
-  getTypeNode() {
-    const metavariableNode = this.getMetavariableNode(),
-          typeNode = metavariableNode.getTypeNode();
+  getMetaTypeName() {
+    const metaTypeNode = this.getMetaTypeNode(),
+          metaTypeName = metaTypeNode.getMetaTypeName();
 
-    return typeNode;
+    return metaTypeName;
   }
 
   getMetaTypeNode() {

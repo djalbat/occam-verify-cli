@@ -12,6 +12,7 @@ import { termsFromJSON,
          assertionsFromJSON,
          referencesFromJSON,
          assumptionsFromJSON,
+         metavariablesFromJSON,
          substitutionsFromJSON,
          judgementsToJudgementsJSON,
          equalitiesToEqualitiesJSON,
@@ -19,10 +20,11 @@ import { termsFromJSON,
          assertionsToAssertionsJSON,
          referencesToReferencesJSON,
          assumptionsToAssumptionsJSON,
+         metavariablesToMetavariablesJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
 export default class EphemeralContext extends Context {
-  constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, substitutions) {
+  constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions) {
     super(context);
 
     this.terms = terms;
@@ -33,6 +35,7 @@ export default class EphemeralContext extends Context {
     this.statements = statements;
     this.references = references;
     this.assumptions = assumptions;
+    this.metavariables = metavariables;
     this.substitutions = substitutions;
   }
 
@@ -66,6 +69,10 @@ export default class EphemeralContext extends Context {
 
   getAssumptions() {
     return this.assumptions;
+  }
+
+  getMetavariables() {
+    return this.metavariables;
   }
 
   getSubstitutions() {
@@ -278,6 +285,31 @@ export default class EphemeralContext extends Context {
     }
   }
 
+  addMetavariable(metavariable) {
+    const context = this, ///
+          metavariableA = metavariable, ///
+          metavariableString = metavariable.getString();
+
+    context.trace(`Adding the '${metavariableString}' metavariable to the ephemeral context...`);
+
+    const metavariableB = this.metavariables.find((metavariable) => {
+      const metavariableB = metavariable, ///
+            metavariableAEqualToSubstitutionB = metavariableA.isEqualTo(metavariableB);
+
+      if (metavariableAEqualToSubstitutionB) {
+        return true;
+      }
+    }) || null;
+
+    if (metavariableB !== null) {
+      context.trace(`The '${metavariableString}' metavariable has already been added to the ephemeral context.`);
+    } else {
+      this.metavariables.push(metavariable);
+
+      context.debug(`...added the '${metavariableString}' metavariable to the ephemeral context.`);
+    }
+  }
+
   addSubstitution(substitution) {
     const context = this, ///
           substitutionA = substitution, ///
@@ -425,6 +457,18 @@ export default class EphemeralContext extends Context {
     return reference;
   }
 
+  findMetavariableByMetavariableNode(metavariableNode) {
+    const metavariable = this.metavariables.find((metavariable) => {
+      const metavariableNodeMatches = metavariable.matchMetavariableNode(metavariableNode);
+
+      if (metavariableNodeMatches) {
+        return true;
+      }
+    }) || null;
+
+    return metavariable;
+  }
+
   findSubstitutionBySubstitutionNode(substitutionNode) {
     const substitution = this.substitutions.find((substitution) => {
       const substitutionNodeMatches = substitution.matchSubstitutionNode(substitutionNode);
@@ -493,6 +537,13 @@ export default class EphemeralContext extends Context {
     return referencePresent;
   }
 
+  isMetavariablePresentByMetavariableNode(metavariablenNode) {
+    const metavariablen = this.findMetavariableByMetavariableNode(metavariablenNode),
+          metavariablenPresent = (metavariablen !== null);
+
+    return metavariablenPresent;
+  }
+
   isSubstitutionPresentBySubstitutionNode(substitutionNode) {
     const substitution = this.findSubstitutionBySubstitutionNode(substitutionNode),
           substitutionPresent = (substitution !== null);
@@ -510,6 +561,9 @@ export default class EphemeralContext extends Context {
     const context = this; ///
 
     this.terms = termsFromJSON(json, context);
+
+    this.metavariables = metavariablesFromJSON(json, context);
+
     this.statements = statementsFromJSON(json, context);
     this.references = referencesFromJSON(json, context);
 
@@ -532,6 +586,7 @@ export default class EphemeralContext extends Context {
           assertionsJSON = assertionsToAssertionsJSON(this.assertions),
           referencesJSON = referencesToReferencesJSON(this.references),
           assumptionsJSON = assumptionsToAssumptionsJSON(this.assumptions),
+          metavariablesJSON = metavariablesToMetavariablesJSON(this.metavariables),
           substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
           terms = termsJSON, ///
           frames = framesJSON, ///
@@ -541,6 +596,7 @@ export default class EphemeralContext extends Context {
           assertions = assertionsJSON, ///
           references = referencesJSON, ///
           assumptions = assumptionsJSON, ///
+          metavariables = metavariablesJSON,  //
           substitutions = substitutionsJSON, ///
           json = {
             terms,
@@ -551,6 +607,7 @@ export default class EphemeralContext extends Context {
             assertions,
             references,
             assumptions,
+            metavariables,
             substitutions
           };
 
@@ -566,8 +623,9 @@ export default class EphemeralContext extends Context {
           assertions = null,
           references = null,
           assumptions = null,
+          metavariables = null,
           substitutions = null,
-          emphemeralContext = new EphemeralContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, substitutions);
+          emphemeralContext = new EphemeralContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
 
     emphemeralContext.initialise(json);
 
@@ -583,8 +641,9 @@ export default class EphemeralContext extends Context {
           assertions = [],
           references = [],
           assumptions = [],
+          metavariables = [],
           substitutions = [],
-          emphemeralContext = new EphemeralContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, substitutions);
+          emphemeralContext = new EphemeralContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
 
     return emphemeralContext;
   }
