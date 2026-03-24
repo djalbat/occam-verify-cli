@@ -94,7 +94,9 @@ function validateStatementAsMetavariable(statement, context) {
 
     context.trace(`Validating the '${statementString}' statement as a metavariable...`);
 
-    metavariable = metavariable.validate(context);
+    const declared = true;  ///
+
+    metavariable = metavariable.validate(declared, context);
 
     if (metavariable !== null) {
       statementValidatesAsMetavariable = true;
@@ -103,25 +105,17 @@ function validateStatementAsMetavariable(statement, context) {
             generalContext = context, ///
             specificContext = context;  ///
 
-      let termSubstitution,
-          frameSubstitution;
+      let substitution;
 
-      termSubstitution = TermSubstitution.fromStatement(statement, context);
+      const frameSubstitution = FrameSubstitution.fromStatement(statement, context),
+            termSubstitution = TermSubstitution.fromStatement(statement, context);
 
-      if (termSubstitution !== null) {
-        termSubstitution = termSubstitution.validate(generalContext, specificContext);  ///
+      substitution = (termSubstitution || frameSubstitution);
 
-        if (termSubstitution === null) {
-          statementValidatesAsMetavariable = false;
-        }
-      }
+      if (substitution !== null) {
+        substitution = substitution.validate(generalContext, specificContext);  ///
 
-      frameSubstitution = FrameSubstitution.fromStatement(statement, context);
-
-      if (frameSubstitution !== null) {
-        frameSubstitution = frameSubstitution.validate(generalContext, specificContext);  ///
-
-        if (frameSubstitution === null) {
+        if (substitution === null) {
           statementValidatesAsMetavariable = false;
         }
       }

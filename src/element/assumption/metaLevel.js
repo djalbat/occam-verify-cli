@@ -3,10 +3,10 @@
 import { Element } from "occam-languages";
 
 import { define } from "../../elements";
-import { attempt, descend, instantiate } from "../../utilities/context";
 import { instantiateMetaLevelAssumption } from "../../process/instantiate";
+import { metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
 import { metaLevelAssumptionStringFromStatementAndReference } from "../../utilities/string";
-import { referenceFromMetaLevelAssumptionNode, statementFromMetaLevelAssumptionNode, metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
+import { attempt, descend, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class MetaLevelAssumption extends Element {
   constructor(context, string, node, reference, statement) {
@@ -200,27 +200,35 @@ export default define(class MetaLevelAssumption extends Element {
   }
 
   toJSON() {
-    const string = this.getString(),
-          json = {
-            string
-          };
+    const context = this.getContext();
 
-    return json;
+    return serialise((context) => {
+      const string = this.getString(),
+            json = {
+              context,
+              string
+            };
+
+      return json;
+    }, context);
   }
 
   static name = "MetaLevelAssumption";
 
   static fromJSON(json, context) {
-    const metaLevelAssumption = instantiate((context) => {
-      const { string } = json,
-            metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context),
-            node = metaLevelAssumptionNode,  ///
-            reference = referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context),
-            statement = statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context),
-            metaLevelAssumption = new MetaLevelAssumption(context, string, node, reference, statement);
+    let metaLevelAssumption;
 
-      return metaLevelAssumption;
-    }, context);
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string } = json,
+              metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context),
+              node = metaLevelAssumptionNode,  ///
+              reference = referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context),
+              statement = statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context);
+
+        metaLevelAssumption = new MetaLevelAssumption(context, string, node, reference, statement);
+      }, context);
+    }, json, context);
 
     return metaLevelAssumption;
   }
@@ -239,3 +247,17 @@ export default define(class MetaLevelAssumption extends Element {
     return metaLevelAssumption;
   }
 });
+
+function referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context) {
+  const referenceNode = metaLevelAssumptionNode.getReferenceNode(),
+        refernece = context.findReferenceByReferenceNode(referenceNode);
+
+  return refernece;
+}
+
+function statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context) {
+  const statementNode = metaLevelAssumptionNode.getStatementNode(),
+        statement = context.findStatementByStatementNode(statementNode);
+
+  return statement;
+}

@@ -148,7 +148,13 @@ export default define(class Metavariable extends Element {
     return typeVerifies;
   }
 
-  validate(context) {
+  validate(declared, context) {
+    if (context === undefined) {
+      context = declared; ///
+
+      declared = false;
+    }
+
     let metavariable = null;
 
     const metavariableString = this.getString(); ///
@@ -157,13 +163,13 @@ export default define(class Metavariable extends Element {
 
     let validates = false;
 
-    const typeValidates = this.validateType(context);
+    const typeValidates = this.validateType(declared, context);
 
     if (typeValidates) {
-      const termValidates = this.validateTerm(context);
+      const termValidates = this.validateTerm(declared, context);
 
       if (termValidates) {
-        const nameValidates = this.validateName(context);
+        const nameValidates = this.validateName(declared, context);
 
         if (nameValidates) {
           validates = true;
@@ -180,7 +186,7 @@ export default define(class Metavariable extends Element {
     return metavariable;
   }
 
-  validateTerm(context) {
+  validateTerm(declared, context) {
     let termValidates = true; ///
 
     if (this.term !== null) {
@@ -197,20 +203,19 @@ export default define(class Metavariable extends Element {
       let term = null;
 
       if (metavariable !== null) {
-        const type = metavariable.getType(),
-              metavariableString = metavariable.getString();
+        const type = metavariable.getType();
 
         if (type !== null) {
           term = this.term.validateGivenType(type, context);
-        } else {
-          context.trace(`The '${metavariableString}' metavariable does not have a type`);
         }
       } else {
-        term = this.term.validate(context, (term) => {
-          const validatesForwards = true;
+        if (!declared) {
+          term = this.term.validate(context, (term) => {
+            const validatesForwards = true;
 
-          return validatesForwards;
-        });
+            return validatesForwards;
+          });
+        }
       }
 
       if (term !== null) {
@@ -227,8 +232,8 @@ export default define(class Metavariable extends Element {
     return termValidates;
   }
 
-  validateName(context) {
-    let termValidates = true; ///
+  validateName(declared, context) {
+    let nameValidates = true; ///
 
     const metavariableName = this.getMetavariableName(),  ///
           metavariableString = this.getString();  ///
@@ -239,21 +244,25 @@ export default define(class Metavariable extends Element {
 
     if (metavariable !== null) {
       const metaType = metavariable.getMetaType(),
-            metaTypeSTring = metaType.getString();
+            metaTypeString = metaType.getString();
 
       this.metaType = metaType;
 
-      context.trace(`Setting the '${metavariableString}' metavariable's meta-type to the '${metaTypeSTring}' meta-type.`);
+      context.trace(`Setting the '${metavariableString}' metavariable's meta-type to the '${metaTypeString}' meta-type.`);
+    } else {
+      if (declared) {
+        nameValidates = false;
+      }
     }
 
-    if (termValidates) {
+    if (nameValidates) {
       context.debug(`...validated the '${metavariableString}' metavariable's '${metavariableName}' name.`);
     }
 
-    return termValidates;
+    return nameValidates;
   }
 
-  validateType(context) {
+  validateType(declared, context) {
     let typeValidates = false;
 
     const metavariableString = this.getString();  ///
