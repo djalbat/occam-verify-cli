@@ -40,43 +40,153 @@ export default class EphemeralContext extends Context {
   }
 
   getTerms() {
-    return this.terms;
+    let terms;
+    
+    const context = this.getContext();
+    
+    terms = context.getTerms();
+    
+    terms = [ ///
+      ...this.terms,
+      ...terms
+    ];
+    
+    return terms;
   }
 
   getFrames() {
-    return this.frames;
+    let frames;
+    
+    const context = this.getContext();
+    
+    frames = context.getFrames();
+    
+    frames = [ ///
+      ...this.frames,
+      ...frames
+    ];
+    
+    return frames;
   }
 
   getEqualities() {
-    return this.equalities;
+    let equalities;
+    
+    const context = this.getContext();
+    
+    equalities = context.getEqualities();
+    
+    equalities = [ ///
+      ...this.equalities,
+      ...equalities
+    ];
+    
+    return equalities;
   }
 
   getJudgements() {
-    return this.judgements;
+    let judgements;
+    
+    const context = this.getContext();
+    
+    judgements = context.getJudgements();
+    
+    judgements = [ ///
+      ...this.judgements,
+      ...judgements
+    ];
+    
+    return judgements;
   }
 
   getStatements() {
-    return this.statements;
+    let statements;
+    
+    const context = this.getContext();
+    
+    statements = context.getStatements();
+    
+    statements = [ ///
+      ...this.statements,
+      ...statements
+    ];
+    
+    return statements;
   }
 
   getAssertions() {
-    return this.assertions;
+    let assertions;
+    
+    const context = this.getContext();
+    
+    assertions = context.getAssertions();
+    
+    assertions = [ ///
+      ...this.assertions,
+      ...assertions
+    ];
+    
+    return assertions;
   }
 
   getReferences() {
-    return this.references;
+    let references;
+    
+    const context = this.getContext();
+    
+    references = context.getReferences();
+    
+    references = [ ///
+      ...this.references,
+      ...references
+    ];
+    
+    return references;
   }
 
   getAssumptions() {
-    return this.assumptions;
+    let assumptions;
+    
+    const context = this.getContext();
+    
+    assumptions = context.getAssumptions();
+    
+    assumptions = [ ///
+      ...this.assumptions,
+      ...assumptions
+    ];
+    
+    return assumptions;
   }
 
   getMetavariables() {
-    return this.metavariables;
+    let metavariables;
+    
+    const context = this.getContext();
+    
+    metavariables = context.getMetavariables();
+    
+    metavariables = [ ///
+      ...this.metavariables,
+      ...metavariables
+    ];
+    
+    return metavariables;
   }
 
   getSubstitutions() {
-    return this.substitutions;
+    let substitutions;
+    
+    const context = this.getContext();
+    
+    substitutions = context.getSubstitutions();
+    
+    substitutions = [ ///
+      ...this.substitutions,
+      ...substitutions
+    ];
+    
+    return substitutions;
   }
 
   addTerms(terms) {
@@ -86,20 +196,21 @@ export default class EphemeralContext extends Context {
   }
 
   addTerm(term) {
-    const termA = term, ///
-          context = this, ///
+    const context = this, ///
+          termA = term, ///
           termString = term.getString();
 
     context.trace(`Adding the '${termString}' term to the ephemeral context...`);
 
-    const termB = this.terms.find((term) => {
-      const termB = term, ///
-            termAEqualToTermB = termA.isEqualTo(termB);
-
-      if (termAEqualToTermB) {
-        return true;
-      }
-    }) || null;
+    const terms = this.getTerms(),
+          termB = terms.find((term) => {
+            const termB = term, ///
+                  termAEqualToTermB = termA.isEqualTo(termB);
+      
+            if (termAEqualToTermB) {
+              return true;
+            }
+          }) || null;
 
     if (termB !== null) {
       context.trace(`The '${termString}' term has already been added to the ephemeral context.`);
@@ -111,20 +222,21 @@ export default class EphemeralContext extends Context {
   }
 
   addFrame(frame) {
-    const frameA = frame, ///
-          context = this, ///
+    const context = this, ///
+          frameA = frame, ///
           frameString = frame.getString();
 
     context.trace(`Adding the '${frameString}' frame to the ephemeral context...`);
 
-    const frameB = this.frames.find((frame) => {
-      const frameB = frame, ///
-            frameAEqualToFrameB = frameA.isEqualTo(frameB);
-
-      if (frameAEqualToFrameB) {
-        return true;
-      }
-    }) || null;
+    const frames = this.getFrames(),
+          frameB = frames.find((frame) => {
+            const frameB = frame, ///
+                  frameAEqualToFrameB = frameA.isEqualTo(frameB);
+      
+            if (frameAEqualToFrameB) {
+              return true;
+            }
+          }) || null;
 
     if (frameB !== null) {
       context.trace(`The '${frameString}' frame has already been added to the ephemeral context.`);
@@ -136,20 +248,21 @@ export default class EphemeralContext extends Context {
   }
 
   addEquality(equality) {
-    const equalityA = equality, ///
-          context = this, ///
+    const context = this, ///
+          equalityA = equality, ///
           equalityString = equality.getString();
 
     context.trace(`Adding the '${equalityString}' equality to the ephemeral context...`);
 
-    const equalityB = this.equalities.find((equality) => {
-      const equalityB = equality, ///
-            equalityAEqualToEqualityB = equalityA.isEqualTo(equalityB);
-
-      if (equalityAEqualToEqualityB) {
-        return true;
-      }
-    }) || null;
+    const equalities = this.getEqualities(),
+          equalityB = equalities.find((equality) => {
+            const equalityB = equality, ///
+                  equalityAEqualToEqualityB = equalityA.isEqualTo(equalityB);
+      
+            if (equalityAEqualToEqualityB) {
+              return true;
+            }
+          }) || null;
 
     if (equalityB !== null) {
       context.trace(`The '${equalityString}' equality has already been added to the ephemeral context.`);
@@ -161,20 +274,21 @@ export default class EphemeralContext extends Context {
   }
 
   addJudgement(judgement) {
-    const judgementA = judgement, ///
-          context = this, ///
+    const context = this, ///
+          judgementA = judgement, ///
           judgementString = judgement.getString();
 
     context.trace(`Adding the '${judgementString}' judgement to the ephemeral context...`);
 
-    const judgementB = this.judgements.find((judgement) => {
-      const judgementB = judgement, ///
-            judgementAEqualToEqualityB = judgementA.isEqualTo(judgementB);
-
-      if (judgementAEqualToEqualityB) {
-        return true;
-      }
-    }) || null;
+    const judgements = this.getJudgements(),
+          judgementB = judgements.find((judgement) => {
+            const judgementB = judgement, ///
+                  judgementAEqualToEqualityB = judgementA.isEqualTo(judgementB);
+      
+            if (judgementAEqualToEqualityB) {
+              return true;
+            }
+          }) || null;
 
     if (judgementB !== null) {
       context.trace(`The '${judgementString}' judgement has already been added to the ephemeral context.`);
@@ -192,14 +306,15 @@ export default class EphemeralContext extends Context {
 
     context.trace(`Adding the '${statementString}' statement to the ephemeral context...`);
 
-    const statementB = this.statements.find((statement) => {
-      const statementB = statement, ///
-            statementAEqualToStatementB = statementA.isEqualTo(statementB);
-
-      if (statementAEqualToStatementB) {
-        return true;
-      }
-    }) || null;
+    const statements = this.getStatements(),
+          statementB = statements.find((statement) => {
+            const statementB = statement, ///
+                  statementAEqualToStatementB = statementA.isEqualTo(statementB);
+      
+            if (statementAEqualToStatementB) {
+              return true;
+            }
+          }) || null;
 
     if (statementB !== null) {
       context.trace(`The '${statementString}' statement has already been added to the ephemeral context.`);
@@ -217,14 +332,15 @@ export default class EphemeralContext extends Context {
 
     context.trace(`Adding the '${assertionString}' assertion to the ephemeral context...`);
 
-    const assertionB = this.assertions.find((assertion) => {
-      const assertionB = assertion, ///
-            assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
-
-      if (assertionAEqualToAssertionB) {
-        return true;
-      }
-    }) || null;
+    const assertions = this.getAssumptions(),
+          assertionB = assertions.find((assertion) => {
+            const assertionB = assertion, ///
+                  assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
+      
+            if (assertionAEqualToAssertionB) {
+              return true;
+            }
+          }) || null;
 
     if (assertionB !== null) {
       context.trace(`The '${assertionString}' assertion has already been added to the ephemeral context.`);
@@ -242,14 +358,15 @@ export default class EphemeralContext extends Context {
 
     context.trace(`Adding the '${referenceString}' reference to the ephemeral context...`);
 
-    const referenceB = this.references.find((reference) => {
-      const referenceB = reference, ///
-            referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);
-
-      if (referenceAEqualToReferenceB) {
-        return true;
-      }
-    }) || null;
+    const references = this.getReferences(),
+          referenceB = references.find((reference) => {
+            const referenceB = reference, ///
+                  referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);
+      
+            if (referenceAEqualToReferenceB) {
+              return true;
+            }
+          }) || null;
 
     if (referenceB !== null) {
       context.trace(`The '${referenceString}' reference has already been added to the ephemeral context.`);
@@ -267,14 +384,15 @@ export default class EphemeralContext extends Context {
 
     context.trace(`Adding the '${assumptionString}' assumption to the ephemeral context...`);
 
-    const assumptionB = this.assumptions.find((assumption) => {
-      const assumptionB = assumption, ///
-            assumptionAEqualToAssumptionB = assumptionA.isEqualTo(assumptionB);
-
-      if (assumptionAEqualToAssumptionB) {
-        return true;
-      }
-    }) || null;
+    const assumptions = this.getAssumptions(),
+          assumptionB = assumptions.find((assumption) => {
+            const assumptionB = assumption, ///
+                  assumptionAEqualToAssumptionB = assumptionA.isEqualTo(assumptionB);
+      
+            if (assumptionAEqualToAssumptionB) {
+              return true;
+            }
+          }) || null;
 
     if (assumptionB !== null) {
       context.trace(`The '${assumptionString}' assumption has already been added to the ephemeral context.`);
@@ -292,14 +410,15 @@ export default class EphemeralContext extends Context {
 
     context.trace(`Adding the '${metavariableString}' metavariable to the ephemeral context...`);
 
-    const metavariableB = this.metavariables.find((metavariable) => {
-      const metavariableB = metavariable, ///
-            metavariableAEqualToSubstitutionB = metavariableA.isEqualTo(metavariableB);
-
-      if (metavariableAEqualToSubstitutionB) {
-        return true;
-      }
-    }) || null;
+    const metavariables = this.getMetavariables(),
+          metavariableB = metavariables.find((metavariable) => {
+            const metavariableB = metavariable, ///
+                  metavariableAEqualToSubstitutionB = metavariableA.isEqualTo(metavariableB);
+      
+            if (metavariableAEqualToSubstitutionB) {
+              return true;
+            }
+          }) || null;
 
     if (metavariableB !== null) {
       context.trace(`The '${metavariableString}' metavariable has already been added to the ephemeral context.`);
@@ -317,14 +436,15 @@ export default class EphemeralContext extends Context {
 
     context.trace(`Adding the '${substitutionString}' substitution to the ephemeral context...`);
 
-    const substitutionB = this.substitutions.find((substitution) => {
-      const substitutionB = substitution, ///
-            substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
-
-      if (substitutionAEqualToSubstitutionB) {
-        return true;
-      }
-    }) || null;
+    const substitutions = this.getSubstitutions(),
+          substitutionB = substitutions.find((substitution) => {
+            const substitutionB = substitution, ///
+                  substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
+      
+            if (substitutionAEqualToSubstitutionB) {
+              return true;
+            }
+          }) || null;
 
     if (substitutionB !== null) {
       context.trace(`The '${substitutionString}' substitution has already been added to the ephemeral context.`);
@@ -335,148 +455,145 @@ export default class EphemeralContext extends Context {
     }
   }
 
-  retrieveEphemeralContext() {
-    const ephemeralContext = this;  ///
-
-    return ephemeralContext;
-  }
-
   findTermByTermNode(termNode) {
-    const term = this.terms.find((term) => {
-      const termNodeMatches = term.matchTermNode(termNode);
-
-      if (termNodeMatches) {
-        return true;
-      }
-    }) || null;
+    const terms = this.getTerms(),
+          term = terms.find((term) => {
+            const termNodeMatches = term.matchTermNode(termNode);
+      
+            if (termNodeMatches) {
+              return true;
+            }
+          }) || null;
 
     return term;
   }
 
   findFrameByFrameNode(frameNode) {
-    const frame = this.frames.find((frame) => {
-      const frameNodeMatches = frame.matchFrameNode(frameNode);
+    const frames = this.getFrames(),
+          frame = frames.find((frame) => {
+            const frameNodeMatches = frame.matchFrameNode(frameNode);
 
-      if (frameNodeMatches) {
-        return true;
-      }
-    }) || null;
+            if (frameNodeMatches) {
+              return true;
+            }
+          }) || null;
 
     return frame;
   }
 
   findEqualityByEqualityNode(equalityNode) {
-    const equality = this.equalities.find((equality) => {
-      const equalityNodeMatches = equality.matchEqualityNode(equalityNode);
+    const equalities = this.getEqualities(),
+          equality = equalities.find((equality) => {
+            const equalityNodeMatches = equality.matchEqualityNode(equalityNode);
 
-      if (equalityNodeMatches) {
-        return true;
-      }
-    }) || null;
+            if (equalityNodeMatches) {
+              return true;
+            }
+          }) || null;
 
     return equality;
   }
 
   findJudgementByJudgementNode(judgementNode) {
-    const judgement = this.judgements.find((judgement) => {
-      const judgementNodeMatches = judgement.matchJudgementNode(judgementNode);
+    const judgements = this.getJudgements(),
+          judgement = judgements.find((judgement) => {
+            const judgementNodeMatches = judgement.matchJudgementNode(judgementNode);
 
-      if (judgementNodeMatches) {
-        return true;
-      }
-    }) || null;
+            if (judgementNodeMatches) {
+              return true;
+            }
+          }) || null;
 
     return judgement;
   }
 
   findStatementByStatementNode(statementNode) {
-    const statement = this.statements.find((statement) => {
-      const statementNodeMatches = statement.matchStatementNode(statementNode);
+    const statements = this.getStatements(),
+          statement = statements.find((statement) => {
+            const statementNodeMatches = statement.matchStatementNode(statementNode);
 
-      if (statementNodeMatches) {
-        return true;
-      }
-    }) || null;
+            if (statementNodeMatches) {
+              return true;
+            }
+          }) || null;
 
     return statement;
   }
 
   findReferenceByReferenceNode(referenceNode) {
-    const reference = this.references.find((reference) => {
-      const referenceMatcheReferenceNode = reference.matchReferenceNode(referenceNode);
+    const references = this.getReferences(),
+          reference = references.find((reference) => {
+            const referenceMatcheReferenceNode = reference.matchReferenceNode(referenceNode);
 
-      if (referenceMatcheReferenceNode) {
-        return true;
-      }
-    }) || null;
+            if (referenceMatcheReferenceNode) {
+              return true;
+            }
+          }) || null;
 
     return reference;
   }
 
   findAssertionByAssertionNode(assertionNode) {
-    const assertion = this.assertions.find((assertion) => {
-      const assertionNodeMatches = assertion.matchAssertionNode(assertionNode);
+    const assertions = this.getAssertions(),
+          assertion = assertions.find((assertion) => {
+            const assertionNodeMatches = assertion.matchAssertionNode(assertionNode);
 
-      if (assertionNodeMatches) {
-        return true;
-      }
-    }) || null;
+            if (assertionNodeMatches) {
+              return true;
+            }
+          }) || null;
 
     return assertion;
   }
 
-  findAssumptionByAssumptionNode(assumptionNode, metaLevel = false) {
-    let assumption;
+  findAssumptionByAssumptionNode(assumptionNode) {
+    const assumptions = this.getAssumptions(),
+          assumption = assumptions.find((assumption) => {
+            const assumptionNodeMatches = assumption.matchAssumptionNode(assumptionNode);
 
-    if (metaLevel) {
-      const context = this.getContext();
-
-      assumption = context.findAssumptionByAssumptionNode(assumptionNode, metaLevel);
-    } else {
-      assumption = this.assumptions.find((assumption) => {
-        const assumptionNodeMatches = assumption.matchAssumptionNode(assumptionNode);
-
-        if (assumptionNodeMatches) {
-          return true;
-        }
-      }) || null;
-    }
+            if (assumptionNodeMatches) {
+              return true;
+            }
+          }) || null;
 
     return assumption;
   }
 
   findReferenceByMetavariableNode(metavariableNode) {
-    const reference = this.references.find((reference) => {
-      const referenceMatcheMetavariableNode = reference.matchMetavariableNode(metavariableNode);
+    const references = this.getReferences(),
+          reference = references.find((reference) => {
+            const referenceMatcheMetavariableNode = reference.matchMetavariableNode(metavariableNode);
 
-      if (referenceMatcheMetavariableNode) {
-        return true;
-      }
-    }) || null;
+            if (referenceMatcheMetavariableNode) {
+              return true;
+            }
+          }) || null;
 
     return reference;
   }
 
   findMetavariableByMetavariableNode(metavariableNode) {
-    const metavariable = this.metavariables.find((metavariable) => {
-      const metavariableNodeMatches = metavariable.matchMetavariableNode(metavariableNode);
+    const metavariables = this.getMetavariables(),
+          metavariable = metavariables.find((metavariable) => {
+            const metavariableNodeMatches = metavariable.matchMetavariableNode(metavariableNode);
 
-      if (metavariableNodeMatches) {
-        return true;
-      }
-    }) || null;
+            if (metavariableNodeMatches) {
+              return true;
+            }
+          }) || null;
 
     return metavariable;
   }
 
   findSubstitutionBySubstitutionNode(substitutionNode) {
-    const substitution = this.substitutions.find((substitution) => {
-      const substitutionNodeMatches = substitution.matchSubstitutionNode(substitutionNode);
+    const substitutions = this.getSubstitutions(),
+          substitution = substitutions.find((substitution) => {
+            const substitutionNodeMatches = substitution.matchSubstitutionNode(substitutionNode);
 
-      if (substitutionNodeMatches) {
-        return true;
-      }
-    }) || null;
+            if (substitutionNodeMatches) {
+              return true;
+            }
+          }) || null;
 
     return substitution;
   }
@@ -523,8 +640,8 @@ export default class EphemeralContext extends Context {
     return assertionPresent;
   }
 
-  isAssumptionPresentByAssumptionNode(assumptionNode, metaLevel = false) {
-    const assumption = this.findAssumptionByAssumptionNode(assumptionNode, metaLevel),
+  isAssumptionPresentByAssumptionNode(assumptionNode) {
+    const assumption = this.findAssumptionByAssumptionNode(assumptionNode),
           assumptionPresent = (assumption !== null);
 
     return assumptionPresent;
@@ -578,38 +695,51 @@ export default class EphemeralContext extends Context {
   }
 
   toJSON() {
-    const termsJSON = termsToTermsJSON(this.terms),
-          framesJSON = framesToFramesJSON(this.frames),
-          judgementsJSON = judgementsToJudgementsJSON(this.judgements),
-          equalitiesJSON = equalitiesToEqualitiesJSON(this.equalities),
-          statementsJSON = statementsToStatementsJSON(this.statements),
-          assertionsJSON = assertionsToAssertionsJSON(this.assertions),
-          referencesJSON = referencesToReferencesJSON(this.references),
-          assumptionsJSON = assumptionsToAssumptionsJSON(this.assumptions),
-          metavariablesJSON = metavariablesToMetavariablesJSON(this.metavariables),
-          substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
-          terms = termsJSON, ///
-          frames = framesJSON, ///
-          judgements = judgementsJSON, ///
-          equalities = equalitiesJSON, ///
-          statements = statementsJSON, ///
-          assertions = assertionsJSON, ///
-          references = referencesJSON, ///
-          assumptions = assumptionsJSON, ///
-          metavariables = metavariablesJSON,  //
-          substitutions = substitutionsJSON, ///
-          json = {
-            terms,
-            frames,
-            judgements,
-            equalities,
-            statements,
-            assertions,
-            references,
-            assumptions,
-            metavariables,
-            substitutions
-          };
+    let terms = this.getTerms(),
+        frames = this.getFrames(),
+        judgements = this.getJudgements(),
+        equalities = this.getEqualities(),
+        statements = this.getStatements(),
+        assertions = this.getAssertions(),
+        references = this.getReferences(),
+        assumptions = this.getAssumptions(),
+        metavariables = this.getMetavariables(),
+        substitutions = this.getSubstitutions();
+
+    const termsJSON = termsToTermsJSON(terms),
+          framesJSON = framesToFramesJSON(frames),
+          judgementsJSON = judgementsToJudgementsJSON(judgements),
+          equalitiesJSON = equalitiesToEqualitiesJSON(equalities),
+          statementsJSON = statementsToStatementsJSON(statements),
+          assertionsJSON = assertionsToAssertionsJSON(assertions),
+          referencesJSON = referencesToReferencesJSON(references),
+          assumptionsJSON = assumptionsToAssumptionsJSON(assumptions),
+          metavariablesJSON = metavariablesToMetavariablesJSON(metavariables),
+          substitutionsJSON = substitutionsToSubstitutionsJSON(substitutions);
+
+    terms = termsJSON; ///
+    frames = framesJSON; ///
+    judgements = judgementsJSON; ///
+    equalities = equalitiesJSON; ///
+    statements = statementsJSON; ///
+    assertions = assertionsJSON; ///
+    references = referencesJSON; ///
+    assumptions = assumptionsJSON; ///
+    metavariables = metavariablesJSON;  //
+    substitutions = substitutionsJSON; ///
+
+    const json = {
+      terms,
+      frames,
+      judgements,
+      equalities,
+      statements,
+      assertions,
+      references,
+      assumptions,
+      metavariables,
+      substitutions
+    };
 
     return json;
   }

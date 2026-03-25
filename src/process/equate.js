@@ -2,6 +2,8 @@
 
 import { queryUtilities, EquivalencePass } from "occam-languages";
 
+import { findEquivalenceByTermNodes } from "../utilities/equivalences";
+
 const { nodeQuery } = queryUtilities;
 
 const termNodeQuery = nodeQuery("/term");
@@ -29,7 +31,7 @@ class EquationalPass extends EquivalencePass {
                   leftTermNode,
                   rightTermNode
                 ],
-                equivalence = equivalences.findEquivalenceByTermNodes(termNodes);
+                equivalence = findEquivalenceByTermNodes(equivalences, termNodes);
 
           if (equivalence !== null) {
             success = true;

@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import Context from "../context";
 
-const { last } = arrayUtilities;
+const { push, last } = arrayUtilities;
 
 export default class SyntheticContext extends Context {
   constructor(context, contexts) {
@@ -17,157 +17,124 @@ export default class SyntheticContext extends Context {
     return this.contexts;
   }
 
-  addSubstitutions(substitutions) {
-    const context = this.getContext();
-
-    context.addSubstitutions(substitutions);
+  getTerms() {
+    const terms = [];
+    
+    this.contexts.forEach((context) => {
+      const contextTerms = context.getTerms();
+      
+      push(terms, contextTerms);      
+    });
+    
+    return terms;
   }
 
-  findTermByTermNode(termNode) {
-    let term = null;
+  getFrames() {
+    const frames = [];
 
-    this.contexts.some((context) => {
-      term = context.findTermByTermNode(termNode);
+    this.contexts.forEach((context) => {
+      const contextFrames = context.getFrames();
 
-      if (term !== null) {
-        return true;
-      }
+      push(frames, contextFrames);
     });
 
-    return term;
+    return frames;
   }
 
-  findFrameByFrameNode(frameNode) {
-    let frame = null;
+  getEqualities() {
+    const equalities = [];
 
-    this.contexts.some((context) => {
-      frame = context.findFrameByFrameNode(frameNode);
+    this.contexts.forEach((context) => {
+      const contextEqualities = context.getEqualities();
 
-      if (frame !== null) {
-        return true;
-      }
+      push(equalities, contextEqualities);
     });
 
-    return frame;
+    return equalities;
   }
 
-  findStatementByStatementNode(statementNode) {
-    let statement = null;
+  getJudgements() {
+    const judgements = [];
 
-    this.contexts.some((context) => {
-      statement = context.findStatementByStatementNode(statementNode);
+    this.contexts.forEach((context) => {
+      const contextJudgements = context.getJudgements();
 
-      if (statement !== null) {
-        return true;
-      }
+      push(judgements, contextJudgements);
     });
 
-    return statement;
+    return judgements;
   }
 
-  findSubstitutionBySubstitutionNode(substitutionNode) {
-    let substitution = null;
+  getStatements() {
+    const statements = [];
 
-    this.contexts.some((context) => {
-      substitution = context.findSubstitutionBySubstitutionNode(substitutionNode);
+    this.contexts.forEach((context) => {
+      const contextStatements = context.getStatements();
 
-      if (substitution !== null) {
-        return true;
-      }
+      push(statements, contextStatements);
     });
 
-    return substitution;
+    return statements;
   }
 
-  findReferenceByMetavariableNode(metavariableNode) {
-    let reference = null;
+  getAssertions() {
+    const assertions = [];
 
-    this.contexts.some((context) => {
-      reference = context.findReferenceByMetavariableNode(metavariableNode);
+    this.contexts.forEach((context) => {
+      const contextAssertions = context.getAssertions();
 
-      if (reference !== null) {
-        return true;
-      }
+      push(assertions, contextAssertions);
     });
 
-    return reference;
+    return assertions;
   }
 
-  findVariableByVariableIdentifier(variableIdentifier) {
-    let variable = null;
+  getReferences() {
+    const references = [];
 
-    this.contexts.some((context) => {
-      variable = context.findVariableByVariableIdentifier(variableIdentifier);
+    this.contexts.forEach((context) => {
+      const contextReferences = context.getReferences();
 
-      if (variable !== null) {
-        return true;
-      }
+      push(references, contextReferences);
     });
 
-    return variable;
+    return references;
   }
 
-  findMetavariableByMetavariableName(metavariableName) {
-    let metavariable = null;
+  getAssumptions() {
+    const assumptions = [];
 
-    this.contexts.some((context) => {
-      metavariable = context.findMetavariableByMetavariableName(metavariableName);
+    this.contexts.forEach((context) => {
+      const contextAssumptions = context.getAssumptions();
 
-      if (metavariable !== null) {
-        return true;
-      }
+      push(assumptions, contextAssumptions);
     });
 
-    return metavariable;
+    return assumptions;
   }
 
-  isTermPresentByTermNode(termNode) {
-    const term = this.findTermByTermNode(termNode),
-          termPresent = (term !== null);
+  getMetavariables() {
+    const metavariables = [];
 
-    return termPresent;
+    this.contexts.forEach((context) => {
+      const contextMetavariables = context.getMetavariables();
+
+      push(metavariables, contextMetavariables);
+    });
+
+    return metavariables;
   }
 
-  isFramePresentByFrameNode(frameNode) {
-    const frame = this.findFrameByFrameNode(frameNode),
-          framePresent = (frame !== null);
+  getSubstitutions() {
+    const substitutions = [];
 
-    return framePresent;
-  }
+    this.contexts.forEach((context) => {
+      const contextSubstitutions = context.getSubstitutions();
 
-  isStatementPresentByStatementNode(statementNode) {
-    const statement = this.findStatementByStatementNode(statementNode),
-          statementPresent = (statement !== null);
+      push(substitutions, contextSubstitutions);
+    });
 
-    return statementPresent;
-  }
-
-  isSubstitutionPresentBySubstitutionNode(substitutionNode) {
-    const substitution = this.findSubstitutionBySubstitutionNode(substitutionNode),
-      substitutionPresent = (substitution !== null);
-
-    return substitutionPresent;
-  }
-
-  isReferencePresentByMetavariableNode(metavariableNode) {
-    const reference = this.findReferenceByMetavariableNode(metavariableNode),
-          referencePresent = (reference !== null);
-
-    return referencePresent;
-  }
-
-  isVariablePresentByVariableIdentifier(variableIdentifier) {
-    const variable = this.findVariableByVariableIdentifier(variableIdentifier),
-          variablePresent = (variable !== null);
-
-    return variablePresent;
-  }
-
-  isMetavariablePresentByMetavariableName(metavariableName) {
-    const metavariable = this.findMetavariableByMetavariableName(metavariableName),
-          metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
+    return substitutions;
   }
 
   static fromContexts(...contexts) {

@@ -6,7 +6,7 @@ import { define } from "../elements";
 import { instantiateLabel } from "../process/instantiate";
 import { labelFromLabelNode } from "../utilities/element";
 import { metavariableFromLabelNode } from "../utilities/element";
-import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
+import { ablate, attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Label extends Element {
   constructor(context, string, node, metavariable) {
@@ -162,11 +162,13 @@ export default define(class Label extends Element {
   static fromLabelString(labelString, context) {
     let label;
 
-    instantiate((context) => {
-      const string = labelString,  ///
-            labelNode = instantiateLabel(string, context);
+    ablate((context) => {
+      instantiate((context) => {
+        const string = labelString,  ///
+              labelNode = instantiateLabel(string, context);
 
-      label = labelFromLabelNode(labelNode, context);
+        label = labelFromLabelNode(labelNode, context);
+      }, context);
     }, context);
 
     return label;

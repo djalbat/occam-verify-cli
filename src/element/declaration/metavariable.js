@@ -37,7 +37,9 @@ export default define(class MetavariableDeclaration extends Declaration {
       const metaTypeVerifies = this.verifyMetaType();
 
       if (metaTypeVerifies) {
-        context.addMetavariable(this.metavariable);
+        const declaredMetavariable = this.metavariable; ///
+
+        context.addDeclaredMetavariable(declaredMetavariable);
 
         verifies = true;
       }

@@ -49,7 +49,9 @@ export default define(class VariableDeclaration extends Declaration {
       const variableVerifies = this.verifyVariable();
 
       if (variableVerifies) {
-        context.addVariable(this.variable);
+        const declaredVariable = this.variable;
+
+        context.addDeclaredVariable(declaredVariable);
 
         verifies = true;
       }

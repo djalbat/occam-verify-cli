@@ -686,6 +686,23 @@ export function ephemeralContextFromJSON(json, context) {
   return emphemeralContext;
 }
 
+export function declaredVariablesFromJSON(json, context) {
+  let { declaredVariables } = json;
+
+  const { Variable } = elements,
+        declaredVariablesJSON = declaredVariables; ///
+
+  declaredVariables = declaredVariablesJSON.map((declaredVariableJSON) => {
+    const json = declaredVariableJSON,  ///
+          variable = Variable.fromJSON(json, context),
+          declaredVariable = variable;  ///
+
+    return declaredVariable;
+  });
+
+  return declaredVariables;
+}
+
 export function propertyRelationsFromJSON(json, context) {
   let { propertyRelations } = json;
 
@@ -716,6 +733,23 @@ export function metaLevelAssumptionsFromJSON(json, context) {
   });
 
   return metaLevelAssumptions;
+}
+
+export function declaredMetavariablesFromJSON(json, context) {
+  let { declaredMetavariables } = json;
+
+  const { Metavariable } = elements,
+        declaredMetavariablesJSON = declaredMetavariables; ///
+
+  declaredMetavariables = declaredMetavariablesJSON.map((declaredMetavariableJSON) => {
+    const json = declaredMetavariableJSON,  ///
+          metavariable = Metavariable.fromJSON(json, context),
+          declaredMetavariable = metavariable;  ///
+
+    return declaredMetavariable;
+  });
+
+  return declaredMetavariables;
 }
 
 export function nameToNameJSON(name) {
@@ -758,6 +792,12 @@ export function negatedToNegatedJSON(negated) {
   const negatedJSON = negated;  ///
 
   return negatedJSON;
+}
+
+export function ariableToVariableJSON(ariable) {
+  const ariableJSON = ariable.toJSON();
+
+  return ariableJSON;
 }
 
 export function metaTypeToMetaTypeJSON(metaType) {
@@ -844,6 +884,12 @@ export function procedureReferenceToProcedureReferenceJSON(procedureReference) {
   const procedureReferenceJSON = procedureReference.toJSON();
 
   return procedureReferenceJSON;
+}
+
+export function declaredMetavariableToDEclaredMetavariableJSON(declaredMetavariable) {
+  const declaredMetavariableJSON = declaredMetavariable.toJSON();
+
+  return declaredMetavariableJSON;
 }
 
 export function substitutionFromSubstitutionJSON(json, context) {
@@ -1136,6 +1182,16 @@ export function propertyRelationsToPropertyRelationsJSON(propertyRelations) {
   return propertyRelationsJSON;
 }
 
+export function declaredVariablesToDeclaredVariablesJSON(declaredVariables) {
+  const declaredVariablesJSON = declaredVariables.map((declaredVariable) => {
+    const declaredVariableJSON = declaredVariable.toJSON();
+
+    return declaredVariableJSON;
+  });
+
+  return declaredVariablesJSON;
+}
+
 export function metaLevelAssumptionsToMetaLevelAssumptionsJSON(metaLevelAssumptions) {
   const metaLevelAssumptionsJSON = metaLevelAssumptions.map((metaLevelAssumption) => {
     const metaLevelAssumptionJSON = metaLevelAssumption.toJSON();
@@ -1144,6 +1200,16 @@ export function metaLevelAssumptionsToMetaLevelAssumptionsJSON(metaLevelAssumpti
   });
 
   return metaLevelAssumptionsJSON;
+}
+
+export function declaredMetavariablesToDeclaredMetavariablesJSON(declaredMetavariables) {
+  const declaredMetavariablesJSON = declaredMetavariables.map((declaredMetavariable) => {
+    const declaredMetavariableJSON = declaredMetavariable.toJSON();
+
+    return declaredMetavariableJSON;
+  });
+
+  return declaredMetavariablesJSON;
 }
 
 function findTypeByName(name, context) {

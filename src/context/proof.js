@@ -3,50 +3,21 @@
 import { arrayUtilities } from "necessary";
 
 import Context from "../context";
-import elements from "../elements";
+
+import { mergeEquivalences, findEquivalenceByTerm, equivalencesFromEquality, separateGroundedTermsAndDefinedVariables } from "../utilities/equivalences";
 
 const { last, filter } = arrayUtilities;
 
 class ProofContext extends Context {
-  constructor(context, variables, judgements, assignments, equivalences, metaLevelAssumptions, subproofOrProofAssertions) {
+  constructor(context, assignments, equivalences, declaredVariables, declaredJudgements, metaLevelAssumptions, subproofOrProofAssertions) {
     super(context);
 
-    this.variables = variables;
-    this.judgements = judgements;
     this.assignments = assignments;
     this.equivalences = equivalences;
+    this.declaredVariables = declaredVariables;
+    this.declaredJudgements = declaredJudgements;
     this.metaLevelAssumptions = metaLevelAssumptions;
     this.subproofOrProofAssertions = subproofOrProofAssertions;
-  }
-
-  getVariables() {
-    let variables;
-
-    const context = this.getContext();
-
-    variables = context.getVariables();
-
-    variables = [
-      ...this.variables,
-      ...variables
-    ];
-
-    return variables;
-  }
-
-  getJudgements() {
-    let judgements;
-
-    const context = this.getContext();
-
-    judgements = context.getJudgements();
-
-    judgements = [ ///
-      ...this.judgements,
-      ...judgements
-    ]
-
-    return judgements;
   }
 
   getAssignments() {
@@ -64,9 +35,39 @@ class ProofContext extends Context {
 
     context = this; ///
 
-    equivalences = this.equivalences.mergedWith(equivalences, context);  ///
+    equivalences = mergeEquivalences(this.equivalences, equivalences, context);  ///
 
     return equivalences;
+  }
+
+  getDeclaredVariables() {
+    let declaredVariables;
+
+    const context = this.getContext();
+
+    declaredVariables = context.getDeclaredVariables();
+
+    declaredVariables = [
+      ...this.declaredVariables,
+      ...declaredVariables
+    ];
+
+    return declaredVariables;
+  }
+
+  getDeclaredJudgements() {
+    let declaredJudgements;
+
+    const context = this.getContext();
+
+    declaredJudgements = context.getDeclaredJudgements();
+
+    declaredJudgements = [ ///
+      ...this.declaredJudgements,
+      ...declaredJudgements
+    ]
+
+    return declaredJudgements;
   }
 
   getMetaLevelAssumptions() {
@@ -139,37 +140,14 @@ class ProofContext extends Context {
     const equalityRelfexive = equality.isReflexive();
 
     if (!equalityRelfexive) {
-      const { Equivalence } = elements,
-            equivalence = Equivalence.fromEquality(equality, context);
+      const equivalence = equivalencesFromEquality(equality, context);
 
-      this.equivalences = this.equivalences.mergedWithEquivalence(equivalence, context);
+      this.equivalences = mergeEquivalences(this.equivalences, equivalence, context);
 
       context.debug(`...added the '${equalityString}' equality to the proof context.`);
     } else {
       context.debug(`The reflexive '${equalityString}' equality has not been added to the proof context.`);
     }
-  }
-
-  addVariable(variable) {
-    const context = this, ///
-          variableString = variable.getString();
-
-    context.trace(`Adding the '${variableString}' variable to the proof context...`);
-
-    this.variables.push(variable);
-
-    context.debug(`...added the '${variableString}' variable to the proof context.`);
-  }
-
-  addJudgement(judgement) {
-    const context = this, ///
-          judgementString = judgement.getString();
-
-    context.trace(`Adding the '${judgementString}' judgement to the proof context...`);
-
-    this.judgements.push(judgement);
-
-    context.debug(`...added the '${judgementString}' judgement to the proof context.`);
   }
 
   addAssignment(assignment) {
@@ -182,6 +160,28 @@ class ProofContext extends Context {
     this.assignments.forEach((assignment) => {
       assignment(context);
     });
+  }
+
+  addDEclaredVariable(declaredVariable) {
+    const context = this, ///
+          declaredVariableString = declaredVariable.getString();
+
+    context.trace(`Adding the '${declaredVariableString}' declared variable to the proof context...`);
+
+    this.declaredVariables.push(declaredVariable);
+
+    context.debug(`...added the '${declaredVariableString}' declared variable to the proof context.`);
+  }
+
+  addDeclaredJudgement(declaredJudgement) {
+    const context = this, ///
+          declaredJudgementString = declaredJudgement.getString();
+
+    context.trace(`Adding the '${declaredJudgementString}' declared judgement to the proof context...`);
+
+    this.declaredJudgements.push(declaredJudgement);
+
+    context.debug(`...added the '${declaredJudgementString}' declared judgement to the proof context.`);
   }
 
   addMetaLevelAssumption(metaLevelAssumption) {
@@ -240,11 +240,11 @@ class ProofContext extends Context {
     return comparesToTermAndPropertyRelation;
   }
 
-  findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
+  findEquivalenceByTerm(term) { return findEquivalenceByTerm(this.equivalences, term); }
 
   findJudgementByMetavariableName(metavariableName) {
-    const judgements = this.getJudgements(),
-          judgement = judgements.find((judgement) => {
+    const declaredJudgements = this.getJudgements(),
+          judgement = declaredJudgements.find((judgement) => {
             const judgementMetavariableComparesToMetavariable = judgement.compareMetavariableName(metavariableName);
 
             if (judgementMetavariableComparesToMetavariable) {
@@ -256,8 +256,8 @@ class ProofContext extends Context {
   }
 
   findVariableByVariableIdentifier(variableIdentifier) {
-    const variables = this.getVariables(),
-          variable = variables.find((variable) => {
+    const declaredVariables = this.getVariables(),
+          variable = declaredVariables.find((variable) => {
             const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
 
             if (variableComparesToVariableIdentifier) {
@@ -269,9 +269,9 @@ class ProofContext extends Context {
   }
 
   findJudgementsByMetavariableNode(metavariableNode) {
-    const judgements = this.getJudgements();
+    const declaredJudgements = this.getJudgements();
 
-    filter(judgements, (judgement) => {
+    filter(declaredJudgements, (judgement) => {
       const metavariableNodeMatches = judgement.matchMetavariableNode(metavariableNode);
 
       if (metavariableNodeMatches) {
@@ -279,7 +279,7 @@ class ProofContext extends Context {
       }
     });
 
-    return judgements;
+    return declaredJudgements;
   }
 
   findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode) {
@@ -320,7 +320,7 @@ class ProofContext extends Context {
           groundedTerms = [],
           definedVariables = [];
 
-    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
+    separateGroundedTermsAndDefinedVariables(equivalences, groundedTerms, definedVariables, context);
 
     const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
             const groundedTermNode = groundedTerm.getNode(),
@@ -336,13 +336,12 @@ class ProofContext extends Context {
   }
 
   static fromMetaLevelAssumptions(metaLevelAssumptions, context) {
-    const { Equivalences } = elements,
-          variables = [],
-          judgements = [],
-          assignments = [],
-          equivalences = Equivalences.fromNothing(context),
+    const assignments = [],
+          equivalences = [],
+          declaredVariables = [],
+          declaredJudgements = [],
           subproofOrProofAssertions = [],
-          proofContext = new ProofContext(context, variables, judgements, assignments, equivalences, metaLevelAssumptions, subproofOrProofAssertions);
+          proofContext = new ProofContext(context, assignments, equivalences, declaredVariables, declaredJudgements, metaLevelAssumptions, subproofOrProofAssertions);
 
     return proofContext;
   }

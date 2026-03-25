@@ -775,6 +775,7 @@ export function referenceSubstitutionFromReferenceSubstitutionNode(referenceSubs
 }
 
 export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+
   const { StatementSubstitution } = elements,
         node = statementSubstitutionNode,  ///
         string = context.nodeAsString(node),

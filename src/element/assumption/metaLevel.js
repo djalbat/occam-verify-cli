@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { instantiateMetaLevelAssumption } from "../../process/instantiate";
 import { metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
 import { metaLevelAssumptionStringFromStatementAndReference } from "../../utilities/string";
-import { attempt, descend, serialise, unserialise, instantiate } from "../../utilities/context";
+import { ablate, attempt, descend, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class MetaLevelAssumption extends Element {
   constructor(context, string, node, reference, statement) {
@@ -236,12 +236,14 @@ export default define(class MetaLevelAssumption extends Element {
   static fromStatementAndReference(statement, reference, context) {
     let metaLevelAssumption;
 
-    instantiate((context) => {
-      const metaLevelAssumptionString = metaLevelAssumptionStringFromStatementAndReference(statement, reference),
-            string = metaLevelAssumptionString,  ///
-            metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context);
+    ablate((context) => {
+      instantiate((context) => {
+        const metaLevelAssumptionString = metaLevelAssumptionStringFromStatementAndReference(statement, reference),
+              string = metaLevelAssumptionString,  ///
+              metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context);
 
-      metaLevelAssumption = metaLevelAssumptionFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context);
+        metaLevelAssumption = metaLevelAssumptionFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context);
+      }, context);
     }, context);
 
     return metaLevelAssumption;

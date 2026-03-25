@@ -510,10 +510,10 @@ export function unifySubstitution(generalSubstitution, specificSubstitution, gen
   let substitutionUnifies = false;
 
   const generalSubstitutionNode = generalSubstitution.getNode(),
-    specificSubstitutionNode = specificSubstitution.getNode(),
-    generalNode = generalSubstitutionNode, ///
-    specificNode = specificSubstitutionNode,  ///
-    success = substitutionPass.run(generalNode, specificNode, generalContext, specificContext);
+        specificSubstitutionNode = specificSubstitution.getNode(),
+        generalNode = generalSubstitutionNode, ///
+        specificNode = specificSubstitutionNode,  ///
+        success = substitutionPass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     substitutionUnifies = true;

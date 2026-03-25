@@ -36,7 +36,6 @@ import Constructor from "./element/constructor";
 import Supposition from "./element/proofAssertion/supposition";
 import Metatheorem from "./element/topLevelMetaAssertion/metatheorem";
 import Equivalence from "./element/equivalence";
-import Equivalences from "./element/equivalences";
 import Metavariable from "./element/metavariable";
 import ProcedureCall from "./element/procedureCall";
 import SubDerivation from "./element/subDerivation";

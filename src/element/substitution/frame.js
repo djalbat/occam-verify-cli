@@ -3,8 +3,8 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { attempt, instantiate } from "../../utilities/context";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
+import { join, ablate, attempt, instantiate } from "../../utilities/context";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
 import { frameSubstitutionFromStatementNode, frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 
@@ -87,24 +87,25 @@ export default define(class FrameSubstitution extends Substitution {
 
       context.debug(`...the '${frameSubstitutionString}' frame substitution is already valid.`);
     } else {
-      const context = this.getContext(),
-            specificContext = context;  ///
+      const context = this.getContext();
 
-      attempt((specificContext) => {
-        const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
+      join((context) => {
+        attempt((context) => {
+          const targetFrameValidates = this.validateTargetFrame(context);
 
-        if (targetFrameValidates) {
-          const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
+          if (targetFrameValidates) {
+            const replacementFrameValidates = this.validateReplacementFrame(context);
 
-          if (replacementFrameValidates) {
-            validates = true;
+            if (replacementFrameValidates) {
+              validates = true;
+            }
           }
-        }
 
-        if (validates) {
-          specificContext.commit(this);
-        }
-      }, specificContext);
+          if (validates) {
+            context.commit(this);
+          }
+        }, context);
+      }, generalContext, specificContext, context);
     }
 
     if (validates) {
@@ -120,11 +121,10 @@ export default define(class FrameSubstitution extends Substitution {
     return frameSubstitution;
   }
 
-  validateTargetFrame(generalContext, specificContext) {
+  validateTargetFrame(context) {
     let targetFrameValidates = false;
 
-    const context = generalContext,  ///
-          targetFrameString = this.targetFrame.getString(),
+    const targetFrameString = this.targetFrame.getString(),
           frameSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${frameSubstitutionString}' frame substitution's '${targetFrameString}' target frame...`);
@@ -150,11 +150,10 @@ export default define(class FrameSubstitution extends Substitution {
     return targetFrameValidates;
   }
 
-  validateReplacementFrame(generalContext, specificContext) {
+  validateReplacementFrame(context) {
     let replacementFrameValidates = false;
 
-    const context = specificContext,  ///
-          replacementFrameString = this.replacementFrame.getString(),
+    const replacementFrameString = this.replacementFrame.getString(),
           frameSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${frameSubstitutionString}' frame substitution's '${replacementFrameString}' replacement frame...`);
@@ -206,12 +205,14 @@ export default define(class FrameSubstitution extends Substitution {
   static fromFrameAndMetavariable(frame, metavariable, context) {
     let frameSubstitution
 
-    instantiate((context) => {
-      const frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
-            string = frameSubstitutionString,  ///
-            frameSubstitutionNode = instantiateFrameSubstitution(string, context);
+    ablate((context) => {
+      instantiate((context) => {
+        const frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
+              string = frameSubstitutionString,  ///
+              frameSubstitutionNode = instantiateFrameSubstitution(string, context);
 
-      frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+        frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+      }, context);
     }, context);
 
     return frameSubstitution;

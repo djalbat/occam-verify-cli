@@ -10,12 +10,25 @@ import IllativeContext from "../context/illative";
 import EphemeralContext from "../context/ephemeral";
 import BranchingContext from "../context/branching";
 import SyntheticContext from "../context/synthetic";
+import NominalFileContext from "../context/file/nominal";
 
 import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export function join(innerFunction, ...contexts) {
   const syntheticContext = SyntheticContext.fromContexts(...contexts),
         context = syntheticContext;  ///
+
+  return innerFunction(context);
+}
+
+export function ablate(innerFunction, context) {
+  let contextNominalFileContext = (context instanceof NominalFileContext);
+
+  while (!contextNominalFileContext) {
+    context = context.getContext();
+
+    contextNominalFileContext = (context instanceof NominalFileContext)
+  }
 
   return innerFunction(context);
 }
@@ -53,12 +66,6 @@ export function descend(innerFunction, context) {
 }
 
 export function attempt(innerFunction, context) {
-  const contextEphemeralContext = (context instanceof EphemeralContext);
-
-  if (contextEphemeralContext) {
-    context = context.getContext();
-  }
-
   const ephemeralContext = EphemeralContext.fromNothing(context);
 
   context = ephemeralContext;  ///

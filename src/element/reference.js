@@ -6,7 +6,7 @@ import { define } from "../elements";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { referenceFromReferenceNode } from "../utilities/element";
-import { attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
+import { ablate, attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
 import { metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 
 export default define(class Reference extends Element {
@@ -354,11 +354,13 @@ export default define(class Reference extends Element {
   static fromReferenceString(referenceString, context) {
     let reference;
 
-    instantiate((context) => {
-      const string = referenceString,  ///
-            referenceNode = instantiateReference(string, context);
+    ablate((context) => {
+      instantiate((context) => {
+        const string = referenceString,  ///
+              referenceNode = instantiateReference(string, context);
 
-      reference = referenceFromReferenceNode(referenceNode, context);
+        reference = referenceFromReferenceNode(referenceNode, context);
+      }, context);
     }, context);
 
     return reference;

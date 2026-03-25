@@ -94,13 +94,6 @@ export default class Context extends ContextBase {
     return equivalences;
   }
 
-  getVariables(includeRelease) {
-    const context = this.getContext(),
-          variables = context.getVariables(includeRelease);
-
-    return variables;
-  }
-
   getCombinators(includeRelease) {
     const context = this.getContext(),
           combinators = context.getCombinators(includeRelease);
@@ -115,11 +108,18 @@ export default class Context extends ContextBase {
     return constructors;
   }
 
-  getMetavariables(includeRelease) {
+  getDeclaredVariables(includeRelease) {
     const context = this.getContext(),
-          metavariables = context.getMetavariables(includeRelease);
+          declaredVariables = context.getDeclaredVariables(includeRelease);
 
-    return metavariables;
+    return declaredVariables;
+  }
+
+  getDeclaredMetavariables(includeRelease) {
+    const context = this.getContext(),
+          declaredMetavariables = context.getDeclaredMetavariables(includeRelease);
+
+    return declaredMetavariables;
   }
 
   getSubproofOrProofAssertions() {
@@ -225,9 +225,9 @@ export default class Context extends ContextBase {
     return reference;
   }
 
-  findAssumptionByAssumptionNode(assumptionNode, metaLevel = false) {
+  findAssumptionByAssumptionNode(assumptionNode) {
     const context = this.getContext(),
-          assumption = context.findAssumptionByAssumptionNode(assumptionNode, metaLevel);
+          assumption = context.findAssumptionByAssumptionNode(assumptionNode);
 
     return assumption;
   }
