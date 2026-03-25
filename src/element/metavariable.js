@@ -58,8 +58,8 @@ export default define(class Metavariable extends Element {
 
   isDeclared(context) {
     const metavariableName = this.getMetavariableName(),
-          metavariable = context.findMetavariableByMetavariableName(metavariableName),
-          declared = (metavariable !== null);
+          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName),
+          declared = (declaredMetavariable !== null);
 
     return declared;
   }
@@ -259,11 +259,11 @@ export default define(class Metavariable extends Element {
       context.trace(`Validating the '${metavariableString}' metavariable's '${termString}' term...`);
 
       const metavariableName = this.getMetavariableName(),
-            metavariable = context.findMetavariableByMetavariableName(metavariableName);
+            declaredMetavaraible = context.findDeclaredMetavariableByMetavariableName(metavariableName);
 
       let term = null;
 
-      if (metavariable !== null) {
+      if (declaredMetavaraible !== null) {
         const type = metavariable.getType();
 
         if (type !== null) {
@@ -301,10 +301,10 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Validating the '${metavariableString}' metavariable's '${metavariableName}' name...`);
 
-    const metavariable = context.findMetavariableByMetavariableName(metavariableName);
+    const declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName);
 
-    if (metavariable !== null) {
-      const metaType = metavariable.getMetaType(),
+    if (declaredMetavariable !== null) {
+      const metaType = declaredMetavariable.getMetaType(),
             metaTypeString = metaType.getString();
 
       this.metaType = metaType;
@@ -522,8 +522,8 @@ export default define(class Metavariable extends Element {
 
         if (frameSingular) {
           const frameMetavariableName = frame.getMetavariableName(),
-                frameMetavariable = context.findMetavariableByMetavariableName(frameMetavariableName),
-                frameMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(frameMetavariable, generalContext, specificContext);
+                frameDeclaredMetavariable = context.findDeclaredMetavariableByMetavariableName(frameMetavariableName),
+                frameMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(frameDeclaredMetavariable, generalContext, specificContext);
 
           if (frameMetavariableUnifiesIntrinsically) {
             frameMetavariableUnifies = true;
@@ -597,8 +597,8 @@ export default define(class Metavariable extends Element {
 
         if (statementSingular) {
           const statementMetavariableName = statement.getMetavariableName(),
-                statementMetavariable = context.findMetavariableByMetavariableName(statementMetavariableName),
-                statementMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(statementMetavariable, generalContext, specificContext);
+                statementDeclaredMetavariable = context.findDeclaredMetavariableByMetavariableName(statementMetavariableName),
+                statementMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(statementDeclaredMetavariable, generalContext, specificContext);
 
           if (statementMetavariableUnifiesIntrinsically) {
             statementMetavariableUnifies = true;

@@ -14,9 +14,10 @@ export function equalityAssignmentFromEquality(equality, context) {
 
 export function judgementAssignmentFromJudgement(judgement, context) {
   const judgementAssignment = (context) => {
-    const judgementAdded = context.addJudgement(judgement);
+    const declaredJudgement = judgement,  ///
+          declaredJudgementAdded = context.addDeclaredJudgement(declaredJudgement);
 
-    return judgementAdded;
+    return declaredJudgementAdded;
   };
 
   return judgementAssignment;
@@ -109,15 +110,17 @@ function variableAssignmentFromVariableNodeAndType(variableNode, type, context) 
   variable.setType(type);
 
   const variableAssignment = (context) => {
-    context.addVariable(variable);
+    const declaredVariable = variable;  ///
 
-    const variableTypeString = variable.getTypeString(),
-          variableString = variable.getString(),
-          assigned = true;
+    context.addDeclaredVariable(declaredVariable);
+
+    const declaredVariableTypeString = declaredVariable.getTypeString(),
+          declaredVariableString = declaredVariable.getString(),
+          assigned = true;  ///
 
     assigned ?
-      context.trace(`Assigned the '${variableString}' variable with type '${variableTypeString}'.`) :
-        context.debug(`Unable to assign the '${variableString}' variable with type '${variableTypeString}'.`);
+      context.trace(`Assigned the '${declaredVariableString}' declared variable with type '${declaredVariableTypeString}'.`) :
+        context.debug(`Unable to assign the '${declaredVariableString}' declared variable with type '${declaredVariableTypeString}'.`);
 
     return assigned;
   };

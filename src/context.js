@@ -80,9 +80,16 @@ export default class Context extends ContextBase {
     return assumptions;
   }
 
+  getMetavariables() {
+    const context = this.getContext(),
+          metavariables = context.getMetavariables();
+
+    return metavariables;
+  }
+
   getSubstitutions() {
     const context = this.getContext(),
-          substitutions = context.getSubstitutions();
+      substitutions = context.getSubstitutions();
 
     return substitutions;
   }
@@ -288,11 +295,11 @@ export default class Context extends ContextBase {
     return substitution;
   }
 
-  findMetavariableByMetavariableName(metavariableName) {
+  findDeclaredMetavariableByMetavariableName(metavariableName) {
     const context = this.getContext(),
-          metavariable = context.findMetavariableByMetavariableName(metavariableName);
+          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName);
 
-    return metavariable;
+    return declaredMetavariable;
   }
 
   findSubstitutionByVariableIdentifier(variableIdentifier) {

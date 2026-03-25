@@ -228,12 +228,12 @@ export default class NominalFileContext extends FileContext {
     return metatheorems;
   }
 
-  getDEclaredVariables(includeRelease = true) {
+  getDeclaredVariables() {
     return this.declaredVariables;
   }
 
   getDeclaredMetavariables(includeRelease = true) {
-    return this.declaredVetavariables;
+    return this.declaredMetavariables;
   }
 
   getTerms() {
@@ -645,17 +645,17 @@ export default class NominalFileContext extends FileContext {
     return variable;
   }
 
-  findMetavariableByMetavariableName(metavariableName) {
-    const metavariables = this.getMetavariables(),
-          metavariable = metavariables.find((metavariable) => {
-            const metavariableComparesToMetavariableName = metavariable.compareMetavariableName(metavariableName);
+  findDeclaredMetavariableByMetavariableName(metavariableName) {
+    const declaredMetavariables = this.getDeclaredMetavariables(),
+          declaredMetavariable = declaredMetavariables.find((declaredMetavariable) => {
+            const declaredMetavariableComparesToMetavariableName = declaredMetavariable.compareMetavariableName(metavariableName);
 
-            if (metavariableComparesToMetavariableName) {
+            if (declaredMetavariableComparesToMetavariableName) {
               return true;
             }
           }) || null;
 
-    return metavariable;
+    return declaredMetavariable;
   }
 
   findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode) {
@@ -756,10 +756,10 @@ export default class NominalFileContext extends FileContext {
   }
 
   isMetavariablePresentByMetavariableName(metavariableName) {
-    const metavariable = this.findMetavariableByMetavariableName(metavariableName),
-          metavariablePresent = (metavariable !== null);
+    const declaredMetavariable = this.findDeclaredMetavariableByMetavariableName(metavariableName),
+          declaredMetavariablePresent = (declaredMetavariable !== null);
 
-    return metavariablePresent;
+    return declaredMetavariablePresent;
   }
 
   isProcedurePresentByProcedureName(procedureName) {

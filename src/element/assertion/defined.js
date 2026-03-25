@@ -264,8 +264,8 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
 
   if (frame!== null) {
     const metavariableName = frame.getMetavariableName(),
-          metavariable = context.findMetavariableByMetavariableName(metavariableName),
-          metavariableDefined = isMetavariableDefined(metavariable, context);
+          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName),
+          metavariableDefined = isMetavariableDefined(declaredMetavariable, context);
 
     if (!negated && metavariableDefined) {
       validatesWhenDerived = true;
