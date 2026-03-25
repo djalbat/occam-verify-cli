@@ -210,9 +210,9 @@ class ProofContext extends Context {
       context.debug(`The '${metaLevelAssumptionString}' metaLevelAssumption has already been added to the proof context.`);
     } else {
       this.metaLevelAssumptions.push(metaLevelAssumption);
-
-      context.debug(`...added the '${metaLevelAssumptionString}' meta-level assumption to the proof context.`);
     }
+
+    context.debug(`...added the '${metaLevelAssumptionString}' meta-level assumption to the proof context.`);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {

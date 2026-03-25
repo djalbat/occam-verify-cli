@@ -189,12 +189,6 @@ export default class EphemeralContext extends Context {
     return substitutions;
   }
 
-  addTerms(terms) {
-    terms.forEach((term) => {
-      this.addTerm(term);
-    });
-  }
-
   addTerm(term) {
     const context = this, ///
           termA = term, ///
@@ -216,9 +210,9 @@ export default class EphemeralContext extends Context {
       context.trace(`The '${termString}' term has already been added to the ephemeral context.`);
     } else {
       this.terms.push(term);
-
-      context.debug(`...added the '${termString}' term to the ephemeral context.`);
     }
+
+    context.debug(`...added the '${termString}' term to the ephemeral context.`);
   }
 
   addFrame(frame) {
@@ -242,9 +236,9 @@ export default class EphemeralContext extends Context {
       context.trace(`The '${frameString}' frame has already been added to the ephemeral context.`);
     } else {
       this.frames.push(frame);
-
-      context.debug(`...added the '${frameString}' frame to the ephemeral context.`);
     }
+
+    context.debug(`...added the '${frameString}' frame to the ephemeral context.`);
   }
 
   addEquality(equality) {
@@ -268,9 +262,9 @@ export default class EphemeralContext extends Context {
       context.trace(`The '${equalityString}' equality has already been added to the ephemeral context.`);
     } else {
       this.equalities.push(equality);
-
-      context.debug(`...added the '${equalityString}' equality to the ephemeral context.`);
     }
+
+    context.debug(`...added the '${equalityString}' equality to the ephemeral context.`);
   }
 
   addJudgement(judgement) {
@@ -294,9 +288,9 @@ export default class EphemeralContext extends Context {
       context.trace(`The '${judgementString}' judgement has already been added to the ephemeral context.`);
     } else {
       this.judgements.push(judgement);
-
-      context.debug(`...added the '${judgementString}' judgement to the ephemeral context.`);
     }
+
+    context.debug(`...added the '${judgementString}' judgement to the ephemeral context.`);
   }
 
   addStatement(statement) {
@@ -320,9 +314,9 @@ export default class EphemeralContext extends Context {
       context.trace(`The '${statementString}' statement has already been added to the ephemeral context.`);
     } else {
       this.statements.push(statement);
-
-      context.debug(`...added the '${statementString}' statement to the ephemeral context.`);
     }
+
+    context.debug(`...added the '${statementString}' statement to the ephemeral context.`);
   }
 
   addAssertion(assertion) {
@@ -346,9 +340,9 @@ export default class EphemeralContext extends Context {
       context.trace(`The '${assertionString}' assertion has already been added to the ephemeral context.`);
     } else {
       this.assertions.push(assertion);
-
-      context.debug(`...added the '${assertionString}' assertion to the ephemeral context.`);
     }
+
+    context.debug(`...added the '${assertionString}' assertion to the ephemeral context.`);
   }
 
   addReference(reference) {
@@ -371,10 +365,14 @@ export default class EphemeralContext extends Context {
     if (referenceB !== null) {
       context.trace(`The '${referenceString}' reference has already been added to the ephemeral context.`);
     } else {
-      this.references.push(reference);
+      const context = reference.getContext();
 
-      context.debug(`...added the '${referenceString}' reference to the ephemeral context.`);
+      context.commit(this);
+
+      this.references.push(reference);
     }
+
+    context.debug(`...added the '${referenceString}' reference to the ephemeral context.`);
   }
 
   addAssumption(assumption) {
@@ -398,9 +396,9 @@ export default class EphemeralContext extends Context {
       context.trace(`The '${assumptionString}' assumption has already been added to the ephemeral context.`);
     } else {
       this.assumptions.push(assumption);
-
-      context.debug(`...added the '${assumptionString}' assumption to the ephemeral context.`);
     }
+
+    context.debug(`...added the '${assumptionString}' assumption to the ephemeral context.`);
   }
 
   addMetavariable(metavariable) {
@@ -424,9 +422,9 @@ export default class EphemeralContext extends Context {
       context.trace(`The '${metavariableString}' metavariable has already been added to the ephemeral context.`);
     } else {
       this.metavariables.push(metavariable);
-
-      context.debug(`...added the '${metavariableString}' metavariable to the ephemeral context.`);
     }
+
+    context.debug(`...added the '${metavariableString}' metavariable to the ephemeral context.`);
   }
 
   addSubstitution(substitution) {
@@ -449,10 +447,74 @@ export default class EphemeralContext extends Context {
     if (substitutionB !== null) {
       context.trace(`The '${substitutionString}' substitution has already been added to the ephemeral context.`);
     } else {
-      this.substitutions.push(substitution);
+      const context = substitution.getContext();
 
-      context.debug(`...added the '${substitutionString}' substitution to the ephemeral context.`);
+      context.commit(this);
+
+      this.substitutions.push(substitution);
     }
+
+    context.debug(`...added the '${substitutionString}' substitution to the ephemeral context.`);
+  }
+
+  addTerms(terms) {
+    terms.forEach((term) => {
+      this.addTerm(term);
+    });
+  }
+
+  addFrames(frames) {
+    frames.forEach((frame) => {
+      this.addFrame(frame);
+    });
+  }
+
+  addEqualities(equalities) {
+    equalities.forEach((equality) => {
+      this.addEquality(equality);
+    });
+  }
+
+  addJudgements(judgements) {
+    judgements.forEach((judgement) => {
+      this.addJudgement(judgement);
+    });
+  }
+
+  addAssertions(assertions) {
+    assertions.forEach((assertion) => {
+      this.addAssertion(assertion);
+    });
+  }
+
+  addStatements(statements) {
+    statements.forEach((statement) => {
+      this.addStatement(statement);
+    });
+  }
+
+  addReferences(references) {
+    references.forEach((reference) => {
+      this.addReference(reference);
+    });
+  }
+
+  addAssumptions(assumptions) {
+    assumptions.forEach((assumption) => {
+      this.addAssumption(assumption);
+    });
+  }
+
+  addMetavariables(metavariables) {
+    metavariables.forEach((metavariable) => {
+      this.addMetavariable(metavariable);
+    });
+  }
+
+  addSubstitutions(substitutions) {
+    substitutions.forEach((substitution) => {
+      this.addSubstitution(substitution);
+    });
   }
 
   findTermByTermNode(termNode) {
@@ -668,10 +730,38 @@ export default class EphemeralContext extends Context {
     return substitutionPresent;
   }
 
-  commit(element) {
-    const context = this; ///
+  commit(elementOrContext) {
+    const elementOrContextContext = (elementOrContext instanceof Context);
 
-    element.setContext(context);
+    if (elementOrContextContext) {
+      const context = elementOrContext, ///
+            terms = this.getTerms(),
+            frames = this.getFrames(),
+            equalities = this.getEqualities(),
+            judgements = this.getJudgements(),
+            assertions = this.getAssertions(),
+            statements = this.getStatements(),
+            references = this.getReferences(),
+            assumptions = this.getAssumptions(),
+            metavariables = this.getMetavariables(),
+            substitutions = this.getSubstitutions();
+
+      context.addTerms(terms);
+      context.addFrames(frames);
+      context.addEqualities(equalities);
+      context.addJudgements(judgements);
+      context.addAssertions(assertions);
+      context.addStatements(statements);
+      context.addReferences(references);
+      context.addAssumptions(assumptions);
+      context.addMetavariables(metavariables);
+      context.addSubstitutions(substitutions);
+    } else {
+      const context = this, ///
+            element = elementOrContext; ///
+
+      element.setContext(context);
+    }
   }
 
   initialise(json) {

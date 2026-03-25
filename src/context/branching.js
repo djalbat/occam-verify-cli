@@ -33,9 +33,9 @@ export default class BranchingContext extends Context {
       context.trace(`The '${termString}' term has already been added to the branching context.`);
     } else {
       this.terms.push(term);
-
-      context.debug(`...added the '${termString}' term to the branching context.`);
     }
+
+    context.debug(`...added the '${termString}' term to the branching context.`);
   }
 
   addTerms(terms) {

@@ -66,8 +66,6 @@ export default define(class Premise extends ProofAssertion {
           const statementValidates = this.validateStatement(context);
 
           if (statementValidates) {
-            context.commit(this);
-
             validates = true;
           }
         }
@@ -76,10 +74,12 @@ export default define(class Premise extends ProofAssertion {
           const procedureCallValidates = this.validateProcedureCall(context);
 
           if (procedureCallValidates) {
-            context.commit(this);
-
             validates = true;
           }
+        }
+
+        if (validates) {
+          context.commit(this);
         }
       }, context);
     }, context);

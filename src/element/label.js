@@ -90,9 +90,11 @@ export default define(class Label extends Element {
       const metavariableValidates = this.validateMetavariable(context);
 
       if (metavariableValidates) {
-        context.commit(this);
-
         validates = true;
+      }
+
+      if (validates) {
+        context.commit(this);
       }
     }, context);
 

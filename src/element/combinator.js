@@ -38,9 +38,11 @@ export default define(class Combinator extends Element {
       const statementValidates = this.validateStatement(context);
 
       if (statementValidates) {
-        context.commit(this);
-
         validates = true;
+      }
+
+      if (validates) {
+        context.commit(this);
       }
     }, context)
 

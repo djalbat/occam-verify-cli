@@ -62,9 +62,11 @@ export default define(class Conclusion extends Element {
         const statementValidates = this.validateStatement(context);
 
         if (statementValidates) {
-          context.commit(this);
-
           validates = true;
+        }
+
+        if (validates) {
+          context.commit(this);
         }
       }, context);
     }, context);

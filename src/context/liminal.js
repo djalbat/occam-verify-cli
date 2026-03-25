@@ -84,10 +84,14 @@ export default class LiminalContext extends Context {
     if (substitutionB !== null) {
       context.debug(`The '${substitutionString}' substitution has already been added to the liminal context.`);
     } else {
-      this.substitutions.push(substitution);
+      const context = substitution.getContext();
 
-      context.debug(`...added the '${substitutionString}' substitution to the liminal context.`);
+      context.commit(this);
+
+      this.substitutions.push(substitution);
     }
+
+    context.debug(`...added the '${substitutionString}' substitution to the liminal context.`);
   }
 
   addSubstitutions(substitutions) {
