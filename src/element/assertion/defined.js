@@ -249,8 +249,8 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   const context = specificContext;  ///
 
   if (term !== null) {
-    const variableIdentifier = term.getVariableIdentifier(),
-          variable = context.findVariableByVariableIdentifier(variableIdentifier),
+    const variableNode = term.getVariableNode(),
+          variable = context.findVariableByVariableNode(variableNode),
           variableDefined = isVariableDefined(variable, context);
 
     if (!negated && variableDefined) {

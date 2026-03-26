@@ -26,6 +26,20 @@ export default define(class Statement extends Element {
     return metavariableName;
   }
 
+  getTermSubstitutionNode() {
+    const statementNode = this.getNode(),
+          termSubstitutionNode = statementNode.getTermSubstitutionNode();
+
+    return termSubstitutionNode;
+  }
+
+  getFrameSubstitutionNode() {
+    const statementNode = this.getNode(),
+          frameSubstitutionNode = statementNode.getFrameSubstitutionNode();
+
+    return frameSubstitutionNode;
+  }
+
   isSingular() {
     const statementNode = this.getStatementNode(),
           singular = statementNode.isSingular();

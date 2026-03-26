@@ -255,17 +255,17 @@ class ProofContext extends Context {
     return judgement;
   }
 
-  findVariableByVariableIdentifier(variableIdentifier) {
-    const declaredVariables = this.getVariables(),
-          variable = declaredVariables.find((variable) => {
-            const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
+  findDeclaredVariableByVariableIdentifier(variableIdentifier) {
+    const declaredVariables = this.getDeclaredVariables(),
+          declaredVariable = declaredVariables.find((declaredVariable) => {
+            const variableComparesToVariableIdentifier = declaredVariable.compareVariableIdentifier(variableIdentifier);
 
             if (variableComparesToVariableIdentifier) {
               return true;
             }
           }) || null;
 
-    return variable;
+    return declaredVariable;
   }
 
   findJudgementsByMetavariableNode(metavariableNode) {
@@ -307,11 +307,11 @@ class ProofContext extends Context {
     return judgementPresent;
   }
 
-  isVariablePresentByVariableIdentifier(variableIdentifier) {
-    const variable = this.findVariableByVariableIdentifier(variableIdentifier),
-          variablePresent = (variable !== null);
+  isDeclaredVariablePresentByVariableIdentifier(variableIdentifier) {
+    const declaredVariable = this.findDeclaredVariableByVariableIdentifier(variableIdentifier),
+          declaredVariablePresent = (declaredVariable !== null);
 
-    return variablePresent;
+    return declaredVariablePresent;
   }
 
   isTermGrounded(term) {

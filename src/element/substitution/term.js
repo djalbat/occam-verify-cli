@@ -5,9 +5,9 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
-import { join, ablate, attempt, instantiate } from "../../utilities/context";
+import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { termSubstitutionFromStatementNode, termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
+import { join, ablate, descend, attempt, instantiate } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, targetTerm, replacementTerm) {
@@ -137,17 +137,19 @@ export default define(class TermSubstitution extends Substitution {
     const targetTermSingular = this.targetTerm.isSingular();
 
     if (targetTermSingular) {
-      const targetTerm = this.targetTerm.validate(context, (targetTerm) => {
-        const validatesForwards = true;
+      descend((context) => {
+        const targetTerm = this.targetTerm.validate(context, (targetTerm) => {
+          const validatesForwards = true;
 
-        return validatesForwards;
-      });
+          return validatesForwards;
+        });
 
-      if (targetTerm !== null) {
-        this.targetTerm = targetTerm;
+        if (targetTerm !== null) {
+          this.targetTerm = targetTerm;
 
-        targetTermValidates = true;
-      }
+          targetTermValidates = true;
+        }
+      }, context);
     } else {
       context.debug(`The '${termSubstitutionString}' term substitution's '${targetTermString}' target term is not singular.`);
     }
@@ -168,17 +170,19 @@ export default define(class TermSubstitution extends Substitution {
 
     context.trace(`Validating the '${termSubstitutionString}' term substitution's '${replacementTermString}' replacement term...`);
 
-    const replacementTerm = this.replacementTerm.validate(context, (replacementTerm) => {
-      const validatesForwards = true;
+    descend((context) => {
+      const replacementTerm = this.replacementTerm.validate(context, (replacementTerm) => {
+        const validatesForwards = true;
 
-      return validatesForwards;
-    });
+        return validatesForwards;
+      });
 
-    if (replacementTerm !== null) {
-      this.replacementTerm = replacementTerm;
+      if (replacementTerm !== null) {
+        this.replacementTerm = replacementTerm;
 
-      replacementTermValidates = true;
-    }
+        replacementTermValidates = true;
+      }
+    }, context);
 
     if (replacementTermValidates) {
       context.debug(`...validated the '${termSubstitutionString}' term substitution's '${replacementTermString}' replacement term...`);
@@ -210,8 +214,15 @@ export default define(class TermSubstitution extends Substitution {
   }
 
   static fromStatement(statement, context) {
-    const statementNode = statement.getNode(),
-          termSubstitution = termSubstitutionFromStatementNode(statementNode, context);
+    let termSubstitution = null;
+
+    const termSubstitutionNode = statement.getTermSubstitutionNode();
+
+    if (termSubstitutionNode !== null) {
+      ablate((context) => {
+        termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
+      }, context);
+    }
 
     return termSubstitution;
   }
@@ -221,7 +232,7 @@ export default define(class TermSubstitution extends Substitution {
 
     let termSubstitution;
 
-    ablate((comtext) => {
+    ablate((context) => {
       instantiate((context) => {
         const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
               string = termSubstitutionString,  ///

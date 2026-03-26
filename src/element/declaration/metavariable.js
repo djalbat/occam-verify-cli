@@ -59,12 +59,12 @@ export default define(class MetavariableDeclaration extends Declaration {
           metaTypeString = this.metaType.getString(),
           metaTypeDeclarationString = this.getString(); ///
 
-    context.trace(`Verifying the '${metaTypeDeclarationString}' variable declaration's '${metaTypeString}' metaType...`);
+    context.trace(`Verifying the '${metaTypeDeclarationString}' metavariable declaration's '${metaTypeString}' metaType...`);
 
     this.metavariable.setMetaType(this.metaType);
 
     if (metaTypeVerifies) {
-      context.debug(`...verified the '${metaTypeDeclarationString}' variable declaration's '${metaTypeString}' metaType.`);
+      context.debug(`...verified the '${metaTypeDeclarationString}' metavariable declaration's '${metaTypeString}' metaType.`);
     }
 
     return metaTypeVerifies;
@@ -77,19 +77,19 @@ export default define(class MetavariableDeclaration extends Declaration {
           metavariableString = this.metavariable.getString(),
           metavariableDeclarationString = this.getString(); ///
 
-    context.trace(`Verifying the '${metavariableDeclarationString}' variable declaration's '${metavariableString}' metavariable...`);
+    context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration's '${metavariableString}' metavariable...`);
 
     const metavariableName = this.metavariable.getName(),
-          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
+          declaredMetavariablePresent = context.isDeclaredMetavariablePresentByMetavariableName(metavariableName);
 
-    if (!metavariablePresent) {
+    if (!declaredMetavariablePresent) {
       metavariableVerifies = this.metavariable.verify(context);
     } else {
-      context.debug(`The '${metavariableName}' metavariable is already present.`);
+      context.debug(`The '${metavariableName}' declared metavariable is already present.`);
     }
 
     if (metavariableVerifies) {
-      context.debug(`...verified the '${metavariableDeclarationString}' variable declaration's '${metavariableString}' metavariable.`);
+      context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration's '${metavariableString}' metavariable.`);
     }
 
     return metavariableVerifies;

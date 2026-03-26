@@ -632,17 +632,17 @@ export default class NominalFileContext extends FileContext {
     return typePrefix;
   }
 
-  findVariableByVariableIdentifier(variableIdentifier) {
-    const variables = this.getVariables(),
-          variable = variables.find((variable) => {
-            const variableComparesToVariableIdentifier = variable.compareVariableIdentifier(variableIdentifier);
+  findDeclaredVariableByVariableIdentifier(VariableIdentitifer) {
+    const declaredVariables = this.getDeclaredVariables(),
+          declaredVariable = declaredVariables.find((declaredVariable) => {
+            const declaredVariableComparesToVariableIdentitifer = declaredVariable.compareVariableIdentifier(VariableIdentitifer);
 
-            if (variableComparesToVariableIdentifier) {
+            if (declaredVariableComparesToVariableIdentitifer) {
               return true;
             }
           }) || null;
 
-    return variable;
+    return declaredVariable;
   }
 
   findDeclaredMetavariableByMetavariableName(metavariableName) {
@@ -748,14 +748,14 @@ export default class NominalFileContext extends FileContext {
     return typePrefixPresent;
   }
 
-  isVariablePresentByVariableIdentifier(variableIdentifier) {
-    const variable = this.findVariableByVariableIdentifier(variableIdentifier),
-          variablePresent = (variable !== null);
+  isDeclaredVariablePresentByVariableIdentifier(variableIdentifier) {
+    const declaredVariable = this.findDeclaredVariableByVariableIdentifier(variableIdentifier),
+          declaredVariablePresent = (declaredVariable !== null);
 
-    return variablePresent;
+    return declaredVariablePresent;
   }
 
-  isMetavariablePresentByMetavariableName(metavariableName) {
+  isDeclaredMetavariablePresentByMetavariableName(metavariableName) {
     const declaredMetavariable = this.findDeclaredMetavariableByMetavariableName(metavariableName),
           declaredMetavariablePresent = (declaredMetavariable !== null);
 

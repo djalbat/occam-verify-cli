@@ -281,9 +281,9 @@ export default class Context extends ContextBase {
     return type;
   }
 
-  findVariableByVariableIdentifier(variableIdentifier) {
+  findVariableByVariableNode(variableNode) {
     const context = this.getContext(),
-          variable = context.findVariableByVariableIdentifier(variableIdentifier);
+          variable = context.findVariableByVariableNode(variableNode);
 
     return variable;
   }
@@ -433,9 +433,9 @@ export default class Context extends ContextBase {
     return judgementPresent;
   }
 
-  isMetavariablePresentByMetavariableName(metavariableName) {
+  isDeclaredMetavariablePresentByMetavariableName(metavariableName) {
     const context = this.getContext(),
-          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
+          metavariablePresent = context.isDeclaredMetavariablePresentByMetavariableName(metavariableName);
 
     return metavariablePresent;
   }

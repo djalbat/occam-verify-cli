@@ -4,7 +4,7 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
-import { join, ablate, attempt, instantiate } from "../../utilities/context";
+import { join, descend, ablate, attempt, instantiate } from "../../utilities/context";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
 
@@ -148,11 +148,13 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${targetReferenceString}' target reference...`);
 
-    const targetReference = this.targetReference.validate(context);
+    descend((context) => {
+      const targetReference = this.targetReference.validate(context);
 
-    if (targetReference !== null) {
-      targetReferenceValidates = true;
-    }
+      if (targetReference !== null) {
+        targetReferenceValidates = true;
+      }
+    }, context);
 
     if (targetReferenceValidates) {
       context.debug(`...validated the '${referenceSubstitutionString}' reference substitution's '${targetReferenceString}' target reference...`);
@@ -170,11 +172,13 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${replacementReferenceString}' replacement reference...`);
 
-    const replacementReference = this.replacementReference.validate(context);
+    descend((context) => {
+      const replacementReference = this.replacementReference.validate(context);
 
-    if (replacementReference !== null) {
-      replacementReferenceValidates = true;
-    }
+      if (replacementReference !== null) {
+        replacementReferenceValidates = true;
+      }
+    }, context);
 
     if (replacementReferenceValidates) {
       context.debug(`...validated the '${referenceSubstitutionString}' reference substitution's '${replacementReferenceString}' replacement reference.`);

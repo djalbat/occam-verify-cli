@@ -51,7 +51,7 @@ export default define(class VariableDeclaration extends Declaration {
       if (variableVerifies) {
         const declaredVariable = this.variable;
 
-       context.addDeclaredVariable(declaredVariable);
+        context.addDeclaredVariable(declaredVariable);
 
         verifies = true;
       }
@@ -67,9 +67,8 @@ export default define(class VariableDeclaration extends Declaration {
   verifyType() {
     let typeVerifies = false;
 
-    const context = this.getContext();
-
-    const typeString = this.type.getString(),
+    const context = this.getContext(),
+          typeString = this.type.getString(),
           variableDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${variableDeclarationString}' variable declaration's '${typeString}' type...`);
@@ -111,10 +110,10 @@ export default define(class VariableDeclaration extends Declaration {
     context.trace(`Verifying the '${variableDeclarationString}' variable declaration's '${variableString}' variable...`);
 
     const variableIdentifier = this.variable.getIdentifier(),
-          variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentifier);
+          declaredVariablePresent = context.isDeclaredVariablePresentByVariableIdentifier(variableIdentifier);
 
-    if (variablePresent) {
-      context.debug(`The '${variableString}' variable is already present.`);
+    if (declaredVariablePresent) {
+      context.debug(`The '${variableString}' declared variable is already present.`);
     } else {
       variableVerifies = true;
     }

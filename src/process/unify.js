@@ -126,14 +126,13 @@ class MetaLevelPass extends ZipPassBase {
         let success = false;
 
         const termNode = specificTermNode, ///
-              variableNode = generalTermVariableNode, ///
-              variableIdentifier = variableNode.getVariableIdentifier();
+              variableNode = generalTermVariableNode; ///
 
         let context;
 
         context = generalContext; ///
 
-        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
+        const variable = context.findVariableByVariableNode(variableNode);
 
         context = specificContext;  ///
 
@@ -409,14 +408,13 @@ class SubstitutionPass extends ZipPass {
         let success = false;
 
         const termNode = specificTermNode, ///
-              variableNode = generalTermVariableNode, ///
-              variableIdentifier = variableNode.getVariableIdentifier();
+              variableNode = generalTermVariableNode; ///
 
         let context;
 
         context = generalContext; ///
 
-        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
+        const variable = context.findVariableByVariableNode(variableNode);
 
         context = specificContext;  ///
 
@@ -442,14 +440,13 @@ class IntrinsicLevelPass extends ZipPass {
         let success = false;
 
         const termNode = specificTermNode, ///
-              variableNode = generalTermVariableNode, ///
-              variableIdentifier = variableNode.getVariableIdentifier();
+              variableNode = generalTermVariableNode; ///
 
         let context;
 
         context = generalContext; ///
 
-        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
+        const variable = context.findVariableByVariableNode(variableNode);
 
         context = specificContext;  ///
 

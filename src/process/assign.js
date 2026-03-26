@@ -28,12 +28,12 @@ export function leftVariableAssignmentFromEquality(equality, context) {
     ///
   };
 
-  const leftTermNode = equality.getLeftTermNode(),
+  const type = equality.getType(),
+        leftTermNode = equality.getLeftTermNode(),
         singularVariableNode = leftTermNode.getSingularVariableNode();
 
   if (singularVariableNode !== null) {
-    const type = equality.getType(),
-          leftVariableNode = singularVariableNode;  ///
+    const leftVariableNode = singularVariableNode;  ///
 
     leftVariableAssignment = variableAssignmentFromVariableNodeAndType(leftVariableNode, type, context);
   }
@@ -46,12 +46,12 @@ export function rightVariableAssignmentFromEquality(equality, context) {
     ///
   };
 
-  const rightTermNode = equality.getRightTermNode(),
+  const type = equality.getType(),
+        rightTermNode = equality.getRightTermNode(),
         singularVariableNode = rightTermNode.getSingularVariableNode();
 
   if (singularVariableNode !== null) {
-    const type = equality.getType(),
-          rightVariableNode = singularVariableNode;  ///
+    const rightVariableNode = singularVariableNode;  ///
 
     rightVariableAssignment = variableAssignmentFromVariableNodeAndType(rightVariableNode, type, context);
   }

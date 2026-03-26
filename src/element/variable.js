@@ -77,12 +77,11 @@ export default define(class Variable extends Element {
 
     let validates = false;
 
-    const variableIdentifier = this.identifier;
+    const variableIdentifier = this.identifier, ///
+          declaredVariable = context.findDeclaredVariableByVariableIdentifier(variableIdentifier);
 
-    variable = context.findVariableByVariableIdentifier(variableIdentifier);
-
-    if (variable !== null) {
-      const type = variable.getType(),
+    if (declaredVariable !== null) {
+      const type = declaredVariable.getType(),
             typeString = type.getString(),
             variableString = this.getString();  ///
 
@@ -138,9 +137,9 @@ export default define(class Variable extends Element {
 
       context = generalContext;  ///
 
-      const variableIdentifier = variable.getIdentifier();
+      const variableNode = variable.getIdentifier();
 
-      variable = context.findVariableByVariableIdentifier(variableIdentifier);
+      variable = context.findVariableByVariableNode(variableNode);
 
       context = specificContext;  ///
 
