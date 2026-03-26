@@ -365,10 +365,6 @@ export default class EphemeralContext extends Context {
     if (referenceB !== null) {
       context.trace(`The '${referenceString}' reference has already been added to the ephemeral context.`);
     } else {
-      const context = reference.getContext();
-
-      context.commit(this);
-
       this.references.push(reference);
     }
 
@@ -447,10 +443,6 @@ export default class EphemeralContext extends Context {
     if (substitutionB !== null) {
       context.trace(`The '${substitutionString}' substitution has already been added to the ephemeral context.`);
     } else {
-      const context = substitution.getContext();
-
-      context.commit(this);
-
       this.substitutions.push(substitution);
     }
 
@@ -730,38 +722,10 @@ export default class EphemeralContext extends Context {
     return substitutionPresent;
   }
 
-  commit(elementOrContext) {
-    const elementOrContextContext = (elementOrContext instanceof Context);
+  commit(element) {
+    const context = this; ///
 
-    if (elementOrContextContext) {
-      const context = elementOrContext, ///
-            terms = this.getTerms(),
-            frames = this.getFrames(),
-            equalities = this.getEqualities(),
-            judgements = this.getJudgements(),
-            assertions = this.getAssertions(),
-            statements = this.getStatements(),
-            references = this.getReferences(),
-            assumptions = this.getAssumptions(),
-            metavariables = this.getMetavariables(),
-            substitutions = this.getSubstitutions();
-
-      context.addTerms(terms);
-      context.addFrames(frames);
-      context.addEqualities(equalities);
-      context.addJudgements(judgements);
-      context.addAssertions(assertions);
-      context.addStatements(statements);
-      context.addReferences(references);
-      context.addAssumptions(assumptions);
-      context.addMetavariables(metavariables);
-      context.addSubstitutions(substitutions);
-    } else {
-      const context = this, ///
-            element = elementOrContext; ///
-
-      element.setContext(context);
-    }
+    element.setContext(context);
   }
 
   initialise(json) {

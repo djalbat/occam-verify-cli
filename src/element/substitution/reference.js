@@ -108,10 +108,11 @@ export default define(class ReferenceSubstitution extends Substitution {
 
       join((context) => {
         attempt((context) => {
-          const targetReferenceValidates = this.validateTargetReference(context);
+          const specificContext = context,  ///
+                targetReferenceValidates = this.validateTargetReference(generalContext, specificContext);
 
           if (targetReferenceValidates) {
-            const replacementReferenceValidates = this.validateReplacementReference(context);
+            const replacementReferenceValidates = this.validateReplacementReference(generalContext, specificContext);
 
             if (replacementReferenceValidates) {
               validates = true;
@@ -122,7 +123,7 @@ export default define(class ReferenceSubstitution extends Substitution {
             context.commit(this);
           }
         }, context);
-      }, generalContext, specificContext, context);
+      }, specificContext, context);
     }
 
     if (validates) {
@@ -138,10 +139,11 @@ export default define(class ReferenceSubstitution extends Substitution {
     return referenceSubstitution;
   }
 
-  validateTargetReference(context) {
+  validateTargetReference(generalContext, specificContext) {
     let targetReferenceValidates = false;
 
-    const targetReferenceString = this.targetReference.getString(),
+    const context = generalContext, ///
+          targetReferenceString = this.targetReference.getString(),
           referenceSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${targetReferenceString}' target reference...`);
@@ -159,10 +161,11 @@ export default define(class ReferenceSubstitution extends Substitution {
     return targetReferenceValidates;
   }
 
-  validateReplacementReference(context) {
+  validateReplacementReference(generalContext, specificContext) {
     let replacementReferenceValidates = false;
 
-    const replacementReferenceString = this.replacementReference.getString(),
+    const context = specificContext,  ///
+          replacementReferenceString = this.replacementReference.getString(),
           referenceSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's '${replacementReferenceString}' replacement reference...`);
