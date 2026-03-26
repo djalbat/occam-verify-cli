@@ -121,6 +121,12 @@ export function unserialise(innerFunction, json, context) {
   return innerFunction(json, context);
 }
 
+export async function asyncFurtle(procedure, terms, context) {
+  context = procedure.getContext();
+
+  return await procedure.call(terms, context);
+}
+
 export async function asyncRestrict(innerFunction, metaLevelAssumptions, context) {
   if (context === undefined) {
     context = metaLevelAssumptions;  ///
