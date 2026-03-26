@@ -8,7 +8,7 @@ import { mergeEquivalences, findEquivalenceByTerm, equivalencesFromEquality, sep
 
 const { last, filter } = arrayUtilities;
 
-class ProofContext extends Context {
+class BoundedContext extends Context {
   constructor(context, assignments, equivalences, declaredVariables, declaredJudgements, metaLevelAssumptions, subproofOrProofAssertions) {
     super(context);
 
@@ -341,10 +341,10 @@ class ProofContext extends Context {
           declaredVariables = [],
           declaredJudgements = [],
           subproofOrProofAssertions = [],
-          proofContext = new ProofContext(context, assignments, equivalences, declaredVariables, declaredJudgements, metaLevelAssumptions, subproofOrProofAssertions);
+          boundedContext = new BoundedContext(context, assignments, equivalences, declaredVariables, declaredJudgements, metaLevelAssumptions, subproofOrProofAssertions);
 
-    return proofContext;
+    return boundedContext;
   }
 }
 
-export default ProofContext;
+export default BoundedContext;

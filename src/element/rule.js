@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 import { Element, asynchronousUtilities } from "occam-languages";
 
 import { define } from "../elements";
-import { asyncRestrict } from "../utilities/context";
+import { enclose } from "../utilities/context";
 import { labelsFromJSON, premisesFromJSON, conclusionFromJSON, labelsToLabelsJSON, premisesToPremisesJSON, conclusionToConclusionJSON } from "../utilities/json";
 
 const { reverse, extract } = arrayUtilities,
@@ -88,7 +88,7 @@ export default define(class Rule extends Element {
 
     context.trace(`Verifying the '${ruleString}' rule...`);
 
-    await asyncRestrict(async (context) => {
+    await enclose(async (context) => {
       const labelsVerify = this.verifyLabels();
 
       if (labelsVerify) {

@@ -7,7 +7,7 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { unifyStatements } from "../../utilities/unification";
-import { derive, attempt, asyncReconcile } from "../../utilities/context";
+import { derive, attempt, reconcile } from "../../utilities/context";
 
 const { asyncSome } = asynchronousUtilities;
 
@@ -214,7 +214,7 @@ export default define(class Step extends ProofAssertion {
     await asyncSome(unifyStatements, async (unifyStatement) => {
       let statementUnifies;
 
-      await asyncReconcile(async (context) => {
+      await reconcile(async (context) => {
         statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
       }, context);
 

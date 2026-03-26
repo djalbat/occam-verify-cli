@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 import { termsUtilities } from "occam-furtle";
 
 import { define } from "../elements";
-import { instantiate, asyncFurtle } from "../utilities/context";
+import { instantiate, evaluate } from "../utilities/context";
 import { instantiateProcedureCall } from "../process/instantiate";
 import { parametersFromProcedureCallNode, procedureReferenceFromProcedureCallNode } from "../utilities/element";
 
@@ -88,7 +88,7 @@ export default define(class ProcedureCall extends Element {
     try {
       const primitives = this.findPrimitives(context),
             terms = termsFromPrimitives(primitives),
-            term = await asyncFurtle(procedure, terms, context),
+            term = await evaluate(procedure, terms),
             boolean = term.isBoolean();
 
       if (!boolean) {

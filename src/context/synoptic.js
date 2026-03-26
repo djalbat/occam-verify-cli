@@ -6,7 +6,7 @@ import Context from "../context";
 
 const { push, last } = arrayUtilities;
 
-export default class SyntheticContext extends Context {
+export default class SynopticContext extends Context {
   constructor(context, contexts) {
     super(context);
 
@@ -283,8 +283,8 @@ export default class SyntheticContext extends Context {
   static fromContexts(...contexts) {
     const lastContext = last(contexts),
           context = lastContext,  ///
-          syntheticContext = new SyntheticContext(context, contexts);
+          synopticContext = new SynopticContext(context, contexts);
 
-    return syntheticContext;
+    return synopticContext;
   }
 }

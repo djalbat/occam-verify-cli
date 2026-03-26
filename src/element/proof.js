@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { asyncRestrict } from "../utilities/context";
+import { enclose } from "../utilities/context";
 
 export default define(class Proof extends Element {
   constructor(context, string, node, derivation) {
@@ -36,7 +36,7 @@ export default define(class Proof extends Element {
   async verify(statement, context) {
     let verifies = false;
 
-    await asyncRestrict(async (context) => {
+    await enclose(async (context) => {
       const derivationVerifies = await this.derivation.verify(context);
 
       if (derivationVerifies) {

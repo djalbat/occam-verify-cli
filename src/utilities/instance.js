@@ -1,6 +1,6 @@
 "use strict";
 
-import { nominally } from "../utilities/context";
+import { ground } from "../utilities/context";
 import { BASE_TYPE_SYMBOL } from "../constants";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { instantiateCombinator, instantiateConstructor } from "../process/instantiate";
@@ -11,7 +11,7 @@ let bracketedCombinator = null,
 
 export function bracketedCombinatorFromNothing() {
   if (bracketedCombinator === null) {
-    bracketedCombinator = nominally((context) => {
+    bracketedCombinator = ground((context) => {
       const bracketedCombinatorString = `(${STATEMENT_META_TYPE_NAME})`,
             string = bracketedCombinatorString, ///
             combinatorNode = instantiateCombinator(string, context),
@@ -27,7 +27,7 @@ export function bracketedCombinatorFromNothing() {
 
 export function bracketedConstructorFromNothing() {
   if (bracketedConstructor === null) {
-    bracketedConstructor = nominally((context) => {
+    bracketedConstructor = ground((context) => {
       const bracketedConstructorString = `(${BASE_TYPE_SYMBOL})`,
             string = bracketedConstructorString,  ///
             constructorNode = instantiateConstructor(string, context),

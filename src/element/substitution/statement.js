@@ -171,15 +171,17 @@ export default define(class StatementSubstitution extends Substitution {
 
       context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${substitutionString}' substitution...`);
 
-      const generalContext = context, ///
-            specificContext = context,  ///
-            substitution = this.substitution.validate(generalContext, specificContext);
+      descend((context) => {
+        const generalContext = context, ///
+              specificContext = context,  ///
+              substitution = this.substitution.validate(generalContext, specificContext);
 
-      if (substitution !== null) {
-        this.substitution = substitution;
+        if (substitution !== null) {
+          this.substitution = substitution;
 
-        substitutionValidates = true;
-      }
+          substitutionValidates = true;
+        }
+      }, context);
 
       if (substitutionValidates) {
         context.debug(`...validatewd the '${statementSubstitutionString}' statement substitution's '${substitutionString}' substitution.`);
