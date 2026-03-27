@@ -45,6 +45,8 @@ export default define(class ReferenceSubstitution extends Substitution {
     return replacementNode;
   }
 
+  getMetavariableNode() { return this.targetReference.getMetavariableNode(); }
+
   isTrivial() {
     const targetReferenceEqualToReplacementReference = this.targetReference.isEqualTo(this.replacementReference),
           trivial = targetReferenceEqualToReplacementReference; ///

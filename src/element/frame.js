@@ -39,7 +39,7 @@ export default define(class Frame extends Element {
     return metavariableNode;
   }
 
-  getMetavarialbeName() {
+  getMetavariableName() {
     let metavariableName = null;
 
     const singular = this.isSingular();
@@ -92,17 +92,15 @@ export default define(class Frame extends Element {
     const singular = this.isSingular();
 
     if (singular) {
-      debugger
+      const parameterName = parameter.getName();
 
-      // const parameterName = parameter.getName();
-      //
-      // if (parameterName !== null) {
-      //   const metavariableName = this.getMetavariableName();
-      //
-      //   if (parameterName === metavariableName) {
-      //     comparesToParamter = true;
-      //   }
-      // }
+      if (parameterName !== null) {
+        const metavariableName = this.getMetavariableName();
+
+        if (parameterName === metavariableName) {
+          comparesToParamter = true;
+        }
+      }
     }
 
     return comparesToParamter;

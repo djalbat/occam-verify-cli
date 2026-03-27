@@ -57,6 +57,8 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementNode;
   }
 
+  getMetavariableNode() { return this.targetStatement.getMetavariableNode(); }
+
   isSimple() {
     const simple = (this.substitution === null);
 

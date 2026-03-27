@@ -387,7 +387,7 @@ export default define(class Metavariable extends Element {
     if (statementMetavariableUnifies) {
       statementUnifies = true;
     } else {
-      const metavariableNode = metavariable.getName(),
+      const metavariableNode = metavariable.getNode(),
             substitutionPresent = (substitution !== null) ?
                                     context.isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
                                       context.isSubstitutionPresentByMetavariableNode(metavariableNode);

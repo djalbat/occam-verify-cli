@@ -24,37 +24,17 @@ export function judgementAssignmentFromJudgement(judgement, context) {
 }
 
 export function leftVariableAssignmentFromEquality(equality, context) {
-  let leftVariableAssignment = (contxt) => {
-    ///
-  };
-
   const type = equality.getType(),
-        leftTermNode = equality.getLeftTermNode(),
-        singularVariableNode = leftTermNode.getSingularVariableNode();
-
-  if (singularVariableNode !== null) {
-    const leftVariableNode = singularVariableNode;  ///
-
-    leftVariableAssignment = variableAssignmentFromVariableNodeAndType(leftVariableNode, type, context);
-  }
+        leftTerm = equality.getLeftTerm(),
+        leftVariableAssignment = variableAssignmentFromTermAndType(leftTerm, type, context);
 
   return leftVariableAssignment;
 }
 
 export function rightVariableAssignmentFromEquality(equality, context) {
-  let rightVariableAssignment = (context) => {
-    ///
-  };
-
   const type = equality.getType(),
-        rightTermNode = equality.getRightTermNode(),
-        singularVariableNode = rightTermNode.getSingularVariableNode();
-
-  if (singularVariableNode !== null) {
-    const rightVariableNode = singularVariableNode;  ///
-
-    rightVariableAssignment = variableAssignmentFromVariableNodeAndType(rightVariableNode, type, context);
-  }
+        rightTerm = equality.getRightTerm(),
+        rightVariableAssignment = variableAssignmentFromTermAndType(rightTerm, type, context);
 
   return rightVariableAssignment;
 }
@@ -71,7 +51,7 @@ export function variableAssignmentFromTypeAssertion(typeAssertion, context) {
     const type = typeAssertion.getType(),
           variableNode = term.getVariableNode();
 
-    variableAssignment = variableAssignmentFromVariableNodeAndType(variableNode, type, context);
+    variableAssignment = variableAssignmentFromTermAndType(variableNode, type, context);
   }
 
   return variableAssignment;
@@ -99,26 +79,40 @@ export function variableAssignmentFromPrepertyAssertion(propertyAssertion, conte
 
   }
 
-function variableAssignmentFromVariableNodeAndType(variableNode, type, context) {
-  const variable = variableFromVariableNode(variableNode, context);
-
-  variable.setType(type);
-
-  const variableAssignment = (context) => {
-    const declaredVariable = variable;  ///
-
-    context.addDeclaredVariable(declaredVariable);
-
-    const declaredVariableTypeString = declaredVariable.getTypeString(),
-          declaredVariableString = declaredVariable.getString(),
-          assigned = true;  ///
-
-    assigned ?
-      context.trace(`Assigned the '${declaredVariableString}' declared variable with type '${declaredVariableTypeString}'.`) :
-        context.debug(`Unable to assign the '${declaredVariableString}' declared variable with type '${declaredVariableTypeString}'.`);
-
-    return assigned;
+function variableAssignmentFromTermAndType(term, type, context) {
+  let variableAssignment = (context) => {
+    ///
   };
+
+  const termSingular = term.isSingular();
+
+  if (termSingular) {
+    const termType = term.getType(),
+          termTypeEqualToType = termType.isEqualTo(type);
+
+    if (!termTypeEqualToType) {
+      const variableNode = term.getVariableNode(),
+            variable = variableFromVariableNode(variableNode, context);
+
+      variable.setType(type);
+
+      variableAssignment = (context) => {
+        const declaredVariable = variable;  ///
+
+        context.addDeclaredVariable(declaredVariable);
+
+        const declaredVariableTypeString = declaredVariable.getTypeString(),
+              declaredVariableString = declaredVariable.getString(),
+              assigned = true;  ///
+
+        assigned ?
+          context.trace(`Assigned the '${declaredVariableString}' declared variable with type '${declaredVariableTypeString}'.`) :
+             context.debug(`Unable to assign the '${declaredVariableString}' declared variable with type '${declaredVariableTypeString}'.`);
+
+        return assigned;
+      };
+    }
+  }
 
   return variableAssignment;
 }

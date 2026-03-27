@@ -87,12 +87,6 @@ export default class Substitution extends Element {
     return substitutionNodeMatches;
   }
 
-  compareParameter(parameter) {
-    const comparesToParameter = false;
-
-    return comparesToParameter;
-  }
-
   findValidSubstitution(context) {
     const substitutionNode = this.getSubstitutionNode(),
           substitution = context.findSubstitutionBySubstitutionNode(substitutionNode),

@@ -31,6 +31,8 @@ export default define(class FrameSubstitution extends Substitution {
     return frameSubstitutionNode;
   }
 
+  getMetavariableNode() { return this.targetFrame.getMetavariableNode(); }
+
   getTargetNode() {
     const targetFrameNode = this.targetFrame.getNode(),
           tergetNode = targetFrameNode; ///

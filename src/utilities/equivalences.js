@@ -2,6 +2,8 @@
 
 import { arrayUtilities } from "necessary";
 
+import elements from "../elements";
+
 import { variablesFromTerm } from "../utilities/equivalence";
 
 const { push, separate } = arrayUtilities;
@@ -28,6 +30,16 @@ export function findEquivalenceByTerm(equivalences, term) {
   }) || null;
 
   return equivalence;
+}
+
+export function equivalencesFromEquality(equality, context) {
+  const { Equivalence } = elements,
+        eaulivalence = Equivalence.fromEquality(equality, context),
+        equivalences = [
+          eaulivalence
+        ];
+
+  return equivalences;
 }
 
 export function findEquivalenceByTermNodes(equivalences, termNodes) {
@@ -114,6 +126,23 @@ function mergeEquivalence(equivalencesA, equivalenceB, context) {
   return equivalencesA;
 }
 
+function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, context) {
+  groundedTerms.forEach((groundedTerm) => {
+    const term = groundedTerm,  ///
+          variables = variablesFromTerm(term, context);
+
+    variables.forEach((variable) => {
+      const definedVariablesIncludesTermVariable = definedVariables.includes(variable);
+
+      if (!definedVariablesIncludesTermVariable) {
+        const definedVariable = variable;  ///
+
+        definedVariables.push(definedVariable);
+      }
+    });
+  });
+}
+
 function separateInitiallyGroundedEquivalences(equivalences, remainingEquivalences, initiallyGroundedEquivalences, context) {
   separate(equivalences, remainingEquivalences, initiallyGroundedEquivalences, (equivalence) => {
     const equivalenceInitiallyGrounded = equivalence.isInitiallyGrounded(context);
@@ -131,23 +160,6 @@ function separateImplicitlyGroundedEquivalences(equivalences, remainingEquivalen
     if (!equivalenceImplicitlyGrounded) {
       return true;
     }
-  });
-}
-
-function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, context) {
-  groundedTerms.forEach((groundedTerm) => {
-    const term = groundedTerm,  ///
-          variables = variablesFromTerm(term, context);
-
-    variables.forEach((variable) => {
-      const definedVariablesIncludesTermVariable = definedVariables.includes(variable);
-
-      if (!definedVariablesIncludesTermVariable) {
-        const definedVariable = variable;  ///
-
-        definedVariables.push(definedVariable);
-      }
-    });
   });
 }
 

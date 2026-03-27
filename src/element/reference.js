@@ -59,16 +59,18 @@ export default define(class Reference extends Element {
   compareParameter(parameter) {
     let comparesToParamter = false;
 
-    const parameterName = parameter.getName();
+    const singular = this.isSingular();
 
-    if (parameterName !== null) {
-      debugger
+    if (singular) {
+      const parameterName = parameter.getName();
 
-      // const metavariableName = this.getMetavariableName();
-      //
-      // if (parameterName === metavariableName) {
-      //   comparesToParamter = true;
-      // }
+      if (parameterName !== null) {
+        const metavariableName = this.getMetavariableName();
+
+        if (parameterName === metavariableName) {
+          comparesToParamter = true;
+        }
+      }
     }
 
     return comparesToParamter;

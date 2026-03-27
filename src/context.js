@@ -622,10 +622,22 @@ export default class Context extends ContextBase {
     context.addSubstitution(substitution);
   }
 
+  addDeclaredVariable(declaredVariable) {
+    const context = this.getContext();
+
+    context.addDeclaredVariable(declaredVariable);
+  }
+
   addMetaLevelAssumption(metaLevelAssumption) {
     const context = this.getContext();
 
     context.addMetaLevelAssumption(metaLevelAssumption);
+  }
+
+  addDeclaredMetavariable(declaredMetavariable) {
+    const context = this.getContext();
+
+    context.addDeclaredMetavariable(declaredMetavariable);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {

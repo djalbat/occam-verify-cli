@@ -30,6 +30,20 @@ export default define(class Statement extends Element {
     return frameSubstitutionNode;
   }
 
+  getMetavariableNode() {
+    let metavariableNode = null;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const statementNode = this.getStatementNode();
+
+      metavariableNode = statementNode.getMetavariableNode();
+    }
+
+    return metavariableNode;
+  }
+
   getMetavariableName() {
     let metavariableName = null;
 
@@ -96,17 +110,15 @@ export default define(class Statement extends Element {
     const singular = this.isSingular();
 
     if (singular) {
-      debugger
+      const parameterName = parameter.getName();
 
-      // const parameterName = parameter.getName();
-      //
-      // if (parameterName !== null) {
-      //   const metavariableName = this.getMetavariableName();
-      //
-      //   if (parameterName === metavariableName) {
-      //     comparesToParamter = true;
-      //   }
-      // }
+      if (parameterName !== null) {
+        const metavariableName = this.getMetavariableName();
+
+        if (parameterName === metavariableName) {
+          comparesToParamter = true;
+        }
+      }
     }
 
     return comparesToParamter;
