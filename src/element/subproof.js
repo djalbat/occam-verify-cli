@@ -54,10 +54,10 @@ export default define(class Subproof extends Element {
     return proofAssertion;
   }
 
-  compareStatement(statement, context) {
-    const statementUnifies = false;
+  compareStep(step, context) {
+    const comparesToStep = false;
 
-    return statementUnifies;
+    return comparesToStep;
   }
 
   async verify(context) {

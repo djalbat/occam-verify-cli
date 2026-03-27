@@ -160,8 +160,8 @@ export function termSubstitutionStringFromTermAndVariable(term, variable) {
 }
 
 export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conclusion) {
-  const premisesString = premisesStringFromPremises(premises),
-        conclusionString = conclusion.getString(),
+  const conclusionString = conclusion.getString(),
+        premisesString = premisesStringFromPremises(premises),
         labelsString = labelsStringFromLabels(labels),
         ruleString = (premisesString !== null) ?
                        `${labelsString} :: [${premisesString}]...${conclusionString}` :

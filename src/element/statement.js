@@ -1,15 +1,12 @@
 "use strict";
 
 import { Element } from "occam-languages";
-import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
 import { join, reconcile, instantiate } from "../utilities/context";
-
-const { backwardsSome } = arrayUtilities;
 
 export default define(class Statement extends Element {
   getStatementNode() {
@@ -121,21 +118,6 @@ export default define(class Statement extends Element {
     }
 
     return comparesToMetavariableName;
-  }
-
-  compareSubproofOrProofAssertions(subproofOrProofAssertions, context) {
-    let comparesToSubproofOrProofAssertions;
-
-    comparesToSubproofOrProofAssertions = backwardsSome(subproofOrProofAssertions, (subproofOrProofAssertion) => {
-      const statement = this, ///
-            subproofOrProofAssertionComparesToStatement = subproofOrProofAssertion.compareStatement(statement, context);
-
-      if (subproofOrProofAssertionComparesToStatement) {
-        return true;
-      }
-    });
-
-    return comparesToSubproofOrProofAssertions;
   }
 
   findValidStatment(context) {

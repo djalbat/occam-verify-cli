@@ -282,52 +282,52 @@ export default class TopLevelAssertion extends Element {
     return suppositionsVerify;
   }
 
-  async unifyStatementWithDeduction(statement, context) {
-    let statementUnifiesWithDeduction = false;
+  async unifyStepWithDeduction(step, context) {
+    let stepUnifiesWithDeduction = false;
 
     await this.break(context);
 
-    const statementString = statement.getString(),
+    const stepString = step.getString(),
           deductionString = this.deduction.getString(),
           topLevelAssertionString = this.getString(); ///
 
-    context.trace(`Unifying the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction...`);
+    context.trace(`Unifying the '${stepString}' step with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction...`);
 
-    const statementUnifies = await this.deduction.unifyStatement(statement, context);
+    const stepUnifies = await this.deduction.unifyStep(step, context);
 
-    if (statementUnifies) {
-      statementUnifiesWithDeduction = true;
+    if (stepUnifies) {
+      stepUnifiesWithDeduction = true;
     }
 
-    if (statementUnifiesWithDeduction) {
-      context.debug(`...unified the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction.`);
+    if (stepUnifiesWithDeduction) {
+      context.debug(`...unified the '${stepString}' step with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction.`);
     }
 
-    return statementUnifiesWithDeduction;
+    return stepUnifiesWithDeduction;
   }
 
-  async unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context) {
-    let statementAndSubproofOrProofAssertionsUnify = false;
+  async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
+    let stepAndSubproofOrProofAssertionsUnify = false;
 
     const correlatesToHypotheses = this.correlateHypotheses(context);
 
     if (correlatesToHypotheses) {
-      const statementUnifiesWithDeduction = await this.unifyStatementWithDeduction(statement, context);
+      const stepUnifiesWithDeduction = await this.unifyStepWithDeduction(step, context);
 
-      if (statementUnifiesWithDeduction) {
+      if (stepUnifiesWithDeduction) {
         const subproofOrProofAssertionsUnifiesWithSuppositions = await this.unifySubproofOrProofAssertionsWithSuppositions(subproofOrProofAssertions, context);
 
         if (subproofOrProofAssertionsUnifiesWithSuppositions) {
           const substitutionsResolved = context.areSubstitutionsResolved();
 
           if (substitutionsResolved) {
-            statementAndSubproofOrProofAssertionsUnify = true;
+            stepAndSubproofOrProofAssertionsUnify = true;
           }
         }
       }
     }
 
-    return statementAndSubproofOrProofAssertionsUnify;
+    return stepAndSubproofOrProofAssertionsUnify;
   }
 
   async unifySubproofOrProofAssertionsWithSupposition(subproofOrProofAssertions, supposition, context) {

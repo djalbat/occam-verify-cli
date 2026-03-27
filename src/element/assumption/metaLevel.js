@@ -233,12 +233,14 @@ export default define(class MetaLevelAssumption extends Element {
     return metaLevelAssumption;
   }
 
-  static fromStatementAndReference(statement, reference, context) {
+  static fromStep(step, context) {
     let metaLevelAssumption;
 
     ablate((context) => {
       instantiate((context) => {
-        const metaLevelAssumptionString = metaLevelAssumptionStringFromStatementAndReference(statement, reference),
+        const statement = step.getStatement(),
+              reference = step.getReference(),
+              metaLevelAssumptionString = metaLevelAssumptionStringFromStatementAndReference(statement, reference),
               string = metaLevelAssumptionString,  ///
               metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context);
 

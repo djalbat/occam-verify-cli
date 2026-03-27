@@ -113,13 +113,13 @@ export default define(class SatisfiesAssertion extends Assertion {
     return referenceVerifies;
   }
 
-  unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
-    let statementUnifies = false;
+  unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
+    let stepAndSubproofOrProofAssertionsUnify = false;
 
-    const statementString = statement.getString(),
+    const steptString = step.getString(),
           satisfiesAssertionString = this.getString(); ///
 
-    context.trace(`Unifying the '${statementString}' statement with the '${satisfiesAssertionString}' satisfies assertion...`);
+    context.trace(`Unifying the '${steptString}' step with the '${satisfiesAssertionString}' satisfies assertion...`);
 
     this.signature.validate(context);
 
@@ -132,9 +132,9 @@ export default define(class SatisfiesAssertion extends Assertion {
       if (axiomComparesToSignature) {
         const substitutionsB = substitutions; ///
 
-        statementUnifies = axiom.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
+        stepAndSubproofOrProofAssertionsUnify = unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
 
-        if (statementUnifies) {
+        if (stepAndSubproofOrProofAssertionsUnify) {
           const substitutionsA = substitutions, ///
                 substitutionsCorrelate = substitutionsA.correlateSubstitutions(substitutionsB);
 
@@ -144,17 +144,17 @@ export default define(class SatisfiesAssertion extends Assertion {
 
             context.trace(`THe signature's ${substitutionsBString} substitutions do not correlate with the unification's ${substitutionsAString} substitutions.`);
 
-            statementUnifies = false;
+            stepAndSubproofOrProofAssertionsUnify = false;
           }
         }
       }
     }
 
-    if (statementUnifies) {
-      context.debug(`...unified the '${statementString}' statement with the '${satisfiesAssertionString}' satisfies assertion.`);
+    if (stepAndSubproofOrProofAssertionsUnify) {
+      context.debug(`...unified the '${steptString}' step with the '${satisfiesAssertionString}' satisfies assertion.`);
     }
 
-    return statementUnifies;
+    return stepAndSubproofOrProofAssertionsUnify;
   }
 
   static name = "SatisfiesAssertion";
@@ -176,6 +176,13 @@ export default define(class SatisfiesAssertion extends Assertion {
         satisfiesAssertion = new SatisfiesAssertion(context, string, node, signature, reference);
       }, context);
     }
+
+    return satisfiesAssertion;
+  }
+
+  static fromStep(step, context) {
+    const statementNode = step.getStatementNode(),
+      satisfiesAssertion = satisfiesAssertionFromStatementNode(statementNode, context);
 
     return satisfiesAssertion;
   }

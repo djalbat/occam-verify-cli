@@ -1,15 +1,17 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
 import { asynchronousUtilities } from "occam-languages";
 
 import elements from "../../elements";
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
-import { unifyStatements } from "../../utilities/unification";
+import { unifySteps } from "../../utilities/unification";
 import { derive, attempt, reconcile } from "../../utilities/context";
 
-const { asyncSome } = asynchronousUtilities;
+const { asyncSome } = asynchronousUtilities,
+      { backwardsSome } = arrayUtilities;
 
 export default define(class Step extends ProofAssertion {
   constructor(context, string, node, statement, reference, satisfiesAssertion) {
@@ -34,6 +36,13 @@ export default define(class Step extends ProofAssertion {
     return stepNode;
   }
 
+  getStatementNode() {
+    const statement = this.getStatement(),
+          statementNode = statement.getNode();
+
+    return statementNode;
+  }
+
   isSatisfied() {
     const satisfied = (this.satisfiesAssertion !== null);
 
@@ -44,6 +53,13 @@ export default define(class Step extends ProofAssertion {
     const qualified = (this.reference !== null);
 
     return qualified;
+  }
+
+  isUnqualified() {
+    const qualified = this.isQualified(),
+          unqualified = !qualified;
+
+    return unqualified;
   }
 
   compareTermAndPropertyRelation(term, propertyRelation, context) {
@@ -58,6 +74,22 @@ export default define(class Step extends ProofAssertion {
     }
 
     return comparesToTermAndPropertyRelation;
+  }
+
+  compareSubproofOrProofAssertions(subproofOrProofAssertions, context) {
+    let comparesToSubproofOrProofAssertions;
+
+    const step = this; ///
+
+    comparesToSubproofOrProofAssertions = backwardsSome(subproofOrProofAssertions, (subproofOrProofAssertion) => {
+      const subproofOrProofAssertionComparesToStatement = subproofOrProofAssertion.compareStep(step, context);
+
+      if (subproofOrProofAssertionComparesToStatement) {
+        return true;
+      }
+    });
+
+    return comparesToSubproofOrProofAssertions;
   }
 
   async verify(context) {
@@ -207,15 +239,13 @@ export default define(class Step extends ProofAssertion {
 
     context.trace(`Unifying the '${stepString}' step...`);
 
-    const statement = this.getStatement(),
-          reference = this.getReference(),
-          satisfiesAssertion = this.getSatisfiesAssertion();
+    const step = this;  ///
 
-    await asyncSome(unifyStatements, async (unifyStatement) => {
+    await asyncSome(unifySteps, async (unifyStep) => {
       let statementUnifies;
 
       await reconcile(async (context) => {
-        statementUnifies = await unifyStatement(statement, reference, satisfiesAssertion, context);
+        statementUnifies = await unifyStep(step, context);
       }, context);
 
       if (statementUnifies) {

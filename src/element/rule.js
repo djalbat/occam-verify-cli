@@ -224,28 +224,48 @@ export default define(class Rule extends Element {
     return conclusionVerifies;
   }
 
-  async unifyStatementWithConclusion(statement, context) {
-    let statementUnifiesWithConclusion = false;
+  async unifyStepWithConclusion(step, context) {
+    let stepUnifiesWithConclusion = false;
 
     await this.break(context);
 
     const ruleString = this.getString(),
-          statementString = statement.getString(),
+          stepString = step.getString(),
           conclusionString = this.conclusion.getString();
 
-    context.trace(`Unifying the '${statementString}' statement with the '${ruleString}' rule's '${conclusionString}' conclusion...`);
+    context.trace(`Unifying the '${stepString}' step with the '${ruleString}' rule's '${conclusionString}' conclusion...`);
 
-    const statementUnifies = this.conclusion.unifyStatement(statement, context);
+    const stepUnifies = this.conclusion.unifyStep(step, context);
 
-    if (statementUnifies) {
-      statementUnifiesWithConclusion = true;
+    if (stepUnifies) {
+      stepUnifiesWithConclusion = true;
     }
+
+    if (stepUnifiesWithConclusion) {
+      context.debug(`...unified the '${stepString}' step with the '${ruleString}' rule's '${conclusionString}' conclusion.`);
+    }
+
+    return stepUnifiesWithConclusion;
+  }
+
+  async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
+    let stepAndSubproofOrProofAssertionsUnify = false;
+
+    const statementUnifiesWithConclusion = await this.unifyStepWithConclusion(step, context);
 
     if (statementUnifiesWithConclusion) {
-      context.debug(`...unified the '${statementString}' statement with the '${ruleString}' rule's '${conclusionString}' conclusion.`);
+      const subproofOrProofAssertionsUnifiesWithPremises = await this.unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context);
+
+      if (subproofOrProofAssertionsUnifiesWithPremises) {
+        const substitutionsResolved = context.areSubstitutionsResolved();
+
+        if (substitutionsResolved) {
+          stepAndSubproofOrProofAssertionsUnify = true;
+        }
+      }
     }
 
-    return statementUnifiesWithConclusion;
+    return stepAndSubproofOrProofAssertionsUnify;
   }
 
   async unifySubproofOrProofAssertionsWithPremise(subproofOrProofAssertions, premise, context) {
@@ -302,26 +322,6 @@ export default define(class Rule extends Element {
     });
 
     return subproofOrProofAssertionsUnifiesWithPremises;
-  }
-
-  async unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context) {
-    let statementAndSubproofOrProofAssertionsUnify = false;
-
-    const statementUnifiesWithConclusion = await this.unifyStatementWithConclusion(statement, context);
-
-    if (statementUnifiesWithConclusion) {
-      const subproofOrProofAssertionsUnifiesWithPremises = await this.unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context);
-
-      if (subproofOrProofAssertionsUnifiesWithPremises) {
-        const substitutionsResolved = context.areSubstitutionsResolved();
-
-        if (substitutionsResolved) {
-          statementAndSubproofOrProofAssertionsUnify = true;
-        }
-      }
-    }
-
-    return statementAndSubproofOrProofAssertionsUnify;
   }
 
   toJSON() {

@@ -101,13 +101,13 @@ export default define(class Deduction extends Element {
     return statementValidates;
   }
 
-  unifyStatement(statement, context) {
-    let statementUnifies;
+  unifyStep(step, context) {
+    let stepUnifies = false;
 
-    const statementString = statement.getString(),
+    const stepString = step.getString(),
           deductionString = this.getString();  ///
 
-    context.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`);
+    context.trace(`Unifying the '${stepString}' step with the '${deductionString}' deduction...`);
 
     const specificContext = context;  ///
 
@@ -117,13 +117,18 @@ export default define(class Deduction extends Element {
 
     context = specificContext;  ///
 
-    statementUnifies = this.statement.unifyStatement(statement, generalContext, specificContext);
+    const statement = step.getStatement(),
+          statementUnifies = this.statement.unifyStatement(statement, generalContext, specificContext);
 
     if (statementUnifies) {
-      context.debug(`...unified the '${statementString}' statement with the '${deductionString}' deduction.`);
+      stepUnifies = true;
     }
 
-    return statementUnifies;
+    if (stepUnifies) {
+      context.debug(`...unified the '${stepString}' step with the '${deductionString}' deduction.`);
+    }
+
+    return stepUnifies;
   }
 
   unifyDeduction(deduction, substitutions, generalContext, specificContext) {

@@ -28,27 +28,28 @@ export default class ProofAssertion extends Element {
     return proofAssertion;
   }
 
-  compareStatement(statement, context) {
-    let comparesToStatement = false;
+  compareStep(step, context) {
+    let comparesToStep = false;
 
-    const statementString = statement.getString(),
+    const stepString = step.getString(),
           proofAssertionString = this.getString();  ///
 
-    context.trace(`Comparing the '${statementString}' statement to the '${proofAssertionString}' proof assertion...`);
+    context.trace(`Comparing the '${stepString}' step to the '${proofAssertionString}' proof assertion...`);
 
-    const leftStatement = statement,  ///
+    const statement = step.getStatement(),
+          leftStatement = statement,  ///
           rightStatement = this.statement,  ///
           statementsEquate = equateStatements(leftStatement, rightStatement, context);
 
     if (statementsEquate) {
-      comparesToStatement = true;
+      comparesToStep = true;
     }
 
-    if (comparesToStatement) {
-      context.debug(`...compared the '${statementString}' statement to the '${proofAssertionString}' proof assertion.`);
+    if (comparesToStep) {
+      context.debug(`...compared the '${stepString}' step to the '${proofAssertionString}' proof assertion.`);
     }
 
-    return comparesToStatement;
+    return comparesToStep;
   }
 
   unifyStatement(statement, generalContext, specificContext) {

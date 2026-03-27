@@ -8,51 +8,57 @@ import { descend } from "./context";
 
 const { backwardsSome } = arrayUtilities;
 
-async function unifyStatementWithRule(statement, reference, satisfiesAssertion, context) {
-  let statementUnifiesWithRule = false;
+async function unifyStepWithRule(step, context) {
+  let stepUnifiesWithRule = false;
 
-  if (reference !== null) {
-    const rule = context.findRuleByReference(reference);
+  const qualified = step.isQualified();
+
+  if (qualified) {
+    const reference = step.getReference(),
+          rule = context.findRuleByReference(reference);
 
     if (rule !== null) {
-      const ruleString = rule.getString(),
-            statementString = statement.getString();
+      const stepString = step.getString(),
+            ruleString = rule.getString();
 
-      context.trace(`Unifying the '${statementString}' statement with the '${ruleString}' rule...`);
+      context.trace(`Unifying the '${stepString}' step with the '${ruleString}' rule...`);
 
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
-            statementAndSubproofOrProofAssertionsUnify = await rule.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
+            stepAndSubproofOrProofAssertionsUnify = await rule.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
 
-      if (statementAndSubproofOrProofAssertionsUnify) {
-        statementUnifiesWithRule = true;
+      if (stepAndSubproofOrProofAssertionsUnify) {
+        stepUnifiesWithRule = true;
       }
 
-      if (statementUnifiesWithRule) {
-        context.debug(`...unified the '${statementString}' statement with the '${ruleString}' rule.`);
+      if (stepUnifiesWithRule) {
+        context.debug(`...unified the '${stepString}' step with the '${ruleString}' rule.`);
       }
     }
   }
 
-  return statementUnifiesWithRule;
+  return stepUnifiesWithRule;
 }
 
-async function unifyStatementWithReference(statement, reference, satisfiesAssertion, context) {
-  let statementUnifiesWithReference = false;
+async function unifyStepWithReference(step, context) {
+  let stepUnifiesWithReference = false;
 
-  if (reference !== null) {
-    const statementString = statement.getString(),
+  const qualified = step.isQualified();
+
+  if (qualified) {
+    const reference = step.getReference(),
+          stepString = step.getString(),
           referenceString = reference.getString();
 
-    context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
+    context.trace(`Unifying the '${stepString}' step with the '${referenceString}' reference...`);
 
     const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
     if (topLevelAssertion !== null) {
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
-            statementAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
+            stepAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
 
-      if (statementAndSubproofOrProofAssertionsUnify) {
-        statementUnifiesWithReference = true;
+      if (stepAndSubproofOrProofAssertionsUnify) {
+        stepUnifiesWithReference = true;
       }
     } else {
       const metaLevel = context.isMetaLevel();
@@ -60,43 +66,45 @@ async function unifyStatementWithReference(statement, reference, satisfiesAssert
       if (metaLevel) {
         descend((context) => {
           const { MetaLevelAssumption } = elements,
-                metaLevelAssumption = MetaLevelAssumption.fromStatementAndReference(statement, reference, context);
+                metaLevelAssumption = MetaLevelAssumption.fromStep(step, context);
 
           metaLevelAssumption.validate(context);
 
-          statementUnifiesWithReference = true;
+          stepUnifiesWithReference = true;
         }, context);
       }
     }
 
-    if (statementUnifiesWithReference) {
-      context.debug(`...unified the '${statementString}' statement with the '${referenceString}' reference.`);
+    if (stepUnifiesWithReference) {
+      context.debug(`...unified the '${stepString}' step with the '${referenceString}' reference.`);
     }
   }
 
-  return statementUnifiesWithReference;
+  return stepUnifiesWithReference;
 }
 
-async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfiesAssertion, context) {
-  let statementUnifiesAsSatisfiesAssertion = false;
+async function unifyStepAsSatisfiesAssertion(step, context) {
+  let stepUnifiesAsSatisfiesAssertion = false;
 
   const { SatisfiesAssertion } = elements;
 
-  satisfiesAssertion = SatisfiesAssertion.fromStatement(statement, context);
+  const satisfiesAssertion = SatisfiesAssertion.fromStep(step, context);
 
   if (satisfiesAssertion !== null) {
-    const statementString = statement.getString();
+    const stepString = step.getString();
 
-    context.trace(`Unifying the '${statementString}' statement as a satisfies assertion...`);
+    context.trace(`Unifying the '${stepString}' step as a satisfies assertion...`);
 
     descend((context) => {
       satisfiesAssertion.verifySignature(context);
     }, context);
 
-    if (reference === null) {
+    const unqualified = step.isUnqualified();
+
+    if (unqualified) {
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions();
 
-      statementUnifiesAsSatisfiesAssertion = backwardsSome(subproofOrProofAssertions, (stepsOrSubproof) => {
+      stepUnifiesAsSatisfiesAssertion = backwardsSome(subproofOrProofAssertions, (stepsOrSubproof) => {
         const stepOrSubProofUnifiesWIthSatisfiesAssertion = stepsOrSubproof.unifyWithSatisfiesAssertion(satisfiesAssertion, context);
 
         if (stepOrSubProofUnifiesWIthSatisfiesAssertion) {
@@ -104,11 +112,10 @@ async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfie
         }
       });
     } else {
-      const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+      const reference = satisfiesAssertion.getReference(),
+            topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
       if (topLevelAssertion !== null) {
-        reference = satisfiesAssertion.getReference();
-
         const axiom = context.findAxiomByReference(reference);
 
         if (axiom !== null) {
@@ -121,7 +128,7 @@ async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfie
               const substitutionsCorrelates = satisfiesAssertion.correlateSubstitutions(substitutions, context);
 
               if (substitutionsCorrelates) {
-                statementUnifiesAsSatisfiesAssertion = true;
+                stepUnifiesAsSatisfiesAssertion = true;
               }
             }
           } else {
@@ -133,124 +140,139 @@ async function unifyStatementAsSatisfiesAssertion(statement, reference, satisfie
       }
     }
 
-    if (statementUnifiesAsSatisfiesAssertion) {
-      context.debug(`...unified the '${statementString}' statement as a satisfies assertion.`);
+    if (stepUnifiesAsSatisfiesAssertion) {
+      context.debug(`...unified the '${stepString}' step as a satisfies assertion.`);
     }
   }
 
-  return statementUnifiesAsSatisfiesAssertion;
+  return stepUnifiesAsSatisfiesAssertion;
 }
 
-async function unifyStatementWithTopLevelAssertion(statement, reference, satisfiesAssertion, context) {
-  let statementUnifiesWithTopLevelAssertion = false;
+async function unifyStepWithTopLevelAssertion(step, context) {
+  let stepUnifiesWithTopLevelAssertion = false;
 
-  if (reference !== null) {
-    const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+  const qualified = step.isQualified();
+
+  if (qualified) {
+    const reference = step.getReference(),
+          topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
     if (topLevelAssertion !== null) {
-      const statementString = statement.getString(),
+      const stepString = step.getString(),
             topLevelAssertionString = reference.getString();
 
-      context.trace(`Unifying the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion...`);
+      context.trace(`Unifying the '${stepString}' step with the '${topLevelAssertionString}' top level assertion...`);
 
       const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
-            statementAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
+            stepAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
 
-      if (statementAndSubproofOrProofAssertionsUnify) {
-        statementUnifiesWithTopLevelAssertion = true;
+      if (stepAndSubproofOrProofAssertionsUnify) {
+        stepUnifiesWithTopLevelAssertion = true;
       }
 
-      if (statementUnifiesWithTopLevelAssertion) {
-        context.debug(`...unified the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion.`);
+      if (stepUnifiesWithTopLevelAssertion) {
+        context.debug(`...unified the '${stepString}' step with the '${topLevelAssertionString}' top level assertion.`);
       }
     }
   }
 
-  return statementUnifiesWithTopLevelAssertion;
+  return stepUnifiesWithTopLevelAssertion;
 }
 
-async function unifyStatementAsEquality(statement, reference, satisfiesAssertion, context) {
-  let statementUnifiesAEquality = false;
+async function unifyStepAsEquality(step, context) {
+  let stepUnifiesAEquality = false;
 
-  if (reference === null) {
+  const unqualified = step.isUnqualified();
+
+  if (unqualified) {
     const { Equality } = elements,
+          statement = step.getStatement(),
           equality = Equality.fromStatement(statement, context);
 
     if (equality !== null) {
-      const statementString = statement.getString();
+      const stepString = step.getString();
 
-      context.trace(`Unifying the '${statementString}' statement as an equality...`);
+      context.trace(`Unifying the '${stepString}' step as an equality...`);
 
       const equalityEqual = equality.isEqual(context);
 
       if (equalityEqual) {
-        statementUnifiesAEquality = true;
+        stepUnifiesAEquality = true;
       }
 
-      if (statementUnifiesAEquality) {
-        context.debug(`...unified the '${statementString}' statement as an equality.`);
+      if (stepUnifiesAEquality) {
+        context.debug(`...unified the '${stepString}' step as an equality.`);
       }
     }
   }
 
-  return statementUnifiesAEquality;
+  return stepUnifiesAEquality;
 }
 
-async function unifyStatementAsJudgement(statement, reference, satisfiesAssertion, context) {
-  let statementUnifiesAsJudgement = false;
+async function unifyStepAsJudgement(step, context) {
+  let stepUnifiesAsJudgement = false;
 
-  if (reference === null) {
+  const unqualified = step.isUnqualified();
+
+  if (unqualified) {
     const { Judgement } = elements,
+          statement = step.getStatement(),
           judgement = Judgement.fromStatement(statement, context);
 
     if (judgement !== null) {
-      const statementString = statement.getString();
+      const stepString = step.getString();
 
-      context.trace(`Unifying the '${statementString}' statement as a judgement...`);
+      context.trace(`Unifying the '${stepString}' step as a judgement...`);
 
-      statementUnifiesAsJudgement = true;
+      stepUnifiesAsJudgement = true;
 
-      if (statementUnifiesAsJudgement) {
-        context.debug(`...unified the '${statementString}' statement as a judgement.`);
+      if (stepUnifiesAsJudgement) {
+        context.debug(`...unified the '${stepString}' step as a judgement.`);
       }
     }
   }
 
-  return statementUnifiesAsJudgement;
+  return stepUnifiesAsJudgement;
 }
 
-async function unifyStatementAsTypeAssertion(statement, reference, satisfiesAssertion, context) {
-  let statementUnifiesAsTypeAssertion = false;
+async function unifyStepAsTypeAssertion(step, context) {
+  let stepUnifiesAsTypeAssertion = false;
 
-  if (reference === null) {
+  const unqualified = step.isUnqualified();
+
+  if (unqualified) {
     const { TypeAssertion } = elements,
+          statement = step.getStatement(),
           typeAssertion = TypeAssertion.fromStatement(statement, context);
 
     if (typeAssertion !== null) {
-      const statementString = statement.getString();
+      const stepString = step.getString();
 
-      context.trace(`Unifying the '${statementString}' statement as a type assertion...`);
+      context.trace(`Unifying the '${stepString}' step as a type assertion...`);
 
-      statementUnifiesAsTypeAssertion = true;
+      stepUnifiesAsTypeAssertion = true;
 
-      context.debug(`...unified the '${statementString}' statement as a type assertion.`);
+      context.debug(`...unified the '${stepString}' step as a type assertion.`);
     }
   }
 
-  return statementUnifiesAsTypeAssertion;
+  return stepUnifiesAsTypeAssertion;
 }
 
-async function unifyStatementAsPropertyAssertion(statement, reference, satisfiesAssertion, context) {
-  let statementUnifiesAsPropertyAssertion = false;
+async function unifyStepAsPropertyAssertion(step, context) {
+  let stepUnifiesAsPropertyAssertion = false;
 
-  if (reference === null) {
+  const unqualified = step.isUnqualified();
+
+  if (unqualified) {
     const { PropertyAssertion } = elements,
+          statement = step.getStatement(),
           propertyAssertion = PropertyAssertion.fromStatement(statement, context);
 
     if (propertyAssertion !== null) {
-      const statementString = statement.getString();
+      const stepString = step.getString();
 
-      context.trace(`Unifying the '${statementString}' statement as a property assertion...`);
+      context.trace(`Unifying the '${stepString}' step as a property assertion...`);
 
       const term = propertyAssertion.getTerm(),
             equivalence = context.findEquivalenceByTerm(term);
@@ -266,75 +288,79 @@ async function unifyStatementAsPropertyAssertion(statement, reference, satisfies
         });
 
         if (propertyAssertionMatches) {
-          statementUnifiesAsPropertyAssertion = true;
+          stepUnifiesAsPropertyAssertion = true;
         }
       }
 
-      if (statementUnifiesAsPropertyAssertion) {
-        context.debug(`...unified the '${statementString}' statement as a property assertion.`);
+      if (stepUnifiesAsPropertyAssertion) {
+        context.debug(`...unified the '${stepString}' step as a property assertion.`);
       }
     }
   }
 
-  return statementUnifiesAsPropertyAssertion;
+  return stepUnifiesAsPropertyAssertion;
 }
 
-async function unifyStatementWithSatisfiesAssertion(statement, reference, satisfiesAssertion, context) {
-  let statementUnifiesWithSatisfiesAssertion = false;
+async function unifyStepWithSatisfiesAssertion(step, context) {
+  let stepUnifiesWithSatisfiesAssertion = false;
+
+  const satisfiesAssertion = step.getSatisfiesAssertion();
 
   if (satisfiesAssertion !== null) {
-    const statementString = statement.getString(),
+    const stepString = step.getString(),
           satisfiesAssertionString = satisfiesAssertion.getString();
 
-    context.trace(`Unifying the '${statementString}' statememnt with the '${satisfiesAssertionString}' satisfies assertion...`);
+    context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`);
 
     const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
-          statementUnifies = satisfiesAssertion.unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context);
+          stepUnifies = satisfiesAssertion.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
 
-    if (statementUnifies) {
-      statementUnifiesWithSatisfiesAssertion = true;
+    if (stepUnifies) {
+      stepUnifiesWithSatisfiesAssertion = true;
     }
 
-    if (statementUnifiesWithSatisfiesAssertion) {
-      context.debug(`...unified the '${statementString}' statememnt with the '${satisfiesAssertionString}' satisfies assertion.`);
+    if (stepUnifiesWithSatisfiesAssertion) {
+      context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`);
     }
   }
 
-  return statementUnifiesWithSatisfiesAssertion;
+  return stepUnifiesWithSatisfiesAssertion;
 }
 
-async function compareStatementWithSubproofOrProofAssertions(statement, reference, satisfiesAssertion, context) {
-  let statementEquatesWithStepOrSubproofs = false;
+async function compareStepWithSubproofOrProofAssertions(step, context) {
+  let stepComparesToSubproofOrProofAssertions = false;
 
-  if (reference === null) {
-    const statementString = statement.getString();
+  const unqualified = step.isUnqualified();
 
-    context.trace(`Comparing the '${statementString}' statement with the subproofs or proof asssertions...`);
+  if (unqualified) {
+    const stepString = step.getString();
+
+    context.trace(`Comparing the '${stepString}' step with the subproofs or proof asssertions...`);
 
     const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
-          statementUnifiesWithSteps = statement.compareSubproofOrProofAssertions(subproofOrProofAssertions, context);
+          comparesToSubproofOrProofAssertions = step.compareSubproofOrProofAssertions(subproofOrProofAssertions, context);
 
-    if (statementUnifiesWithSteps) {
-      statementEquatesWithStepOrSubproofs = true;
+    if (comparesToSubproofOrProofAssertions) {
+      stepComparesToSubproofOrProofAssertions = true;
     }
 
-    if (statementEquatesWithStepOrSubproofs) {
-      context.debug(`...compared the '${statementString}' statement with the subproofs or proof asssertions.`);
+    if (stepComparesToSubproofOrProofAssertions) {
+      context.debug(`...compared the '${stepString}' step with the subproofs or proof asssertions.`);
     }
   }
 
-  return statementEquatesWithStepOrSubproofs;
+  return stepComparesToSubproofOrProofAssertions;
 }
 
-export const unifyStatements = [
-  unifyStatementWithRule,
-  unifyStatementWithReference,
-  unifyStatementAsSatisfiesAssertion,
-  unifyStatementWithTopLevelAssertion,
-  unifyStatementAsEquality,
-  unifyStatementAsJudgement,
-  unifyStatementAsTypeAssertion,
-  unifyStatementAsPropertyAssertion,
-  unifyStatementWithSatisfiesAssertion,
-  compareStatementWithSubproofOrProofAssertions
+export const unifySteps = [
+  unifyStepWithRule,
+  unifyStepWithReference,
+  unifyStepAsSatisfiesAssertion,
+  unifyStepWithTopLevelAssertion,
+  unifyStepAsEquality,
+  unifyStepAsJudgement,
+  unifyStepAsTypeAssertion,
+  unifyStepAsPropertyAssertion,
+  unifyStepWithSatisfiesAssertion,
+  compareStepWithSubproofOrProofAssertions
 ];
