@@ -21,22 +21,6 @@ export default class Substitution extends Element {
     return substitutionNode;
   }
 
-  matchSubstitutionNode(substitutionNode) {
-    const node = substitutionNode, ///
-          nodeMatches = this.matchNode(node),
-          substitutionNodeMatches = nodeMatches; ///
-
-    return substitutionNodeMatches;
-  }
-
-  findValidSubstitution(context) {
-    const substitutionNode = this.getSubstitutionNode(),
-          substitution = context.findSubstitutionBySubstitutionNode(substitutionNode),
-          validSubstitution = substitution;  ///
-
-    return validSubstitution;
-  }
-
   isEqualTo(substitution) {
     const substitutionNode = substitution.getNode(),
           substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
@@ -65,28 +49,28 @@ export default class Substitution extends Element {
     return variable;
   }
 
-  getSubstitution() {
-    const substitution = null;
-
-    return substitution;
-  }
-
   getMetavariable() {
     const metavariable = null;
 
     return metavariable;
   }
 
-  getMetavariableName() {
-    const metavariableName = null;
+  getSubstitution() {
+    const substitution = null;
 
-    return metavariableName;
+    return substitution;
   }
 
-  getVariableIdentifier() {
-    const variableIdentifier = null;
+  getVariableNode() {
+    const variableNode = null;
 
-    return variableIdentifier;
+    return variableNode;
+  }
+
+  getMetavariableNode() {
+    const metavariableNode = null;
+
+    return metavariableNode;
   }
 
   isSimple() {
@@ -95,28 +79,26 @@ export default class Substitution extends Element {
     return simple;
   }
 
+  matchSubstitutionNode(substitutionNode) {
+    const node = substitutionNode, ///
+          nodeMatches = this.matchNode(node),
+          substitutionNodeMatches = nodeMatches; ///
+
+    return substitutionNodeMatches;
+  }
+
   compareParameter(parameter) {
     const comparesToParameter = false;
 
     return comparesToParameter;
   }
 
-  compareMetavariable(metavariable) {
-    const compaaresToMetavariable = false;
+  findValidSubstitution(context) {
+    const substitutionNode = this.getSubstitutionNode(),
+          substitution = context.findSubstitutionBySubstitutionNode(substitutionNode),
+          validSubstitution = substitution;  ///
 
-    return compaaresToMetavariable;
-  }
-
-  compareMetavariableName(metavariableName) {
-    const comparesToMetavariableName = false;
-
-    return comparesToMetavariableName;
-  }
-
-  compareVariableIdentifier(variableIdentifier) {
-    const comparesToVariableIdentifier = false;
-
-    return comparesToVariableIdentifier;
+    return validSubstitution;
   }
 
   resolve(substitutions, generalContext, specificContext) {

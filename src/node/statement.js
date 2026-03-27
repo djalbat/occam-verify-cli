@@ -31,18 +31,6 @@ export default class StatementNode extends NonTerminalNode {
     return singular;
   }
 
-  getMetavariableName() {
-    let metavariableName = null;
-
-    const metavariableNode = this.getMetavariableNode();
-
-    if (metavariableNode !== null) {
-      metavariableName = metavariableNode.getMetavariableName();
-    }
-
-    return metavariableName;
-  }
-
   getMetavariableNode() {
     const singularMetavariableNode = this.getSingularMetavariableNode(),
           metavariableNode = singularMetavariableNode;  ///

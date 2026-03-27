@@ -32,12 +32,6 @@ export default define(class Reference extends Element {
     return referenceNode;
   }
 
-  getMetavariableName() {
-    const metavariableName = this.metavariable.getName();
-
-    return metavariableName;
-  }
-
   getMetavariableNode() {
     const metavariableNode = this.metavariable.getNode();
 
@@ -68,11 +62,13 @@ export default define(class Reference extends Element {
     const parameterName = parameter.getName();
 
     if (parameterName !== null) {
-      const metavariableName = this.getMetavariableName();
+      debugger
 
-      if (parameterName === metavariableName) {
-        comparesToParamter = true;
-      }
+      // const metavariableName = this.getMetavariableName();
+      //
+      // if (parameterName === metavariableName) {
+      //   comparesToParamter = true;
+      // }
     }
 
     return comparesToParamter;
@@ -97,8 +93,6 @@ export default define(class Reference extends Element {
 
     return comparesToMetavariable;
   }
-
-  compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
 
   compareTopLevelMetaAssertion(topLevelMetaAssertion) {
     let topLevelMetaAssertionCompares = false;

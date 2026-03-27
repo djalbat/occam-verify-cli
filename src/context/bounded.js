@@ -242,12 +242,12 @@ class BoundedContext extends Context {
 
   findEquivalenceByTerm(term) { return findEquivalenceByTerm(this.equivalences, term); }
 
-  findJudgementByMetavariableName(metavariableName) {
+  findJudgementByMetavariableNode(metavariableNode) {
     const declaredJudgements = this.getJudgements(),
           judgement = declaredJudgements.find((judgement) => {
-            const judgementMetavariableComparesToMetavariable = judgement.compareMetavariableName(metavariableName);
+            const metavariableNodeMatches = judgement.matchMetavariableNode(metavariableNode);
 
-            if (judgementMetavariableComparesToMetavariable) {
+            if (metavariableNodeMatches) {
               return true;
             }
           }) || null;
@@ -300,8 +300,8 @@ class BoundedContext extends Context {
     return metaLevelAssumption;
   }
 
-  isJudgementPresentByMetavariableName(metavariableName) {
-    const judgement = this.findJudgementByMetavariableName(metavariableName),
+  isJudgementPresentByMetavariableNode(metavariableNode) {
+    const judgement = this.findJudgementByMetavariableNode(metavariableNode),
           judgementPresent = (judgement !== null);
 
     return judgementPresent;

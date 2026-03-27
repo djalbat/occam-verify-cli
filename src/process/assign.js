@@ -68,15 +68,10 @@ export function variableAssignmentFromTypeAssertion(typeAssertion, context) {
         termSingular = term.isSingular();
 
   if (termSingular) {
-    const variableIdentifier = term.getVariableIdentifier(),
-          variable = context.findVariableByVariableIdentifier(variableIdentifier);
+    const type = typeAssertion.getType(),
+          variableNode = term.getVariableNode();
 
-    if (variable !== null) {
-      const type = typeAssertion.getType(),
-            variableNode = variable.getNode();
-
-      variableAssignment = variableAssignmentFromVariableNodeAndType(variableNode, type, context);
-    }
+    variableAssignment = variableAssignmentFromVariableNodeAndType(variableNode, type, context);
   }
 
   return variableAssignment;

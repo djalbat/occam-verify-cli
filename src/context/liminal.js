@@ -1,7 +1,7 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { metavariableNamesFromSubstitutions } from "../utilities/substitutions";
+import { metavariableNodesFromSubstitutions } from "../utilities/substitutions";
 
 import Context from "../context";
 import elements from "../elements";
@@ -98,10 +98,10 @@ export default class LiminalContext extends Context {
 
   resolveSubstitutions(generalContext, specificContext) {
     const substitutions = this.getSubstitutions(),
-          metavariableNames = metavariableNamesFromSubstitutions(substitutions);
+          metavariableNodes = metavariableNodesFromSubstitutions(substitutions);
 
-    metavariableNames.forEach((metavariableName) => {
-      const complexSubstitutions = this.findComplexSubstitutionsByMetavariableName(metavariableName);
+    metavariableNodes.forEach((metavariableNode) => {
+      const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode);
 
       complexSubstitutions.forEach((complexSubstitution) => {
         const substitution = complexSubstitution, ///
@@ -116,9 +116,9 @@ export default class LiminalContext extends Context {
 
   areSubstitutionsResolved() {
     const substitutions = this.getSubstitutions(),
-          metavariableNames = metavariableNamesFromSubstitutions(substitutions),
-          resolved = metavariableNames.every((metavariableName) => {
-            const complexSubstitutions = this.findComplexSubstitutionsByMetavariableName(metavariableName),
+          metavariableNodes = metavariableNodesFromSubstitutions(substitutions),
+          resolved = metavariableNodes.every((metavariableNode) => {
+            const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode),
                   complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
                     const complexSubstitutionResolved = complexSubstitution.isResolved();
 
@@ -195,11 +195,11 @@ export default class LiminalContext extends Context {
     return substitutions;
   }
 
-  findSubstitutionByVariableIdentifier(variableIdentifier) {
+  findSubstitutionByVariableNode(variableNode) {
     const substitution = this.findSubstitution((substitution) => {
-      const substitutionComparesToVariableIdentifier = substitution.compareVariableIdentifier(variableIdentifier);
+      const substitutionComparesToVariableNode = substitution.compareVariableNode(variableNode);
 
-      if (substitutionComparesToVariableIdentifier) {
+      if (substitutionComparesToVariableNode) {
         return true;
       }
     }) || null;
@@ -207,22 +207,22 @@ export default class LiminalContext extends Context {
     return substitution;
   }
 
-  findSubstitutionByMetavariableName(metavariableName) {
-    const simpleSubstitution = this.findSimpleSubstitutionByMetavariableName(metavariableName),
+  findSubstitutionByMetavariableNode(metavariableNode) {
+    const simpleSubstitution = this.findSimpleSubstitutionByMetavariableNode(metavariableNode),
           substitution = simpleSubstitution;  ///
 
     return substitution;
   }
 
-  findSimpleSubstitutionByMetavariableName(metavariableName) {
+  findSimpleSubstitutionByMetavariableNode(metavariableNode) {
     const simpleSubstitution = this.findSubstitution((substitution) => {
       const substitutionSimple = substitution.isSimple();
 
       if (substitutionSimple) {
         const simpleSubstitution = substitution,  ///
-              simpleSubstitutionComparesToMetavariableName = simpleSubstitution.compareMetavariableName(metavariableName);
+              metavariableNodeMatches = simpleSubstitution.matchMetavariableNode(metavariableNode);
 
-        if (simpleSubstitutionComparesToMetavariableName) {
+        if (metavariableNodeMatches) {
           return true;
         }
       }
@@ -231,15 +231,15 @@ export default class LiminalContext extends Context {
     return simpleSubstitution;
   }
 
-  findComplexSubstitutionsByMetavariableName(metavariableName) {
+  findComplexSubstitutionsByMetavariableNode(metavariableNode) {
     const complexSubstitution = this.findSubstitutions((substitution) => {
       const substitutionComplex = substitution.isComplex();
 
       if (substitutionComplex) {
         const complexSubstitution = substitution,  ///
-              complexSubstitutionComparesToMetavariableName = complexSubstitution.compareMetavariableName(metavariableName);
+              metavariableNodeMatches = complexSubstitution.matchMetavariableNode(metavariableNode);
 
-        if (complexSubstitutionComparesToMetavariableName) {
+        if (metavariableNodeMatches) {
           return true;
         }
       }
@@ -248,13 +248,13 @@ export default class LiminalContext extends Context {
     return complexSubstitution;
   }
 
-  findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) {
+  findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) {
     const substitutionA = substitution; ///
 
     substitution = this.findSubstitution((substitution) => {  ///
-      const substitutionComparesToMetavariableName = substitution.compareMetavariableName(metavariableName);
+      const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
 
-      if (substitutionComparesToMetavariableName) {
+      if (metavariableNodeMatches) {
         const substitutionB = substitution, ///
               substitutionBEqualToSubstitutionA = substitutionB.isEqualTo(substitutionA);
 
@@ -267,22 +267,15 @@ export default class LiminalContext extends Context {
     return substitution;
   }
 
-  isSubstitutionPresentByMetavariableName(metavariableName) {
-    const substitution = this.findSubstitutionByMetavariableName(metavariableName),
+  isSubstitutionPresentByMetavariableNode(metavariableNode) {
+    const substitution = this.findSubstitutionByMetavariableNode(metavariableNode),
           substitutionPresent = (substitution !== null);
 
     return substitutionPresent;
   }
 
-  isSimpleSubstitutionPresentByMetavariableName(metavariableName) {
-    const simpleSubstitution = this.findSimpleSubstitutionByMetavariableName(metavariableName),
-          simpleSubstitutionPresent = (simpleSubstitution !== null);
-
-    return simpleSubstitutionPresent;
-  }
-
-  isSubstitutionPresentByMetavariableNameAndSubstitution(metavariableName, substitution) {
-    substitution = this.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution);  ///
+  isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) {
+    substitution = this.findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution);  ///
 
     const substitutionPresent = (substitution !== null);
 

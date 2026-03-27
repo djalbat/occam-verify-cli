@@ -43,16 +43,16 @@ export default define(class Rule extends Element {
     return ruleNode;
   }
 
-  compareMetavariableName(metavariableName) {
-    const comparesToMetavariableName = this.labels.some((label) => {
-      const labelComparesToMetavariableName = label.compareMetavariableName(metavariableName);
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.labels.some((label) => {
+      const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
 
-      if (labelComparesToMetavariableName) {
+      if (metavariableNodeMatches) {
         return true;
       }
     });
 
-    return comparesToMetavariableName;
+    return metavariableNodeMatches;
   }
 
   async verify() {

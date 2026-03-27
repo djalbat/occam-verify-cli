@@ -39,9 +39,14 @@ export default define(class Frame extends Element {
     return metavariableNode;
   }
 
-  getMetavariableName() {
-    const frameNode = this.getFrameNode(),
-          metavariableName = frameNode.getMetavariableName();
+  getMetavarialbeName() {
+    let metavariableName = null;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      metavariableName = this.metavariable.getName();
+    }
 
     return metavariableName;
   }
@@ -87,36 +92,20 @@ export default define(class Frame extends Element {
     const singular = this.isSingular();
 
     if (singular) {
-      const parameterName = parameter.getName();
+      debugger
 
-      if (parameterName !== null) {
-        const metavariableName = this.getMetavariableName();
-
-        if (parameterName === metavariableName) {
-          comparesToParamter = true;
-        }
-      }
+      // const parameterName = parameter.getName();
+      //
+      // if (parameterName !== null) {
+      //   const metavariableName = this.getMetavariableName();
+      //
+      //   if (parameterName === metavariableName) {
+      //     comparesToParamter = true;
+      //   }
+      // }
     }
 
     return comparesToParamter;
-  }
-
-  compareMetavariableName(metavariableName) {
-    let comparesToMetavariableName = false;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const metavariableNameA = metavariableName ///
-
-      metavariableName = this.getMetavariableName();
-
-      const metavariableNameB = metavariableName; ///
-
-      comparesToMetavariableName = (metavariableNameA === metavariableNameB);
-    }
-
-    return comparesToMetavariableName;
   }
 
   findValidFrame(context) {

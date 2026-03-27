@@ -59,6 +59,12 @@ export default class TopLevelAssertion extends Element {
     this.hypotheses = hypotheses;
   }
 
+  getSupposition(index) {
+    const supposition = this.suppositions[index] || null;
+
+    return supposition;
+  }
+
   isHypothetical() {
     const hypothesesLength = this.hypotheses.length,
           hypothetical = (hypothesesLength > 0);
@@ -73,22 +79,16 @@ export default class TopLevelAssertion extends Element {
     return unconditional;
   }
 
-  getSupposition(index) {
-    const supposition = this.suppositions[index] || null;
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.labels.some((label) => {
+      const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
 
-    return supposition;
-  }
-
-  compareMetavariableName(metavariableName) {
-    const comparesToMetavariableName = this.labels.some((label) => {
-      const labelComparesToMetavariableName = label.compareMetavariableName(metavariableName);
-
-      if (labelComparesToMetavariableName) {
+      if (metavariableNodeMatches) {
         return true;
       }
     });
 
-    return comparesToMetavariableName;
+    return metavariableNodeMatches;
   }
 
   correlateHypotheses(context) {

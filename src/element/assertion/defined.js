@@ -263,8 +263,8 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   }
 
   if (frame!== null) {
-    const metavariableName = frame.getMetavariableName(),
-          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName),
+    const metavariableNode = frame.getMetavariableNode(),
+          declaredMetavariable = context.findDeclaredMetavariableByMetavariableNode(metavariableNode),
           metavariableDefined = isMetavariableDefined(declaredMetavariable, context);
 
     if (!negated && metavariableDefined) {
@@ -299,8 +299,8 @@ function isVariableDefined(variable, context) {
 }
 
 function isMetavariableDefined(metavariable, context) {
-  const metavariableName = metavariable.getNode(),
-        judgementPresent = context.isJudgementPresentByMetavariableName(metavariableName),
+  const metavariableNode = metavariable.getNode(),
+        judgementPresent = context.isJudgementPresentByMetavariableNode(metavariableNode),
         metavariableDefined = judgementPresent; ///
 
   return metavariableDefined

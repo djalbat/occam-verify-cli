@@ -129,24 +129,6 @@ export default define(class Term extends Element {
     return comparesToParamter;
   }
 
-  compareVariableIdentifier(variableIdentifier) {
-    let comparesToVariableIdentifier = false;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const variableIdentifierA = variableIdentifier; ///
-
-      variableIdentifier = this.getVariableIdentifier();
-
-      const variableIdentifierB = variableIdentifier;
-
-      comparesToVariableIdentifier = (variableIdentifierA === variableIdentifierB);
-    }
-
-    return comparesToVariableIdentifier;
-  }
-
   findValidTerm(context) {
     const termNode = this.getTermNode(),
           term = context.findTermByTermNode(termNode),

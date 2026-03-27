@@ -16,13 +16,6 @@ export default define(class Statement extends Element {
     return statementNode;
   }
 
-  getMetavariableName() {
-    const sttaementNode = this.getStatementNode(),
-          metavariableName = sttaementNode.getMetavariableName();
-
-    return metavariableName;
-  }
-
   getTermSubstitutionNode() {
     const statementNode = this.getNode(),
           termSubstitutionNode = statementNode.getTermSubstitutionNode();
@@ -37,11 +30,19 @@ export default define(class Statement extends Element {
     return frameSubstitutionNode;
   }
 
-  isSingular() {
-    const statementNode = this.getStatementNode(),
-          singular = statementNode.isSingular();
+  getMetavariableName() {
+    let metavariableName = null;
 
-    return singular;
+    const singular = this.isSingular();
+
+    if (singular) {
+      const statementNode = this.getStatementNode(),
+            metavariableNode = statementNode.getMetavariableNode();
+
+      metavariableName = metavariableNode.getMetavariableName();
+    }
+
+    return metavariableName;
   }
 
   isEqualTo(statement) {
@@ -52,6 +53,13 @@ export default define(class Statement extends Element {
     return equalTo;
   }
 
+  isSingular() {
+    const statementNode = this.getStatementNode(),
+          singular = statementNode.isSingular();
+
+    return singular;
+  }
+
   matchStatementNode(statementNode) {
     const node = statementNode, ///
           nodeMatches = this.matchNode(node),
@@ -60,64 +68,48 @@ export default define(class Statement extends Element {
     return statementNodeMatches;
   }
 
+  matchMetavariableNode(metavariableNode) {
+    let metavariableNodeMatches = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const metavariableNodeA = metavariableNode, ///
+            statementNode = this.getStatementNode();
+
+      metavariableNode = statementNode.getMetavariableNode();
+
+      const metavariableNodeB = metavariableNode, ///
+            metavariableNodeAMatchesMetavariableNodeB = metavariableNodeA.match(metavariableNodeB);
+
+      if (metavariableNodeAMatchesMetavariableNodeB) {
+        metavariableNodeMatches = true;
+      }
+    }
+
+    return metavariableNodeMatches;
+  }
+
   compareParameter(parameter) {
     let comparesToParamter = false;
 
     const singular = this.isSingular();
 
     if (singular) {
-      const parameterName = parameter.getName();
+      debugger
 
-      if (parameterName !== null) {
-        const metavariableName = this.getMetavariableName();
-
-        if (parameterName === metavariableName) {
-          comparesToParamter = true;
-        }
-      }
+      // const parameterName = parameter.getName();
+      //
+      // if (parameterName !== null) {
+      //   const metavariableName = this.getMetavariableName();
+      //
+      //   if (parameterName === metavariableName) {
+      //     comparesToParamter = true;
+      //   }
+      // }
     }
 
     return comparesToParamter;
-  }
-
-  compareMetavariable(metavariable) {
-    let comparesToMetavariableName;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      let metavariableName;
-
-      metavariableName = metavariable.getName();
-
-      const metavariableNameA = metavariableName; ///
-
-      metavariableName = this.getMetavariableName();
-
-      const metavariableNameB = metavariableName; ///
-
-      comparesToMetavariableName = (metavariableNameA === metavariableNameB);
-    }
-
-    return comparesToMetavariableName;
-  }
-
-  compareMetavariableName(metavariableName) {
-    let comparesToMetavariableName = false;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const metavariableNameA = metavariableName ///
-
-      metavariableName = this.getMetavariableName();
-
-      const metavariableNameB = metavariableName; ///
-
-      comparesToMetavariableName = (metavariableNameA === metavariableNameB);
-    }
-
-    return comparesToMetavariableName;
   }
 
   findValidStatment(context) {

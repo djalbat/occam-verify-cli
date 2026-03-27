@@ -12,8 +12,8 @@ export function termFromTermAndSubstitutions(term, generalContext, specificConte
     term = null;  ///
 
     if (termSingular) {
-      const variableIdentifier = termNode.getVariableIdentifier(),
-            substitution = specificContext.findSubstitutionByVariableIdentifier(variableIdentifier);
+      const variableNode = termNode.getVariableNode(),
+            substitution = specificContext.findSubstitutionByVariableNode(variableNode);
 
       if (substitution !== null) {
         const termSubstitution = substitution,  ///
@@ -35,8 +35,8 @@ export function frameFromFrameAndSubstitutions(frame, generalContext, specificCo
     frame = null;  ///
 
     if (frameSingular) {
-      const metavariableName = frameNode.getMetavariableName(),
-            substitution = specificContext.findSubstitutionByMetavariableName(metavariableName);
+      const metavariableNode = frameNode.getMetavariableNode(),
+            substitution = specificContext.findSubstitutionByMetavariableNode(metavariableNode);
 
       if (substitution !== null) {
         const frameSubstitution = substitution, ///
@@ -78,11 +78,11 @@ export function statementFromStatementAndSubstitutions(statement, generalContext
         specificContext = context;  ///
       }
 
-      const metavariableName = statementNode.getMetavariableName();
+      const metavariableNode = statementNode.getMetavariableNode();
 
       substitution = (substitution !== null) ?
-                       specificContext.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) :
-                         specificContext.findSubstitutionByMetavariableName(metavariableName);
+                       specificContext.findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
+                         specificContext.findSubstitutionByMetavariableNode(metavariableNode);
 
       if (substitution !== null) {
         const statementSubstitution = substitution, ///
@@ -96,22 +96,24 @@ export function statementFromStatementAndSubstitutions(statement, generalContext
   return statement;
 }
 
-export function metavariableNamesFromSubstitutions(substitutions) {
-  const metavariableNames = [];
+export function metavariableNodesFromSubstitutions(substitutions) {
+  const metavariableNodes = [];
 
   substitutions.forEach((substitution) => {
-    const metavariableName = substitution.getMetavariableName();
+    const metavariableNode = substitution.getMetavariableNode();
 
-    if (metavariableName !== null) {
-      metavariableNames.push(metavariableName);
+    if (metavariableNode !== null) {
+      metavariableNodes.push(metavariableNode);
     }
   });
 
-  compress(metavariableNames, (metavariableNameA, metavariableNameB) => {
-    if (metavariableNameA !== metavariableNameB) {
+  compress(metavariableNodes, (metavariableNodeA, metavariableNodeB) => {
+    const metavariableNodeAMatchesetavariableNodeB = metavariableNodeA.match(metavariableNodeB);
+
+    if (!metavariableNodeAMatchesetavariableNodeB) {
       return true;
     }
   });
 
-  return metavariableNames;
+  return metavariableNodes;
 }

@@ -18,20 +18,20 @@ export default class Assertion extends Element {
     return assertionNodeMatches;
   }
 
-  findValidAssertion(context) {
-    const assertionNode = this.getAssertionNode(),
-          assertion = context.findAssertionByAssertionNode(assertionNode),
-          validAssertion = assertion;  ///
-
-    return validAssertion;
-  }
-
   isEqualTo(assertion) {
     const assertionNode = assertion.getNode(),
           assertionNodeMatches = this.matchAssertionNode(assertionNode),
           equalTo = assertionNodeMatches;  ///
 
     return equalTo;
+  }
+
+  findValidAssertion(context) {
+    const assertionNode = this.getAssertionNode(),
+          assertion = context.findAssertionByAssertionNode(assertionNode),
+          validAssertion = assertion;  ///
+
+    return validAssertion;
   }
 
   toJSON() {

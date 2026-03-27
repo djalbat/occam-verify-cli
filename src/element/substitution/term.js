@@ -46,16 +46,14 @@ export default define(class TermSubstitution extends Substitution {
     return replacementNode;
   }
 
-  getVariableIdentifier() { return this.targetTerm.getVariableIdentifier(); }
-
-  compareVariableIdentifier(variableIdentifier) { return this.targetTerm.compareVariableIdentifier(variableIdentifier); }
-
   isTrivial() {
     const targetTermEqualToReplacementTerm = this.targetTerm.isEqualTo(this.replacementTerm),
           trivial = targetTermEqualToReplacementTerm; ///
 
     return trivial;
   }
+
+  matchVariableNode(variableNode) { return this.targetTerm.matchVariableNode(variableNode); }
 
   compareTerm(term, context) {
     term = stripBracketsFromTerm(term, context); ///

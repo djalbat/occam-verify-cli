@@ -97,6 +97,14 @@ export default define(class Metavariable extends Element {
     return comparesToMetavariableName;
   }
 
+  findValidMetavariable(context) {
+    const metavariableNode = this.getMetavariableNode(),
+          metavariable = context.findMetavariableByMetavariableNode(metavariableNode),
+          validMetavariable = metavariable; ///
+
+    return validMetavariable;
+  }
+
   verify(context) {
     let verifies = false;
 
@@ -162,14 +170,6 @@ export default define(class Metavariable extends Element {
     }
 
     return typeVerifies;
-  }
-
-  findValidMetavariable(context) {
-    const metavariableNode = this.getMetavariableNode(),
-          metavariable = context.findMetavariableByMetavariableNode(metavariableNode),
-          validMetavariable = metavariable; ///
-
-    return validMetavariable;
   }
 
   validate(strict, context) {
@@ -332,13 +332,14 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
-    const frameMetavariableUnifies = this.unifyFrameMetavariable(frame, generalContext, specificContext);
+    const metavariable = this,  ///
+          frameMetavariableUnifies = this.unifyFrameMetavariable(frame, generalContext, specificContext);
 
     if (frameMetavariableUnifies) {
       frameUnifies = true;
     } else {
-      const metavariableName = this.getMetavariableName(),
-            substitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
+      const metavariableNode = metavariable.getNode(),
+            substitution = context.findSubstitutionByMetavariableNode(metavariableNode);
 
       if (substitution !== null) {
         const substitutionFrameComparesToFrame = substitution.compareFrame(frame, context);
@@ -353,7 +354,6 @@ export default define(class Metavariable extends Element {
         }
       } else {
         const { FrameSubstitution } = elements,
-              metavariable = this,  ///
               frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
 
         frameSubstitution.validate(generalContext, specificContext);
@@ -387,15 +387,15 @@ export default define(class Metavariable extends Element {
     if (statementMetavariableUnifies) {
       statementUnifies = true;
     } else {
-      const metavariableName = metavariable.getName(),
+      const metavariableNode = metavariable.getName(),
             substitutionPresent = (substitution !== null) ?
-                                    context.isSubstitutionPresentByMetavariableNameAndSubstitution(metavariableName, substitution) :
-                                      context.isSubstitutionPresentByMetavariableName(metavariableName);
+                                    context.isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
+                                      context.isSubstitutionPresentByMetavariableNode(metavariableNode);
 
       if (substitutionPresent) {
         substitution = (substitution !== null) ?
-                         context.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) :
-                           context.findSubstitutionByMetavariableName(metavariableName);
+                         context.findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
+                           context.findSubstitutionByMetavariableNode(metavariableNode);
 
         const substitutionComparesToStatement = substitution.compareStatement(statement, context);
 
@@ -435,13 +435,14 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Unifying the '${referenceString}' reference with the '${metavariableString}' metavariable...`);
 
-    const referenceMetavariableUnifies = this.unifyReferenceMetavariable(reference, generalContext, specificContext);
+    const metavariable = this,  ///
+          referenceMetavariableUnifies = this.unifyReferenceMetavariable(reference, generalContext, specificContext);
 
     if (referenceMetavariableUnifies) {
       referenceUnifies = true;
     } else {
-      const metavariableName = this.getMetavariableName(),
-            substitution = context.findSubstitutionByMetavariableName(metavariableName);
+      const metavariableNode = metavariable.getNode(),
+            substitution = context.findSubstitutionByMetavariableNode(metavariableNode);
 
       if (substitution !== null) {
         const substitutionReferenceComparesToReference = substitution.compareReference(reference, context);
@@ -456,7 +457,6 @@ export default define(class Metavariable extends Element {
         }
       } else {
         const { ReferenceSubstitution } = elements,
-              metavariable = this,  ///
               referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
 
         referenceSubstitution.validate(generalContext, specificContext);
@@ -512,10 +512,10 @@ export default define(class Metavariable extends Element {
           specificContextFilePath = specificContext.getFilePath();
 
     if (generalContextFilePath === specificContextFilePath) {
-      const metavariableName = this.getMetavariableName(),  ///
-            frameMetavariableComparesToMetvariable = frame.compareMetavariableName(metavariableName);
+      const metavariableNode = this.getMetavariableNode(),  ///
+            metavariableNodeMatches = frame.matchMetavariableNode(metavariableNode);
 
-      if (frameMetavariableComparesToMetvariable) {
+      if (metavariableNodeMatches) {
         frameMetavariableUnifies = true;
       } else {
         const frameSingular = frame.isSingular();
@@ -587,8 +587,8 @@ export default define(class Metavariable extends Element {
           specificContextFilePath = specificContext.getFilePath();
 
     if (generalContextFilePath === specificContextFilePath) {
-      const metavariable = this,  ///
-            statementMetavariableComparesToMetvariable = statement.compareMetavariable(metavariable);
+      const metavariableNode = this.getMetavariableNode(),
+            statementMetavariableComparesToMetvariable = statement.matchMetavariableNode(metavariableNode);
 
       if (statementMetavariableComparesToMetvariable) {
         statementMetavariableUnifies = true;

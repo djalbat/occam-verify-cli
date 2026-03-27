@@ -117,9 +117,9 @@ export default define(class Variable extends Element {
 
     variable = this; ///
 
-    const variableIdentifier = variable.getIdentifier();
+    const variableNode = variable.getNode();
 
-    substitution = context.findSubstitutionByVariableIdentifier(variableIdentifier);
+    substitution = context.findSubstitutionByVariableNode(variableNode);
 
     if (substitution !== null) {
       const substitutionComparesToTerm = substitution.compareTerm(term, context);

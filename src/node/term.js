@@ -36,34 +36,6 @@ export default class TermNode extends NonTerminalNode {
     return singularTermNode;
   }
 
-  getVariableIdentifier() {
-    let variableIdentifier = null;
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      const singularVariableNode = this.getSingularVariableNode();
-
-      variableIdentifier = singularVariableNode.getVariableIdentifier();
-    }
-
-    return variableIdentifier;
-  }
-
-  getSingularVariableIdentifier() {
-    let singularVariableIdentifier = null;
-
-    const singularVariableNode = this.getSingularVariableNode();
-
-    if (singularVariableNode !== null) {
-      const variableIdentifier = singularVariableNode.getVariableIdentifier();
-
-      singularVariableIdentifier = variableIdentifier;  ///
-    }
-
-    return singularVariableIdentifier;
-  }
-
   getVariableNodes() {
     const ruleName = VARIABLE_RULE_NAME,
           variableNodes = this.getNodesByRuleName(ruleName);

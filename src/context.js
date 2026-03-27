@@ -169,20 +169,6 @@ export default class Context extends ContextBase {
     return topLevelMetaAssertion;
   }
 
-  findTypeByTypeName(metaTypeName) {
-    const context = this.getContext(),
-          type = context.findTypeByTypeName(metaTypeName);
-
-    return type;
-  }
-
-  findMetaTypeByMetaTypeName(metaTypeName) {
-    const context = this.getContext(),
-          metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
-
-    return metaType;
-  }
-
   findTermByTermNode(termNode) {
     const context = this.getContext(),
           term = context.findTermByTermNode(termNode);
@@ -195,6 +181,13 @@ export default class Context extends ContextBase {
           frame = context.findFrameByFrameNode(frameNode);
 
     return frame;
+  }
+
+  findVariableByVariableNode(variableNode) {
+    const context = this.getContext(),
+          variable = context.findVariableByVariableNode(variableNode);
+
+    return variable;
   }
 
   findEqualityByEqualityNode(equalityNode) {
@@ -274,6 +267,49 @@ export default class Context extends ContextBase {
     return metaLevelAssumption;
   }
 
+  findSubstitutionByVariableNode(variableNode) {
+    const context = this.getContext(),
+          substitution = context.findSubstitutionByVariableNode(variableNode);
+
+    return substitution;
+  }
+
+  findSubstitutionByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+          substitution = context.findSubstitutionByMetavariableNode(metavariableNode);
+
+    return substitution;
+  }
+
+  findSimpleSubstitutionByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+          simpleSubstitution = context.findSimpleSubstitutionByMetavariableNode(metavariableNode);
+
+    return simpleSubstitution;
+  }
+
+  findComplexSubstitutionsByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+          complexSubstitution = context.findComplexSubstitutionsByMetavariableNode(metavariableNode);
+
+    return complexSubstitution;
+  }
+
+  findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) {
+    const context = this.getContext();
+
+    substitution = context.findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution); ///
+
+    return substitution;
+  }
+
+  findTypeByTypeName(metaTypeName) {
+    const context = this.getContext(),
+          type = context.findTypeByTypeName(metaTypeName);
+
+    return type;
+  }
+
   findTypeByNominalTypeName(nominalTypeName) {
     const context = this.getContext(),
           type = context.findTypeByNominalTypeName(nominalTypeName);
@@ -281,54 +317,11 @@ export default class Context extends ContextBase {
     return type;
   }
 
-  findVariableByVariableNode(variableNode) {
+  findMetaTypeByMetaTypeName(metaTypeName) {
     const context = this.getContext(),
-          variable = context.findVariableByVariableNode(variableNode);
+          metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
-    return variable;
-  }
-
-  findSubstitutionByMetavariableName(metavariableName) {
-    const context = this.getContext(),
-          substitution = context.findSubstitutionByMetavariableName(metavariableName);
-
-    return substitution;
-  }
-
-  findDeclaredMetavariableByMetavariableName(metavariableName) {
-    const context = this.getContext(),
-          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName);
-
-    return declaredMetavariable;
-  }
-
-  findSubstitutionByVariableIdentifier(variableIdentifier) {
-    const context = this.getContext(),
-          substitution = context.findSubstitutionByVariableIdentifier(variableIdentifier);
-
-    return substitution;
-  }
-
-  findSimpleSubstitutionByMetavariableName(metavariableName) {
-    const context = this.getContext(),
-          simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
-
-    return simpleSubstitution;
-  }
-
-  findComplexSubstitutionsByMetavariableName(metavariableName) {
-    const context = this.getContext(),
-          complexSubstitution = context.findComplexSubstitutionsByMetavariableName(metavariableName);
-
-    return complexSubstitution;
-  }
-
-  findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution) {
-    const context = this.getContext();
-
-    substitution = context.findSubstitutionByMetavariableNameAndSubstitution(metavariableName, substitution); ///
-
-    return substitution;
+    return metaType;
   }
 
   findProcedureByProcedureName(procedureName) {
@@ -336,6 +329,20 @@ export default class Context extends ContextBase {
           procedure = context.findProcedureByProcedureName(procedureName);
 
     return procedure;
+  }
+
+  findDeclaredVariableByVariableIdentifier(variableIdentifier) {
+    const context = this.getContext(),
+          declaredVariable = context.findDeclaredVariableByVariableIdentifier(variableIdentifier);
+
+    return declaredVariable;
+  }
+
+  findDeclaredMetavariableByMetavariableName(metavariableName) {
+    const context = this.getContext(),
+          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName);
+
+    return declaredMetavariable;
   }
 
   isMetavariablePresent(metavariable, context) {
@@ -384,13 +391,6 @@ export default class Context extends ContextBase {
     return framePresent;
   }
 
-  isTypePresentByNominalTypeName(nominalTypeName) {
-    const context = this.getContext(),
-          typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
-
-    return typePresent;
-  }
-
   isEqualityPresentByEqualityNode(equalityNode) {
     const context = this.getContext(),
           equalityPresent = context.isEqualityPresentByEqualityNode(equalityNode);
@@ -419,27 +419,6 @@ export default class Context extends ContextBase {
     return assertionPresent;
   }
 
-  isReferencePresentByMetavariableNode(metvvariableNode) {
-    const context = this.getContext(),
-          referencePresent = context.isReferencePresentByMetavariableNode(metvvariableNode);
-
-    return referencePresent;
-  }
-
-  isJudgementPresentByMetavariableName(metavariableName) {
-    const context = this.getContext(),
-          judgementPresent = context.isJudgementPresentByMetavariableName(metavariableName);
-
-    return judgementPresent;
-  }
-
-  isDeclaredMetavariablePresentByMetavariableName(metavariableName) {
-    const context = this.getContext(),
-          metavariablePresent = context.isDeclaredMetavariablePresentByMetavariableName(metavariableName);
-
-    return metavariablePresent;
-  }
-
   isMetavariablePresentByMetavariableNode(metavariableNode) {
     const context = this.getContext(),
           metavariablePresent = context.isMetavariablePresentByMetavariableNode(metavariableNode);
@@ -454,18 +433,11 @@ export default class Context extends ContextBase {
     return substitutionPresent;
   }
 
-  isSubstitutionPresentByMetavariableNameAndSubstitution(metavariableName, substitution) {
+  isTypePresentByNominalTypeName(nominalTypeName) {
     const context = this.getContext(),
-          substitutionPresent = context.isSubstitutionPresentByMetavariableNameAndSubstitution(metavariableName, substitution);
+          typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
-    return substitutionPresent;
-  }
-
-  isSubstitutionPresentByMetavariableName(metavariableName) {
-    const context = this.getContext(),
-          substitutionPresent = context.isSubstitutionPresentByMetavariableName(metavariableName);
-
-    return substitutionPresent;
+    return typePresent;
   }
 
   isProcedurePresentByProcedureName(procedureName) {
@@ -473,6 +445,41 @@ export default class Context extends ContextBase {
           procedurePresent = context.isProcedurePresentByProcedureName(procedureName);
 
     return procedurePresent;
+  }
+
+  isDeclaredMetavariablePresentByMetavariableName(metavariableName) {
+    const context = this.getContext(),
+          metavariablePresent = context.isDeclaredMetavariablePresentByMetavariableName(metavariableName);
+
+    return metavariablePresent;
+  }
+
+  isReferencePresentByMetavariableNode(metvvariableNode) {
+    const context = this.getContext(),
+      referencePresent = context.isReferencePresentByMetavariableNode(metvvariableNode);
+
+    return referencePresent;
+  }
+
+  isJudgementPresentByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+      judgementPresent = context.isJudgementPresentByMetavariableNode(metavariableNode);
+
+    return judgementPresent;
+  }
+
+  isSubstitutionPresentByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+          substitutionPresent = context.isSubstitutionPresentByMetavariableNode(metavariableNode);
+
+    return substitutionPresent;
+  }
+
+  isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) {
+    const context = this.getContext(),
+      substitutionPresent = context.isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution);
+
+    return substitutionPresent;
   }
 
   isMetaLevel() {

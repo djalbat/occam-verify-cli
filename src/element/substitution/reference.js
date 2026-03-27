@@ -45,16 +45,14 @@ export default define(class ReferenceSubstitution extends Substitution {
     return replacementNode;
   }
 
-  getMetavariableName() { return this.targetReference.getMetavariableName(); }
-
-  compareMetavariableName(metavariableName) { return this.targetReference.compareMetavariableName(metavariableName); }
-
   isTrivial() {
     const targetReferenceEqualToReplacementReference = this.targetReference.isEqualTo(this.replacementReference),
           trivial = targetReferenceEqualToReplacementReference; ///
 
     return trivial;
   }
+
+  matchMetavariableNode(metavariableNode) { return this.targetReference.matchMetavariableNode(metavariableNode); }
 
   compareReference(reference, context) {
     const referenceEqualToReplacementReference = this.replacementReference.isEqualTo(reference),

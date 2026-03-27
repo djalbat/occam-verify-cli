@@ -429,11 +429,11 @@ export default class NominalFileContext extends FileContext {
 
   findRuleByReference(reference) {
     const rules = this.getRules(),
-          metavariableName = reference.getMetavariableName(),
+          metavariableNode = reference.getMetavariableNode(),
           rule = rules.find((rule) => {
-            const ruleComparesToMetavariableName = rule.compareMetavariableName(metavariableName);
+            const metavariableNodeMatches = rule.matchMetavariableNode(metavariableNode);
 
-            if (ruleComparesToMetavariableName) {
+            if (metavariableNodeMatches) {
               return true;
             }
           }) || null;
@@ -443,11 +443,11 @@ export default class NominalFileContext extends FileContext {
 
   findAxiomByReference(reference) {
     const axioms = this.getAxioms(),
-          metavariableName = reference.getMetavariableName(),
+          metavariableNode = reference.getMetavariableNode(),
           axiom = axioms.find((axiom) => {
-            const axiomComparesToMetavariableName = axiom.compareMetavariableName(metavariableName);
+            const metavariableNodeMatches = axiom.matchMetavariableNode(metavariableNode);
 
-            if (axiomComparesToMetavariableName) {
+            if (metavariableNodeMatches) {
               return true;
             }
           }) || null;
@@ -457,11 +457,11 @@ export default class NominalFileContext extends FileContext {
 
   findLemmaByReference(reference) {
     const lemmas = this.getLemmas(),
-          metavariableName = reference.getMetavariableName(),
+          metavariableNode = reference.getMetavariableNode(),
           lemma = lemmas.find((lemma) => {
-            const lemmaComparesToMetavariableName = lemma.compareMetavariableName(metavariableName);
+            const metavariableNodeMatches = lemma.matchMetavariableNode(metavariableNode);
 
-            if (lemmaComparesToMetavariableName) {
+            if (metavariableNodeMatches) {
               return true;
             }
           }) || null;
@@ -471,11 +471,11 @@ export default class NominalFileContext extends FileContext {
 
   findTheoremByReference(reference) {
     const theorems = this.getTheorems(),
-          metavariableName = reference.getMetavariableName(),
+          metavariableNode = reference.getMetavariableNode(),
           theorem = theorems.find((theorem) => {
-            const theoremComparesToMetavariableName = theorem.compareMetavariableName(metavariableName);
+            const metavariableNodeMatches = theorem.matchMetavariableNode(metavariableNode);
 
-            if (theoremComparesToMetavariableName) {
+            if (metavariableNodeMatches) {
               return true;
             }
           }) || null;
@@ -485,11 +485,11 @@ export default class NominalFileContext extends FileContext {
 
   findConjectureByReference(reference) {
     const conjectures = this.getConjectures(),
-          metavariableName = reference.getMetavariableName(),
+          metavariableNode = reference.getMetavariableNode(),
           conjecture = conjectures.find((conjecture) => {
-            const conjectureComparesToMetavariableName = conjecture.compareMetavariableName(metavariableName);
+            const metavariableNodeMatches = conjecture.matchMetavariableNode(metavariableNode);
 
-            if (conjectureComparesToMetavariableName) {
+            if (metavariableNodeMatches) {
               return true;
             }
           }) || null;

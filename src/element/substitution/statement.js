@@ -43,8 +43,6 @@ export default define(class StatementSubstitution extends Substitution {
     return statementSubstitutionNode;
   }
 
-  getMtavariableName() { return this.targetStatement.getMtavariableName(); }
-
   getTargetNode() {
     const targetStatementNode = this.targetStatement.getNode(),
           targetNode = targetStatementNode; ///
@@ -65,9 +63,7 @@ export default define(class StatementSubstitution extends Substitution {
     return simple;
   }
 
-  getMetavariableName() { return this.targetStatement.getMetavariableName(); }
-
-  compareMetavariableName(metavariableName) { return this.targetStatement.compareMetavariableName(metavariableName); }
+  matchMetavariableNode(metavariableNode) { return this.targetStatement.matchMetavariableNode(metavariableNode); }
 
   compareStatement(statement, context) {
     statement = stripBracketsFromStatement(statement, context); ///
@@ -102,8 +98,6 @@ export default define(class StatementSubstitution extends Substitution {
 
     return comparesToSubstitution;
   }
-
-  compareMetavariable(metavariable) { return this.targetStatement.compareMetavariable(metavariable); }
 
   validate(generalContext, specificContext) {
     let statementSubstitution = null;
@@ -165,7 +159,7 @@ export default define(class StatementSubstitution extends Substitution {
     let substitutionValidates = true;
 
     if (this.substitution !== null) {
-      const context = specificContext,  ///
+      const context = generalContext,  ///
             substitutionString = this.substitution.getString(),
             statementSubstitutionString = this.getString();
 
@@ -296,6 +290,8 @@ export default define(class StatementSubstitution extends Substitution {
     }, specificContext);
 
     if (substitution !== null) {
+      substitution = substitution.validate(generalContext, specificContext);
+
       simpleSubstitutionUnifies = true;
     }
 
@@ -328,35 +324,32 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementStatemnentUnifies;
   }
 
-  unifyWithSimpleSubstitution(simpleSubstitution, generalContext, specificContext) {
-    let substitution;
-
-    const complexSubstitution = this, ///
-          simpleSubstitutionContext = simpleSubstitution.getContext(),
-          complexSubstitutionContext = complexSubstitution.getContext();
-
-    generalContext = simpleSubstitutionContext; ///
-
-    specificContext = complexSubstitutionContext;  ///
-
-    substitution = simpleSubstitution.unifyComplexSubstitution(complexSubstitution, generalContext, specificContext);
-
-    return substitution;
-  }
-
   resolve(generalContext, specificContext) {
     let resolved = false;
 
     const context = specificContext,  ///
-          metavariableName = this.getMetavariableName(),
-          simpleSubstitution = context.findSimpleSubstitutionByMetavariableName(metavariableName);
+          metavariableNode = this.getMetavariableNode(),
+          simpleSubstitution = context.findSimpleSubstitutionByMetavariableNode(metavariableNode),
+          complexSubstitution = this; ///
 
     if (simpleSubstitution !== null) {
+      let context;
+
+      context = this.getContext();
+
+      const specificContext = context;  ///
+
+      context = simpleSubstitution.getContext();
+
+      const generalContext = context; ///
+
+      context = specificContext;  ///
+
       const substitutionString = this.getString(); ///
 
       context.trace(`Resolving the ${substitutionString} substitution...`);
 
-      const substitution = this.unifyWithSimpleSubstitution(simpleSubstitution, generalContext, specificContext); ///
+      const substitution = simpleSubstitution.unifyComplexSubstitution(complexSubstitution, generalContext, specificContext);
 
       if (substitution !== null) {
         let context;

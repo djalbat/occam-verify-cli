@@ -26,8 +26,6 @@ export default define(class Label extends Element {
     return labelNode;
   }
 
-  getMetavariableName() { return this.metavariable.getName(); }
-
   getMetavariableNode() { return this.metavariable.getNode(); }
 
   matchLabelNode(labelNode) {
@@ -38,6 +36,8 @@ export default define(class Label extends Element {
     return labelNodeMatches;
   }
 
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+
   compareReference(reference) {
     const metavariable = reference.getMetavariable(),
           metavariableComparesToMetavariable = this.compareMetavariable(metavariable),
@@ -47,8 +47,6 @@ export default define(class Label extends Element {
   }
 
   compareMetavariable(metavariable) { return this.metavariable.compare(metavariable); }
-
-  compareMetavariableName(metavariableName) { return this.metavariable.compareMetavariableName(metavariableName); }
 
   verify() {
     let verifies = false;
