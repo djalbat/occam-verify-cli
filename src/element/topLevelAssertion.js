@@ -16,8 +16,8 @@ import { labelsFromJSON,
          hypothesesToHypothesesJSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
 
-const { extract, reverse, correlate } = arrayUtilities,
-      { asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
+const { reverse, correlate } = arrayUtilities,
+      { asyncExtract, asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
 
 export default class TopLevelAssertion extends Element {
   constructor(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses) {
@@ -118,28 +118,6 @@ export default class TopLevelAssertion extends Element {
     }
 
     return correlatesToHypotheses;
-  }
-
-  unifyStatementWithDeduction(statement, context) {
-    let statementUnifiesWithDeduction = false;
-
-    const statementString = statement.getString(),
-          deductionString = this.deduction.getString(),
-          topLevelAssertionString = this.getString(); ///
-
-    context.trace(`Unifying the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction...`);
-
-    const statementUnifies = this.deduction.unifyStatement(statement, context);
-
-    if (statementUnifies) {
-      statementUnifiesWithDeduction = true;
-    }
-
-    if (statementUnifiesWithDeduction) {
-      context.debug(`...unified the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction.`);
-    }
-
-    return statementUnifiesWithDeduction;
   }
 
   async verify() {
@@ -304,13 +282,37 @@ export default class TopLevelAssertion extends Element {
     return suppositionsVerify;
   }
 
+  async unifyStatementWithDeduction(statement, context) {
+    let statementUnifiesWithDeduction = false;
+
+    await this.break(context);
+
+    const statementString = statement.getString(),
+          deductionString = this.deduction.getString(),
+          topLevelAssertionString = this.getString(); ///
+
+    context.trace(`Unifying the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction...`);
+
+    const statementUnifies = await this.deduction.unifyStatement(statement, context);
+
+    if (statementUnifies) {
+      statementUnifiesWithDeduction = true;
+    }
+
+    if (statementUnifiesWithDeduction) {
+      context.debug(`...unified the '${statementString}' statement with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction.`);
+    }
+
+    return statementUnifiesWithDeduction;
+  }
+
   async unifyStatementAndSubproofOrProofAssertions(statement, subproofOrProofAssertions, context) {
     let statementAndSubproofOrProofAssertionsUnify = false;
 
     const correlatesToHypotheses = this.correlateHypotheses(context);
 
     if (correlatesToHypotheses) {
-      const statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, context);
+      const statementUnifiesWithDeduction = await this.unifyStatementWithDeduction(statement, context);
 
       if (statementUnifiesWithDeduction) {
         const subproofOrProofAssertionsUnifiesWithSuppositions = await this.unifySubproofOrProofAssertionsWithSuppositions(subproofOrProofAssertions, context);
@@ -331,9 +333,11 @@ export default class TopLevelAssertion extends Element {
   async unifySubproofOrProofAssertionsWithSupposition(subproofOrProofAssertions, supposition, context) {
     let subproofOrProofAssertionsUnifiesWithSupposition = false;
 
+    await this.break(context);
+
     if (!subproofOrProofAssertionsUnifiesWithSupposition) {
-      const subproofOrProofAssertion = extract(subproofOrProofAssertions, (subproofOrProofAssertion) => {
-        const subproofOrProofAssertionUnifies = supposition.unifySubproofOrProofAssertion(subproofOrProofAssertion, context);
+      const subproofOrProofAssertion = await asyncExtract(subproofOrProofAssertions, async (subproofOrProofAssertion) => {
+        const subproofOrProofAssertionUnifies = await supposition.unifySubproofOrProofAssertion(subproofOrProofAssertion, context);
 
         if (subproofOrProofAssertionUnifies) {
           const specificContext = context;  ///
@@ -371,7 +375,7 @@ export default class TopLevelAssertion extends Element {
 
     subproofOrProofAssertions = reverse(subproofOrProofAssertions); ///
 
-    subproofOrProofAssertionsUnifiesWithSuppositions = asyncBackwardsEvery(this.suppositions, async (supposition) => {
+    subproofOrProofAssertionsUnifiesWithSuppositions = await asyncBackwardsEvery(this.suppositions, async (supposition) => {
       const stepUnifiesWithSupposition = await this.unifySubproofOrProofAssertionsWithSupposition(subproofOrProofAssertions, supposition, context);
 
       if (stepUnifiesWithSupposition) {

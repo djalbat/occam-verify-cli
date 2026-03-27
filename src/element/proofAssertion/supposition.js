@@ -158,6 +158,47 @@ export default define(class Supposition extends ProofAssertion {
     return suppositionUnifies;
   }
 
+  async unifyIndependently(context) {
+    let unifiesIndependently = false;
+
+    const suppositionString = this.getString(); ///
+
+    context.trace(`Unifying the '${suppositionString}' supposition independently...`);
+
+    const statement = this.getStatement(),
+          procedureCall = this.getProcedureCall();
+
+    if (statement !== null) {
+      const specificContext = context;  ///
+
+      context = this.getContext();
+
+      const generalContext = context; ///
+
+      context = specificContext;  ///
+
+      const statementUnifiesIndependently = statement.unifyIndependently(generalContext, specificContext);
+
+      if (statementUnifiesIndependently) {
+        unifiesIndependently = true;
+      }
+    }
+
+    if (procedureCall !== null) {
+      const procedureCallResolvedIndependently = await procedureCall.unifyIndependently(context);
+
+      if (procedureCallResolvedIndependently) {
+        unifiesIndependently = true;
+      }
+    }
+
+    if (unifiesIndependently) {
+      context.debug(`...unified the '${suppositionString}' supposition independenly.`);
+    }
+
+    return unifiesIndependently;
+  }
+
   unifySubproofOrProofAssertion(subproofOrProofAssertion, context) {
     let subproofOrProofAssertionUnifies;
 
@@ -263,47 +304,6 @@ export default define(class Supposition extends ProofAssertion {
     }
 
     return subproofUnifies;
-  }
-
-  async unifyIndependently(context) {
-    let unifiesIndependently = false;
-
-    const suppositionString = this.getString(); ///
-
-    context.trace(`Unifying the '${suppositionString}' supposition independently...`);
-
-    const statement = this.getStatement(),
-          procedureCall = this.getProcedureCall();
-
-    if (statement !== null) {
-      const specificContext = context;  ///
-
-      context = this.getContext();
-
-      const generalContext = context; ///
-
-      context = specificContext;  ///
-
-      const statementUnifiesIndependently = statement.unifyIndependently(generalContext, specificContext);
-
-      if (statementUnifiesIndependently) {
-        unifiesIndependently = true;
-      }
-    }
-
-    if (procedureCall !== null) {
-      const procedureCallResolvedIndependently = await procedureCall.unifyIndependently(context);
-
-      if (procedureCallResolvedIndependently) {
-        unifiesIndependently = true;
-      }
-    }
-
-    if (unifiesIndependently) {
-      context.debug(`...unified the '${suppositionString}' supposition independenly.`);
-    }
-
-    return unifiesIndependently;
   }
 
   toJSON() {
