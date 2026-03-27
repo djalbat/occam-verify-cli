@@ -3,8 +3,6 @@
 import { arrayUtilities } from "necessary";
 import { Element, asynchronousUtilities } from "occam-languages";
 
-import assignAssignments from "../process/assign";
-
 import { define } from "../elements";
 
 const { last } = arrayUtilities,

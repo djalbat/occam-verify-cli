@@ -71,18 +71,18 @@ export function declare(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function descend(innerFunction, context) {
-  const nestedContext = NestedContext.fromNothing(context);
-
-  context = nestedContext;  ///
-
-  return innerFunction(context);
-}
-
 export function attempt(innerFunction, context) {
   const ephemeralContext = EphemeralContext.fromNothing(context);
 
   context = ephemeralContext;  ///
+
+  return innerFunction(context);
+}
+
+export function descend(innerFunction, context) {
+  const nestedContext = NestedContext.fromNothing(context);
+
+  context = nestedContext;  ///
 
   return innerFunction(context);
 }
