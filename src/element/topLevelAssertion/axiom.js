@@ -38,9 +38,12 @@ export default define(class Axiom extends TopLevelAssertion {
 
       context = this.getContext();
 
-      const generalContext = context;  ///
+      const generalContext = context,  ///
+            signatureAComparesToSignatureB = signatureA.compareSignature(signatureB, generalContext, specificContext);
 
-      comparesToSignature = signatureA.compare(signatureB, generalContext, specificContext);
+      if (signatureAComparesToSignatureB) {
+        comparesToSignature = true;
+      }
     }
 
     return comparesToSignature;

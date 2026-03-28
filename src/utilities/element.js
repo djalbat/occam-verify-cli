@@ -618,9 +618,10 @@ export function termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, c
   const { TermSubstitution } = elements,
         node = termSubstitutionNode,  ///
         string = context.nodeAsString(node),
+        generalContext = generalContextFromTermSubstitutionNode(termSubstitutionNode, context),
         targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
         replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context),
-        termSubstitution = new TermSubstitution(context, string, node, targetTerm, replacementTerm);
+        termSubstitution = new TermSubstitution(context, string, node, generalContext, targetTerm, replacementTerm);
 
   return termSubstitution;
 }
@@ -629,9 +630,10 @@ export function frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode
   const { FrameSubstitution } = elements,
         node = frameSubstitutionNode,  ///
         string = context.nodeAsString(node),
+        generalContext = generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context),
         targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
         replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
-        frameSubstitution = new FrameSubstitution(context, string, node, targetFrame, replacementFrame);
+        frameSubstitution = new FrameSubstitution(context, string, node, generalContext, targetFrame, replacementFrame);
 
   return frameSubstitution;
 }
@@ -767,9 +769,10 @@ export function referenceSubstitutionFromReferenceSubstitutionNode(referenceSubs
   const { ReferenceSubstitution } = elements,
         node = referenceSubstitutionNode,  ///
         string = context.nodeAsString(node),
+        generalContext = generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
         targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
         replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
-        referenceSubstitution = new ReferenceSubstitution(context, string, node, targetReference, replacementReference);
+        referenceSubstitution = new ReferenceSubstitution(context, string, node, generalContext, targetReference, replacementReference);
 
   return referenceSubstitution;
 }
@@ -779,11 +782,12 @@ export function statementSubstitutionFromStatementSubstitutionNode(statementSubs
   const { StatementSubstitution } = elements,
         node = statementSubstitutionNode,  ///
         string = context.nodeAsString(node),
+        generalContext = generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context),
         resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
         substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
         targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
         replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
-        statementSubstitution = new StatementSubstitution(context, string, node, resolved, substitution, targetStatement, replacementStatement);
+        statementSubstitution = new StatementSubstitution(context, string, node, generalContext, resolved, substitution, targetStatement, replacementStatement);
 
   return statementSubstitution;
 }
@@ -1757,6 +1761,12 @@ export function topLevelMetaAssertionFromReferenceNode(referenceNode, context) {
   return topLevelMetaAssertion;
 }
 
+export function generalContextFromTermSubstitutionNode(termSubstitutionNode, context) {
+  const generalContext = null;
+
+  return generalContext;
+}
+
 export function deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
   const deductionNode = metaLemmaMetathoremNode.getDeductionNode(),
         deduction = deductionFromDeductionNode(deductionNode, context);
@@ -1776,6 +1786,12 @@ export function replacementTermFromTermSubstitutionNode(termSubstitutionNode, co
         replacementTerm = termFromTermNode(replacementTermNode, context);
 
   return replacementTerm;
+}
+
+export function generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+  const generalContext = null;
+
+  return generalContext;
 }
 
 export function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
@@ -1879,6 +1895,18 @@ export function provisionalFromComplexTypeDeclarationNode(complexTypeDeclaration
   const provisional = complexTypeDeclarationNode.isProvisional();
 
   return provisional;
+}
+
+export function generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const generalContext = null;
+
+  return generalContext;
+}
+
+export function generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+  const generalContext = null;
+
+  return generalContext;
 }
 
 export function metavariableFromMetavariableDeclarationNode(metavariableDeclarationNode, context) {

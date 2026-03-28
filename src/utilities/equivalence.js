@@ -14,9 +14,9 @@ export function variablesFromTerm(term, context) {
         });
 
   compress(variables, (variableA, variableB) => {
-    const variableAEqualToVariableB = variableA.isEqualTo(variableB);
+    const variableAComparesToVariableB = variableA.compareVariable(variableB);
 
-    if (!variableAEqualToVariableB) {
+    if (!variableAComparesToVariableB) {
       return true;
     }
   });

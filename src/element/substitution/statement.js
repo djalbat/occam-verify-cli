@@ -11,8 +11,8 @@ import { join, ablate, attempt, descend, reconcile, instantiate } from "../../ut
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
-  constructor(context, string, node, resolved, substitution, targetStatement, replacementStatement) {
-    super(context, string, node);
+  constructor(context, string, node, generalContext, resolved, substitution, targetStatement, replacementStatement) {
+    super(context, string, node, generalContext);
 
     this.resolved = resolved;
     this.substitution = substitution;
@@ -151,6 +151,8 @@ export default define(class StatementSubstitution extends Substitution {
 
       context.addSubstitution(substitution);
 
+      this.setGeneralContext(generalContext);
+
       context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
     }
 
@@ -241,40 +243,57 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementStatementValidates;
   }
 
-  unifySubstitution(substitution, generalContext, specificContext) {
-    let substitutionUnifies;
+  unifySimpleSubstitution(simpleSubstitution, context) {
+    let simpleSubstitutionUnifies;
 
-    const context = specificContext,
-          generalSubstitution = this.substitution,  ///
-          specificSubstitution = substitution,  ///
-          generalSubstitutionString = generalSubstitution.getString(),
-          specificSubstitutionString = specificSubstitution.getString();
+    const substitutionString = this.substitution.getString(),
+          simpleSubstitutionString = simpleSubstitution.getString();
 
-    context.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
+    context.trace(`Unifying the '${simpleSubstitutionString}' simple substitution with the '${substitutionString}' substitution...`);
 
-    reconcile((specificContext) => {
-      substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, generalContext, specificContext);
+    const generalSubstitution = this.substitution,  ///
+          specificSubstitution = simpleSubstitution,  ///
+          generalSubstitutionGeneralContext = generalSubstitution.getGeneralContext(),
+          generalSubstitutionSpecificContext = generalSubstitution.getSpecificContext(),
+          specificSubstitutionGeneralContext = specificSubstitution.getGeneralContext(),
+          specificSubstitutionSpecificContext = specificSubstitution.getSpecificContext();
 
-      if (substitutionUnifies) {
-        specificContext.commit();
-      }
-    }, specificContext);
+    join((specificContext) => {
+      join((generalContext) => {
+        reconcile((specificContext) => {
+          simpleSubstitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, generalContext, specificContext);
 
-    if (substitutionUnifies) {
-      context.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
+          if (simpleSubstitutionUnifies) {
+            specificContext.commit(context);
+          }
+        }, specificContext)
+      }, generalSubstitutionSpecificContext, generalSubstitutionGeneralContext);
+    }, specificSubstitutionSpecificContext, specificSubstitutionGeneralContext, context);
+
+    if (simpleSubstitutionUnifies) {
+      context.trace(`...unified the '${simpleSubstitutionString}' simple substitution with the '${substitutionString}' substitution.`);
     }
 
-    return substitutionUnifies;
+    return simpleSubstitutionUnifies;
   }
 
-  unifyComplexSubstitution(complexSubstitution, generalContext, specificContext) {
+  unifyComplexSubstitution(complexSubstitution, context) {
     let substitution = null;
 
-    const context = specificContext, ///
-          simpleSubstitutionString = this.getString(),  ///
+    const simpleSubstitutionString = this.getString(),  ///
           complexSubstitutionString = complexSubstitution.getString();  ///
 
     context.trace(`Unifying the '${complexSubstitutionString}' complex substitution with the '${simpleSubstitutionString}' simple substitution...`);
+
+    context = complexSubstitution.getContext();
+
+    const specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context; ///
+
+    context = specificContext;  ///
 
     let simpleSubstitutionUnifies = false;
 
@@ -326,49 +345,24 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementStatemnentUnifies;
   }
 
-  resolve(generalContext, specificContext) {
+  resolve(context) {
     let resolved = false;
 
-    const context = specificContext,  ///
-          metavariableNode = this.getMetavariableNode(),
+    const metavariableNode = this.getMetavariableNode(),
           simpleSubstitution = context.findSimpleSubstitutionByMetavariableNode(metavariableNode),
           complexSubstitution = this; ///
 
     if (simpleSubstitution !== null) {
-      let context;
-
-      context = this.getContext();
-
-      const specificContext = context;  ///
-
-      context = simpleSubstitution.getContext();
-
-      const generalContext = context; ///
-
-      context = specificContext;  ///
-
       const substitutionString = this.getString(); ///
 
       context.trace(`Resolving the ${substitutionString} substitution...`);
 
-      const substitution = simpleSubstitution.unifyComplexSubstitution(complexSubstitution, generalContext, specificContext);
+      const substitution = simpleSubstitution.unifyComplexSubstitution(complexSubstitution, context);
 
       if (substitution !== null) {
-        let context;
+        const simpleSubstitutionUnifies = complexSubstitution.unifySimpleSubstitution(substitution, context);
 
-        context = substitution.getContext();
-
-        const specificContext = context;  ///
-
-        context = this.substitution.getContext();
-
-        const generalContext = context; ///
-
-        context = specificContext;  ///
-
-        const substitutionUnifies = this.unifySubstitution(substitution, generalContext, specificContext);
-
-        if (substitutionUnifies) {
+        if (simpleSubstitutionUnifies) {
           resolved = true;
         }
 
@@ -392,11 +386,14 @@ export default define(class StatementSubstitution extends Substitution {
       instantiate((context) => {
         const { string } = json,
               statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-              node = statementSubstitutionNode,  ///
+              node = statementSubstitutionNode, ///
+              generalContext = generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context),
+              resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
+              substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
               targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
               replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
-        statementSubstitutionn = new StatementSubstitution(context, string, node, targetStatement, replacementStatement);
+        statementSubstitutionn = new StatementSubstitution(context, string, node, generalContext, resolved, substitution, targetStatement, replacementStatement);
       }, context);
     }
 
@@ -452,4 +449,23 @@ function replacementStatementFromStatementSubstitutionNode(statementSubstitution
         replacementStatement = context.findStatementByStatementNode(replacementStatementNode);
 
   return replacementStatement;
+}
+
+function resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const resolved = true;
+
+  return resolved;
+}
+
+function substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const substitutionNode = statementSubstitutionNode.getSubstitutionNode(),
+        substitution = context.findStatementByStatementNode(substitutionNode);
+
+  return substitution;
+}
+
+function generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const generalContext = context; ///
+
+  return generalContext;
 }

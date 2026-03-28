@@ -22,9 +22,9 @@ export default class BranchingContext extends Context {
 
     const termB = this.terms.find((term) => {
       const termB = term, ///
-            termAEqualToTermB = termA.isEqualTo(termB);
+            termAComparesToTermB = termA.compareTerm(termB);
 
-      if (termAEqualToTermB) {
+      if (termAComparesToTermB) {
         return true;
       }
     }) || null;

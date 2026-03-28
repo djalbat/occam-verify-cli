@@ -249,11 +249,11 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   const context = specificContext;  ///
 
   if (term !== null) {
-    const variableNode = term.getVariableNode(),
-          variable = context.findVariableByVariableNode(variableNode),
-          variableDefined = isVariableDefined(variable, context);
+    const variableIdentifier = term.getVariableIdentifier(),
+          declaredDariable = context.findDeclaredVariableByVariableIdentifier(variableIdentifier),
+          declaredDariableDefined = isVariableDefined(declaredDariable, context);
 
-    if (!negated && variableDefined) {
+    if (!negated && declaredDariableDefined) {
       validatesWhenDerived = true;
     }
 
@@ -263,8 +263,8 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   }
 
   if (frame!== null) {
-    const metavariableNode = frame.getMetavariableNode(),
-          declaredMetavariable = context.findDeclaredMetavariableByMetavariableNode(metavariableNode),
+    const metavariableName = frame.getMetavariableName(),
+          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName),
           metavariableDefined = isMetavariableDefined(declaredMetavariable, context);
 
     if (!negated && metavariableDefined) {
@@ -287,9 +287,9 @@ function isVariableDefined(variable, context) {
   equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
 
   const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
-          const definedVariableEqualToVariable = definedVariable.compare(variable);
+          const definedVariableComparesToVariable = definedVariable.compareVariable(variable);
 
-          if (definedVariableEqualToVariable === variable) {
+          if (definedVariableComparesToVariable === variable) {
             return true;
           }
         }),

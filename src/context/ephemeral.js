@@ -199,9 +199,9 @@ export default class EphemeralContext extends Context {
     const terms = this.getTerms(),
           termB = terms.find((term) => {
             const termB = term, ///
-                  termAEqualToTermB = termA.isEqualTo(termB);
+                  termAComparesToTermB = termA.compareTerm(termB);
       
-            if (termAEqualToTermB) {
+            if (termAComparesToTermB) {
               return true;
             }
           }) || null;

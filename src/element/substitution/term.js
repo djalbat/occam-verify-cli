@@ -10,8 +10,8 @@ import { termSubstitutionStringFromTermAndVariable } from "../../utilities/strin
 import { join, ablate, descend, attempt, instantiate } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
-  constructor(context, string, node, targetTerm, replacementTerm) {
-    super(context, string, node);
+  constructor(context, string, node, generalContext, targetTerm, replacementTerm) {
+    super(context, string, node, generalContext);
 
     this.targetTerm = targetTerm;
     this.replacementTerm = replacementTerm;
@@ -119,6 +119,8 @@ export default define(class TermSubstitution extends Substitution {
 
       context.addSubstitution(substitution);
 
+      this.setGeneralContext(generalContext);
+
       context.debug(`...validated the '${termSubstitutionString}' term substitution.`);
     }
 
@@ -203,10 +205,11 @@ export default define(class TermSubstitution extends Substitution {
         const { string } = json,
               termSubstitutionNode = instantiateTermSubstitution(string, context),
               node = termSubstitutionNode,  ///
+              generalContext = generalContextFromTermSubstitutionNode(termSubstitutionNode, context),
               targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
               replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
 
-        termSubstitutionn = new TermSubstitution(context, string, node, targetTerm, replacementTerm);
+        termSubstitutionn = new TermSubstitution(context, string, node, generalContext, targetTerm, replacementTerm);
       }, context);
     }
 
@@ -258,4 +261,10 @@ function replacementTermFromTermSubstitutionNode(termSubstitutionNode, context) 
         replacementTerm = context.findTermByTermNode(replacementTermNode);
 
   return replacementTerm;
+}
+
+function generalContextFromTermSubstitutionNode(termSubstitutionNode, context) {
+  const generalContext = context; ///
+
+  return generalContext;
 }

@@ -96,8 +96,9 @@ export default class LiminalContext extends Context {
     });
   }
 
-  resolveSubstitutions(generalContext, specificContext) {
-    const substitutions = this.getSubstitutions(),
+  resolveSubstitutions() {
+    const context = this, ///
+          substitutions = this.getSubstitutions(),
           metavariableNodes = metavariableNodesFromSubstitutions(substitutions);
 
     metavariableNodes.forEach((metavariableNode) => {
@@ -108,7 +109,7 @@ export default class LiminalContext extends Context {
               resolved = substitution.isResolved();
 
         if (!resolved) {
-          substitution.resolve(generalContext, specificContext);
+          substitution.resolve(context);
         }
       });
     });

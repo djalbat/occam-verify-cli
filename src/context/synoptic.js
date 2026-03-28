@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import Context from "../context";
 
-const { push, last } = arrayUtilities;
+const { push, last, compress } = arrayUtilities;
 
 export default class SynopticContext extends Context {
   constructor(context, contexts) {
@@ -25,6 +25,14 @@ export default class SynopticContext extends Context {
 
       push(terms, contextTerms);
     });
+    
+    compress(terms, (termA, termB) => {
+      const termAComparesToTermB = termA.compareTerm(termB);
+      
+      if (!termAComparesToTermB) {
+        return true;
+      }
+    });
 
     return terms;
   }
@@ -36,6 +44,14 @@ export default class SynopticContext extends Context {
       const contextFrames = context.getFrames();
 
       push(frames, contextFrames);
+    });
+
+    compress(frames, (frameA, frameB) => {
+      const frameAEqualToFrameB = frameA.isEqualTo(frameB);
+
+      if (!frameAEqualToFrameB) {
+        return true;
+      }
     });
 
     return frames;
@@ -50,6 +66,14 @@ export default class SynopticContext extends Context {
       push(equalities, contextEqualities);
     });
 
+    compress(equalities, (equalityA, equalityB) => {
+      const equalityAEqualToEqualityB = equalityA.isEqualTo(equalityB);
+
+      if (!equalityAEqualToEqualityB) {
+        return true;
+      }
+    });
+
     return equalities;
   }
 
@@ -60,6 +84,14 @@ export default class SynopticContext extends Context {
       const contextJudgements = context.getJudgements();
 
       push(judgements, contextJudgements);
+    });
+
+    compress(judgements, (judgementA, judgementB) => {
+      const judgementAEqualToJudgementB = judgementA.isEqualTo(judgementB);
+
+      if (!judgementAEqualToJudgementB) {
+        return true;
+      }
     });
 
     return judgements;
@@ -74,6 +106,14 @@ export default class SynopticContext extends Context {
       push(statements, contextStatements);
     });
 
+    compress(statements, (statementA, statementB) => {
+      const statementAEqualToStatementB = statementA.isEqualTo(statementB);
+
+      if (!statementAEqualToStatementB) {
+        return true;
+      }
+    });
+
     return statements;
   }
 
@@ -84,6 +124,14 @@ export default class SynopticContext extends Context {
       const contextAssertions = context.getAssertions();
 
       push(assertions, contextAssertions);
+    });
+
+    compress(assertions, (assertionA, assertionB) => {
+      const assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
+
+      if (!assertionAEqualToAssertionB) {
+        return true;
+      }
     });
 
     return assertions;
@@ -98,6 +146,14 @@ export default class SynopticContext extends Context {
       push(references, contextReferences);
     });
 
+    compress(references, (referenceA, referenceB) => {
+      const referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);
+
+      if (!referenceAEqualToReferenceB) {
+        return true;
+      }
+    });
+
     return references;
   }
 
@@ -108,6 +164,14 @@ export default class SynopticContext extends Context {
       const contextAssumptions = context.getAssumptions();
 
       push(assumptions, contextAssumptions);
+    });
+
+    compress(assumptions, (assumptionA, assumptionB) => {
+      const assumptionAEqualToAssumptionB = assumptionA.isEqualTo(assumptionB);
+
+      if (!assumptionAEqualToAssumptionB) {
+        return true;
+      }
     });
 
     return assumptions;
@@ -122,6 +186,14 @@ export default class SynopticContext extends Context {
       push(metavariables, contextMetavariables);
     });
 
+    compress(metavariables, (metavariableA, metavariableB) => {
+      const metavariableAEqualToMetavariableB = metavariableA.isEqualTo(metavariableB);
+
+      if (!metavariableAEqualToMetavariableB) {
+        return true;
+      }
+    });
+
     return metavariables;
   }
 
@@ -132,6 +204,14 @@ export default class SynopticContext extends Context {
       const contextSubstitutions = context.getSubstitutions();
 
       push(substitutions, contextSubstitutions);
+    });
+
+    compress(substitutions, (substitutionA, substitutionB) => {
+      const substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
+
+      if (!substitutionAEqualToSubstitutionB) {
+        return true;
+      }
     });
 
     return substitutions;

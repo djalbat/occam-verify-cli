@@ -45,11 +45,11 @@ export default define(class Variable extends Element {
     return identifierEqualTo;
   }
 
-  compare(variable) {
+  compareVariable(variable) {
     const variableIdentifier = variable.getIdentifier(),
-          comparesTo = (this.identifier === variableIdentifier);
+          comparesToVariable = (this.identifier === variableIdentifier);
 
-    return comparesTo;
+    return comparesToVariable;
   }
 
   compareParamter(parameter) {

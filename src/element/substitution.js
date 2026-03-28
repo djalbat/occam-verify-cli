@@ -6,6 +6,16 @@ import { primitiveUtilities } from "occam-furtle";
 const { primitiveFromNode } =primitiveUtilities;
 
 export default class Substitution extends Element {
+  constructor(context, string, node, generalContext) {
+    super(context, string, node);
+
+    this.generalContext = generalContext;
+  }
+
+  getGeneralContext() {
+    return this.generalContext;
+  }
+
   getPrimitive(context) {
     const replacementNode = this.getReplacementNode(),
           node = replacementNode, ///
@@ -19,6 +29,17 @@ export default class Substitution extends Element {
           substitutionNode = node; ///
 
     return substitutionNode;
+  }
+
+  getSpecificContext() {
+    const context = this.getContext(),
+          specificContext = context;  ///
+
+    return specificContext;
+  }
+
+  setGeneralContext(generalContext) {
+    this.generalContext = generalContext;
   }
 
   isEqualTo(substitution) {

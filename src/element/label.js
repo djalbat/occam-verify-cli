@@ -46,7 +46,7 @@ export default define(class Label extends Element {
     return comparesToReference;
   }
 
-  compareMetavariable(metavariable) { return this.metavariable.compare(metavariable); }
+  compareMetavariable(metavariable) { return this.metavariable.compareMetavariable(metavariable); }
 
   verify() {
     let verifies = false;

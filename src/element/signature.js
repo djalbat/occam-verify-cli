@@ -122,7 +122,7 @@ export default define(class Signature extends Element {
     return termsValidate
   }
 
-  compare(signature, substitutions, generalContext, specificContext) {
+  compareSignature(signature, substitutions, generalContext, specificContext) {
     const terms = signature.getTerms(),
           termsA = this.terms,  ///
           termsB = terms, ///
@@ -153,9 +153,9 @@ export default define(class Signature extends Element {
               }
             }
           }),
-          compares = matches; ///
+          comparesToSignature = matches; ///
 
-    return compares;
+    return comparesToSignature;
   }
 
   compareSubstitutions(substitutions, context) {

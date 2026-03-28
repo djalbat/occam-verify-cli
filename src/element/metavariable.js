@@ -82,7 +82,7 @@ export default define(class Metavariable extends Element {
     return metavariableNodeMatches;
   }
 
-  compare(metavariable) {
+  compareMetavariable(metavariable) {
     const metavariableName = metavariable.getName(),
           comparesToMetavariableName = this.compareMetavariableName(metavariableName),
           comparesToMetavariable = comparesToMetavariableName;  ///

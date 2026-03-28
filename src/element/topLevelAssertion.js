@@ -340,15 +340,7 @@ export default class TopLevelAssertion extends Element {
         const subproofOrProofAssertionUnifies = await supposition.unifySubproofOrProofAssertion(subproofOrProofAssertion, context);
 
         if (subproofOrProofAssertionUnifies) {
-          const specificContext = context;  ///
-
-          context = this.getContext();
-
-          const generalContext = context; ///
-
-          context = specificContext;  ///
-
-          context.resolveSubstitutions(generalContext, specificContext);
+          context.resolveSubstitutions();
 
           return true;
         }

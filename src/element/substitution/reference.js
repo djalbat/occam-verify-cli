@@ -9,8 +9,8 @@ import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilit
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
 
 export default define(class ReferenceSubstitution extends Substitution {
-  constructor(context, string, node, targetReference, replacementReference) {
-    super(context, string, node);
+  constructor(context, string, node, generalContext, targetReference, replacementReference) {
+    super(context, string, node, generalContext);
 
     this.targetReference = targetReference;
     this.replacementReference = replacementReference;
@@ -133,6 +133,8 @@ export default define(class ReferenceSubstitution extends Substitution {
 
       context.addSubstitution(substitution);
 
+      this.setGeneralContext(generalContext);
+
       context.debug(`...validated the '${referenceSubstitutionString}' reference substitution.`);
     }
 
@@ -198,11 +200,12 @@ export default define(class ReferenceSubstitution extends Substitution {
       instantiate((context) => {
         const { string } = json,
               referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
-              node = referenceSubstitutionNode,  ///
+              node = referenceSubstitutionNode, ///
+              generalContext = generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
               targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
               replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
 
-        referenceSubstitutionn = new ReferenceSubstitution(context, string, node, targetReference, replacementReference);
+        referenceSubstitutionn = new ReferenceSubstitution(context, string, node, generalContext, targetReference, replacementReference);
       }, context);
     }
 
@@ -256,4 +259,10 @@ function replacementReferenceFromReferenceSubstitutionNode(referenceSubstitution
         replacementReference = context.findReferenceByReferenceNode(replacementReferenceNode);
 
   return replacementReference;
+}
+
+function generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+  const generalContext = context; ///
+
+  return generalContext;
 }

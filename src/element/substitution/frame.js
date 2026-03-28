@@ -9,8 +9,8 @@ import { join, ablate, descend, attempt, instantiate } from "../../utilities/con
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
 
 export default define(class FrameSubstitution extends Substitution {
-  constructor(context, string, node, targetFrame, replacementFrame) {
-    super(context, string, node);
+  constructor(context, string, node, generalContext, targetFrame, replacementFrame) {
+    super(context, string, node, generalContext);
 
     this.targetFrame = targetFrame;
     this.replacementFrame = replacementFrame;
@@ -116,6 +116,8 @@ export default define(class FrameSubstitution extends Substitution {
 
       context.addSubstitution(substitution);
 
+      this.setGeneralContext(generalContext);
+
       context.debug(`...validated the '${frameSubstitutionString}' frame substitution.`);
     }
 
@@ -191,11 +193,12 @@ export default define(class FrameSubstitution extends Substitution {
       instantiate((context) => {
         const { string } = json,
               frameSubstitutionNode = instantiateFrameSubstitution(string, context),
-              node = frameSubstitutionNode,  ///
+              node = frameSubstitutionNode, ///
+              generalContext = generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context),
               targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
               replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
 
-        frameSubstitutionn = new FrameSubstitution(context, string, node, targetFrame, replacementFrame);
+        frameSubstitutionn = new FrameSubstitution(context, string, node, generalContext, targetFrame, replacementFrame);
       }, context);
     }
 
@@ -246,3 +249,10 @@ function replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, contex
 
   return replacementFrame;
 }
+
+function generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+  const generalContext = context; ///
+
+  return generalContext;
+}
+

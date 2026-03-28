@@ -41,14 +41,6 @@ export default define(class Term extends Element {
     return variableIdentifier;
   }
 
-  isEqualTo(term) {
-    const termNode = term.getNode(),
-          termNodeMatches = this.matchTermNode(termNode),
-          equalTo = termNodeMatches;  ///
-
-    return equalTo;
-  }
-
   isGrounded(definedVariables, context) {
     const term  = this, ///
           variables = variablesFromTerm(term, context);
