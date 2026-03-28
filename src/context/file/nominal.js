@@ -33,8 +33,8 @@ const { push, filter } = arrayUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class NominalFileContext extends FileContext {
-  constructor(context, fileContent, filePath, tokens, node, lexer, parser, types, rules, axioms, lemmas, theorems, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, declaredVariables, declaredMetavariables) {
-    super(context, fileContent, filePath, tokens, node);
+  constructor(context, fileContent, filePath, tokens, node, json, lexer, parser, types, rules, axioms, lemmas, theorems, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, declaredVariables, declaredMetavariables) {
+    super(context, fileContent, filePath, tokens, node, json);
 
     this.lexer = lexer;
     this.parser = parser;
@@ -798,34 +798,38 @@ export default class NominalFileContext extends FileContext {
   }
 
   initialise() {
-    const fileContext = this; ///
-
     super.initialise();
 
-    this.types = [];
+    const json = this.getJSON();
 
-    typesFromJSON(this.json, this.types, fileContext);
+    if (json !== null) {
+      const fileContext = this; ///
 
-    this.lemmas = lemmasFromJSON(this.json, fileContext);
-    this.metaLemmas = metaLemmasFromJSON(this.json, fileContext);
+      this.types = [];
 
-    this.declaredMetavariables = declaredMetavariablesFromJSON(this.json, fileContext);
-    this.declaredVariables = declaredVariablesFromJSON(this.json, fileContext);
-    this.typePrefixes = typePrefixesFromJSON(this.json, fileContext);
-    this.combinators = combinatorsFromJSON(this.json, fileContext);
-    this.constructors = constructorsFromJSON(this.json, fileContext);
-    this.metatheorems = metatheoremsFromJSON(this.json, fileContext);
+      typesFromJSON(json, this.types, fileContext);
 
-    const node = this.getNode(),
-          context = this, ///
-          fileNode = node;  ///
+      this.lemmas = lemmasFromJSON(json, fileContext);
+      this.metaLemmas = metaLemmasFromJSON(json, fileContext);
 
-    initialiseFile(fileNode, context);
+      this.declaredMetavariables = declaredMetavariablesFromJSON(json, fileContext);
+      this.declaredVariables = declaredVariablesFromJSON(json, fileContext);
+      this.typePrefixes = typePrefixesFromJSON(json, fileContext);
+      this.combinators = combinatorsFromJSON(json, fileContext);
+      this.constructors = constructorsFromJSON(json, fileContext);
+      this.metatheorems = metatheoremsFromJSON(json, fileContext);
 
-    // this.rules = rulesFromJSON(json, fileContext);
-    // this.axioms = axiomsFromJSON(json, fileContext);
-    // this.theorems = theoremsFromJSON(json, fileContext);
-    // this.conjectures = conjecturesFromJSON(json, fileContext);
+      const node = this.getNode(),
+            context = this, ///
+            fileNode = node;  ///
+
+      this.rules = [];
+      this.axioms = [];
+      this.theorems = [];
+      this.conjectures = [];
+
+      initialiseFile(fileNode, context);
+    }
   }
 
   toJSON() {
