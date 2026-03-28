@@ -11,22 +11,14 @@ import { verifyFile } from "../../process/verify";
 import { baseTypeFromNothing } from "../../utilities/type";
 import { findMetaTypeByMetaTypeName } from "../../metaTypes";
 import { typesFromJSON,
-         rulesFromJSON,
-         axiomsFromJSON,
+         lemmasFromJSON,
          typesToTypesJSON,
-         rulesToRulesJSON,
-         theoremsFromJSON,
-         lemmasFromNothing,
-         axiomsToAxiomsJSON,
-         conjecturesFromJSON,
+         metaLemmasFromJSON,
          combinatorsFromJSON,
          typePrefixesFromJSON,
          constructorsFromJSON,
          metatheoremsFromJSON,
-         metaLemmasFromNothing,
-         theoremsToTheoremsJSON,
          declaredVariablesFromJSON,
-         conjecturesToConjecturesJSON,
          combinatorsToCombinatorsJSON,
          declaredMetavariablesFromJSON,
          typePrefixesToTypePrefixesJSON,
@@ -811,40 +803,33 @@ export default class NominalFileContext extends FileContext {
 
     typesFromJSON(json, this.types, fileContext);
 
-    this.lemmas = lemmasFromNothing();
-    this.metaLemmas = metaLemmasFromNothing();
+    this.lemmas = lemmasFromJSON(json, fileContext);
+    this.metaLemmas = metaLemmasFromJSON(json, fileContext);
 
     this.declaredMetavariables = declaredMetavariablesFromJSON(json, fileContext);
     this.declaredVariables = declaredVariablesFromJSON(json, fileContext);
-
-    this.rules = rulesFromJSON(json, fileContext);
-    this.axioms = axiomsFromJSON(json, fileContext);
-    this.theorems = theoremsFromJSON(json, fileContext);
-    this.conjectures = conjecturesFromJSON(json, fileContext);
-    this.combinators = combinatorsFromJSON(json, fileContext);
     this.typePrefixes = typePrefixesFromJSON(json, fileContext);
+    this.combinators = combinatorsFromJSON(json, fileContext);
     this.constructors = constructorsFromJSON(json, fileContext);
     this.metatheorems = metatheoremsFromJSON(json, fileContext);
+
+    // this.rules = rulesFromJSON(json, fileContext);
+    // this.axioms = axiomsFromJSON(json, fileContext);
+    // this.theorems = theoremsFromJSON(json, fileContext);
+    // this.conjectures = conjecturesFromJSON(json, fileContext);
   }
 
   toJSON() {
     const typesJSON = typesToTypesJSON(this.types),
-          rulesJSON = rulesToRulesJSON(this.rules),
-          axiomsJSON = axiomsToAxiomsJSON(this.axioms),
-          theoremsJSON = theoremsToTheoremsJSON(this.theorems),
-          conjecturesJSON = conjecturesToConjecturesJSON(this.conjectures),
           combinatorsJSON = combinatorsToCombinatorsJSON(this.combinators),
           typePrefixesJSON = typePrefixesToTypePrefixesJSON(this.typePrefixes),
           constructorsJSON = constructorsToConstructorsJSON(this.constructors),
           metatheoremsJSON = metatheoremsToMetatheoremsJSON(this.metatheorems),
           declaredVariablesJSON = declaredVariablesToDeclaredVariablesJSON(this.declaredVariables),
           declaredMetavariablesJSON = declaredMetavariablesToDeclaredMetavariablesJSON(this.declaredMetavariables),
+          fileContent = this.fileContent,
           filePath = this.filePath,
           types = typesJSON,  ///
-          rules = rulesJSON,  ///
-          axioms = axiomsJSON,  ///
-          theorems = theoremsJSON,  ///
-          conjectures = conjecturesJSON,  ///
           combinators = combinatorsJSON,  ///
           typePrefixes = typePrefixesJSON,  ///
           constructors = constructorsJSON,  ///
@@ -852,12 +837,9 @@ export default class NominalFileContext extends FileContext {
           declaredVariables = declaredVariablesJSON,  ///
           declaredMetavariables = declaredMetavariablesJSON,  ///
           json = {
+            fileContent,
             filePath,
             types,
-            rules,
-            axioms,
-            theorems,
-            conjectures,
             combinators,
             typePrefixes,
             constructors,

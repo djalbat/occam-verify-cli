@@ -2,19 +2,6 @@
 
 import elements from "../elements";
 import EphemeralContext from "../context/ephemeral";
-import Substitution from "../element/substitution";
-
-export function lemmasFromNothing() {
-  const lemmas = [];
-
-  return lemmas;
-}
-
-export function metaLemmasFromNothing() {
-  const metaLemmas = [];
-
-  return metaLemmas;
-}
 
 export function nameFromJSON(json, context) {
   let { name } = json;
@@ -84,6 +71,12 @@ export function frameFromJSON(json, context) {
   }
 
   return frame;
+}
+
+export function lemmasFromJSON(json, context) {
+  const lemmas = [];
+
+  return lemmas;
 }
 
 export function negatedFromJSON(json, context) {
@@ -186,6 +179,12 @@ export function conclusionFromJSON(json, context) {
   return conclusion;
 }
 
+export function metaLemmasFromJSON(json, context) {
+  const metaLemmas = [];
+
+  return metaLemmas;
+}
+
 export function provisionalFromJSON(json, context) {
   const { provisional } = json;
 
@@ -268,22 +267,6 @@ export function termsFromJSON(json, context) {
   return terms;
 }
 
-export function rulesFromJSON(json, context) {
-  let { rules } = json;
-
-  const { Rule } = elements,
-        rulesJSON = rules; ///
-
-  rules = rulesJSON.map((ruleJSON) => {
-    const json = ruleJSON,  ///
-          rule = Rule.fromJSON(json, context);
-
-    return rule;
-  });
-
-  return rules;
-}
-
 export function framesFromJSON(json, context) {
   let { frames } = json;
 
@@ -316,22 +299,6 @@ export function labelsFromJSON(json, context) {
   return labels;
 }
 
-export function axiomsFromJSON(json, context) {
-  let { axioms } = json;
-
-  const { Axiom } = elements,
-        axiomsJSON = axioms; ///
-
-  axioms = axiomsJSON.map((axiomJSON) => {
-    const json = axiomJSON,  ///
-          axiom = Axiom.fromJSON(json, context);
-
-    return axiom;
-  });
-
-  return axioms;
-}
-
 export function premisesFromJSON(json, context) {
   let { premises } = json;
 
@@ -346,22 +313,6 @@ export function premisesFromJSON(json, context) {
   });
 
   return premises;
-}
-
-export function theoremsFromJSON(json, context) {
-  let { theorems } = json;
-
-  const { Theorem } = elements,
-        theoremsJSON = theorems; ///
-
-  theorems = theoremsJSON.map((theoremJSON) => {
-    const json = theoremJSON,  ///
-          theorem = Theorem.fromJSON(json, context);
-
-    return theorem;
-  });
-
-  return theorems;
 }
 
 export function variablesFromJSON(json, context) {
@@ -527,22 +478,6 @@ export function referencesFromJSON(json, context) {
   });
 
   return references;
-}
-
-export function conjecturesFromJSON(json, context) {
-  let { conjectures } = json;
-
-  const { Conjecture } = elements,
-        conjecturesJSON = conjectures; ///
-
-  conjectures = conjecturesJSON.map((conjectureJSON) => {
-    const json = conjectureJSON,  ///
-          conjecture = Conjecture.fromJSON(json, context);
-
-    return conjecture;
-  });
-
-  return conjectures;
 }
 
 export function combinatorsFromJSON(json, context) {
@@ -922,16 +857,6 @@ export function typesToTypesJSON(types) {
   return typesJSON;
 }
 
-export function rulesToRulesJSON(rules) {
-  const rulesJSON = rules.map((rule) => {
-    const ruleJSON = rule.toJSON();
-
-    return ruleJSON;
-  });
-
-  return rulesJSON;
-}
-
 export function labelsToLabelsJSON(labels) {
   const labelsJSON = labels.map((label) => {
     const labelJSON = label.toJSON();
@@ -952,16 +877,6 @@ export function framesToFramesJSON(frames) {
   return framesJSON;
 }
 
-export function axiomsToAxiomsJSON(axioms) {
-  const axiomsJSON = axioms.map((axiom) => {
-    const axiomJSON = axiom.toJSON();
-
-    return axiomJSON;
-  });
-
-  return axiomsJSON;
-}
-
 export function premisesToPremisesJSON(premises) {
   const premisesJSON = premises.map((premise) => {
     const premiseJSON = premise.toJSON();
@@ -970,16 +885,6 @@ export function premisesToPremisesJSON(premises) {
   });
 
   return premisesJSON;
-}
-
-export function theoremsToTheoremsJSON(theorems) {
-  const theoremsJSON = theorems.map((theorem) => {
-    const theoremJSON = theorem.toJSON();
-
-    return theoremJSON;
-  });
-
-  return theoremsJSON;
 }
 
 export function variablesToVariablesJSON(variables) {
@@ -1080,16 +985,6 @@ export function referencesToReferencesJSON(references) {
   });
 
   return referencesJSON;
-}
-
-export function conjecturesToConjecturesJSON(conjectures) {
-  const conjecturesJSON = conjectures.map((conjecture) => {
-    const conjectureJSON = conjecture.toJSON();
-
-    return conjectureJSON;
-  });
-
-  return conjecturesJSON;
 }
 
 export function combinatorsToCombinatorsJSON(combinators) {
