@@ -509,6 +509,14 @@ export default class EphemeralContext extends Context {
     });
   }
 
+  findVariableByVariableNode(variableNode) {
+    const variableIdentifier = variableNode.getVariableIdentifier(),
+          declaredVariable = this.findDeclaredVariableByVariableIdentifier(variableIdentifier),
+          variable = declaredVariable;  ///
+
+    return variable;
+  }
+
   findTermByTermNode(termNode) {
     const terms = this.getTerms(),
           term = terms.find((term) => {

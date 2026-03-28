@@ -5,6 +5,20 @@ import { NonTerminalNode } from "occam-languages";
 import { ARGUMENT_RULE_NAME, VARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class TermNode extends NonTerminalNode {
+  getVariableIdentifier() {
+    let variableIdentifier = null;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const variableNode = this.getVariableNode();
+
+      variableIdentifier = variableNode.getVariableIdentifier();
+    }
+
+    return variableIdentifier;
+  }
+
   isSingular() {
     let singular = false;
 

@@ -463,7 +463,7 @@ export default class Context extends ContextBase {
 
   isJudgementPresentByMetavariableNode(metavariableNode) {
     const context = this.getContext(),
-      judgementPresent = context.isJudgementPresentByMetavariableNode(metavariableNode);
+          judgementPresent = context.isJudgementPresentByMetavariableNode(metavariableNode);
 
     return judgementPresent;
   }

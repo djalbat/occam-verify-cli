@@ -198,9 +198,9 @@ export default class LiminalContext extends Context {
 
   findSubstitutionByVariableNode(variableNode) {
     const substitution = this.findSubstitution((substitution) => {
-      const substitutionComparesToVariableNode = substitution.compareVariableNode(variableNode);
+      const variableNodeMatches = substitution.matchVariableNode(variableNode);
 
-      if (substitutionComparesToVariableNode) {
+      if (variableNodeMatches) {
         return true;
       }
     }) || null;

@@ -100,6 +100,18 @@ export default class Substitution extends Element {
     return simple;
   }
 
+  matchVariableNode(variableNode) {
+    const variableNodeMatches = false;
+
+    return variableNodeMatches;
+  }
+
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = false;
+
+    return metavariableNodeMatches;
+  }
+
   matchSubstitutionNode(substitutionNode) {
     const node = substitutionNode, ///
           nodeMatches = this.matchNode(node),
@@ -107,6 +119,7 @@ export default class Substitution extends Element {
 
     return substitutionNodeMatches;
   }
+
 
   findValidSubstitution(context) {
     const substitutionNode = this.getSubstitutionNode(),

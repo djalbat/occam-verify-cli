@@ -34,6 +34,13 @@ export default define(class Term extends Element {
     return termNode;
   }
 
+  getVariableNode() {
+    const termNode = this.getTermNode(),
+          variableNode = termNode.getVariableNode();
+
+    return variableNode;
+  }
+
   getVariableIdentifier() {
     const termNode = this.getTermNode(),
           variableIdentifier = termNode.getVariableIdentifier();
@@ -91,6 +98,27 @@ export default define(class Term extends Element {
           termNodeMatches = nodeMatches; ///
 
     return termNodeMatches;
+  }
+
+  matchVariableNode(variableNode) {
+    let varialbeNodeMatches = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const variableNodeA = variableNode; ///
+
+      variableNode = this.getVariableNode();
+
+      const variableNodeB = variableNode, ///
+            variableNodeAMatchesVariableNodeB = variableNodeA.match(variableNodeB);
+
+      if (variableNodeAMatchesVariableNodeB) {
+        varialbeNodeMatches = true; ///
+      }
+    }
+
+    return varialbeNodeMatches;
   }
 
   compareTerm(term) {

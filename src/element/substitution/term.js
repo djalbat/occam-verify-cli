@@ -49,8 +49,8 @@ export default define(class TermSubstitution extends Substitution {
   getVariableNode() { return this.targetTerm.getVariableNode(); }
 
   isTrivial() {
-    const targetTermEqualToReplacementTerm = this.targetTerm.isEqualTo(this.replacementTerm),
-          trivial = targetTermEqualToReplacementTerm; ///
+    const targetTermComparesToReplacementTerm = this.targetTerm.compareTerm(this.replacementTerm),
+          trivial = targetTermComparesToReplacementTerm; ///
 
     return trivial;
   }
@@ -60,8 +60,8 @@ export default define(class TermSubstitution extends Substitution {
   compareTerm(term, context) {
     term = stripBracketsFromTerm(term, context); ///
 
-    const termEqualToReplacementTerm = this.replacementTerm.isEqualTo(term),
-          comparedToTerm = termEqualToReplacementTerm; ///
+    const replacementTermComparesToTerm = this.replacementTerm.compareTerm(term),
+          comparedToTerm = replacementTermComparesToTerm; ///
 
     return comparedToTerm;
   }

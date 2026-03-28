@@ -137,7 +137,7 @@ export default define(class Variable extends Element {
 
       context = generalContext;  ///
 
-      const variableNode = variable.getIdentifier();
+      const variableNode = variable.getNode();
 
       variable = context.findVariableByVariableNode(variableNode);
 

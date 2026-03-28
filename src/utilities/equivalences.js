@@ -66,7 +66,7 @@ export function separateGroundedTermsAndDefinedVariables(equivalences, groundedT
 
   separateInitiallyGroundedEquivalences(equivalences, remainingEquivalences, initiallyGroundedEquivalences, context);
 
-  const initiallyGroundedEquivalencesLength = initiallyGroundedEquivalences.getLength();
+  const initiallyGroundedEquivalencesLength = initiallyGroundedEquivalences.length;
 
   if (initiallyGroundedEquivalencesLength > 0) {
     groundedEquivalences = initiallyGroundedEquivalences; ///
@@ -97,7 +97,7 @@ export function separateGroundedTermsAndDefinedVariables(equivalences, groundedT
 
       push(groundedEquivalences, implicitlyGroundedEquivalences);
 
-      implicitlyGroundedEquivalencesLength = implicitlyGroundedEquivalences.getLength();  ///
+      implicitlyGroundedEquivalencesLength = implicitlyGroundedEquivalences.length;  ///
     }
   }
 }

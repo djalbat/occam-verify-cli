@@ -5,6 +5,7 @@ import Assertion from "../assertion";
 import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
 import { instantiateDefinedAssertion } from "../../process/instantiate";
+import { separateGroundedTermsAndDefinedVariables } from "../../utilities/equivalences";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
 import { termFromJDefinedAssertionNode, frameFromJDefinedAssertionNode, negatedFromJDefinedAssertionNode, definedAssertionFromStatementNode } from "../../utilities/element";
 
@@ -101,10 +102,10 @@ export default define(class DefinedAssertion extends Assertion {
         context.debug(`The '${termString}' term is not singular.`);
       } else {
         const term = this.term.validate(context, (term) => {
-                const validatesForwards = true;
+          const validatesForwards = true;
 
-                return validatesForwards;
-              });
+          return validatesForwards;
+        });
 
         if (term !== null) {
           this.term = term; ///
@@ -257,7 +258,7 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
       validatesWhenDerived = true;
     }
 
-    if (negated && !variableDefined) {
+    if (negated && !declaredDariableDefined) {
       validatesWhenDerived = true;
     }
   }
@@ -265,13 +266,13 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   if (frame!== null) {
     const metavariableName = frame.getMetavariableName(),
           declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName),
-          metavariableDefined = isMetavariableDefined(declaredMetavariable, context);
+          declaredMetavariableDefined = isMetavariableDefined(declaredMetavariable, context);
 
-    if (!negated && metavariableDefined) {
+    if (!negated && declaredMetavariableDefined) {
       validatesWhenDerived = true;
     }
 
-    if (negated && !metavariableDefined) {
+    if (negated && !declaredMetavariableDefined) {
       validatesWhenDerived = true;
     }
   }
@@ -284,7 +285,7 @@ function isVariableDefined(variable, context) {
         groundedTerms = [],
         definedVariables = [];
 
-  equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
+  separateGroundedTermsAndDefinedVariables(equivalences, groundedTerms, definedVariables, context);
 
   const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
           const definedVariableComparesToVariable = definedVariable.compareVariable(variable);
