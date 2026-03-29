@@ -273,11 +273,8 @@ export function deductionFromDeductionNode(deductionNode, context) {
   const { Deduction } = elements,
         node = deductionNode, ///
         string = context.nodeAsString(node),
-        statement = statementFromDeductionNode(deductionNode, context);
-
-  context = null;
-
-  const deduction = new Deduction(context, string, node, statement);
+        statement = statementFromDeductionNode(deductionNode, context),
+        deduction = new Deduction(context, string, node, statement);
 
   return deduction;
 }
@@ -419,11 +416,8 @@ export function conclusionFromConclusionNode(conclusionNode, context) {
   const { Conclusion } = elements,
         node = conclusionNode, ///
         string = context.nodeAsString(node),
-        statement = statementFromConclusionNode(conclusionNode, context);
-
-  context = null;
-
-  const conclusion = new Conclusion(context, string, node, statement);
+        statement = statementFromConclusionNode(conclusionNode, context),
+        conclusion = new Conclusion(context, string, node, statement);
 
   return conclusion;
 }

@@ -6,7 +6,6 @@ import { Element, asynchronousUtilities } from "occam-languages";
 import { define } from "../elements";
 import { enclose } from "../utilities/context";
 import { labelsFromJSON, premisesFromJSON, conclusionFromJSON, labelsToLabelsJSON, premisesToPremisesJSON, conclusionToConclusionJSON } from "../utilities/json";
-import {rulsStringFromLabelsPremisesAndConclusion} from "../utilities/string";
 
 const { reverse } = arrayUtilities,
       { asyncExtract, asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
@@ -344,7 +343,6 @@ export default define(class Rule extends Element {
           labels = labelsFromJSON(json, context),
           premises = premisesFromJSON(json, context),
           conclusion = conclusionFromJSON(json, context),
-          ruleString = rulsStringFromLabelsPremisesAndConclusion(labels, premises, conclusion),
           rule = new Rule(context, string, node, proof, labels, premises, conclusion);
 
     return rule;
