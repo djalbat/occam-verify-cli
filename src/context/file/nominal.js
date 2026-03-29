@@ -831,7 +831,7 @@ export default class NominalFileContext extends FileContext {
     this.rules = rulesFromJSON(json, fileContext);
     this.axioms = axiomsFromJSON(json, fileContext);
     this.theorems = theoremsFromJSON(json, fileContext);
-    this.conjectures = [conjecturesFromJSON(json, fileContext)];
+    this.conjectures = conjecturesFromJSON(json, fileContext);
     this.metatheorems = metatheoremsFromJSON(json, fileContext);
   }
 
