@@ -42,11 +42,10 @@ export default define(class Section extends Element {
     return sectionNode;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies = false;
 
-    const context = this.getContext(),
-          sectionString = this.getString();  ///
+    const sectionString = this.getString();  ///
 
     context.trace(`Verifying the '${sectionString}' section...`);
 

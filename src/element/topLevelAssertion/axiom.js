@@ -49,10 +49,8 @@ export default define(class Axiom extends TopLevelAssertion {
     return comparesToSignature;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies;
-
-    const context = this.getContext();
 
     await this.break(context);
 
@@ -63,7 +61,7 @@ export default define(class Axiom extends TopLevelAssertion {
     const signatureVerifies = this.verifySignature();
 
     if (signatureVerifies) {
-      verifies = await super.verify();
+      verifies = await super.verify(context);
     }
 
     if (verifies) {

@@ -12,10 +12,8 @@ export default define(class MetaLemma extends TopLevelMetaAssertion {
     return metaLemmaNode;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies;
-
-    const context = this.getContext();
 
     await this.break(context);
 
@@ -23,7 +21,7 @@ export default define(class MetaLemma extends TopLevelMetaAssertion {
 
     context.trace(`Verifying the '${metaLemmaString}' meta-lemma...`);
 
-    verifies = super.verify();
+    verifies = super.verify(context);
 
     if (verifies) {
       const metaTheorem = this; ///

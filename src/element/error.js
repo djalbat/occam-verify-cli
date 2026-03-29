@@ -12,11 +12,10 @@ export default define(class Error extends Element {
     return errorNode;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies = false;
 
-    const context = this.getContext(),
-          errorString = this.getString();  ///
+    const errorString = this.getString();  ///
 
     context.warning(`The '${errorString}' error cannot be verified.`);
 

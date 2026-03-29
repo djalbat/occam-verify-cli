@@ -20,10 +20,8 @@ export default define(class MetavariableDeclaration extends Declaration {
     return this.metavariable;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies;
-
-    const context = this.getContext();
 
     await this.break(context);
 
@@ -31,10 +29,10 @@ export default define(class MetavariableDeclaration extends Declaration {
 
     context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
 
-    const metavariableVerifies = this.verifyMetavariable();
+    const metavariableVerifies = this.verifyMetavariable(context);
 
     if (metavariableVerifies) {
-      const metaTypeVerifies = this.verifyMetaType();
+      const metaTypeVerifies = this.verifyMetaType(context);
 
       if (metaTypeVerifies) {
         const declaredMetavariable = this.metavariable; ///
@@ -52,11 +50,10 @@ export default define(class MetavariableDeclaration extends Declaration {
     return verifies;
   }
 
-  verifyMetaType() {
+  verifyMetaType(context) {
     let metaTypeVerifies = true;
 
-    const context = this.getContext(),
-          metaTypeString = this.metaType.getString(),
+    const metaTypeString = this.metaType.getString(),
           metaTypeDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${metaTypeDeclarationString}' metavariable declaration's '${metaTypeString}' metaType...`);
@@ -70,11 +67,10 @@ export default define(class MetavariableDeclaration extends Declaration {
     return metaTypeVerifies;
   }
 
-  verifyMetavariable() {
+  verifyMetavariable(context) {
     let metavariableVerifies = false;
 
-    const context = this.getContext(),
-          metavariableString = this.metavariable.getString(),
+    const metavariableString = this.metavariable.getString(),
           metavariableDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration's '${metavariableString}' metavariable...`);

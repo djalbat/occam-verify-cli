@@ -55,10 +55,8 @@ export default define(class Rule extends Element {
     return metavariableNodeMatches;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies = false;
-
-    const context = this.getContext();
 
     await this.break(context);
 
@@ -67,7 +65,7 @@ export default define(class Rule extends Element {
     context.trace(`Verifying the '${ruleString}' rule...`);
 
     await enclose(async (context) => {
-      const labelsVerify = this.verifyLabels();
+      const labelsVerify = this.verifyLabels(context);
 
       if (labelsVerify) {
         const premisesVerify = await this.verifyPremises(context);
@@ -97,11 +95,10 @@ export default define(class Rule extends Element {
     return verifies;
   }
 
-  verifyLabel(label) {
+  verifyLabel(context, label) {
     let labelVerifies;
 
-    const context = this.getContext(),
-          ruleString = this.getString(),  ///
+    const ruleString = this.getString(),  ///
           labelString = label.getString();
 
     context.trace(`Verifying the '${ruleString}' rule's '${labelString}' label...`);
@@ -115,16 +112,15 @@ export default define(class Rule extends Element {
     return labelVerifies;
   }
 
-  verifyLabels() {
+  verifyLabels(context) {
     let labelsVerify;
 
-    const context = this.getContext(),
-          ruleString = this.getString();  ///
+    const ruleString = this.getString();  ///
 
     context.trace(`Verifying the '${ruleString}' rule's labels...`);
 
     labelsVerify = this.labels.every((label) => {
-      const labelVerifies = this.verifyLabel(label);
+      const labelVerifies = this.verifyLabel(context, label);
 
       if (labelVerifies) {
         return true;

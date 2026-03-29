@@ -12,10 +12,8 @@ export default define(class Theorem extends TopLevelAssertion {
     return theoremNode;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies;
-
-    const context = this.getContext();
 
     await this.break(context);
 
@@ -23,7 +21,7 @@ export default define(class Theorem extends TopLevelAssertion {
 
     context.trace(`Verifying the '${theoremString}' theorem...`);
 
-    verifies = await super.verify();
+    verifies = await super.verify(context);
 
     if (verifies) {
       const theorem = this; ///

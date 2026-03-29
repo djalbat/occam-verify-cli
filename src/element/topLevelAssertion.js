@@ -120,11 +120,10 @@ export default class TopLevelAssertion extends Element {
     return correlatesToHypotheses;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies = false;
 
-    const context = this.getContext(),
-          topLevelAssertionString = this.getString(); ///
+    const topLevelAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${topLevelAssertionString}' top level assertion...`);
 

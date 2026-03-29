@@ -95,16 +95,15 @@ export default class TopLevelMetaAssertion extends Element {
     return comparesToReference;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies = false;
 
-    const context = this.getContext(),
-          topLevelMetaAssertionString = this.getString(); ///
+    const topLevelMetaAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta assertion...`);
 
     await enclose(async (context) => {
-      const labelVerifies = this.verifyLabel();
+      const labelVerifies = this.verifyLabel(context);
 
       if (labelVerifies) {
         const suppositionsVerify = await this.verifySuppositions(context);
@@ -130,11 +129,10 @@ export default class TopLevelMetaAssertion extends Element {
     return verifies;
   }
 
-  verifyLabel() {
+  verifyLabel(context) {
     let labelVerifies;
 
-    const context = this.getContext(),
-          topLevelMetaAssertionString = this.getString(),  ///
+    const topLevelMetaAssertionString = this.getString(),  ///
           labelString = this.label.getString();
 
     context.trace(`Verifying the '${topLevelMetaAssertionString}' top level meta-assertion's '${labelString}' label...`);

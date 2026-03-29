@@ -22,10 +22,8 @@ export default define(class TypePrefixDeclaration extends Declaration {
     return typePrefixDeclarationNode;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies = false;
-
-    const context = this.getContext();
 
     await this.break(context);
 
@@ -37,7 +35,7 @@ export default define(class TypePrefixDeclaration extends Declaration {
           typesLength = types.length;
 
     if (typesLength === 0) {
-      const typePrefixVerifies = this.verifyTypePrefix();
+      const typePrefixVerifies = this.verifyTypePrefix(context);
 
       if (typePrefixVerifies) {
         context.addTypePrefix(this.typePrefix);
@@ -55,11 +53,10 @@ export default define(class TypePrefixDeclaration extends Declaration {
     return verifies;
   }
 
-  verifyTypePrefix() {
+  verifyTypePrefix(context) {
     let typePrefixVerifies = false;
 
-    const context = this.getContext(),
-          typePrefixString = this.typePrefix.getString();
+    const typePrefixString = this.typePrefix.getString();
 
     context.trace(`Verifying the '${typePrefixString}' type prefix...`);
 

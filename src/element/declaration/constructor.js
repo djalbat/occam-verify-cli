@@ -32,10 +32,8 @@ export default define(class ConstructorDeclaration extends Declaration {
     return constructorDeclarationNode;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies = false;
-
-    const context = this.getContext();
 
     await this.break(context);
 
@@ -43,10 +41,10 @@ export default define(class ConstructorDeclaration extends Declaration {
 
     context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
 
-    const typeVerified = this.verifyType();
+    const typeVerified = this.verifyType(context);
 
     if (typeVerified) {
-      const constructorValidates = this.validateConstructor();
+      const constructorValidates = this.validateConstructor(context);
 
       if (constructorValidates) {
         this.constructor.setType(this.type);
@@ -64,11 +62,10 @@ export default define(class ConstructorDeclaration extends Declaration {
     return verifies;
   }
 
-  verifyType() {
+  verifyType(context) {
     let typeVerifies = false;
 
-    const context = this.getContext(),
-          typeString = this.type.getString(),
+    const typeString = this.type.getString(),
           constructorDeclarationString = this.getString();  ///
 
     context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration's '${typeString}' type...`);
@@ -100,11 +97,10 @@ export default define(class ConstructorDeclaration extends Declaration {
     return typeVerifies;
   }
 
-  validateConstructor() {
+  validateConstructor(context) {
     let constructorValidates;
 
-    const context = this.getContext(),
-          includeType = false,
+    const includeType = false,
           constructorString = this.constructor.getString(includeType),
           constructorDeclarationString = this.getString();  ///
 

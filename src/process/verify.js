@@ -46,7 +46,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const error = errorFromErrorNode(errorNode, context),
-              errorVerifies = await error.verify();
+              errorVerifies = await error.verify(context);
 
         if (errorVerifies) {
           success = true;
@@ -61,7 +61,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const rule = ruleFromRuleNode(ruleNode, context),
-              ruleVerifies = await rule.verify();
+              ruleVerifies = await rule.verify(context);
 
         if (ruleVerifies) {
           success = true;
@@ -76,7 +76,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const axiom = axiomFromAxiomNode(axiomNode, context),
-              axiomVerifies = await axiom.verify();
+              axiomVerifies = await axiom.verify(context);
 
         if (axiomVerifies) {
           success = true;
@@ -91,7 +91,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const lemma = lemmaFromLemmaNode(lemmaNode, context),
-              lemmaVerifies = await lemma.verify();
+              lemmaVerifies = await lemma.verify(context);
 
         if (lemmaVerifies) {
           success = true;
@@ -106,7 +106,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const section = sectionFromSectionNode(sectionNode, context),
-              sectionVerifies = await section.verify();
+              sectionVerifies = await section.verify(context);
 
         if (sectionVerifies) {
           success = true;
@@ -121,7 +121,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const theorem = theoremFromTheoremNode(theoremNode, context),
-              theoremVerifies = await theorem.verify();
+              theoremVerifies = await theorem.verify(context);
 
         if (theoremVerifies) {
           success = true;
@@ -136,7 +136,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const metaLemma = metaLemmaFromMetaLemmaNode(metaLemmaNode, context),
-              metaLemmaVerifies = await metaLemma.verify();
+              metaLemmaVerifies = await metaLemma.verify(context);
 
         if (metaLemmaVerifies) {
           success = true;
@@ -151,7 +151,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const conjecture = conjectureFromConjectureNode(conjectureNode, context),
-              conjectureVerifies = await conjecture.verify();
+              conjectureVerifies = await conjecture.verify(context);
 
         if (conjectureVerifies) {
           success = true;
@@ -166,7 +166,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const metatheorem = metatheoremFromMetatheoremNode(metatheoremNode, context),
-              metatheoremVerifies = await metatheorem.verify();
+              metatheoremVerifies = await metatheorem.verify(context);
 
         if (metatheoremVerifies) {
           success = true;
@@ -181,7 +181,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const variableDeclaration = variableDeclarationFromVariableDeclarationNode(variableDeclarationNode, context),
-              variableDeclarationVerifies = await variableDeclaration.verify();
+              variableDeclarationVerifies = await variableDeclaration.verify(context);
 
         if (variableDeclarationVerifies) {
           success = true;
@@ -196,7 +196,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const simpleTypeDeclaration = simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
-              simpleTypeDeclarationVerifies = await simpleTypeDeclaration.verify();
+              simpleTypeDeclarationVerifies = await simpleTypeDeclaration.verify(context);
 
         if (simpleTypeDeclarationVerifies) {
           success = true;
@@ -211,7 +211,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const typePrefixDeclaration = typePrefixDeclarationFromTypePrefixDeclarationNode(typePrefixDeclarationNode, context),
-              typePrefixDeclarationVerifies = await typePrefixDeclaration.verify();
+              typePrefixDeclarationVerifies = await typePrefixDeclaration.verify(context);
 
         if (typePrefixDeclarationVerifies) {
           success = true;
@@ -226,7 +226,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const combinatorDeclaration = combinatorDeclarationFromCombinatorDeclarationNode(combinatorDeclarationNode, context),
-              combinatorDeclarationVerifies = await combinatorDeclaration.verify();
+              combinatorDeclarationVerifies = await combinatorDeclaration.verify(context);
 
         if (combinatorDeclarationVerifies) {
           success = true;
@@ -241,7 +241,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const constructorDeclaration = constructorDeclarationFromConstructorDeclarationNode(constructorDeclarationNode, context),
-              constructorDeclarationVerifies = await constructorDeclaration.verify();
+              constructorDeclarationVerifies = await constructorDeclaration.verify(context);
 
         if (constructorDeclarationVerifies) {
           success = true;
@@ -256,7 +256,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const complexTypeDeclaration = complexTypeDeclarationFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
-              complexTypeDeclarationVerifies = await complexTypeDeclaration.verify();
+              complexTypeDeclarationVerifies = await complexTypeDeclaration.verify(context);
 
         if (complexTypeDeclarationVerifies) {
           success = true;
@@ -271,7 +271,7 @@ class TopLevelPass extends AsyncPass {
         let success = false;
 
         const metavariableDeclaration = metavariableDeclarationFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
-              metavariableDeclarationVerifies = await metavariableDeclaration.verify();
+              metavariableDeclarationVerifies = await metavariableDeclaration.verify(context);
 
         if (metavariableDeclarationVerifies) {
           success = true;

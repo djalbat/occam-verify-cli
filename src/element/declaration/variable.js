@@ -32,10 +32,8 @@ export default define(class VariableDeclaration extends Declaration {
     return variableDeclarationNode;
   }
 
-  async verify() {
+  async verify(context) {
     let verifies = false;
-
-    const context = this.getContext();
 
     await this.break(context);
 
@@ -43,10 +41,10 @@ export default define(class VariableDeclaration extends Declaration {
 
     context.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
 
-    const typeVerifies = this.verifyType();
+    const typeVerifies = this.verifyType(context);
 
     if (typeVerifies) {
-      const variableVerifies = this.verifyVariable();
+      const variableVerifies = this.verifyVariable(context);
 
       if (variableVerifies) {
         const declaredVariable = this.variable;
@@ -64,11 +62,10 @@ export default define(class VariableDeclaration extends Declaration {
     return verifies;
   }
 
-  verifyType() {
+  verifyType(context) {
     let typeVerifies = false;
 
-    const context = this.getContext(),
-          typeString = this.type.getString(),
+    const typeString = this.type.getString(),
           variableDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${variableDeclarationString}' variable declaration's '${typeString}' type...`);
@@ -100,11 +97,10 @@ export default define(class VariableDeclaration extends Declaration {
     return typeVerifies;
   }
 
-  verifyVariable() {
+  verifyVariable(context) {
     let  variableVerifies = false;
 
-    const context = this.getContext(),
-          variableString = this.variable.getString(),
+    const variableString = this.variable.getString(),
           variableDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${variableDeclarationString}' variable declaration's '${variableString}' variable...`);

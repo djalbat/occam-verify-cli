@@ -8,8 +8,8 @@ import { procedureCallFromSuppositionNode } from "../../utilities/element";
 import { join, declare, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class Supposition extends ProofAssertion {
-  constructor(context, string, node, statement, procedureCall) {
-    super(context, string, node, statement);
+  constructor(context, string, node, lineIndex, statement, procedureCall) {
+    super(context, string, node, lineIndex, statement);
 
     this.procedureCall = procedureCall;
   }
@@ -327,13 +327,13 @@ export default define(class Supposition extends ProofAssertion {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               suppositionNode = instantiateSupposition(string, context),
               node = suppositionNode,  ///
               statement = statementFromSuppositionNode(suppositionNode, context),
               procedureCall = procedureCallFromSuppositionNode(suppositionNode, context);
 
-        supposition = new Supposition(context, string, node, statement, procedureCall);
+        supposition = new Supposition(context, string, node, lineIndex, statement, procedureCall);
       }, context);
     }, json, context);
 
