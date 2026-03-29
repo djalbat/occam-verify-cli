@@ -16,8 +16,8 @@ import { labelFromJSON,
 const { asyncForwardsEvery } = asynchronousUtilities;
 
 export default class TopLevelMetaAssertion extends Element {
-  constructor(context, string, node, label, suppositions, deduction, proof, metaLevelAssumptions) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, label, suppositions, deduction, proof, metaLevelAssumptions) {
+    super(context, string, node, lineIndex);
 
     this.label = label;
     this.suppositions = suppositions;
@@ -235,11 +235,15 @@ export default class TopLevelMetaAssertion extends Element {
           deductionJSON = deductionToDeductionJSON(this.deduction),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           metaLevelAssumptionsJSON = metaLevelAssumptionsToMetaLevelAssumptionsJSON(this.metaLevelAssumptions),
+          string = this.getString(),
+          lineIndex = this.getLineIndex(),
           label = labelJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
           metaLevelAssumptions = metaLevelAssumptionsJSON,  ///
           json = {
+            string,
+            lineIndex,
             label,
             deduction,
             suppositions,
@@ -250,14 +254,15 @@ export default class TopLevelMetaAssertion extends Element {
   }
 
   static fromJSON(Class, json, context) {
-    const label = labelFromJSON(json, context),
+    const { lineIndex } = json,
+          label = labelFromJSON(json, context),
           deduction = deductionFromJSON(json, context),
           suppositions = suppositionsFromJSON(json, context),
           metaLevelAssumptions = metaLevelAssumptionsFromJSON(json, context),
           node = null,
           proof = null,
           string = topLevelMetaAssertionStringFromLabelSuppositionsDeductionAndMetaLevelAssumptions(label, suppositions, deduction, metaLevelAssumptions),
-          topLevelMetaAssertion = new Class(context, string, node, label, suppositions, deduction, proof, metaLevelAssumptions);
+          topLevelMetaAssertion = new Class(context, string, node, lineIndex, label, suppositions, deduction, proof, metaLevelAssumptions);
 
     return topLevelMetaAssertion;
   }

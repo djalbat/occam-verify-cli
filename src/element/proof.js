@@ -6,8 +6,8 @@ import { define } from "../elements";
 import { enclose } from "../utilities/context";
 
 export default define(class Proof extends Element {
-  constructor(context, string, node, derivation) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, derivation) {
+    super(context, string, node, lineIndex);
 
     this.derivation = derivation;
   }
@@ -55,6 +55,17 @@ export default define(class Proof extends Element {
     }, context);
 
     return verifies;
+  }
+
+  toJSON() {
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
+
+    return json;
   }
 
   static name = "Proof";

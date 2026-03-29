@@ -372,8 +372,10 @@ export default define(class Statement extends Element {
 
   toJSON() {
     const string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
-            string
+            string,
+            lineIndex
           };
 
     return json;
@@ -383,13 +385,13 @@ export default define(class Statement extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             statementNode = instantiateStatement(string, context),
             node = statementNode; ///
 
       context = null;
 
-      const statement = new Statement(context, string, node);
+      const statement = new Statement(context, string, node, lineIndex);
 
       return statement;
     }, context);

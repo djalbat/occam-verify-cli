@@ -11,8 +11,8 @@ import { join, ablate, attempt, descend, reconcile, instantiate } from "../../ut
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
-  constructor(context, string, node, generalContext, resolved, substitution, targetStatement, replacementStatement) {
-    super(context, string, node, generalContext);
+  constructor(context, string, node, lineIndex, generalContext, resolved, substitution, targetStatement, replacementStatement) {
+    super(context, string, node, lineIndex, generalContext);
 
     this.resolved = resolved;
     this.substitution = substitution;
@@ -384,7 +384,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               statementSubstitutionNode = instantiateStatementSubstitution(string, context),
               node = statementSubstitutionNode, ///
               generalContext = generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context),
@@ -393,7 +393,7 @@ export default define(class StatementSubstitution extends Substitution {
               targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
               replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
-        statementSubstitutionn = new StatementSubstitution(context, string, node, generalContext, resolved, substitution, targetStatement, replacementStatement);
+        statementSubstitutionn = new StatementSubstitution(context, string, node, lineIndex, generalContext, resolved, substitution, targetStatement, replacementStatement);
       }, context);
     }
 

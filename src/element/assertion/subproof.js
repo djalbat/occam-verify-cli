@@ -13,8 +13,8 @@ import { subproofAssertionFromStatementNode } from "../../utilities/element";
 const { last, front, backwardsEvery } = arrayUtilities;
 
 export default define(class SubproofAssertion extends Assertion {
-  constructor(context, string, node, statements) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, statements) {
+    super(context, string, node, lineIndex);
 
     this.statements = statements;
   }
@@ -289,6 +289,12 @@ export default define(class SubproofAssertion extends Assertion {
     return topLevelMetaAssertionUnifies;
   }
 
+  toJSON() {
+    const json = super.toJSON();
+
+    return json;
+  }
+
   static name = "SubproofAssertion";
 
   static fromJSON(json, context) {
@@ -298,14 +304,14 @@ export default define(class SubproofAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               subproofAssertionNode = instantiateSubproofAssertion(string, context),
               statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),
               node = subproofAssertionNode; ///
 
         context = null;
 
-        subproorAssertion = new SubproofAssertion(context, string, node, statements);
+        subproorAssertion = new SubproofAssertion(context, string, node, lineIndex, statements);
       }, context);
     }
 

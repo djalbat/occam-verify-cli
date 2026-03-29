@@ -8,8 +8,8 @@ import { instantiateProcedureReference } from "../process/instantiate";
 import { nameFromProcedureReferenceNode } from "../utilities/element";
 
 export default define(class ProcedureReference extends Element {
-  constructor(context, string, node, name) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, name) {
+    super(context, string, node, lineIndex);
 
     this.name = name;
   }
@@ -33,8 +33,10 @@ export default define(class ProcedureReference extends Element {
 
   toJSON() {
     const string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
-            string
+            string,
+            lineIndex
           };
 
     return json;
@@ -44,14 +46,14 @@ export default define(class ProcedureReference extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             procedureReferenceNode = instantiateProcedureReference(string, context),
             node = procedureReferenceNode,  ///
             name = nameFromProcedureReferenceNode(procedureReferenceNode, context);
 
       context = null;
 
-      const procedureReference = new ProcedureReference(context, string, node, name);
+      const procedureReference = new ProcedureReference(context, string, node, lineIndex, name);
 
       return procedureReference;
     }, context);

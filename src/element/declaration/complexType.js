@@ -5,8 +5,8 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class ComplexTypeDeclaration extends Declaration {
-  constructor(context, string, node, type, superTypes) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, type, superTypes) {
+    super(context, string, node, lineIndex);
 
     this.type = type;
     this.superTypes = superTypes;

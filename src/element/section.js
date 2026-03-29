@@ -5,8 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 
 export default define(class Section extends Element {
-  constructor(context, string, node, hypotheses, axiom, lemma, theorem, conjecture) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, hypotheses, axiom, lemma, theorem, conjecture) {
+    super(context, string, node, lineIndex);
 
     this.hypotheses = hypotheses;
     this.axiom = axiom;
@@ -80,6 +80,17 @@ export default define(class Section extends Element {
     });
 
     return hypothesesVerify;
+  }
+
+  toJSON() {
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
+
+    return json;
   }
 
   static name = "Section";

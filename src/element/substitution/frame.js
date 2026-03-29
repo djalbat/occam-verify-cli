@@ -9,8 +9,8 @@ import { join, ablate, descend, attempt, instantiate } from "../../utilities/con
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
 
 export default define(class FrameSubstitution extends Substitution {
-  constructor(context, string, node, generalContext, targetFrame, replacementFrame) {
-    super(context, string, node, generalContext);
+  constructor(context, string, node, lineIndex, generalContext, targetFrame, replacementFrame) {
+    super(context, string, node, lineIndex, generalContext);
 
     this.targetFrame = targetFrame;
     this.replacementFrame = replacementFrame;
@@ -191,14 +191,14 @@ export default define(class FrameSubstitution extends Substitution {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               frameSubstitutionNode = instantiateFrameSubstitution(string, context),
               node = frameSubstitutionNode, ///
               generalContext = generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context),
               targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
               replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
 
-        frameSubstitutionn = new FrameSubstitution(context, string, node, generalContext, targetFrame, replacementFrame);
+        frameSubstitutionn = new FrameSubstitution(context, string, node, lineIndex, generalContext, targetFrame, replacementFrame);
       }, context);
     }
 

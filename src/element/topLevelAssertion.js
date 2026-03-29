@@ -20,8 +20,8 @@ const { reverse, correlate } = arrayUtilities,
       { asyncExtract, asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
 
 export default class TopLevelAssertion extends Element {
-  constructor(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, labels, suppositions, deduction, proof, signature, hypotheses) {
+    super(context, string, node, lineIndex);
 
     this.labels = labels;
     this.suppositions = suppositions;
@@ -384,12 +384,16 @@ export default class TopLevelAssertion extends Element {
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           signatureJSON = signatureToSignatureJSON(this.signature),
           hypothesesJSON = hypothesesToHypothesesJSON(this.hypotheses),
+          string = this.getString(),
+          lineIndex = this.getLineIndex(),
           labels = labelsJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
           signature = signatureJSON,  ///
           hypotheses = hypothesesJSON,  ///
           json = {
+            string,
+            lineIndex,
             labels,
             deduction,
             suppositions,
@@ -401,7 +405,8 @@ export default class TopLevelAssertion extends Element {
   }
 
   static fromJSON(Class, json, context) {
-    const labels = labelsFromJSON(json, context),
+    const { lineIndex } = json,
+          labels = labelsFromJSON(json, context),
           deduction = deductionFromJSON(json, context),
           suppositions = suppositionsFromJSON(json, context),
           signature = signatureFromJSON(json, context),
@@ -410,7 +415,7 @@ export default class TopLevelAssertion extends Element {
           node = null,
           proof = null,
           string = topLevelAssertionString, ///
-          topLevelAssertion = new Class(context, string, node, labels, suppositions, deduction, proof, signature, hypotheses);
+          topLevelAssertion = new Class(context, string, node, lineIndex, labels, suppositions, deduction, proof, signature, hypotheses);
 
     return topLevelAssertion;
   }

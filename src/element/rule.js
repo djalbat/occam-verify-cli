@@ -11,8 +11,8 @@ const { reverse } = arrayUtilities,
       { asyncExtract, asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
 
 export default define(class Rule extends Element {
-  constructor(context, string, node, proof, labels, premises, conclusion) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, proof, labels, premises, conclusion) {
+    super(context, string, node, lineIndex);
 
     this.proof = proof;
     this.labels = labels;
@@ -320,12 +320,14 @@ export default define(class Rule extends Element {
     const labelsJSON = labelsToLabelsJSON(this.labels),
           premisesJSON = premisesToPremisesJSON(this.premises),
           conclusionJSON = conclusionToConclusionJSON(this.conclusion),
+          string = this.getString(),
+          lineIndex = this.getLineIndex(),
           labels = labelsJSON,  ///
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///
-          string = this.getString(),
           json = {
             string,
+            lineIndex,
             labels,
             premises,
             conclusion
@@ -337,13 +339,13 @@ export default define(class Rule extends Element {
   static name = "Rule";
 
   static fromJSON(json, context) {
-    const node = null,
+    const { string, lineIndex } = json,
+          node = null,
           proof = null,
-          string = null,
           labels = labelsFromJSON(json, context),
           premises = premisesFromJSON(json, context),
           conclusion = conclusionFromJSON(json, context),
-          rule = new Rule(context, string, node, proof, labels, premises, conclusion);
+          rule = new Rule(context, string, node, lineIndex, proof, labels, premises, conclusion);
 
     return rule;
   }

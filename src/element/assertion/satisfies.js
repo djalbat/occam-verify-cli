@@ -8,8 +8,8 @@ import { instantiateSatisfiesAssertion } from "../../process/instantiate";
 import { signatureFromJSatisfiesAssertionNode, referenceFromJSatisfiesAssertionNode, satisfiesAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class SatisfiesAssertion extends Assertion {
-  constructor(context, string, node, signature, reference) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, signature, reference) {
+    super(context, string, node, lineIndex);
 
     this.signature = signature;
     this.reference = reference;
@@ -157,6 +157,12 @@ export default define(class SatisfiesAssertion extends Assertion {
     return stepAndSubproofOrProofAssertionsUnify;
   }
 
+  toJSON() {
+    const json = super.toJSON();
+
+    return json;
+  }
+
   static name = "SatisfiesAssertion";
 
   static fromJSON(json, context) {
@@ -165,7 +171,7 @@ export default define(class SatisfiesAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {const { string } = json,
+      instantiate((context) => {const { string, lineIndex } = json,
               definedAssertionNode = instantiateSatisfiesAssertion(string, context),
               node = definedAssertionNode,  ///
               signature = signatureFromJSatisfiesAssertionNode(definedAssertionNode, context),
@@ -173,7 +179,7 @@ export default define(class SatisfiesAssertion extends Assertion {
 
         context = null;
 
-        satisfiesAssertion = new SatisfiesAssertion(context, string, node, signature, reference);
+        satisfiesAssertion = new SatisfiesAssertion(context, string, node, lineIndex, signature, reference);
       }, context);
     }
 

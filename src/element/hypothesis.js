@@ -8,8 +8,8 @@ import { instantiateHypothesis } from "../process/instantiate";
 import { statementFromHypothesisNode } from "../utilities/element";
 
 export default define(class Hypothesis extends Element {
-  constructor(context, string, node, statement) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, statement) {
+    super(context, string, node, lineIndex);
 
     this.statement = statement;
   }
@@ -91,8 +91,10 @@ export default define(class Hypothesis extends Element {
 
   toJSON() {
     const string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
-            string
+            string,
+            lineIndex
           };
 
     return json;
@@ -102,14 +104,14 @@ export default define(class Hypothesis extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             hypothesisNode = instantiateHypothesis(string, context),
             node = hypothesisNode,  ///
             statement = statementFromHypothesisNode(hypothesisNode, context);
 
       context = null;
 
-      const hypothesis = new Hypothesis(context, string, node, statement);
+      const hypothesis = new Hypothesis(context, string, node, lineIndex, statement);
 
       return hypothesis;
     }, context);

@@ -8,8 +8,8 @@ import { enclose } from "../utilities/context";
 const { asyncEvery } = asynchronousUtilities;
 
 export default define(class Subproof extends Element {
-  constructor(context, string, node, suppositions, subDerivation) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, suppositions, subDerivation) {
+    super(context, string, node, lineIndex);
 
     this.suppositions = suppositions;
     this.subDerivation = subDerivation;
@@ -145,6 +145,17 @@ export default define(class Subproof extends Element {
     }
 
     return unifiesWithSatisfiesAssertion;
+  }
+
+  toJSON() {
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
+
+    return json;
   }
 
   static name = "Subproof";

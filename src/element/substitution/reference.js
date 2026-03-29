@@ -9,8 +9,8 @@ import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilit
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
 
 export default define(class ReferenceSubstitution extends Substitution {
-  constructor(context, string, node, generalContext, targetReference, replacementReference) {
-    super(context, string, node, generalContext);
+  constructor(context, string, node, lineIndex, generalContext, targetReference, replacementReference) {
+    super(context, string, node, lineIndex, generalContext);
 
     this.targetReference = targetReference;
     this.replacementReference = replacementReference;
@@ -198,14 +198,14 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
               node = referenceSubstitutionNode, ///
               generalContext = generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
               targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
               replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
 
-        referenceSubstitutionn = new ReferenceSubstitution(context, string, node, generalContext, targetReference, replacementReference);
+        referenceSubstitutionn = new ReferenceSubstitution(context, string, node, lineIndex, generalContext, targetReference, replacementReference);
       }, context);
     }
 

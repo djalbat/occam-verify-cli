@@ -8,8 +8,8 @@ import { instantiateTypePrefix } from "../process/instantiate";
 import { nameFromTypePrefixNode } from "../utilities/element";
 
 export default define(class TypePrefix extends Element {
-  constructor(context, string, node, name) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, name) {
+    super(context, string, node, lineIndex);
 
     this.name = name;
   }
@@ -33,8 +33,10 @@ export default define(class TypePrefix extends Element {
 
   toJSON() {
     const string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
-            string
+            string,
+            lineIndex
           };
 
     return json;
@@ -44,14 +46,14 @@ export default define(class TypePrefix extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             typePrefixNode = instantiateTypePrefix(string, context),
             node = typePrefixNode, ///
             name = nameFromTypePrefixNode(typePrefixNode, context);
 
       context = null; ///
 
-      const typePrefix = new TypePrefix(context, string, node, name);
+      const typePrefix = new TypePrefix(context, string, node, lineIndex, name);
 
       return typePrefix;
     }, context);

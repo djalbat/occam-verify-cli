@@ -5,8 +5,8 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class TypePrefixDeclaration extends Declaration {
-  constructor(context, string, node, typePrefix) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, typePrefix) {
+    super(context, string, node, lineIndex);
 
     this.typePrefix = typePrefix;
   }

@@ -13,8 +13,8 @@ import { termsFromSignatureNode } from "../utilities/element";
 const { match, compare, correlate } = arrayUtilities;
 
 export default define(class Signature extends Element {
-  constructor(context, string, node, terms) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, terms) {
+    super(context, string, node, lineIndex);
 
     this.terms = terms;
   }
@@ -218,8 +218,10 @@ export default define(class Signature extends Element {
 
   toJSON() {
     const string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
-            string
+            string,
+            lineIndex
           };
 
     return json;
@@ -229,11 +231,11 @@ export default define(class Signature extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             signatureNode = instantiateSignature(string, context),
             node = signatureNode,  ///
             terms = termsFromSignatureNode(signatureNode, context),
-            signature = new Signature(context, string, node, terms);
+            signature = new Signature(context, string, node, lineIndex, terms);
 
       return signature;
     }, context);

@@ -9,8 +9,8 @@ import { metavariableFromLabelNode } from "../utilities/element";
 import { ablate, attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Label extends Element {
-  constructor(context, string, node, metavariable) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, metavariable) {
+    super(context, string, node, lineIndex);
 
     this.metavariable = metavariable;
   }
@@ -131,9 +131,11 @@ export default define(class Label extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
+            lineIndex = this.getLineIndex(),
             json = {
               context,
-              string
+              string,
+              lineIndex
             };
 
       return json;
@@ -147,12 +149,12 @@ export default define(class Label extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               labelNode = instantiateLabel(string, context),
               node = labelNode, ///
               metavariable = metavariableFromLabelNode(labelNode, context);
 
-        label = new Label(context, string, node, metavariable);
+        label = new Label(context, string, node, lineIndex, metavariable);
       }, context);
     }, json, context);
 

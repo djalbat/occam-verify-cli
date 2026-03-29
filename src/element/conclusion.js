@@ -7,8 +7,8 @@ import { instantiateConclusion } from "../process/instantiate";
 import { declare, attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Conclusion extends Element {
-  constructor(context, string, node, statement) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, statement) {
+    super(context, string, node, lineIndex);
 
     this.statement = statement;
   }
@@ -136,9 +136,11 @@ export default define(class Conclusion extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
+            lineIndex = this.getLineIndex(),
             json = {
               context,
-              string
+              string,
+              lineIndex
             };
 
       return json;
@@ -152,12 +154,12 @@ export default define(class Conclusion extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               conclusionNode = instantiateConclusion(string, context),
               node = conclusionNode,  ///
               statement = statementFromConclusionNode(conclusionNode, context);
 
-        conclusion = new Conclusion(context, string, node, statement);
+        conclusion = new Conclusion(context, string, node, lineIndex, statement);
       }, context);
     }, json, context);
 

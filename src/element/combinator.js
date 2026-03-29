@@ -10,8 +10,8 @@ import { validateStatementAsCombinator } from "../process/validate";
 import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Combinator extends Element {
-  constructor(context, string, node, statement) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, statement) {
+    super(context, string, node, lineIndex);
 
     this.statement = statement;
   }
@@ -107,9 +107,11 @@ export default define(class Combinator extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
+            lineIndex = this.getLineIndex(),
             json = {
               context,
-              string
+              string,
+              lineIndex
             };
 
       return json;
@@ -123,12 +125,12 @@ export default define(class Combinator extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               combinatorNode = instantiateCombinator(string, context),
               node = combinatorNode,  ///
               statement = statementFromCombinatorNode(combinatorNode, context);
 
-        combinator = new Combinator(context, string, node, statement);
+        combinator = new Combinator(context, string, node, lineIndex, statement);
       }, context);
     }, json, context);
 

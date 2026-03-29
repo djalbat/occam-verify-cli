@@ -9,8 +9,8 @@ import { nameFromPropertyNode } from "../utilities/element";
 import { nominalTypeNameFromJSON, nominalTypeNameToNominalTypeNameJSON } from "../utilities/json";
 
 export default define(class Property extends Element {
-  constructor(context, string, node, name, nominalTypeName) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, name, nominalTypeName) {
+    super(context, string, node, lineIndex);
 
     this.name = name;
     this.nominalTypeName = nominalTypeName;
@@ -47,8 +47,10 @@ export default define(class Property extends Element {
     const nominalTypeNameJSON = nominalTypeNameToNominalTypeNameJSON(this.nominalTypeName),
           nominalTypeName = nominalTypeNameJSON,  ///
           string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
             string,
+            lineIndex,
             nominalTypeName
           };
 
@@ -59,7 +61,7 @@ export default define(class Property extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             propertyNode = instantiateProperty(string, context),
             node = propertyNode,  ///
             name = nameFromPropertyNode(propertyNode, context),
@@ -67,7 +69,7 @@ export default define(class Property extends Element {
 
       context = null;
 
-      const property = new Property(context, string, node, name, nominalTypeName);
+      const property = new Property(context, string, node, lineIndex, name, nominalTypeName);
 
       return property;
     }, context);

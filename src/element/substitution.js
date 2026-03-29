@@ -6,8 +6,8 @@ import { primitiveUtilities } from "occam-furtle";
 const { primitiveFromNode } =primitiveUtilities;
 
 export default class Substitution extends Element {
-  constructor(context, string, node, generalContext) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, generalContext) {
+    super(context, string, node, lineIndex);
 
     this.generalContext = generalContext;
   }
@@ -138,9 +138,11 @@ export default class Substitution extends Element {
   toJSON() {
     const { name } = this.constructor,
           string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
             name,
-            string
+            string,
+            lineIndex
           };
 
     return json;

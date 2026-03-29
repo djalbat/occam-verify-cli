@@ -7,8 +7,8 @@ import { superTypesStringFromSuperTypes } from "../../utilities/string";
 import {baseTypeFromNothing} from "../../utilities/type";
 
 export default define(class SimpleTypeDeclaration extends Declaration {
-  constructor(context, string, node, type, superTypes, provisional) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, type, superTypes, provisional) {
+    super(context, string, node, lineIndex);
 
     this.type = type;
     this.superTypes = superTypes;

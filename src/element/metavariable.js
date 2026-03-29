@@ -13,8 +13,8 @@ import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/un
 import { nameFromMetavariableNode, termFromMetavariableNode, typeFromMetavariableNode, metavariableFromStatementNode } from "../utilities/element";
 
 export default define(class Metavariable extends Element {
-  constructor(context, string, node, name, term, type, metaType) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, name, term, type, metaType) {
+    super(context, string, node, lineIndex);
     
     this.name = name;
     this.term = term;
@@ -638,8 +638,10 @@ export default define(class Metavariable extends Element {
     const metaTypeJSON = metaTypeToMetaTypeJSON(this.metaType),
           metaType = metaTypeJSON,  ///
           string = this.getString(), ///
+          lineIndex = this.getLineIndex(),
           json = {
             string,
+            lineIndex,
             metaType
           };
 
@@ -650,14 +652,14 @@ export default define(class Metavariable extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             metavariableNode = instantiateMetavariable(string, context),
             node = metavariableNode,  ///
             name = nameFromMetavariableNode(metavariableNode, context),
             term = termFromMetavariableNode(metavariableNode, context),
             type = typeFromMetavariableNode(metavariableNode, context),
             metaType = metaTypeFromJSON(json, context),
-            metavariable = new Metavariable(context, string, node, name, term, type, metaType);
+            metavariable = new Metavariable(context, string, node, lineIndex, name, term, type, metaType);
 
       return metavariable;
     }, context);

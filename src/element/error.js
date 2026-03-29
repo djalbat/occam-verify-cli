@@ -23,5 +23,16 @@ export default define(class Error extends Element {
     return verifies;
   }
 
+  toJSON() {
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
+
+    return json;
+  }
+
   static name = "Error";
 });

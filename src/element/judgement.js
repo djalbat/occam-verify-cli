@@ -9,8 +9,8 @@ import { judgementFromStatementNode } from "../utilities/element";
 import { judgementAssignmentFromJudgement } from "../process/assign";
 
 export default define(class Judgement extends Element {
-  constructor(context, string, node, frame, assumption) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, frame, assumption) {
+    super(context, string, node, lineIndex);
 
     this.frame = frame;
     this.assumption = assumption;
@@ -243,8 +243,10 @@ export default define(class Judgement extends Element {
 
   toJSON() {
     const string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
-            string
+            string,
+            lineIndex
           };
 
     return json;
@@ -254,7 +256,7 @@ export default define(class Judgement extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             judgementNode = instantiateJudgement(string, context),
             node = judgementNode,  ///
             frame = frameFromJudgementNode(judgementNode, context),
@@ -262,7 +264,7 @@ export default define(class Judgement extends Element {
 
       context = null;
 
-      const judgement = new Judgement(context, string, node, frame, assumption);
+      const judgement = new Judgement(context, string, node, lineIndex, frame, assumption);
 
       return judgement;
     }, context);

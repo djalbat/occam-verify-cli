@@ -13,8 +13,8 @@ import { equivalenceFromEquivalenceNode } from "../utilities/element";
 const { compress } = arrayUtilities;
 
 export default define(class Equivalence extends Element {
-  constructor(context, string, node, type, terms) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, type, terms) {
+    super(context, string, node, lineIndex);
 
     this.type = type;
     this.terms = terms;
@@ -229,6 +229,17 @@ export default define(class Equivalence extends Element {
     equivalence.setType(type);
 
     return equivalence;
+  }
+
+  toJSON() {
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
+
+    return json;
   }
 
   static name = "Equivalence";

@@ -9,8 +9,8 @@ const { last } = arrayUtilities,
       { asyncEvery } = asynchronousUtilities;
 
 export default define(class SubDerivation extends Element {
-  constructor(context, string, node, subproofOrProofAssertions) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, subproofOrProofAssertions) {
+    super(context, string, node, lineIndex);
 
     this.subproofOrProofAssertions = subproofOrProofAssertions;
   }
@@ -50,6 +50,17 @@ export default define(class SubDerivation extends Element {
     });
 
     return verifies;
+  }
+
+  toJSON() {
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
+
+    return json;
   }
 
   static name = "SubDerivation";

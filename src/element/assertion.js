@@ -37,9 +37,11 @@ export default class Assertion extends Element {
   toJSON() {
     const { name } = this.constructor,
           string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
             name,
-            string
+            string,
+            lineIndex
           };
 
     return json;

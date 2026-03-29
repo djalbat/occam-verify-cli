@@ -11,8 +11,8 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Constructor extends Element {
-  constructor(context, string, node, term, type) {
-    super(context, string, node, type);
+  constructor(context, string, node, lineIndex, term, type) {
+    super(context, string, node, lineIndex);
 
     this.term = term;
     this.type = type;
@@ -151,10 +151,12 @@ export default define(class Constructor extends Element {
       const includeType = false,
             typeJSON = typeToTypeJSON(this.type),
             string = this.getString(includeType),
+            lineIndex = this.getLineIndex(),
             type = typeJSON,  ///
             json = {
               context,
               string,
+              lineIndex,
               type
             };
 
@@ -169,13 +171,13 @@ export default define(class Constructor extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               constructorNode = instantiateConstructor(string, context),
               node = constructorNode, ///
               term = termFromConstructorNode(constructorNode, context),
               type = typeFromJSON(json, context);
 
-        constructor = new Constructor(context, string, node, term, type);
+        constructor = new Constructor(context, string, node, lineIndex, term, type);
       }, context);
     }, json, context);
 

@@ -13,8 +13,8 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 const { filter } = arrayUtilities;
 
 export default define(class Term extends Element {
-  constructor(context, string, node, type) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, type) {
+    super(context, string, node, lineIndex);
 
     this.type = type;
   }
@@ -236,9 +236,11 @@ export default define(class Term extends Element {
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
           string = this.getString(), ///
+          lineIndex = this.getLineIndex(),
           type = typeJSON,  ///
           json = {
             string,
+            lineIndex,
             type
           };
 
@@ -249,14 +251,14 @@ export default define(class Term extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             termNode = instantiateTerm(string, context),
             node = termNode,  ///
             type = typeFromJSON(json, context);
 
       context = null;
 
-      const term = new Term(context, string, node, type);
+      const term = new Term(context, string, node, lineIndex, type);
 
       return term;
     }, context);

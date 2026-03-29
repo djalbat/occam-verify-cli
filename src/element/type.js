@@ -13,8 +13,8 @@ import { superTypesFromJSON, provisionalFromJSON, propertiesFromJSON, provisiona
 const { push, first } = arrayUtilities;
 
 export default define(class Type extends Element {
-  constructor(context, string, node, name, prefixName, superTypes, properties, provisional) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, name, prefixName, superTypes, properties, provisional) {
+    super(context, string, node, lineIndex);
 
     this.name = name;
     this.prefixName = prefixName;
@@ -303,8 +303,10 @@ export default define(class Type extends Element {
           properties = propertiesJSON,  ///
           provisional = provisinoalJSOM,  ///
           string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
             string,
+            lineIndex,
             superTypes,
             properties,
             provisional
@@ -317,7 +319,7 @@ export default define(class Type extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             typeNode = instantiateType(string, context),
             node = typeNode, ///
             name = nameFromTypeNode(typeNode, context),
@@ -328,7 +330,7 @@ export default define(class Type extends Element {
 
       context = null; ///
 
-      const type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
+      const type = new Type(context, string, node, lineIndex, name, prefixName, superTypes, properties, provisional);
 
       return type;
     }, context);
@@ -337,6 +339,7 @@ export default define(class Type extends Element {
   static fromName(name, context) {
     const string = name,  ///
           node = null,
+          lineIndex = null,
           prefixName = null,
           superTypes = [],
           properties = [],
@@ -344,7 +347,7 @@ export default define(class Type extends Element {
 
     context = null;
 
-    const type = new Type(context, string, node, name, prefixName, superTypes, properties, provisional);
+    const type = new Type(context, string, node, lineIndex, name, prefixName, superTypes, properties, provisional);
 
     return type;
   }

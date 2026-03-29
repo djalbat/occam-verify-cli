@@ -10,8 +10,8 @@ import { metavariableFromFrameNode } from "../utilities/element";
 import { assumptionsStringFromAssumptions } from "../utilities/string";
 
 export default define(class Frame extends Element {
-  constructor(context, string, node, assumptions, metavariable) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, assumptions, metavariable) {
+    super(context, string, node, lineIndex);
 
     this.assumptions = assumptions;
     this.metavariable = metavariable;
@@ -286,8 +286,10 @@ export default define(class Frame extends Element {
 
   toJSON() {
     const string = this.getString(),
+          lineIndex = this.getLineIndex(),
           json = {
-            string
+            string,
+            lineIndex
           };
 
     return json;
@@ -297,7 +299,7 @@ export default define(class Frame extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string } = json,
+      const { string, lineIndex } = json,
             frameNode = instantiateFrame(string, context),
             node = frameNode, ///
             assumptions = assumptionsFromFrameNode(frameNode, context),
@@ -305,7 +307,7 @@ export default define(class Frame extends Element {
 
       context = null;
 
-      const frame = new Frame(context, string, node, assumptions, metavariable);
+      const frame = new Frame(context, string, node, lineIndex, assumptions, metavariable);
 
       return frame;
     }, context);
