@@ -10,8 +10,8 @@ import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "..
 import { termFromJDefinedAssertionNode, frameFromJDefinedAssertionNode, negatedFromJDefinedAssertionNode, definedAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class DefinedAssertion extends Assertion {
-  constructor(context, string, node, term, frame, negated) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, term, frame, negated) {
+    super(context, string, node, lineIndex);
 
     this.term = term;
     this.frame= frame;

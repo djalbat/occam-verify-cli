@@ -9,8 +9,8 @@ import { metaLevelAssumptionStringFromStatementAndReference } from "../../utilit
 import { ablate, attempt, descend, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class MetaLevelAssumption extends Element {
-  constructor(context, string, node, reference, statement) {
-    super(context, string, node);
+  constructor(context, string, node, lineIndex, reference, statement) {
+    super(context, string, node, lineIndex);
 
     this.reference = reference;
     this.statement = statement;
@@ -75,8 +75,6 @@ export default define(class MetaLevelAssumption extends Element {
 
       context.debug(`...the '${metaLevelAssumptionString}' meta-level assumption is already valid.`);
     } else {
-      const context = this.getContext();
-
       attempt((context) => {
         const statementValidates = this.validateStatement(context);
 

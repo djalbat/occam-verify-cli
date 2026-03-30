@@ -128,7 +128,7 @@ export default class TopLevelAssertion extends Element {
     context.trace(`Verifying the '${topLevelAssertionString}' top level assertion...`);
 
     await enclose(async (context) => {
-      const labelsVerify = this.verifyLabels();
+      const labelsVerify = this.verifyLabels(context);
 
       if (labelsVerify) {
         const suppositionsVerify = await this.verifySuppositions(context);
@@ -154,11 +154,10 @@ export default class TopLevelAssertion extends Element {
     return verifies;
   }
 
-  verifyLabels() {
+  verifyLabels(context) {
     let labelsVerify;
 
-    const context = this.getContext(),
-          topLevelAssertionString = this.getString();  ///
+    const topLevelAssertionString = this.getString();  ///
 
     context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's labels...`);
 
