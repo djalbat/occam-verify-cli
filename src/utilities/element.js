@@ -34,7 +34,7 @@ export function typeFromTypeNode(typeNode, context) {
 
     context = null;
 
-    type = new Type(context, string, node, lineIndex, prefixName, superTypes, properties, provisional);
+    type = new Type(context, string, node, lineIndex, name, prefixName, superTypes, properties, provisional);
   }
 
   return type;
