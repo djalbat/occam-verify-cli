@@ -301,8 +301,8 @@ function isVariableDefined(variable, context) {
 
 function isMetavariableDefined(metavariable, context) {
   const metavariableNode = metavariable.getNode(),
-        judgementPresent = context.isJudgementPresentByMetavariableNode(metavariableNode),
-        metavariableDefined = judgementPresent; ///
+        declaredJudgementPresent = context.isDeclaredJudgementPresentByMetavariableNode(metavariableNode),
+        metavariableDefined = declaredJudgementPresent; ///
 
   return metavariableDefined
 }

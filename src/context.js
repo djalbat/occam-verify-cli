@@ -115,18 +115,25 @@ export default class Context extends ContextBase {
     return constructors;
   }
 
-  getDeclaredVariables(includeRelease) {
+  getDeclaredVariables() {
     const context = this.getContext(),
-          declaredVariables = context.getDeclaredVariables(includeRelease);
+          declaredVariables = context.getDeclaredVariables();
 
     return declaredVariables;
   }
 
-  getDeclaredMetavariables(includeRelease) {
+  getDeclaredMetavariables() {
     const context = this.getContext(),
-          declaredMetavariables = context.getDeclaredMetavariables(includeRelease);
+          declaredMetavariables = context.getDeclaredMetavariables();
 
     return declaredMetavariables;
+  }
+
+  getDeclaredJudgements() {
+    const context = this.getContext(),
+          declaredJudgements = context.getDeclaredJudgements();
+
+    return declaredJudgements;
   }
 
   getSubproofOrProofAssertions() {
@@ -258,6 +265,13 @@ export default class Context extends ContextBase {
           substitution = context.findSubstitutionBySubstitutionNode(substitutionNode);
 
     return substitution;
+  }
+
+  findDeclaredJudgementsByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+          declaredJudgements = context.findDeclaredJudgementsByMetavariableNode(metavariableNode);
+
+    return declaredJudgements;
   }
 
   findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode) {
@@ -461,18 +475,18 @@ export default class Context extends ContextBase {
     return referencePresent;
   }
 
-  isJudgementPresentByMetavariableNode(metavariableNode) {
-    const context = this.getContext(),
-          judgementPresent = context.isJudgementPresentByMetavariableNode(metavariableNode);
-
-    return judgementPresent;
-  }
-
   isSubstitutionPresentByMetavariableNode(metavariableNode) {
     const context = this.getContext(),
           substitutionPresent = context.isSubstitutionPresentByMetavariableNode(metavariableNode);
 
     return substitutionPresent;
+  }
+
+  isDeclaredJudgementPresentByMetavariableNode(metavariableNode) {
+    const context = this.getContext(),
+          declaredJudgementPresent = context.isDeclaredJudgementPresentByMetavariableNode(metavariableNode);
+
+    return declaredJudgementPresent;
   }
 
   isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) {

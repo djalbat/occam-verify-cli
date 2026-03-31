@@ -193,7 +193,7 @@ export default define(class Judgement extends Element {
     const metavariableNode = this.getMetavariableNode(),
           topLevelMetaAssertion = this.getTopLevelMetaAssertion(),
           metaLevelAssumptions = topLevelMetaAssertion.getMetaLevelAssumptions(),
-          judgements = context.findJudgementsByMetavariableNode(metavariableNode);
+          judgements = context.findDeclaredJudgementsByMetavariableNode(metavariableNode);
 
     let assumptions;
 

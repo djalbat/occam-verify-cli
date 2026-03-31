@@ -242,17 +242,17 @@ class BoundedContext extends Context {
 
   findEquivalenceByTerm(term) { return findEquivalenceByTerm(this.equivalences, term); }
 
-  findJudgementByMetavariableNode(metavariableNode) {
-    const declaredJudgements = this.getJudgements(),
-          judgement = declaredJudgements.find((judgement) => {
-            const metavariableNodeMatches = judgement.matchMetavariableNode(metavariableNode);
+  findDeclaredJudgementByMetavariableNode(metavariableNode) {
+    const declaredJudgements = this.getDeclaredJudgements(),
+          declaredJudgement = declaredJudgements.find((declaredJudgement) => {
+            const metavariableNodeMatches = declaredJudgement.matchMetavariableNode(metavariableNode);
 
             if (metavariableNodeMatches) {
               return true;
             }
           }) || null;
 
-    return judgement;
+    return declaredJudgement;
   }
 
   findDeclaredVariableByVariableIdentifier(variableIdentifier) {
@@ -269,7 +269,7 @@ class BoundedContext extends Context {
   }
 
   findJudgementsByMetavariableNode(metavariableNode) {
-    const declaredJudgements = this.getJudgements();
+    const declaredJudgements = this.getDeclaredJudgements();
 
     filter(declaredJudgements, (judgement) => {
       const metavariableNodeMatches = judgement.matchMetavariableNode(metavariableNode);
@@ -300,11 +300,11 @@ class BoundedContext extends Context {
     return metaLevelAssumption;
   }
 
-  isJudgementPresentByMetavariableNode(metavariableNode) {
-    const judgement = this.findJudgementByMetavariableNode(metavariableNode),
-          judgementPresent = (judgement !== null);
+  isDeclaredJudgementPresentByMetavariableNode(metavariableNode) {
+    const declaredJudgement = this.findDeclaredJudgementByMetavariableNode(metavariableNode),
+          declaredJudgementPresent = (declaredJudgement !== null);
 
-    return judgementPresent;
+    return declaredJudgementPresent;
   }
 
   isDeclaredVariablePresentByVariableIdentifier(variableIdentifier) {
