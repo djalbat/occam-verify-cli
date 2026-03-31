@@ -162,7 +162,7 @@ export default class TopLevelAssertion extends Element {
     context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's labels...`);
 
     labelsVerify = this.labels.every((label) => {
-      const labelVerifies = this.verifyLabel(label);
+      const labelVerifies = this.verifyLabel(label, context);
 
       if (labelVerifies) {
         return true;
@@ -176,11 +176,10 @@ export default class TopLevelAssertion extends Element {
     return labelsVerify;
   }
 
-  verifyLabel(label) {
+  verifyLabel(label, context) {
     let labelVerifies;
 
-    const context = this.getContext(),
-          labelString = label.getString(),
+    const labelString = label.getString(),
           topLevelAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${topLevelAssertionString}' top level assertion's '${labelString}' label...`);
