@@ -1045,13 +1045,6 @@ export function nameFromParaneterNode(parameterNode, context) {
   return name;
 }
 
-export function nameFromTypePrefixNode(typePrefixNode, context) {
-  const typePrefixName = typePrefixNode.getTypePrefixName(),
-        name = typePrefixName;  ///
-
-  return name;
-}
-
 export function superTypesFromTypeNode(typeNode, context) {
   const superTypes = null;
 
@@ -1102,6 +1095,13 @@ export function termsFromSignatureNode(signatureNode, context) {
         terms = termsFromTermNodes(termNodes, context);
 
   return terms;
+}
+
+export function nameFromTypePrefixNode(typePrefixNode, context) {
+  const typePrefixName = typePrefixNode.getTypePrefixName(),
+        name = typePrefixName;  ///
+
+  return name;
 }
 
 export function provisionalFromTypeNode(typeNode, context) {
@@ -2060,6 +2060,12 @@ export function frameSubstitutionFromStatementSubstitutionNode(statementSubstitu
   return frameSubstitution;
 }
 
+export function metaLevelAssumptionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
+  const metaLevelAssumptions = [];
+
+  return metaLevelAssumptions;
+}
+
 export function replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
   const { Reference } = elements,
         replacementReferenceNode = referenceSubstitutionNode.getReplacementReferenceNode(),
@@ -2074,12 +2080,6 @@ export function replacementStatementFromStatementSubstitutionNode(statementSubst
         replacementStatement = statementFromStatementNode(replacementStatementNode, context);
 
   return replacementStatement;
-}
-
-export function metaLevelAssumptionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
-  const metaLevelAssumptions = [];
-
-  return metaLevelAssumptions;
 }
 
 export function termsFromTermNodes(termNodes, context) {

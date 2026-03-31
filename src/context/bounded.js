@@ -162,7 +162,7 @@ class BoundedContext extends Context {
     });
   }
 
-  addDEclaredVariable(declaredVariable) {
+  addDeclaredVariable(declaredVariable) {
     const context = this, ///
           declaredVariableString = declaredVariable.getString();
 
