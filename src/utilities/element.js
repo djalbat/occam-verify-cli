@@ -1182,7 +1182,7 @@ export function termFromMetavariableNode(metavariableNode, context) {
   const termNode = metavariableNode.getTermNode();
 
   if (termNode !== null) {
-    term = context.findTermByTermNode(termNode);
+    term = termFromTermNode(termNode, context);
   }
 
   return term;

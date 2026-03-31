@@ -160,8 +160,6 @@ export default define(class Metavariable extends Element {
         this.type = type;
 
         typeVerifies = true;
-
-        context.error(`Type '${typeName}' is not present.`);
       }
 
       if (typeVerifies) {
@@ -264,7 +262,7 @@ export default define(class Metavariable extends Element {
       let term = null;
 
       if (declaredMetavaraible !== null) {
-        const type = metavariable.getType();
+        const type = declaredMetavaraible.getType();
 
         if (type !== null) {
           term = this.term.validateGivenType(type, context);
@@ -475,15 +473,9 @@ export default define(class Metavariable extends Element {
   unifyMetavariable(metavariable, context) {
     let metavariableUnifies;
 
-    const specificContext = context; ///
-
-    context = this.getContext();
-
-    const generalContext = context;  ///
-
-    context = specificContext;  ///
-
-    const generalMetavariable = this, ///
+    const generalContext = context, ///
+          specificContext = context,  ///
+          generalMetavariable = this, ///
           specificMetavariable = metavariable,  ///
           generalMetavariableString = generalMetavariable.getString(),
           specificMetavariableString = specificMetavariable.getString();

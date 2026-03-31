@@ -353,12 +353,19 @@ class MetavariablePass extends ZipPass {
       run: (generalTypeNode, specificTermNode, generalContext, specificContext) => {
         let success = false;
 
+        let context;
+
         const typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
-              nominalTypeName = typeNode.getNominalTypeName(),
-              type = generalContext.findTypeByNominalTypeName(nominalTypeName),
-              context = specificContext, ///
-              term = context.findTermByTermNode(termNode),
+              nominalTypeName = typeNode.getNominalTypeName();
+
+        context = generalContext; ///
+
+        const type = context.findTypeByNominalTypeName(nominalTypeName);
+
+        context = specificContext; ///
+
+        const term = context.findTermByTermNode(termNode),
               termType = term.getType(),
               termTypeEqualToOrSubTypeOfGivenTypeType = termType.isEqualToOrSubTypeOf(type);
 

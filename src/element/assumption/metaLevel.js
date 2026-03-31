@@ -122,21 +122,24 @@ export default define(class MetaLevelAssumption extends Element {
     const referenceString = this.reference.getString(),
           metaLevelAssumptionString = this.getString();  ///
 
-    context.trace(`Validating the '${metaLevelAssumptionString}' metaLevelAssumption's '${referenceString}' reference...`);
+    context.trace(`Validating the '${metaLevelAssumptionString}' meta-level assumption's '${referenceString}' reference...`);
 
     const reference = this.reference.validate(context);
 
     if (reference !== null) {
-      const metavariable = this.reference.getMetavariable(),
+      const context = reference.getContext(),
+            metavariable = this.reference.getMetavariable(),
             metavariablePresent = context.isMetavariablePresent(metavariable, context);
 
       if (metavariablePresent) {
+        this.reference = reference;
+
         referenceValidates = true;
       }
     }
 
     if (referenceValidates) {
-      context.debug(`...validated the '${metaLevelAssumptionString}' metaLevelAssumption's '${referenceString}' reference.`);
+      context.debug(`...validated the '${metaLevelAssumptionString}' meta-level assumption's '${referenceString}' reference.`);
     }
 
     return referenceValidates;
@@ -148,7 +151,7 @@ export default define(class MetaLevelAssumption extends Element {
     const metaLevelAssumptionString = this.getString(),  ///
           statementString = this.statement.getString();
 
-    context.trace(`Validating the '${metaLevelAssumptionString}' metaLevelAssumption's '${statementString}' statement...`);
+    context.trace(`Validating the '${metaLevelAssumptionString}' meta-level assumption's '${statementString}' statement...`);
 
     descend((context) => {
       const statement = this.statement.validate(context);
@@ -159,7 +162,7 @@ export default define(class MetaLevelAssumption extends Element {
     }, context);
 
     if (statementValidates) {
-      context.debug(`...validated the '${metaLevelAssumptionString}' metaLevelAssumption's '${statementString}' statement.`);
+      context.debug(`...validated the '${metaLevelAssumptionString}' meta-level assumption's '${statementString}' statement.`);
     }
 
     return statementValidates;
