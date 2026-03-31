@@ -73,12 +73,6 @@ export function frameFromJSON(json, context) {
   return frame;
 }
 
-export function lemmasFromJSON(json, context) {
-  const lemmas = [];
-
-  return lemmas;
-}
-
 export function negatedFromJSON(json, context) {
   const { negated } = json;
 
@@ -177,12 +171,6 @@ export function conclusionFromJSON(json, context) {
   conclusion = Conclusion.fromJSON(json, context);
 
   return conclusion;
-}
-
-export function metaLemmasFromJSON(json, context) {
-  const metaLemmas = [];
-
-  return metaLemmas;
 }
 
 export function provisionalFromJSON(json, context) {

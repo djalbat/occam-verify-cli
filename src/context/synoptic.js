@@ -4,215 +4,131 @@ import { arrayUtilities } from "necessary";
 
 import Context from "../context";
 
-const { push, last, compress } = arrayUtilities;
+import { compressTerms,
+         compressFrames,
+         compressEqualities,
+         compressJudgements,
+         compressAssertions,
+         compressStatements,
+         compressReferences,
+         compressAssumptions,
+         compressMetavariables,
+         compressSubstitutions,} from "../utilities/synoptic";
+
+const { push } = arrayUtilities;
 
 export default class SynopticContext extends Context {
-  constructor(context, contexts) {
+  constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions) {
     super(context);
 
-    this.contexts = contexts;
+    this.terms = terms;
+    this.frames = frames;
+    this.equalities = equalities;
+    this.judgements = judgements;
+    this.assertions = assertions;
+    this.statements = statements;
+    this.references = references;
+    this.assumptions = assumptions;
+    this.metavariables = metavariables;
+    this.substitutions = substitutions;
   }
 
-  getContexts() {
-    return this.contexts;
-  }
+  getTerms(terms = []) {
+    push(terms, this.terms);
 
-  getTerms() {
-    const terms = [];
+    this.context.getTerms(terms);
 
-    this.contexts.forEach((context) => {
-      const contextTerms = context.getTerms();
-
-      push(terms, contextTerms);
-    });
-    
-    compress(terms, (termA, termB) => {
-      const termAComparesToTermB = termA.compareTerm(termB);
-      
-      if (!termAComparesToTermB) {
-        return true;
-      }
-    });
+    compressTerms(terms);
 
     return terms;
   }
 
-  getFrames() {
-    const frames = [];
+  getFrames(frames = []) {
+    push(frames, this.frames);
 
-    this.contexts.forEach((context) => {
-      const contextFrames = context.getFrames();
+    this.context.getFrames(frames);
 
-      push(frames, contextFrames);
-    });
-
-    compress(frames, (frameA, frameB) => {
-      const frameAEqualToFrameB = frameA.isEqualTo(frameB);
-
-      if (!frameAEqualToFrameB) {
-        return true;
-      }
-    });
+    compressFrames(frames);
 
     return frames;
   }
 
-  getEqualities() {
-    const equalities = [];
+  getEqualities(equalities = []) {
+    push(equalities, this.equalities);
 
-    this.contexts.forEach((context) => {
-      const contextEqualities = context.getEqualities();
+    this.context.getEqualities(equalities);
 
-      push(equalities, contextEqualities);
-    });
-
-    compress(equalities, (equalityA, equalityB) => {
-      const equalityAEqualToEqualityB = equalityA.isEqualTo(equalityB);
-
-      if (!equalityAEqualToEqualityB) {
-        return true;
-      }
-    });
+    compressEqualities(equalities);
 
     return equalities;
   }
 
-  getJudgements() {
-    const judgements = [];
+  getJudgements(judgements = []) {
+    push(judgements, this.judgements);
 
-    this.contexts.forEach((context) => {
-      const contextJudgements = context.getJudgements();
+    this.context.getJudgements(judgements);
 
-      push(judgements, contextJudgements);
-    });
-
-    compress(judgements, (judgementA, judgementB) => {
-      const judgementAEqualToJudgementB = judgementA.isEqualTo(judgementB);
-
-      if (!judgementAEqualToJudgementB) {
-        return true;
-      }
-    });
+    compressJudgements(judgements);
 
     return judgements;
   }
 
-  getStatements() {
-    const statements = [];
+  getStatements(statements = []) {
+    push(statements, this.statements);
 
-    this.contexts.forEach((context) => {
-      const contextStatements = context.getStatements();
+    this.context.getStatements(statements);
 
-      push(statements, contextStatements);
-    });
-
-    compress(statements, (statementA, statementB) => {
-      const statementAEqualToStatementB = statementA.isEqualTo(statementB);
-
-      if (!statementAEqualToStatementB) {
-        return true;
-      }
-    });
+    compressStatements(statements);
 
     return statements;
   }
 
-  getAssertions() {
-    const assertions = [];
+  getAssertions(assertions = []) {
+    push(assertions, this.assertions);
 
-    this.contexts.forEach((context) => {
-      const contextAssertions = context.getAssertions();
+    this.context.getAssertions(assertions);
 
-      push(assertions, contextAssertions);
-    });
-
-    compress(assertions, (assertionA, assertionB) => {
-      const assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
-
-      if (!assertionAEqualToAssertionB) {
-        return true;
-      }
-    });
+    compressAssertions(assertions);
 
     return assertions;
   }
 
-  getReferences() {
-    const references = [];
+  getReferences(references = []) {
+    push(references, this.references);
 
-    this.contexts.forEach((context) => {
-      const contextReferences = context.getReferences();
+    this.context.getReferences(references);
 
-      push(references, contextReferences);
-    });
-
-    compress(references, (referenceA, referenceB) => {
-      const referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);
-
-      if (!referenceAEqualToReferenceB) {
-        return true;
-      }
-    });
+    compressReferences(references);
 
     return references;
   }
 
-  getAssumptions() {
-    const assumptions = [];
+  getAssumptions(assumptions = []) {
+    push(assumptions, this.assumptions);
 
-    this.contexts.forEach((context) => {
-      const contextAssumptions = context.getAssumptions();
+    this.context.getAssumptions(assumptions);
 
-      push(assumptions, contextAssumptions);
-    });
-
-    compress(assumptions, (assumptionA, assumptionB) => {
-      const assumptionAEqualToAssumptionB = assumptionA.isEqualTo(assumptionB);
-
-      if (!assumptionAEqualToAssumptionB) {
-        return true;
-      }
-    });
+    compressAssumptions(assumptions);
 
     return assumptions;
   }
 
-  getMetavariables() {
-    const metavariables = [];
+  getMetavariables(metavariables = []) {
+    push(metavariables, this.metavariables);
 
-    this.contexts.forEach((context) => {
-      const contextMetavariables = context.getMetavariables();
+    this.context.getMetavariables(metavariables);
 
-      push(metavariables, contextMetavariables);
-    });
-
-    compress(metavariables, (metavariableA, metavariableB) => {
-      const metavariableAEqualToMetavariableB = metavariableA.isEqualTo(metavariableB);
-
-      if (!metavariableAEqualToMetavariableB) {
-        return true;
-      }
-    });
+    compressMetavariables(metavariables);
 
     return metavariables;
   }
 
-  getSubstitutions() {
-    const substitutions = [];
+  getSubstitutions(substitutions = []) {
+    push(substitutions, this.substitutions);
 
-    this.contexts.forEach((context) => {
-      const contextSubstitutions = context.getSubstitutions();
+    this.context.getSubstitutions(substitutions);
 
-      push(substitutions, contextSubstitutions);
-    });
-
-    compress(substitutions, (substitutionA, substitutionB) => {
-      const substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
-
-      if (!substitutionAEqualToSubstitutionB) {
-        return true;
-      }
-    });
+    compressSubstitutions(substitutions);
 
     return substitutions;
   }
@@ -361,10 +277,139 @@ export default class SynopticContext extends Context {
   }
 
   static fromContexts(...contexts) {
-    const lastContext = last(contexts),
-          context = lastContext,  ///
-          synopticContext = new SynopticContext(context, contexts);
+    const context = contexts.pop(),  ///
+          terms = termsFromContexts(contexts),
+          frames = framesFromContexts(contexts),
+          equalities = equalitiesFromContexts(contexts),
+          judgements = judgementsFromContexts(contexts),
+          assertions = assertionsFromContexts(contexts),
+          statements = statementsFromContexts(contexts),
+          references = referencesFromContexts(contexts),
+          assumptions = assumptionsFromContexts(contexts),
+          metavariables = metavariablesFromContexts(contexts),
+          substitutions = substitutionsFromContexts(contexts),
+          synopticContext = new SynopticContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
 
     return synopticContext;
   }
+}
+
+function termsFromContexts(contexts) {
+  const terms = [];
+
+  contexts.forEach((context) => {
+    context.getTerms(terms);
+  });
+
+  compressTerms(terms);
+
+  return terms;
+}
+
+function framesFromContexts(contexts) {
+  const frames = [];
+
+  contexts.forEach((context) => {
+    context.getFrames(frames);
+  });
+
+  compressFrames(frames);
+
+  return frames;
+}
+
+function equalitiesFromContexts(contexts) {
+  const equalities = [];
+
+  contexts.forEach((context) => {
+    context.getEqualities(equalities);
+  });
+
+  compressEqualities(equalities);
+
+  return equalities;
+}
+
+function judgementsFromContexts(contexts) {
+  const judgements = [];
+
+  contexts.forEach((context) => {
+    context.getJudgements(judgements);
+  });
+
+  compressJudgements(judgements);
+
+  return judgements;
+}
+
+function assertionsFromContexts(contexts) {
+  const assertions = [];
+
+  contexts.forEach((context) => {
+    context.getAssertions(assertions);
+  });
+
+  compressAssertions(assertions);
+
+  return assertions;
+}
+
+function statementsFromContexts(contexts) {
+  const statements = [];
+
+  contexts.forEach((context) => {
+    context.getStatements(statements);
+  });
+
+  compressStatements(statements);
+
+  return statements;
+}
+
+function referencesFromContexts(contexts) {
+  const references = [];
+
+  contexts.forEach((context) => {
+    context.getReferences(references);
+  });
+
+  compressReferences(references);
+
+  return references;
+}
+
+function assumptionsFromContexts(contexts) {
+  const assumptions = [];
+
+  contexts.forEach((context) => {
+    context.getAssumptions(assumptions);
+  });
+
+  compressAssumptions(assumptions);
+
+  return assumptions;
+}
+
+function metavariablesFromContexts(contexts) {
+  const metavariables = [];
+
+  contexts.forEach((context) => {
+    context.getMetavariables(metavariables);
+  });
+
+  compressMetavariables(metavariables);
+
+  return metavariables;
+}
+
+function substitutionsFromContexts(contexts) {
+  const substitutions = [];
+
+  contexts.forEach((context) => {
+    context.getSubstitutions(substitutions);
+  });
+
+  compressSubstitutions(substitutions);
+
+  return substitutions;
 }

@@ -5,8 +5,8 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
-import { join, ablate, descend, attempt, instantiate } from "../../utilities/context";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
+import { join, ablate, descend, attempt, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(context, string, node, lineIndex, generalContext, targetFrame, replacementFrame) {
@@ -185,16 +185,21 @@ export default define(class FrameSubstitution extends Substitution {
   static name = "FrameSubstitution";
 
   toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            name,
-            string,
-            lineIndex
-          };
+    const context = this.getContext();
 
-    return json;
+    return serialise((context) => {
+      const { name } = this.constructor,
+            string = this.getString(),
+            lineIndex = this.getLineIndex(),
+            json = {
+              name,
+              context,
+              string,
+              lineIndex
+            };
+
+      return json;
+    }, context);
   }
 
   static fromJSON(json, context) {
@@ -203,16 +208,18 @@ export default define(class FrameSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {
-        const { string, lineIndex } = json,
-              frameSubstitutionNode = instantiateFrameSubstitution(string, context),
-              node = frameSubstitutionNode, ///
-              generalContext = generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context),
-              targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
-              replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
+      unserialise((json, context) => {
+        instantiate((context) => {
+          const { string, lineIndex } = json,
+                frameSubstitutionNode = instantiateFrameSubstitution(string, context),
+                node = frameSubstitutionNode, ///
+                generalContext = generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context),
+                targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
+                replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
 
-        frameSubstitutionn = new FrameSubstitution(context, string, node, lineIndex, generalContext, targetFrame, replacementFrame);
-      }, context);
+          frameSubstitutionn = new FrameSubstitution(context, string, node, lineIndex, generalContext, targetFrame, replacementFrame);
+        }, context);
+      }, json, context);
     }
 
     return frameSubstitutionn;

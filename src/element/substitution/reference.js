@@ -4,9 +4,9 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
-import { join, descend, ablate, attempt, instantiate } from "../../utilities/context";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
+import { join, ablate, descend, attempt, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class ReferenceSubstitution extends Substitution {
   constructor(context, string, node, lineIndex, generalContext, targetReference, replacementReference) {
@@ -192,16 +192,21 @@ export default define(class ReferenceSubstitution extends Substitution {
   static name = "ReferenceSubstitution";
 
   toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            name,
-            string,
-            lineIndex
-          };
+    const context = this.getContext();
 
-    return json;
+    return serialise((context) => {
+      const { name } = this.constructor,
+            string = this.getString(),
+            lineIndex = this.getLineIndex(),
+            json = {
+              name,
+              context,
+              string,
+              lineIndex
+            };
+
+      return json;
+    }, context);
   }
 
   static fromJSON(json, context) {
@@ -210,16 +215,18 @@ export default define(class ReferenceSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {
-        const { string, lineIndex } = json,
-              referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
-              node = referenceSubstitutionNode, ///
-              generalContext = generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
-              targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
-              replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
+      unserialise((json, context) => {
+        instantiate((context) => {
+          const { string, lineIndex } = json,
+                referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
+                node = referenceSubstitutionNode, ///
+                generalContext = generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
+                targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
+                replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
 
-        referenceSubstitutionn = new ReferenceSubstitution(context, string, node, lineIndex, generalContext, targetReference, replacementReference);
-      }, context);
+          referenceSubstitutionn = new ReferenceSubstitution(context, string, node, lineIndex, generalContext, targetReference, replacementReference);
+        }, context);
+      }, json, context);
     }
 
     return referenceSubstitutionn;

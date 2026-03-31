@@ -24,72 +24,82 @@ export default class Context extends ContextBase {
     return filePath;
   }
 
-  getTerms() {
-    const context = this.getContext(),
-          terms = context.getTerms();
+  getTerms(terms = []) {
+    const context = this.getContext();
+
+    context.getTerms(terms);
 
     return terms;
   }
 
-  getFrames() {
-    const context = this.getContext(),
-      frames = context.getFrames();
+  getFrames(frames = []) {
+    const context = this.getContext();
+
+    context.getFrames(frames);
 
     return frames;
   }
 
-  getJudgements() {
-    const context = this.getContext(),
-          judgements = context.getJudgements();
+  getJudgements(judgements = []) {
+    const context = this.getContext();
+
+    context.getJudgements(judgements);
 
     return judgements;
   }
 
-  getEqualities() {
-    const context = this.getContext(),
-          equalities = context.getEqualities();
+  getEqualities(equalities = []) {
+    const context = this.getContext();
+
+    context.getEqualities(equalities);
 
     return equalities;
   }
 
-  getStatements() {
-    const context = this.getContext(),
-          statements = context.getStatements();
+  getStatements(statements = []) {
+    const context = this.getContext();
+
+    context.getStatements(statements);
 
     return statements;
   }
 
-  getAssertions() {
-    const context = this.getContext(),
-          assertions = context.getAssertions();
+  getAssertions(assertions = []) {
+    const context = this.getContext();
+
+    context.getAssertions(assertions);
 
     return assertions;
   }
 
-  getReferences() {
-    const context = this.getContext(),
-          references = context.getReferences();
+  getReferences(references = []) {
+    const context = this.getContext();
+
+    context.getReferences(references);
 
     return references;
   }
 
-  getAssumptions() {
-    const context = this.getContext(),
-          assumptions = context.getAssumptions();
+  getAssumptions(assumptions = []) {
+    const context = this.getContext();
+
+    context.getAssumptions(assumptions);
 
     return assumptions;
   }
 
-  getMetavariables() {
-    const context = this.getContext(),
-          metavariables = context.getMetavariables();
+  getMetavariables(metavariables = []) {
+    const context = this.getContext();
+
+    context.getMetavariables(metavariables);
 
     return metavariables;
   }
 
-  getSubstitutions() {
-    const context = this.getContext(),
-      substitutions = context.getSubstitutions();
+  getSubstitutions(substitutions = []) {
+    const context = this.getContext();
+
+    context.getSubstitutions(substitutions);
 
     return substitutions;
   }

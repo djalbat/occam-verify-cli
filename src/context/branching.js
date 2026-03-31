@@ -1,6 +1,12 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import Context from "../context";
+
+import { compressTerms } from "../utilities/synoptic";
+
+const { push } = arrayUtilities;
 
 export default class BranchingContext extends Context {
   constructor(context, terms) {
@@ -9,8 +15,12 @@ export default class BranchingContext extends Context {
     this.terms = terms;
   }
 
-  getTerms() {
-    return this.terms;
+  getTerms(terms = []) {
+    push(terms, this.terms);
+
+    compressTerms(terms);
+
+    return terms;
   }
 
   addTerm(term) {

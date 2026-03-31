@@ -13,12 +13,10 @@ import { findMetaTypeByMetaTypeName } from "../../metaTypes";
 import { typesFromJSON,
          rulesFromJSON,
          axiomsFromJSON,
-         lemmasFromJSON,
          typesToTypesJSON,
          theoremsFromJSON,
          rulesToRulesJSON,
          axiomsToAxiomsJSON,
-         metaLemmasFromJSON,
          conjecturesFromJSON,
          combinatorsFromJSON,
          typePrefixesFromJSON,
@@ -242,63 +240,43 @@ export default class NominalFileContext extends FileContext {
     return declaredJudgements;
   }
 
-  getTerms() {
-    const terms = [];
-
+  getTerms(terms = []) {
     return terms;
   }
 
-  getFrames() {
-    const frames = [];
-
+  getFrames(frames = []) {
     return frames;
   }
 
-  getEqualities() {
-    const equalities = [];
-
+  getEqualities(equalities = []) {
     return equalities;
   }
 
-  getJudgements() {
-    const judgements = [];
-
+  getJudgements(judgements = []) {
     return judgements;
   }
 
-  getAssertions() {
-    const assertions = [];
-
+  getAssertions(assertions = []) {
     return assertions;
   }
 
-  getStatements() {
-    const statements = [];
-
+  getStatements(statements = []) {
     return statements;
   }
 
-  getReferences() {
-    const references = [];
-
+  getReferences(references = []) {
     return references;
   }
 
-  getAssumptions() {
-    const assumptions = [];
-
+  getAssumptions(assumptions = []) {
     return assumptions;
   }
 
-  getMetavariables() {
-    const metavariables = [];
-
+  getMetavariables(metavariables = []) {
     return metavariables;
   }
 
-  getSubstitutions() {
-    const substitutions = [];
-
+  getSubstitutions(substitutions = []) {
     return substitutions;
   }
 
@@ -825,8 +803,8 @@ export default class NominalFileContext extends FileContext {
 
     typesFromJSON(json, this.types, fileContext);
 
-    this.lemmas = lemmasFromJSON(json, fileContext);
-    this.metaLemmas = metaLemmasFromJSON(json, fileContext);
+    this.lemmas = [];
+    this.metaLemmas = [];
 
     this.declaredMetavariables = declaredMetavariablesFromJSON(json, fileContext);
     this.declaredVariables = declaredVariablesFromJSON(json, fileContext);

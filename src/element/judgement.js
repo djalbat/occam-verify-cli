@@ -38,6 +38,14 @@ export default define(class Judgement extends Element {
     return singular;
   }
 
+  isEqualTo(judgement) {
+    const judgementNode = judgement.getNode(),
+          judgementNodeMatches = this.matchJudgementNode(judgementNode),
+          equalTo = judgementNodeMatches;  ///
+
+    return equalTo;
+  }
+
   getAssumptions() { return this.frame.getAssumptions(); }
 
   getMetavariable() { return this.frame.getMetavariable(); }

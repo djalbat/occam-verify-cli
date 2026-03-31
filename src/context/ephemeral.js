@@ -1,7 +1,19 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import Context from "../context";
 
+import { compressTerms,
+         compressFrames,
+         compressEqualities,
+         compressJudgements,
+         compressAssertions,
+         compressStatements,
+         compressReferences,
+         compressAssumptions,
+         compressMetavariables,
+         compressSubstitutions,} from "../utilities/synoptic";
 import { termsFromJSON,
          framesFromJSON,
          termsToTermsJSON,
@@ -23,6 +35,8 @@ import { termsFromJSON,
          metavariablesToMetavariablesJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
+const { push } = arrayUtilities;
+
 export default class EphemeralContext extends Context {
   constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions) {
     super(context);
@@ -39,153 +53,123 @@ export default class EphemeralContext extends Context {
     this.substitutions = substitutions;
   }
 
-  getTerms() {
-    let terms;
-    
+  getTerms(terms = []) {
     const context = this.getContext();
-    
-    terms = context.getTerms();
-    
-    terms = [ ///
-      ...this.terms,
-      ...terms
-    ];
-    
+
+    push(terms, this.terms);
+
+    context.getTerms(terms);
+
+    compressTerms(context);
+
     return terms;
   }
 
-  getFrames() {
-    let frames;
-    
+  getFrames(frames = []) {
     const context = this.getContext();
-    
-    frames = context.getFrames();
-    
-    frames = [ ///
-      ...this.frames,
-      ...frames
-    ];
-    
+
+    push(frames, this.frames);
+
+    context.getFrames(frames);
+
+    compressFrames(context);
+
     return frames;
   }
 
-  getEqualities() {
-    let equalities;
-    
+  getEqualities(equalities = []) {
     const context = this.getContext();
-    
-    equalities = context.getEqualities();
-    
-    equalities = [ ///
-      ...this.equalities,
-      ...equalities
-    ];
-    
+
+    push(equalities, this.equalities);
+
+    context.getEqualities(equalities);
+
+    compressEqualities(context);
+
     return equalities;
   }
 
-  getJudgements() {
-    let judgements;
-    
+  getJudgements(judgements = []) {
     const context = this.getContext();
-    
-    judgements = context.getJudgements();
-    
-    judgements = [ ///
-      ...this.judgements,
-      ...judgements
-    ];
-    
+
+    push(judgements, this.judgements);
+
+    context.getJudgements(judgements);
+
+    compressJudgements(context);
+
     return judgements;
   }
 
-  getStatements() {
-    let statements;
-    
+  getStatements(statements = []) {
     const context = this.getContext();
-    
-    statements = context.getStatements();
-    
-    statements = [ ///
-      ...this.statements,
-      ...statements
-    ];
-    
+
+    push(statements, this.statements);
+
+    context.getStatements(statements);
+
+    compressStatements(context);
+
     return statements;
   }
 
-  getAssertions() {
-    let assertions;
-    
+  getAssertions(assertions = []) {
     const context = this.getContext();
-    
-    assertions = context.getAssertions();
-    
-    assertions = [ ///
-      ...this.assertions,
-      ...assertions
-    ];
-    
+
+    push(assertions, this.assertions);
+
+    context.getAssertions(assertions);
+
+    compressAssertions(context);
+
     return assertions;
   }
 
-  getReferences() {
-    let references;
-    
+  getReferences(references = []) {
     const context = this.getContext();
-    
-    references = context.getReferences();
-    
-    references = [ ///
-      ...this.references,
-      ...references
-    ];
-    
+
+    push(references, this.references);
+
+    context.getReferences(references);
+
+    compressReferences(context);
+
     return references;
   }
 
-  getAssumptions() {
-    let assumptions;
-    
+  getAssumptions(assumptions = []) {
     const context = this.getContext();
-    
-    assumptions = context.getAssumptions();
-    
-    assumptions = [ ///
-      ...this.assumptions,
-      ...assumptions
-    ];
-    
+
+    push(assumptions, this.assumptions);
+
+    context.getAssumptions(assumptions);
+
+    compressAssumptions(context);
+
     return assumptions;
   }
 
-  getMetavariables() {
-    let metavariables;
-    
+  getMetavariables(metavariables = []) {
     const context = this.getContext();
-    
-    metavariables = context.getMetavariables();
-    
-    metavariables = [ ///
-      ...this.metavariables,
-      ...metavariables
-    ];
-    
+
+    push(metavariables, this.metavariables);
+
+    context.getMetavariables(metavariables);
+
+    compressMetavariables(context);
+
     return metavariables;
   }
 
-  getSubstitutions() {
-    let substitutions;
-    
+  getSubstitutions(substitutions = []) {
     const context = this.getContext();
-    
-    substitutions = context.getSubstitutions();
-    
-    substitutions = [ ///
-      ...this.substitutions,
-      ...substitutions
-    ];
-    
+
+    push(substitutions, this.substitutions);
+
+    context.getSubstitutions(substitutions);
+
+    compressSubstitutions(context);
+
     return substitutions;
   }
 

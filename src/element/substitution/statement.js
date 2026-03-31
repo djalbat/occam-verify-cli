@@ -7,7 +7,7 @@ import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, ablate, attempt, descend, reconcile, instantiate } from "../../utilities/context";
+import { join, ablate, descend, reconcile, attempt, serialise, unserialise, instantiate } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -378,16 +378,21 @@ export default define(class StatementSubstitution extends Substitution {
   static name = "StatementSubstitution";
 
   toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            name,
-            string,
-            lineIndex
-          };
+    const context = this.getContext();
 
-    return json;
+    return serialise((context) => {
+      const { name } = this.constructor,
+            string = this.getString(),
+            lineIndex = this.getLineIndex(),
+            json = {
+              name,
+              context,
+              string,
+              lineIndex
+            };
+
+      return json;
+    }, context);
   }
 
   static fromJSON(json, context) {
@@ -396,18 +401,20 @@ export default define(class StatementSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {
-        const { string, lineIndex } = json,
-              statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-              node = statementSubstitutionNode, ///
-              generalContext = generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context),
-              resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
-              substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
-              targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
-              replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context);
+      unserialise((json, context) => {
+        instantiate((context) => {
+          const { string, lineIndex } = json,
+                statementSubstitutionNode = instantiateStatementSubstitution(string, context),
+                node = statementSubstitutionNode, ///
+                generalContext = generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context),
+                resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
+                substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
+                targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
+                replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
-        statementSubstitutionn = new StatementSubstitution(context, string, node, lineIndex, generalContext, resolved, substitution, targetStatement, replacementStatement);
-      }, context);
+          statementSubstitutionn = new StatementSubstitution(context, string, node, lineIndex, generalContext, resolved, substitution, targetStatement, replacementStatement);
+        }, context);
+      }, json, context);
     }
 
     return statementSubstitutionn;

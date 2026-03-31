@@ -7,7 +7,7 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { join, ablate, descend, attempt, instantiate } from "../../utilities/context";
+import { join, ablate, descend, attempt, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, lineIndex, generalContext, targetTerm, replacementTerm) {
@@ -196,16 +196,21 @@ export default define(class TermSubstitution extends Substitution {
   static name = "TermSubstitution";
 
   toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            name,
-            string,
-            lineIndex
-          };
+    const context = this.getContext();
 
-    return json;
+    return serialise((context) => {
+      const { name } = this.constructor,
+            string = this.getString(),
+            lineIndex = this.getLineIndex(),
+            json = {
+              name,
+              context,
+              string,
+              lineIndex
+            };
+
+      return json;
+    }, context);
   }
 
   static fromJSON(json, context) {
@@ -214,16 +219,18 @@ export default define(class TermSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {
-        const { string, lineIndex } = json,
-              termSubstitutionNode = instantiateTermSubstitution(string, context),
-              node = termSubstitutionNode,  ///
-              generalContext = generalContextFromTermSubstitutionNode(termSubstitutionNode, context),
-              targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
-              replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
+      unserialise((json, context) => {
+        instantiate((context) => {
+          const { string, lineIndex } = json,
+                termSubstitutionNode = instantiateTermSubstitution(string, context),
+                node = termSubstitutionNode,  ///
+                generalContext = generalContextFromTermSubstitutionNode(termSubstitutionNode, context),
+                targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
+                replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
 
-        termSubstitutionn = new TermSubstitution(context, string, node, lineIndex, generalContext, targetTerm, replacementTerm);
-      }, context);
+          termSubstitutionn = new TermSubstitution(context, string, node, lineIndex, generalContext, targetTerm, replacementTerm);
+        }, context);
+      }, json, context);
     }
 
     return termSubstitutionn;
