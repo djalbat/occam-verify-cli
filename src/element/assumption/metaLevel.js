@@ -205,9 +205,11 @@ export default define(class MetaLevelAssumption extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
+            lineIndex = this.getLineIndex(),
             json = {
               context,
-              string
+              string,
+              lineIndex
             };
 
       return json;
@@ -221,13 +223,13 @@ export default define(class MetaLevelAssumption extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context),
               node = metaLevelAssumptionNode,  ///
               reference = referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context),
               statement = statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context);
 
-        metaLevelAssumption = new MetaLevelAssumption(context, string, node, reference, statement);
+        metaLevelAssumption = new MetaLevelAssumption(context, string, node, lineIndex, reference, statement);
       }, context);
     }, json, context);
 

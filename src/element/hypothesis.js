@@ -89,6 +89,8 @@ export default define(class Hypothesis extends Element {
     return verifies;
   }
 
+  static name = "Hypothesis";
+
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -99,8 +101,6 @@ export default define(class Hypothesis extends Element {
 
     return json;
   }
-
-  static name = "Hypothesis";
 
   static fromJSON(json, context) {
     return instantiate((context) => {

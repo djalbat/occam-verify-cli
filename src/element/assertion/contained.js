@@ -243,13 +243,18 @@ export default define(class ContainedAssertion extends Assertion {
     return unifiesIndependently;
   }
 
+  static name = "ContainedAssertion";
+
   toJSON() {
-    const json = super.toJSON();
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
 
     return json;
   }
-
-  static name = "ContainedAssertion";
 
   static fromJSON(json, context) {
     let containedAssertion = null;

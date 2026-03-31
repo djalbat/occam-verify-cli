@@ -195,6 +195,19 @@ export default define(class TermSubstitution extends Substitution {
 
   static name = "TermSubstitution";
 
+  toJSON() {
+    const { name } = this.constructor,
+          string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            name,
+            string,
+            lineIndex
+          };
+
+    return json;
+  }
+
   static fromJSON(json, context) {
     let termSubstitutionn = null;
 

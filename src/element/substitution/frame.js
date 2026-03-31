@@ -184,6 +184,19 @@ export default define(class FrameSubstitution extends Substitution {
 
   static name = "FrameSubstitution";
 
+  toJSON() {
+    const { name } = this.constructor,
+          string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            name,
+            string,
+            lineIndex
+          };
+
+    return json;
+  }
+
   static fromJSON(json, context) {
     let frameSubstitutionn = null;
 

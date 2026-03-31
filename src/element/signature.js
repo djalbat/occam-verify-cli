@@ -216,6 +216,8 @@ export default define(class Signature extends Element {
     return substitutionsCorrelates;
   }
 
+  static name = "Signature";
+
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -226,8 +228,6 @@ export default define(class Signature extends Element {
 
     return json;
   }
-
-  static name = "Signature";
 
   static fromJSON(json, context) {
     return instantiate((context) => {

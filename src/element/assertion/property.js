@@ -203,13 +203,18 @@ export default define(class PropertyAssertion extends Assertion {
     context.addAssignment(variableAssigment);
   }
 
+  static name = "PropertyAssertion";
+
   toJSON() {
-    const json = super.toJSON();
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
 
     return json;
   }
-
-  static name = "PropertyAssertion";
 
   static fromJSON(json, context) {
     let propertyAssertion = null;

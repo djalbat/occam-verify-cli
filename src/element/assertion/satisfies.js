@@ -157,13 +157,18 @@ export default define(class SatisfiesAssertion extends Assertion {
     return stepAndSubproofOrProofAssertionsUnify;
   }
 
+  static name = "SatisfiesAssertion";
+
   toJSON() {
-    const json = super.toJSON();
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
 
     return json;
   }
-
-  static name = "SatisfiesAssertion";
 
   static fromJSON(json, context) {
     let satisfiesAssertion = null;
@@ -171,7 +176,8 @@ export default define(class SatisfiesAssertion extends Assertion {
     const { name } = json;
 
     if (this.name === name) {
-      instantiate((context) => {const { string, lineIndex } = json,
+      instantiate((context) => {
+        const { string, lineIndex } = json,
               definedAssertionNode = instantiateSatisfiesAssertion(string, context),
               node = definedAssertionNode,  ///
               signature = signatureFromJSatisfiesAssertionNode(definedAssertionNode, context),

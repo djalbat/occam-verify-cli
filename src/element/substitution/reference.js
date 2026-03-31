@@ -191,6 +191,19 @@ export default define(class ReferenceSubstitution extends Substitution {
 
   static name = "ReferenceSubstitution";
 
+  toJSON() {
+    const { name } = this.constructor,
+          string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            name,
+            string,
+            lineIndex
+          };
+
+    return json;
+  }
+
   static fromJSON(json, context) {
     let referenceSubstitutionn = null;
 

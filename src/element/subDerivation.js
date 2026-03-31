@@ -52,16 +52,5 @@ export default define(class SubDerivation extends Element {
     return verifies;
   }
 
-  toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
-
-    return json;
-  }
-
   static name = "SubDerivation";
 });

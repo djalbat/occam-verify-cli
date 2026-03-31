@@ -3,8 +3,8 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { instantiate } from "../utilities/context";
 import { equateTerms } from "../process/equate";
+import { instantiate } from "../utilities/context";
 import { instantiateEquality } from "../process/instantiate";
 import { equalityFromStatementNode } from "../utilities/element";
 import { equalityAssignmentFromEquality, leftVariableAssignmentFromEquality, rightVariableAssignmentFromEquality } from "../process/assign";
@@ -259,8 +259,6 @@ export default define(class Equality extends Element {
     context.addAssignment(rightVariableAssignment);
   }
 
-  static name = "Equality";
-
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -271,6 +269,8 @@ export default define(class Equality extends Element {
 
     return json;
   }
+
+  static name = "Equality";
 
   static fromJSON(json, context) {
     return instantiate((context) => {

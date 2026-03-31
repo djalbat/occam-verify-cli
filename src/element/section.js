@@ -81,16 +81,5 @@ export default define(class Section extends Element {
     return hypothesesVerify;
   }
 
-  toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
-
-    return json;
-  }
-
   static name = "Section";
 });

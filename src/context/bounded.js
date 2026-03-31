@@ -255,6 +255,20 @@ class BoundedContext extends Context {
     return declaredJudgement;
   }
 
+  findDeclaredJudgementsByMetavariableNode(metavariableNode) {
+    const declaredJudgements = this.getDeclaredJudgements();
+
+    filter(declaredJudgements, (declaredJudgement) => {
+      const metavariableNodeMatches = declaredJudgement.matchMetavariableNode(metavariableNode);
+
+      if (metavariableNodeMatches) {
+        return true;
+      }
+    });
+
+    return declaredJudgements;
+  }
+
   findDeclaredVariableByVariableIdentifier(variableIdentifier) {
     const declaredVariables = this.getDeclaredVariables(),
           declaredVariable = declaredVariables.find((declaredVariable) => {
@@ -266,20 +280,6 @@ class BoundedContext extends Context {
           }) || null;
 
     return declaredVariable;
-  }
-
-  findJudgementsByMetavariableNode(metavariableNode) {
-    const declaredJudgements = this.getDeclaredJudgements();
-
-    filter(declaredJudgements, (judgement) => {
-      const metavariableNodeMatches = judgement.matchMetavariableNode(metavariableNode);
-
-      if (metavariableNodeMatches) {
-        return true;
-      }
-    });
-
-    return declaredJudgements;
   }
 
   findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode) {

@@ -193,13 +193,13 @@ export default define(class Judgement extends Element {
     const metavariableNode = this.getMetavariableNode(),
           topLevelMetaAssertion = this.getTopLevelMetaAssertion(),
           metaLevelAssumptions = topLevelMetaAssertion.getMetaLevelAssumptions(),
-          judgements = context.findDeclaredJudgementsByMetavariableNode(metavariableNode);
+          declaredJudgements = context.findDeclaredJudgementsByMetavariableNode(metavariableNode);
 
     let assumptions;
 
     assumptions = this.getAssumptions();
 
-    assumptions = assumptionsFromJudgements(judgements, assumptions);
+    assumptions = assumptionsFromDeclaredJudgements(declaredJudgements, assumptions);
 
     reconcile((context) => {
       const metaLevelAssumptionsUnify = metaLevelAssumptions.every((metaLevelAssumption) => {
@@ -241,6 +241,8 @@ export default define(class Judgement extends Element {
     context.addAssignment(judgementAssignment);
   }
 
+  static name = "Judgement";
+
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -251,8 +253,6 @@ export default define(class Judgement extends Element {
 
     return json;
   }
-
-  static name = "Judgement";
 
   static fromJSON(json, context) {
     return instantiate((context) => {
@@ -285,19 +285,19 @@ function frameFromJudgementNode(judgementNode, context) {
   return frame;
 }
 
-function assumptionsFromJudgements(judgements, assumptions = []) {
-  judgements.map((judgement) => {
-    const assumption = judgement.getAssumption();
-
-    assumptions.push(assumption);
-  });
-
-  return assumptions;
-}
-
 function assumptionFromJudgementNode(judgementNode, context) {
   const assumptionNode = judgementNode.getAssumptionNode(),
         assumption = context.findAssumptionByAssumptionNode(assumptionNode);
 
   return assumption;
+}
+
+function assumptionsFromDeclaredJudgements(declaredJudgements, assumptions = []) {
+  declaredJudgements.map((declaredJudgement) => {
+    const assumption = declaredJudgement.getAssumption();
+
+    assumptions.push(assumption);
+  });
+
+  return assumptions;
 }

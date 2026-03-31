@@ -629,7 +629,7 @@ export default define(class Metavariable extends Element {
   toJSON() {
     const metaTypeJSON = metaTypeToMetaTypeJSON(this.metaType),
           metaType = metaTypeJSON,  ///
-          string = this.getString(), ///
+          string = this.getString(),
           lineIndex = this.getLineIndex(),
           json = {
             string,

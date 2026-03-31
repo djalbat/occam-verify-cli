@@ -147,16 +147,5 @@ export default define(class Subproof extends Element {
     return unifiesWithSatisfiesAssertion;
   }
 
-  toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
-
-    return json;
-  }
-
   static name = "Subproof";
 });

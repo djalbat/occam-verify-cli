@@ -370,6 +370,8 @@ export default define(class Statement extends Element {
     return topLevelAssertionUnifies;
   }
 
+  static name = "Statement";
+
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -380,8 +382,6 @@ export default define(class Statement extends Element {
 
     return json;
   }
-
-  static name = "Statement";
 
   static fromJSON(json, context) {
     return instantiate((context) => {

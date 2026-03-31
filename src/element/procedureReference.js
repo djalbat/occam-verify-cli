@@ -31,6 +31,8 @@ export default define(class ProcedureReference extends Element {
     return procedureName;
   }
 
+  static name = "ProcedureReference";
+
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -41,8 +43,6 @@ export default define(class ProcedureReference extends Element {
 
     return json;
   }
-
-  static name = "ProcedureReference";
 
   static fromJSON(json, context) {
     return instantiate((context) => {

@@ -377,6 +377,19 @@ export default define(class StatementSubstitution extends Substitution {
 
   static name = "StatementSubstitution";
 
+  toJSON() {
+    const { name } = this.constructor,
+          string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            name,
+            string,
+            lineIndex
+          };
+
+    return json;
+  }
+
   static fromJSON(json, context) {
     let statementSubstitutionn = null;
 

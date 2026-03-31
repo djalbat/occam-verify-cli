@@ -31,6 +31,8 @@ export default define(class TypePrefix extends Element {
     return comparesToTypePrefixName;
   }
 
+  static name = "TypePrefix";
+
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -41,8 +43,6 @@ export default define(class TypePrefix extends Element {
 
     return json;
   }
-
-  static name = "TypePrefix";
 
   static fromJSON(json, context) {
     return instantiate((context) => {

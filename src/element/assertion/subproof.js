@@ -289,13 +289,18 @@ export default define(class SubproofAssertion extends Assertion {
     return topLevelMetaAssertionUnifies;
   }
 
+  static name = "SubproofAssertion";
+
   toJSON() {
-    const json = super.toJSON();
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
 
     return json;
   }
-
-  static name = "SubproofAssertion";
 
   static fromJSON(json, context) {
     let subproorAssertion = null;

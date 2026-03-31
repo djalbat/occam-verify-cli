@@ -231,17 +231,6 @@ export default define(class Equivalence extends Element {
     return equivalence;
   }
 
-  toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
-
-    return json;
-  }
-
   static name = "Equivalence";
 
   static fromEquality(equality, context) {

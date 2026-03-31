@@ -267,6 +267,8 @@ export default define(class Assumption extends Element {
     return topLevelMetaAssertionUnifies;
   }
 
+  static name = "Assumption";
+
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -277,8 +279,6 @@ export default define(class Assumption extends Element {
 
     return json;
   }
-
-  static name = "Assumption";
 
   static fromJSON(json, context) {
     const assumption = instantiate((context) => {

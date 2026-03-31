@@ -34,6 +34,8 @@ export default define(class MetaType extends Element {
     return comparesToMetaTypeName;
   }
 
+  static name = "MetaType";
+
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -44,8 +46,6 @@ export default define(class MetaType extends Element {
 
     return json;
   }
-
-  static name = "MetaType";
 
   static fromJSON(json, context) {
     const { string } = json,

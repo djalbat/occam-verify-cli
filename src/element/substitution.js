@@ -2,6 +2,7 @@
 
 import { Element } from "occam-languages";
 import { primitiveUtilities } from "occam-furtle";
+import {serialise} from "../utilities/context";
 
 const { primitiveFromNode } =primitiveUtilities;
 
@@ -120,7 +121,6 @@ export default class Substitution extends Element {
     return substitutionNodeMatches;
   }
 
-
   findValidSubstitution(context) {
     const substitutionNode = this.getSubstitutionNode(),
           substitution = context.findSubstitutionBySubstitutionNode(substitutionNode),
@@ -136,15 +136,20 @@ export default class Substitution extends Element {
   }
 
   toJSON() {
-    const { name } = this.constructor,
-          string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            name,
-            string,
-            lineIndex
-          };
+    const context = this.getContext();
 
-    return json;
+    return serialise((context) => {
+      const { name } = this.constructor,
+            string = this.getString(),
+            lineIndex = this.getLineIndex(),
+            json = {
+              name,
+              context,
+              string,
+              lineIndex
+            };
+
+      return json;
+    }, context);
   }
 }

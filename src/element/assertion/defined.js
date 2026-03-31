@@ -213,6 +213,17 @@ export default define(class DefinedAssertion extends Assertion {
 
   static name = "DefinedAssertion";
 
+  toJSON() {
+    const string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          json = {
+            string,
+            lineIndex
+          };
+
+    return json;
+  }
+
   static fromJSON(json, context) {
     let definedAssertion = null;
 
@@ -220,7 +231,7 @@ export default define(class DefinedAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string } = json,
+        const { string, lineIndex } = json,
               definedAssertionNode = instantiateDefinedAssertion(string, context),
               node = definedAssertionNode,  ///
               term = termFromJDefinedAssertionNode(definedAssertionNode, context),
@@ -229,7 +240,7 @@ export default define(class DefinedAssertion extends Assertion {
 
         context = null;
 
-        definedAssertion = new DefinedAssertion(context, string, node, term, frame, negated);
+        definedAssertion = new DefinedAssertion(context, string, node, lineIndex, term, frame, negated);
       }, context);
     }
 

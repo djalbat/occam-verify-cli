@@ -118,6 +118,8 @@ export default define(class ProcedureCall extends Element {
     return unifiesIndependently;
   }
 
+  static name = "ProcedureCall";
+
   toJSON() {
     const string = this.getString(),
           lineIndex = this.getLineIndex(),
@@ -128,8 +130,6 @@ export default define(class ProcedureCall extends Element {
 
     return json;
   }
-
-  static name = "ProcedureCall";
 
   static fromJSON(json, context) {
     return instantiate((context) => {

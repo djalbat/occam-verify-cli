@@ -193,15 +193,17 @@ export default define(class TypeAssertion extends Assertion {
   }
 
   toJSON() {
-    const json = super.toJSON();
-
     const typeJSON = typeToTypeJSON(this.type),
-          type = typeJSON;  ///
+          string = this.getString(),
+          lineIndex = this.getLineIndex(),
+          type = typeJSON,
+          json = {
+            string,
+            lineIndex,
+            type
+          };
 
-    return {
-      ...json,
-      type
-    };
+    return json;
   }
 
   static name = "TypeAssertion";
