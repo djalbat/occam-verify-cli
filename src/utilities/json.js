@@ -1,9 +1,9 @@
 "use strict";
 
 import elements from "../elements";
-import EphemeralContext from "../context/ephemeral";
+import MneimicContext from "../context/mnemic";
 
-export function nameFromJSON(json, context) {
+mnemicnction nameFromJSON(json, context) {
   let { name } = json;
 
   const nameJSON = name;  ///
@@ -659,7 +659,7 @@ export function metavariablesFromJSON(json, context) {
   return metavariables;
 }
 
-export function ephemeralContextsFromJSON(json, context) {
+export function mnemicContextsFromJSON(json, context) {
   const releaseContext = context; ///
 
   const { contexts = [] } = json;
@@ -671,15 +671,15 @@ export function ephemeralContextsFromJSON(json, context) {
   }
 
   const contextsJSON = contexts,  ///
-        ephemeralContexts = contextsJSON.map((contextJSON) => {
+        mnemicContexts = contextsJSON.map((contextJSON) => {
           const json = contextJSON, ///
                 context = releaseContext, ///
-                emphemeralContext = EphemeralContext.fromJSON(json, context);
+                emphemeralContext = MneimicContext.fromJSON(json, context);
 
           return emphemeralContext;  ///
         });
 
-  return ephemeralContexts;
+  return mnemicContexts;
 }
 
 export function declaredVariablesFromJSON(json, context) {
@@ -870,10 +870,10 @@ export function nominalTypeNameToNominalTypeNameJSON(nominalTypeName) {
   return nominalTypeNameJSON;
 }
 
-export function ephemeralContextToEphemeralContextJSON(ephemeralContext) {
-  const ephemeralContextJSON = ephemeralContext.toJSON();
+export function mnemicContextToMneimicContextJSON(mnemicContext) {
+  const mnemicContextJSON = mnemicContext.toJSON();
 
-  return ephemeralContextJSON;
+  return mnemicContextJSON;
 }
 
 export function procedureReferenceToProcedureReferenceJSON(procedureReference) {

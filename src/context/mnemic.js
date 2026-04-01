@@ -37,7 +37,7 @@ import { termsFromJSON,
 
 const { push } = arrayUtilities;
 
-export default class EphemeralContext extends Context {
+export default class MnemicContext extends Context {
   constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions) {
     super(context);
 
@@ -178,7 +178,7 @@ export default class EphemeralContext extends Context {
           termA = term, ///
           termString = term.getString();
 
-    context.trace(`Adding the '${termString}' term to the ephemeral context...`);
+    context.trace(`Adding the '${termString}' term to the mnemic context...`);
 
     const terms = this.getTerms(),
           termB = terms.find((term) => {
@@ -191,12 +191,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (termB !== null) {
-      context.trace(`The '${termString}' term has already been added to the ephemeral context.`);
+      context.trace(`The '${termString}' term has already been added to the mnemic context.`);
     } else {
       this.terms.push(term);
     }
 
-    context.debug(`...added the '${termString}' term to the ephemeral context.`);
+    context.debug(`...added the '${termString}' term to the mnemic context.`);
   }
 
   addFrame(frame) {
@@ -204,7 +204,7 @@ export default class EphemeralContext extends Context {
           frameA = frame, ///
           frameString = frame.getString();
 
-    context.trace(`Adding the '${frameString}' frame to the ephemeral context...`);
+    context.trace(`Adding the '${frameString}' frame to the mnemic context...`);
 
     const frames = this.getFrames(),
           frameB = frames.find((frame) => {
@@ -217,12 +217,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (frameB !== null) {
-      context.trace(`The '${frameString}' frame has already been added to the ephemeral context.`);
+      context.trace(`The '${frameString}' frame has already been added to the mnemic context.`);
     } else {
       this.frames.push(frame);
     }
 
-    context.debug(`...added the '${frameString}' frame to the ephemeral context.`);
+    context.debug(`...added the '${frameString}' frame to the mnemic context.`);
   }
 
   addEquality(equality) {
@@ -230,7 +230,7 @@ export default class EphemeralContext extends Context {
           equalityA = equality, ///
           equalityString = equality.getString();
 
-    context.trace(`Adding the '${equalityString}' equality to the ephemeral context...`);
+    context.trace(`Adding the '${equalityString}' equality to the mnemic context...`);
 
     const equalities = this.getEqualities(),
           equalityB = equalities.find((equality) => {
@@ -243,12 +243,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (equalityB !== null) {
-      context.trace(`The '${equalityString}' equality has already been added to the ephemeral context.`);
+      context.trace(`The '${equalityString}' equality has already been added to the mnemic context.`);
     } else {
       this.equalities.push(equality);
     }
 
-    context.debug(`...added the '${equalityString}' equality to the ephemeral context.`);
+    context.debug(`...added the '${equalityString}' equality to the mnemic context.`);
   }
 
   addJudgement(judgement) {
@@ -256,7 +256,7 @@ export default class EphemeralContext extends Context {
           judgementA = judgement, ///
           judgementString = judgement.getString();
 
-    context.trace(`Adding the '${judgementString}' judgement to the ephemeral context...`);
+    context.trace(`Adding the '${judgementString}' judgement to the mnemic context...`);
 
     const judgements = this.getJudgements(),
           judgementB = judgements.find((judgement) => {
@@ -269,12 +269,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (judgementB !== null) {
-      context.trace(`The '${judgementString}' judgement has already been added to the ephemeral context.`);
+      context.trace(`The '${judgementString}' judgement has already been added to the mnemic context.`);
     } else {
       this.judgements.push(judgement);
     }
 
-    context.debug(`...added the '${judgementString}' judgement to the ephemeral context.`);
+    context.debug(`...added the '${judgementString}' judgement to the mnemic context.`);
   }
 
   addStatement(statement) {
@@ -282,7 +282,7 @@ export default class EphemeralContext extends Context {
           statementA = statement, ///
           statementString = statement.getString();
 
-    context.trace(`Adding the '${statementString}' statement to the ephemeral context...`);
+    context.trace(`Adding the '${statementString}' statement to the mnemic context...`);
 
     const statements = this.getStatements(),
           statementB = statements.find((statement) => {
@@ -295,12 +295,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (statementB !== null) {
-      context.trace(`The '${statementString}' statement has already been added to the ephemeral context.`);
+      context.trace(`The '${statementString}' statement has already been added to the mnemic context.`);
     } else {
       this.statements.push(statement);
     }
 
-    context.debug(`...added the '${statementString}' statement to the ephemeral context.`);
+    context.debug(`...added the '${statementString}' statement to the mnemic context.`);
   }
 
   addAssertion(assertion) {
@@ -308,7 +308,7 @@ export default class EphemeralContext extends Context {
           assertionA = assertion, ///
           assertionString = assertion.getString();
 
-    context.trace(`Adding the '${assertionString}' assertion to the ephemeral context...`);
+    context.trace(`Adding the '${assertionString}' assertion to the mnemic context...`);
 
     const assertions = this.getAssumptions(),
           assertionB = assertions.find((assertion) => {
@@ -321,12 +321,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (assertionB !== null) {
-      context.trace(`The '${assertionString}' assertion has already been added to the ephemeral context.`);
+      context.trace(`The '${assertionString}' assertion has already been added to the mnemic context.`);
     } else {
       this.assertions.push(assertion);
     }
 
-    context.debug(`...added the '${assertionString}' assertion to the ephemeral context.`);
+    context.debug(`...added the '${assertionString}' assertion to the mnemic context.`);
   }
 
   addReference(reference) {
@@ -334,7 +334,7 @@ export default class EphemeralContext extends Context {
           referenceA = reference, ///
           referenceString = reference.getString();
 
-    context.trace(`Adding the '${referenceString}' reference to the ephemeral context...`);
+    context.trace(`Adding the '${referenceString}' reference to the mnemic context...`);
 
     const references = this.getReferences(),
           referenceB = references.find((reference) => {
@@ -347,12 +347,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (referenceB !== null) {
-      context.trace(`The '${referenceString}' reference has already been added to the ephemeral context.`);
+      context.trace(`The '${referenceString}' reference has already been added to the mnemic context.`);
     } else {
       this.references.push(reference);
     }
 
-    context.debug(`...added the '${referenceString}' reference to the ephemeral context.`);
+    context.debug(`...added the '${referenceString}' reference to the mnemic context.`);
   }
 
   addAssumption(assumption) {
@@ -360,7 +360,7 @@ export default class EphemeralContext extends Context {
           assumptionA = assumption, ///
           assumptionString = assumption.getString();
 
-    context.trace(`Adding the '${assumptionString}' assumption to the ephemeral context...`);
+    context.trace(`Adding the '${assumptionString}' assumption to the mnemic context...`);
 
     const assumptions = this.getAssumptions(),
           assumptionB = assumptions.find((assumption) => {
@@ -373,12 +373,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (assumptionB !== null) {
-      context.trace(`The '${assumptionString}' assumption has already been added to the ephemeral context.`);
+      context.trace(`The '${assumptionString}' assumption has already been added to the mnemic context.`);
     } else {
       this.assumptions.push(assumption);
     }
 
-    context.debug(`...added the '${assumptionString}' assumption to the ephemeral context.`);
+    context.debug(`...added the '${assumptionString}' assumption to the mnemic context.`);
   }
 
   addMetavariable(metavariable) {
@@ -386,7 +386,7 @@ export default class EphemeralContext extends Context {
           metavariableA = metavariable, ///
           metavariableString = metavariable.getString();
 
-    context.trace(`Adding the '${metavariableString}' metavariable to the ephemeral context...`);
+    context.trace(`Adding the '${metavariableString}' metavariable to the mnemic context...`);
 
     const metavariables = this.getMetavariables(),
           metavariableB = metavariables.find((metavariable) => {
@@ -399,12 +399,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (metavariableB !== null) {
-      context.trace(`The '${metavariableString}' metavariable has already been added to the ephemeral context.`);
+      context.trace(`The '${metavariableString}' metavariable has already been added to the mnemic context.`);
     } else {
       this.metavariables.push(metavariable);
     }
 
-    context.debug(`...added the '${metavariableString}' metavariable to the ephemeral context.`);
+    context.debug(`...added the '${metavariableString}' metavariable to the mnemic context.`);
   }
 
   addSubstitution(substitution) {
@@ -412,7 +412,7 @@ export default class EphemeralContext extends Context {
           substitutionA = substitution, ///
           substitutionString = substitution.getString();
 
-    context.trace(`Adding the '${substitutionString}' substitution to the ephemeral context...`);
+    context.trace(`Adding the '${substitutionString}' substitution to the mnemic context...`);
 
     const substitutions = this.getSubstitutions(),
           substitutionB = substitutions.find((substitution) => {
@@ -425,12 +425,12 @@ export default class EphemeralContext extends Context {
           }) || null;
 
     if (substitutionB !== null) {
-      context.trace(`The '${substitutionString}' substitution has already been added to the ephemeral context.`);
+      context.trace(`The '${substitutionString}' substitution has already been added to the mnemic context.`);
     } else {
       this.substitutions.push(substitution);
     }
 
-    context.debug(`...added the '${substitutionString}' substitution to the ephemeral context.`);
+    context.debug(`...added the '${substitutionString}' substitution to the mnemic context.`);
   }
 
   addTerms(terms) {
@@ -801,11 +801,11 @@ export default class EphemeralContext extends Context {
           assumptions = null,
           metavariables = null,
           substitutions = null,
-          emphemeralContext = new EphemeralContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
+          mnemicContext = new MnemicContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
 
-    emphemeralContext.initialise(json);
+    mnemicContext.initialise(json);
 
-    return emphemeralContext;
+    return mnemicContext;
   }
 
   static fromNothing(context) {
@@ -819,8 +819,8 @@ export default class EphemeralContext extends Context {
           assumptions = [],
           metavariables = [],
           substitutions = [],
-          emphemeralContext = new EphemeralContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
+          mnemicContext = new MnemicContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
 
-    return emphemeralContext;
+    return mnemicContext;
   }
 }

@@ -1,5 +1,6 @@
 "use strict";
 
+import MenmicContext from "../context/mnemic";
 import NestedContext from "../context/nested";
 import TheticContext from "../context/thetic";
 import BoundedContext from "../context/bounded";
@@ -8,11 +9,10 @@ import LiteralContext from "../context/literal";
 import LiminalContext from "../context/liminal";
 import SynopticContext from "../context/synoptic";
 import IllativeContext from "../context/illative";
-import EphemeralContext from "../context/ephemeral";
 import BranchingContext from "../context/branching";
 import NominalFileContext from "../context/file/nominal";
 
-import { ephemeralContextsFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
+import { mnemicContextsFromJSON, mnemicContextToMenmicContextJSON } from "../utilities/json";
 
 export function join(innerFunction, ...contexts) {
   const synopticContext = SynopticContext.fromContexts(...contexts),
@@ -81,9 +81,9 @@ export function descend(innerFunction, context) {
 
 export function attempt(innerFunction, ...contexts) {
   contexts = contexts.map((context) => {  ///
-    const ephemeralContext = EphemeralContext.fromNothing(context);
+    const mnemicContext = MenmicContext.fromNothing(context);
 
-    context = ephemeralContext;  ///
+    context = mnemicContext;  ///
 
     return context;
   })
@@ -121,9 +121,9 @@ export function reconcile(innerFunction, context) {
 
 export function serialise(innerFunction, ...contexts) {
   contexts = contexts.map((context) => {  ///
-    const ephemeralContext = context, ///
-          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-          contextJSON = ephemeralContextJSON; ///
+    const mnemicContext = context, ///
+          mnemicContextJSON = mnemicContextToMenmicContextJSON(mnemicContext),
+          contextJSON = mnemicContextJSON; ///
 
     context = contextJSON;  ///
 
@@ -134,8 +134,8 @@ export function serialise(innerFunction, ...contexts) {
 }
 
 export function unserialise(innerFunction, json, context) {
-  const ephemeralContexts = ephemeralContextsFromJSON(json, context),
-        contexts = ephemeralContexts; ///
+  const mnemicContexts = mnemicContextsFromJSON(json, context),
+        contexts = mnemicContexts; ///
 
   return innerFunction(json, ...contexts);
 }

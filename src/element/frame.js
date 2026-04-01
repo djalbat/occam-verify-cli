@@ -206,9 +206,10 @@ export default define(class Frame extends Element {
   validateAssumption(assumption, assumptions, context) {
     let assumptionValidates = false;
 
-    const frameString = this.getString(); ///
+    const frameString = this.getString(), ///
+          assumptionString = assumption.getString();
 
-    context.trace(`Validating the '${frameString}' frame's assumption.`);
+    context.trace(`Validating the '${frameString}' frame's '${assumptionString}' assumption.`);
 
     assumption = assumption.validate(context);  ///
 
@@ -219,7 +220,7 @@ export default define(class Frame extends Element {
     }
 
     if (assumptionValidates) {
-      context.debug(`...validated the '${frameString}' frame's assumption.`);
+      context.debug(`...validated the '${frameString}' frame's '${assumptionString}' assumption.`);
     }
 
     return assumptionValidates;

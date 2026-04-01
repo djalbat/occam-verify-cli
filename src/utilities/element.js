@@ -10,7 +10,7 @@ import { equivalenceStringFromTerms,
          subproofStringFromSuppositionsAndSubDerivation,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
-         topLevelMetaAssertionStringFromLabelSuppositionsDeductionAndMetaLevelAssumptions } from "../utilities/string";
+         topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -368,7 +368,7 @@ export function metaLemmaFromMetaLemmaNode(metaLemmaNode, context) {
         deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         metaLevelAssumptions = metaLevelAssumptionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
-        topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsDeductionAndMetaLevelAssumptions(label, suppositions, deduction, metaLevelAssumptions),
+        topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
         node = metaLemmaMetathoremNode, ///
         string = topLevelMetaAssertionString, ///
         lineIndex = null;
@@ -561,7 +561,7 @@ export function metatheoremFromMetatheoremNode(metatheoremNode, context) {
         deduction = deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         suppositions = suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
         metaLevelAssumptions = metaLevelAssumptionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context),
-        topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsDeductionAndMetaLevelAssumptions(label, suppositions, deduction, metaLevelAssumptions),
+        topLevelMetaAssertionString = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
         node = metaLemmaMetathoremNode, ///
         string = topLevelMetaAssertionString, ///
         lineIndex = null;

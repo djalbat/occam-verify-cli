@@ -3,7 +3,7 @@
 import { Element, asynchronousUtilities } from "occam-languages";
 
 import { enclose } from "../utilities/context";
-import { topLevelMetaAssertionStringFromLabelSuppositionsDeductionAndMetaLevelAssumptions } from "../utilities/string";
+import { topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
 import { labelFromJSON,
          labelToLabelJSON,
          deductionFromJSON,
@@ -259,7 +259,7 @@ export default class TopLevelMetaAssertion extends Element {
           metaLevelAssumptions = metaLevelAssumptionsFromJSON(json, context),
           node = null,
           proof = null,
-          string = topLevelMetaAssertionStringFromLabelSuppositionsDeductionAndMetaLevelAssumptions(label, suppositions, deduction, metaLevelAssumptions),
+          string = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
           topLevelMetaAssertion = new Class(context, string, node, lineIndex, label, suppositions, deduction, proof, metaLevelAssumptions);
 
     return topLevelMetaAssertion;

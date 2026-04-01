@@ -192,15 +192,15 @@ export default define(class Metavariable extends Element {
     } else {
       let validates = false;
 
-      const typeValidates = this.validateType(strict, context);
+      const nameValidates = this.validateName(strict, context);
 
-      if (typeValidates) {
+      if (nameValidates) {
         const termValidates = this.validateTerm(strict, context);
 
         if (termValidates) {
-          const nameValidates = this.validateName(strict, context);
+          const typeValidates = this.validateType(strict, context);
 
-          if (nameValidates) {
+          if (typeValidates) {
             validates = true;
           }
         }
@@ -222,34 +222,42 @@ export default define(class Metavariable extends Element {
     return metavariable;
   }
 
-  validateType(strict, context) {
-    let typeValidates = false;
+  validateName(strict, context) {
+    let nameValidates = true; ///
 
     const metavariableString = this.getString();  ///
 
-    context.trace(`Validating  the '${metavariableString}' metavariable's type...`);
+    context.trace(`Validating the '${metavariableString}' metavariable's name...`);
 
-    if (this.type === null) {
-      typeValidates = true;
+    const metavariableName = this.getMetavariableName(),  ///
+          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName);
+
+    if (declaredMetavariable !== null) {
+      const metaType = declaredMetavariable.getMetaType(),
+            metaTypeString = metaType.getString();
+
+      this.metaType = metaType;
+
+      context.trace(`Setting the '${metavariableString}' metavariable's meta-type to the '${metaTypeString}' meta-type.`);
     } else {
-      const typeString = this.type.getString();
-
-      context.trace(`A '${typeString}' type is present in the '${metavariableString}' metavariable.`);
+      if (strict) {
+        nameValidates = false;
+      }
     }
 
-    if (typeValidates) {
-      context.trace(`...validated  the '${metavariableString}' metavariable's type.`);
+    if (nameValidates) {
+      context.debug(`...validated the '${metavariableString}' metavariable's name.`);
     }
 
-    return typeValidates;
+    return nameValidates;
   }
 
   validateTerm(strict, context) {
-    let termValidates = true; ///
+    let termValidates = false;
 
-    if (this.term !== null) {
-      termValidates = false;
-
+    if (this.term === null) {
+      termValidates = true;
+    } else {
       const metavariableString = this.getString();
 
       context.trace(`Validating the '${metavariableString}' metavariable's term...`);
@@ -289,34 +297,28 @@ export default define(class Metavariable extends Element {
     return termValidates;
   }
 
-  validateName(strict, context) {
-    let nameValidates = true; ///
+  validateType(strict, context) {
+    let typeValidates;
 
-    const metavariableString = this.getString();  ///
-
-    context.trace(`Validating the '${metavariableString}' metavariable's name...`);
-
-    const metavariableName = this.getMetavariableName(),  ///
-          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName);
-
-    if (declaredMetavariable !== null) {
-      const metaType = declaredMetavariable.getMetaType(),
-            metaTypeString = metaType.getString();
-
-      this.metaType = metaType;
-
-      context.trace(`Setting the '${metavariableString}' metavariable's meta-type to the '${metaTypeString}' meta-type.`);
+    if (this.type === null) {
+      typeValidates = true;
     } else {
-      if (strict) {
-        nameValidates = false;
+      const metavariableString = this.getString();  ///
+
+      context.trace(`Validating  the '${metavariableString}' metavariable's type...`);
+
+      typeValidates = false;
+
+      const typeString = this.type.getString();
+
+      context.trace(`A '${typeString}' type is present in the '${metavariableString}' metavariable.`);
+
+      if (typeValidates) {
+        context.trace(`...validated  the '${metavariableString}' metavariable's type.`);
       }
     }
 
-    if (nameValidates) {
-      context.debug(`...validated the '${metavariableString}' metavariable's name.`);
-    }
-
-    return nameValidates;
+    return typeValidates;
   }
 
   unifyFrame(frame, generalContext, specificContext) {

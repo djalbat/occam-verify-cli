@@ -89,20 +89,6 @@ export function parametersStringFromParameters(parameters) {
   return parametersString;
 }
 
-export function assumptionsStringFromAssumptions(assumptions) {
-  const assumptionsString = assumptions.reduce((assumptionsString, assumption) => {
-    const assumptionString = assumption.getString();
-
-    assumptionsString = (assumptionsString === null) ?
-                          assumptionString: ///
-                           `${assumptionsString}, ${assumptionString}`;
-
-    return assumptionsString;
-  }, null);
-
-  return assumptionsString;
-}
-
 export function suppositionsStringFromSuppositions(suppositions) {
   const suppositionsString = suppositions.reduce((suppositionsString, supposition) => {
     const suppositionString = supposition.getString();
@@ -115,20 +101,6 @@ export function suppositionsStringFromSuppositions(suppositions) {
   }, null);
 
   return suppositionsString;
-}
-
-export function metalevelAssumptionsStringFromMetaLevelAssumptions(metaLevelAssumptions) {
-  const metaLevelAssumptionsString = metaLevelAssumptions.reduce((metaLevelAssumptionsString, metaLevelAssumption) => {
-    const metaLevelAssumptionString = metaLevelAssumption.getString();
-
-    metaLevelAssumptionsString = (metaLevelAssumptionsString === null) ?
-                                   metaLevelAssumptionString: ///
-                                    `${metaLevelAssumptionsString}, ${metaLevelAssumptionString}`;
-
-    return metaLevelAssumptionsString;
-  }, null);
-
-  return metaLevelAssumptionsString;
 }
 
 export function signatureStringFromTerms(terms) {
@@ -250,6 +222,17 @@ export function topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels
   return topLevelAssertionString;
 }
 
+export function topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction) {
+  const labelString = label.getString(),
+        deductionString = deduction.getString(),
+        suppositionsString = suppositionsStringFromSuppositions(suppositions),
+        topLevelMetaAssertionString = (suppositionsString !== null) ?
+                                       `${labelString} :: [${suppositionsString}]...${deductionString}` :
+                                         `${labelString} :: ${deductionString}`;
+
+  return topLevelMetaAssertionString;
+}
+
 export function statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution) {
   const statementString = statement.getString(),
         metavariableString = metavariable.getString(),
@@ -257,16 +240,4 @@ export function statementSubstitutionStringFromStatementMetavariableAndSubstitut
         statementSubstitutionString = `[${statementString} for ${metavariableString}${substitutionString}]`;
 
   return statementSubstitutionString;
-}
-
-export function topLevelMetaAssertionStringFromLabelSuppositionsDeductionAndMetaLevelAssumptions(label, suppositions, deduction, metaLevelAssumptions) {
-  const labelString = label.getString(),
-        deductionString = deduction.getString(),
-        suppositionsString = suppositionsStringFromSuppositions(suppositions),
-        metalevelAssumptionsString = metalevelAssumptionsStringFromMetaLevelAssumptions(metaLevelAssumptions),
-        topLevelMetaAssertionString = (suppositionsString !== null) ?
-                                       `${labelString} :: [${suppositionsString}]...${deductionString} ${metalevelAssumptionsString}` :
-                                         `${labelString} :: ${deductionString} ${metalevelAssumptionsString}`;
-
-  return topLevelMetaAssertionString;
 }
