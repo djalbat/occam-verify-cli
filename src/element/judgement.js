@@ -132,10 +132,9 @@ export default define(class Judgement extends Element {
   validateFrame(context) {
     let frameValidates = false;
 
-    const frameString = this.frame.getString(),
-          judgementString = this.getString(); ///
+    const judgementString = this.getString(); ///
 
-    context.trace(`Validating the '${judgementString}' judgement's '${frameString}' frame...`);
+    context.trace(`Validating the '${judgementString}' judgement's frame...`);
 
     const frame = this.frame.validate(context);
 
@@ -146,7 +145,7 @@ export default define(class Judgement extends Element {
     }
 
     if (frameValidates) {
-      context.trace(`...validated the '${judgementString}' judgement's '${frameString}' frame.`);
+      context.trace(`...validated the '${judgementString}' judgement's frame.`);
     }
 
     return frameValidates;
@@ -155,10 +154,9 @@ export default define(class Judgement extends Element {
   validateAssumption(context) {
     let assumptionValidates = false;
 
-    const assumptionString = this.assumption.getString(),
-          judgementString = this.getString(); ///
+    const judgementString = this.getString(); ///
 
-    context.trace(`Validating the '${judgementString}' judgement's '${assumptionString}' assumption...`);
+    context.trace(`Validating the '${judgementString}' judgement's assumption...`);
 
     const assumption = this.assumption.validate(context);
 
@@ -169,7 +167,7 @@ export default define(class Judgement extends Element {
     }
 
     if (assumptionValidates) {
-      context.debug(`...validated the '${judgementString}' judgement's '${assumptionString}' assumption.`);
+      context.debug(`...validated the '${judgementString}' judgement's assumption.`);
     }
 
     return assumptionValidates;

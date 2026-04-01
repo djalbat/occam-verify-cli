@@ -148,10 +148,9 @@ export default define(class Metavariable extends Element {
     let typeVerifies = true;  ///
 
     if (this.type !== null) {
-      const typeString = this.type.getString(),
-            metavariableString = this.getString();
+      const metavariableString = this.getString();
 
-      context.trace(`Verifying the '${metavariableString}' metavariable's '${typeString}' type...`);
+      context.trace(`Verifying the '${metavariableString}' metavariable's type...`);
 
       const typeName = this.type.getName(),
             type = context.findTypeByTypeName(typeName);
@@ -163,7 +162,7 @@ export default define(class Metavariable extends Element {
       }
 
       if (typeVerifies) {
-        context.debug(`...verifieds the '${metavariableString}' metavariable's '${typeString}' type.`);
+        context.debug(`...verifieds the '${metavariableString}' metavariable's type.`);
       }
     }
 
@@ -251,10 +250,9 @@ export default define(class Metavariable extends Element {
     if (this.term !== null) {
       termValidates = false;
 
-      const termString = this.term.getString(),
-            metavariableString = this.getString();
+      const metavariableString = this.getString();
 
-      context.trace(`Validating the '${metavariableString}' metavariable's '${termString}' term...`);
+      context.trace(`Validating the '${metavariableString}' metavariable's term...`);
 
       const metavariableName = this.getMetavariableName(),
             declaredMetavaraible = context.findDeclaredMetavariableByMetavariableName(metavariableName);
@@ -284,7 +282,7 @@ export default define(class Metavariable extends Element {
       }
 
       if (termValidates) {
-        context.debug(`...validated the '${metavariableString}' metavariable's '${termString}' term.`);
+        context.debug(`...validated the '${metavariableString}' metavariable's term.`);
       }
     }
 
@@ -294,12 +292,12 @@ export default define(class Metavariable extends Element {
   validateName(strict, context) {
     let nameValidates = true; ///
 
+    const metavariableString = this.getString();  ///
+
+    context.trace(`Validating the '${metavariableString}' metavariable's name...`);
+
     const metavariableName = this.getMetavariableName(),  ///
-          metavariableString = this.getString();  ///
-
-    context.trace(`Validating the '${metavariableString}' metavariable's '${metavariableName}' name...`);
-
-    const declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName);
+          declaredMetavariable = context.findDeclaredMetavariableByMetavariableName(metavariableName);
 
     if (declaredMetavariable !== null) {
       const metaType = declaredMetavariable.getMetaType(),
@@ -315,7 +313,7 @@ export default define(class Metavariable extends Element {
     }
 
     if (nameValidates) {
-      context.debug(`...validated the '${metavariableString}' metavariable's '${metavariableName}' name.`);
+      context.debug(`...validated the '${metavariableString}' metavariable's name.`);
     }
 
     return nameValidates;

@@ -106,10 +106,9 @@ export default define(class Label extends Element {
   validateMetavariable(context) {
     let metavariableValidates = false;
 
-    const labelString = this.getString(), ///
-          metavariableString = this.metavariable.getString();
+    const labelString = this.getString(); ///
 
-    context.trace(`Validating the '${labelString}' label's '${metavariableString}' metavariable...`);
+    context.trace(`Validating the '${labelString}' label's metavariable...`);
 
     const metavariable = this.metavariable.validate(context);
 
@@ -120,7 +119,7 @@ export default define(class Label extends Element {
     }
 
     if (metavariableValidates) {
-      context.debug(`...validated the '${labelString}' label's '${metavariableString}' metavariable.'`);
+      context.debug(`...validated the '${labelString}' label's metavariable.'`);
     }
 
     return metavariableValidates;

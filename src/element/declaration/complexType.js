@@ -281,7 +281,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     const propertyString = property.getString(),
           nominalTypeName = property.getNominalTypeName();
 
-    context.trace(`Verifying the '${propertyString}' property's '${nominalTypeName}' nominal type name...`);
+    context.trace(`Verifying the '${propertyString}' property's nominal type name...`);
 
     const typeComparesToNominalTypeName = this.type.compareNominalTypeName(nominalTypeName);
 
@@ -296,7 +296,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     }
 
     if (propertyNominalTypeNameVerifies) {
-      context.debug(`...verifies the '${propertyString}' property's '${nominalTypeName}' nominal type name.`);
+      context.debug(`...verifies the '${propertyString}' property's nominal type name.`);
     }
 
     return propertyNominalTypeNameVerifies;

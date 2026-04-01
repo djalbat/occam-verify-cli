@@ -671,10 +671,10 @@ export default class NominalFileContext extends FileContext {
     return metavariablePresent;
   }
 
-  isLabelPresentByReference(reference) {
+  isLabelPresentByReference(reference, context = null) {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
-            const labelUnifies = reference.unifyLabel(label);
+            const labelUnifies = reference.unifyLabel(label, context);
 
             if (labelUnifies) {
               return true;

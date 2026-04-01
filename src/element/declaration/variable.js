@@ -65,21 +65,24 @@ export default define(class VariableDeclaration extends Declaration {
   verifyType(context) {
     let typeVerifies = false;
 
-    const typeString = this.type.getString(),
-          variableDeclarationString = this.getString(); ///
+    const variableDeclarationString = this.getString(); ///
 
-    context.trace(`Verifying the '${variableDeclarationString}' variable declaration's '${typeString}' type...`);
+    context.trace(`Verifying the '${variableDeclarationString}' variable declaration's type...`);
 
     const nominalTypeName = this.type.getNominalTypeName(),
           type = context.findTypeByNominalTypeName(nominalTypeName),
           typePresent = (type !== null)
 
     if (!typePresent) {
+      const typeString = this.type.getString();
+
       context.debug(`The '${typeString}' type is not present.`);
     } else {
       const typeComparesToProvisional = type.compareProvisional(this.provisional);
 
       if (!typeComparesToProvisional) {
+        const typeString = this.type.getString();
+
         this.provisional ?
           context.debug(`The '${variableDeclarationString}' variable declaration's '${typeString}' type is present but not provisional.`) :
             context.debug(`The '${variableDeclarationString}' variable declaration's '${typeString}' type is present but provisional.`);
@@ -91,7 +94,7 @@ export default define(class VariableDeclaration extends Declaration {
     }
 
     if (typeVerifies) {
-      context.debug(`...verified the '${variableDeclarationString}' variable declaration's '${typeString}' type.`);
+      context.debug(`...verified the '${variableDeclarationString}' variable declaration's type.`);
     }
 
     return typeVerifies;

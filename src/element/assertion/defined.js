@@ -94,13 +94,11 @@ export default define(class DefinedAssertion extends Assertion {
       const termString = this.term.getString(), ///
             definedAssertionString = this.getString();  ///
 
-      context.trace(`Validating the '${definedAssertionString}' defined assertion's '${termString}' term...`);
+      context.trace(`Validating the '${definedAssertionString}' defined assertion's term...`);
 
       const termSingular = this.term.isSingular();
 
-      if (!termSingular) {
-        context.debug(`The '${termString}' term is not singular.`);
-      } else {
+      if (termSingular) {
         const term = this.term.validate(context, (term) => {
           const validatesForwards = true;
 
@@ -114,8 +112,10 @@ export default define(class DefinedAssertion extends Assertion {
         }
 
         if (termValidates) {
-          context.debug(`...validates the'${definedAssertionString}' defined assertion's '${termString}' term.`);
+          context.debug(`...validates the'${definedAssertionString}' defined assertion's term.`);
         }
+      } else {
+        context.debug(`The '${termString}' term is not singular.`);
       }
     }
 

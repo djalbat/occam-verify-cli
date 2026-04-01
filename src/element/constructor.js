@@ -82,11 +82,10 @@ export default define(class Constructor extends Element {
   validateTerm(context) {
     let termValidates = false;
 
-    const termString = this.term.getString(),
-          includeType = false,
+    const includeType = false,
           constructorString = this.getString(includeType);
 
-    context.trace(`Validating the '${constructorString}' constructor's '${termString}' term...`);
+    context.trace(`Validating the '${constructorString}' constructor's term...`);
 
     const termValidatesAsConstructor = validateTermAsConstructor(this.term, context);
 
@@ -95,7 +94,7 @@ export default define(class Constructor extends Element {
     }
 
     if (termValidates) {
-      context.debug(`...validated the '${constructorString}' constructor's '${termString}' term.`);
+      context.debug(`...validated the '${constructorString}' constructor's term.`);
     }
 
     return termValidates;

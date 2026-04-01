@@ -91,10 +91,9 @@ export default define(class SatisfiesAssertion extends Assertion {
   validateReference(context) {
     let referenceVerifies = false;
 
-    const referenceString = this.reference.getString(),
-          satisfiesAssertionString = this.getString();  ///
+    const satisfiesAssertionString = this.getString();  ///
 
-    context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertino's '${referenceString}' reference...`);
+    context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertino's reference...`);
 
     const axiom = context.findAxiomByReference(this.reference);
 
@@ -107,7 +106,7 @@ export default define(class SatisfiesAssertion extends Assertion {
     }
 
     if (referenceVerifies) {
-      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertino's '${referenceString}' reference.`);
+      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertino's reference.`);
     }
 
     return referenceVerifies;

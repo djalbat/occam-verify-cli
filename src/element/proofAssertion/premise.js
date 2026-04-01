@@ -118,10 +118,9 @@ export default define(class Premise extends ProofAssertion {
   validateProcedureCall(context) {
     let procedureCallValidates = false;
 
-    const premiseString = this.getString(), ///
-          procedureCallString = this.procedureCall.getString();
+    const premiseString = this.getString(); ///
 
-    context.trace(`Validatting the '${premiseString}' premise's '${procedureCallString}' procedure call...`);
+    context.trace(`Validatting the '${premiseString}' premise's procedure call...`);
 
     const procedureCall = this.procedureCall.validate(context);
 
@@ -130,7 +129,7 @@ export default define(class Premise extends ProofAssertion {
     }
 
     if (procedureCallValidates) {
-      context.debug(`...validated the '${premiseString}' premise's '${procedureCallString}' procedure call.`);
+      context.debug(`...validated the '${premiseString}' premise's procedure call.`);
     }
 
     return procedureCallValidates;

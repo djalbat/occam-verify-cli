@@ -53,15 +53,14 @@ export default define(class MetavariableDeclaration extends Declaration {
   verifyMetaType(context) {
     let metaTypeVerifies = true;
 
-    const metaTypeString = this.metaType.getString(),
-          metaTypeDeclarationString = this.getString(); ///
+    const metaTypeDeclarationString = this.getString(); ///
 
-    context.trace(`Verifying the '${metaTypeDeclarationString}' metavariable declaration's '${metaTypeString}' metaType...`);
+    context.trace(`Verifying the '${metaTypeDeclarationString}' metavariable declaration's metaType...`);
 
     this.metavariable.setMetaType(this.metaType);
 
     if (metaTypeVerifies) {
-      context.debug(`...verified the '${metaTypeDeclarationString}' metavariable declaration's '${metaTypeString}' metaType.`);
+      context.debug(`...verified the '${metaTypeDeclarationString}' metavariable declaration's metaType.`);
     }
 
     return metaTypeVerifies;
@@ -70,10 +69,9 @@ export default define(class MetavariableDeclaration extends Declaration {
   verifyMetavariable(context) {
     let metavariableVerifies = false;
 
-    const metavariableString = this.metavariable.getString(),
-          metavariableDeclarationString = this.getString(); ///
+    const metavariableDeclarationString = this.getString(); ///
 
-    context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration's '${metavariableString}' metavariable...`);
+    context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration's metavariable...`);
 
     const metavariableName = this.metavariable.getName(),
           declaredMetavariablePresent = context.isDeclaredMetavariablePresentByMetavariableName(metavariableName);
@@ -85,7 +83,7 @@ export default define(class MetavariableDeclaration extends Declaration {
     }
 
     if (metavariableVerifies) {
-      context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration's '${metavariableString}' metavariable.`);
+      context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration's metavariable.`);
     }
 
     return metavariableVerifies;

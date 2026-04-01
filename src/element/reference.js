@@ -106,7 +106,7 @@ export default define(class Reference extends Element {
     context.trace(`Comparing the '${topLevelMetaAssertionString}' top level meta-assertion to the '${referenceString}' reference...`);
 
     const label = topLevelMetaAssertion.getLabel(),
-          labelUnifies = this.unifyLabel(label);
+          labelUnifies = this.unifyLabel(label, context);
 
     if (labelUnifies) {
       topLevelMetaAssertionCompares = true;
@@ -155,7 +155,7 @@ export default define(class Reference extends Element {
 
           if (metaType === null) {
             const reference = this, ///
-                  labelPresent = context.isLabelPresentByReference(reference);
+                  labelPresent = context.isLabelPresentByReference(reference, context);
 
             if (labelPresent) {
               validates = true;
@@ -197,10 +197,9 @@ export default define(class Reference extends Element {
   validateMetavariable(context) {
     let metavariableValidates = false;
 
-    const referenceString = this.getString(), ///
-          metavariableString = this.metavariable.getString();
+    const referenceString = this.getString(); ///
 
-    context.trace(`Validating the '${referenceString}' reference's '${metavariableString}' metavariable...'`);
+    context.trace(`Validating the '${referenceString}' reference's metavariable...'`);
 
     const metavariable = this.metavariable.validate(context);
 
@@ -211,30 +210,25 @@ export default define(class Reference extends Element {
     }
 
     if (metavariableValidates) {
-      context.debug(`...validated the '${referenceString}' reference's '${metavariableString}' metavariable.'`);
+      context.debug(`...validated the '${referenceString}' reference's metavariable.'`);
     }
 
     return metavariableValidates;
   }
 
-  unifyLabel(label) {
+  unifyLabel(label, context) {
     let labelUnifies = false;
 
-    let context;
-
     const labelString = label.getString(),
-          labelContext = label.getContext(),
           referenceString = this.getString(); ///
-
-    context = labelContext; ///
 
     context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
-    const specificContext = labelContext;  ///
-
-    context = this.getContext();
-
     const generalContext = context; ///
+
+    context = label.getContext();
+
+    const specificContext = context;  ///
 
     reconcile((specificContext) => {
       const metavariable = label.getMetavariable(),

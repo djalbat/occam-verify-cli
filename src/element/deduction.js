@@ -81,10 +81,9 @@ export default define(class Deduction extends Element {
   validateStatement(context) {
     let statementValidates = false;
 
-    const statementString = this.statement.getString(),
-          deductionnString = this.getString();  ///
+    const deductionnString = this.getString();  ///
 
-    context.trace(`Validating the '${deductionnString}' deductionn's '${statementString}' statement...`);
+    context.trace(`Validating the '${deductionnString}' deductionn's statement...`);
 
     descend((context) => {
       const statement = this.statement.validate(context);
@@ -95,7 +94,7 @@ export default define(class Deduction extends Element {
     }, context);
 
     if (statementValidates) {
-      context.trace(`...validated the '${deductionnString}' deductionn's '${statementString}' statement.`);
+      context.trace(`...validated the '${deductionnString}' deductionn's statement.`);
     }
 
     return statementValidates;

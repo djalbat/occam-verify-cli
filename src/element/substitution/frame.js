@@ -127,10 +127,9 @@ export default define(class FrameSubstitution extends Substitution {
     let targetFrameValidates = false;
 
     const context = generalContext,  ///
-          targetFrameString = this.targetFrame.getString(),
           frameSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${frameSubstitutionString}' frame substitution's '${targetFrameString}' target frame...`);
+    context.trace(`Validating the '${frameSubstitutionString}' frame substitution's target frame...`);
 
     const targetFrameSingular = this.targetFrame.isSingular();
 
@@ -145,11 +144,13 @@ export default define(class FrameSubstitution extends Substitution {
         }
       }, context);
     } else {
-      context.debug(`The '${frameSubstitutionString}' frame substitution's '${targetFrameString}' target frame is not singular.`);
+      const targetFrameString = this.targetFrame.getString();
+
+      context.debug(`The '${targetFrameString}' target frame is not singular.`);
     }
 
     if (targetFrameValidates) {
-      context.debug(`...validated the '${frameSubstitutionString}' frame substitution's '${targetFrameString}' target frame...`);
+      context.debug(`...validated the frame substitution's target frame...`);
     }
 
     return targetFrameValidates;
@@ -159,10 +160,9 @@ export default define(class FrameSubstitution extends Substitution {
     let replacementFrameValidates = false;
 
     const context = specificContext,  ///
-          replacementFrameString = this.replacementFrame.getString(),
           frameSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${frameSubstitutionString}' frame substitution's '${replacementFrameString}' replacement frame...`);
+    context.trace(`Validating the '${frameSubstitutionString}' frame substitution's replacement frame...`);
 
     descend((context) => {
       const replacementFrame = this.replacementFrame.validate(context);
@@ -175,7 +175,7 @@ export default define(class FrameSubstitution extends Substitution {
     }, context);
 
     if (replacementFrameValidates) {
-      context.debug(`...validated the '${frameSubstitutionString}' frame substitution's '${replacementFrameString}' replacement frame.`);
+      context.debug(`...validated the '${frameSubstitutionString}' frame substitution's replacement frame.`);
     }
 
     return replacementFrameValidates;

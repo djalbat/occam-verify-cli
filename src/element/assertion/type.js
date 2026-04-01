@@ -86,10 +86,9 @@ export default define(class TypeAssertion extends Assertion {
   validateType(context) {
     let typeValidates;
 
-    const typeString = this.type.getString(),
-          typeAssertionString = this.getString();  ///
+    const typeAssertionString = this.getString();  ///
 
-    context.trace(`Validating the '${typeAssertionString}' type assertion's '${typeString}' type...`);
+    context.trace(`Validating the '${typeAssertionString}' type assertion's type...`);
 
     const nominalTypeName = this.type.getNominalTypeName(),
           type = context.findTypeByNominalTypeName(nominalTypeName);
@@ -99,11 +98,13 @@ export default define(class TypeAssertion extends Assertion {
 
       typeValidates = true;
     } else {
+      const typeString = this.type.getString();
+
       context.debug(`The '${typeString}' type is not present.`);
     }
 
     if (typeValidates) {
-      context.debug(`...validated the '${typeAssertionString}' type assertion's '${typeString}' type.`);
+      context.debug(`...validated the '${typeAssertionString}' type assertion's type.`);
     }
 
     return typeValidates;

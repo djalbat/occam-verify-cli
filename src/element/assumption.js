@@ -112,10 +112,9 @@ export default define(class Assumption extends Element {
   validateReference(context) {
     let referenceValidates = false;
 
-    const referenceString = this.reference.getString(),
-          assumptionString = this.getString();  ///
+    const assumptionString = this.getString();  ///
 
-    context.trace(`Validating the '${assumptionString}' assumption's '${referenceString}' reference...`);
+    context.trace(`Validating the '${assumptionString}' assumption's reference...`);
 
     const reference = this.reference.validate(context);
 
@@ -142,7 +141,7 @@ export default define(class Assumption extends Element {
     }
 
     if (referenceValidates) {
-      context.debug(`...validated the '${assumptionString}' assumption's '${referenceString}' reference.`);
+      context.debug(`...validated the '${assumptionString}' assumption's reference.`);
     }
 
     return referenceValidates;
@@ -151,10 +150,9 @@ export default define(class Assumption extends Element {
   validateStatement(context) {
     let statementValidates = false;
 
-    const assumptionString = this.getString(),  ///
-          statementString = this.statement.getString();
+    const assumptionString = this.getString();  ///
 
-    context.trace(`Validating the '${assumptionString}' assumption's '${statementString}' statement...`);
+    context.trace(`Validating the '${assumptionString}' assumption's statement...`);
 
     const statement = this.statement.validate(context);
 
@@ -163,7 +161,7 @@ export default define(class Assumption extends Element {
     }
 
     if (statementValidates) {
-      context.debug(`...validated the '${assumptionString}' assumption's '${statementString}' statement.`);
+      context.debug(`...validated the '${assumptionString}' assumption's statement.`);
     }
 
     return statementValidates;

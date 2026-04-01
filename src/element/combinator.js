@@ -56,10 +56,9 @@ export default define(class Combinator extends Element {
   validateStatement(context) {
     let statementValidates = false;
 
-    const statementString = this.statement.getString(),
-          combinatorString = this.getString();  ///
+    const combinatorString = this.getString();  ///
 
-    context.trace(`Validating the '${combinatorString}' combinator's '${statementString}' statement...`);
+    context.trace(`Validating the '${combinatorString}' combinator's statement...`);
 
     const statementValidatesAsCombinator = validateStatementAsCombinator(this.statement, context);
 
@@ -68,7 +67,7 @@ export default define(class Combinator extends Element {
     }
 
     if (statementValidates) {
-      context.debug(`...validated the '${combinatorString}' combinator's '${statementString}' statement.`);
+      context.debug(`...validated the '${combinatorString}' combinator's statement.`);
     }
 
     return statementValidates;

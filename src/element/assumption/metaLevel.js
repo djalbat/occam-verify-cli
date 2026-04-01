@@ -119,10 +119,9 @@ export default define(class MetaLevelAssumption extends Element {
   validateReference(context) {
     let referenceValidates = false;
 
-    const referenceString = this.reference.getString(),
-          metaLevelAssumptionString = this.getString();  ///
+    const metaLevelAssumptionString = this.getString();  ///
 
-    context.trace(`Validating the '${metaLevelAssumptionString}' meta-level assumption's '${referenceString}' reference...`);
+    context.trace(`Validating the '${metaLevelAssumptionString}' meta-level assumption's reference...`);
 
     const reference = this.reference.validate(context);
 
@@ -139,7 +138,7 @@ export default define(class MetaLevelAssumption extends Element {
     }
 
     if (referenceValidates) {
-      context.debug(`...validated the '${metaLevelAssumptionString}' meta-level assumption's '${referenceString}' reference.`);
+      context.debug(`...validated the '${metaLevelAssumptionString}' meta-level assumption's reference.`);
     }
 
     return referenceValidates;
@@ -148,10 +147,9 @@ export default define(class MetaLevelAssumption extends Element {
   validateStatement(context) {
     let statementValidates = false;
 
-    const metaLevelAssumptionString = this.getString(),  ///
-          statementString = this.statement.getString();
+    const metaLevelAssumptionString = this.getString();  ///
 
-    context.trace(`Validating the '${metaLevelAssumptionString}' meta-level assumption's '${statementString}' statement...`);
+    context.trace(`Validating the '${metaLevelAssumptionString}' meta-level assumption's statement...`);
 
     descend((context) => {
       const statement = this.statement.validate(context);
@@ -162,7 +160,7 @@ export default define(class MetaLevelAssumption extends Element {
     }, context);
 
     if (statementValidates) {
-      context.debug(`...validated the '${metaLevelAssumptionString}' meta-level assumption's '${statementString}' statement.`);
+      context.debug(`...validated the '${metaLevelAssumptionString}' meta-level assumption's statement.`);
     }
 
     return statementValidates;

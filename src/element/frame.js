@@ -7,7 +7,6 @@ import { instantiate } from "../utilities/context";
 import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromFrameNode } from "../utilities/element";
-import { assumptionsStringFromAssumptions } from "../utilities/string";
 
 export default define(class Frame extends Element {
   constructor(context, string, node, lineIndex, assumptions, metavariable) {
@@ -207,10 +206,9 @@ export default define(class Frame extends Element {
   validateAssumption(assumption, assumptions, context) {
     let assumptionValidates = false;
 
-    const frameString = this.getString(), ///
-          assumptionstring = assumption.getString();
+    const frameString = this.getString(); ///
 
-    context.trace(`Validating the '${frameString}' frame's '${assumptionstring}' assumption.`);
+    context.trace(`Validating the '${frameString}' frame's assumption.`);
 
     assumption = assumption.validate(context);  ///
 
@@ -221,7 +219,7 @@ export default define(class Frame extends Element {
     }
 
     if (assumptionValidates) {
-      context.debug(`...validated the '${frameString}' frame's '${assumptionstring}' assumption.`);
+      context.debug(`...validated the '${frameString}' frame's assumption.`);
     }
 
     return assumptionValidates;
@@ -233,10 +231,9 @@ export default define(class Frame extends Element {
     const assumptionsLength = this.assumptions.length;
 
     if (assumptionsLength) {
-      const frameString = this.getString(), ///
-            assumptionsString = assumptionsStringFromAssumptions(this.assumptions);
+      const frameString = this.getString(); ///
 
-      context.trace(`Validating the '${frameString}' frame's '${assumptionsString}' assumptions...`);
+      context.trace(`Validating the '${frameString}' frame's assumptions...`);
 
       const assumptions = [];
 
@@ -251,7 +248,7 @@ export default define(class Frame extends Element {
       if (assumptionsValidate) {
         this.assumptions = assumptions;
 
-        context.debug(`...validated the '${frameString}' frame's '${assumptionsString}' assumptions.`);
+        context.debug(`...validated the '${frameString}' frame's assumptions.`);
       }
     } else {
       assumptionsValidate = true;
@@ -266,10 +263,9 @@ export default define(class Frame extends Element {
     if (this.metavariable !== null) {
       metavariableValidates = false;
 
-      const frameString = this.getString(), ///
-            metavariableString = this.metavariable.getString();
+      const frameString = this.getString(); ///
 
-      context.trace(`Validating the '${frameString}' frame's '${metavariableString}' metavariable...`);
+      context.trace(`Validating the '${frameString}' frame's metavariable...`);
 
       const metavariable = this.metavariable.validate(context),
             metaTypeName = FRAME_META_TYPE_NAME,
@@ -278,6 +274,10 @@ export default define(class Frame extends Element {
 
       if (metavariableMetaTypeEqualToFrameMetaType) {
         metavariableValidates = true;
+      }
+
+      if (metavariableValidates) {
+        context.debug(`...validated the '${frameString}' frame's metavariable.`);
       }
     }
 

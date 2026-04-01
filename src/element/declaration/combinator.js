@@ -49,15 +49,14 @@ export default define(class CombinatorDeclaration extends Declaration {
   validateCombinator(context) {
     let combinatorValidates;
 
-    const combinatorString = this.combinator.getString(),
-          combinatorDeclarationString = this.getString();  ///
+    const combinatorDeclarationString = this.getString();  ///
 
-    context.trace(`Validating the '${combinatorDeclarationString}' combinator declaration's '${combinatorString}' combinator...`);
+    context.trace(`Validating the '${combinatorDeclarationString}' combinator declaration's combinator...`);
 
     combinatorValidates = this.combinator.validate(context);
 
     if (combinatorValidates) {
-      context.debug(`...validated the '${combinatorDeclarationString}' combinator declaration's '${combinatorString}' combinator.`);
+      context.debug(`...validated the '${combinatorDeclarationString}' combinator declaration's combinator.`);
     }
 
     return combinatorValidates;

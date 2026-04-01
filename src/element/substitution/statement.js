@@ -163,17 +163,16 @@ export default define(class StatementSubstitution extends Substitution {
 
     if (substitution !== null) {
       const context = generalContext,  ///
-            substitutionString = this.substitution.getString(),
             statementSubstitutionString = this.getString();
 
-      context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${substitutionString}' substitution...`);
+      context.trace(`Validating the '${statementSubstitutionString}' statement substitution's substitution...`);
 
       this.substitution = substitution;
 
       substitutionValidates = true;
 
       if (substitutionValidates) {
-        context.debug(`...validatewd the '${statementSubstitutionString}' statement substitution's '${substitutionString}' substitution.`);
+        context.debug(`...validatewd the '${statementSubstitutionString}' statement substitution's substitution.`);
       }
     }
 
@@ -184,10 +183,9 @@ export default define(class StatementSubstitution extends Substitution {
     let targetStatementValidates = false;
 
     const context = generalContext,  ///
-          targetStatementString = this.targetStatement.getString(),
           statementSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${targetStatementString}' target statement...`);
+    context.trace(`Validating the '${statementSubstitutionString}' statement substitution's target statement...`);
 
     const targetStatementSingular = this.targetStatement.isSingular();
 
@@ -200,11 +198,13 @@ export default define(class StatementSubstitution extends Substitution {
         }
       }, context);
     } else {
-      context.debug(`The '${statementSubstitutionString}' statement substitution's '${targetStatementString}' target statement is not singular.`);
+      const targetStatementString = this.targetStatement.getString();
+
+      context.debug(`The '${targetStatementString}' target statement is not singular.`);
     }
 
     if (targetStatementValidates) {
-      context.debug(`...validated the '${statementSubstitutionString}' statement substitution's '${targetStatementString}' target statement...`);
+      context.debug(`...validated the '${statementSubstitutionString}' statement substitution's target statement...`);
     }
 
     return targetStatementValidates;
@@ -214,10 +214,9 @@ export default define(class StatementSubstitution extends Substitution {
     let replacementStatementValidates = false;
 
     const context = specificContext,  ///
-          replacementStatementString = this.replacementStatement.getString(),
           statementSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${replacementStatementString}' replacement statement...`);
+    context.trace(`Validating the '${statementSubstitutionString}' statement substitution's replacement statement...`);
 
     descend((context) => {
       const replacementStatement = this.replacementStatement.validate(context);
@@ -228,7 +227,7 @@ export default define(class StatementSubstitution extends Substitution {
     }, context);
 
     if (replacementStatementValidates) {
-      context.debug(`...validated the '${statementSubstitutionString}' statement substitution's '${replacementStatementString}' replacement statement.`);
+      context.debug(`...validated the '${statementSubstitutionString}' statement substitution's replacement statement.`);
     }
 
     return replacementStatementValidates;

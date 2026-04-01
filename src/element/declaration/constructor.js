@@ -65,10 +65,9 @@ export default define(class ConstructorDeclaration extends Declaration {
   verifyType(context) {
     let typeVerifies = false;
 
-    const typeString = this.type.getString(),
-          constructorDeclarationString = this.getString();  ///
+    const constructorDeclarationString = this.getString();  ///
 
-    context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration's '${typeString}' type...`);
+    context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration's type...`);
 
     const nominalTypeName = this.type.getNominalTypeName(),
           type = context.findTypeByNominalTypeName(nominalTypeName);
@@ -78,6 +77,8 @@ export default define(class ConstructorDeclaration extends Declaration {
             typeComparesToProvisional = type.compareProvisional(provisional);
 
       if (!typeComparesToProvisional) {
+        const typeString = this.type.getString();
+
         provisional ?
           context.debug(`The '${typeString}' type is present but not provisional.`) :
             context.debug(`The '${typeString}' type is present but provisional.`);
@@ -87,11 +88,13 @@ export default define(class ConstructorDeclaration extends Declaration {
         typeVerifies = true;
       }
     } else {
+      const typeString = this.type.getString();
+
       context.debug(`The '${typeString}' type is not present.`);
     }
 
     if (typeVerifies) {
-      context.debug(`...verified the '${constructorDeclarationString}' constructor declaration's '${typeString}' type.`);
+      context.debug(`...verified the '${constructorDeclarationString}' constructor declaration's type.`);
     }
 
     return typeVerifies;

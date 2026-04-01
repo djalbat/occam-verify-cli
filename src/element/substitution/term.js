@@ -130,10 +130,9 @@ export default define(class TermSubstitution extends Substitution {
     let targetTermValidates = false;
 
     const context = generalContext, ///
-          targetTermString = this.targetTerm.getString(),
           termSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${termSubstitutionString}' term substitution's '${targetTermString}' target term...`);
+    context.trace(`Validating the '${termSubstitutionString}' term substitution's target term...`);
 
     const targetTermSingular = this.targetTerm.isSingular();
 
@@ -152,11 +151,13 @@ export default define(class TermSubstitution extends Substitution {
         }
       }, context);
     } else {
-      context.debug(`The '${termSubstitutionString}' term substitution's '${targetTermString}' target term is not singular.`);
+      const targetTermString = this.targetTerm.getString();
+
+      context.debug(`The '${targetTermString}' target term is not singular.`);
     }
 
     if (targetTermValidates) {
-      context.debug(`...validated the '${termSubstitutionString}' term substitution's '${targetTermString}' target term...`);
+      context.debug(`...validated the '${termSubstitutionString}' term substitution's target term...`);
     }
 
     return targetTermValidates;
@@ -166,10 +167,9 @@ export default define(class TermSubstitution extends Substitution {
     let replacementTermValidates = false;
 
     const context = specificContext,  ///
-          replacementTermString = this.replacementTerm.getString(),
           termSubstitutionString = this.getString();  ///
 
-    context.trace(`Validating the '${termSubstitutionString}' term substitution's '${replacementTermString}' replacement term...`);
+    context.trace(`Validating the '${termSubstitutionString}' term substitution's replacement term...`);
 
     descend((context) => {
       const replacementTerm = this.replacementTerm.validate(context, (replacementTerm) => {
@@ -186,7 +186,7 @@ export default define(class TermSubstitution extends Substitution {
     }, context);
 
     if (replacementTermValidates) {
-      context.debug(`...validated the '${termSubstitutionString}' term substitution's '${replacementTermString}' replacement term...`);
+      context.debug(`...validated the '${termSubstitutionString}' term substitution's replacement term...`);
     }
 
     return replacementTermValidates;

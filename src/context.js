@@ -160,7 +160,9 @@ export default class Context extends ContextBase {
 
     const parentContext = context; ///
 
-    metavariable = parentContext.findMetavariable(metavariable, childContext);  ///
+    context = childContext; ///
+
+    metavariable = parentContext.findMetavariable(metavariable, context);
 
     return metavariable;
   }
@@ -374,15 +376,25 @@ export default class Context extends ContextBase {
 
     context = this.getContext();
 
-    const parentContext = context,  ///
-          metavariablePresent = parentContext.isMetavariablePresent(metavariable, childContext);
+    const parentContext = context;  ///
+
+    context = childContext; ///
+
+    const metavariablePresent = parentContext.isMetavariablePresent(metavariable, context);
 
     return metavariablePresent;
   }
 
-  isLabelPresentByReference(reference) {
-    const context = this.getContext(),
-          labelPresent = context.isLabelPresentByReference(reference);
+  isLabelPresentByReference(reference, context = null) {
+    const childContext = context; ///
+
+    context = this.getContext();
+
+    const parentContext = context;  ///
+
+    context = childContext; ///
+
+    const labelPresent = parentContext.isLabelPresentByReference(reference, context);
 
     return labelPresent;
   }
