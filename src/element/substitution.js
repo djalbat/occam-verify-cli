@@ -1,8 +1,8 @@
 "use strict";
 
 import { Element } from "occam-languages";
+import { serialise } from "../utilities/context";
 import { primitiveUtilities } from "occam-furtle";
-import {serialise} from "../utilities/context";
 
 const { primitiveFromNode } =primitiveUtilities;
 
@@ -37,6 +37,12 @@ export default class Substitution extends Element {
           specificContext = context;  ///
 
     return specificContext;
+  }
+
+  getName() {
+    const { name } = this.constructor;
+
+    return name;
   }
 
   getContexts() {
@@ -160,20 +166,20 @@ export default class Substitution extends Element {
   }
 
   toJSON() {
-    const context = this.getContext();
+    const contexts = this.getContexts();
 
-    return serialise((context) => {
-      const { name } = this.constructor,
+    return serialise((...contexts) => {
+      const name = this.getName(),
             string = this.getString(),
             lineIndex = this.getLineIndex(),
             json = {
               name,
-              context,
+              contexts,
               string,
               lineIndex
             };
 
       return json;
-    }, context);
+    }, ...contexts);
   }
 }

@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { join, ablate, descend, attempt, serialise, unserialise, instantiate } from "../../utilities/context";
+import { join, ablate, descend, attempt, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(context, string, node, lineIndex, generalContext, targetFrame, replacementFrame) {
@@ -182,24 +182,6 @@ export default define(class FrameSubstitution extends Substitution {
   }
 
   static name = "FrameSubstitution";
-
-  toJSON() {
-    const contexts = this.getContexts();
-
-    return serialise((...contexts) => {
-      const { name } = this.constructor,
-            string = this.getString(),
-            lineIndex = this.getLineIndex(),
-            json = {
-              name,
-              contexts,
-              string,
-              lineIndex
-            };
-
-      return json;
-    }, ...contexts);
-  }
 
   static fromJSON(json, context) {
     let frameSubstitutionn = null;

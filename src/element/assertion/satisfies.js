@@ -159,17 +159,6 @@ export default define(class SatisfiesAssertion extends Assertion {
 
   static name = "SatisfiesAssertion";
 
-  toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
-
-    return json;
-  }
-
   static fromJSON(json, context) {
     let satisfiesAssertion = null;
 

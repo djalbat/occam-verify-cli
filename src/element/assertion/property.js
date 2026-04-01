@@ -205,17 +205,6 @@ export default define(class PropertyAssertion extends Assertion {
 
   static name = "PropertyAssertion";
 
-  toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
-
-    return json;
-  }
-
   static fromJSON(json, context) {
     let propertyAssertion = null;
 

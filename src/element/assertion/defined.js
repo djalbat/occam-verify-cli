@@ -213,17 +213,6 @@ export default define(class DefinedAssertion extends Assertion {
 
   static name = "DefinedAssertion";
 
-  toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
-
-    return json;
-  }
-
   static fromJSON(json, context) {
     let definedAssertion = null;
 

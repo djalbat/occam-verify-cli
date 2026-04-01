@@ -245,17 +245,6 @@ export default define(class ContainedAssertion extends Assertion {
 
   static name = "ContainedAssertion";
 
-  toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
-
-    return json;
-  }
-
   static fromJSON(json, context) {
     let containedAssertion = null;
 

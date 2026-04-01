@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
-import { join, ablate, descend, attempt, serialise, unserialise, instantiate } from "../../utilities/context";
+import { join, ablate, descend, attempt, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class ReferenceSubstitution extends Substitution {
   constructor(context, string, node, lineIndex, generalContext, targetReference, replacementReference) {
@@ -189,24 +189,6 @@ export default define(class ReferenceSubstitution extends Substitution {
   }
 
   static name = "ReferenceSubstitution";
-
-  toJSON() {
-    const contexts = this.getContexts();
-
-    return serialise((...contexts) => {
-      const { name } = this.constructor,
-            string = this.getString(),
-            lineIndex = this.getLineIndex(),
-            json = {
-              name,
-              contexts,
-              string,
-              lineIndex
-            };
-
-      return json;
-    }, ...contexts);
-  }
 
   static fromJSON(json, context) {
     let referenceSubstitutionn = null;

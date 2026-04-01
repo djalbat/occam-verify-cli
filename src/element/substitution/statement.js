@@ -7,7 +7,7 @@ import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, ablate, descend, reconcile, attempt, serialise, unserialise, instantiate } from "../../utilities/context";
+import { join, ablate, descend, reconcile, attempt, unserialise, instantiate } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -366,24 +366,6 @@ export default define(class StatementSubstitution extends Substitution {
 
   static name = "StatementSubstitution";
 
-  toJSON() {
-    const contexts = this.getContexts();
-
-    return serialise((...contexts) => {
-      const { name } = this.constructor,
-            string = this.getString(),
-            lineIndex = this.getLineIndex(),
-            json = {
-              name,
-              contexts,
-              string,
-              lineIndex
-            };
-
-      return json;
-    }, ...contexts);
-  }
-
   static fromJSON(json, context) {
     let statementSubstitutionn = null;
 
@@ -447,6 +429,19 @@ export default define(class StatementSubstitution extends Substitution {
   }
 });
 
+function resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const resolved = true;
+
+  return resolved;
+}
+
+function substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+  const substitutionNode = statementSubstitutionNode.getSubstitutionNode(),
+        substitution = context.findStatementByStatementNode(substitutionNode);
+
+  return substitution;
+}
+
 function targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context) {
   const targetStatementNode = statementSubstitutionNode.getTargetStatementNode(),
         targetStatement = context.findStatementByStatementNode(targetStatementNode);
@@ -459,17 +454,4 @@ function replacementStatementFromStatementSubstitutionNode(statementSubstitution
         replacementStatement = context.findStatementByStatementNode(replacementStatementNode);
 
   return replacementStatement;
-}
-
-function resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context) {
-  const resolved = true;
-
-  return resolved;
-}
-
-function substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
-  const substitutionNode = statementSubstitutionNode.getSubstitutionNode(),
-        substitution = context.findStatementByStatementNode(substitutionNode);
-
-  return substitution;
 }

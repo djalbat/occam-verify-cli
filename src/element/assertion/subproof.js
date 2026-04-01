@@ -291,17 +291,6 @@ export default define(class SubproofAssertion extends Assertion {
 
   static name = "SubproofAssertion";
 
-  toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
-
-    return json;
-  }
-
   static fromJSON(json, context) {
     let subproorAssertion = null;
 

@@ -3,6 +3,12 @@
 import { Element } from "occam-languages";
 
 export default class Assertion extends Element {
+  getName() {
+    const { name } = this.constructor;
+
+    return name;
+  }
+
   getAssertionNode() {
     const node = this.getNode(),
           assertionNode = node; ///
@@ -35,7 +41,7 @@ export default class Assertion extends Element {
   }
 
   toJSON() {
-    const { name } = this.constructor,
+    const name = this.getName(),
           string = this.getString(),
           lineIndex = this.getLineIndex(),
           json = {
