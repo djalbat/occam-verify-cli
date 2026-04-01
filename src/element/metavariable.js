@@ -411,7 +411,7 @@ export default define(class Metavariable extends Element {
                                         StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
                                           StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
 
-        statementSubstitution.validate(generalContext, specificContext);
+        statementSubstitution.validate(substitution, generalContext, specificContext);
 
         statementUnifies = true;
       }

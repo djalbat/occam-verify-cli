@@ -659,18 +659,27 @@ export function metavariablesFromJSON(json, context) {
   return metavariables;
 }
 
-export function ephemeralContextFromJSON(json, context) {
-  const releaseContext = context;
+export function ephemeralContextsFromJSON(json, context) {
+  const releaseContext = context; ///
 
-  ({context} = json);
+  const { contexts = [] } = json;
 
-  json = context; ///
+  ({ context = null } = json);
 
-  context = releaseContext; ///
+  if (context !== null) {
+    contexts.push(context);
+  }
 
-  const emphemeralContext = EphemeralContext.fromJSON(json, context);
+  const contextsJSON = contexts,  ///
+        ephemeralContexts = contextsJSON.map((contextJSON) => {
+          const json = contextJSON, ///
+                context = releaseContext, ///
+                emphemeralContext = EphemeralContext.fromJSON(json, context);
 
-  return emphemeralContext;
+          return emphemeralContext;  ///
+        });
+
+  return ephemeralContexts;
 }
 
 export function declaredVariablesFromJSON(json, context) {

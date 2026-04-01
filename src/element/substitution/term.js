@@ -92,24 +92,25 @@ export default define(class TermSubstitution extends Substitution {
     } else {
       const context = this.getContext();
 
-      join((context) => {
-        attempt((context) => {
-          const specificContext = context,  ///
-                targetTermValidates = this.validateTargetTerm(generalContext, specificContext);
+      join((generalContext) => {
+        join((specificContext) => {
+          attempt((generalContext, specificContext) => {
+            const targetTermValidates = this.validateTargetTerm(generalContext, specificContext);
 
-          if (targetTermValidates) {
-            const replacementTermValidates = this.validateReplacementTerm(generalContext, specificContext);
+            if (targetTermValidates) {
+              const replacementTermValidates = this.validateReplacementTerm(generalContext, specificContext);
 
-            if (replacementTermValidates) {
-              validates = true;
+              if (replacementTermValidates) {
+                validates = true;
+              }
             }
-          }
 
-          if (validates) {
-            context.commit(this);
-          }
-        }, context);
-      }, specificContext, context);
+            if (validates) {
+              this.setContexts(generalContext, specificContext);
+            }
+          }, generalContext, specificContext);
+        }, specificContext, context);
+      }, generalContext, context);
     }
 
     if (validates) {
@@ -118,8 +119,6 @@ export default define(class TermSubstitution extends Substitution {
       termSubstitution = substitution;  ///
 
       context.addSubstitution(substitution);
-
-      this.setGeneralContext(generalContext);
 
       context.debug(`...validated the '${termSubstitutionString}' term substitution.`);
     }
@@ -196,21 +195,21 @@ export default define(class TermSubstitution extends Substitution {
   static name = "TermSubstitution";
 
   toJSON() {
-    const context = this.getContext();
+    const contexts = this.getContexts();
 
-    return serialise((context) => {
+    return serialise((...contexts) => {
       const { name } = this.constructor,
             string = this.getString(),
             lineIndex = this.getLineIndex(),
             json = {
               name,
-              context,
+              contexts,
               string,
               lineIndex
             };
 
       return json;
-    }, context);
+    }, ...contexts);
   }
 
   static fromJSON(json, context) {
@@ -219,12 +218,13 @@ export default define(class TermSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialise((json, context) => {
+      unserialise((json, generalContext, specificContext) => {
+        const context = specificContext;  ///
+
         instantiate((context) => {
           const { string, lineIndex } = json,
                 termSubstitutionNode = instantiateTermSubstitution(string, context),
                 node = termSubstitutionNode,  ///
-                generalContext = generalContextFromTermSubstitutionNode(termSubstitutionNode, context),
                 targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
                 replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
 
@@ -281,10 +281,4 @@ function replacementTermFromTermSubstitutionNode(termSubstitutionNode, context) 
         replacementTerm = context.findTermByTermNode(replacementTermNode);
 
   return replacementTerm;
-}
-
-function generalContextFromTermSubstitutionNode(termSubstitutionNode, context) {
-  const generalContext = context; ///
-
-  return generalContext;
 }

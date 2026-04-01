@@ -12,7 +12,7 @@ import EphemeralContext from "../context/ephemeral";
 import BranchingContext from "../context/branching";
 import NominalFileContext from "../context/file/nominal";
 
-import { ephemeralContextFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
+import { ephemeralContextsFromJSON, ephemeralContextToEphemeralContextJSON } from "../utilities/json";
 
 export function join(innerFunction, ...contexts) {
   const synopticContext = SynopticContext.fromContexts(...contexts),
@@ -71,20 +71,24 @@ export function declare(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function attempt(innerFunction, context) {
-  const ephemeralContext = EphemeralContext.fromNothing(context);
-
-  context = ephemeralContext;  ///
-
-  return innerFunction(context);
-}
-
 export function descend(innerFunction, context) {
   const nestedContext = NestedContext.fromNothing(context);
 
   context = nestedContext;  ///
 
   return innerFunction(context);
+}
+
+export function attempt(innerFunction, ...contexts) {
+  contexts = contexts.map((context) => {  ///
+    const ephemeralContext = EphemeralContext.fromNothing(context);
+
+    context = ephemeralContext;  ///
+
+    return context;
+  })
+
+  return innerFunction(...contexts);
 }
 
 export function enclose(innerFunction, metaLevelAssumptions, context) {
@@ -115,22 +119,25 @@ export function reconcile(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function serialise(innerFunction, context) {
-  const ephemeralContext = context, ///
-        ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
-        contextJSON = ephemeralContextJSON; ///
+export function serialise(innerFunction, ...contexts) {
+  contexts = contexts.map((context) => {  ///
+    const ephemeralContext = context, ///
+          ephemeralContextJSON = ephemeralContextToEphemeralContextJSON(ephemeralContext),
+          contextJSON = ephemeralContextJSON; ///
 
-  context = contextJSON;  ///
+    context = contextJSON;  ///
 
-  return innerFunction(context);
+    return context;
+  });
+
+  return innerFunction(...contexts);
 }
 
 export function unserialise(innerFunction, json, context) {
-  const ephemeralContext = ephemeralContextFromJSON(json, context);
+  const ephemeralContexts = ephemeralContextsFromJSON(json, context),
+        contexts = ephemeralContexts; ///
 
-  context = ephemeralContext; ///
-
-  return innerFunction(json, context);
+  return innerFunction(json, ...contexts);
 }
 
 export function instantiate(innerFunction, context) {

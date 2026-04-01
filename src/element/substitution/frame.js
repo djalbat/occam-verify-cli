@@ -89,24 +89,25 @@ export default define(class FrameSubstitution extends Substitution {
     } else {
       const context = this.getContext();
 
-      join((context) => {
-        attempt((context) => {
-          const specificContext = context,  ///,
-                targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
+      join((generalContext) => {
+        join((specificContext) => {
+          attempt((generalContext, specificContext) => {
+            const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
 
-          if (targetFrameValidates) {
-            const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
+            if (targetFrameValidates) {
+              const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
 
-            if (replacementFrameValidates) {
-              validates = true;
+              if (replacementFrameValidates) {
+                validates = true;
+              }
             }
-          }
 
-          if (validates) {
-            context.commit(this);
-          }
-        }, context);
-      }, specificContext, context);
+            if (validates) {
+              this.setContexts(generalContext, specificContext);
+            }
+          }, generalContext, specificContext);
+        }, specificContext, context);
+      }, generalContext, context);
     }
 
     if (validates) {
@@ -115,8 +116,6 @@ export default define(class FrameSubstitution extends Substitution {
       frameSubstitution = substitution; ///
 
       context.addSubstitution(substitution);
-
-      this.setGeneralContext(generalContext);
 
       context.debug(`...validated the '${frameSubstitutionString}' frame substitution.`);
     }
@@ -185,21 +184,21 @@ export default define(class FrameSubstitution extends Substitution {
   static name = "FrameSubstitution";
 
   toJSON() {
-    const context = this.getContext();
+    const contexts = this.getContexts();
 
-    return serialise((context) => {
+    return serialise((...contexts) => {
       const { name } = this.constructor,
             string = this.getString(),
             lineIndex = this.getLineIndex(),
             json = {
               name,
-              context,
+              contexts,
               string,
               lineIndex
             };
 
       return json;
-    }, context);
+    }, ...contexts);
   }
 
   static fromJSON(json, context) {
@@ -208,12 +207,13 @@ export default define(class FrameSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialise((json, context) => {
+      unserialise((json, generalContext, specificContext) => {
+        const context = specificContext;  ///
+
         instantiate((context) => {
           const { string, lineIndex } = json,
                 frameSubstitutionNode = instantiateFrameSubstitution(string, context),
                 node = frameSubstitutionNode, ///
-                generalContext = generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context),
                 targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
                 replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
 
@@ -269,10 +269,3 @@ function replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, contex
 
   return replacementFrame;
 }
-
-function generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context) {
-  const generalContext = context; ///
-
-  return generalContext;
-}
-

@@ -101,7 +101,7 @@ export default define(class StatementSubstitution extends Substitution {
     return comparesToSubstitution;
   }
 
-  validate(generalContext, specificContext) {
+  validate(substitution, generalContext, specificContext) {
     let statementSubstitution = null;
 
     const context = specificContext,  ///
@@ -120,28 +120,29 @@ export default define(class StatementSubstitution extends Substitution {
     } else {
       const context = this.getContext();
 
-      join((context) => {
-        attempt((context) => {
-          const specificContext = context,  ///
-                targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
+      join((generalContext) => {
+        join((specificContext) => {
+          attempt((generalContext, specificContext) => {
+            const targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
 
-          if (targetStatementValidates) {
-            const replacementStatementValidates = this.validateReplacementStatement(generalContext, specificContext);
+            if (targetStatementValidates) {
+              const replacementStatementValidates = this.validateReplacementStatement(generalContext, specificContext);
 
-            if (replacementStatementValidates) {
-              const substitutionValidates = this.validateSubstitution(generalContext, specificContext);
+              if (replacementStatementValidates) {
+                const substitutionValidates = this.validateSubstitution(substitution, generalContext, specificContext);
 
-              if (substitutionValidates) {
-                validates = true;
+                if (substitutionValidates) {
+                  validates = true;
+                }
               }
             }
-          }
 
-          if (validates) {
-            context.commit(this);
-          }
-        }, context);
-      }, specificContext, context);
+            if (validates) {
+              this.setContexts(generalContext, specificContext);
+            }
+          }, generalContext, specificContext);
+        }, specificContext, context);
+      }, generalContext, context);
     }
 
     if (validates) {
@@ -151,35 +152,25 @@ export default define(class StatementSubstitution extends Substitution {
 
       context.addSubstitution(substitution);
 
-      this.setGeneralContext(generalContext);
-
       context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
     }
 
     return statementSubstitution;
   }
 
-  validateSubstitution(generalContext, specificContext) {
+  validateSubstitution(substitution, generalContext, specificContext) {
     let substitutionValidates = true;
 
-    if (this.substitution !== null) {
+    if (substitution !== null) {
       const context = generalContext,  ///
             substitutionString = this.substitution.getString(),
             statementSubstitutionString = this.getString();
 
       context.trace(`Validating the '${statementSubstitutionString}' statement substitution's '${substitutionString}' substitution...`);
 
-      descend((context) => {
-        const generalContext = context, ///
-              specificContext = context,  ///
-              substitution = this.substitution.validate(generalContext, specificContext);
+      this.substitution = substitution;
 
-        if (substitution !== null) {
-          this.substitution = substitution;
-
-          substitutionValidates = true;
-        }
-      }, context);
+      substitutionValidates = true;
 
       if (substitutionValidates) {
         context.debug(`...validatewd the '${statementSubstitutionString}' statement substitution's '${substitutionString}' substitution.`);
@@ -251,12 +242,10 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Unifying the '${simpleSubstitutionString}' simple substitution with the '${substitutionString}' substitution...`);
 
-    const generalSubstitution = this.substitution,  ///
-          specificSubstitution = simpleSubstitution,  ///
-          generalSubstitutionGeneralContext = generalSubstitution.getGeneralContext(),
-          generalSubstitutionSpecificContext = generalSubstitution.getSpecificContext(),
-          specificSubstitutionGeneralContext = specificSubstitution.getGeneralContext(),
-          specificSubstitutionSpecificContext = specificSubstitution.getSpecificContext();
+    const specificSubstitution = simpleSubstitution,  ///
+          generalSubstitution = this.substitution, ///
+          specificContexts = specificSubstitution.getContexts(),  ///
+          generalContexts = generalSubstitution.getContexts();
 
     join((specificContext) => {
       join((generalContext) => {
@@ -267,8 +256,8 @@ export default define(class StatementSubstitution extends Substitution {
             specificContext.commit(context);
           }
         }, specificContext)
-      }, generalSubstitutionSpecificContext, generalSubstitutionGeneralContext);
-    }, specificSubstitutionSpecificContext, specificSubstitutionGeneralContext, context);
+      }, ...generalContexts);
+    }, ...specificContexts, context);
 
     if (simpleSubstitutionUnifies) {
       context.trace(`...unified the '${simpleSubstitutionString}' simple substitution with the '${substitutionString}' substitution.`);
@@ -311,7 +300,7 @@ export default define(class StatementSubstitution extends Substitution {
     }, specificContext);
 
     if (substitution !== null) {
-      substitution = substitution.validate(generalContext, specificContext);
+      substitution = substitution.validate(generalContext, specificContext);  ///
 
       simpleSubstitutionUnifies = true;
     }
@@ -378,21 +367,21 @@ export default define(class StatementSubstitution extends Substitution {
   static name = "StatementSubstitution";
 
   toJSON() {
-    const context = this.getContext();
+    const contexts = this.getContexts();
 
-    return serialise((context) => {
+    return serialise((...contexts) => {
       const { name } = this.constructor,
             string = this.getString(),
             lineIndex = this.getLineIndex(),
             json = {
               name,
-              context,
+              contexts,
               string,
               lineIndex
             };
 
       return json;
-    }, context);
+    }, ...contexts);
   }
 
   static fromJSON(json, context) {
@@ -401,12 +390,13 @@ export default define(class StatementSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialise((json, context) => {
+      unserialise((json, generalContext, specificContext) => {
+        const context = specificContext;  ///
+
         instantiate((context) => {
           const { string, lineIndex } = json,
                 statementSubstitutionNode = instantiateStatementSubstitution(string, context),
                 node = statementSubstitutionNode, ///
-                generalContext = generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context),
                 resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
                 substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
                 targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
@@ -482,10 +472,4 @@ function substitutionFromStatementSubstitutionNode(statementSubstitutionNode, co
         substitution = context.findStatementByStatementNode(substitutionNode);
 
   return substitution;
-}
-
-function generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context) {
-  const generalContext = context; ///
-
-  return generalContext;
 }

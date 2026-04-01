@@ -106,24 +106,25 @@ export default define(class ReferenceSubstitution extends Substitution {
     } else {
       const context = this.getContext();
 
-      join((context) => {
-        attempt((context) => {
-          const specificContext = context,  ///
-                targetReferenceValidates = this.validateTargetReference(generalContext, specificContext);
+      join((generalContext) => {
+        join((specificContext) => {
+          attempt((generalContext, specificContext) => {
+            const targetReferenceValidates = this.validateTargetReference(generalContext, specificContext);
 
-          if (targetReferenceValidates) {
-            const replacementReferenceValidates = this.validateReplacementReference(generalContext, specificContext);
+            if (targetReferenceValidates) {
+              const replacementReferenceValidates = this.validateReplacementReference(generalContext, specificContext);
 
-            if (replacementReferenceValidates) {
-              validates = true;
+              if (replacementReferenceValidates) {
+                validates = true;
+              }
             }
-          }
 
-          if (validates) {
-            context.commit(this);
-          }
-        }, context);
-      }, specificContext, context);
+            if (validates) {
+              this.setContexts(generalContext, specificContext);
+            }
+          }, generalContext, specificContext);
+        }, specificContext, context);
+      }, generalContext, context);
     }
 
     if (validates) {
@@ -132,8 +133,6 @@ export default define(class ReferenceSubstitution extends Substitution {
       referenceSubstitution = substitution;  ///
 
       context.addSubstitution(substitution);
-
-      this.setGeneralContext(generalContext);
 
       context.debug(`...validated the '${referenceSubstitutionString}' reference substitution.`);
     }
@@ -192,21 +191,21 @@ export default define(class ReferenceSubstitution extends Substitution {
   static name = "ReferenceSubstitution";
 
   toJSON() {
-    const context = this.getContext();
+    const contexts = this.getContexts();
 
-    return serialise((context) => {
+    return serialise((...contexts) => {
       const { name } = this.constructor,
             string = this.getString(),
             lineIndex = this.getLineIndex(),
             json = {
               name,
-              context,
+              contexts,
               string,
               lineIndex
             };
 
       return json;
-    }, context);
+    }, ...contexts);
   }
 
   static fromJSON(json, context) {
@@ -215,12 +214,13 @@ export default define(class ReferenceSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialise((json, context) => {
+      unserialise((json, generalContext, specificContext) => {
+        const context = specificContext;  ///
+
         instantiate((context) => {
           const { string, lineIndex } = json,
                 referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
                 node = referenceSubstitutionNode, ///
-                generalContext = generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
                 targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
                 replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
 
@@ -279,10 +279,4 @@ function replacementReferenceFromReferenceSubstitutionNode(referenceSubstitution
         replacementReference = context.findReferenceByReferenceNode(replacementReferenceNode);
 
   return replacementReference;
-}
-
-function generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
-  const generalContext = context; ///
-
-  return generalContext;
 }
