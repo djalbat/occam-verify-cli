@@ -96,11 +96,11 @@ export function statementFromStatementAndSubstitutions(statement, generalContext
   return statement;
 }
 
-export function metavariableNodesFromSubstitutions(substitutions) {
+export function metavariableNodesFromDerivedSubstitutions(derivedSubstitutions) {
   const metavariableNodes = [];
 
-  substitutions.forEach((substitution) => {
-    const metavariableNode = substitution.getMetavariableNode();
+  derivedSubstitutions.forEach((derivedSubstitution) => {
+    const metavariableNode = derivedSubstitution.getMetavariableNode();
 
     if (metavariableNode !== null) {
       metavariableNodes.push(metavariableNode);

@@ -1,7 +1,7 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { metavariableNodesFromSubstitutions } from "../utilities/substitutions";
+import { metavariableNodesFromDerivedSubstitutions } from "../utilities/substitutions";
 
 import Context from "../context";
 import elements from "../elements";
@@ -9,126 +9,126 @@ import elements from "../elements";
 const { find, first } = arrayUtilities;
 
 export default class LiminalContext extends Context {
-  constructor(context, substitutions) {
+  constructor(context, derivedSubstitutions) {
     super(context);
 
-    this.substitutions = substitutions;
+    this.derivedSubstitutions = derivedSubstitutions;
   }
 
-  getSubstitutions(nested = true) {
-    let substitutions;
+  getDerivedSubstitutions(nested = true) {
+    let derivedSubstitutions;
 
     if (nested) {
       const context = this.getContext();
 
-      substitutions = context.getSubstitutions();
+      derivedSubstitutions = context.getDerivedSubstitutions();
 
-      substitutions = [ ///
-        ...this.substitutions,
-        ...substitutions
+      derivedSubstitutions = [ ///
+        ...this.derivedSubstitutions,
+        ...derivedSubstitutions
       ]
     } else {
-      substitutions = this.substitutions;
+      derivedSubstitutions = this.derivedSubstitutions;
     }
 
-    return substitutions;
+    return derivedSubstitutions;
   }
 
-  getSoleSubstitution(nested = true) {
-    let soleSubstitution = null;
+  getSoleDerivedSubstitution(nested = true) {
+    let soleDerivedSubstitution = null;
 
-    const substitutions = this.getSubstitutions(nested),
-          substitutionsLength = substitutions.length;
+    const derivedSubstitutions = this.getDerivedSubstitutions(nested),
+          derivedSubstitutionsLength = derivedSubstitutions.length;
 
-    if (substitutionsLength === 1) {
-      const firstSubstitution = first(substitutions);
+    if (derivedSubstitutionsLength === 1) {
+      const firstDerivedSubstitution = first(derivedSubstitutions);
 
-      soleSubstitution = firstSubstitution; ///
+      soleDerivedSubstitution = firstDerivedSubstitution; ///
     }
 
-    return soleSubstitution;
+    return soleDerivedSubstitution;
   }
 
-  getSoleNonTrivialSubstitution(nested = true) {
-    let soleNonTrivialSubstitution = null;
+  getSoleNonTrivialDerivedSubstitution(nested = true) {
+    let soleNonTrivialDerivedSubstitution = null;
 
-    const soleSubstitution = this.getSoleSubstitution(nested);
+    const soleDerivedSubstitution = this.getSoleDerivedSubstitution(nested);
 
-    if (soleSubstitution !== null) {
-      const soleSubstitutionNonTrivial = soleSubstitution.isNonTrivial();
+    if (soleDerivedSubstitution !== null) {
+      const soleDerivedSubstitutionNonTrivial = soleDerivedSubstitution.isNonTrivial();
 
-      if (soleSubstitutionNonTrivial) {
-        soleNonTrivialSubstitution = soleSubstitution;  ///
+      if (soleDerivedSubstitutionNonTrivial) {
+        soleNonTrivialDerivedSubstitution = soleDerivedSubstitution;  ///
       }
     }
 
-    return soleNonTrivialSubstitution;
+    return soleNonTrivialDerivedSubstitution;
   }
 
-  addSubstitution(substitution) {
+  addDerivedSubstitution(derivedSubstitution) {
     const context = this, ///
-          substitutionA = substitution, ///
-          substitutionString = substitution.getString();
+          derivedSubstitutionA = derivedSubstitution, ///
+          derivedSubstitutionString = derivedSubstitution.getString();
 
-    context.trace(`Adding the '${substitutionString}' substitution to the liminal context...`);
+    context.trace(`Adding the '${derivedSubstitutionString}' derivedSubstitution to the liminal context...`);
 
-    const substitutionB = this.substitutions.find((substitution) => {
-      const substitutionB = substitution, ///
-            substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
+    const derivedSubstitutionB = this.derivedSubstitutions.find((derivedSubstitution) => {
+      const derivedSubstitutionB = derivedSubstitution, ///
+            derivedSubstitutionAEqualToDerivedSubstitutionB = derivedSubstitutionA.isEqualTo(derivedSubstitutionB);
 
-      if (substitutionAEqualToSubstitutionB) {
+      if (derivedSubstitutionAEqualToDerivedSubstitutionB) {
         return true;
       }
     }) || null;
 
-    if (substitutionB !== null) {
-      context.debug(`The '${substitutionString}' substitution has already been added to the liminal context.`);
+    if (derivedSubstitutionB !== null) {
+      context.debug(`The '${derivedSubstitutionString}' derivedSubstitution has already been added to the liminal context.`);
     } else {
-      this.substitutions.push(substitution);
+      this.derivedSubstitutions.push(derivedSubstitution);
     }
 
-    context.debug(`...added the '${substitutionString}' substitution to the liminal context.`);
+    context.debug(`...added the '${derivedSubstitutionString}' derivedSubstitution to the liminal context.`);
   }
 
-  addSubstitutions(substitutions) {
-    substitutions.forEach((substitution) => {
-      this.addSubstitution(substitution);
+  addDerivedSubstitutions(derivedSubstitutions) {
+    derivedSubstitutions.forEach((derivedSubstitution) => {
+      this.addDerivedSubstitution(derivedSubstitution);
     });
   }
 
-  resolveSubstitutions() {
+  resolveDerivedSubstitutions() {
     const context = this, ///
-          substitutions = this.getSubstitutions(),
-          metavariableNodes = metavariableNodesFromSubstitutions(substitutions);
+          derivedSubstitutions = this.getDerivedSubstitutions(),
+          metavariableNodes = metavariableNodesFromDerivedSubstitutions(derivedSubstitutions);
 
     metavariableNodes.forEach((metavariableNode) => {
-      const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode);
+      const complexDerivedSubstitutions = this.findComplexDerivedSubstitutionsByMetavariableNode(metavariableNode);
 
-      complexSubstitutions.forEach((complexSubstitution) => {
-        const substitution = complexSubstitution, ///
-              resolved = substitution.isResolved();
+      complexDerivedSubstitutions.forEach((complexDerivedSubstitution) => {
+        const derivedSubstitution = complexDerivedSubstitution, ///
+              resolved = derivedSubstitution.isResolved();
 
         if (!resolved) {
-          substitution.resolve(context);
+          derivedSubstitution.resolve(context);
         }
       });
     });
   }
 
-  areSubstitutionsResolved() {
-    const substitutions = this.getSubstitutions(),
-          metavariableNodes = metavariableNodesFromSubstitutions(substitutions),
+  areDerivedSubstitutionsResolved() {
+    const derivedSubstitutions = this.getDerivedSubstitutions(),
+          metavariableNodes = metavariableNodesFromDerivedSubstitutions(derivedSubstitutions),
           resolved = metavariableNodes.every((metavariableNode) => {
-            const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode),
-                  complexSubstitutionsResolved = complexSubstitutions.every((complexSubstitution) => {
-                    const complexSubstitutionResolved = complexSubstitution.isResolved();
+            const complexDerivedSubstitutions = this.findComplexDerivedSubstitutionsByMetavariableNode(metavariableNode),
+                  complexDerivedSubstitutionsResolved = complexDerivedSubstitutions.every((complexDerivedSubstitution) => {
+                    const complexDerivedSubstitutionResolved = complexDerivedSubstitution.isResolved();
 
-                    if (complexSubstitutionResolved) {
+                    if (complexDerivedSubstitutionResolved) {
                       return true;
                     }
                   });
 
-            if (complexSubstitutionsResolved) {
+            if (complexDerivedSubstitutionsResolved) {
               return true;
             }
           });
@@ -137,8 +137,8 @@ export default class LiminalContext extends Context {
   }
 
   isEmpty() {
-    const substitutionsLength = this.substitutions.length,
-          empty = (substitutionsLength === 0);
+    const derivedSubstitutionsLength = this.derivedSubstitutions.length,
+          empty = (derivedSubstitutionsLength === 0);
 
     return empty;
   }
@@ -152,15 +152,15 @@ export default class LiminalContext extends Context {
       qualifies = true;
     } else {
       const nested = false,
-            soleSubstitution = this.getSoleSubstitution(nested);
+            soleDerivedSubstitution = this.getSoleDerivedSubstitution(nested);
 
-      if (soleSubstitution !== null) {
-        const { ReferenceSubstitution } = elements,
+      if (soleDerivedSubstitution !== null) {
+        const { ReferenceDerivedSubstitution } = elements,
               context = this,
-              referenceSubstitution = ReferenceSubstitution.fromAssumptionAndMetaLevelAssumption(assumption, metaLevelAssumption, context),
-              soleSubstitutionCompares = referenceSubstitution.compareSubstitution(soleSubstitution);
+              referenceDerivedSubstitution = ReferenceDerivedSubstitution.fromAssumptionAndMetaLevelAssumption(assumption, metaLevelAssumption, context),
+              soleDerivedSubstitutionCompares = referenceDerivedSubstitution.compareDerivedSubstitution(soleDerivedSubstitution);
 
-        if (soleSubstitutionCompares) {
+        if (soleDerivedSubstitutionCompares) {
           qualifies = true;
         }
       }
@@ -176,52 +176,52 @@ export default class LiminalContext extends Context {
 
     context.debug(`Committing the limiinal context`);
 
-    context.addSubstitutions(this.substitutions);
+    context.addDerivedSubstitutions(this.derivedSubstitutions);
   }
 
-  findSubstitution(callback) {
-    const substitutions = this.getSubstitutions(),
-          substitution = substitutions.find(callback);
+  findDerivedSubstitution(callback) {
+    const derivedSubstitutions = this.getDerivedSubstitutions(),
+          derivedSubstitution = derivedSubstitutions.find(callback);
 
-    return substitution;
+    return derivedSubstitution;
   }
 
-  findSubstitutions(callback, nested = true) {
-    let substitutions;
+  findDerivedSubstitutions(callback, nested = true) {
+    let derivedSubstitutions;
 
-    substitutions = this.getSubstitutions(nested);
+    derivedSubstitutions = this.getDerivedSubstitutions(nested);
 
-    substitutions = find(substitutions, callback);  ///
+    derivedSubstitutions = find(derivedSubstitutions, callback);  ///
 
-    return substitutions;
+    return derivedSubstitutions;
   }
 
-  findSubstitutionByVariableNode(variableNode) {
-    const substitution = this.findSubstitution((substitution) => {
-      const variableNodeMatches = substitution.matchVariableNode(variableNode);
+  findDerivedSubstitutionByVariableNode(variableNode) {
+    const derivedSubstitution = this.findDerivedSubstitution((derivedSubstitution) => {
+      const variableNodeMatches = derivedSubstitution.matchVariableNode(variableNode);
 
       if (variableNodeMatches) {
         return true;
       }
     }) || null;
 
-    return substitution;
+    return derivedSubstitution;
   }
 
-  findSubstitutionByMetavariableNode(metavariableNode) {
-    const simpleSubstitution = this.findSimpleSubstitutionByMetavariableNode(metavariableNode),
-          substitution = simpleSubstitution;  ///
+  findDerivedSubstitutionByMetavariableNode(metavariableNode) {
+    const simpleDerivedSubstitution = this.findSimpleDerivedSubstitutionByMetavariableNode(metavariableNode),
+          derivedSubstitution = simpleDerivedSubstitution;  ///
 
-    return substitution;
+    return derivedSubstitution;
   }
 
-  findSimpleSubstitutionByMetavariableNode(metavariableNode) {
-    const simpleSubstitution = this.findSubstitution((substitution) => {
-      const substitutionSimple = substitution.isSimple();
+  findSimpleDerivedSubstitutionByMetavariableNode(metavariableNode) {
+    const simpleDerivedSubstitution = this.findDerivedSubstitution((derivedSubstitution) => {
+      const derivedSubstitutionSimple = derivedSubstitution.isSimple();
 
-      if (substitutionSimple) {
-        const simpleSubstitution = substitution,  ///
-              metavariableNodeMatches = simpleSubstitution.matchMetavariableNode(metavariableNode);
+      if (derivedSubstitutionSimple) {
+        const simpleDerivedSubstitution = derivedSubstitution,  ///
+              metavariableNodeMatches = simpleDerivedSubstitution.matchMetavariableNode(metavariableNode);
 
         if (metavariableNodeMatches) {
           return true;
@@ -229,16 +229,16 @@ export default class LiminalContext extends Context {
       }
     }) || null;
 
-    return simpleSubstitution;
+    return simpleDerivedSubstitution;
   }
 
-  findComplexSubstitutionsByMetavariableNode(metavariableNode) {
-    const complexSubstitution = this.findSubstitutions((substitution) => {
-      const substitutionComplex = substitution.isComplex();
+  findComplexDerivedSubstitutionsByMetavariableNode(metavariableNode) {
+    const complexDerivedSubstitution = this.findDerivedSubstitutions((derivedSubstitution) => {
+      const derivedSubstitutionComplex = derivedSubstitution.isComplex();
 
-      if (substitutionComplex) {
-        const complexSubstitution = substitution,  ///
-              metavariableNodeMatches = complexSubstitution.matchMetavariableNode(metavariableNode);
+      if (derivedSubstitutionComplex) {
+        const complexDerivedSubstitution = derivedSubstitution,  ///
+              metavariableNodeMatches = complexDerivedSubstitution.matchMetavariableNode(metavariableNode);
 
         if (metavariableNodeMatches) {
           return true;
@@ -246,46 +246,45 @@ export default class LiminalContext extends Context {
       }
     }) || null;
 
-    return complexSubstitution;
+    return complexDerivedSubstitution;
   }
 
-  findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) {
-    const substitutionA = substitution; ///
+  findDerivedSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, derivedSubstitution) {
+    const derivedSubstitutionA = derivedSubstitution; ///
 
-    substitution = this.findSubstitution((substitution) => {  ///
-      const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
+    derivedSubstitution = this.findDerivedSubstitution((derivedSubstitution) => {  ///
+      const metavariableNodeMatches = derivedSubstitution.matchMetavariableNode(metavariableNode);
 
       if (metavariableNodeMatches) {
-        const substitutionB = substitution, ///
-              substitutionBEqualToSubstitutionA = substitutionB.isEqualTo(substitutionA);
+        const derivedSubstitutionB = derivedSubstitution, ///
+              derivedSubstitutionBEqualToDerivedSubstitutionA = derivedSubstitutionB.isEqualTo(derivedSubstitutionA);
 
-        if (substitutionBEqualToSubstitutionA) {
+        if (derivedSubstitutionBEqualToDerivedSubstitutionA) {
           return true;
         }
       }
     }) || null;
 
-    return substitution;
+    return derivedSubstitution;
   }
 
-  isSubstitutionPresentByMetavariableNode(metavariableNode) {
-    const substitution = this.findSubstitutionByMetavariableNode(metavariableNode),
-          substitutionPresent = (substitution !== null);
+  isDerivedSubstitutionPresentByMetavariableNode(metavariableNode) {
+    const derivedSubstitution = this.findDerivedSubstitutionByMetavariableNode(metavariableNode),
+          derivedSubstitutionPresent = (derivedSubstitution !== null);
 
-    return substitutionPresent;
+    return derivedSubstitutionPresent;
   }
 
-  isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) {
-    substitution = this.findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution);  ///
+  isDerivedSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) {
+    const derivedSubstitution = this.findDerivedSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution),
+          derivedSubstitutionPresent = (derivedSubstitution !== null);
 
-    const substitutionPresent = (substitution !== null);
-
-    return substitutionPresent;
+    return derivedSubstitutionPresent;
   }
 
   static fromNothing(context) {
-    const substitutions = [],
-          liminalContext = new LiminalContext(context, substitutions);
+    const derivedSubstitutions = [],
+          liminalContext = new LiminalContext(context, derivedSubstitutions);
 
     return liminalContext;
   }

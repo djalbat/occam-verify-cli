@@ -253,9 +253,9 @@ export default define(class Rule extends Element {
       const subproofOrProofAssertionsUnifiesWithPremises = await this.unifySubproofOrProofAssertionsWithPremises(subproofOrProofAssertions, context);
 
       if (subproofOrProofAssertionsUnifiesWithPremises) {
-        const substitutionsResolved = context.areSubstitutionsResolved();
+        const derivedSubstitutionsResolved = context.areDerivedSubstitutionsResolved();
 
-        if (substitutionsResolved) {
+        if (derivedSubstitutionsResolved) {
           stepAndSubproofOrProofAssertionsUnify = true;
         }
       }
@@ -274,7 +274,7 @@ export default define(class Rule extends Element {
         const subproofOrProofAssertionUnifies = await premise.unifySubproofOrProofAssertion(subproofOrProofAssertion, context);
 
         if (subproofOrProofAssertionUnifies) {
-          context.resolveSubstitutions();
+          context.resolveDerivedSubstitutions();
 
           return true;
         }

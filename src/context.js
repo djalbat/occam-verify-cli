@@ -104,6 +104,14 @@ export default class Context extends ContextBase {
     return substitutions;
   }
 
+  getDerivedSubstitutions(derivedSubstitutions = []) {
+    const context = this.getContext();
+
+    context.getDerivedSubstitutions(derivedSubstitutions);
+
+    return derivedSubstitutions;
+  }
+
   getEquivalences() {
     const context = this.getContext(),
           equivalences = context.getEquivalences();
@@ -497,11 +505,11 @@ export default class Context extends ContextBase {
     return referencePresent;
   }
 
-  isSubstitutionPresentByMetavariableNode(metavariableNode) {
+  isDerivedSubstitutionPresentByMetavariableNode(metavariableNode) {
     const context = this.getContext(),
-          substitutionPresent = context.isSubstitutionPresentByMetavariableNode(metavariableNode);
+          derivedSubstitutionPresent = context.isDerivedSubstitutionPresentByMetavariableNode(metavariableNode);
 
-    return substitutionPresent;
+    return derivedSubstitutionPresent;
   }
 
   isDeclaredJudgementPresentByMetavariableNode(metavariableNode) {
@@ -511,11 +519,11 @@ export default class Context extends ContextBase {
     return declaredJudgementPresent;
   }
 
-  isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) {
+  isDerivedSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) {
     const context = this.getContext(),
-      substitutionPresent = context.isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution);
+          derivedSubstitutionPresent = context.isDerivedSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution);
 
-    return substitutionPresent;
+    return derivedSubstitutionPresent;
   }
 
   isMetaLevel() {

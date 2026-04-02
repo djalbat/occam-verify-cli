@@ -315,9 +315,9 @@ export default class TopLevelAssertion extends Element {
         const subproofOrProofAssertionsUnifiesWithSuppositions = await this.unifySubproofOrProofAssertionsWithSuppositions(subproofOrProofAssertions, context);
 
         if (subproofOrProofAssertionsUnifiesWithSuppositions) {
-          const substitutionsResolved = context.areSubstitutionsResolved();
+          const derivedSubstitutionsResolved = context.areDerivedSubstitutionsResolved();
 
-          if (substitutionsResolved) {
+          if (derivedSubstitutionsResolved) {
             stepAndSubproofOrProofAssertionsUnify = true;
           }
         }
@@ -337,7 +337,7 @@ export default class TopLevelAssertion extends Element {
         const subproofOrProofAssertionUnifies = await supposition.unifySubproofOrProofAssertion(subproofOrProofAssertion, context);
 
         if (subproofOrProofAssertionUnifies) {
-          context.resolveSubstitutions();
+          context.resolveDerivedSubstitutions();
 
           return true;
         }

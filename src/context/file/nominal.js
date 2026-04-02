@@ -280,6 +280,10 @@ export default class NominalFileContext extends FileContext {
     return substitutions;
   }
 
+  getDerivedSubstitutions(derivedSubstitutions = []) {
+    return derivedSubstitutions;
+  }
+
   addType(type) {
     this.types.push(type);
 

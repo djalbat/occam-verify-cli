@@ -386,19 +386,16 @@ export default define(class Metavariable extends Element {
       statementUnifies = true;
     } else {
       const metavariableNode = metavariable.getNode(),
-            substitutionPresent = (substitution !== null) ?
-                                    context.isSubstitutionPresentByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
-                                      context.isSubstitutionPresentByMetavariableNode(metavariableNode);
+            derivedSubstitution = (substitution !== null) ?
+                                   context.findDerivedSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
+                                     context.findDerivedSubstitutionByMetavariableNode(metavariableNode);
 
-      if (substitutionPresent) {
-        substitution = (substitution !== null) ?
-                         context.findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
-                           context.findSubstitutionByMetavariableNode(metavariableNode);
 
-        const substitutionComparesToStatement = substitution.compareStatement(statement, context);
+      if (derivedSubstitution !== null) {
+        const derivedSubstitutionComparesToStatement = derivedSubstitution.compareStatement(statement, context);
 
-        if (substitutionComparesToStatement) {
-          const statementSubstitution = substitution, //
+        if (derivedSubstitutionComparesToStatement) {
+          const statementSubstitution = derivedSubstitution, //
                 statementSubstitutionString = statementSubstitution.getString();
 
           context.trace(`The '${statementSubstitutionString}' statement substitution is already present.`);
