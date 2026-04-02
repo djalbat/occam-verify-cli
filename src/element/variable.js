@@ -113,22 +113,21 @@ export default define(class Variable extends Element {
     context.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
     let variable,
-        substitution;
+        derivedSubstitution;
 
     variable = this; ///
 
     const variableNode = variable.getNode();
 
-    substitution = context.findSubstitutionByVariableNode(variableNode);
+    derivedSubstitution = context.findDerivedSubstitutionByVariableNode(variableNode);
 
-    if (substitution !== null) {
-      const substitutionComparesToTerm = substitution.compareTerm(term, context);
+    if (derivedSubstitution !== null) {
+      const derivedSubstitutionComparesToTerm = derivedSubstitution.compareTerm(term, context);
 
-      if (substitutionComparesToTerm) {
-        const termSubstitution = substitution,  ///
-              termSubstitutionString = termSubstitution.getString();
+      if (derivedSubstitutionComparesToTerm) {
+        const derivedSubstitutionString = derivedSubstitution.getString();
 
-        context.trace(`The '${termSubstitutionString}' term substitution is already present.`);
+        context.trace(`The '${derivedSubstitutionString}' derived substitution is already present.`);
 
         termUnifies = true;
       }

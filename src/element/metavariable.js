@@ -337,16 +337,15 @@ export default define(class Metavariable extends Element {
       frameUnifies = true;
     } else {
       const metavariableNode = metavariable.getNode(),
-            substitution = context.findSubstitutionByMetavariableNode(metavariableNode);
+            derivedSubstitution = context.findDerivedSubstitutionByMetavariableNode(metavariableNode);
 
-      if (substitution !== null) {
-        const substitutionFrameComparesToFrame = substitution.compareFrame(frame, context);
+      if (derivedSubstitution !== null) {
+        const derivedSubstitutionFrameComparesToFrame = derivedSubstitution.compareFrame(frame, context);
 
-        if (substitutionFrameComparesToFrame) {
-          const frameSubstitution = substitution, ///
-                frameSubstitutionString = frameSubstitution.getString();
+        if (derivedSubstitutionFrameComparesToFrame) {
+          const derivedSubstitutionString = derivedSubstitution.getString();
 
-          context.trace(`The '${frameSubstitutionString}' frame substitution is already present.`);
+          context.trace(`The '${derivedSubstitutionString}' derived substitution is already present.`);
 
           frameUnifies = true;
         }
@@ -390,15 +389,13 @@ export default define(class Metavariable extends Element {
                                    context.findDerivedSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
                                      context.findDerivedSubstitutionByMetavariableNode(metavariableNode);
 
-
       if (derivedSubstitution !== null) {
         const derivedSubstitutionComparesToStatement = derivedSubstitution.compareStatement(statement, context);
 
         if (derivedSubstitutionComparesToStatement) {
-          const statementSubstitution = derivedSubstitution, //
-                statementSubstitutionString = statementSubstitution.getString();
+          const derivedSubstitutionString = derivedSubstitution.getString();
 
-          context.trace(`The '${statementSubstitutionString}' statement substitution is already present.`);
+          context.trace(`The '${derivedSubstitutionString}' derived substitution is already present.`);
 
           statementUnifies = true;
         }
@@ -437,16 +434,15 @@ export default define(class Metavariable extends Element {
       referenceUnifies = true;
     } else {
       const metavariableNode = metavariable.getNode(),
-            substitution = context.findSubstitutionByMetavariableNode(metavariableNode);
+            derivedSubstitution = context.findDerivedSubstitutionByMetavariableNode(metavariableNode);
 
-      if (substitution !== null) {
-        const substitutionReferenceComparesToReference = substitution.compareReference(reference, context);
+      if (derivedSubstitution !== null) {
+        const derivedSubstitutionReferenceComparesToReference = derivedSubstitution.compareReference(reference, context);
 
-        if (substitutionReferenceComparesToReference) {
-          const referenceSubstitution = substitution, ///
-                referenceSubstitutionString = referenceSubstitution.getString();
+        if (derivedSubstitutionReferenceComparesToReference) {
+          const derivedSubstitutionString = derivedSubstitution.getString();
 
-          context.trace(`The '${referenceSubstitutionString}' reference substitution is already present.`);
+          context.trace(`The '${derivedSubstitutionString}' derived substitution is already present.`);
 
           referenceUnifies = true;
         }
