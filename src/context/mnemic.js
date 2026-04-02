@@ -12,8 +12,7 @@ import { compressTerms,
          compressStatements,
          compressReferences,
          compressAssumptions,
-         compressMetavariables,
-         compressSubstitutions,} from "../utilities/synoptic";
+         compressMetavariables,} from "../utilities/synoptic";
 import { termsFromJSON,
          framesFromJSON,
          termsToTermsJSON,
@@ -25,20 +24,18 @@ import { termsFromJSON,
          referencesFromJSON,
          assumptionsFromJSON,
          metavariablesFromJSON,
-         substitutionsFromJSON,
          judgementsToJudgementsJSON,
          equalitiesToEqualitiesJSON,
          statementsToStatementsJSON,
          assertionsToAssertionsJSON,
          referencesToReferencesJSON,
          assumptionsToAssumptionsJSON,
-         metavariablesToMetavariablesJSON,
-         substitutionsToSubstitutionsJSON } from "../utilities/json";
+         metavariablesToMetavariablesJSON } from "../utilities/json";
 
 const { push } = arrayUtilities;
 
 export default class MnemicContext extends Context {
-  constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions) {
+  constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables) {
     super(context);
 
     this.terms = terms;
@@ -50,7 +47,6 @@ export default class MnemicContext extends Context {
     this.references = references;
     this.assumptions = assumptions;
     this.metavariables = metavariables;
-    this.substitutions = substitutions;
   }
 
   getTerms(terms = []) {
@@ -159,18 +155,6 @@ export default class MnemicContext extends Context {
     compressMetavariables(context);
 
     return metavariables;
-  }
-
-  getSubstitutions(substitutions = []) {
-    const context = this.getContext();
-
-    push(substitutions, this.substitutions);
-
-    context.getSubstitutions(substitutions);
-
-    compressSubstitutions(context);
-
-    return substitutions;
   }
 
   addTerm(term) {
@@ -391,9 +375,9 @@ export default class MnemicContext extends Context {
     const metavariables = this.getMetavariables(),
           metavariableB = metavariables.find((metavariable) => {
             const metavariableB = metavariable, ///
-                  metavariableAEqualToSubstitutionB = metavariableA.isEqualTo(metavariableB);
+                  metavariableAEqualToMetavariableB = metavariableA.isEqualTo(metavariableB);
       
-            if (metavariableAEqualToSubstitutionB) {
+            if (metavariableAEqualToMetavariableB) {
               return true;
             }
           }) || null;
@@ -405,32 +389,6 @@ export default class MnemicContext extends Context {
     }
 
     context.debug(`...added the '${metavariableString}' metavariable to the mnemic context.`);
-  }
-
-  addSubstitution(substitution) {
-    const context = this, ///
-          substitutionA = substitution, ///
-          substitutionString = substitution.getString();
-
-    context.trace(`Adding the '${substitutionString}' substitution to the mnemic context...`);
-
-    const substitutions = this.getSubstitutions(),
-          substitutionB = substitutions.find((substitution) => {
-            const substitutionB = substitution, ///
-                  substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
-      
-            if (substitutionAEqualToSubstitutionB) {
-              return true;
-            }
-          }) || null;
-
-    if (substitutionB !== null) {
-      context.trace(`The '${substitutionString}' substitution has already been added to the mnemic context.`);
-    } else {
-      this.substitutions.push(substitution);
-    }
-
-    context.debug(`...added the '${substitutionString}' substitution to the mnemic context.`);
   }
 
   addTerms(terms) {
@@ -488,9 +446,7 @@ export default class MnemicContext extends Context {
   }
 
   addSubstitutions(substitutions) {
-    substitutions.forEach((substitution) => {
-      this.addSubstitution(substitution);
-    });
+    ///
   }
 
   findVariableByVariableNode(variableNode) {
@@ -631,19 +587,6 @@ export default class MnemicContext extends Context {
     return metavariable;
   }
 
-  findSubstitutionBySubstitutionNode(substitutionNode) {
-    const substitutions = this.getSubstitutions(),
-          substitution = substitutions.find((substitution) => {
-            const substitutionNodeMatches = substitution.matchSubstitutionNode(substitutionNode);
-
-            if (substitutionNodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return substitution;
-  }
-
   isTermPresentByTermNode(termNode) {
     const term = this.findTermByTermNode(termNode),
           termPresent = (term !== null);
@@ -707,13 +650,6 @@ export default class MnemicContext extends Context {
     return metavariablenPresent;
   }
 
-  isSubstitutionPresentBySubstitutionNode(substitutionNode) {
-    const substitution = this.findSubstitutionBySubstitutionNode(substitutionNode),
-          substitutionPresent = (substitution !== null);
-
-    return substitutionPresent;
-  }
-
   commit(element) {
     const context = this; ///
 
@@ -737,7 +673,6 @@ export default class MnemicContext extends Context {
 
     this.judgements = judgementsFromJSON(json, context);
     this.assertions = assertionsFromJSON(json, context);
-    this.substitutions = substitutionsFromJSON(json, context);
   }
 
   toJSON() {
@@ -749,8 +684,7 @@ export default class MnemicContext extends Context {
         assertions = this.getAssertions(),
         references = this.getReferences(),
         assumptions = this.getAssumptions(),
-        metavariables = this.getMetavariables(),
-        substitutions = this.getSubstitutions();
+        metavariables = this.getMetavariables();
 
     const termsJSON = termsToTermsJSON(terms),
           framesJSON = framesToFramesJSON(frames),
@@ -760,8 +694,7 @@ export default class MnemicContext extends Context {
           assertionsJSON = assertionsToAssertionsJSON(assertions),
           referencesJSON = referencesToReferencesJSON(references),
           assumptionsJSON = assumptionsToAssumptionsJSON(assumptions),
-          metavariablesJSON = metavariablesToMetavariablesJSON(metavariables),
-          substitutionsJSON = substitutionsToSubstitutionsJSON(substitutions);
+          metavariablesJSON = metavariablesToMetavariablesJSON(metavariables);
 
     terms = termsJSON; ///
     frames = framesJSON; ///
@@ -772,7 +705,6 @@ export default class MnemicContext extends Context {
     references = referencesJSON; ///
     assumptions = assumptionsJSON; ///
     metavariables = metavariablesJSON;  //
-    substitutions = substitutionsJSON; ///
 
     const json = {
       terms,
@@ -783,8 +715,7 @@ export default class MnemicContext extends Context {
       assertions,
       references,
       assumptions,
-      metavariables,
-      substitutions
+      metavariables
     };
 
     return json;
@@ -800,8 +731,7 @@ export default class MnemicContext extends Context {
           references = null,
           assumptions = null,
           metavariables = null,
-          substitutions = null,
-          mnemicContext = new MnemicContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
+          mnemicContext = new MnemicContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables);
 
     mnemicContext.initialise(json);
 
@@ -818,8 +748,7 @@ export default class MnemicContext extends Context {
           references = [],
           assumptions = [],
           metavariables = [],
-          substitutions = [],
-          mnemicContext = new MnemicContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
+          mnemicContext = new MnemicContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables);
 
     return mnemicContext;
   }

@@ -6,8 +6,8 @@ import { define } from "../elements";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { referenceFromReferenceNode } from "../utilities/element";
-import { ablate, attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
 import { metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
+import { join, ablate, attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Reference extends Element {
   constructor(context, string, node, lineIndex, metavariable, topLevelMetaAssertion) {
@@ -287,18 +287,20 @@ export default define(class Reference extends Element {
 
     context = temporaryContext; ///
 
-    reconcile((specificContext) => {
-      const metavariable = label.getMetavariable(),
-            metavariableUnifies = this.unifyMetavariable(metavariable, generalContext, specificContext);
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        const metavariable = label.getMetavariable(),
+              metavariableUnifies = this.unifyMetavariable(metavariable, generalContext, specificContext);
 
-      if (metavariableUnifies) {
-        this.topLevelMetaAssertion = topLevelMetaAssertion;
+        if (metavariableUnifies) {
+          this.topLevelMetaAssertion = topLevelMetaAssertion;
 
-        specificContext.commit(context);
+          specificContext.commit(context);
 
-        topLevelMetaAssertionUUnifies = true;
-      }
-    }, specificContext);
+          topLevelMetaAssertionUUnifies = true;
+        }
+      }, specificContext);
+    }, specificContext, context);
 
     if (topLevelMetaAssertionUUnifies) {
       context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference.`);

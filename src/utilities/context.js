@@ -12,7 +12,7 @@ import IllativeContext from "../context/illative";
 import BranchingContext from "../context/branching";
 import NominalFileContext from "../context/file/nominal";
 
-import { mnemicContextsFromJSON, mnemicContextToMenmicContextJSON } from "../utilities/json";
+import { mnemicContextsFromJSON, mnemicContextToMnemicContextJSON } from "../utilities/json";
 
 export function join(innerFunction, ...contexts) {
   const synopticContext = SynopticContext.fromContexts(...contexts),
@@ -122,7 +122,7 @@ export function reconcile(innerFunction, context) {
 export function serialise(innerFunction, ...contexts) {
   contexts = contexts.map((context) => {  ///
     const mnemicContext = context, ///
-          mnemicContextJSON = mnemicContextToMenmicContextJSON(mnemicContext),
+          mnemicContextJSON = mnemicContextToMnemicContextJSON(mnemicContext),
           contextJSON = mnemicContextJSON; ///
 
     context = contextJSON;  ///

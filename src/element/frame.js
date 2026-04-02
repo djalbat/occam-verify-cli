@@ -165,44 +165,6 @@ export default define(class Frame extends Element {
     return frame;
   }
 
-  validateWhenStated(context) {
-    let validatesWhenStated = false;
-
-    const frameString = this.getString();  ///
-
-    context.trace(`Validating the '${frameString}' stated frame...`);
-
-    const singular = this.isSingular();
-
-    if (singular) {
-      validatesWhenStated = true;
-    } else {
-      context.debug(`The '${frameString}' stated frame must be singular.`);
-    }
-
-    if (validatesWhenStated) {
-      context.debug(`...validated the '${frameString}' stated frame.`);
-    }
-
-    return validatesWhenStated;
-  }
-
-  validateWhenDerived(context) {
-    let validatesWhenDerived;
-
-    const frameString = this.getString();  ///
-
-    context.trace(`Verifying the '${frameString}' derived frame...`);
-
-    validatesWhenDerived = true;
-
-    if (validatesWhenDerived) {
-      context.debug(`...verified the '${frameString}' derived frame.`);
-    }
-
-    return validatesWhenDerived;
-  }
-
   validateAssumption(assumption, assumptions, context) {
     let assumptionValidates = false;
 
@@ -229,30 +191,24 @@ export default define(class Frame extends Element {
   validateAssumptions(context) {
     let assumptionsValidate;
 
-    const assumptionsLength = this.assumptions.length;
+    const frameString = this.getString();
 
-    if (assumptionsLength) {
-      const frameString = this.getString(); ///
+    context.trace(`Validating the '${frameString}' frame's assumptions...`);
 
-      context.trace(`Validating the '${frameString}' frame's assumptions...`);
+    const assumptions = [];
 
-      const assumptions = [];
+    assumptionsValidate = this.assumptions.every((assumption) => {
+      const assumptionValidates = this.validateAssumption(assumption, assumptions, context);
 
-      assumptionsValidate = this.assumptions.every((assumption) => {
-        const assumptionValidates = this.validateAssumption(assumption, assumptions, context);
-
-        if (assumptionValidates) {
-          return true;
-        }
-      });
-
-      if (assumptionsValidate) {
-        this.assumptions = assumptions;
-
-        context.debug(`...validated the '${frameString}' frame's assumptions.`);
+      if (assumptionValidates) {
+        return true;
       }
-    } else {
-      assumptionsValidate = true;
+    });
+
+    if (assumptionsValidate) {
+      this.assumptions = assumptions;
+
+      context.debug(`...validated the '${frameString}' frame's assumptions.`);
     }
 
     return assumptionsValidate;
@@ -274,6 +230,8 @@ export default define(class Frame extends Element {
             metavariableMetaTypeEqualToFrameMetaType = metavariable.isMetaTypeEqualTo(frameMetaType);
 
       if (metavariableMetaTypeEqualToFrameMetaType) {
+        this.metavariable = metavariable; ///
+
         metavariableValidates = true;
       }
 
@@ -283,6 +241,64 @@ export default define(class Frame extends Element {
     }
 
     return metavariableValidates;
+  }
+
+  validateWhenStated(context) {
+    let validatesWhenStated = false;
+
+    const frameString = this.getString();  ///
+
+    context.trace(`Validating the '${frameString}' stated frame...`);
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      validatesWhenStated = true;
+    } else {
+      context.debug(`The '${frameString}' stated frame must be singular.`);
+    }
+
+    if (validatesWhenStated) {
+      context.debug(`...validated the '${frameString}' stated frame.`);
+    }
+
+    return validatesWhenStated;
+  }
+
+  validateWhenDerived(context) {
+    let validatesWhenDerived = false;
+
+    const frameString = this.getString();  ///
+
+    context.trace(`Verifying the '${frameString}' derived frame...`);
+
+    if (this.metavariable !== null) {
+      const metavariableNode = this.getMetavariableNode(),
+            declaredJudgements = context.findDeclaredJudgementsByMetavariableNode(metavariableNode),
+            declaredJudgementsLength = declaredJudgements.length;
+
+      if (declaredJudgementsLength > 0) {
+        declaredJudgements.forEach((declaredJudgement) => {
+          const assumption = declaredJudgement.getAssumption();
+
+          this.assumptions.push(assumption);
+        });
+
+        validatesWhenDerived = true;
+      } else {
+        const metavariableString = this.metavariable.getString();
+
+        context.trace(`The '${frameString}' frame's '${metavariableString}' metavariable does not match any declared judgements...`);
+      }
+    } else {
+      validatesWhenDerived = true;
+    }
+
+    if (validatesWhenDerived) {
+      context.debug(`...verified the '${frameString}' derived frame.`);
+    }
+
+    return validatesWhenDerived;
   }
 
   toJSON() {

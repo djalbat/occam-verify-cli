@@ -119,22 +119,19 @@ export default define(class Assumption extends Element {
     const reference = this.reference.validate(context);
 
     if (reference !== null) {
-      const metavariable = this.reference.getMetavariable(),
+      const metavariable = reference.getMetavariable(),
             metavariablePresent = context.isMetavariablePresent(metavariable, context);
 
       if (metavariablePresent) {
+        this.reference = reference;
+
         referenceValidates = true;
       } else {
-        const topLevelMetaAssertions = context.findTopLevelMetaAssertionsByReference(this.reference),
-              topLevelMetaAssertionsCompare = topLevelMetaAssertions.some((topLevelMetaAssertion) => {
-                const topLevelMetaAssertionUnifies = this.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+        const topLevelMetaAssertionsUnify = this.unifyTopLevelMetaAssertions(reference, context);
 
-                if (topLevelMetaAssertionUnifies) {
-                  return true;
-                }
-              });
+        if (topLevelMetaAssertionsUnify) {
+          this.reference = reference;
 
-        if (topLevelMetaAssertionsCompare) {
           referenceValidates = true;
         }
       }
@@ -263,6 +260,22 @@ export default define(class Assumption extends Element {
     }
 
     return topLevelMetaAssertionUnifies;
+  }
+
+  unifyTopLevelMetaAssertions(reference, context) {
+    let topLevelMetaAssertionsUnify;
+
+    const topLevelMetaAssertions = context.findTopLevelMetaAssertionsByReference(reference);
+
+    topLevelMetaAssertionsUnify = topLevelMetaAssertions.some((topLevelMetaAssertion) => {
+      const topLevelMetaAssertionUnifies = this.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+
+      if (topLevelMetaAssertionUnifies) {
+        return true;
+      }
+    });
+
+    return topLevelMetaAssertionsUnify;
   }
 
   static name = "Assumption";

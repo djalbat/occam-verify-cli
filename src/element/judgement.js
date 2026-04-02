@@ -196,36 +196,26 @@ export default define(class Judgement extends Element {
 
     context.trace(`Validating the '${judgementString}' derived judgement...`);
 
-    const metavariableNode = this.getMetavariableNode(),
+    const assumptions = this.getAssumptions(),
           topLevelMetaAssertion = this.getTopLevelMetaAssertion(),
           metaLevelAssumptions = topLevelMetaAssertion.getMetaLevelAssumptions(),
-          declaredJudgements = context.findDeclaredJudgementsByMetavariableNode(metavariableNode);
+          metaLevelAssumptionsUnify = metaLevelAssumptions.every((metaLevelAssumption) => {
+            const metaLevelAssumptionUnifies = assumptions.some((assumption) => {
+              const metaLevelAssumptionUnifies = assumption.unifyMetaLevelAssumption(metaLevelAssumption, context);
 
-    let assumptions;
+              if (metaLevelAssumptionUnifies) {
+                return true;
+              }
+            });
 
-    assumptions = this.getAssumptions();
+            if (metaLevelAssumptionUnifies) {
+              return true;
+            }
+          });
 
-    assumptions = assumptionsFromDeclaredJudgements(declaredJudgements, assumptions);
-
-    reconcile((context) => {
-      const metaLevelAssumptionsUnify = metaLevelAssumptions.every((metaLevelAssumption) => {
-        const metaLevelAssumptionUnifies = assumptions.some((assumption) => {
-          const metaLevelAssumptionUnifies = assumption.unifyMetaLevelAssumption(metaLevelAssumption, context);
-
-          if (metaLevelAssumptionUnifies) {
-            return true;
-          }
-        });
-
-        if (metaLevelAssumptionUnifies) {
-          return true;
-        }
-      });
-
-      if (metaLevelAssumptionsUnify) {
-        validatesWhenDerived = true;
-      }
-    }, context);
+    if (metaLevelAssumptionsUnify) {
+      validatesWhenDerived = true;
+    }
 
     if (validatesWhenDerived) {
       context.debug(`...validated the '${judgementString}' derived judgement.`);
@@ -296,14 +286,4 @@ function assumptionFromJudgementNode(judgementNode, context) {
         assumption = context.findAssumptionByAssumptionNode(assumptionNode);
 
   return assumption;
-}
-
-function assumptionsFromDeclaredJudgements(declaredJudgements, assumptions = []) {
-  declaredJudgements.map((declaredJudgement) => {
-    const assumption = declaredJudgement.getAssumption();
-
-    assumptions.push(assumption);
-  });
-
-  return assumptions;
 }

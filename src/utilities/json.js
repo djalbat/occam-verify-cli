@@ -1,9 +1,9 @@
 "use strict";
 
 import elements from "../elements";
-import MneimicContext from "../context/mnemic";
+import MnemicContext from "../context/mnemic";
 
-mnemicnction nameFromJSON(json, context) {
+export function nameFromJSON(json, context) {
   let { name } = json;
 
   const nameJSON = name;  ///
@@ -674,9 +674,9 @@ export function mnemicContextsFromJSON(json, context) {
         mnemicContexts = contextsJSON.map((contextJSON) => {
           const json = contextJSON, ///
                 context = releaseContext, ///
-                emphemeralContext = MneimicContext.fromJSON(json, context);
+                mnemicContext = MnemicContext.fromJSON(json, context);
 
-          return emphemeralContext;  ///
+          return mnemicContext;  ///
         });
 
   return mnemicContexts;
@@ -870,7 +870,7 @@ export function nominalTypeNameToNominalTypeNameJSON(nominalTypeName) {
   return nominalTypeNameJSON;
 }
 
-export function mnemicContextToMneimicContextJSON(mnemicContext) {
+export function mnemicContextToMnemicContextJSON(mnemicContext) {
   const mnemicContextJSON = mnemicContext.toJSON();
 
   return mnemicContextJSON;
