@@ -418,7 +418,7 @@ function resolvedFromStatementSubstitutionNode(statementSubstitutionNode, contex
 
 function substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
   const substitutionNode = statementSubstitutionNode.getSubstitutionNode(),
-        substitution = context.findStatementByStatementNode(substitutionNode);
+        substitution = context.findSubstitutionBySubstitutionNode(substitutionNode);
 
   return substitution;
 }

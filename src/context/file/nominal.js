@@ -682,6 +682,12 @@ export default class NominalFileContext extends FileContext {
     return substitution;
   }
 
+  findSimpleSubstitutionByMetavariableNode(metavariableNode) {
+    const simpleSubstitution = null;
+
+    return simpleSubstitution;
+  }
+
   findMetaLevelAssumptionByMetaLevelAssumptionNode(metaLevelAssumptionNode) {
     const metaLevelAssumption = null;
 
