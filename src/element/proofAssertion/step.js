@@ -8,7 +8,7 @@ import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
 import { unifySteps } from "../../utilities/unification";
-import { derive, attempt, reconcile } from "../../utilities/context";
+import { derive, declare, attempt, reconcile } from "../../utilities/context";
 
 const { asyncSome } = asynchronousUtilities,
       { backwardsSome } = arrayUtilities;
@@ -133,7 +133,9 @@ export default define(class Step extends ProofAssertion {
 
     context.trace(`Validating the '${stepString}' step...`);
 
-    derive((context) => {
+    const qualified = this.isQualified();
+
+    (qualified ? declare : derive)((context) => {
       attempt((context) => {
         const statementValidates = this.validateStatement(context);
 
@@ -141,9 +143,9 @@ export default define(class Step extends ProofAssertion {
           const referenceValidates = this.validateReference(context);
 
           if (referenceValidates) {
-            const satisfiesAssertioValidates = this.validateSatisfiesAssertion(context);
+            const satisfiesAssertionValidates = this.validateSatisfiesAssertion(context);
 
-            if (satisfiesAssertioValidates) {
+            if (satisfiesAssertionValidates) {
               validates = true;
             }
           }
@@ -153,7 +155,7 @@ export default define(class Step extends ProofAssertion {
           context.commit(this);
         }
       }, context);
-    }, context);
+    }, context)
 
     if (validates) {
       context.debug(`...validated the '${stepString}' step.`);
