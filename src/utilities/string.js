@@ -131,6 +131,14 @@ export function termSubstitutionStringFromTermAndVariable(term, variable) {
   return termSubstitutionString;
 }
 
+export function assumptionStringFromReferenceAndStatement(reference, statement) {
+  const referenceString = reference.getString(),
+        statementString = statement.getString(),
+        assumptionString = `${referenceString} :: ${statementString}`;
+
+  return assumptionString;
+}
+
 export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conclusion) {
   const conclusionString = conclusion.getString(),
         premisesString = premisesStringFromPremises(premises),
@@ -170,7 +178,7 @@ export function frameSubstitutionStringFromFrameAndMetavariable(frame, metavaria
   return string;
 }
 
-export function metaLevelAssumptionStringFromStatementAndReference(statement, reference) {
+export function metaLevelAssumptionStringFromReferenceAndStatement(reference, statement) {
   const statementString = statement.getString(),
         referneceString = reference.getString(),
         metaLevelAssumptionString = `${referneceString} :: ${statementString}`;

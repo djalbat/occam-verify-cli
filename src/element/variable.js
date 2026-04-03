@@ -156,6 +156,10 @@ export default define(class Variable extends Element {
 
         termSubstitution.validate(generalContext, specificContext);
 
+        const derivedSubstitution = termSubstitution; ///
+
+        specificContext.addDerivedSubstitution(derivedSubstitution);
+
         termUnifies = true;
       }
     }

@@ -600,6 +600,12 @@ export default class Context extends ContextBase {
     context.addSubstitutions(substitutions);
   }
 
+  addDerivedSubstitutions(derivedSubstitutions) {
+    const context = this.getContext();
+
+    context.addDerivedSubstitutions(derivedSubstitutions);
+  }
+
   addTerm(term) {
     const context = this.getContext();
 

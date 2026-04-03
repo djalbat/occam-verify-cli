@@ -11,6 +11,7 @@ import { equivalenceStringFromTerms,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
          topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
+import statement from "../element/statement";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -1327,9 +1328,16 @@ export function identifierFromParameterNode(parameterNode, context) {
 
 export function referenceFromAssumptionNode(assumptionNode, context) {
   const metavariableNode = assumptionNode.getMetavariableNode(),
-        reference = referenceFromMetavariableNode(metavariableNode, context);
+    reference = referenceFromMetavariableNode(metavariableNode, context);
 
   return reference;
+}
+
+export function statementFromAssumptionNode(assumptionNode, context) {
+  const statesmentNode = assumptionNode.getStatementNode(),
+        statement = statementFromStatementNode(statesmentNode, context);
+
+  return statement;
 }
 
 export function statementFromCombinatorNode(combinatorNode, context) {
@@ -1347,13 +1355,6 @@ export function statementFromConclusionNode(conclusinoNode, context) {
   if (statementNode !== null) {
     statement = statementFromStatementNode(statementNode, context);
   }
-
-  return statement;
-}
-
-export function statementFromAssumptionNode(assumptionNode, context) {
-  const statementNode = assumptionNode.getStatementNode(),
-        statement = statementFromStatementNode(statementNode, context);
 
   return statement;
 }
@@ -1827,13 +1828,6 @@ export function targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, cont
   return targetFrame;
 }
 
-export function statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context) {
-  const statementNode = metaLevelAssumptionNode.getStatementNode(),
-        statement = statementFromStatementNode(statementNode, context);
-
-  return statement;
-}
-
 export function referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context) {
   const { Reference } = elements,
         referenceNode = metaLevelAssumptionNode.getReferenceNode(),
@@ -1841,6 +1835,13 @@ export function referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, co
         reference = Reference.fromReferenceString(referenceString, context);
 
   return reference;
+}
+
+export function statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context) {
+  const statementNode = metaLevelAssumptionNode.getStatementNode(),
+        statement = statementFromStatementNode(statementNode, context);
+
+  return statement;
 }
 
 export function suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context) {

@@ -90,30 +90,28 @@ export default define(class Judgement extends Element {
     } else {
       let validates = false;
 
-      reconcile((context) => {
-        const frameValidates = this.validateFrame(context);
+      const frameValidates = this.validateFrame(context);
 
-        if (frameValidates) {
-          const assumptionValidates = this.validateAssumption(context);
+      if (frameValidates) {
+        const assumptionValidates = this.validateAssumption(context);
 
-          if (assumptionValidates) {
-            const stated = context.isStated();
+        if (assumptionValidates) {
+          const stated = context.isStated();
 
-            let validatesWhenStated = false,
-                validatesWhenDerived = false;
+          let validatesWhenStated = false,
+              validatesWhenDerived = false;
 
-            if (stated) {
-              validatesWhenStated = this.validateWhenStated(context);
-            } else {
-              validatesWhenDerived = this.validateWhenDerived(context);
-            }
+          if (stated) {
+            validatesWhenStated = this.validateWhenStated(context);
+          } else {
+            validatesWhenDerived = this.validateWhenDerived(context);
+          }
 
-            if (validatesWhenStated || validatesWhenDerived) {
-              validates = true;
-            }
+          if (validatesWhenStated || validatesWhenDerived) {
+            validates = true;
           }
         }
-      }, context);
+      }
 
       if (validates) {
         judgement = this; ///
@@ -196,26 +194,28 @@ export default define(class Judgement extends Element {
 
     context.trace(`Validating the '${judgementString}' derived judgement...`);
 
-    const assumptions = this.getAssumptions(),
-          topLevelMetaAssertion = this.getTopLevelMetaAssertion(),
-          metaLevelAssumptions = topLevelMetaAssertion.getMetaLevelAssumptions(),
-          metaLevelAssumptionsUnify = metaLevelAssumptions.every((metaLevelAssumption) => {
-            const metaLevelAssumptionUnifies = assumptions.some((assumption) => {
-              const metaLevelAssumptionUnifies = assumption.unifyMetaLevelAssumption(metaLevelAssumption, context);
+    reconcile((context) => {
+      const assumptions = this.getAssumptions(),
+            topLevelMetaAssertion = this.getTopLevelMetaAssertion(),
+            metaLevelAssumptions = topLevelMetaAssertion.getMetaLevelAssumptions(),
+            metaLevelAssumptionsUnify = metaLevelAssumptions.every((metaLevelAssumption) => {
+              const assumptionUnifies = assumptions.some((assumption) => {
+                const assumptionUnifies = metaLevelAssumption.unifyAssumption(assumption, context);
 
-              if (metaLevelAssumptionUnifies) {
+                if (assumptionUnifies) {
+                  return true;
+                }
+              });
+
+              if (assumptionUnifies) {
                 return true;
               }
             });
 
-            if (metaLevelAssumptionUnifies) {
-              return true;
-            }
-          });
-
-    if (metaLevelAssumptionsUnify) {
-      validatesWhenDerived = true;
-    }
+      if (metaLevelAssumptionsUnify) {
+        validatesWhenDerived = true;
+      }
+    }, context);
 
     if (validatesWhenDerived) {
       context.debug(`...validated the '${judgementString}' derived judgement.`);

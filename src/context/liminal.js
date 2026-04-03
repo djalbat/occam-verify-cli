@@ -70,7 +70,7 @@ export default class LiminalContext extends Context {
           derivedSubstitutionA = derivedSubstitution, ///
           derivedSubstitutionString = derivedSubstitution.getString();
 
-    context.trace(`Adding the '${derivedSubstitutionString}' derivedSubstitution to the liminal context...`);
+    context.trace(`Adding the '${derivedSubstitutionString}' derived substitution to the liminal context...`);
 
     const derivedSubstitutionB = this.derivedSubstitutions.find((derivedSubstitution) => {
       const derivedSubstitutionB = derivedSubstitution, ///
@@ -82,12 +82,12 @@ export default class LiminalContext extends Context {
     }) || null;
 
     if (derivedSubstitutionB !== null) {
-      context.debug(`The '${derivedSubstitutionString}' derivedSubstitution has already been added to the liminal context.`);
+      context.debug(`The '${derivedSubstitutionString}' derived substitution has already been added to the liminal context.`);
     } else {
       this.derivedSubstitutions.push(derivedSubstitution);
     }
 
-    context.debug(`...added the '${derivedSubstitutionString}' derivedSubstitution to the liminal context.`);
+    context.debug(`...added the '${derivedSubstitutionString}' derived substitution to the liminal context.`);
   }
 
   addDerivedSubstitutions(derivedSubstitutions) {

@@ -355,6 +355,10 @@ export default define(class Metavariable extends Element {
 
         frameSubstitution.validate(generalContext, specificContext);
 
+        const derivedSubstitution = frameSubstitution;  ///
+
+        specificContext.addDerivedSubstitution(derivedSubstitution);
+
         frameUnifies = true;
       }
     }
@@ -407,6 +411,10 @@ export default define(class Metavariable extends Element {
 
         statementSubstitution.validate(substitution, generalContext, specificContext);
 
+        const derivedSubstitution = statementSubstitution;  ///
+
+        specificContext.addDerivedSubstitution(derivedSubstitution);
+
         statementUnifies = true;
       }
     }
@@ -451,6 +459,10 @@ export default define(class Metavariable extends Element {
               referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
 
         referenceSubstitution.validate(generalContext, specificContext);
+
+        const derivedSubstitution = referenceSubstitution;  ///
+
+        specificContext.addDerivedSubstitution(derivedSubstitution);
 
         referenceUnifies = true;
       }

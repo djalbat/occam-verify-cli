@@ -3,9 +3,8 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { unifyAssumption } from "../process/unify";
+import { instantiate } from "../utilities/context";
 import { instantiateAssumption } from "../process/instantiate";
-import { join, reconcile, instantiate } from "../utilities/context";
 
 export default define(class Assumption extends Element {
   constructor(context, string, node, lineIndex, reference, statement) {
@@ -202,45 +201,6 @@ export default define(class Assumption extends Element {
     return validatesWhenDerived;
   }
 
-  unifyMetaLevelAssumption(metaLevelAssumption, context) {
-    let metaLevelAssumptionUnifies;
-
-    const assumptionString = this.getString(),  ///
-          metaLevelAssumptionString = metaLevelAssumption.getString();
-
-    context.trace(`Unifying the '${metaLevelAssumptionString}' meta-level assumption with the '${assumptionString}' assumption...`);
-
-    const metaLevelAssumptionContext = metaLevelAssumption.getContext(),
-          assumptionContext = this.getContext(),
-          generalContext = assumptionContext, ///
-          specificContext = metaLevelAssumptionContext;  ///
-
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const generalAssumption = this, ///
-              specificAssumption = metaLevelAssumption,  ///
-              assumptionUnifies = unifyAssumption(generalAssumption, specificAssumption, generalContext, specificContext);
-
-        if (assumptionUnifies) {
-          const assumption = this,  ///
-                specificContextQualifies = specificContext.qualify(assumption, metaLevelAssumption);
-
-          if (specificContextQualifies) {
-            specificContext.commit(context);
-
-            metaLevelAssumptionUnifies = true;
-          }
-        }
-      }, specificContext);
-    }, specificContext, context);
-
-    if (metaLevelAssumptionUnifies) {
-      context.debug(`...unified the '${metaLevelAssumptionString}' meta-level assumption with the '${assumptionString}' assumption.`);
-    }
-
-    return metaLevelAssumptionUnifies;
-  }
-
   unifyTopLevelMetaAssertion(topLevelMetaAssertion, context) {
     let topLevelMetaAssertionUnifies;
 
@@ -292,7 +252,7 @@ export default define(class Assumption extends Element {
   }
 
   static fromJSON(json, context) {
-    const assumption = instantiate((context) => {
+    return instantiate((context) => {
       const { string, lineIndex } = json,
             assumptionNode = instantiateAssumption(string, context),
             node = assumptionNode,  ///
@@ -302,8 +262,6 @@ export default define(class Assumption extends Element {
 
       return assumption;
     }, context);
-
-    return assumption;
   }
 });
 

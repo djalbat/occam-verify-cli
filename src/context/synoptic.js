@@ -18,7 +18,7 @@ import { compressTerms,
 const { push } = arrayUtilities;
 
 export default class SynopticContext extends Context {
-  constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions) {
+  constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions, derivedSubstitutions) {
     super(context);
 
     this.terms = terms;
@@ -31,6 +31,7 @@ export default class SynopticContext extends Context {
     this.assumptions = assumptions;
     this.metavariables = metavariables;
     this.substitutions = substitutions;
+    this.derivedSubstitutions = derivedSubstitutions;
   }
 
   getTerms(terms = []) {
@@ -131,6 +132,14 @@ export default class SynopticContext extends Context {
     compressSubstitutions(substitutions);
 
     return substitutions;
+  }
+
+  getDerivedSubstitutions(derivedSubstitutions = []) {
+    push(derivedSubstitutions, this.derivedSubstitutions);
+
+    this.context.getDerivedSubstitutions(derivedSubstitutions);
+
+    return derivedSubstitutions;
   }
 
   findTermByTermNode(termNode) {
@@ -288,7 +297,8 @@ export default class SynopticContext extends Context {
           assumptions = assumptionsFromContexts(contexts),
           metavariables = metavariablesFromContexts(contexts),
           substitutions = substitutionsFromContexts(contexts),
-          synopticContext = new SynopticContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
+          derivedSubstitutions = derivedSubstitutionsFromContexts(contexts),
+          synopticContext = new SynopticContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions, derivedSubstitutions);
 
     return synopticContext;
   }
@@ -412,4 +422,14 @@ function substitutionsFromContexts(contexts) {
   compressSubstitutions(substitutions);
 
   return substitutions;
+}
+
+function derivedSubstitutionsFromContexts(contexts) {
+  const derivedSubstitutions = [];
+
+  contexts.forEach((context) => {
+    context.getDerivedSubstitutions(derivedSubstitutions);
+  });
+
+  return derivedSubstitutions;
 }

@@ -149,72 +149,6 @@ class MetaLevelPass extends ZipPassBase {
   ];
 }
 
-class AssumptionPass extends ZipPass {
-  static maps = [
-    {
-      generalNodeQuery: statementMetavariableNodeQuery,
-      specificNodeQuery: statementNodeQuery,
-      run: (generalStatementMetavariableNode, specificStatementNode, generalContext, specificContext) => {
-        let success = false;
-
-        const statementNode = specificStatementNode, ///
-              metavariableNode = generalStatementMetavariableNode;  ///
-
-        let context;
-
-        context = generalContext; ///
-
-        const metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
-
-        context = specificContext;  ///
-
-        const statement = context.findStatementByStatementNode(statementNode),
-              substitution = null,
-              statementUnifies = metavariable.unifyStatement(statement, substitution, generalContext, specificContext);
-
-        if (statementUnifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      generalNodeQuery: metavariableNodeQuery,
-      specificNodeQuery: referenceMetavariableNodeQuery,
-      run: (generalMetavariableNode, specificReferenceMetavariableNode, generalContext, specificContext) => {
-        let success = false;
-
-        let context,
-            reference,
-            metavariableNode;
-
-        context = generalContext; ///
-
-        metavariableNode = generalMetavariableNode;  ///
-
-        reference = context.findReferenceByMetavariableNode(metavariableNode);
-
-        const metavariable = reference.getMetavariable();
-
-        context = specificContext;  ///
-
-        metavariableNode = specificReferenceMetavariableNode; ///
-
-        reference = context.findReferenceByMetavariableNode(metavariableNode);
-
-        const referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
-
-        if (referenceUnifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    }
-  ];
-}
-
 class CombinatorPass extends ZipPass {
   static maps = [
     {
@@ -471,7 +405,6 @@ class IntrinsicLevelPass extends ZipPass {
 }
 
 const metaLevelPass = new MetaLevelPass(),
-      assumptionPass = new AssumptionPass(),
       combinatorPass = new CombinatorPass(),
       constructorPass = new ConstructorPass(),
       metavariablePass = new MetavariablePass(),
@@ -492,22 +425,6 @@ export function unifyStatement(generalStatement, specificStatement, generalConte
   }
 
   return statementUnifies;
-}
-
-export function unifyAssumption(generalAssumption, specificAssumption, generalContext, specificContext) {
-  let assumptionUnifies = false;
-
-  const generalAssumptionNode = generalAssumption.getNode(),
-        specificAssumptionNode = specificAssumption.getNode(),
-        generalNode = generalAssumptionNode, ///
-        specificNode = specificAssumptionNode,  ///
-        success = assumptionPass.run(generalNode, specificNode, generalContext, specificContext);
-
-  if (success) {
-    assumptionUnifies = true;
-  }
-
-  return assumptionUnifies;
 }
 
 export function unifySubstitution(generalSubstitution, specificSubstitution, generalContext, specificContext) {

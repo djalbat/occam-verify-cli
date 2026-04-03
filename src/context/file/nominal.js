@@ -646,10 +646,28 @@ export default class NominalFileContext extends FileContext {
     return declaredMetavariable;
   }
 
+  findTermByTermNode(termNode) {
+    const term = null;
+
+    return term;
+  }
+
+  findStatementByStatementNode(statementNode) {
+    const statement = null;
+
+    return statement;
+  }
+
   findSubstitutionByVariableNode(variableNode) {
     const substitution = null;
 
     return substitution;
+  }
+
+  findMetavariableByMetavariableNode(metavariableNode) {
+    const metavariable = null;
+
+    return metavariable;
   }
 
   findSubstitutionByMetavariableNode(metavariableNode) {

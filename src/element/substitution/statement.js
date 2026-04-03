@@ -83,24 +83,6 @@ export default define(class StatementSubstitution extends Substitution {
     return comparesToParameter;
   }
 
-  compareSubstitution(substitution) {
-    let comparesToSubstitution = false;
-
-    if (false) {
-      ///
-    } else if ((this.substitution === null) && (substitution === null)){
-      comparesToSubstitution = true;
-    } else if ((this.substitution !== null) && (substitution !== null)){
-      const substitutionEqualToSubstituion = this.substitution.isEqualTo(substitution);
-
-      if (substitutionEqualToSubstituion) {
-        comparesToSubstitution = true;
-      }
-    }
-
-    return comparesToSubstitution;
-  }
-
   validate(substitution, generalContext, specificContext) {
     let statementSubstitution = null;
 
@@ -292,9 +274,9 @@ export default define(class StatementSubstitution extends Substitution {
       if (replacementStatementUnifies) {
         const nested = false,
               context = specificContext,  ///
-              soleNonTrivialSubstitution = context.getSoleNonTrivialSubstitution(nested);
+              soleNonTrivialDerivedSubstitution = context.getSoleNonTrivialDerivedSubstitution(nested);
 
-        substitution = soleNonTrivialSubstitution;  ///
+        substitution = soleNonTrivialDerivedSubstitution;  ///
       }
     }, specificContext);
 

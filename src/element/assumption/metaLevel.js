@@ -3,10 +3,12 @@
 import { Element } from "occam-languages";
 
 import { define } from "../../elements";
+import { unifyStatement } from "../../process/unify";
+import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateMetaLevelAssumption } from "../../process/instantiate";
 import { metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
-import { metaLevelAssumptionStringFromStatementAndReference } from "../../utilities/string";
-import { ablate, attempt, descend, serialise, unserialise, instantiate } from "../../utilities/context";
+import { metaLevelAssumptionStringFromReferenceAndStatement } from "../../utilities/string";
+import { join, ablate, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class MetaLevelAssumption extends Element {
   constructor(context, string, node, lineIndex, reference, statement) {
@@ -198,6 +200,85 @@ export default define(class MetaLevelAssumption extends Element {
     return validatesWhenDerived;
   }
 
+  unifyAssumption(assumption, context) {
+    let assumptionUnifies;
+
+    const assumptionString = assumption.getString(),  ///
+          metaLevelAssumptionString = this.getString();
+
+    context.trace(`Unifying the '${assumptionString}' assumption with the '${metaLevelAssumptionString}' meta-level assumption...`);
+
+    const metaLevelAssumptionContext = this.getContext(), ///
+          assumptionContext = assumption.getContext(),
+          specificContext = assumptionContext, ///
+          generalContext = metaLevelAssumptionContext;  ///
+
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        const reference = assumption.getReference(),
+              referneceUnifies = this.unifyReference(reference, generalContext, specificContext);
+
+        if (referneceUnifies) {
+          const statement = assumption.getStatement(),
+                statementUnifieds = this.unifyStatement(statement, generalContext, specificContext);
+
+          if (statementUnifieds) {
+            specificContext.commit(context);
+
+            assumptionUnifies = true;
+          }
+        }
+      }, specificContext);
+    }, specificContext, context);
+
+    if (assumptionUnifies) {
+      context.debug(`...unified the '${assumptionString}' assumption with the '${metaLevelAssumptionString}' meta-level assumption...`);
+    }
+
+    return assumptionUnifies;
+  }
+
+  unifyReference(reference, generalContext, specificContext) {
+    let referenceUnifies;
+
+    const context = specificContext,  ///
+          referenceString = reference.getString(),
+          metaLevelAssumptionString = this.getString(); ///
+
+    context.trace(`Unifying the '${referenceString}' reference with the '${metaLevelAssumptionString}' meta-level assumption's reference...`);
+
+    const metavariable = this.getMetavariable();
+
+    referenceUnifies = metavariable.unifyReference(reference, generalContext, specificContext);
+
+    if (referenceUnifies) {
+      context.debug(`..unified the '${referenceString}' with the '${metaLevelAssumptionString}' meta-level assumption's reference.`);
+    }
+
+    return referenceUnifies;
+  }
+
+  unifyStatement(statement, generalContext, specificContext) {
+    let statementUnifies;
+
+    const context = specificContext,  ///
+          statementString = statement.getString(),
+          metaLevelAssumptionString = this.getString(); ///
+
+    context.trace(`Unifying the '${statementString}' statement with the '${metaLevelAssumptionString}' meta-level assumption's statement...`);
+
+    const generalStatement = stripBracketsFromStatement(this.statement, context), ///
+          specificStatement = stripBracketsFromStatement(statement, context);  ///
+
+    statementUnifies = unifyStatement(generalStatement, specificStatement, generalContext, specificContext);
+
+    if (statementUnifies) {
+      context.debug(`...unified the '${statementString}' statement with the '${metaLevelAssumptionString}' meta-level assumption's statement.`);
+    }
+
+    return statementUnifies;
+  }
+
   toJSON() {
     const context = this.getContext();
 
@@ -239,9 +320,9 @@ export default define(class MetaLevelAssumption extends Element {
 
     ablate((context) => {
       instantiate((context) => {
-        const statement = step.getStatement(),
-              reference = step.getReference(),
-              metaLevelAssumptionString = metaLevelAssumptionStringFromStatementAndReference(statement, reference),
+        const reference = step.getReference(),
+              statement = step.getStatement(),
+              metaLevelAssumptionString = metaLevelAssumptionStringFromReferenceAndStatement(reference, statement),
               string = metaLevelAssumptionString,  ///
               metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context);
 
