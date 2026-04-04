@@ -35,9 +35,11 @@ export default class SynopticContext extends Context {
   }
 
   getTerms(terms = []) {
+    const context = this.getContext();
+
     push(terms, this.terms);
 
-    this.context.getTerms(terms);
+    context.getTerms(terms);
 
     compressTerms(terms);
 
@@ -45,9 +47,11 @@ export default class SynopticContext extends Context {
   }
 
   getFrames(frames = []) {
+    const context = this.getContext();
+
     push(frames, this.frames);
 
-    this.context.getFrames(frames);
+    context.getFrames(frames);
 
     compressFrames(frames);
 
@@ -55,9 +59,11 @@ export default class SynopticContext extends Context {
   }
 
   getEqualities(equalities = []) {
+    const context = this.getContext();
+
     push(equalities, this.equalities);
 
-    this.context.getEqualities(equalities);
+    context.getEqualities(equalities);
 
     compressEqualities(equalities);
 
@@ -65,9 +71,11 @@ export default class SynopticContext extends Context {
   }
 
   getJudgements(judgements = []) {
+    const context = this.getContext();
+
     push(judgements, this.judgements);
 
-    this.context.getJudgements(judgements);
+    context.getJudgements(judgements);
 
     compressJudgements(judgements);
 
@@ -75,9 +83,11 @@ export default class SynopticContext extends Context {
   }
 
   getStatements(statements = []) {
+    const context = this.getContext();
+
     push(statements, this.statements);
 
-    this.context.getStatements(statements);
+    context.getStatements(statements);
 
     compressStatements(statements);
 
@@ -85,9 +95,11 @@ export default class SynopticContext extends Context {
   }
 
   getAssertions(assertions = []) {
+    const context = this.getContext();
+
     push(assertions, this.assertions);
 
-    this.context.getAssertions(assertions);
+    context.getAssertions(assertions);
 
     compressAssertions(assertions);
 
@@ -95,9 +107,11 @@ export default class SynopticContext extends Context {
   }
 
   getReferences(references = []) {
+    const context = this.getContext();
+
     push(references, this.references);
 
-    this.context.getReferences(references);
+    context.getReferences(references);
 
     compressReferences(references);
 
@@ -105,9 +119,11 @@ export default class SynopticContext extends Context {
   }
 
   getAssumptions(assumptions = []) {
+    const context = this.getContext();
+
     push(assumptions, this.assumptions);
 
-    this.context.getAssumptions(assumptions);
+    context.getAssumptions(assumptions);
 
     compressAssumptions(assumptions);
 
@@ -115,9 +131,11 @@ export default class SynopticContext extends Context {
   }
 
   getMetavariables(metavariables = []) {
+    const context = this.getContext();
+
     push(metavariables, this.metavariables);
 
-    this.context.getMetavariables(metavariables);
+    context.getMetavariables(metavariables);
 
     compressMetavariables(metavariables);
 
@@ -125,9 +143,11 @@ export default class SynopticContext extends Context {
   }
 
   getSubstitutions(substitutions = []) {
+    const context = this.getContext();
+
     push(substitutions, this.substitutions);
 
-    this.context.getSubstitutions(substitutions);
+    context.getSubstitutions(substitutions);
 
     compressSubstitutions(substitutions);
 
@@ -135,9 +155,11 @@ export default class SynopticContext extends Context {
   }
 
   getDerivedSubstitutions(derivedSubstitutions = []) {
+    const context = this.getContext();
+
     push(derivedSubstitutions, this.derivedSubstitutions);
 
-    this.context.getDerivedSubstitutions(derivedSubstitutions);
+    context.getDerivedSubstitutions(derivedSubstitutions);
 
     return derivedSubstitutions;
   }

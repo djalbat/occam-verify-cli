@@ -6,7 +6,7 @@ import { metavariableNodesFromDerivedSubstitutions } from "../utilities/substitu
 import Context from "../context";
 import elements from "../elements";
 
-const { find, first } = arrayUtilities;
+const { push, find, first } = arrayUtilities;
 
 export default class LiminalContext extends Context {
   constructor(context, derivedSubstitutions) {
@@ -15,33 +15,23 @@ export default class LiminalContext extends Context {
     this.derivedSubstitutions = derivedSubstitutions;
   }
 
-  getDerivedSubstitutions(nested = true) {
-    let derivedSubstitutions;
+  getDerivedSubstitutions(derivedSubstitutions = []) {
+    const context = this.getContext();
 
-    if (nested) {
-      const context = this.getContext();
+    push(derivedSubstitutions, this.derivedSubstitutions);
 
-      derivedSubstitutions = context.getDerivedSubstitutions();
-
-      derivedSubstitutions = [ ///
-        ...this.derivedSubstitutions,
-        ...derivedSubstitutions
-      ]
-    } else {
-      derivedSubstitutions = this.derivedSubstitutions;
-    }
+    context.getDerivedSubstitutions(derivedSubstitutions);
 
     return derivedSubstitutions;
   }
 
-  getSoleDerivedSubstitution(nested = true) {
+  getSoleDerivedSubstitution() {
     let soleDerivedSubstitution = null;
 
-    const derivedSubstitutions = this.getDerivedSubstitutions(nested),
-          derivedSubstitutionsLength = derivedSubstitutions.length;
+    const derivedSubstitutionsLength = this.derivedSubstitutions.length;
 
     if (derivedSubstitutionsLength === 1) {
-      const firstDerivedSubstitution = first(derivedSubstitutions);
+      const firstDerivedSubstitution = first(this.derivedSubstitutions);
 
       soleDerivedSubstitution = firstDerivedSubstitution; ///
     }
@@ -49,10 +39,10 @@ export default class LiminalContext extends Context {
     return soleDerivedSubstitution;
   }
 
-  getSoleNonTrivialDerivedSubstitution(nested = true) {
+  getSoleNonTrivialDerivedSubstitution() {
     let soleNonTrivialDerivedSubstitution = null;
 
-    const soleDerivedSubstitution = this.getSoleDerivedSubstitution(nested);
+    const soleDerivedSubstitution = this.getSoleDerivedSubstitution();
 
     if (soleDerivedSubstitution !== null) {
       const soleDerivedSubstitutionNonTrivial = soleDerivedSubstitution.isNonTrivial();
@@ -151,8 +141,7 @@ export default class LiminalContext extends Context {
     if (empty) {
       qualifies = true;
     } else {
-      const nested = false,
-            soleDerivedSubstitution = this.getSoleDerivedSubstitution(nested);
+      const soleDerivedSubstitution = this.getSoleDerivedSubstitution();
 
       if (soleDerivedSubstitution !== null) {
         const { ReferenceDerivedSubstitution } = elements,
@@ -186,10 +175,10 @@ export default class LiminalContext extends Context {
     return derivedSubstitution;
   }
 
-  findDerivedSubstitutions(callback, nested = true) {
+  findDerivedSubstitutions(callback) {
     let derivedSubstitutions;
 
-    derivedSubstitutions = this.getDerivedSubstitutions(nested);
+    derivedSubstitutions = this.getDerivedSubstitutions();
 
     derivedSubstitutions = find(derivedSubstitutions, callback);  ///
 

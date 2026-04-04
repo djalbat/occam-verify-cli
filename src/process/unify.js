@@ -14,14 +14,12 @@ const typeNodeQuery = nodeQuery("/type"),
       frameNodeQuery = nodeQuery("/frame"),
       metaTypeNodeQuery = nodeQuery("/metaType"),
       statementNodeQuery = nodeQuery("/statement"),
-      metavariableNodeQuery = nodeQuery("/metavariable"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
-      referenceMetavariableNodeQuery = nodeQuery("/reference/metavariable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       assumptionMetavariableNodeQuery = nodeQuery("/assumption/metavariable!");
 
-class MetaLevelPass extends ZipPassBase {
+class StatementPass extends ZipPassBase {
   static maps = [
     {
       generalNodeQuery: assumptionMetavariableNodeQuery,
@@ -404,7 +402,7 @@ class IntrinsicLevelPass extends ZipPass {
   ];
 }
 
-const metaLevelPass = new MetaLevelPass(),
+const statementPass = new StatementPass(),
       combinatorPass = new CombinatorPass(),
       constructorPass = new ConstructorPass(),
       metavariablePass = new MetavariablePass(),
@@ -418,7 +416,7 @@ export function unifyStatement(generalStatement, specificStatement, generalConte
         specificStatementNode = specificStatement.getNode(),
         generalNode = generalStatementNode, ///
         specificNode = specificStatementNode,  ///
-        success = metaLevelPass.run(generalNode, specificNode, generalContext, specificContext);
+        success = statementPass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     statementUnifies = true;

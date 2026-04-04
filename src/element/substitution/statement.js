@@ -272,9 +272,8 @@ export default define(class StatementSubstitution extends Substitution {
             replacementStatementUnifies = this.unifyReplacementStatement(replacementStatement, generalContext, specificContext);
 
       if (replacementStatementUnifies) {
-        const nested = false,
-              context = specificContext,  ///
-              soleNonTrivialDerivedSubstitution = context.getSoleNonTrivialDerivedSubstitution(nested);
+        const context = specificContext,  ///
+              soleNonTrivialDerivedSubstitution = context.getSoleNonTrivialDerivedSubstitution();
 
         substitution = soleNonTrivialDerivedSubstitution;  ///
       }

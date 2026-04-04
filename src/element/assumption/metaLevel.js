@@ -201,7 +201,7 @@ export default define(class MetaLevelAssumption extends Element {
   }
 
   unifyAssumption(assumption, context) {
-    let assumptionUnifies;
+    let assumptionUnifies = false;
 
     const assumptionString = assumption.getString(),  ///
           metaLevelAssumptionString = this.getString();
