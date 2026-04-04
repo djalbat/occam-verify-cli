@@ -12,7 +12,7 @@ import IllativeContext from "../context/illative";
 import BranchingContext from "../context/branching";
 import NominalFileContext from "../context/file/nominal";
 
-import { mnemicContextsFromJSON, mnemicContextToMnemicContextJSON } from "../utilities/json";
+import { mnemicContextFromJSON, mnemicContextsFromJSON, mnemicContextToMnemicContextJSON, mnemicContextsToMnemicContextsJSON } from "../utilities/json";
 
 export function join(innerFunction, ...contexts) {
   const synopticContext = SynopticContext.fromContexts(...contexts),
@@ -79,16 +79,12 @@ export function descend(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function attempt(innerFunction, ...contexts) {
-  contexts = contexts.map((context) => {  ///
-    const mnemicContext = MenmicContext.fromNothing(context);
+export function attempt(innerFunction, context) {
+  const mnemicContext = MenmicContext.fromNothing(context);
 
-    context = mnemicContext;  ///
+  context = mnemicContext;  ///
 
-    return context;
-  })
-
-  return innerFunction(...contexts);
+  return innerFunction(context);
 }
 
 export function enclose(innerFunction, metaLevelAssumptions, context) {
@@ -119,25 +115,24 @@ export function reconcile(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function serialise(innerFunction, ...contexts) {
-  contexts = contexts.map((context) => {  ///
-    const mnemicContext = context, ///
-          mnemicContextJSON = mnemicContextToMnemicContextJSON(mnemicContext),
-          contextJSON = mnemicContextJSON; ///
+export function serialise(innerFunction, context) {
+  const mnemicContext = context, ///
+        mnemicContextJSON = mnemicContextToMnemicContextJSON(mnemicContext),
+        contextJSON = mnemicContextJSON; ///
 
-    context = contextJSON;  ///
+  context = contextJSON;  ///
 
-    return context;
-  });
-
-  return innerFunction(...contexts);
+  return innerFunction(context);
 }
 
-export function unserialise(innerFunction, json, context) {
-  const mnemicContexts = mnemicContextsFromJSON(json, context),
-        contexts = mnemicContexts; ///
+export function serialises(innerFunction, contexts) {
+  const mnemicContexts = contexts, ///
+        mnemicContextsJSON = mnemicContextsToMnemicContextsJSON(mnemicContexts),
+        contextsJSON = mnemicContextsJSON; ///
 
-  return innerFunction(json, ...contexts);
+  contexts = contextsJSON;  ///
+
+  return innerFunction(contexts);
 }
 
 export function instantiate(innerFunction, context) {
@@ -146,4 +141,19 @@ export function instantiate(innerFunction, context) {
   context = literalContext;  ///
 
   return innerFunction(context);
+}
+
+export function unserialise(innerFunction, json, context) {
+  const mnemicContext = mnemicContextFromJSON(json, context);
+
+  context = mnemicContext; ///
+
+  return innerFunction(json, context);
+}
+
+export function unserialises(innerFunction, json, context) {
+  const mnemicContexts = mnemicContextsFromJSON(json, context),
+        contexts = mnemicContexts; ///
+
+  return innerFunction(json, ...contexts);
 }

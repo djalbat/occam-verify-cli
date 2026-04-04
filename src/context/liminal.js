@@ -147,9 +147,9 @@ export default class LiminalContext extends Context {
         const { ReferenceDerivedSubstitution } = elements,
               context = this,
               referenceDerivedSubstitution = ReferenceDerivedSubstitution.fromAssumptionAndMetaLevelAssumption(assumption, metaLevelAssumption, context),
-              soleDerivedSubstitutionCompares = referenceDerivedSubstitution.compareDerivedSubstitution(soleDerivedSubstitution);
+              referenceDerivedSubstitutionComparesToSsoleDerivedSubstitution = referenceDerivedSubstitution.compareSubstitution(soleDerivedSubstitution);
 
-        if (soleDerivedSubstitutionCompares) {
+        if (referenceDerivedSubstitutionComparesToSsoleDerivedSubstitution) {
           qualifies = true;
         }
       }

@@ -351,13 +351,13 @@ export default define(class Metavariable extends Element {
         }
       } else {
         const { FrameSubstitution } = elements,
-              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context);
+              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, generalContext, specificContext);
 
-        frameSubstitution.validate(generalContext, specificContext);
+        frameSubstitution.validate(context);
 
         const derivedSubstitution = frameSubstitution;  ///
 
-        specificContext.addDerivedSubstitution(derivedSubstitution);
+        context.addDerivedSubstitution(derivedSubstitution);
 
         frameUnifies = true;
       }
@@ -406,14 +406,14 @@ export default define(class Metavariable extends Element {
       } else {
         const { StatementSubstitution } = elements,
               statementSubstitution = (substitution !== null) ?
-                                        StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) :
-                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context);
+                                        StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, generalContext, specificContext) :
+                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, generalContext, specificContext);
 
-        statementSubstitution.validate(substitution, generalContext, specificContext);
+        statementSubstitution.validate(substitution, context);
 
         const derivedSubstitution = statementSubstitution;  ///
 
-        specificContext.addDerivedSubstitution(derivedSubstitution);
+        context.addDerivedSubstitution(derivedSubstitution);
 
         statementUnifies = true;
       }
@@ -456,13 +456,13 @@ export default define(class Metavariable extends Element {
         }
       } else {
         const { ReferenceSubstitution } = elements,
-              referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context);
+              referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, generalContext, specificContext);
 
-        referenceSubstitution.validate(generalContext, specificContext);
+        referenceSubstitution.validate(context);
 
         const derivedSubstitution = referenceSubstitution;  ///
 
-        specificContext.addDerivedSubstitution(derivedSubstitution);
+        context.addDerivedSubstitution(derivedSubstitution);
 
         referenceUnifies = true;
       }

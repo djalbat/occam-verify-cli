@@ -5,12 +5,12 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
+import { ablate, descend, attempt, instantiate, unserialises } from "../../utilities/context";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
-import { join, ablate, descend, attempt, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class ReferenceSubstitution extends Substitution {
-  constructor(context, string, node, lineIndex, generalContext, targetReference, replacementReference) {
-    super(context, string, node, lineIndex, generalContext);
+  constructor(context, string, node, lineIndex, targetReference, replacementReference) {
+    super(context, string, node, lineIndex);
 
     this.targetReference = targetReference;
     this.replacementReference = replacementReference;
@@ -87,11 +87,10 @@ export default define(class ReferenceSubstitution extends Substitution {
     return substitutionCompares;
   }
 
-  validate(generalContext, specificContext) {
+  validate(context) {
     let referenceSubstitution = null;
 
-    const context = specificContext,  ///
-          referenceSubstitutionString = this.getString();  ///
+    const referenceSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution...`);
 
@@ -104,27 +103,24 @@ export default define(class ReferenceSubstitution extends Substitution {
 
       context.debug(`...the '${referenceSubstitutionString}' reference substitution is already valid.`);
     } else {
-      const context = this.getContext();
+      const generalContext = this.getGeneralContext(),
+            specificContext = this.getSpecificContext();
 
-      join((generalContext) => {
-        join((specificContext) => {
-          attempt((generalContext, specificContext) => {
-            const targetReferenceValidates = this.validateTargetReference(generalContext, specificContext);
+      attempt((specificContext) => {
+        const targetReferenceValidates = this.validateTargetReference(generalContext, specificContext);
 
-            if (targetReferenceValidates) {
-              const replacementReferenceValidates = this.validateReplacementReference(generalContext, specificContext);
+        if (targetReferenceValidates) {
+          const replacementReferenceValidates = this.validateReplacementReference(generalContext, specificContext);
 
-              if (replacementReferenceValidates) {
-                validates = true;
-              }
-            }
+          if (replacementReferenceValidates) {
+            validates = true;
+          }
+        }
 
-            if (validates) {
-              this.setContexts(generalContext, specificContext);
-            }
-          }, generalContext, specificContext);
-        }, specificContext, context);
-      }, generalContext, context);
+        if (validates) {
+          specificContext.commit(this);
+        }
+      }, specificContext);
     }
 
     if (validates) {
@@ -194,17 +190,22 @@ export default define(class ReferenceSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialise((json, generalContext, specificContext) => {
+      unserialises((json, generalContext, specificContext) => {
         const context = specificContext;  ///
 
         instantiate((context) => {
           const { string, lineIndex } = json,
+                specificContext = context,  ///
+                contexts = [
+                  generalContext,
+                  specificContext
+                ],
                 referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
                 node = referenceSubstitutionNode, ///
                 targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
                 replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
 
-          referenceSubstitutionn = new ReferenceSubstitution(context, string, node, lineIndex, generalContext, targetReference, replacementReference);
+          referenceSubstitutionn = new ReferenceSubstitution(contexts, string, node, lineIndex, targetReference, replacementReference);
         }, context);
       }, json, context);
     }
@@ -212,34 +213,40 @@ export default define(class ReferenceSubstitution extends Substitution {
     return referenceSubstitutionn;
   }
 
-  static fromReferenceAndMetavariable(reference, metavariable, context) {
+  static fromReferenceAndMetavariable(reference, metavariable, generalContext, specificContext) {
     let referenceSubstitution;
+
+    const context = specificContext;  ///
 
     ablate((context) => {
       instantiate((context) => {
-        const referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
+        const specificContext = context,  ///
+              referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
               string = referenceSubstitutionString,  ///
               referenceSubstitutionNode = instantiateReferenceSubstitution(string, context);
 
-        referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
+        referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, generalContext, specificContext);
       }, context);
     }, context);
 
     return referenceSubstitution;
   }
 
-  static fromAssumptionAndMetaLevelAssumption(assumption, metaLevelAssumption, context) {
+  static fromAssumptionAndMetaLevelAssumption(assumption, metaLevelAssumption, generalContext, specificContext) {
     let referenceSubstitution;
+
+    const context = specificContext;  ///
 
     ablate((context) => {
       instantiate((context) => {
-        const reference = metaLevelAssumption.getReference(),
+        const specificContext = context,  ///
               metavariable = assumption.getMetavariable(),
+              reference = metaLevelAssumption.getReference(),
               referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
               string = referenceSubstitutionString,  ///
               referenceSubstitutionNode = instantiateReferenceSubstitution(string, context);
 
-        referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
+        referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, generalContext, specificContext);
       }, context);
     }, context);
 

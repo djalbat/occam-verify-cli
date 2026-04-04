@@ -192,6 +192,20 @@ export function metavariableFromJSON(json, context) {
   return metavariable;
 }
 
+export function mnemicContextFromJSON(json, context) {
+  const releaseContext = context; ///
+
+  ({ context } = json);
+
+  json = context; ///
+
+  context = releaseContext; ///
+
+  const mnemicContext = MnemicContext.fromJSON(json, context);
+
+  return mnemicContext;
+}
+
 export function procedureCallFromJSON(json, context) {
   let { procedureCall = null } = json;
 
@@ -662,22 +676,17 @@ export function metavariablesFromJSON(json, context) {
 export function mnemicContextsFromJSON(json, context) {
   const releaseContext = context; ///
 
-  const { contexts = [] } = json;
+  const { contexts } = json;
 
-  ({ context = null } = json);
+  const mnemicContexts = contexts.map((context) => {
+    json = context; ///
 
-  if (context !== null) {
-    contexts.push(context);
-  }
+    context = releaseContext; ///
 
-  const contextsJSON = contexts,  ///
-        mnemicContexts = contextsJSON.map((contextJSON) => {
-          const json = contextJSON, ///
-                context = releaseContext, ///
-                mnemicContext = MnemicContext.fromJSON(json, context);
+    const mnemicContext = MnemicContext.fromJSON(json, context);
 
-          return mnemicContext;  ///
-        });
+    return mnemicContext;  ///
+  });
 
   return mnemicContexts;
 }
@@ -1166,6 +1175,16 @@ export function metavariablesToMetavariablesJSON(metavariables) {
   });
 
   return metavariablesJSON;
+}
+
+export function mnemicContextsToMnemicContextsJSON(mnemicContexts) {
+  const mnemicContextsJSON = mnemicContexts.map((mnemicContext) => {
+    const mnemicContextJSON = mnemicContext.toJSON();
+
+    return mnemicContextJSON;
+  });
+
+  return mnemicContextsJSON;
 }
 
 export function propertyRelationsToPropertyRelationsJSON(propertyRelations) {

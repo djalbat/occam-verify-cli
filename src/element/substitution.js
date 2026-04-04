@@ -1,20 +1,72 @@
 "use strict";
 
-import { Element } from "occam-languages";
-import { serialise } from "../utilities/context";
+import { arrayUtilities } from "necessary";
+
+import { serialises } from "../utilities/context";
 import { primitiveUtilities } from "occam-furtle";
 
-const { primitiveFromNode } =primitiveUtilities;
+const { first, second } = arrayUtilities,
+      { primitiveFromNode } =primitiveUtilities;
 
-export default class Substitution extends Element {
-  constructor(context, string, node, lineIndex, generalContext) {
-    super(context, string, node, lineIndex);
-
-    this.generalContext = generalContext;
+class Element {
+  constructor(contexts, string, node, lineIndex) {
+    this.contexts = contexts;
+    this.string = string;
+    this.node = node;
+    this.lineIndex = lineIndex;
   }
 
-  getGeneralContext() {
-    return this.generalContext;
+  getContexts() {
+    return this.contexts;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
+  }
+
+  getLineIndex() {
+    return this.lineIndex;
+  }
+
+  setContexts(contexts) {
+    this.contexts = contexts;
+  }
+
+  setString(string) {
+    this.string = string;
+  }
+
+  setNode(node) {
+    this.node = node;
+  }
+
+  setLineIndex(lineIndex) {
+    this.lineIndex = lineIndex;
+  }
+
+  async break(context) {
+    this.lineIndex = await context.break(this.node, this.lineIndex);
+  }
+
+  matchNode(node) { return this.node.match(node); }
+}
+
+export default class Substitution extends Element {
+  getName() {
+    const { name } = this.constructor;
+
+    return name;
+  }
+
+  getContext() {
+    const specificContext = this.getSpecificContext(),
+          context = specificContext;  ///
+
+    return context;
   }
 
   getPrimitive(context) {
@@ -32,45 +84,46 @@ export default class Substitution extends Element {
     return substitutionNode;
   }
 
+  getGeneralContext() {
+    const contexts = this.getContexts(),
+      firstContext = first(contexts),
+      generalContext = firstContext;  ///
+
+    return generalContext;
+  }
+
   getSpecificContext() {
-    const context = this.getContext(),
-          specificContext = context;  ///
+    const contexts = this.getContexts(),
+      secondContext = second(contexts),
+      specificContext = secondContext;  ///
 
     return specificContext;
   }
 
-  getName() {
-    const { name } = this.constructor;
+  setContext(context) {
+    const specificContext = context;  ///
 
-    return name;
+    this.setSpecificContext(specificContext);
   }
 
-  getContexts() {
-    const generalContext = this.getGeneralContext(),
-          specificContext = this.getSpecificContext(),
+  setGeneralContext(generalContext) {
+    const specificContext = this.getSpecificContext(),
           contexts = [
             generalContext,
             specificContext
           ];
 
-    return contexts;
+    this.setContexts(contexts);
   }
 
-  setGeneralContext(generalContext) {
-    this.generalContext = generalContext;
-  }
+  setSpecificContext(specificContext) {
+    const generalContext = this.getGeneralContext(),
+          contexts = [
+            generalContext,
+            specificContext
+          ];
 
-  setSpecificContext(specifiContext) {
-    const context = specifiContext; ///
-
-    this.setContext(context);
-  }
-
-  setContexts(...contexts) {
-    const [ generalContext, specificContext ] = contexts;
-
-    this.setGeneralContext(generalContext);
-    this.setSpecificContext(specificContext);
+    this.setContexts(contexts);
   }
 
   isEqualTo(substitution) {
@@ -168,7 +221,7 @@ export default class Substitution extends Element {
   toJSON() {
     const contexts = this.getContexts();
 
-    return serialise((...contexts) => {
+    return serialises((contexts) => {
       const name = this.getName(),
             string = this.getString(),
             lineIndex = this.getLineIndex(),
@@ -180,6 +233,6 @@ export default class Substitution extends Element {
             };
 
       return json;
-    }, ...contexts);
+    }, contexts);
   }
 }

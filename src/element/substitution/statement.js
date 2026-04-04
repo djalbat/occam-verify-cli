@@ -7,12 +7,12 @@ import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, ablate, descend, reconcile, attempt, unserialise, instantiate } from "../../utilities/context";
+import { join, ablate, descend, reconcile, attempt, instantiate, unserialises } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
-  constructor(context, string, node, lineIndex, generalContext, resolved, substitution, targetStatement, replacementStatement) {
-    super(context, string, node, lineIndex, generalContext);
+  constructor(contexts, string, node, lineIndex, resolved, substitution, targetStatement, replacementStatement) {
+    super(contexts, string, node, lineIndex);
 
     this.resolved = resolved;
     this.substitution = substitution;
@@ -83,11 +83,10 @@ export default define(class StatementSubstitution extends Substitution {
     return comparesToParameter;
   }
 
-  validate(substitution, generalContext, specificContext) {
+  validate(substitution, context) {
     let statementSubstitution = null;
 
-    const context = specificContext,  ///
-          statementSubstitutionString = this.getString();  ///
+    const statementSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${statementSubstitutionString}' statement substitution...`);
 
@@ -100,31 +99,28 @@ export default define(class StatementSubstitution extends Substitution {
 
       context.debug(`...the '${statementSubstitutionString}' statement substitution is already valid.`);
     } else {
-      const context = this.getContext();
+      const generalContext = this.getGeneralContext(),
+            specificContext = this.getSpecificContext();
 
-      join((generalContext) => {
-        join((specificContext) => {
-          attempt((generalContext, specificContext) => {
-            const targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
+      attempt((specificContext) => {
+        const targetStatementValidates = this.validateTargetStatement(generalContext, specificContext);
 
-            if (targetStatementValidates) {
-              const replacementStatementValidates = this.validateReplacementStatement(generalContext, specificContext);
+        if (targetStatementValidates) {
+          const replacementStatementValidates = this.validateReplacementStatement(generalContext, specificContext);
 
-              if (replacementStatementValidates) {
-                const substitutionValidates = this.validateSubstitution(substitution, generalContext, specificContext);
+          if (replacementStatementValidates) {
+            const substitutionValidates = this.validateSubstitution(substitution, generalContext, specificContext);
 
-                if (substitutionValidates) {
-                  validates = true;
-                }
-              }
+            if (substitutionValidates) {
+              validates = true;
             }
+          }
+        }
 
-            if (validates) {
-              this.setContexts(generalContext, specificContext);
-            }
-          }, generalContext, specificContext);
-        }, specificContext, context);
-      }, generalContext, context);
+        if (validates) {
+          specificContext.commit(this);
+        }
+      }, specificContext);
     }
 
     if (validates) {
@@ -352,19 +348,24 @@ export default define(class StatementSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialise((json, generalContext, specificContext) => {
+      unserialises((json, generalContext, specificContext) => {
         const context = specificContext;  ///
 
         instantiate((context) => {
           const { string, lineIndex } = json,
+                specificContext = context,  ///
+                contexts = [
+                  generalContext,
+                  specificContext
+                ],
                 statementSubstitutionNode = instantiateStatementSubstitution(string, context),
                 node = statementSubstitutionNode, ///
                 resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
-                substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
+                substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext),
                 targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
                 replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context);
 
-          statementSubstitutionn = new StatementSubstitution(context, string, node, lineIndex, generalContext, resolved, substitution, targetStatement, replacementStatement);
+          statementSubstitutionn = new StatementSubstitution(contexts, string, node, lineIndex, resolved, substitution, targetStatement, replacementStatement);
         }, context);
       }, json, context);
     }
@@ -372,36 +373,42 @@ export default define(class StatementSubstitution extends Substitution {
     return statementSubstitutionn;
   }
 
-  static fromStatementAndMetavariable(statement, metavariable, context) {
+  static fromStatementAndMetavariable(statement, metavariable, generalContext, specificContext) {
+    const context = specificContext;  ///
+
     statement = stripBracketsFromStatement(statement, context); ///
 
     let statementSubstitution;
 
     ablate((context) => {
       instantiate((context) => {
-        const statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable, context),
+        const specificContext = context,  ///
+              statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable),
               string = statementSubstitutionString, ///
               statementSubstitutionNode = instantiateStatementSubstitution(string, context);
 
-        statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
+        statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext);
       }, context);
     }, context);
 
     return statementSubstitution;
   }
 
-  static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) {
+  static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, generalContext, specificContext) {
+    const context = specificContext;  ///
+
     statement = stripBracketsFromStatement(statement, context); ///
 
     let statementSubstitution;
 
     ablate((context) => {
       instantiate((context) => {
-        const statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
+        const specificContext = context,  ///
+              statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
               string = statementSubstitutionString, ///
               statementSubstitutionNode = instantiateStatementSubstitution(string, context);
 
-        statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context);
+        statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext);
       }, context);
     }, context);
 

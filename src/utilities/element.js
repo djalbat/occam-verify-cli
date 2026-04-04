@@ -11,7 +11,6 @@ import { equivalenceStringFromTerms,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
          topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
-import statement from "../element/statement";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -675,28 +674,36 @@ export function propertyRelationFromPropertyRelationNode(propertyRelationNode, c
   return propertyRelation;
 }
 
-export function termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context) {
+export function termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, generalContext, specificContext) {
   const { TermSubstitution } = elements,
         node = termSubstitutionNode,  ///
+        context = specificContext,  ///
+        contexts = [
+          generalContext,
+          specificContext
+        ],
         string = context.nodeAsString(node),
         lineIndex = null,
-        generalContext = generalContextFromTermSubstitutionNode(termSubstitutionNode, context),
         targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
         replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context),
-        termSubstitution = new TermSubstitution(context, string, node, lineIndex, generalContext, targetTerm, replacementTerm);
+        termSubstitution = new TermSubstitution(contexts, string, node, lineIndex, targetTerm, replacementTerm);
 
   return termSubstitution;
 }
 
-export function frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+export function frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, generalContext, specificContext) {
   const { FrameSubstitution } = elements,
         node = frameSubstitutionNode,  ///
+        context = specificContext,  ///
+        contexts = [
+          generalContext,
+          specificContext
+        ],
         string = context.nodeAsString(node),
         lineIndex = null,
-        generalContext = generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context),
         targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
         replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
-        frameSubstitution = new FrameSubstitution(context, string, node, lineIndex, generalContext, targetFrame, replacementFrame);
+        frameSubstitution = new FrameSubstitution(contexts, string, node, lineIndex, targetFrame, replacementFrame);
 
   return frameSubstitution;
 }
@@ -853,31 +860,38 @@ export function simpleTypeDeclarationFromSimpleTypeDeclarationNode(simpleTypeDec
   return simpleTypeDeclaration;
 }
 
-export function referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+export function referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, generalContext, specificContext) {
   const { ReferenceSubstitution } = elements,
         node = referenceSubstitutionNode,  ///
+        context = specificContext,  ///
+        contexts = [
+          generalContext,
+          specificContext
+        ],
         string = context.nodeAsString(node),
         lineIndex = null,
-        generalContext = generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
         targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
         replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
-        referenceSubstitution = new ReferenceSubstitution(context, string, node, lineIndex, generalContext, targetReference, replacementReference);
+        referenceSubstitution = new ReferenceSubstitution(contexts, string, node, lineIndex, targetReference, replacementReference);
 
   return referenceSubstitution;
 }
 
-export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
-
+export function statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext) {
   const { StatementSubstitution } = elements,
         node = statementSubstitutionNode,  ///
+        context = specificContext,  ///
+        contexts = [
+          generalContext,
+          specificContext
+        ],
         string = context.nodeAsString(node),
         lineIndex = null,
-        generalContext = generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context),
         resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
-        substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
+        substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext),
         targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
         replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
-        statementSubstitution = new StatementSubstitution(context, string, node, lineIndex, generalContext, resolved, substitution, targetStatement, replacementStatement);
+        statementSubstitution = new StatementSubstitution(contexts, string, node, lineIndex, resolved, substitution, targetStatement, replacementStatement);
 
   return statementSubstitution;
 }
@@ -1630,18 +1644,6 @@ export function definedAssertionFromStatementNode(statementNode, context) {
   return definedAssertion;
 }
 
-export function termSubstitutionFromStatementNode(statementNode, context) {
-  let termSubstitution = null;
-
-  const termSubstitutionNode = statementNode.getTermSubstitutionNode();
-
-  if (termSubstitutionNode !== null) {
-    termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
-  }
-
-  return termSubstitution;
-}
-
 export function negatedFromContainedAssertionNode(containedAssertionNode, context) {
   const negated = containedAssertionNode.isNegated();
 
@@ -1695,18 +1697,6 @@ export function labelFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, cont
         label = Label.fromLabelString(labelString, context);
 
   return label;
-}
-
-export function frameSubstitutionFromStatementNode(statementNode, context) {
-  let frameSubstitution = null;
-
-  const frameSubstitutionNode = statementNode.getFrameSubstitutionNode();
-
-  if (frameSubstitutionNode !== null) {
-    frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
-  }
-
-  return frameSubstitution;
 }
 
 export function propertyAssertionFromStatementNode(statementNode, context) {
@@ -1863,12 +1853,6 @@ export function topLevelMetaAssertionFromReferenceNode(referenceNode, context) {
   return topLevelMetaAssertion;
 }
 
-export function generalContextFromTermSubstitutionNode(termSubstitutionNode, context) {
-  const generalContext = null;
-
-  return generalContext;
-}
-
 export function deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, context) {
   const deductionNode = metaLemmaMetathoremNode.getDeductionNode(),
         deduction = deductionFromDeductionNode(deductionNode, context);
@@ -1888,12 +1872,6 @@ export function replacementTermFromTermSubstitutionNode(termSubstitutionNode, co
         replacementTerm = termFromTermNode(replacementTermNode, context);
 
   return replacementTerm;
-}
-
-export function generalContextFromFrameSubstitutionNode(frameSubstitutionNode, context) {
-  const generalContext = null;
-
-  return generalContext;
 }
 
 export function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
@@ -1972,9 +1950,9 @@ export function suppositionsFromTopLevelMetaAssertionNode(metaLemmaMetathoremNod
   return suppositions;
 }
 
-export function substitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
-  const frameSubstitution = frameSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
-        termSubstitution = termSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context),
+export function substitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContxt, specificContext) {
+  const frameSubstitution = frameSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContxt, specificContext),
+        termSubstitution = termSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContxt, specificContext),
         substitution = (frameSubstitution || termSubstitution);
 
   return substitution;
@@ -1997,18 +1975,6 @@ export function provisionalFromComplexTypeDeclarationNode(complexTypeDeclaration
   const provisional = complexTypeDeclarationNode.isProvisional();
 
   return provisional;
-}
-
-export function generalContextFromStatementSubstitutionNode(statementSubstitutionNode, context) {
-  const generalContext = null;
-
-  return generalContext;
-}
-
-export function generalContextFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
-  const generalContext = null;
-
-  return generalContext;
 }
 
 export function metavariableFromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
@@ -2034,25 +2000,25 @@ export function targetStatementFromStatementSubstitutionNode(statementSubstituti
   return targetStatement;
 }
 
-export function termSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+export function termSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext) {
   let termSubstitution = null;
 
   const termSubstitutionNode = statementSubstitutionNode.getTermSubstitutionNode();
 
   if (termSubstitutionNode !== null) {
-    termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
+    termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, generalContext, specificContext);
   }
 
   return termSubstitution;
 }
 
-export function frameSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+export function frameSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext) {
   let frameSubstitution = null;
 
   const frameSubstitutionNode = statementSubstitutionNode.getFrameSubstitutionNode();
 
   if (frameSubstitutionNode !== null) {
-    frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+    frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, generalContext, specificContext);
   }
 
   return frameSubstitution;

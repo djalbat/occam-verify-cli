@@ -6,11 +6,11 @@ import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { join, ablate, descend, attempt, unserialise, instantiate } from "../../utilities/context";
+import { ablate, descend, attempt, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
-  constructor(context, string, node, lineIndex, generalContext, targetFrame, replacementFrame) {
-    super(context, string, node, lineIndex, generalContext);
+  constructor(contexts, string, node, lineIndex, targetFrame, replacementFrame) {
+    super(contexts, string, node, lineIndex);
 
     this.targetFrame = targetFrame;
     this.replacementFrame = replacementFrame;
@@ -70,11 +70,10 @@ export default define(class FrameSubstitution extends Substitution {
     return comparesToParameter;
   }
 
-  validate(generalContext, specificContext) {
+  validate(context) {
     let frameSubstitution = null;
 
-    const context = specificContext,  ///
-          frameSubstitutionString = this.getString();  ///
+    const frameSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${frameSubstitutionString}' frame substitution...`);
 
@@ -87,27 +86,24 @@ export default define(class FrameSubstitution extends Substitution {
 
       context.debug(`...the '${frameSubstitutionString}' frame substitution is already valid.`);
     } else {
-      const context = this.getContext();
+      const generalContext = this.getGeneralContext(),
+            specificContext = this.getSpecificContext();
 
-      join((generalContext) => {
-        join((specificContext) => {
-          attempt((generalContext, specificContext) => {
-            const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
+      attempt((specificContext) => {
+        const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
 
-            if (targetFrameValidates) {
-              const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
+        if (targetFrameValidates) {
+          const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
 
-              if (replacementFrameValidates) {
-                validates = true;
-              }
-            }
+          if (replacementFrameValidates) {
+            validates = true;
+          }
+        }
 
-            if (validates) {
-              this.setContexts(generalContext, specificContext);
-            }
-          }, generalContext, specificContext);
-        }, specificContext, context);
-      }, generalContext, context);
+        if (validates) {
+          specificContext.commit(this);
+        }
+      }, specificContext);
     }
 
     if (validates) {
@@ -189,17 +185,22 @@ export default define(class FrameSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialise((json, generalContext, specificContext) => {
+      unserialises((json, generalContext, specificContext) => {
         const context = specificContext;  ///
 
         instantiate((context) => {
           const { string, lineIndex } = json,
+                specificContext = context,  ///
+                contexts = [
+                  generalContext,
+                  specificContext
+                ],
                 frameSubstitutionNode = instantiateFrameSubstitution(string, context),
                 node = frameSubstitutionNode, ///
                 targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
                 replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
 
-          frameSubstitutionn = new FrameSubstitution(context, string, node, lineIndex, generalContext, targetFrame, replacementFrame);
+          frameSubstitutionn = new FrameSubstitution(contexts, string, node, lineIndex, targetFrame, replacementFrame);
         }, context);
       }, json, context);
     }
@@ -207,30 +208,36 @@ export default define(class FrameSubstitution extends Substitution {
     return frameSubstitutionn;
   }
 
-  static fromStatement(statement, context) {
+  static fromStatement(statement, generalContext, specificContext) {
     let frameSubstitution = null;
 
-    const frameSubstitutionNode = statement.getFrameSubstitutionNode();
+    const context = specificContext,  ///
+          frameSubstitutionNode = statement.getFrameSubstitutionNode();
 
     if (frameSubstitutionNode !== null) {
       ablate((context) => {
-        frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+        const specificContext = context;  ///
+
+        frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, generalContext, specificContext);
       }, context);
     }
 
     return frameSubstitution;
   }
 
-  static fromFrameAndMetavariable(frame, metavariable, context) {
+  static fromFrameAndMetavariable(frame, metavariable, generalContext, specificContext) {
     let frameSubstitution
+
+    const context = specificContext;  ///
 
     ablate((context) => {
       instantiate((context) => {
-        const frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
+        const specificContext = context,  ///
+              frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
               string = frameSubstitutionString,  ///
               frameSubstitutionNode = instantiateFrameSubstitution(string, context);
 
-        frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, context);
+        frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, generalContext, specificContext);
       }, context);
     }, context);
 

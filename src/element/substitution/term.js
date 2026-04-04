@@ -7,11 +7,11 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { join, ablate, descend, attempt, unserialise, instantiate } from "../../utilities/context";
+import { ablate, descend, attempt, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
-  constructor(context, string, node, lineIndex, generalContext, targetTerm, replacementTerm) {
-    super(context, string, node, lineIndex, generalContext);
+  constructor(context, string, node, lineIndex, targetTerm, replacementTerm) {
+    super(context, string, node, lineIndex);
 
     this.targetTerm = targetTerm;
     this.replacementTerm = replacementTerm;
@@ -73,11 +73,10 @@ export default define(class TermSubstitution extends Substitution {
     return comparesToParameter;
   }
 
-  validate(generalContext, specificContext) {
+  validate(context) {
     let termSubstitution = null;
 
-    const context = specificContext,  ///
-          termSubstitutionString = this.getString();  ///
+    const termSubstitutionString = this.getString();  ///
 
     context.trace(`Validating the '${termSubstitutionString}' term substitution...`);
 
@@ -90,27 +89,24 @@ export default define(class TermSubstitution extends Substitution {
 
       context.debug(`...the '${termSubstitutionString}' term substitution is already valid.`);
     } else {
-      const context = this.getContext();
+      const generalContext = this.getGeneralContext(),
+            specificContext = this.getSpecificContext();
 
-      join((generalContext) => {
-        join((specificContext) => {
-          attempt((generalContext, specificContext) => {
-            const targetTermValidates = this.validateTargetTerm(generalContext, specificContext);
+      attempt((specificContext) => {
+        const targetTermValidates = this.validateTargetTerm(generalContext, specificContext);
 
-            if (targetTermValidates) {
-              const replacementTermValidates = this.validateReplacementTerm(generalContext, specificContext);
+        if (targetTermValidates) {
+          const replacementTermValidates = this.validateReplacementTerm(generalContext, specificContext);
 
-              if (replacementTermValidates) {
-                validates = true;
-              }
-            }
+          if (replacementTermValidates) {
+            validates = true;
+          }
+        }
 
-            if (validates) {
-              this.setContexts(generalContext, specificContext);
-            }
-          }, generalContext, specificContext);
-        }, specificContext, context);
-      }, generalContext, context);
+        if (validates) {
+          specificContext.commit(this);
+        }
+      }, specificContext);
     }
 
     if (validates) {
@@ -200,17 +196,22 @@ export default define(class TermSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialise((json, generalContext, specificContext) => {
+      unserialises((json, generalContext, specificContext) => {
         const context = specificContext;  ///
 
         instantiate((context) => {
           const { string, lineIndex } = json,
+                specificContext = context,  ///
+                contexts = [
+                  generalContext,
+                  specificContext
+                ],
                 termSubstitutionNode = instantiateTermSubstitution(string, context),
                 node = termSubstitutionNode,  ///
                 targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
                 replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
 
-          termSubstitutionn = new TermSubstitution(context, string, node, lineIndex, generalContext, targetTerm, replacementTerm);
+          termSubstitutionn = new TermSubstitution(contexts, string, node, lineIndex, targetTerm, replacementTerm);
         }, context);
       }, json, context);
     }
@@ -218,32 +219,38 @@ export default define(class TermSubstitution extends Substitution {
     return termSubstitutionn;
   }
 
-  static fromStatement(statement, context) {
+  static fromStatement(statement, generalContext, specificContext) {
     let termSubstitution = null;
 
-    const termSubstitutionNode = statement.getTermSubstitutionNode();
+    const context = specificContext,  ///
+          termSubstitutionNode = statement.getTermSubstitutionNode();
 
     if (termSubstitutionNode !== null) {
       ablate((context) => {
-        termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
+        const specificContext = context;  ///
+
+        termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, generalContext, specificContext);
       }, context);
     }
 
     return termSubstitution;
   }
 
-  static fromTermAndVariable(term, variable, context) {
+  static fromTermAndVariable(term, variable, generalContext, specificContext) {
+    const context = specificContext;  ///
+
     term = stripBracketsFromTerm(term, context); ///
 
     let termSubstitution;
 
     ablate((context) => {
       instantiate((context) => {
-        const termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
+        const specificContext = context, ///
+              termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
               string = termSubstitutionString,  ///
               termSubstitutionNode = instantiateTermSubstitution(string, context);
 
-        termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, context);
+        termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, generalContext, specificContext);
       }, context);
     }, context);
 
