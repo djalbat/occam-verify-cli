@@ -152,7 +152,7 @@ export default define(class Step extends ProofAssertion {
         }
 
         if (validates) {
-          context.commit(this);
+          this.commit(context);
         }
       }, context);
     }, context)

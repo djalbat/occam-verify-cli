@@ -118,7 +118,9 @@ export default define(class StatementSubstitution extends Substitution {
         }
 
         if (validates) {
-          specificContext.commit(this);
+          context = specificContext;  ///
+
+          this.commit(context);
         }
       }, specificContext);
     }

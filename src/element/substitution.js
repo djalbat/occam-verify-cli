@@ -62,13 +62,6 @@ export default class Substitution extends Element {
     return name;
   }
 
-  getContext() {
-    const specificContext = this.getSpecificContext(),
-          context = specificContext;  ///
-
-    return context;
-  }
-
   getPrimitive(context) {
     const replacementNode = this.getReplacementNode(),
           node = replacementNode, ///
@@ -86,24 +79,18 @@ export default class Substitution extends Element {
 
   getGeneralContext() {
     const contexts = this.getContexts(),
-      firstContext = first(contexts),
-      generalContext = firstContext;  ///
+          firstContext = first(contexts),
+          generalContext = firstContext;  ///
 
     return generalContext;
   }
 
   getSpecificContext() {
     const contexts = this.getContexts(),
-      secondContext = second(contexts),
-      specificContext = secondContext;  ///
+          secondContext = second(contexts),
+          specificContext = secondContext;  ///
 
     return specificContext;
-  }
-
-  setContext(context) {
-    const specificContext = context;  ///
-
-    this.setSpecificContext(specificContext);
   }
 
   setGeneralContext(generalContext) {
@@ -218,10 +205,15 @@ export default class Substitution extends Element {
     return resolved;
   }
 
+  commit(generalContext, specificContext) {
+    this.setGeneralContext(generalContext);
+    this.setSpecificContext(specificContext);
+  }
+
   toJSON() {
     const contexts = this.getContexts();
 
-    return serialises((contexts) => {
+    return serialises((...contexts) => {
       const name = this.getName(),
             string = this.getString(),
             lineIndex = this.getLineIndex(),
@@ -233,6 +225,6 @@ export default class Substitution extends Element {
             };
 
       return json;
-    }, contexts);
+    }, ...contexts);
   }
 }

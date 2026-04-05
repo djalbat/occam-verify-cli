@@ -118,7 +118,9 @@ export default define(class ReferenceSubstitution extends Substitution {
         }
 
         if (validates) {
-          specificContext.commit(this);
+          context = specificContext;  ///
+
+          this.commit(context);
         }
       }, specificContext);
     }

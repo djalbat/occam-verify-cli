@@ -41,7 +41,7 @@ export function ablate(innerFunction, context) {
   while (!contextNominalFileContext) {
     context = context.getContext();
 
-    contextNominalFileContext = (context instanceof NominalFileContext)
+    contextNominalFileContext = (context instanceof NominalFileContext);
   }
 
   return innerFunction(context);
@@ -125,16 +125,6 @@ export function serialise(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function serialises(innerFunction, contexts) {
-  const mnemicContexts = contexts, ///
-        mnemicContextsJSON = mnemicContextsToMnemicContextsJSON(mnemicContexts),
-        contextsJSON = mnemicContextsJSON; ///
-
-  contexts = contextsJSON;  ///
-
-  return innerFunction(contexts);
-}
-
 export function instantiate(innerFunction, context) {
   const literalContext = LiteralContext.fromNothing(context);
 
@@ -151,9 +141,35 @@ export function unserialise(innerFunction, json, context) {
   return innerFunction(json, context);
 }
 
+export function ablates(innerFunction, ...contexts) {
+  contexts = contexts.map((context) => {  ///
+    let contextNominalFileContext = (context instanceof NominalFileContext);
+
+    while (!contextNominalFileContext) {
+      context = context.getContext();
+
+      contextNominalFileContext = (context instanceof NominalFileContext);
+    }
+
+    return context;
+  });
+
+  return innerFunction(...contexts);
+}
+
+export function serialises(innerFunction, ...contexts) {
+  const mnemicContexts = contexts, ///
+        mnemicContextsJSON = mnemicContextsToMnemicContextsJSON(mnemicContexts),
+        contextsJSON = mnemicContextsJSON; ///
+
+  contexts = contextsJSON;  ///
+
+  return innerFunction(...contexts);
+}
+
 export function unserialises(innerFunction, json, context) {
   const mnemicContexts = mnemicContextsFromJSON(json, context),
         contexts = mnemicContexts; ///
 
-  return innerFunction(json, ...contexts);
+  return innerFunction(json, contexts);
 }

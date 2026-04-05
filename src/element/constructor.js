@@ -68,7 +68,7 @@ export default define(class Constructor extends Element {
       }
 
       if (validates) {
-        context.commit(this);
+        this.commit(context);
       }
     }, context);
 

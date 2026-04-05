@@ -42,7 +42,7 @@ export default define(class Combinator extends Element {
       }
 
       if (validates) {
-        context.commit(this);
+        this.commit(context);
       }
     }, context)
 

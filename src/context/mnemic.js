@@ -439,70 +439,6 @@ export default class MnemicContext extends Context {
     });
   }
 
-  addFrames(frames) {
-    frames.forEach((frame) => {
-      this.addFrame(frame);
-    });
-  }
-
-  addEqualities(equalities) {
-    equalities.forEach((equality) => {
-      this.addEquality(equality);
-    });
-  }
-
-  addJudgements(judgements) {
-    judgements.forEach((judgement) => {
-      this.addJudgement(judgement);
-    });
-  }
-
-  addAssertions(assertions) {
-    assertions.forEach((assertion) => {
-      this.addAssertion(assertion);
-    });
-  }
-
-  addStatements(statements) {
-    statements.forEach((statement) => {
-      this.addStatement(statement);
-    });
-  }
-
-  addReferences(references) {
-    references.forEach((reference) => {
-      this.addReference(reference);
-    });
-  }
-
-  addAssumptions(assumptions) {
-    assumptions.forEach((assumption) => {
-      this.addAssumption(assumption);
-    });
-  }
-
-  addMetavariables(metavariables) {
-    metavariables.forEach((metavariable) => {
-      this.addMetavariable(metavariable);
-    });
-  }
-
-  addSubstitutions(substitutions) {
-    ///
-  }
-
-  addDerivedSubstitutions(derivedSubstitutions) {
-    ///
-  }
-
-  findVariableByVariableNode(variableNode) {
-    const variableIdentifier = variableNode.getVariableIdentifier(),
-          declaredVariable = this.findDeclaredVariableByVariableIdentifier(variableIdentifier),
-          variable = declaredVariable;  ///
-
-    return variable;
-  }
-
   findTermByTermNode(termNode) {
     const terms = this.getTerms(),
           term = terms.find((term) => {
@@ -644,6 +580,14 @@ export default class MnemicContext extends Context {
           }) || null;
 
     return substitution;
+  }
+
+  findVariableByVariableNode(variableNode) {
+    const variableIdentifier = variableNode.getVariableIdentifier(),
+          declaredVariable = this.findDeclaredVariableByVariableIdentifier(variableIdentifier),
+          variable = declaredVariable;  ///
+
+    return variable;
   }
 
   isTermPresentByTermNode(termNode) {

@@ -178,7 +178,7 @@ export default define(class Reference extends Element {
         }
 
         if (validates) {
-          context.commit(this);
+          this.commit(context);
         }
       }, context);
     }

@@ -79,7 +79,7 @@ export default define(class Supposition extends ProofAssertion {
         }
 
         if (validates) {
-          context.commit(this);
+          this.commit(context);
         }
       }, context);
     }, context);

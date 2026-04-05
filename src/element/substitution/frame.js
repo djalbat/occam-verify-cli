@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { ablate, descend, attempt, instantiate, unserialises } from "../../utilities/context";
+import { ablates, descend, attempt, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(contexts, string, node, lineIndex, targetFrame, replacementFrame) {
@@ -89,21 +89,23 @@ export default define(class FrameSubstitution extends Substitution {
       const generalContext = this.getGeneralContext(),
             specificContext = this.getSpecificContext();
 
-      attempt((specificContext) => {
-        const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
+      attempt((generalContext) => {
+        attempt((specificContext) => {
+          const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
 
-        if (targetFrameValidates) {
-          const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
+          if (targetFrameValidates) {
+            const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
 
-          if (replacementFrameValidates) {
-            validates = true;
+            if (replacementFrameValidates) {
+              validates = true;
+            }
           }
-        }
 
-        if (validates) {
-          specificContext.commit(this);
-        }
-      }, specificContext);
+          if (validates) {
+            this.commit(generalContext, specificContext);
+          }
+        }, specificContext);
+      }, generalContext);
     }
 
     if (validates) {
@@ -211,15 +213,12 @@ export default define(class FrameSubstitution extends Substitution {
   static fromStatement(statement, generalContext, specificContext) {
     let frameSubstitution = null;
 
-    const context = specificContext,  ///
-          frameSubstitutionNode = statement.getFrameSubstitutionNode();
+    const frameSubstitutionNode = statement.getFrameSubstitutionNode();
 
     if (frameSubstitutionNode !== null) {
-      ablate((context) => {
-        const specificContext = context;  ///
-
+      ablates((generalContext, specificContext) => {
         frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, generalContext, specificContext);
-      }, context);
+      }, generalContext, specificContext);
     }
 
     return frameSubstitution;
@@ -228,9 +227,9 @@ export default define(class FrameSubstitution extends Substitution {
   static fromFrameAndMetavariable(frame, metavariable, generalContext, specificContext) {
     let frameSubstitution
 
-    const context = specificContext;  ///
+    ablates((generalContext, specificContext) => {
+      const context = specificContext;  ///
 
-    ablate((context) => {
       instantiate((context) => {
         const specificContext = context,  ///
               frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
@@ -239,7 +238,7 @@ export default define(class FrameSubstitution extends Substitution {
 
         frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, generalContext, specificContext);
       }, context);
-    }, context);
+    }, generalContext, specificContext);
 
     return frameSubstitution;
   }

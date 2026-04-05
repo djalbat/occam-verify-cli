@@ -308,6 +308,10 @@ export default class SynopticContext extends Context {
   }
 
   static fromContexts(...contexts) {
+    contexts = [  ///
+      ...contexts
+    ];
+
     const context = contexts.pop(),  ///
           terms = termsFromContexts(contexts),
           frames = framesFromContexts(contexts),

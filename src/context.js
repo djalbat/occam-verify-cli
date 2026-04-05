@@ -546,60 +546,6 @@ export default class Context extends ContextBase {
     context.addTerms(terms);
   }
 
-  addFrames(frames) {
-    const context = this.getContext();
-
-    context.addFrames(frames);
-  }
-
-  addEqualities(equalities) {
-    const context = this.getContext();
-
-    context.addEqualities(equalities);
-  }
-
-  addJudgements(judgements) {
-    const context = this.getContext();
-
-    context.addJudgements(judgements);
-  }
-
-  addAssertions(assertions) {
-    const context = this.getContext();
-
-    context.addAssertions(assertions);
-  }
-
-  addStatements(statements) {
-    const context = this.getContext();
-
-    context.addStatements(statements);
-  }
-
-  addReferences(references) {
-    const context = this.getContext();
-
-    context.addReferences(references);
-  }
-
-  addAssumptions(assumptions) {
-    const context = this.getContext();
-
-    context.addAssumptions(assumptions);
-  }
-
-  addMetavariables(metavariables) {
-    const context = this.getContext();
-
-    context.addMetavariables(metavariables);
-  }
-
-  addSubstitutions(substitutions) {
-    const context = this.getContext();
-
-    context.addSubstitutions(substitutions);
-  }
-
   addDerivedSubstitutions(derivedSubstitutions) {
     const context = this.getContext();
 

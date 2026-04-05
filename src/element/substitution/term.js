@@ -104,7 +104,9 @@ export default define(class TermSubstitution extends Substitution {
         }
 
         if (validates) {
-          specificContext.commit(this);
+          context = specificContext;  ///
+
+          this.commit(context);
         }
       }, specificContext);
     }

@@ -92,7 +92,7 @@ export default define(class Label extends Element {
       }
 
       if (validates) {
-        context.commit(this);
+        this.commit(context);
       }
     }, context);
 

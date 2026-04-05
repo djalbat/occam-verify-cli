@@ -66,7 +66,7 @@ export default define(class Deduction extends Element {
         }
 
         if (validates) {
-          context.commit(this);
+          this.commit(context);
         }
       }, context);
     }, context);

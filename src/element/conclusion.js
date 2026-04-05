@@ -66,7 +66,7 @@ export default define(class Conclusion extends Element {
         }
 
         if (validates) {
-          context.commit(this);
+          this.commit(context);
         }
       }, context);
     }, context);
