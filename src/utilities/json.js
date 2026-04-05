@@ -1008,11 +1008,12 @@ export function hypothesesToHypothesesJSON(hypotheses) {
 }
 
 export function superTypesToSuperTypesJSON(superTypes) {
-  const superTypesJSON = superTypes.map((superType) => {
-    const superTypeJSON = superType.toJSON();
+  const abridged = true,
+        superTypesJSON = superTypes.map((superType) => {
+          const superTypeJSON = superType.toJSON(abridged);
 
-    return superTypeJSON;
-  });
+          return superTypeJSON;
+        });
 
   return superTypesJSON;
 }

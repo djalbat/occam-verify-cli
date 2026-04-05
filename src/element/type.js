@@ -295,22 +295,28 @@ export default define(class Type extends Element {
     return comparesToNominalTypeName;
   }
 
-  toJSON() {
-    const superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
-          propertiesJSON = propertiesToPropertiesJSON(this.properties),
-          provisinoalJSOM = provisionalToProvisionalJSON(this.provisional),
-          superTypes = superTypesJSON,  ///
-          properties = propertiesJSON,  ///
-          provisional = provisinoalJSOM,  ///
-          string = this.getString(),
+  toJSON(abridged = false) {
+    const string = this.getString(),
           lineIndex = this.getLineIndex(),
           json = {
             string,
-            lineIndex,
-            superTypes,
-            properties,
-            provisional
+            lineIndex
           };
+
+    if (!abridged) {
+      const superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
+            propertiesJSON = propertiesToPropertiesJSON(this.properties),
+            provisinoalJSOM = provisionalToProvisionalJSON(this.provisional),
+            superTypes = superTypesJSON,  ///
+            properties = propertiesJSON,  ///
+            provisional = provisinoalJSOM;  ///
+
+      Object.assign(json, {
+        superTypes,
+        properties,
+        provisional
+      });
+    }
 
     return json;
   }
