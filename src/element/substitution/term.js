@@ -7,7 +7,7 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { ablate, descend, attempt, instantiate, unserialises } from "../../utilities/context";
+import { ablates, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, lineIndex, targetTerm, replacementTerm) {
@@ -92,7 +92,7 @@ export default define(class TermSubstitution extends Substitution {
       const generalContext = this.getGeneralContext(),
             specificContext = this.getSpecificContext();
 
-      attempt((specificContext) => {
+      attempts((generalContext, specificContext) => {
         const targetTermValidates = this.validateTargetTerm(generalContext, specificContext);
 
         if (targetTermValidates) {
@@ -104,11 +104,9 @@ export default define(class TermSubstitution extends Substitution {
         }
 
         if (validates) {
-          context = specificContext;  ///
-
-          this.commit(context);
+          this.commit(generalContext, specificContext);
         }
-      }, specificContext);
+      }, generalContext, specificContext);
     }
 
     if (validates) {
@@ -224,15 +222,12 @@ export default define(class TermSubstitution extends Substitution {
   static fromStatement(statement, generalContext, specificContext) {
     let termSubstitution = null;
 
-    const context = specificContext,  ///
-          termSubstitutionNode = statement.getTermSubstitutionNode();
+    const termSubstitutionNode = statement.getTermSubstitutionNode();
 
     if (termSubstitutionNode !== null) {
-      ablate((context) => {
-        const specificContext = context;  ///
-
+      ablates((generalContext, specificContext) => {
         termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, generalContext, specificContext);
-      }, context);
+      }, generalContext, specificContext);
     }
 
     return termSubstitution;
@@ -245,7 +240,9 @@ export default define(class TermSubstitution extends Substitution {
 
     let termSubstitution;
 
-    ablate((context) => {
+    ablates((generalContext, specificContext) => {
+      const context = specificContext;  ///
+
       instantiate((context) => {
         const specificContext = context, ///
               termSubstitutionString = termSubstitutionStringFromTermAndVariable(term, variable),
@@ -254,7 +251,7 @@ export default define(class TermSubstitution extends Substitution {
 
         termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, generalContext, specificContext);
       }, context);
-    }, context);
+    }, generalContext, specificContext);
 
     return termSubstitution;
   }

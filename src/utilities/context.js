@@ -157,6 +157,18 @@ export function ablates(innerFunction, ...contexts) {
   return innerFunction(...contexts);
 }
 
+export function attempts(innerFunction, ...contexts) {
+  contexts = contexts.map((context) => {
+    const mnemicContext = MenmicContext.fromNothing(context);
+
+    context = mnemicContext;  ///
+
+    return context;
+  });
+
+  return innerFunction(...contexts);
+}
+
 export function serialises(innerFunction, ...contexts) {
   const mnemicContexts = contexts, ///
         mnemicContextsJSON = mnemicContextsToMnemicContextsJSON(mnemicContexts),
@@ -171,5 +183,5 @@ export function unserialises(innerFunction, json, context) {
   const mnemicContexts = mnemicContextsFromJSON(json, context),
         contexts = mnemicContexts; ///
 
-  return innerFunction(json, contexts);
+  return innerFunction(json, ...contexts);
 }

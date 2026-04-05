@@ -17,20 +17,6 @@ export default class LiteralContext extends Context {
     return this.tokens;
   }
 
-  getLexer() {
-    const context = this.getContext(),
-          lexer = context.getLexer();
-
-    return lexer;
-  }
-
-  getParser() {
-    const context = this.getContext(),
-          parser = context.getParser();
-
-    return parser;
-  }
-
   setTokens(tokens) {
     this.tokens = tokens;
   }

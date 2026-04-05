@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { ablates, descend, attempt, instantiate, unserialises } from "../../utilities/context";
+import { ablates, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(contexts, string, node, lineIndex, targetFrame, replacementFrame) {
@@ -89,23 +89,21 @@ export default define(class FrameSubstitution extends Substitution {
       const generalContext = this.getGeneralContext(),
             specificContext = this.getSpecificContext();
 
-      attempt((generalContext) => {
-        attempt((specificContext) => {
-          const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
+      attempts((generalContext, specificContext) => {
+        const targetFrameValidates = this.validateTargetFrame(generalContext, specificContext);
 
-          if (targetFrameValidates) {
-            const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
+        if (targetFrameValidates) {
+          const replacementFrameValidates = this.validateReplacementFrame(generalContext, specificContext);
 
-            if (replacementFrameValidates) {
-              validates = true;
-            }
+          if (replacementFrameValidates) {
+            validates = true;
           }
+        }
 
-          if (validates) {
-            this.commit(generalContext, specificContext);
-          }
-        }, specificContext);
-      }, generalContext);
+        if (validates) {
+          this.commit(generalContext, specificContext);
+        }
+      }, generalContext, specificContext);
     }
 
     if (validates) {

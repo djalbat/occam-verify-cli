@@ -206,8 +206,12 @@ export default class Substitution extends Element {
   }
 
   commit(generalContext, specificContext) {
-    this.setGeneralContext(generalContext);
-    this.setSpecificContext(specificContext);
+    const contexts = [
+      generalContext,
+      specificContext
+    ];
+
+    this.setContexts(contexts);
   }
 
   toJSON() {
