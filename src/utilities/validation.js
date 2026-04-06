@@ -114,7 +114,7 @@ function validateStatementAsMetavariable(statement, context) {
       if (substitution === null) {
         statementValidatesAsMetavariable = true;
       } else {
-        substitution = substitution.validate(generalContext, specificContext);  ///
+        substitution = substitution.validate(context);  ///
 
         if (substitution !== null) {
           statementValidatesAsMetavariable = true;

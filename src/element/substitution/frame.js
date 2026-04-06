@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { ablates, attempts, descend, instantiate, unserialises } from "../../utilities/context";
+import { ablate, ablates, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(contexts, string, node, lineIndex, targetFrame, replacementFrame) {
@@ -225,9 +225,9 @@ export default define(class FrameSubstitution extends Substitution {
   static fromFrameAndMetavariable(frame, metavariable, generalContext, specificContext) {
     let frameSubstitution
 
-    ablates((generalContext, specificContext) => {
-      const context = specificContext;  ///
+    const context = specificContext;  ///
 
+    ablate((context) => {
       instantiate((context) => {
         const specificContext = context,  ///
               frameSubstitutionString = frameSubstitutionStringFromFrameAndMetavariable(frame, metavariable),
@@ -236,7 +236,7 @@ export default define(class FrameSubstitution extends Substitution {
 
         frameSubstitution = frameSubstitutionFromFrameSubstitutionNode(frameSubstitutionNode, generalContext, specificContext);
       }, context);
-    }, generalContext, specificContext);
+    }, context);
 
     return frameSubstitution;
   }

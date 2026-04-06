@@ -5,7 +5,7 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
-import { ablates, attempts, descend, instantiate, unserialises } from "../../utilities/context";
+import { ablate, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
 
 export default define(class ReferenceSubstitution extends Substitution {
@@ -216,9 +216,9 @@ export default define(class ReferenceSubstitution extends Substitution {
   static fromReferenceAndMetavariable(reference, metavariable, generalContext, specificContext) {
     let referenceSubstitution;
 
-    ablates((generalContext, specificContext) => {
-      const context = specificContext;  ///
+    const context = specificContext;  ///
 
+    ablate((context) => {
       instantiate((context) => {
         const specificContext = context,  ///
               referenceSubstitutionString = referenceSubstitutionStringFromReferenceAndMetavariable(reference, metavariable),
@@ -227,7 +227,7 @@ export default define(class ReferenceSubstitution extends Substitution {
 
         referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, generalContext, specificContext);
       }, context);
-    }, generalContext, specificContext);
+    }, context);
 
     return referenceSubstitution;
   }
@@ -235,9 +235,9 @@ export default define(class ReferenceSubstitution extends Substitution {
   static fromAssumptionAndMetaLevelAssumption(assumption, metaLevelAssumption, generalContext, specificContext) {
     let referenceSubstitution;
 
-    ablates((generalContext, specificContext) => {
-      const context = specificContext;  ///
+    const context = specificContext;  ///
 
+    ablate((context) => {
       instantiate((context) => {
         const specificContext = context,  ///
               metavariable = assumption.getMetavariable(),
@@ -248,7 +248,7 @@ export default define(class ReferenceSubstitution extends Substitution {
 
         referenceSubstitution = referenceSubstitutionFromReferenceSubstitutionNode(referenceSubstitutionNode, generalContext, specificContext);
       }, context);
-    }, generalContext, specificContext);
+    }, context);
 
     return referenceSubstitution;
   }

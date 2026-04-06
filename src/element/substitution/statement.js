@@ -7,7 +7,7 @@ import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, ablates, attempts, descend, reconcile, instantiate, unserialises } from "../../utilities/context";
+import { join, ablate, attempts, descend, reconcile, instantiate, unserialises } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -276,7 +276,7 @@ export default define(class StatementSubstitution extends Substitution {
     }, specificContext);
 
     if (substitution !== null) {
-      substitution = substitution.validate(generalContext, specificContext);  ///
+      substitution = substitution.validate(context);  ///
 
       simpleSubstitutionUnifies = true;
     }
@@ -380,9 +380,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     let statementSubstitution;
 
-    ablates((generalContext, specificContext) => {
-      const context = specificContext;  ///
-
+    ablate((context) => {
       instantiate((context) => {
         const specificContext = context,  ///
               statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable),
@@ -391,7 +389,7 @@ export default define(class StatementSubstitution extends Substitution {
 
         statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext);
       }, context);
-    }, generalContext, specificContext);
+    }, context);
 
     return statementSubstitution;
   }
@@ -403,9 +401,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     let statementSubstitution;
 
-    ablates((generalContext, specificContext) => {
-      const context = specificContext;  ///
-
+    ablate((context) => {
       instantiate((context) => {
         const specificContext = context,  ///
               statementSubstitutionString = statementSubstitutionStringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution),
@@ -414,7 +410,7 @@ export default define(class StatementSubstitution extends Substitution {
 
         statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext);
       }, context);
-    }, generalContext, specificContext);
+    }, context);
 
     return statementSubstitution;
   }

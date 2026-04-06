@@ -390,8 +390,8 @@ export default define(class Metavariable extends Element {
     } else {
       const metavariableNode = metavariable.getNode(),
             derivedSubstitution = (substitution !== null) ?
-                                   context.findDerivedSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
-                                     context.findDerivedSubstitutionByMetavariableNode(metavariableNode);
+                                    context.findDerivedSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
+                                      context.findDerivedSubstitutionByMetavariableNode(metavariableNode);
 
       if (derivedSubstitution !== null) {
         const derivedSubstitutionComparesToStatement = derivedSubstitution.compareStatement(statement, context);
