@@ -389,8 +389,6 @@ export default define(class StatementSubstitution extends Substitution {
               string = statementSubstitutionString, ///
               statementSubstitutionNode = instantiateStatementSubstitution(string, context);
 
-        generalContext.gainTokens(specificContext);
-
         statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext);
       }, context);
     }, generalContext, specificContext);
