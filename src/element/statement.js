@@ -6,7 +6,7 @@ import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
-import { join, reconcile, instantiate } from "../utilities/context";
+import { reconcile, instantiate } from "../utilities/context";
 
 export default define(class Statement extends Element {
   getStatementNode() {
@@ -257,17 +257,15 @@ export default define(class Statement extends Element {
     const generalContext = context, ///
           specificContext = deductionContext;  ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const deductionStatementUnifies = this.unifyStatement(deductionStatement, generalContext, specificContext);
+    reconcile((specificContext) => {
+      const deductionStatementUnifies = this.unifyStatement(deductionStatement, generalContext, specificContext);
 
-        if (deductionStatementUnifies) {
-          specificContext.commit(context);
+      if (deductionStatementUnifies) {
+        specificContext.commit(context);
 
-          deductionUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
+        deductionUnifies = true;
+      }
+    }, specificContext);
 
     if (deductionUnifies) {
       context.debug(`...unified the '${deductionString}' deduction with the '${statementString}' statement.`);

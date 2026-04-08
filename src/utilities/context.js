@@ -36,12 +36,16 @@ export function ground(innerFunction) {
 }
 
 export function ablate(innerFunction, context) {
-  let contextNominalFileContext = (context instanceof NominalFileContext);
+  const released = context.isReleased();
 
-  while (!contextNominalFileContext) {
-    context = context.getContext();
+  if (!released) {
+    let contextNominalFileContext = (context instanceof NominalFileContext);
 
-    contextNominalFileContext = (context instanceof NominalFileContext);
+    while (!contextNominalFileContext) {
+      context = context.getContext();
+
+      contextNominalFileContext = (context instanceof NominalFileContext);
+    }
   }
 
   return innerFunction(context);
@@ -80,9 +84,13 @@ export function descend(innerFunction, context) {
 }
 
 export function attempt(innerFunction, context) {
-  const mnemicContext = MenmicContext.fromNothing(context);
+  const released = context.isReleased();
 
-  context = mnemicContext;  ///
+  if (!released) {
+    const mnemicContext = MenmicContext.fromNothing(context);
+
+    context = mnemicContext;  ///
+  }
 
   return innerFunction(context);
 }
@@ -141,11 +149,35 @@ export function unserialise(innerFunction, json, context) {
   return innerFunction(json, context);
 }
 
+export function ablates(innerFunction, ...contexts) {
+  contexts = contexts.map((context) => {  ///
+    const released = context.isReleased();
+
+    if (!released) {
+      let contextNominalFileContext = (context instanceof NominalFileContext);
+
+      while (!contextNominalFileContext) {
+        context = context.getContext();
+
+        contextNominalFileContext = (context instanceof NominalFileContext);
+      }
+    }
+
+    return context;
+  });
+
+  return innerFunction(...contexts);
+}
+
 export function attempts(innerFunction, ...contexts) {
   contexts = contexts.map((context) => {  ///
-    const mnemicContext = MenmicContext.fromNothing(context);
+    const released = context.isReleased();
 
-    context = mnemicContext;  ///
+    if (!released) {
+      const mnemicContext = MenmicContext.fromNothing(context);
+
+      context = mnemicContext;  ///
+    }
 
     return context;
   });

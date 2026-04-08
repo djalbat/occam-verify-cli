@@ -76,26 +76,6 @@ export default define(class Reference extends Element {
     return comparesToParamter;
   }
 
-  compareMetavariable(metavariable) {
-    let comparesToMetavariable = false;
-
-    let metavariableName;
-
-    metavariableName = this.metavariable.getName();
-
-    const metavariableNameA = metavariableName ///
-
-    metavariableName = metavariable.getName();
-
-    const metavariableNameB = metavariableName; ///
-
-    if (metavariableNameA === metavariableNameB) {
-      comparesToMetavariable = true;
-    }
-
-    return comparesToMetavariable;
-  }
-
   compareTopLevelMetaAssertion(topLevelMetaAssertion) {
     let topLevelMetaAssertionCompares = false;
 

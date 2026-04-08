@@ -514,18 +514,6 @@ export default define(class Metavariable extends Element {
 
       if (metavariableNodeMatches) {
         frameMetavariableUnifies = true;
-      } else {
-        const frameSingular = frame.isSingular();
-
-        if (frameSingular) {
-          const frameMetavariableName = frame.getMetavariableName(),
-                frameDeclaredMetavariable = context.findDeclaredMetavariableByMetavariableName(frameMetavariableName),
-                frameMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(frameDeclaredMetavariable, generalContext, specificContext);
-
-          if (frameMetavariableUnifiesIntrinsically) {
-            frameMetavariableUnifies = true;
-          }
-        }
       }
     }
 
@@ -549,18 +537,11 @@ export default define(class Metavariable extends Element {
           specificContextFilePath = specificContext.getFilePath();
 
     if (generalContextFilePath === specificContextFilePath) {
-      const metavariable = this,  ///
-            referenceMetavariableComparesToMetvariable = reference.compareMetavariable(metavariable);
+      const metavariableNode = this.getMetavariableNode(),
+            metavariableNodeMatches = reference.matchMetavariableNode(metavariableNode);
 
-      if (referenceMetavariableComparesToMetvariable) {
+      if (metavariableNodeMatches) {
         referenceMetavariableUnifies = true;
-      } else {
-        const referenceMetavariable = reference.getMetavariable(),
-              referenceMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(referenceMetavariable, generalContext, specificContext);
-
-        if (referenceMetavariableUnifiesIntrinsically) {
-          referenceMetavariableUnifies = true;
-        }
       }
     }
 
@@ -585,22 +566,10 @@ export default define(class Metavariable extends Element {
 
     if (generalContextFilePath === specificContextFilePath) {
       const metavariableNode = this.getMetavariableNode(),
-            statementMetavariableComparesToMetvariable = statement.matchMetavariableNode(metavariableNode);
+            metavariableNodeMatches = statement.matchMetavariableNode(metavariableNode);
 
-      if (statementMetavariableComparesToMetvariable) {
+      if (metavariableNodeMatches) {
         statementMetavariableUnifies = true;
-      } else {
-        const statementSingular = statement.isSingular();
-
-        if (statementSingular) {
-          const statementMetavariableName = statement.getMetavariableName(),
-                statementDeclaredMetavariable = context.findDeclaredMetavariableByMetavariableName(statementMetavariableName),
-                statementMetavariableUnifiesIntrinsically = this.unifyMetavariableIntrinsically(statementDeclaredMetavariable, generalContext, specificContext);
-
-          if (statementMetavariableUnifiesIntrinsically) {
-            statementMetavariableUnifies = true;
-          }
-        }
       }
     }
 

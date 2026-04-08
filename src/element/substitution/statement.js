@@ -7,7 +7,7 @@ import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, ablate, attempts, descend, reconcile, instantiate, unserialises } from "../../utilities/context";
+import { join, ablate, ablates, attempts, descend, reconcile, instantiate, unserialises } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -380,16 +380,20 @@ export default define(class StatementSubstitution extends Substitution {
 
     let statementSubstitution;
 
-    ablate((context) => {
+    ablates((generalContext, specificContext) => {
+      const context = specificContext;  ///
+
       instantiate((context) => {
         const specificContext = context,  ///
               statementSubstitutionString = statementSubstitutionStringFromStatementAndMetavariable(statement, metavariable),
               string = statementSubstitutionString, ///
               statementSubstitutionNode = instantiateStatementSubstitution(string, context);
 
+        generalContext.gainTokens(specificContext);
+
         statementSubstitution = statementSubstitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext);
       }, context);
-    }, context);
+    }, generalContext, specificContext);
 
     return statementSubstitution;
   }
