@@ -175,260 +175,110 @@ export default class MnemicContext extends Context {
 
   addTerm(term) {
     const context = this, ///
-          termA = term, ///
           termString = term.getString();
 
     context.trace(`Adding the '${termString}' term to the mnemic context...`);
 
-    const terms = this.getTerms(),
-          termB = terms.find((term) => {
-            const termB = term, ///
-                  termAComparesToTermB = termA.compareTerm(termB);
-      
-            if (termAComparesToTermB) {
-              return true;
-            }
-          }) || null;
-
-    if (termB !== null) {
-      context.trace(`The '${termString}' term has already been added to the mnemic context.`);
-    } else {
-      this.terms.push(term);
-    }
+    this.terms.push(term);
 
     context.debug(`...added the '${termString}' term to the mnemic context.`);
   }
 
   addFrame(frame) {
     const context = this, ///
-          frameA = frame, ///
           frameString = frame.getString();
 
     context.trace(`Adding the '${frameString}' frame to the mnemic context...`);
 
-    const frames = this.getFrames(),
-          frameB = frames.find((frame) => {
-            const frameB = frame, ///
-                  frameAEqualToFrameB = frameA.isEqualTo(frameB);
-      
-            if (frameAEqualToFrameB) {
-              return true;
-            }
-          }) || null;
-
-    if (frameB !== null) {
-      context.trace(`The '${frameString}' frame has already been added to the mnemic context.`);
-    } else {
-      this.frames.push(frame);
-    }
+    this.frames.push(frame);
 
     context.debug(`...added the '${frameString}' frame to the mnemic context.`);
   }
 
   addEquality(equality) {
     const context = this, ///
-          equalityA = equality, ///
           equalityString = equality.getString();
 
     context.trace(`Adding the '${equalityString}' equality to the mnemic context...`);
 
-    const equalities = this.getEqualities(),
-          equalityB = equalities.find((equality) => {
-            const equalityB = equality, ///
-                  equalityAEqualToEqualityB = equalityA.isEqualTo(equalityB);
-      
-            if (equalityAEqualToEqualityB) {
-              return true;
-            }
-          }) || null;
-
-    if (equalityB !== null) {
-      context.trace(`The '${equalityString}' equality has already been added to the mnemic context.`);
-    } else {
-      this.equalities.push(equality);
-    }
+    this.equalities.push(equality);
 
     context.debug(`...added the '${equalityString}' equality to the mnemic context.`);
   }
 
   addJudgement(judgement) {
     const context = this, ///
-          judgementA = judgement, ///
           judgementString = judgement.getString();
 
     context.trace(`Adding the '${judgementString}' judgement to the mnemic context...`);
 
-    const judgements = this.getJudgements(),
-          judgementB = judgements.find((judgement) => {
-            const judgementB = judgement, ///
-                  judgementAEqualToEqualityB = judgementA.isEqualTo(judgementB);
-      
-            if (judgementAEqualToEqualityB) {
-              return true;
-            }
-          }) || null;
-
-    if (judgementB !== null) {
-      context.trace(`The '${judgementString}' judgement has already been added to the mnemic context.`);
-    } else {
-      this.judgements.push(judgement);
-    }
+    this.judgements.push(judgement);
 
     context.debug(`...added the '${judgementString}' judgement to the mnemic context.`);
   }
 
   addStatement(statement) {
     const context = this, ///
-          statementA = statement, ///
           statementString = statement.getString();
 
     context.trace(`Adding the '${statementString}' statement to the mnemic context...`);
 
-    const statements = this.getStatements(),
-          statementB = statements.find((statement) => {
-            const statementB = statement, ///
-                  statementAEqualToStatementB = statementA.isEqualTo(statementB);
-      
-            if (statementAEqualToStatementB) {
-              return true;
-            }
-          }) || null;
-
-    if (statementB !== null) {
-      context.trace(`The '${statementString}' statement has already been added to the mnemic context.`);
-    } else {
-      this.statements.push(statement);
-    }
+    this.statements.push(statement);
 
     context.debug(`...added the '${statementString}' statement to the mnemic context.`);
   }
 
   addAssertion(assertion) {
     const context = this, ///
-          assertionA = assertion, ///
           assertionString = assertion.getString();
 
     context.trace(`Adding the '${assertionString}' assertion to the mnemic context...`);
 
-    const assertions = this.getAssumptions(),
-          assertionB = assertions.find((assertion) => {
-            const assertionB = assertion, ///
-                  assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
-      
-            if (assertionAEqualToAssertionB) {
-              return true;
-            }
-          }) || null;
-
-    if (assertionB !== null) {
-      context.trace(`The '${assertionString}' assertion has already been added to the mnemic context.`);
-    } else {
-      this.assertions.push(assertion);
-    }
+    this.assertions.push(assertion);
 
     context.debug(`...added the '${assertionString}' assertion to the mnemic context.`);
   }
 
   addReference(reference) {
     const context = this, ///
-          referenceA = reference, ///
           referenceString = reference.getString();
 
     context.trace(`Adding the '${referenceString}' reference to the mnemic context...`);
 
-    const references = this.getReferences(),
-          referenceB = references.find((reference) => {
-            const referenceB = reference, ///
-                  referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);
-      
-            if (referenceAEqualToReferenceB) {
-              return true;
-            }
-          }) || null;
-
-    if (referenceB !== null) {
-      context.trace(`The '${referenceString}' reference has already been added to the mnemic context.`);
-    } else {
-      this.references.push(reference);
-    }
+    this.references.push(reference);
 
     context.debug(`...added the '${referenceString}' reference to the mnemic context.`);
   }
 
   addAssumption(assumption) {
     const context = this, ///
-          assumptionA = assumption, ///
           assumptionString = assumption.getString();
 
     context.trace(`Adding the '${assumptionString}' assumption to the mnemic context...`);
 
-    const assumptions = this.getAssumptions(),
-          assumptionB = assumptions.find((assumption) => {
-            const assumptionB = assumption, ///
-                  assumptionAEqualToAssumptionB = assumptionA.isEqualTo(assumptionB);
-      
-            if (assumptionAEqualToAssumptionB) {
-              return true;
-            }
-          }) || null;
-
-    if (assumptionB !== null) {
-      context.trace(`The '${assumptionString}' assumption has already been added to the mnemic context.`);
-    } else {
-      this.assumptions.push(assumption);
-    }
+    this.assumptions.push(assumption);
 
     context.debug(`...added the '${assumptionString}' assumption to the mnemic context.`);
   }
 
   addMetavariable(metavariable) {
     const context = this, ///
-          metavariableA = metavariable, ///
           metavariableString = metavariable.getString();
 
     context.trace(`Adding the '${metavariableString}' metavariable to the mnemic context...`);
 
-    const metavariables = this.getMetavariables(),
-          metavariableB = metavariables.find((metavariable) => {
-            const metavariableB = metavariable, ///
-                  metavariableAEqualToSubstitutionB = metavariableA.isEqualTo(metavariableB);
-      
-            if (metavariableAEqualToSubstitutionB) {
-              return true;
-            }
-          }) || null;
-
-    if (metavariableB !== null) {
-      context.trace(`The '${metavariableString}' metavariable has already been added to the mnemic context.`);
-    } else {
-      this.metavariables.push(metavariable);
-    }
+    this.metavariables.push(metavariable);
 
     context.debug(`...added the '${metavariableString}' metavariable to the mnemic context.`);
   }
 
   addSubstitution(substitution) {
     const context = this, ///
-          substitutionA = substitution, ///
           substitutionString = substitution.getString();
 
     context.trace(`Adding the '${substitutionString}' substitution to the mnemic context...`);
 
-    const substitutions = this.getSubstitutions(),
-          substitutionB = substitutions.find((substitution) => {
-            const substitutionB = substitution, ///
-                  substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
-
-            if (substitutionAEqualToSubstitutionB) {
-              return true;
-            }
-          }) || null;
-
-    if (substitutionB !== null) {
-      context.trace(`The '${substitutionString}' substitution has already been added to the mnemic context.`);
-    } else {
-      this.substitutions.push(substitution);
-    }
+    this.substitutions.push(substitution);
 
     context.debug(`...added the '${substitutionString}' substitution to the mnemic context.`);
   }

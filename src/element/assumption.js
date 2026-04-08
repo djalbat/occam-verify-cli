@@ -3,7 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { instantiate } from "../utilities/context";
+import {instantiate, reconcile} from "../utilities/context";
 import { instantiateAssumption } from "../process/instantiate";
 
 export default define(class Assumption extends Element {
@@ -209,11 +209,13 @@ export default define(class Assumption extends Element {
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);
 
-    topLevelMetaAssertionUnifies = this.reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+    reconcile((context) => {
+      topLevelMetaAssertionUnifies = this.reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
-    if (topLevelMetaAssertionUnifies) {
-      topLevelMetaAssertionUnifies = this.statement.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
-    }
+      if (topLevelMetaAssertionUnifies) {
+        topLevelMetaAssertionUnifies = this.statement.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+      }
+    }, context);
 
     if (topLevelMetaAssertionUnifies) {
       context.trace(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);

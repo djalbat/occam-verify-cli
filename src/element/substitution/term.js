@@ -7,7 +7,7 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { ablate, ablates, attempts, descend, instantiate, unserialises } from "../../utilities/context";
+import { ablate, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, lineIndex, targetTerm, replacementTerm) {
@@ -219,15 +219,18 @@ export default define(class TermSubstitution extends Substitution {
     return termSubstitutionn;
   }
 
-  static fromStatement(statement, generalContext, specificContext) {
+  static fromStatement(statement, context) {
     let termSubstitution = null;
 
     const termSubstitutionNode = statement.getTermSubstitutionNode();
 
     if (termSubstitutionNode !== null) {
-      ablates((generalContext, specificContext) => {
+      ablate((context) => {
+        const generalContext = context, ///
+              specificContext = context;  ///
+
         termSubstitution = termSubstitutionFromTermSubstitutionNode(termSubstitutionNode, generalContext, specificContext);
-      }, generalContext, specificContext);
+      }, context);
     }
 
     return termSubstitution;

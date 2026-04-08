@@ -772,9 +772,13 @@ export function termToTermJSON(term) {
 }
 
 export function typeToTypeJSON(type) {
-  const typeJSON = (type !== null) ?
-                     type.toJSON() :
-                       null;
+  let typeJSON = null;
+
+  if (type !== null) {
+    const abridged = true;
+
+    typeJSON = type.toJSON(abridged);
+  }
 
   return typeJSON;
 }
@@ -1008,9 +1012,9 @@ export function hypothesesToHypothesesJSON(hypotheses) {
 }
 
 export function superTypesToSuperTypesJSON(superTypes) {
-  const abridged = true,
-        superTypesJSON = superTypes.map((superType) => {
-          const superTypeJSON = superType.toJSON(abridged);
+  const superTypesJSON = superTypes.map((superType) => {
+          const abridged = true,
+                superTypeJSON = superType.toJSON(abridged);
 
           return superTypeJSON;
         });

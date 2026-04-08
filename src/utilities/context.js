@@ -141,24 +141,8 @@ export function unserialise(innerFunction, json, context) {
   return innerFunction(json, context);
 }
 
-export function ablates(innerFunction, ...contexts) {
-  contexts = contexts.map((context) => {  ///
-    let contextNominalFileContext = (context instanceof NominalFileContext);
-
-    while (!contextNominalFileContext) {
-      context = context.getContext();
-
-      contextNominalFileContext = (context instanceof NominalFileContext);
-    }
-
-    return context;
-  });
-
-  return innerFunction(...contexts);
-}
-
 export function attempts(innerFunction, ...contexts) {
-  contexts = contexts.map((context) => {
+  contexts = contexts.map((context) => {  ///
     const mnemicContext = MenmicContext.fromNothing(context);
 
     context = mnemicContext;  ///

@@ -274,18 +274,13 @@ export default define(class Reference extends Element {
     const label = topLevelMetaAssertion.getLabel(),
           labelContext = label.getContext(),
           referenceString = this.getString(), ///
-          temporaryContext = context, ///
+          referenceContext = this.getContext(), ///
           topLevelMetaAssertionString = topLevelMetaAssertion.getString();
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference...`);
 
-    const specificContext = labelContext; ///
-
-    context = this.getContext();
-
-    const generalContext = context; ///
-
-    context = temporaryContext; ///
+    const generalContext = referenceContext, ///
+          specificContext = labelContext; ///
 
     join((specificContext) => {
       reconcile((specificContext) => {
