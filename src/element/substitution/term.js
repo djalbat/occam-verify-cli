@@ -7,7 +7,7 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { ablate, ablates, attempts, descend, instantiate, unserialises } from "../../utilities/context";
+import { ablate, ablates, manifest, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, lineIndex, targetTerm, replacementTerm) {
@@ -133,19 +133,21 @@ export default define(class TermSubstitution extends Substitution {
     const targetTermSingular = this.targetTerm.isSingular();
 
     if (targetTermSingular) {
-      descend((context) => {
-        const targetTerm = this.targetTerm.validate(context, (targetTerm) => {
-          const validatesForwards = true;
+      manifest((context) => {
+        descend((context) => {
+          const targetTerm = this.targetTerm.validate(context, (targetTerm) => {
+            const validatesForwards = true;
 
-          return validatesForwards;
-        });
+            return validatesForwards;
+          });
 
-        if (targetTerm !== null) {
-          this.targetTerm = targetTerm;
+          if (targetTerm !== null) {
+            this.targetTerm = targetTerm;
 
-          targetTermValidates = true;
-        }
-      }, context);
+            targetTermValidates = true;
+          }
+        }, context);
+      }, specificContext, context);
     } else {
       const targetTermString = this.targetTerm.getString();
 

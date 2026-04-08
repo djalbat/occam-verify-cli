@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { ablate, ablates, attempts, descend, instantiate, unserialises } from "../../utilities/context";
+import { ablate, ablates, manifest, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(contexts, string, node, lineIndex, targetFrame, replacementFrame) {
@@ -130,15 +130,17 @@ export default define(class FrameSubstitution extends Substitution {
     const targetFrameSingular = this.targetFrame.isSingular();
 
     if (targetFrameSingular) {
-      descend((context) => {
-        const tragetFrame = this.targetFrame.validate(context);
+      manifest((context) => {
+        descend((context) => {
+          const tragetFrame = this.targetFrame.validate(context);
 
-        if (tragetFrame !== null) {
-          this.targetFrame = tragetFrame;
+          if (tragetFrame !== null) {
+            this.targetFrame = tragetFrame;
 
-          targetFrameValidates = true;
-        }
-      }, context);
+            targetFrameValidates = true;
+          }
+        }, context);
+      }, specificContext, context);
     } else {
       const targetFrameString = this.targetFrame.getString();
 

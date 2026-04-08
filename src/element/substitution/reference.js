@@ -5,8 +5,8 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
-import { ablates, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
+import { ablates, manifest, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class ReferenceSubstitution extends Substitution {
   constructor(context, string, node, lineIndex, targetReference, replacementReference) {
@@ -144,13 +144,15 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's target reference...`);
 
-    descend((context) => {
-      const targetReference = this.targetReference.validate(context);
+    manifest((context) => {
+      descend((context) => {
+        const targetReference = this.targetReference.validate(context);
 
-      if (targetReference !== null) {
-        targetReferenceValidates = true;
-      }
-    }, context);
+        if (targetReference !== null) {
+          targetReferenceValidates = true;
+        }
+      }, context);
+    }, specificContext, context);
 
     if (targetReferenceValidates) {
       context.debug(`...validated the '${referenceSubstitutionString}' reference substitution's target reference...`);

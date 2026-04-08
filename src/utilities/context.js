@@ -7,6 +7,7 @@ import BoundedContext from "../context/bounded";
 import NominalContext from "../context/nominal";
 import LiteralContext from "../context/literal";
 import LiminalContext from "../context/liminal";
+import PhanericContext from "../context/phaneric";
 import SynopticContext from "../context/synoptic";
 import IllativeContext from "../context/illative";
 import BranchingContext from "../context/branching";
@@ -15,7 +16,7 @@ import NominalFileContext from "../context/file/nominal";
 import { mnemicContextFromJSON, mnemicContextsFromJSON, mnemicContextToMnemicContextJSON, mnemicContextsToMnemicContextsJSON } from "../utilities/json";
 
 export function join(innerFunction, ...contexts) {
-  const synopticContext = SynopticContext.fromContexts(...contexts),
+  const synopticContext = SynopticContext.fromContexts(contexts),
         context = synopticContext;  ///
 
   return innerFunction(context);
@@ -109,10 +110,11 @@ export function enclose(innerFunction, metaLevelAssumptions, context) {
   return innerFunction(context);
 }
 
-export function evaluate(procedure, terms) {
-  const context = procedure.getContext();
+export function manifest(innerFunction, ...contexts) {
+  const phanericContext = PhanericContext.fromContexts(contexts),
+        context = phanericContext;  ///
 
-  return procedure.call(terms, context);
+  return innerFunction(context);
 }
 
 export function reconcile(innerFunction, context) {
@@ -200,4 +202,10 @@ export function unserialises(innerFunction, json, context) {
         contexts = mnemicContexts; ///
 
   return innerFunction(json, ...contexts);
+}
+
+export function evaluate(procedure, terms) {
+  const context = procedure.getContext();
+
+  return procedure.call(terms, context);
 }
