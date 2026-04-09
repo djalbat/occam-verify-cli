@@ -22,9 +22,9 @@ export function mergeEquivalences(equivalencesA, equivalencesB, context) {
 
 export function findEquivalenceByTerm(equivalences, term) {
   const equivalence = equivalences.find((equivalence) => {
-    const equivalenceComparesToTerm = equivalence.compareTerm(term);
+    const equivalenceEqualToTerm = equivalence.isEqualTo(term);
 
-    if (equivalenceComparesToTerm) {
+    if (equivalenceEqualToTerm) {
       return true;
     }
   }) || null;

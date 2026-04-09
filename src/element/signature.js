@@ -169,9 +169,9 @@ export default define(class Signature extends Element {
     const array = substitutions.getArray(),
           compares = compare(this.terms, array, (term, substitution) => {
             const substitutionTerm = substitution.getTerm(),
-                  substitutionTermComparesToTerm = substitutionTerm.compareTerm(term);
+                  substitutionTermEqualToTerm = substitutionTerm.isEqualTo(term);
 
-            if (substitutionTermComparesToTerm) {
+            if (substitutionTermEqualToTerm) {
               return true;
             }
           });
@@ -198,9 +198,9 @@ export default define(class Signature extends Element {
     const array = substitutions.getArray(),
           correlates = correlate(this.terms, array, (term, substitution) => {
             const substitutionTerm = substitution.getTerm(),
-                  substitutionTermComparesToTerm = substitutionTerm.compareTerm(term);
+                  substitutionTermEqualToTerm = substitutionTerm.isEqualTo(term);
 
-            if (substitutionTermComparesToTerm) {
+            if (substitutionTermEqualToTerm) {
               return true;
             }
           });

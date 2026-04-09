@@ -7,6 +7,7 @@ import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
 import { reconcile, instantiate } from "../utilities/context";
+import {getEntryStats} from "necessary/lib/utilities/fileSystem";
 
 export default define(class Statement extends Element {
   getStatementNode() {
@@ -244,18 +245,15 @@ export default define(class Statement extends Element {
     return subproofUnifies;
   }
 
-  unifyDeduction(deduction, context) {
+  unifyDeduction(deduction, generalContext, specificContext) {
     let deductionUnifies = false;
 
-    const statementString = this.getString(),  ///
+    const context = generalContext, ///
+          statementString = this.getString(),  ///
           deductionString = deduction.getString(),
-          deductionContext = deduction.getContext(),
           deductionStatement = deduction.getStatement();
 
     context.trace(`Unifying the '${deductionString}' deduction with the '${statementString}' statement...`);
-
-    const generalContext = context, ///
-          specificContext = deductionContext;  ///
 
     reconcile((specificContext) => {
       const deductionStatementUnifies = this.unifyStatement(deductionStatement, generalContext, specificContext);
@@ -345,7 +343,15 @@ export default define(class Statement extends Element {
 
     if (unconditional) {
       const deduction = topLevelMetaAssertion.getDeduction(),
-            deductionUnifies = this.unifyDeduction(deduction, context);
+            generalContext = context; ///
+
+      context = deduction.getContext();
+
+      const specificContext = context;  ///
+
+      context = generalContext; ///
+
+      const deductionUnifies = this.unifyDeduction(deduction, generalContext, specificContext);
 
       if (deductionUnifies) {
         topLevelAssertionUnifies = true;

@@ -160,9 +160,9 @@ export default define(class Equivalence extends Element {
     const termA = term, ///
           comparesToTerm = this.someTerm((term) => {
             const termB = term, ///
-                  termAComparesToTermB = termA.compareTerm(termB);
+                  termAEqualToTermB = termA.isEqualTo(termB);
 
-            if (termAComparesToTermB) {
+            if (termAEqualToTermB) {
               return true;
             }
           });
@@ -174,9 +174,9 @@ export default define(class Equivalence extends Element {
     const termA = term, ///
           terms = this.terms.filter((term) => {
             const termB = term, ///
-                  termAComparesToTermB = termA.compareTerm(termB);
+                  termAEqualToTermB = termA.isEqualTo(termB);
 
-            if (!termAComparesToTermB) {
+            if (!termAEqualToTermB) {
               return true;
             }
           }),
@@ -192,9 +192,9 @@ export default define(class Equivalence extends Element {
     ];
 
     compress(combinedTerms, (combinedTermA, combinedTermB) => {
-      const combinedTermAComparesToCombinedTermB = combinedTermA.compareTerm(combinedTermB);
+      const combinedTermEqualToToCombinedTermB = combinedTermA.isEqualTo(combinedTermB);
 
-      if (!combinedTermAComparesToCombinedTermB) {
+      if (!combinedTermEqualToToCombinedTermB) {
         return true;
       }
     });

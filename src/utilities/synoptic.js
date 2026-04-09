@@ -6,9 +6,9 @@ const { compress } = arrayUtilities;
 
 export function compressTerms(terms) {
   compress(terms, (termA, termB) => {
-    const termAComparesToTermB = termA.compareTerm(termB);
+    const termAEqualToTermB = termA.isEqualTo(termB);
 
-    if (!termAComparesToTermB) {
+    if (!termAEqualToTermB) {
       return true;
     }
   });
