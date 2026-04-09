@@ -267,7 +267,7 @@ export default define(class MetaLevelAssumption extends Element {
 
     context.trace(`Unifying the '${statementString}' statement with the '${metaLevelAssumptionString}' meta-level assumption's statement...`);
 
-    const generalStatement = stripBracketsFromStatement(this.statement, context), ///
+    const generalStatement = this.statement,  ///
           specificStatement = stripBracketsFromStatement(statement, context);  ///
 
     statementUnifies = unifyStatement(generalStatement, specificStatement, generalContext, specificContext);
@@ -318,11 +318,17 @@ export default define(class MetaLevelAssumption extends Element {
   static fromStep(step, context) {
     let metaLevelAssumption;
 
+    let statement;
+
+    statement = step.getStatement();
+
+    statement = stripBracketsFromStatement(statement, context); ///
+
+    const reference = step.getReference();
+
     ablate((context) => {
       instantiate((context) => {
-        const reference = step.getReference(),
-              statement = step.getStatement(),
-              metaLevelAssumptionString = metaLevelAssumptionStringFromReferenceAndStatement(reference, statement),
+        const metaLevelAssumptionString = metaLevelAssumptionStringFromReferenceAndStatement(reference, statement),
               string = metaLevelAssumptionString,  ///
               metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context);
 
