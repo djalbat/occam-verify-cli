@@ -342,7 +342,7 @@ export default class NominalFileContext extends FileContext {
     this.conjectures.push(conjecture);
 
     const filePath = this.getFilePath(),
-          ocnjectureString = ocnjecture.getString();
+          ocnjectureString = conjecture.getString();
 
     this.trace(`Added the '${ocnjectureString}' ocnjecture to the '${filePath}' file context.`)
   }

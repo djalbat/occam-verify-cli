@@ -250,23 +250,6 @@ export default define(class Type extends Element {
     return comparesToProvisional;
   }
 
-  comparePrefixedTypeName(prefixedTypeName) {
-    let comparesToPrefixedTypeName = false;
-
-    const prefixed = this.isPrefixed();
-
-    if (prefixed) {
-      const prefixedName = this.getPrefixedName(),
-            prefixedTypeNamePrefixedName = (prefixedTypeName === prefixedName);
-
-      if (prefixedTypeNamePrefixedName) {
-        comparesToPrefixedTypeName = true;
-      }
-    }
-
-    return comparesToPrefixedTypeName;
-  }
-
   compareNominalTypeName(nominalTypeName) {
     let comparesToNominalTypeName = false;
 
@@ -293,6 +276,23 @@ export default define(class Type extends Element {
     }
 
     return comparesToNominalTypeName;
+  }
+
+  comparePrefixedTypeName(prefixedTypeName) {
+    let comparesToPrefixedTypeName = false;
+
+    const prefixed = this.isPrefixed();
+
+    if (prefixed) {
+      const prefixedName = this.getPrefixedName(),
+            prefixedTypeNamePrefixedName = (prefixedTypeName === prefixedName);
+
+      if (prefixedTypeNamePrefixedName) {
+        comparesToPrefixedTypeName = true;
+      }
+    }
+
+    return comparesToPrefixedTypeName;
   }
 
   toJSON(abridged = false) {

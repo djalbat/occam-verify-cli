@@ -1663,7 +1663,8 @@ export function termFromBracketedConstructorNode(bracketedCcnstructorNode, conte
 }
 
 export function typeFromBracketedConstructorNode(bracketedCcnstructorNode, context) {
-  const type = null;
+  const baseType = baseTypeFromNothing(),
+        type = baseType;  ///
 
   return type;
 }

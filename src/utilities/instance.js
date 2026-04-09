@@ -4,10 +4,7 @@ import { ground } from "../utilities/context";
 import { BASE_TYPE_SYMBOL } from "../constants";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { instantiateCombinator, instantiateConstructor } from "../process/instantiate";
-import {
-  bracketedConstructorFromBracketedConstructorNode,
-  combinatorFromCombinatorNode,
-} from "../utilities/element";
+import { bracketedCombinatorFromBracketedCombinatorNode, bracketedConstructorFromBracketedConstructorNode } from "../utilities/element";
 
 let bracketedCombinator = null,
     bracketedConstructor = null;
@@ -20,7 +17,7 @@ export function bracketedCombinatorFromNothing() {
             combinatorNode = instantiateCombinator(string, context),
             bracketedCombinatorNode = combinatorNode;  ///
 
-      bracketedCombinator = combinatorFromCombinatorNode(bracketedCombinatorNode, context);
+      bracketedCombinator = bracketedCombinatorFromBracketedCombinatorNode(bracketedCombinatorNode, context);
     });
   }
 
