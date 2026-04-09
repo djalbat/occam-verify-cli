@@ -31,6 +31,42 @@ export default define(class TypePrefix extends Element {
     return comparesToTypePrefixName;
   }
 
+  verify(context) {
+    let verifies = false;
+
+    const typePrefixString = this.getString();  ///
+
+    context.trace(`Verifying the '${typePrefixString}' type prefix...`);
+
+    const typePrefix = context.getTypePrefix();
+
+    if (typePrefix === null) {
+      const typePrefixName = this.name, ///
+            typePrefixPresent = context.isTypePrefixPresentByTypePrefixName(typePrefixName);
+
+      if (!typePrefixPresent) {
+        const nominalTypeName = typePrefixName,  ///
+              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
+
+        if (!typePresent) {
+          verifies = true;
+        } else {
+          context.debug(`The '${typePrefixString}' type is already present.`);
+        }
+      } else {
+        context.debug(`The '${typePrefixString}' type prefix is already present.`);
+      }
+    } else {
+      context.trace(`The package already has a '${typePrefixString}' type prefix.`);
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${typePrefixString}' type prefix.`);
+    }
+
+    return verifies;
+  }
+
   static name = "TypePrefix";
 
   toJSON() {

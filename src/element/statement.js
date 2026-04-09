@@ -229,7 +229,7 @@ export default define(class Statement extends Element {
     if (subproofAssertionNode !== null) {
       const context = generalContext, ///
             subproofString = subproof.getString(),
-            statementString = this.getString();
+            statementString = this.getString(); ///
 
       context.trace(`Unifying the '${subproofString}' subproof with the '${statementString}' statement...`);
 

@@ -3,8 +3,8 @@
 import Declaration from "../declaration";
 
 import { define } from "../../elements";
+import { baseTypeFromNothing } from "../../utilities/type";
 import { superTypesStringFromSuperTypes } from "../../utilities/string";
-import {baseTypeFromNothing} from "../../utilities/type";
 
 export default define(class SimpleTypeDeclaration extends Declaration {
   constructor(context, string, node, lineIndex, type, superTypes, provisional) {
@@ -108,7 +108,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     let superTypeVerifies = false;
 
     const superTypeString = superType.getString(),
-          simpleTypeDeclarationString = this.getString(); ///;
+          simpleTypeDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${superTypeString}' super-type...`);
 
@@ -142,7 +142,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
 
     const superTypes = [],
           superTypesString = superTypesStringFromSuperTypes(this.superTypes),
-          simpleTypeDeclarationString = this.getString(); ///;
+          simpleTypeDeclarationString = this.getString(); ///
 
     (superTypesString !== null) ?
       context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${superTypesString}' super-types...`) :
@@ -180,7 +180,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     let typePrefixVerifies = false;
 
     const typeString = this.type.getString(),
-          simpleTypeDeclarationString = this.getString(); ///;
+          simpleTypeDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type's prefix...`);
 
@@ -203,7 +203,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     let propertiesVerify = true;  ///
 
     const typeString = this.type.getString(),
-          simpleTypeDeclarationString = this.getString(); ///;
+          simpleTypeDeclarationString = this.getString(); ///
 
     context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type's properties...`);
 

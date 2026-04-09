@@ -10,7 +10,8 @@ import { equivalenceStringFromTerms,
          subproofStringFromSuppositionsAndSubDerivation,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
-         topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
+         topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction,
+         complexTypeDeclarationFromTypeSuperTypesProvisionalAndPropertyDeclarations } from "../utilities/string";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -488,12 +489,11 @@ export function typePrefixFromTypePrefixNode(typePrefixNode, context) {
         node = typePrefixNode, ///
         string = context.nodeAsString(node),
         lineIndex = null,
-        term = termFromTypePrefixNode(typePrefixNode, context),
-        type = typeFromTypePrefixNode(typePrefixNode, context);
+        name = nameFromTypePrefixNode(typePrefixNode, context);
 
   context = null;
 
-  const typePrefix = new TypePrefix(context, string, node, lineIndex, term, type);
+  const typePrefix = new TypePrefix(context, string, node, lineIndex, name);
 
   return typePrefix;
 }
@@ -783,6 +783,23 @@ export function procedureReferenceFromProcedureReferenceNode(procedureReferenceN
   return procedureRefereence;
 }
 
+export function propertyDeclarationFromPropertyDeclarationNode(propertyDeclarationNode, context) {
+  const { PropertyDeclaration } = elements,
+        node = propertyDeclarationNode,  ///
+        string = context.nodeAsString(node),
+        lineIndex = null,
+        typeNode = propertyDeclarationNode.getTypeNode(),
+        propertyNode = propertyDeclarationNode.getPropertyNode(),
+        type = typeFromTypeNode(typeNode, context),
+        property = propertyFromPropertyNode(propertyNode, context);
+
+  context = null;
+
+  const propertyDeclaration = new PropertyDeclaration(context, string, node, lineIndex, property, type);
+
+  return propertyDeclaration;
+}
+
 export function variableDeclarationFromVariableDeclarationNode(variableDeclarationNode, context) {
   const { VariableDeclaration } = elements,
         node = variableDeclarationNode,  ///
@@ -938,15 +955,17 @@ export function constructorDeclarationFromConstructorDeclarationNode(constructor
 export function complexTypeDeclarationFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
   const { ComplexTypeDeclaration } = elements,
         node = complexTypeDeclarationNode,  ///
-        string = context.nodeAsString(node),
         lineIndex = null,
         type = typeFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
         superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
-        provisional = provisionalFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context);
+        provisional = provisionalFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
+        propertyDeclarations = propertyDeclarationsFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
+        complexTypeDeclarationString = complexTypeDeclarationFromTypeSuperTypesProvisionalAndPropertyDeclarations(type, superTypes, provisional, propertyDeclarations),
+        string = complexTypeDeclarationString;  ///
 
   context = null;
 
-  const complexTypeDeclaration = new ComplexTypeDeclaration(context, string, node, lineIndex, type, superTypes, provisional);
+  const complexTypeDeclaration = new ComplexTypeDeclaration(context, string, node, lineIndex, type, superTypes, provisional, propertyDeclarations);
 
   return complexTypeDeclaration;
 }
@@ -2090,6 +2109,13 @@ export function replacementStatementFromStatementSubstitutionNode(statementSubst
   return replacementStatement;
 }
 
+export function propertyDeclarationsFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
+  const propertyDeclarationnNodes = complexTypeDeclarationNode.getPropertyDeclarationNodes(),
+        propertyDeclarations = propertyDeclarationsFromPropertyDeclarationNodes(propertyDeclarationnNodes, context);
+
+  return propertyDeclarations;
+}
+
 export function termsFromTermNodes(termNodes, context) {
   const terms = termNodes.map((termNode) => {
     const term = termFromTermNode(termNode, context);
@@ -2203,4 +2229,14 @@ export function stepsOrSubproofsFromSubDerivationNode(subDerivationNode, context
         });
 
   return stepsOrSubproofs;
+}
+
+export function propertyDeclarationsFromPropertyDeclarationNodes(propertyDeclarationnNodes, context) {
+  const propertyDeclrations = propertyDeclarationnNodes.map((propertyDeclarationNode) => {
+    const propertyDeclcaration = propertyDeclarationFromPropertyDeclarationNode(propertyDeclarationNode, context);
+
+    return propertyDeclcaration;
+  });
+
+  return propertyDeclrations;
 }

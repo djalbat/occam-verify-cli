@@ -141,7 +141,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     if (substitution !== null) {
       const context = generalContext,  ///
-            statementSubstitutionString = this.getString();
+            statementSubstitutionString = this.getString(); ///
 
       context.trace(`Validating the '${statementSubstitutionString}' statement substitution's substitution...`);
 

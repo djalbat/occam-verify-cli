@@ -249,3 +249,7 @@ export function statementSubstitutionStringFromStatementMetavariableAndSubstitut
 
   return statementSubstitutionString;
 }
+
+export function complexTypeDeclarationFromTypeSuperTypesProvisionalAndPropertyDeclarations(type, superTypes, provisional, propertyDeclarations) {
+  debugger
+}

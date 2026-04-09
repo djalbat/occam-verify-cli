@@ -43,6 +43,109 @@ export default define(class Property extends Element {
     return comparesToNominalTypeName;
   }
 
+  verify(context, properties) {
+    let verifies = false;
+
+    const propertyString = this.getString();  ///
+
+    context.trace(`Verifying the '${propertyString}' property...`);
+
+    const naemVerifies = this.verifyName(properties, context);
+
+    if (naemVerifies) {
+      const nominalTypeNameVerifies = this.verifyNominalTypeName(context);
+
+      if (nominalTypeNameVerifies) {
+        verifies = true;
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${propertyString}' property.`);
+    }
+
+    return verifies;
+  }
+
+  verifyName(properties, context) {
+    let naemVerifies = false;
+
+    const propertyString = this.getString();
+
+    context.trace(`Verifying the '${propertyString}' property's name...`);
+
+    const propertyName = this.name, ///
+          count = properties.reduce((count, property) => {
+            const propertyComparesToPropertyName = property.comparePropertyName(propertyName);
+
+            if (propertyComparesToPropertyName) {
+              count++;
+            }
+
+            return count;
+          }, 0);
+
+    if (count > 1) {
+      context.debug(`The '${propertyString}' property appears more than once.`);
+    } else {
+      const superTypes = this.type.getSuperTypes(),
+            superType = superTypes.find((superType) => {
+              const superTypeProperties = superType.getProperties(),
+                    superTypePropertyComparesToPropertyName = superTypeProperties.some((superTypeProperty) => {
+                      const superTypePropertyComparesToPropertyName = superTypeProperty.comparePropertyName(propertyName);
+
+                      if (superTypePropertyComparesToPropertyName) {
+                        return true;
+                      }
+                    });
+
+              if (superTypePropertyComparesToPropertyName) {
+                return true;
+              }
+            }) || null;
+
+      if (superType !== null) {
+        const superTypeString = superType.getString();
+
+        context.debug(`The '${superTypeString}' super-type has the same property.`);
+      } else {
+        naemVerifies = true;
+      }
+    }
+
+    if (naemVerifies) {
+      context.debug(`...verified the '${propertyString}' property's name.`);
+    }
+
+    return naemVerifies;
+  }
+
+  verifyNominalTypeName(context) {
+    let nominalTypeNameVerifies = false;
+
+    const propertyString = this.getString();  ///
+
+    context.trace(`Verifying the '${propertyString}' property's nominal type name...`);
+
+    const typeComparesToNominalTypeName = this.type.compareNominalTypeName(this.nominalTypeName);
+
+    if (typeComparesToNominalTypeName) {
+      nominalTypeNameVerifies = true;
+    } else {
+      const typePresent = context.isTypePresentByNominalTypeName(this.nominalTypeName);
+
+      if (typePresent) {
+        nominalTypeNameVerifies = true;
+      }
+    }
+
+    if (nominalTypeNameVerifies) {
+      context.debug(`...verifies the '${propertyString}' property's nominal type name.`);
+    }
+
+    return nominalTypeNameVerifies;
+  }
+
   toJSON() {
     const nominalTypeNameJSON = nominalTypeNameToNominalTypeNameJSON(this.nominalTypeName),
           nominalTypeName = nominalTypeNameJSON,  ///

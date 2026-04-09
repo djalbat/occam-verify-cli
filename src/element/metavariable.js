@@ -108,7 +108,7 @@ export default define(class Metavariable extends Element {
   verify(context) {
     let verifies = false;
 
-    const metavariableString = this.getString();
+    const metavariableString = this.getString();  ///
 
     context.trace(`Verifying the '${metavariableString}' metavariable...`);
 
@@ -148,7 +148,7 @@ export default define(class Metavariable extends Element {
     let typeVerifies = true;  ///
 
     if (this.type !== null) {
-      const metavariableString = this.getString();
+      const metavariableString = this.getString();  ///
 
       context.trace(`Verifying the '${metavariableString}' metavariable's type...`);
 
@@ -258,7 +258,7 @@ export default define(class Metavariable extends Element {
     if (this.term === null) {
       termValidates = true;
     } else {
-      const metavariableString = this.getString();
+      const metavariableString = this.getString();  ///
 
       context.trace(`Validating the '${metavariableString}' metavariable's term...`);
 
