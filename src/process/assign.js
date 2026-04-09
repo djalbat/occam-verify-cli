@@ -1,12 +1,10 @@
 "use strict";
 
-import { variableFromVariableNode } from "../utilities/element";
+import { variableAssignmentFromTermAndType } from "../utilities/assignment";
 
 export function equalityAssignmentFromEquality(equality, context) {
   const equalityAssignment = (context) => {
-    const equalityAdded = context.addEquality(equality);
-
-    return equalityAdded;
+    context.addEquality(equality);
   };
 
   return equalityAssignment;
@@ -14,10 +12,9 @@ export function equalityAssignmentFromEquality(equality, context) {
 
 export function judgementAssignmentFromJudgement(judgement, context) {
   const judgementAssignment = (context) => {
-    const declaredJudgement = judgement,  ///
-          declaredJudgementAdded = context.addDeclaredJudgement(declaredJudgement);
+    const declaredJudgement = judgement;  ///
 
-    return declaredJudgementAdded;
+    context.addDeclaredJudgement(declaredJudgement);
   };
 
   return judgementAssignment;
@@ -40,18 +37,9 @@ export function rightVariableAssignmentFromEquality(equality, context) {
 }
 
 export function variableAssignmentFromTypeAssertion(typeAssertion, context) {
-  let variableAssignment = (context) => {
-    ///
-  };
-
   const term = typeAssertion.getTerm(),
-        termSingular = term.isSingular();
-
-  if (termSingular) {
-    const type = typeAssertion.getType();
-
-    variableAssignment = variableAssignmentFromTermAndType(term, type, context);
-  }
+        type = typeAssertion.getType(),
+        variableAssignment = variableAssignmentFromTermAndType(term, type, context);
 
   return variableAssignment;
 }
@@ -77,41 +65,3 @@ export function variableAssignmentFromPrepertyAssertion(propertyAssertion, conte
   //   const variableAssignment = variableAssignmentFromVariable(variable),
 
   }
-
-function variableAssignmentFromTermAndType(term, type, context) {
-  let variableAssignment = (context) => {
-    ///
-  };
-
-  const termSingular = term.isSingular();
-
-  if (termSingular) {
-    const termType = term.getType(),
-          termTypeEqualToType = termType.isEqualTo(type);
-
-    if (!termTypeEqualToType) {
-      const variableNode = term.getVariableNode(),
-            variable = variableFromVariableNode(variableNode, context);
-
-      variable.setType(type);
-
-      variableAssignment = (context) => {
-        const declaredVariable = variable;  ///
-
-        context.addDeclaredVariable(declaredVariable);
-
-        const declaredVariableTypeString = declaredVariable.getTypeString(),
-              declaredVariableString = declaredVariable.getString(),
-              assigned = true;  ///
-
-        assigned ?
-          context.trace(`Assigned the '${declaredVariableString}' declared variable with type '${declaredVariableTypeString}'.`) :
-             context.debug(`Unable to assign the '${declaredVariableString}' declared variable with type '${declaredVariableTypeString}'.`);
-
-        return assigned;
-      };
-    }
-  }
-
-  return variableAssignment;
-}
