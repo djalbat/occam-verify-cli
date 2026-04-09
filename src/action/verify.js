@@ -26,8 +26,7 @@ export default async function verifyAction(name, log) {
           releaseContextFromDependency
         }
 
-  // try {
-
+  try {
     const releaseContextCreated = await createReleaseContexts(dependency, context);
 
     if (!releaseContextCreated) {
@@ -65,9 +64,8 @@ export default async function verifyAction(name, log) {
     const releaseContxt = ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar);
 
     releaseContxt.initialise(releaseContexts, FileContextFromFilePath);
-
-  // }
-  // catch (error) {
-  //   log.error(error);
-  // }
+  }
+  catch (error) {
+    log.error(error);
+  }
 }
