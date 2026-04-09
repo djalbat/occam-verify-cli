@@ -816,6 +816,29 @@ export function metaLevelAssumptionFromMetaLevelAssumptionNode(metaLevelAssumpti
   return metaLevelAssumption;
 }
 
+export function bracketedCombinatorFromBracketedCombinatorNode(bracketedCombinatorNode, context) {
+  const { BracketedCombinator } = elements,
+        node = bracketedCombinatorNode, ///
+        string = context.nodeAsString(node),
+        lineIndex = null,
+        statement = statementFromBracketedCombinatorNode(bracketedCombinatorNode, context),
+        bracketedCombinator = new BracketedCombinator(context, string, node, lineIndex, statement);
+
+  return bracketedCombinator;
+}
+
+export function bracketedConstructorFromBracketedConstructorNode(bracketedConstructorNode, context) {
+  const { BracketedConstructor } = elements,
+        node = bracketedConstructorNode, ///
+        string = context.nodeAsString(node),
+        lineIndex = null,
+        term = termFromBracketedConstructorNode(bracketedConstructorNode, context),
+        type = typeFromBracketedConstructorNode(bracketedConstructorNode, context),
+        bracketedConstructor = new BracketedConstructor(context, string, node, lineIndex, term, type);
+
+  return bracketedConstructor;
+}
+
 export function typePrefixDeclarationFromTypePrefixDeclarationNode(typePrefixDeclarationNode, context) {
   const { TypePrefixDeclaration } = elements,
         node = typePrefixDeclarationNode, ///
@@ -1632,6 +1655,19 @@ export function propertyFromPropertyRelationNode(propertyRelationNode, context) 
   return property;
 }
 
+export function termFromBracketedConstructorNode(bracketedCcnstructorNode, context) {
+  const termNode = bracketedCcnstructorNode.getTermNode(),
+        term = termFromTermNode(termNode, context);
+
+  return term;
+}
+
+export function typeFromBracketedConstructorNode(bracketedCcnstructorNode, context) {
+  const type = null;
+
+  return type;
+}
+
 export function definedAssertionFromStatementNode(statementNode, context) {
   let definedAssertion = null;
 
@@ -1793,6 +1829,13 @@ export function hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, cont
   const ypotheses = [];
 
   return ypotheses;
+}
+
+export function statementFromBracketedCombinatorNode(bracketedCombinatorNode, context) {
+  const statementNode = bracketedCombinatorNode.getStatementNode(),
+        statement = statementFromStatementNode(statementNode, context);
+
+  return statement;
 }
 
 export function signatureFromJSatisfiesAssertionNode(sasisfiesAssertionNode, context) {

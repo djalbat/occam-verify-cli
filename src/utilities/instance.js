@@ -4,21 +4,23 @@ import { ground } from "../utilities/context";
 import { BASE_TYPE_SYMBOL } from "../constants";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { instantiateCombinator, instantiateConstructor } from "../process/instantiate";
-import { combinatorFromCombinatorNode, constructorFromConstructorNode } from "../utilities/element";
+import {
+  bracketedConstructorFromBracketedConstructorNode,
+  combinatorFromCombinatorNode,
+} from "../utilities/element";
 
 let bracketedCombinator = null,
     bracketedConstructor = null;
 
 export function bracketedCombinatorFromNothing() {
   if (bracketedCombinator === null) {
-    bracketedCombinator = ground((context) => {
+    ground((context) => {
       const bracketedCombinatorString = `(${STATEMENT_META_TYPE_NAME})`,
             string = bracketedCombinatorString, ///
             combinatorNode = instantiateCombinator(string, context),
-            bracketedCombinatorNode = combinatorNode,  ///
-            bracketedCombinator = combinatorFromCombinatorNode(bracketedCombinatorNode, context);
+            bracketedCombinatorNode = combinatorNode;  ///
 
-      return bracketedCombinator;
+      bracketedCombinator = combinatorFromCombinatorNode(bracketedCombinatorNode, context);
     });
   }
 
@@ -27,14 +29,13 @@ export function bracketedCombinatorFromNothing() {
 
 export function bracketedConstructorFromNothing() {
   if (bracketedConstructor === null) {
-    bracketedConstructor = ground((context) => {
+    ground((context) => {
       const bracketedConstructorString = `(${BASE_TYPE_SYMBOL})`,
             string = bracketedConstructorString,  ///
             constructorNode = instantiateConstructor(string, context),
-            bracketedConstructorNode = constructorNode, ///
-            bracketedConstructor = constructorFromConstructorNode(bracketedConstructorNode, context);
+            bracketedConstructorNode = constructorNode; ///
 
-      return bracketedConstructor;
+      bracketedConstructor = bracketedConstructorFromBracketedConstructorNode(bracketedConstructorNode, context);
     });
   }
 
