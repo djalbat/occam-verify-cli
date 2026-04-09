@@ -4,7 +4,6 @@ import Declaration from "../declaration";
 
 import { define } from "../../elements";
 import { baseTypeFromNothing } from "../../utilities/type";
-import { superTypesStringFromSuperTypes } from "../../utilities/string";
 
 export default define(class SimpleTypeDeclaration extends Declaration {
   constructor(context, string, node, lineIndex, type, superTypes, provisional) {
@@ -141,12 +140,9 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     let superTypesVerify;
 
     const superTypes = [],
-          superTypesString = superTypesStringFromSuperTypes(this.superTypes),
           simpleTypeDeclarationString = this.getString(); ///
 
-    (superTypesString !== null) ?
-      context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${superTypesString}' super-types...`) :
-        context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's super-types...`);
+    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's super-types...`);
 
     superTypesVerify = this.superTypes.every((superType) => {
       const superTypeVerifies = this.verifySuperType(context, superType, superTypes);
@@ -168,9 +164,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
 
       this.type.setSuperTypes(superTypes);
 
-      (superTypesString !== null) ?
-        context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration's '${superTypesString}' super-types.`) :
-          context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration's super-types.`);
+      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration's super-types.`);
     }
 
     return superTypesVerify;

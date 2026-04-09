@@ -11,7 +11,7 @@ import { equivalenceStringFromTerms,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
          topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction,
-         complexTypeDeclarationFromTypeSuperTypesProvisionalAndPropertyDeclarations } from "../utilities/string";
+         complexTypeDeclarationStringFromTypeSuperTypesAndProvisional } from "../utilities/string";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -234,17 +234,21 @@ export function theoremFromTheoremNode(theoremNode, context) {
 }
 
 export function propertyFromPropertyNode(propertyNode, context) {
-  const { Property } = elements,
-        node = propertyNode, ///
-        string = context.nodeAsString(node),
-        lineIndex = null,
-        propertyName = propertyNode.getPropertyName(),
-        nominalTypeName = null,
-        name = propertyName;  ///
+  let property = null;
 
-  context = null;
+  if (propertyNode != null) {
+    const { Property } = elements,
+          node = propertyNode, ///
+          string = context.nodeAsString(node),
+          lineIndex = null,
+          propertyName = propertyNode.getPropertyName(),
+          nominalTypeName = null,
+          name = propertyName;  ///
 
-  const property = new Property(context, string, node, lineIndex, name, nominalTypeName);
+    context = null;
+
+    property = new Property(context, string, node, lineIndex, name, nominalTypeName);
+  }
 
   return property;
 }
@@ -960,7 +964,7 @@ export function complexTypeDeclarationFromComplexTypeDeclarationNode(complexType
         superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
         provisional = provisionalFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
         propertyDeclarations = propertyDeclarationsFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
-        complexTypeDeclarationString = complexTypeDeclarationFromTypeSuperTypesProvisionalAndPropertyDeclarations(type, superTypes, provisional, propertyDeclarations),
+        complexTypeDeclarationString = complexTypeDeclarationStringFromTypeSuperTypesAndProvisional(type, superTypes, provisional),
         string = complexTypeDeclarationString;  ///
 
   context = null;

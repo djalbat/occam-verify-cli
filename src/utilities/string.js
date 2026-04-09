@@ -1,6 +1,7 @@
 "use strict";
 
 import { baseTypeFromNothing } from "../utilities/type";
+import { EMPTY_STRING, PROVISIONALLY } from "../constants";
 
 export function termsStringFromTerms(terms) {
   const termsString = terms.reduce((termsString, term) => {
@@ -59,18 +60,25 @@ export function hypothesesStringFromHypotheses(hypotheses) {
 }
 
 export function superTypesStringFromSuperTypes(superTypes) {
-  const baseType = baseTypeFromNothing(),
-        superTypesString = superTypes.reduce((superTypesString, superType) => {
-          if (superType !== baseType) {
-            const superTypeString = superType.getString();
+  let superTypesString;
 
-            superTypesString = (superTypesString === null) ?
-                                 `'${superTypeString}'` :
-                                   `${superTypesString}, '${superTypeString}'`;
-          }
+  const baseType = baseTypeFromNothing();
 
-          return superTypesString;
-        }, null);
+  superTypesString = superTypes.reduce((superTypesString, superType) => {
+    if (superType !== baseType) {
+      const superTypeString = superType.getString();
+
+      superTypesString = (superTypesString === null) ?
+                           `'${superTypeString}'` :
+                              `${superTypesString}, '${superTypeString}'`;
+    }
+
+    return superTypesString;
+  }, null);
+
+  superTypesString = (superTypesString !== null) ?
+                       `:${superTypesString}` :
+                          EMPTY_STRING;
 
   return superTypesString;
 }
@@ -89,13 +97,21 @@ export function parametersStringFromParameters(parameters) {
   return parametersString;
 }
 
+export function provisinalStringFromProvisional(provisional) {
+  const provisionString = provisional ?
+                            PROVISIONALLY :
+                              EMPTY_STRING;
+
+  return provisionString;
+}
+
 export function suppositionsStringFromSuppositions(suppositions) {
   const suppositionsString = suppositions.reduce((suppositionsString, supposition) => {
     const suppositionString = supposition.getString();
 
     suppositionsString = (suppositionsString === null) ?
-                            suppositionString: ///
-                             `${suppositionsString}, ${suppositionString}`;
+      suppositionString: ///
+      `${suppositionsString}, ${suppositionString}`;
 
     return suppositionsString;
   }, null);
@@ -230,6 +246,15 @@ export function topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels
   return topLevelAssertionString;
 }
 
+export function complexTypeDeclarationStringFromTypeSuperTypesAndProvisional(type, superTypes, provisional) {
+  const typeString = type.getString(),
+        superTypesString = superTypesStringFromSuperTypes(superTypes),
+        provisionalString = provisinalStringFromProvisional(provisional),
+        complexTypeDeclarationString = `${provisionalString}${typeString}${superTypesString}`;
+
+  return complexTypeDeclarationString;
+}
+
 export function topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction) {
   const labelString = label.getString(),
         deductionString = deduction.getString(),
@@ -248,8 +273,4 @@ export function statementSubstitutionStringFromStatementMetavariableAndSubstitut
         statementSubstitutionString = `[${statementString} for ${metavariableString}${substitutionString}]`;
 
   return statementSubstitutionString;
-}
-
-export function complexTypeDeclarationFromTypeSuperTypesProvisionalAndPropertyDeclarations(type, superTypes, provisional, propertyDeclarations) {
-  debugger
 }

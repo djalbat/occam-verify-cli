@@ -2,9 +2,12 @@
 
 import Declaration from "../declaration";
 
+import { asynchronousUtilities } from "occam-languages";
+
 import { define } from "../../elements";
 import { baseTypeFromNothing } from "../../utilities/type";
-import { superTypesStringFromSuperTypes } from "../../utilities/string";
+
+const { asyncEvery } = asynchronousUtilities;
 
 export default define(class ComplexTypeDeclaration extends Declaration {
   constructor(context, string, node, lineIndex, type, superTypes, provisional, propertyDeclarations) {
@@ -39,6 +42,20 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     return complexTypeDeclarationNode;
   }
 
+  getProperties() {
+    const properties = this.propertyDeclarations.reduce((properties, propertyDeclaration) => {
+      const property = propertyDeclaration.getProperty();
+
+      if (property !== null) {
+        properties.push(property);
+      }
+
+      return properties;
+    }, []);
+
+    return properties;
+  }
+
   async verify(context) {
     let verifies = false;
 
@@ -57,9 +74,13 @@ export default define(class ComplexTypeDeclaration extends Declaration {
         const typePrefixVerifies = this.verifyTypePrefix(context);
 
         if (typePrefixVerifies) {
-          const propertiesVerifies = this.verifyProperties(context);
+          const propertyDeclarationsVerify = await this.verifyPropertyDeclaratisons(context);
 
-          if (propertiesVerifies) {
+          if (propertyDeclarationsVerify) {
+            const properties = this.getProperties();
+
+            this.type.setProperties(properties);
+
             context.addType(this.type);
 
             verifies = true;
@@ -146,12 +167,9 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     let superTypesVerify;
 
     const superTypes = [],
-          superTypesString = superTypesStringFromSuperTypes(this.superTypes),
           complexTypeDeclarationString = this.getString(); ///
 
-    (superTypesString !== null) ?
-      context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration's '${superTypesString}' super-types...`) :
-        context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration's super-types...`);
+    context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration's super-types...`);
 
     superTypesVerify = this.superTypes.every((superType) => {
       const superTypeVerifies = this.verifySuperType(context, superType, superTypes);
@@ -173,9 +191,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
 
       this.type.setSuperTypes(superTypes);
 
-      (superTypesString !== null) ?
-        context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration's '${superTypesString}' super-types.`) :
-          context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration's super-types.`);
+      context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration's super-types.`);
     }
 
     return superTypesVerify;
@@ -204,29 +220,29 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     return typePrefixVerifies;
   }
 
-  verifyProperties(context) {
-    let propertiesVerify;
+  async verifyPropertyDeclaratisons(context) {
+    let propertyDeclarationsVerify;
 
     const typeString = this.type.getString(),
           complexTypeDeclarationString = this.getString(); ///
 
-    context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration's '${typeString}' type's properties...`);
+    context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration's '${typeString}' type's property declarations...`);
 
-    const properties = this.type.getProperties();
+    const properties = this.getProperties();
 
-    propertiesVerify = properties.every((property) => {
-      const propertyVerifes = property.verify(properties, context);
+    propertyDeclarationsVerify = await asyncEvery(this.propertyDeclarations, async (propertyDeclaration) => {
+      const propertyVerifes = await propertyDeclaration.verify(properties, context);
 
       if (propertyVerifes) {
         return true;
       }
     });
 
-    if (propertiesVerify) {
-      context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration's '${typeString}' type's properties.`);
+    if (propertyDeclarationsVerify) {
+      context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration's '${typeString}' type's property declarations.`);
     }
 
-    return propertiesVerify;
+    return propertyDeclarationsVerify;
   }
 
   static name = "ComplexTypeDeclaration";

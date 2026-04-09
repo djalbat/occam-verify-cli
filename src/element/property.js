@@ -43,7 +43,7 @@ export default define(class Property extends Element {
     return comparesToNominalTypeName;
   }
 
-  verify(context, properties) {
+  verify(properties, context) {
     let verifies = false;
 
     const propertyString = this.getString();  ///
