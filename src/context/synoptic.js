@@ -128,14 +128,6 @@ export default class SynopticContext extends Context {
     return substitutions;
   }
 
-  getDerivedSubstitutions(derivedSubstitutions = []) {
-    this.contexts.forEach((context) => {
-      context.getDerivedSubstitutions(derivedSubstitutions);
-    });
-
-    return derivedSubstitutions;
-  }
-
   findTermByTermNode(termNode) {
     const terms = this.getTerms(),
           term = terms.find((term) => {
