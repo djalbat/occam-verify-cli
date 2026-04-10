@@ -6,6 +6,7 @@ import Context from "../context";
 
 import { compressTerms,
          compressFrames,
+         compressProperties,
          compressEqualities,
          compressJudgements,
          compressAssertions,
@@ -13,19 +14,23 @@ import { compressTerms,
          compressReferences,
          compressAssumptions,
          compressMetavariables,
-         compressSubstitutions,} from "../utilities/synoptic";
+         compressSubstitutions,
+         compressPropertyRelations,} from "../utilities/synoptic";
 import { termsFromJSON,
          framesFromJSON,
          termsToTermsJSON,
          framesToFramesJSON,
-         judgementsFromJSON,
+         propertiesFromJSON,
          equalitiesFromJSON,
+         judgementsFromJSON,
          statementsFromJSON,
          assertionsFromJSON,
          referencesFromJSON,
          assumptionsFromJSON,
          metavariablesFromJSON,
          substitutionsFromJSON,
+         propertyRelationsFromJSON,
+         propertiesToPropertiesJSON,
          judgementsToJudgementsJSON,
          equalitiesToEqualitiesJSON,
          statementsToStatementsJSON,
@@ -33,16 +38,18 @@ import { termsFromJSON,
          referencesToReferencesJSON,
          assumptionsToAssumptionsJSON,
          metavariablesToMetavariablesJSON,
-         substitutionsToSubstitutionsJSON } from "../utilities/json";
+         substitutionsToSubstitutionsJSON,
+         propertyRelationsToPropertyRelationsJSON } from "../utilities/json";
 
 const { push } = arrayUtilities;
 
 export default class MnemicContext extends Context {
-  constructor(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions) {
+  constructor(context, terms, frames, properties, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions, propertyRelations) {
     super(context);
 
     this.terms = terms;
     this.frames = frames;
+    this.properties = properties;
     this.equalities = equalities;
     this.judgements = judgements;
     this.assertions = assertions;
@@ -51,6 +58,7 @@ export default class MnemicContext extends Context {
     this.assumptions = assumptions;
     this.metavariables = metavariables;
     this.substitutions = substitutions;
+    this.propertyRelations = propertyRelations;
   }
 
   getTerms(terms = []) {
@@ -75,6 +83,18 @@ export default class MnemicContext extends Context {
     compressFrames(context);
 
     return frames;
+  }
+
+  getProperties(properties = []) {
+    const context = this.getContext();
+
+    push(properties, this.properties);
+
+    context.getProperties(properties);
+
+    compressProperties(context);
+
+    return properties;
   }
 
   getEqualities(equalities = []) {
@@ -173,6 +193,18 @@ export default class MnemicContext extends Context {
     return substitutions;
   }
 
+  getPropertyRelations(propertyRelations = []) {
+    const context = this.getContext();
+
+    push(propertyRelations, this.propertyRelations);
+
+    context.getPropertyRelations(propertyRelations);
+
+    compressPropertyRelations(context);
+
+    return propertyRelations;
+  }
+
   addTerm(term) {
     const context = this, ///
           termString = term.getString();
@@ -204,6 +236,17 @@ export default class MnemicContext extends Context {
     this.equalities.push(equality);
 
     context.debug(`...added the '${equalityString}' equality to the mnemic context.`);
+  }
+
+  addProperty(property) {
+    const context = this, ///
+          propertyString = property.getString();
+
+    context.trace(`Adding the '${propertyString}' property to the mnemic context...`);
+
+    this.properties.push(property);
+
+    context.debug(`...added the '${propertyString}' property to the mnemic context.`);
   }
 
   addJudgement(judgement) {
@@ -283,6 +326,17 @@ export default class MnemicContext extends Context {
     context.debug(`...added the '${substitutionString}' substitution to the mnemic context.`);
   }
 
+  addPropertyRelation(propertyRelation) {
+    const context = this, ///
+          propertyRelationString = propertyRelation.getString();
+
+    context.trace(`Adding the '${propertyRelationString}' property relation to the mnemic context...`);
+
+    this.propertyRelations.push(propertyRelation);
+
+    context.debug(`...added the '${propertyRelationString}' property relation to the mnemic context.`);
+  }
+
   addTerms(terms) {
     terms.forEach((term) => {
       this.addTerm(term);
@@ -317,15 +371,28 @@ export default class MnemicContext extends Context {
 
   findEqualityByEqualityNode(equalityNode) {
     const equalities = this.getEqualities(),
-          equality = equalities.find((equality) => {
-            const equalityNodeMatches = equality.matchEqualityNode(equalityNode);
+      equality = equalities.find((equality) => {
+        const equalityNodeMatches = equality.matchEqualityNode(equalityNode);
 
-            if (equalityNodeMatches) {
+        if (equalityNodeMatches) {
+          return true;
+        }
+      }) || null;
+
+    return equality;
+  }
+
+  findPropertyByPropertyNode(propertyNode) {
+    const properties = this.getProperties(),
+          property = properties.find((property) => {
+            const propertyNodeMatches = property.matchEqualityNode(propertyNode);
+
+            if (propertyNodeMatches) {
               return true;
             }
           }) || null;
 
-    return equality;
+    return property;
   }
 
   findJudgementByJudgementNode(judgementNode) {
@@ -432,6 +499,19 @@ export default class MnemicContext extends Context {
     return substitution;
   }
 
+  findPropertyRelationByPropertyRelationNode(propertyRelationNode) {
+    const propertyRelations = this.getPropertyRelations(),
+          propertyRelation = propertyRelations.find((propertyRelation) => {
+            const propertyRelationNodeMatches = propertyRelation.matchEqualityNode(propertyRelationNode);
+
+            if (propertyRelationNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return propertyRelation;
+  }
+
   findVariableByVariableNode(variableNode) {
     const variableIdentifier = variableNode.getVariableIdentifier(),
           declaredVariable = this.findDeclaredVariableByVariableIdentifier(variableIdentifier),
@@ -459,6 +539,13 @@ export default class MnemicContext extends Context {
           equalityPresent = (equality !== null);
 
     return equalityPresent;
+  }
+
+  isPropertyPresentByPropertyNode(propertyNode) {
+    const property = this.findPropertyByPropertyNode(propertyNode),
+          propertyPresent = (property !== null);
+
+    return propertyPresent;
   }
 
   isJudgementPresentByJudgementNode(judgementNode) {
@@ -510,6 +597,13 @@ export default class MnemicContext extends Context {
     return substitutionPresent;
   }
 
+  isPropertyRelationresentByPropertyRelationNode(propertyRelationNode) {
+    const propertyRelation = this.findPropertyRelationByPropertyRelationNode(propertyRelationNode),
+          propertyRelationresent = (propertyRelation !== null);
+
+    return propertyRelationresent;
+  }
+
   commit(element) {
     const context = this; ///
 
@@ -531,14 +625,18 @@ export default class MnemicContext extends Context {
 
     this.frames = framesFromJSON(json, context);
 
+    this.properties = propertiesFromJSON(json, context);
+
     this.judgements = judgementsFromJSON(json, context);
     this.assertions = assertionsFromJSON(json, context);
     this.substitutions = substitutionsFromJSON(json, context);
+    this.propertyRelations = propertyRelationsFromJSON(json, context);
   }
 
   toJSON() {
     let terms = this.getTerms(),
         frames = this.getFrames(),
+        properties = this.getProperties(),
         judgements = this.getJudgements(),
         equalities = this.getEqualities(),
         statements = this.getStatements(),
@@ -546,10 +644,12 @@ export default class MnemicContext extends Context {
         references = this.getReferences(),
         assumptions = this.getAssumptions(),
         metavariables = this.getMetavariables(),
-        substitutions = this.getSubstitutions();
+        substitutions = this.getSubstitutions(),
+        propertyRelations = this.getPropertyRelations();
 
     const termsJSON = termsToTermsJSON(terms),
           framesJSON = framesToFramesJSON(frames),
+          propertiesJSON = propertiesToPropertiesJSON(properties),
           judgementsJSON = judgementsToJudgementsJSON(judgements),
           equalitiesJSON = equalitiesToEqualitiesJSON(equalities),
           statementsJSON = statementsToStatementsJSON(statements),
@@ -557,10 +657,12 @@ export default class MnemicContext extends Context {
           referencesJSON = referencesToReferencesJSON(references),
           assumptionsJSON = assumptionsToAssumptionsJSON(assumptions),
           metavariablesJSON = metavariablesToMetavariablesJSON(metavariables),
-          substitutionsJSON = substitutionsToSubstitutionsJSON(substitutions);
+          substitutionsJSON = substitutionsToSubstitutionsJSON(substitutions),
+          propertyRelationsJSON = propertyRelationsToPropertyRelationsJSON(propertyRelations);
 
     terms = termsJSON; ///
     frames = framesJSON; ///
+    properties = propertiesJSON;  ///
     judgements = judgementsJSON; ///
     equalities = equalitiesJSON; ///
     statements = statementsJSON; ///
@@ -569,18 +671,21 @@ export default class MnemicContext extends Context {
     assumptions = assumptionsJSON; ///
     metavariables = metavariablesJSON;  //
     substitutions = substitutionsJSON; ///
+    propertyRelations = propertyRelationsJSON; ///
 
     const json = {
       terms,
       frames,
-      judgements,
+      properties,
       equalities,
+      judgements,
       statements,
       assertions,
       references,
       assumptions,
       metavariables,
-      substitutions
+      substitutions,
+      propertyRelations
     };
 
     return json;
@@ -589,6 +694,7 @@ export default class MnemicContext extends Context {
   static fromJSON(json, context) {
     const terms = null,
           frames = null,
+          properties = null,
           equalities = null,
           judgements = null,
           statements = null,
@@ -597,7 +703,8 @@ export default class MnemicContext extends Context {
           assumptions = null,
           metavariables = null,
           substitutions = null,
-          mnemicContext = new MnemicContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
+          propertyRelations = null,
+          mnemicContext = new MnemicContext(context, terms, frames, properties, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions, propertyRelations);
 
     mnemicContext.initialise(json);
 
@@ -607,6 +714,7 @@ export default class MnemicContext extends Context {
   static fromNothing(context) {
     const terms = [],
           frames = [],
+          properties = [],
           equalities = [],
           judgements = [],
           statements = [],
@@ -615,7 +723,8 @@ export default class MnemicContext extends Context {
           assumptions = [],
           metavariables = [],
           substitutions = [],
-          mnemicContext = new MnemicContext(context, terms, frames, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions);
+          propertyRelations = [],
+          mnemicContext = new MnemicContext(context, terms, frames, properties, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions, propertyRelations);
 
     return mnemicContext;
   }

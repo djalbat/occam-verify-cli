@@ -6,6 +6,7 @@ import Context from "../context";
 
 import { compressTerms,
          compressFrames,
+         compressProperties,
          compressEqualities,
          compressJudgements,
          compressAssertions,
@@ -13,7 +14,8 @@ import { compressTerms,
          compressReferences,
          compressAssumptions,
          compressMetavariables,
-         compressSubstitutions,} from "../utilities/synoptic";
+         compressSubstitutions,
+         compressPropertyRelations,} from "../utilities/synoptic";
 
 const { last } = arrayUtilities;
 
@@ -46,6 +48,16 @@ export default class SynopticContext extends Context {
     compressFrames(frames);
 
     return frames;
+  }
+
+  getProperties(properties = []) {
+    this.contexts.forEach((context) => {
+      context.getProperties(properties);
+    });
+
+    compressProperties(properties);
+
+    return properties;
   }
 
   getEqualities(equalities = []) {
@@ -128,6 +140,16 @@ export default class SynopticContext extends Context {
     return substitutions;
   }
 
+  getPropertyRelations(propertyRelations = []) {
+    this.contexts.forEach((context) => {
+      context.getPropertyRelations(propertyRelations);
+    });
+
+    compressPropertyRelations(propertyRelations);
+
+    return propertyRelations;
+  }
+
   findTermByTermNode(termNode) {
     const terms = this.getTerms(),
           term = terms.find((term) => {
@@ -152,6 +174,19 @@ export default class SynopticContext extends Context {
           }) || null;
 
     return frame;
+  }
+
+  findPropertyByPropetyNode(propertyNode) {
+    const propertys = this.getProperties(),
+          property = propertys.find((property) => {
+            const propertyNodeMatches = property.matchFrameNode(propertyNode);
+
+            if (propertyNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return property;
   }
 
   findEqualityByEqualityNode(equalityNode) {
@@ -269,6 +304,19 @@ export default class SynopticContext extends Context {
           }) || null;
 
     return substitution;
+  }
+
+  findPropertyRelationByPropertyRelationNode(propertyRelationNode) {
+    const propertyRelations = this.getPropertyRelations(),
+          propertyRelation = propertyRelations.find((propertyRelation) => {
+            const propertyRelationNodeMatches = propertyRelation.matchPropertyRelationNode(propertyRelationNode);
+
+            if (propertyRelationNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return propertyRelation;
   }
 
   static fromContexts(contexts) {

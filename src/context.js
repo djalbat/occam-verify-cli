@@ -48,6 +48,14 @@ export default class Context extends ContextBase {
     return judgements;
   }
 
+  getProperties(properties = []) {
+    const context = this.getContext();
+
+    context.getProperties(properties);
+
+    return properties;
+  }
+
   getEqualities(equalities = []) {
     const context = this.getContext();
 
@@ -102,6 +110,14 @@ export default class Context extends ContextBase {
     context.getSubstitutions(substitutions);
 
     return substitutions;
+  }
+
+  getPropertyRelations(propertyRelations = []) {
+    const context = this.getContext();
+
+    context.getPropertyRelations(propertyRelations);
+
+    return propertyRelations;
   }
 
   getDerivedSubstitutions(derivedSubstitutions = []) {

@@ -375,22 +375,6 @@ export function variablesFromJSON(json, context) {
   return variables;
 }
 
-export function equalitiesFromJSON(json, context) {
-  let { equalities } = json;
-
-  const { Equality } = elements,
-        equalitiesJSON = equalities; ///
-
-  equalities = equalitiesJSON.map((equalityJSON) => {
-    const json = equalityJSON,  ///
-          equality = Equality.fromJSON(json, context);
-
-    return equality;
-  });
-
-  return equalities;
-}
-
 export function propertiesFromJSON(json, context) {
   let { properties } = json;
 
@@ -405,6 +389,22 @@ export function propertiesFromJSON(json, context) {
   });
 
   return properties;
+}
+
+export function equalitiesFromJSON(json, context) {
+  let { equalities } = json;
+
+  const { Equality } = elements,
+    equalitiesJSON = equalities; ///
+
+  equalities = equalitiesJSON.map((equalityJSON) => {
+    const json = equalityJSON,  ///
+      equality = Equality.fromJSON(json, context);
+
+    return equality;
+  });
+
+  return equalities;
 }
 
 export function superTypesFromJSON(json, context) {

@@ -39,6 +39,22 @@ export default define(class Property extends Element {
     this.type = type;
   }
 
+  isEqualTo(property) {
+    const propertyNode = property.getNode(),
+          propertyNodeMatches = this.matchPropertyNode(propertyNode),
+          equalTo = propertyNodeMatches;  ///
+
+    return equalTo;
+  }
+
+  matchPropertyNode(propertyNode) {
+    const node = propertyNode, ///
+          nodeMatches = this.matchNode(node),
+          propertyNodeMatches = nodeMatches; ///
+
+    return propertyNodeMatches;
+  }
+
   comparePropertyName(propertyName) {
     const comparesToPropertyName = (this.name === propertyName);
 
@@ -96,6 +112,44 @@ export default define(class Property extends Element {
     }
 
     return naemVerifies;
+  }
+
+  findValidProperty(context) {
+    const propertyNode = this.getPropertyNode(),
+          property = context.findPropertyByPropertyNode(propertyNode),
+          validProperty = property; ///
+
+    return validProperty;
+  }
+
+  validate(context) {
+    let property = null;
+
+    const propertyString = this.getString(); ///
+
+    context.trace(`Validating the '${propertyString}' property...`);
+
+    const validProperty = this.findValidProperty(context);
+
+    if (validProperty) {
+      property = validProperty; ///
+
+      context.debug(`...the '${propertyString}' property is already valid.`);
+    } else {
+      let validates = false;
+
+      debugger
+
+      if (validates) {
+        const property = this; ///
+
+        context.addProperty(property);
+
+        context.debug(`...validated the '${propertyString}' property.`);
+      }
+    }
+
+    return property;
   }
 
   toJSON() {

@@ -30,34 +30,74 @@ export default define(class PropertyRelation extends Element {
     return propertyRelationNode;
   }
 
-  verify(context) {
-    let verifies = false;
+  isEqualTo(propertyRelation) {
+    const propertyRelationNode = propertyRelation.getNode(),
+          propertyRelationNodeMatches = this.matchPropertyRelationNode(propertyRelationNode),
+          equalTo = propertyRelationNodeMatches;  ///
+
+    return equalTo;
+  }
+
+  matchPropertyRelationNode(propertyRelationNode) {
+    const node = propertyRelationNode, ///
+          nodeMatches = this.matchNode(node),
+          propertyRelationNodeMatches = nodeMatches; ///
+
+    return propertyRelationNodeMatches;
+  }
+
+  findValidPropertyRelation(context) {
+    const propertyRelationNode = this.getPropertyRelationNode(),
+          propertyRelation = context.findPropertyRelationByPropertyRelationNode(propertyRelationNode),
+          validPropertyRelation = propertyRelation; ///
+
+    return validPropertyRelation;
+  }
+
+  validate(context) {
+    let propertyRelation = null;
 
     const propertyRelationString = this.getString(); ///
 
-    context.trace(`Verifying the '${propertyRelationString}' property relation...`);
+    context.trace(`Validating the '${propertyRelationString}' property relation...`);
 
-    const termValidates = this.validateTerm(context);
+    const validPropertyRelation = this.findValidPropertyRelation(context);
 
-    if (termValidates) {
-      const propertyVerifies = this.verifyProperty(context);
+    if (validPropertyRelation) {
+      propertyRelation = validPropertyRelation; ///
 
-      verifies = propertyVerifies;
+      context.debug(`...the '${propertyRelationString}' property relation is already valid.`);
+    } else {
+      let validates = false;
+
+      const termValidates = this.validateTerm(context);
+
+      if (termValidates) {
+        const propertyVerifies = this.verifyProperty(context);
+
+        validates = propertyVerifies;
+      }
+
+      if (validates) {
+        const propertyRelation = this; ///
+
+        this.assign(context);
+
+        context.addPropertyRelation(propertyRelation);
+
+        context.debug(`...validated the '${propertyRelationString}' property relation.`);
+      }
     }
 
-    if (verifies) {
-      context.debug(`...verified the '${propertyRelationString}' property relation.`);
-    }
-
-    return verifies;
+    return propertyRelation;
   }
 
   validateTerm(context) {
     let termValidates = false;
 
-    const termString = this.term.getString();
+    const propertyRelationString = this.getString(); ///
 
-    context.trace(`Validating the '${termString}' term...`);
+    context.trace(`Validating the '${propertyRelationString}' property relation's term...`);
 
     const term = this.term.validate(context, (term) => {
       const validatesForwards = true;
@@ -72,7 +112,7 @@ export default define(class PropertyRelation extends Element {
     }
 
     if (termValidates) {
-      context.debug(`...validated the '${termString}' term.`);
+      context.debug(`...validated the '${propertyRelationString}' property relation's term.`);
     }
 
     return termValidates;

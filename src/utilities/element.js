@@ -1709,7 +1709,7 @@ export function negatedFromJDefinedAssertionNode(definedAssertionNode, context) 
 }
 
 export function propertyFromPropertyRelationNode(propertyRelationNode, context) {
-  const propertyNode = propertyRelationNode.getTermNode(),
+  const propertyNode = propertyRelationNode.getPropertyNode(),
         property = propertyFromPropertyNode(propertyNode, context);
 
   return property;

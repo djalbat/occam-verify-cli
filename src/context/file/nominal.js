@@ -252,6 +252,10 @@ export default class NominalFileContext extends FileContext {
     return equalities;
   }
 
+  getProperties(properties = []) {
+    return properties;
+  }
+
   getJudgements(judgements = []) {
     return judgements;
   }
@@ -278,6 +282,10 @@ export default class NominalFileContext extends FileContext {
 
   getSubstitutions(substitutions = []) {
     return substitutions;
+  }
+
+  getPropertyRelations(propertyRelations = []) {
+    return propertyRelations;
   }
 
   getDerivedSubstitutions(derivedSubstitutions = []) {

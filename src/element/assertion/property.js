@@ -115,9 +115,9 @@ export default define(class PropertyAssertion extends Assertion {
   validateTerm(context) {
     let termValidates = false;
 
-    const termString = this.term.getString();
+    const propertyAssertionString = this.getString(); ///
 
-    context.trace(`Validating the '${termString}' term...`);
+    context.trace(`Validating the '${propertyAssertionString}' property assertion's term...`);
 
     const term = this.term.validate(context, (term) => {
       const validatesForwards = true;
@@ -132,7 +132,7 @@ export default define(class PropertyAssertion extends Assertion {
     }
 
     if (termValidates) {
-      context.debug(`...validated the '${termString}' term.`);
+      context.debug(`...validated the '${propertyAssertionString}' property assertion's term.`);
     }
 
     return termValidates;
@@ -141,9 +141,9 @@ export default define(class PropertyAssertion extends Assertion {
   validatePropertyRelation(context) {
     let propertyRelationValidates = false;
 
-    const propertyRelationString = this.propertyRelation.getString();
+    const propertyAssertionString = this.getString(); ///
 
-    context.trace(`Validating the '${propertyRelationString}' property relation...`);
+    context.trace(`Validating the '${propertyAssertionString}' property assertion's property relation...`);
 
     const propertyRelation = this.propertyRelation.validate(context);
 
@@ -152,7 +152,7 @@ export default define(class PropertyAssertion extends Assertion {
     }
 
     if (propertyRelationValidates) {
-      context.debug(`...validated the '${propertyRelationString}' property relation.`);
+      context.debug(`...validated the '${propertyAssertionString}' property assertion's property relation.`);
     }
 
     return propertyRelationValidates;
