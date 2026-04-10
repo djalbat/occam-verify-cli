@@ -45,23 +45,9 @@ export function variableAssignmentFromTypeAssertion(typeAssertion, context) {
 }
 
 export function variableAssignmentFromPrepertyAssertion(propertyAssertion, context) {
+  const term = propertyAssertion.getTerm(),
+        type = propertyAssertion.getType(),
+        variableAssignment = variableAssignmentFromTermAndType(term, type, context);
 
-  debugger
-
-  // let variable;
-  //
-  // const { Variable } = elements,
-  //   termNode = this.term.getNode();
-  //
-  // variable = Variable.fromTermNode(termNode, context);
-  //
-  // if (variable !== null) {
-  //   const variableIdentifier = variable.getIdentifier();
-  //
-  //   variable = context.findVariableByVariableIdentifier(variableIdentifier);
-  //
-  //   variable = Variable.fromVariableAndPropertyRelation(variable, this.propertyRelation);
-  //
-  //   const variableAssignment = variableAssignmentFromVariable(variable),
-
-  }
+  return variableAssignment;
+}

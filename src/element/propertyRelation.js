@@ -30,6 +30,8 @@ export default define(class PropertyRelation extends Element {
     return propertyRelationNode;
   }
 
+  getType() { return this.property.getType(); }
+
   isEqualTo(propertyRelation) {
     const propertyRelationNode = propertyRelation.getNode(),
           propertyRelationNodeMatches = this.matchPropertyRelationNode(propertyRelationNode),
@@ -73,15 +75,13 @@ export default define(class PropertyRelation extends Element {
       const termValidates = this.validateTerm(context);
 
       if (termValidates) {
-        const propertyVerifies = this.verifyProperty(context);
+        const propertyValidates = this.validateProperty(context);
 
-        validates = propertyVerifies;
+        validates = propertyValidates;
       }
 
       if (validates) {
-        const propertyRelation = this; ///
-
-        this.assign(context);
+        propertyRelation = this; ///
 
         context.addPropertyRelation(propertyRelation);
 
@@ -118,38 +118,27 @@ export default define(class PropertyRelation extends Element {
     return termValidates;
   }
 
-  verifyProperty(context) {
-    let propertyVerifies;
+  validateProperty(context) {
+    let propertyValidates = false;
 
-    const propertyString = this.property.getString();
+    const propertyRelationString = this.getString(); ///
 
-    context.trace(`Verifying the '${propertyString}' property...`);
+    context.trace(`Validating the '${propertyRelationString}' property relation's property...`);
 
-    const termType = this.term.getType(),
-          propertyName = this.property.getName(),
-          termTypeProperties = termType.getProperties(),
-          variableTypeProperty = termTypeProperties.find((termTypeProperty) => {
-            const termTypePropertyComparesToPropertyName = termTypeProperty.comparePropertyName(propertyName);
+    const type = this.term.getType(),
+          property = this.property.validateGivenType(type, context);
 
-            if (termTypePropertyComparesToPropertyName) {
-              return true;
-            }
-          }) || null;
+    if (property !== null) {
+      this.property = property;
 
-    if (variableTypeProperty === null) {
-      const variableString = this.term.getString(),
-            variableTypeString = termType.getString();
-
-      context.debug(`The '${propertyName}' property is not a property of the '${variableString}' variable's '${variableTypeString}' type.`);
-    } else {
-      propertyVerifies = true;
+      propertyValidates = true;
     }
 
-    if (propertyVerifies) {
-      context.debug(`...verified the '${propertyString}' property.`);
+    if (propertyValidates) {
+      context.trace(`...validated the '${propertyRelationString}' property relation's property.`);
     }
 
-    return propertyVerifies;
+    return propertyValidates;
   }
 
   static name = "PropertyRelation";

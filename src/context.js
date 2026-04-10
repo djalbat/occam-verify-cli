@@ -240,6 +240,13 @@ export default class Context extends ContextBase {
     return equality;
   }
 
+  findPropertyByPropertyNode(propertyNode) {
+    const context = this.getContext(),
+          property = context.findPropertyByPropertyNode(propertyNode);
+
+    return property;
+  }
+
   findJudgementByJudgementNode(judgementNode) {
     const context = this.getContext(),
           judgement = context.findJudgementByJudgementNode(judgementNode);
@@ -301,6 +308,13 @@ export default class Context extends ContextBase {
           substitution = context.findSubstitutionBySubstitutionNode(substitutionNode);
 
     return substitution;
+  }
+
+  findPropertyRelationByPropertyRelationNode(propertyRelationNode) {
+    const context = this.getContext(),
+          propertyRelation = context.findPropertyRelationByPropertyRelationNode(propertyRelationNode);
+
+    return propertyRelation;
   }
 
   findDeclaredJudgementsByMetavariableNode(metavariableNode) {
@@ -586,6 +600,12 @@ export default class Context extends ContextBase {
     context.addEquality(equality);
   }
 
+  addProperty(property) {
+    const context = this.getContext();
+
+    context.addProperty(property);
+  }
+
   addJudgement(judgement) {
     const context = this.getContext();
 
@@ -632,6 +652,12 @@ export default class Context extends ContextBase {
     const context = this.getContext();
 
     context.addSubstitution(substitution);
+  }
+
+  addPropertyRelation(propertyRelation) {
+    const context = this.getContext();
+
+    context.addPropertyRelation(propertyRelation);
   }
 
   addDeclaredVariable(declaredVariable) {

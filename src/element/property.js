@@ -122,7 +122,7 @@ export default define(class Property extends Element {
     return validProperty;
   }
 
-  validate(context) {
+  validate(context, validateForwards) {
     let property = null;
 
     const propertyString = this.getString(); ///
@@ -135,18 +135,73 @@ export default define(class Property extends Element {
       property = validProperty; ///
 
       context.debug(`...the '${propertyString}' property is already valid.`);
+
+      const validatesForward = validateForwards(property);
+
+      if (!validatesForward) {
+        property = null;
+      }
     } else {
       let validates = false;
 
-      debugger
+      property = this;  ///
+
+      const validatesForward = validateForwards(property);
+
+      if (validatesForward) {
+        validates = true;
+      }
 
       if (validates) {
-        const property = this; ///
-
         context.addProperty(property);
 
         context.debug(`...validated the '${propertyString}' property.`);
       }
+    }
+
+    return property;
+  }
+
+  validateGivenType(type, context) {
+    let property;
+
+    const typeString = type.getString(),
+          propertyString = this.getString();  ///
+
+    context.trace(`Validating the '${propertyString}' property given the '${typeString}' type...`);
+
+    let validatesGivenType = false;
+
+    property = this.validate(context, (property) => {
+      let validatesForwards = false;
+
+      const propertyName = this.name, ///
+            typeProperties = type.getProperties(),
+            typeProperty = typeProperties.find((typeProperty) => {
+              const typePropertyComparesToPropertyName = typeProperty.comparePropertyName(propertyName);
+
+              if (typePropertyComparesToPropertyName) {
+                return true;
+              }
+            }) || null;
+
+      if (typeProperty !== null) {
+        const type = typeProperty.getType();
+
+        property.setType(type);
+
+        validatesForwards = true;
+      }
+
+      return validatesForwards;
+    });
+
+    if (property !== null) {
+      validatesGivenType = true;
+    }
+
+    if (validatesGivenType) {
+      context.debug(`...validated the '${propertyString}' property given the '${typeString}' type.`);
     }
 
     return property;

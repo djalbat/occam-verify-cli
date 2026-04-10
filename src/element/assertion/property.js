@@ -31,6 +31,8 @@ export default define(class PropertyAssertion extends Assertion {
     return propertyAssertionNode;
   }
 
+  getType() { return this.propertyRelation.getType(); }
+
   compareTermAndPropertyRelation(term, propertyRelation, context) {
     let comparesToTermAndPropertyRelation = false;
 
@@ -148,7 +150,13 @@ export default define(class PropertyAssertion extends Assertion {
     const propertyRelation = this.propertyRelation.validate(context);
 
     if (propertyRelation !== null) {
-      propertyRelationValidates = true;
+      const type = this.getType(),
+            termType = this.term.getType(),
+            termTypeEqualToOrSuperTypeOfType = termType.isEqualToOrSuperTypeOf(type);
+
+      if (termTypeEqualToOrSuperTypeOfType) {
+        propertyRelationValidates = true;
+      }
     }
 
     if (propertyRelationValidates) {
