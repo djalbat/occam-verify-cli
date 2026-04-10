@@ -76,41 +76,21 @@ export default define(class Property extends Element {
 
     const propertyName = this.name, ///
           count = properties.reduce((count, property) => {
-            const propertyComparesToPropertyName = property.comparePropertyName(propertyName);
+            if (property !== this) {
+              const propertyComparesToPropertyName = property.comparePropertyName(propertyName);
 
-            if (propertyComparesToPropertyName) {
-              count++;
+              if (propertyComparesToPropertyName) {
+                count++;
+              }
             }
 
             return count;
           }, 0);
 
-    if (count > 1) {
-      context.debug(`The '${propertyString}' property appears more than once.`);
+    if (count === 0) {
+      naemVerifies = true;
     } else {
-      const superTypes = this.type.getSuperTypes(),
-            superType = superTypes.find((superType) => {
-              const superTypeProperties = superType.getProperties(),
-                    superTypePropertyComparesToPropertyName = superTypeProperties.some((superTypeProperty) => {
-                      const superTypePropertyComparesToPropertyName = superTypeProperty.comparePropertyName(propertyName);
-
-                      if (superTypePropertyComparesToPropertyName) {
-                        return true;
-                      }
-                    });
-
-              if (superTypePropertyComparesToPropertyName) {
-                return true;
-              }
-            }) || null;
-
-      if (superType !== null) {
-        const superTypeString = superType.getString();
-
-        context.debug(`The '${superTypeString}' super-type has the same property.`);
-      } else {
-        naemVerifies = true;
-      }
+      context.debug(`The '${propertyString}' property appears more than once.`);
     }
 
     if (naemVerifies) {

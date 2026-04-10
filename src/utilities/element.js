@@ -171,12 +171,15 @@ export function axiomFromAxiomNode(axiomNode, context) {
         deduction = deductionFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
-        hypotheses = [],
+        hypotheses = hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         topLevelAsssertionString = topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = axiomNode, ///
         string = topLevelAsssertionString, ///
-        lineIndex = null,
-        axiom = new Axiom(context, string, node, lineIndex, labels, suppositions, deduction, proof, signature, hypotheses);
+        lineIndex = null;
+
+  context = null;
+
+  const axiom = new Axiom(context, string, node, lineIndex, labels, suppositions, deduction, proof, signature, hypotheses);
 
   return axiom;
 }
@@ -220,7 +223,7 @@ export function theoremFromTheoremNode(theoremNode, context) {
         deduction = deductionFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
-        hypotheses = [],
+        hypotheses = hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         topLevelAsssertionString = topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = theoremNode, ///
         string = topLevelAsssertionString, ///
@@ -241,9 +244,8 @@ export function propertyFromPropertyNode(propertyNode, context) {
           node = propertyNode, ///
           string = context.nodeAsString(node),
           lineIndex = null,
-          propertyName = propertyNode.getPropertyName(),
-          nominalTypeName = null,
-          name = propertyName;  ///
+          name = nameFromPropertyNode(propertyNode, context),
+          nominalTypeName = nominalTypeNameFromPropertyNode(propertyNode, context);
 
     context = null;
 
@@ -258,9 +260,9 @@ export function variableFromVariableNode(variableNode, context) {
         node = variableNode,  ///
         string = context.nodeAsString(node),
         lineIndex = null,
-        type = null,
+        type = typeFromVariableNode(variableNode, context),
         identifier = identifierFromVarialbeNode(variableNode, context),
-        propertyRelations = [];
+        propertyRelations = propertyRelationsFromVariableNode(variableNode, context);
 
   context = null;
 
@@ -271,12 +273,12 @@ export function variableFromVariableNode(variableNode, context) {
 
 export function subproofFromSubproofNode(subproofNode, context) {
   const { Subproof } = elements,
-        node = subproofNode, ///
+        node = subproofNode,  ///
+        lineIndex = null,
         suppositions = suppositionsFromSubproofNode(subproofNode, context),
         subDerivation = subDerivationFromSubproofNode(subproofNode, context),
         subproofString = subproofStringFromSuppositionsAndSubDerivation(suppositions, subDerivation, context),
-        string = subproofString,  ///
-        lineIndex = null;
+        string = subproofString;  ///
 
   context = null;
 
@@ -390,8 +392,8 @@ export function parameterFromParameterNode(parameterNode, context) {
         node = parameterNode, ///
         string = context.nodeAsString(node),
         lineIndex = null,
-        name = parameterNode.getName(),
-        identifier = parameterNode.getIdentifier();
+        name = nameFromParamterNode(parameterNode, context),
+        identifier = identifierFromParamterNode(parameterNode, context);
 
   context = null;
 
@@ -436,7 +438,7 @@ export function conjectureFromConjectureNode(conjectureNode, context) {
         deduction = deductionFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
-        hypotheses = [],
+        hypotheses = hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         topLevelAsssertionString = topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
         node = conjectureNode, ///
         string = topLevelAsssertionString, ///
@@ -746,9 +748,9 @@ export function containedAssertionFromContainedAssertionNode(containedAssertionN
         node = containedAssertionNode,  ///
         string = context.nodeAsString(node),
         lineIndex = null,
-        negated = containedAssertionNode.isNegated(),
         term = termFromContainedAssertionNode(containedAssertionNode, context),
         frame = frameFromContainedAssertionNode(containedAssertionNode, context),
+        negated = negatedFromContainedAssertionNode(containedAssertionNode, context),
         statement = statementFromContainedAssertionNode(containedAssertionNode, context);
 
   context = null;
@@ -792,10 +794,8 @@ export function propertyDeclarationFromPropertyDeclarationNode(propertyDeclarati
         node = propertyDeclarationNode,  ///
         string = context.nodeAsString(node),
         lineIndex = null,
-        typeNode = propertyDeclarationNode.getTypeNode(),
-        propertyNode = propertyDeclarationNode.getPropertyNode(),
-        type = typeFromTypeNode(typeNode, context),
-        property = propertyFromPropertyNode(propertyNode, context);
+        type = typeFromPropertyDeclarationNode(propertyDeclarationNode, context),
+        property = propertyFromPropertyDeclarationNode(propertyDeclarationNode, context);
 
   context = null;
 
@@ -809,11 +809,9 @@ export function variableDeclarationFromVariableDeclarationNode(variableDeclarati
         node = variableDeclarationNode,  ///
         string = context.nodeAsString(node),
         lineIndex = null,
-        typeNode = variableDeclarationNode.getTypeNode(),
-        provisional = variableDeclarationNode.isProvisional(),
-        variableNode = variableDeclarationNode.getVariableNode(),
-        type = typeFromTypeNode(typeNode, context),
-        variable = variableFromVariableNode(variableNode, context);
+        type = typeFromVariableDeclarationNode(variableDeclarationNode, context),
+        variable = variableFromVariableDeclarationNode(variableDeclarationNode, context),
+        provisional = provisionalFromVariableDeclarationNode(variableDeclarationNode, context);
 
   context = null;
 
@@ -1066,6 +1064,18 @@ export function lemmaFromSectionNode(sectionNode, context) {
 
 export function nameFromPropertyNode(propertyNode, context) {
   const name = propertyNode.getName();
+
+  return name;
+}
+
+export function typeFromVariableNode(variableNode, context) {
+  const type = null;
+
+  return type;
+}
+
+export function nameFromParamterNode(parameterNode, context) {
+  const name = parameterNode.getName();
 
   return name;
 }
@@ -1325,6 +1335,12 @@ export function typeFromTypeAssertionNode(typeAssertionNode, context) {
 export function identifierFromVarialbeNode(variableNode, context) {
   const variableIdentifier = variableNode.getVariableIdentifier(),
         identifier = variableIdentifier;  ///
+
+  return identifier;
+}
+
+export function identifierFromParamterNode(parameterNode, context) {
+  const identifier = parameterNode.getIdentifier();
 
   return identifier;
 }
@@ -1627,6 +1643,12 @@ export function nameFromProcedureReferenceNode(procedureReferenceNode, context) 
   return name;
 }
 
+export function nominalTypeNameFromPropertyNode(propertyNode, context) {
+  const nominalTypeName = null;  ///
+
+  return nominalTypeName;
+}
+
 export function parametersFromProcedureCallNode(procedureCallNode, context) {
   const parameterNodes = procedureCallNode.getParameterNodes(),
         parameters = parametersFromParameterNodes(parameterNodes, context);
@@ -1651,6 +1673,20 @@ export function labelsFromTopLevelAssertionNode(topLevelAsssertionNode, context)
         labels = labelsFromLabelNodes(labelNodes, context);
 
   return labels;
+}
+
+export function typeFromPropertyDeclarationNode(propertyDeclarationNode, context) {
+  const typeNode = propertyDeclarationNode.getTypeNode(),
+        type = typeFromTypeNode(typeNode, context);
+
+  return type;
+}
+
+export function typeFromVariableDeclarationNode(variableDeclarationNode, context) {
+  const typeNode = variableDeclarationNode.getTypeNode(),
+        type = typeFromTypeNode(typeNode, context);
+
+  return type;
 }
 
 export function procedureCallFromSuppositionNode(suppositionNode, context) {
@@ -1690,6 +1726,12 @@ export function typeFromBracketedConstructorNode(bracketedCcnstructorNode, conte
         type = baseType;  ///
 
   return type;
+}
+
+export function propertyRelationsFromVariableNode(variableNode, context) {
+  const propertyRelations = [];
+
+  return propertyRelations;
 }
 
 export function definedAssertionFromStatementNode(statementNode, context) {
@@ -1855,6 +1897,20 @@ export function hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, cont
   return ypotheses;
 }
 
+export function propertyFromPropertyDeclarationNode(propertyDeclarationNode, context) {
+  const propertyNode = propertyDeclarationNode.getPropertyNode(),
+        property = propertyFromPropertyNode(propertyNode, context);
+
+  return property;
+}
+
+export function variableFromVariableDeclarationNode(variableDeclarationNode, context) {
+  const variableNode = variableDeclarationNode.getVariableNode(),
+        variable = variableFromVariableNode(variableNode, context);
+
+  return variable;
+}
+
 export function statementFromBracketedCombinatorNode(bracketedCombinatorNode, context) {
   const statementNode = bracketedCombinatorNode.getStatementNode(),
         statement = statementFromStatementNode(statementNode, context);
@@ -1925,6 +1981,12 @@ export function deductionFromTopLevelMetaAssertionNode(metaLemmaMetathoremNode, 
         deduction = deductionFromDeductionNode(deductionNode, context);
 
   return deduction;
+}
+
+export function provisionalFromVariableDeclarationNode(variableDeclarationNode, context) {
+  const provisional = variableDeclarationNode.isProvisional();
+
+  return provisional;
 }
 
 export function procedureReferenceFromProcedureCallNode(procedureCallNode, context) {
