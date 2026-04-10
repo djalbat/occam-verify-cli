@@ -245,11 +245,11 @@ export function propertyFromPropertyNode(propertyNode, context) {
           string = context.nodeAsString(node),
           lineIndex = null,
           name = nameFromPropertyNode(propertyNode, context),
-          nominalTypeName = nominalTypeNameFromPropertyNode(propertyNode, context);
+          type = typeFromPropertyNode(propertyNode, context);
 
     context = null;
 
-    property = new Property(context, string, node, lineIndex, name, nominalTypeName);
+    property = new Property(context, string, node, lineIndex, name, type);
   }
 
   return property;
@@ -1063,9 +1063,16 @@ export function lemmaFromSectionNode(sectionNode, context) {
 }
 
 export function nameFromPropertyNode(propertyNode, context) {
-  const name = propertyNode.getName();
+  const propertyName = propertyNode.getPropertyName(),
+        name = propertyName;
 
   return name;
+}
+
+export function typeFromPropertyNode(propertyNode, context) {
+  const type = null;  ///
+
+  return type;
 }
 
 export function typeFromVariableNode(variableNode, context) {
@@ -1641,12 +1648,6 @@ export function nameFromProcedureReferenceNode(procedureReferenceNode, context) 
   const name = procedureReferenceNode.getName();
 
   return name;
-}
-
-export function nominalTypeNameFromPropertyNode(propertyNode, context) {
-  const nominalTypeName = null;  ///
-
-  return nominalTypeName;
 }
 
 export function parametersFromProcedureCallNode(procedureCallNode, context) {

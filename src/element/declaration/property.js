@@ -36,6 +36,8 @@ export default define(class PropertyDeclaration extends Declaration {
         const propertyVerifies = this.verifyProperty(properties, context);
 
         if (propertyVerifies) {
+          this.property.setType(this.type);
+
           verifies = true;
         }
       }
@@ -59,10 +61,11 @@ export default define(class PropertyDeclaration extends Declaration {
     context.trace(`Verifying the '${propertyDeclarationString}' property declaration's '${typeString}' type...`);
 
     const typeName = this.type.getName(),
-          includeRelease = true,
-          typePresent = context.isTypePresentByTypeName(typeName, includeRelease);
+          type = context.findTypeByTypeName(typeName);
 
-    if (typePresent) {
+    if (type !== null) {
+      this.type = type;
+
       typeVerifies = true;
     } else {
       context.debug(`The '${typeString}' type is not present.`);

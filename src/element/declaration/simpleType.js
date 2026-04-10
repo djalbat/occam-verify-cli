@@ -78,8 +78,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type...`);
 
     const typeName = this.type.getName(),
-          includeRelease = true,
-          typePresent = context.isTypePresentByTypeName(typeName, includeRelease);
+          typePresent = context.isTypePresentByTypeName(typeName);
 
     if (!typePresent) {
       const prefixedTypeName = typeName, ///

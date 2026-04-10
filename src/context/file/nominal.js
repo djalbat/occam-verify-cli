@@ -750,8 +750,8 @@ export default class NominalFileContext extends FileContext {
     return labelPresent;
   }
 
-  isTypePresentByTypeName(typeName, includeRelease = true) {
-    const type = this.findTypeByTypeName(typeName, includeRelease),
+  isTypePresentByTypeName(typeName) {
+    const type = this.findTypeByTypeName(typeName),
           typePresent = (type !== null);
 
     return typePresent;

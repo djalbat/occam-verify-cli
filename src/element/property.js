@@ -6,22 +6,22 @@ import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiateProperty } from "../process/instantiate";
 import { nameFromPropertyNode } from "../utilities/element";
-import { nominalTypeNameFromJSON, nominalTypeNameToNominalTypeNameJSON } from "../utilities/json";
+import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 export default define(class Property extends Element {
-  constructor(context, string, node, lineIndex, name, nominalTypeName) {
+  constructor(context, string, node, lineIndex, name, type) {
     super(context, string, node, lineIndex);
 
     this.name = name;
-    this.nominalTypeName = nominalTypeName;
+    this.type = type;
   }
 
   getName() {
     return this.name;
   }
 
-  getNominalTypeName() {
-    return this.nominalTypeName;
+  getType() {
+    return this.type;
   }
 
   getPropertyNode() {
@@ -31,16 +31,18 @@ export default define(class Property extends Element {
     return properetyNode;
   }
 
+  setName(name) {
+    this.name = name;
+  }
+
+  setType(type) {
+    this.type = type;
+  }
+
   comparePropertyName(propertyName) {
     const comparesToPropertyName = (this.name === propertyName);
 
     return comparesToPropertyName;
-  }
-
-  compareNominalTypeName(nominalTypeName) {
-    const comparesToNominalTypeName = (this.nominalTypeName === nominalTypeName);
-
-    return comparesToNominalTypeName;
   }
 
   verify(properties, context) {
@@ -53,11 +55,7 @@ export default define(class Property extends Element {
     const naemVerifies = this.verifyName(properties, context);
 
     if (naemVerifies) {
-      const nominalTypeNameVerifies = this.verifyNominalTypeName(context);
-
-      if (nominalTypeNameVerifies) {
-        verifies = true;
-      }
+      verifies = true;
     }
 
     if (verifies) {
@@ -100,41 +98,15 @@ export default define(class Property extends Element {
     return naemVerifies;
   }
 
-  verifyNominalTypeName(context) {
-    let nominalTypeNameVerifies = false;
-
-    const propertyString = this.getString();  ///
-
-    context.trace(`Verifying the '${propertyString}' property's nominal type name...`);
-
-    const typeComparesToNominalTypeName = this.type.compareNominalTypeName(this.nominalTypeName);
-
-    if (typeComparesToNominalTypeName) {
-      nominalTypeNameVerifies = true;
-    } else {
-      const typePresent = context.isTypePresentByNominalTypeName(this.nominalTypeName);
-
-      if (typePresent) {
-        nominalTypeNameVerifies = true;
-      }
-    }
-
-    if (nominalTypeNameVerifies) {
-      context.debug(`...verifies the '${propertyString}' property's nominal type name.`);
-    }
-
-    return nominalTypeNameVerifies;
-  }
-
   toJSON() {
-    const nominalTypeNameJSON = nominalTypeNameToNominalTypeNameJSON(this.nominalTypeName),
-          nominalTypeName = nominalTypeNameJSON,  ///
+    const typeJSON = typeToTypeJSON(this.type),
           string = this.getString(),
           lineIndex = this.getLineIndex(),
+          type = typeJSON,  ///
           json = {
             string,
             lineIndex,
-            nominalTypeName
+            type
           };
 
     return json;
@@ -148,11 +120,11 @@ export default define(class Property extends Element {
             propertyNode = instantiateProperty(string, context),
             node = propertyNode,  ///
             name = nameFromPropertyNode(propertyNode, context),
-            nominalTypeName = nominalTypeNameFromJSON(json);
+            type = typeFromJSON(json, context);
 
       context = null;
 
-      const property = new Property(context, string, node, lineIndex, name, nominalTypeName);
+      const property = new Property(context, string, node, lineIndex, name, type);
 
       return property;
     }, context);
