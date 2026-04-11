@@ -40,14 +40,6 @@ export default class Context extends ContextBase {
     return frames;
   }
 
-  getJudgements(judgements = []) {
-    const context = this.getContext();
-
-    context.getJudgements(judgements);
-
-    return judgements;
-  }
-
   getProperties(properties = []) {
     const context = this.getContext();
 
@@ -64,12 +56,12 @@ export default class Context extends ContextBase {
     return equalities;
   }
 
-  getStatements(statements = []) {
+  getJudgements(judgements = []) {
     const context = this.getContext();
 
-    context.getStatements(statements);
+    context.getJudgements(judgements);
 
-    return statements;
+    return judgements;
   }
 
   getAssertions(assertions = []) {
@@ -78,6 +70,22 @@ export default class Context extends ContextBase {
     context.getAssertions(assertions);
 
     return assertions;
+  }
+
+  getStatements(statements = []) {
+    const context = this.getContext();
+
+    context.getStatements(statements);
+
+    return statements;
+  }
+
+  getSignatures(signatures = []) {
+    const context = this.getContext();
+
+    context.getSignatures(signatures);
+
+    return signatures;
   }
 
   getReferences(references = []) {
@@ -266,6 +274,13 @@ export default class Context extends ContextBase {
           statement = context.findStatementByStatementNode(statementNode);
 
     return statement;
+  }
+
+  findSignatureBySignatureNode(signatureNode) {
+    const context = this.getContext(),
+          signature = context.findSignatureBySignatureNode(signatureNode);
+
+    return signature;
   }
 
   findReferenceByReferenceNode(referenceNode) {
@@ -479,6 +494,13 @@ export default class Context extends ContextBase {
     return judgementPresent;
   }
 
+  isAssertionPresentByAssertionNode(assertionNode) {
+    const context = this.getContext(),
+          assertionPresent = context.isAssertionPresentByAssertionNode(assertionNode);
+
+    return assertionPresent;
+  }
+
   isStatementPresentByStatementNode(statementNode) {
     const context = this.getContext(),
       statementPresent = context.isStatementPresentByStatementNode(statementNode);
@@ -486,11 +508,11 @@ export default class Context extends ContextBase {
     return statementPresent;
   }
 
-  isAssertionPresentByAssertionNode(assertionNode) {
+  isSignaturePresentBySignatureNode(signatureNode) {
     const context = this.getContext(),
-          assertionPresent = context.isAssertionPresentByAssertionNode(assertionNode);
+          signaturePresent = context.isSignaturePresentBySignatureNode(signatureNode);
 
-    return assertionPresent;
+    return signaturePresent;
   }
 
   isMetavariablePresentByMetavariableNode(metavariableNode) {
@@ -612,16 +634,22 @@ export default class Context extends ContextBase {
     context.addJudgement(judgement);
   }
 
+  addAssertion(assertion) {
+    const context = this.getContext();
+
+    context.addAssertion(assertion);
+  }
+
   addStatement(statement) {
     const context = this.getContext();
 
     context.addStatement(statement);
   }
 
-  addAssertion(assertion) {
+  addSignature(signature) {
     const context = this.getContext();
 
-    context.addAssertion(assertion);
+    context.addSignature(signature);
   }
 
   addReference(reference) {

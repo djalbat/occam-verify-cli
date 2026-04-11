@@ -79,10 +79,18 @@ export default define(class SatisfiesAssertion extends Assertion {
   validateSignature(context) {
     let signatureValidates = false;
 
+    const satisfiesAssertionString = this.getString(); ///
+
+    context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertion's signature...`);
+
     const signature = this.signature.validate(context);
 
     if (signature !== null) {
       signatureValidates = true;
+    }
+
+    if (signatureValidates) {
+      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertion's signature.`);
     }
 
     return signatureValidates;

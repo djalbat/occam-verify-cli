@@ -74,6 +74,16 @@ export function compressStatements(statements) {
   });
 }
 
+export function compressSignatures(signatures) {
+  compress(signatures, (signatureA, signatureB) => {
+    const signatureAEqualToSignatureB = signatureA.isEqualTo(signatureB);
+
+    if (!signatureAEqualToSignatureB) {
+      return true;
+    }
+  });
+}
+
 export function compressReferences(references) {
   compress(references, (referenceA, referenceB) => {
     const referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);

@@ -248,12 +248,12 @@ export default class NominalFileContext extends FileContext {
     return frames;
   }
 
-  getEqualities(equalities = []) {
-    return equalities;
-  }
-
   getProperties(properties = []) {
     return properties;
+  }
+
+  getEqualities(equalities = []) {
+    return equalities;
   }
 
   getJudgements(judgements = []) {
@@ -266,6 +266,10 @@ export default class NominalFileContext extends FileContext {
 
   getStatements(statements = []) {
     return statements;
+  }
+
+  getSignatures(signatures = []) {
+    return signatures;
   }
 
   getReferences(references = []) {

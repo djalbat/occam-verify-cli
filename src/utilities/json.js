@@ -518,16 +518,32 @@ export function referencesFromJSON(json, context) {
   let { references } = json;
 
   const { Reference } = elements,
-        referencesJSON = references; ///
+    referencesJSON = references; ///
 
   references = referencesJSON.map((referenceJSON) => {
     const json = referenceJSON,  ///
-          reference = Reference.fromJSON(json, context);
+      reference = Reference.fromJSON(json, context);
 
     return reference;
   });
 
   return references;
+}
+
+export function signaturesFromJSON(json, context) {
+  let { signatures } = json;
+
+  const { Signature } = elements,
+        signaturesJSON = signatures; ///
+
+  signatures = signaturesJSON.map((signatureJSON) => {
+    const json = signatureJSON,  ///
+          signature = Signature.fromJSON(json, context);
+
+    return signature;
+  });
+
+  return signatures;
 }
 
 export function conjecturesFromJSON(json, context) {
@@ -1070,6 +1086,16 @@ export function statementsToStatementsJSON(statements) {
   });
 
   return statementsJSON;
+}
+
+export function signaturesToSignaturesJSON(signatures) {
+  const signaturesJSON = signatures.map((signature) => {
+    const signatureJSON = signature.toJSON();
+
+    return signatureJSON;
+  });
+
+  return signaturesJSON;
 }
 
 export function assertionsToAssertionsJSON(assertions) {

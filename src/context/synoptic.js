@@ -11,6 +11,7 @@ import { compressTerms,
          compressJudgements,
          compressAssertions,
          compressStatements,
+         compressSignatures,
          compressReferences,
          compressAssumptions,
          compressMetavariables,
@@ -80,6 +81,16 @@ export default class SynopticContext extends Context {
     return judgements;
   }
 
+  getAssertions(assertions = []) {
+    this.contexts.forEach((context) => {
+      context.getAssertions(assertions);
+    });
+
+    compressAssertions(assertions);
+
+    return assertions;
+  }
+
   getStatements(statements = []) {
     this.contexts.forEach((context) => {
       context.getStatements(statements);
@@ -90,14 +101,14 @@ export default class SynopticContext extends Context {
     return statements;
   }
 
-  getAssertions(assertions = []) {
+  getSignatures(signatures = []) {
     this.contexts.forEach((context) => {
-      context.getAssertions(assertions);
+      context.getSignatures(signatures);
     });
 
-    compressAssertions(assertions);
+    compressSignatures(signatures);
 
-    return assertions;
+    return signatures;
   }
 
   getReferences(references = []) {
@@ -215,6 +226,19 @@ export default class SynopticContext extends Context {
     return judgement;
   }
 
+  findAssertionByAssertionNode(assertionNode) {
+    const assertions = this.getAssertions(),
+          assertion = assertions.find((assertion) => {
+            const assertionNodeMatches = assertion.matchAssertionNode(assertionNode);
+
+            if (assertionNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return assertion;
+  }
+
   findStatementByStatementNode(statementNode) {
     const statements = this.getStatements(),
           statement = statements.find((statement) => {
@@ -228,6 +252,19 @@ export default class SynopticContext extends Context {
     return statement;
   }
 
+  findSignatureBySignatureNode(signatureNode) {
+    const signatures = this.getSignatures(),
+          signature = signatures.find((signature) => {
+            const signatureNodeMatches = signature.matchSignatureNode(signatureNode);
+
+            if (signatureNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return signature;
+  }
+
   findReferenceByReferenceNode(referenceNode) {
     const references = this.getReferences(),
           reference = references.find((reference) => {
@@ -239,19 +276,6 @@ export default class SynopticContext extends Context {
           }) || null;
 
     return reference;
-  }
-
-  findAssertionByAssertionNode(assertionNode) {
-    const assertions = this.getAssertions(),
-          assertion = assertions.find((assertion) => {
-            const assertionNodeMatches = assertion.matchAssertionNode(assertionNode);
-
-            if (assertionNodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return assertion;
   }
 
   findAssumptionByAssumptionNode(assumptionNode) {

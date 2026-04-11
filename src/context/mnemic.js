@@ -11,6 +11,7 @@ import { compressTerms,
          compressJudgements,
          compressAssertions,
          compressStatements,
+         compressSignatures,
          compressReferences,
          compressAssumptions,
          compressMetavariables,
@@ -26,6 +27,7 @@ import { termsFromJSON,
          statementsFromJSON,
          assertionsFromJSON,
          referencesFromJSON,
+         signaturesFromJSON,
          assumptionsFromJSON,
          metavariablesFromJSON,
          substitutionsFromJSON,
@@ -34,6 +36,7 @@ import { termsFromJSON,
          judgementsToJudgementsJSON,
          equalitiesToEqualitiesJSON,
          statementsToStatementsJSON,
+         signaturesToSignaturesJSON,
          assertionsToAssertionsJSON,
          referencesToReferencesJSON,
          assumptionsToAssumptionsJSON,
@@ -44,7 +47,7 @@ import { termsFromJSON,
 const { push } = arrayUtilities;
 
 export default class MnemicContext extends Context {
-  constructor(context, terms, frames, properties, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions, propertyRelations) {
+  constructor(context, terms, frames, properties, equalities, judgements, assertions, statements, signatures, references, assumptions, metavariables, substitutions, propertyRelations) {
     super(context);
 
     this.terms = terms;
@@ -54,6 +57,7 @@ export default class MnemicContext extends Context {
     this.judgements = judgements;
     this.assertions = assertions;
     this.statements = statements;
+    this.signatures = signatures;
     this.references = references;
     this.assumptions = assumptions;
     this.metavariables = metavariables;
@@ -131,6 +135,18 @@ export default class MnemicContext extends Context {
     compressStatements(context);
 
     return statements;
+  }
+
+  getSignatures(signatures = []) {
+    const context = this.getContext();
+
+    push(signatures, this.signatures);
+
+    context.getSignatures(signatures);
+
+    compressSignatures(context);
+
+    return signatures;
   }
 
   getAssertions(assertions = []) {
@@ -260,6 +276,17 @@ export default class MnemicContext extends Context {
     context.debug(`...added the '${judgementString}' judgement to the mnemic context.`);
   }
 
+  addAssertion(assertion) {
+    const context = this, ///
+          assertionString = assertion.getString();
+
+    context.trace(`Adding the '${assertionString}' assertion to the mnemic context...`);
+
+    this.assertions.push(assertion);
+
+    context.debug(`...added the '${assertionString}' assertion to the mnemic context.`);
+  }
+
   addStatement(statement) {
     const context = this, ///
           statementString = statement.getString();
@@ -271,15 +298,15 @@ export default class MnemicContext extends Context {
     context.debug(`...added the '${statementString}' statement to the mnemic context.`);
   }
 
-  addAssertion(assertion) {
+  addSignature(signature) {
     const context = this, ///
-          assertionString = assertion.getString();
+          signatureString = signature.getString();
 
-    context.trace(`Adding the '${assertionString}' assertion to the mnemic context...`);
+    context.trace(`Adding the '${signatureString}' signature to the mnemic context...`);
 
-    this.assertions.push(assertion);
+    this.signatures.push(signature);
 
-    context.debug(`...added the '${assertionString}' assertion to the mnemic context.`);
+    context.debug(`...added the '${signatureString}' signature to the mnemic context.`);
   }
 
   addReference(reference) {
@@ -408,6 +435,19 @@ export default class MnemicContext extends Context {
     return judgement;
   }
 
+  findAssertionByAssertionNode(assertionNode) {
+    const assertions = this.getAssertions(),
+          assertion = assertions.find((assertion) => {
+            const assertionNodeMatches = assertion.matchAssertionNode(assertionNode);
+
+            if (assertionNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return assertion;
+  }
+
   findStatementByStatementNode(statementNode) {
     const statements = this.getStatements(),
           statement = statements.find((statement) => {
@@ -421,6 +461,19 @@ export default class MnemicContext extends Context {
     return statement;
   }
 
+  findSignatureBySignatureNode(signatureNode) {
+    const signatures = this.getSignatures(),
+          signature = signatures.find((signature) => {
+            const signatureNodeMatches = signature.matchSignatureNode(signatureNode);
+
+            if (signatureNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return signature;
+  }
+
   findReferenceByReferenceNode(referenceNode) {
     const references = this.getReferences(),
           reference = references.find((reference) => {
@@ -432,19 +485,6 @@ export default class MnemicContext extends Context {
           }) || null;
 
     return reference;
-  }
-
-  findAssertionByAssertionNode(assertionNode) {
-    const assertions = this.getAssertions(),
-          assertion = assertions.find((assertion) => {
-            const assertionNodeMatches = assertion.matchAssertionNode(assertionNode);
-
-            if (assertionNodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return assertion;
   }
 
   findAssumptionByAssumptionNode(assumptionNode) {
@@ -555,6 +595,13 @@ export default class MnemicContext extends Context {
     return judgementPresent;
   }
 
+  isAssertionPresentByAssertionNode(assertionNode) {
+    const assertion = this.findAssertionByAssertionNode(assertionNode),
+          assertionPresent = (assertion !== null);
+
+    return assertionPresent;
+  }
+
   isStatementPresentByStatementNode(statementNode) {
     const statement = this.findStatementByStatementNode(statementNode),
           statementPresent = (statement !== null);
@@ -562,11 +609,11 @@ export default class MnemicContext extends Context {
     return statementPresent;
   }
 
-  isAssertionPresentByAssertionNode(assertionNode) {
-    const assertion = this.findAssertionByAssertionNode(assertionNode),
-          assertionPresent = (assertion !== null);
+  isSignaturePresentBySignatureNode(signatureNode) {
+    const signature = this.findSignatureBySignatureNode(signatureNode),
+          signaturePresent = (signature !== null);
 
-    return assertionPresent;
+    return signaturePresent;
   }
 
   isAssumptionPresentByAssumptionNode(assumptionNode) {
@@ -629,6 +676,7 @@ export default class MnemicContext extends Context {
 
     this.judgements = judgementsFromJSON(json, context);
     this.assertions = assertionsFromJSON(json, context);
+    this.signatures = signaturesFromJSON(json, context);
     this.substitutions = substitutionsFromJSON(json, context);
     this.propertyRelations = propertyRelationsFromJSON(json, context);
   }
@@ -637,10 +685,11 @@ export default class MnemicContext extends Context {
     let terms = this.getTerms(),
         frames = this.getFrames(),
         properties = this.getProperties(),
-        judgements = this.getJudgements(),
         equalities = this.getEqualities(),
-        statements = this.getStatements(),
+        judgements = this.getJudgements(),
         assertions = this.getAssertions(),
+        statements = this.getStatements(),
+        signatures = this.getSignatures(),
         references = this.getReferences(),
         assumptions = this.getAssumptions(),
         metavariables = this.getMetavariables(),
@@ -650,10 +699,11 @@ export default class MnemicContext extends Context {
     const termsJSON = termsToTermsJSON(terms),
           framesJSON = framesToFramesJSON(frames),
           propertiesJSON = propertiesToPropertiesJSON(properties),
-          judgementsJSON = judgementsToJudgementsJSON(judgements),
           equalitiesJSON = equalitiesToEqualitiesJSON(equalities),
-          statementsJSON = statementsToStatementsJSON(statements),
+          judgementsJSON = judgementsToJudgementsJSON(judgements),
           assertionsJSON = assertionsToAssertionsJSON(assertions),
+          statementsJSON = statementsToStatementsJSON(statements),
+          signaturesJSON = signaturesToSignaturesJSON(signatures),
           referencesJSON = referencesToReferencesJSON(references),
           assumptionsJSON = assumptionsToAssumptionsJSON(assumptions),
           metavariablesJSON = metavariablesToMetavariablesJSON(metavariables),
@@ -663,10 +713,11 @@ export default class MnemicContext extends Context {
     terms = termsJSON; ///
     frames = framesJSON; ///
     properties = propertiesJSON;  ///
-    judgements = judgementsJSON; ///
     equalities = equalitiesJSON; ///
-    statements = statementsJSON; ///
+    judgements = judgementsJSON; ///
     assertions = assertionsJSON; ///
+    statements = statementsJSON; ///
+    signatures = signaturesJSON; ///
     references = referencesJSON; ///
     assumptions = assumptionsJSON; ///
     metavariables = metavariablesJSON;  //
@@ -679,8 +730,9 @@ export default class MnemicContext extends Context {
       properties,
       equalities,
       judgements,
-      statements,
       assertions,
+      statements,
+      signatures,
       references,
       assumptions,
       metavariables,
@@ -699,12 +751,13 @@ export default class MnemicContext extends Context {
           judgements = null,
           statements = null,
           assertions = null,
+          signatures = null,
           references = null,
           assumptions = null,
           metavariables = null,
           substitutions = null,
           propertyRelations = null,
-          mnemicContext = new MnemicContext(context, terms, frames, properties, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions, propertyRelations);
+          mnemicContext = new MnemicContext(context, terms, frames, properties, equalities, judgements, assertions, statements, signatures, references, assumptions, metavariables, substitutions, propertyRelations);
 
     mnemicContext.initialise(json);
 
@@ -719,12 +772,13 @@ export default class MnemicContext extends Context {
           judgements = [],
           statements = [],
           assertions = [],
+          signatures = [],
           references = [],
           assumptions = [],
           metavariables = [],
           substitutions = [],
           propertyRelations = [],
-          mnemicContext = new MnemicContext(context, terms, frames, properties, equalities, judgements, assertions, statements, references, assumptions, metavariables, substitutions, propertyRelations);
+          mnemicContext = new MnemicContext(context, terms, frames, properties, equalities, judgements, assertions, statements, signatures, references, assumptions, metavariables, substitutions, propertyRelations);
 
     return mnemicContext;
   }
