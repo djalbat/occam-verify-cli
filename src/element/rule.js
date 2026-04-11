@@ -95,7 +95,7 @@ export default define(class Rule extends Element {
     return verifies;
   }
 
-  verifyLabel(context, label) {
+  verifyLabel(label, context) {
     let labelVerifies;
 
     const ruleString = this.getString(),  ///
@@ -120,7 +120,7 @@ export default define(class Rule extends Element {
     context.trace(`Verifying the '${ruleString}' rule's labels...`);
 
     labelsVerify = this.labels.every((label) => {
-      const labelVerifies = this.verifyLabel(context, label);
+      const labelVerifies = this.verifyLabel(label, context);
 
       if (labelVerifies) {
         return true;

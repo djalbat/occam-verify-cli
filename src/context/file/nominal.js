@@ -552,8 +552,8 @@ export default class NominalFileContext extends FileContext {
     return topLevelMetaAssertions;
   }
 
-  findTypeByTypeName(typeName) {
-    let types = this.getTypes();
+  findTypeByTypeName(typeName, includeRelease = true) {
+    let types = this.getTypes(includeRelease);
 
     const baseType = baseTypeFromNothing();
 
@@ -758,8 +758,8 @@ export default class NominalFileContext extends FileContext {
     return labelPresent;
   }
 
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
+  isTypePresentByTypeName(typeName, includeRelease = true) {
+    const type = this.findTypeByTypeName(typeName, includeRelease),
           typePresent = (type !== null);
 
     return typePresent;

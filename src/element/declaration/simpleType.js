@@ -54,6 +54,13 @@ export default define(class SimpleTypeDeclaration extends Declaration {
           const propertiesVerifies = this.verifyProperties(context);
 
           if (propertiesVerifies) {
+            const typePrefix = context.getTypePrefix(),
+                  prefixName = typePrefix.getPrefixName();
+
+            this.type.setProvisional(this.provisional);
+
+            this.type.setPrefixName(prefixName);
+
             context.addType(this.type);
 
             verifies = true;
@@ -85,8 +92,6 @@ export default define(class SimpleTypeDeclaration extends Declaration {
             typePresent = context.isTypePresentByPrefixedTypeName(prefixedTypeName);
 
       if (!typePresent) {
-        this.type.setProvisional(this.provisional);
-
         typeVerifies = true;
       } else {
         context.debug(`The '${typeString}' type is already present.`);
@@ -102,7 +107,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     return typeVerifies;
   }
 
-  verifySuperType(context, superType, superTypes) {
+  verifySuperType(superType, superTypes, context) {
     let superTypeVerifies = false;
 
     const superTypeString = superType.getString(),
@@ -144,7 +149,7 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's super-types...`);
 
     superTypesVerify = this.superTypes.every((superType) => {
-      const superTypeVerifies = this.verifySuperType(context, superType, superTypes);
+      const superTypeVerifies = this.verifySuperType(superType, superTypes, context);
 
       if (superTypeVerifies) {
         return true;

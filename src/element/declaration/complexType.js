@@ -105,7 +105,8 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration's '${typeString}' type...`);
 
     const typeName = this.type.getName(),
-          typePresent = context.isTypePresentByTypeName(typeName);
+          includeRelease = false,
+          typePresent = context.isTypePresentByTypeName(typeName, includeRelease);
 
     if (!typePresent) {
       const prefixedTypeName = typeName, ///
@@ -129,7 +130,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     return typeVerifies;
   }
 
-  verifySuperType(context, superType, superTypes) {
+  verifySuperType(superType, superTypes, context) {
     let superTypeVerifies = false;
 
     const superTypeString = superType.getString(),
@@ -171,7 +172,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration's super-types...`);
 
     superTypesVerify = this.superTypes.every((superType) => {
-      const superTypeVerifies = this.verifySuperType(context, superType, superTypes);
+      const superTypeVerifies = this.verifySuperType(superType, superTypes, context);
 
       if (superTypeVerifies) {
         return true;

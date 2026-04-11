@@ -6,9 +6,16 @@ import { arrayUtilities } from "necessary";
 import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiateType } from "../process/instantiate";
+import { nameFromTypeNode } from "../utilities/element";
 import { baseTypeFromNothing } from "../utilities/type";
-import { nameFromTypeNode, prefixNameFromTypeNode } from "../utilities/element";
-import { superTypesFromJSON, provisionalFromJSON, propertiesFromJSON, provisionalToProvisionalJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
+import { propertiesFromJSON,
+         prefixNameFromJSON,
+         superTypesFromJSON,
+         provisionalFromJSON,
+         prefixnameToPrevixNameJSON,
+         superTypesToSuperTypesJSON,
+         propertiesToPropertiesJSON,
+         provisionalToProvisionalJSON } from "../utilities/json";
 
 const { push, first } = arrayUtilities;
 
@@ -229,8 +236,7 @@ export default define(class Type extends Element {
   }
 
   compareTypeName(typeName) {
-    const name = this.getName(),
-          nameTypeName = (name === typeName),
+    const nameTypeName = (this.name === typeName),
           comparesToTypeName = nameTypeName;  ///
 
     return comparesToTypeName;
@@ -254,8 +260,7 @@ export default define(class Type extends Element {
     let comparesToNominalTypeName = false;
 
     if (!comparesToNominalTypeName) {
-      const name = this.getName(),
-            nominalTypeNameName = (nominalTypeName === name);
+      const nominalTypeNameName = (this.name === nominalTypeName);
 
       if (nominalTypeNameName) {
         comparesToNominalTypeName = true;
@@ -304,14 +309,17 @@ export default define(class Type extends Element {
           };
 
     if (!abridged) {
-      const superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
+      const prefixNameJSON = prefixnameToPrevixNameJSON(this.prefixName),
+            superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
             propertiesJSON = propertiesToPropertiesJSON(this.properties),
             provisinoalJSOM = provisionalToProvisionalJSON(this.provisional),
+            prefixName = prefixNameJSON,  ///
             superTypes = superTypesJSON,  ///
             properties = propertiesJSON,  ///
             provisional = provisinoalJSOM;  ///
 
       Object.assign(json, {
+        prefixName,
         superTypes,
         properties,
         provisional
@@ -329,7 +337,7 @@ export default define(class Type extends Element {
             typeNode = instantiateType(string, context),
             node = typeNode, ///
             name = nameFromTypeNode(typeNode, context),
-            prefixName = prefixNameFromTypeNode(typeNode, context),
+            prefixName = prefixNameFromJSON(json, context),
             superTypes = superTypesFromJSON(json, context),
             properties = propertiesFromJSON(json, context),
             provisional = provisionalFromJSON(json);

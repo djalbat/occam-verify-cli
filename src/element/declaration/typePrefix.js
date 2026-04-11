@@ -31,7 +31,8 @@ export default define(class TypePrefixDeclaration extends Declaration {
 
     context.trace(`Verifying the '${typePrefixDeclarationString}' type prefix declaration...`);
 
-    const types = context.getTypes(),
+    const includeRelease = false,
+          types = context.getTypes(includeRelease),
           typesLength = types.length;
 
     if (typesLength === 0) {

@@ -407,18 +407,24 @@ export function equalitiesFromJSON(json, context) {
   return equalities;
 }
 
+export function prefixNameFromJSON(json, context) {
+  const { prefixName } = json;
+
+  return prefixName;
+}
+
 export function superTypesFromJSON(json, context) {
   const { superTypes: superTypesJSON } = json;
 
   const superTypes = superTypesJSON.map((superTypeJSON) => {
-          const json = superTypeJSON,  ///
-                { string } = json,
-                name = string,  ///
-                type = findTypeByName(name, context),
-                superType = type; ///
+    const json = superTypeJSON,  ///
+      { string } = json,
+      name = string,  ///
+      type = findTypeByName(name, context),
+      superType = type; ///
 
-          return superType;
-        });
+    return superType;
+  });
 
   return superTypes;
 }
@@ -997,6 +1003,12 @@ export function hypothesesToHypothesesJSON(hypotheses) {
   });
 
   return hypothesesJSON;
+}
+
+export function prefixnameToPrevixNameJSON(prefixname) {
+  const prefixNameJSON = prefixname;  ///
+
+  return prefixNameJSON;
 }
 
 export function superTypesToSuperTypesJSON(superTypes) {
