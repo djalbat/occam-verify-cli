@@ -38,6 +38,32 @@ export default define(class Signature extends Element {
     return validSignature;
   }
 
+  verify(context) {
+    let verifies = false;
+
+    const signatureString = this.getString();  ///
+
+    context.trace(`Verifying the '${signatureString}' signature...`);
+
+    attempt((context) => {
+      const termsValidate = this.validateTerms(context);
+
+      if (termsValidate !== null) {
+        verifies = true;
+      }
+
+      if (verifies) {
+        this.commit(context);
+      }
+    }, context);
+
+    if (verifies) {
+      context.debug(`...validated the '${signatureString}' signature.`);
+    }
+
+    return verifies;
+  }
+
   validate(context) {
     let signature = null;
 
