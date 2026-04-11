@@ -192,14 +192,18 @@ export default define(class Statement extends Element {
 
     context.trace(`Validating the '${statementString}' statement...`);
 
+    let validates;
+
     const validStatement = this.findValidStatment(context);
 
     if (validStatement !== null) {
+      validates = true;
+
       statement = validStatement; ///
 
       context.debug(`...the '${statementString}' statement is already valid.`);
     } else {
-      const validates = validateStatements.some((validateStatement) => {
+      validates = validateStatements.some((validateStatement) => {
         const statement = this, ///
               statementValidates = validateStatement(statement, context);
 
@@ -212,9 +216,11 @@ export default define(class Statement extends Element {
         statement = this; ///
 
         context.addStatement(statement);
-
-        context.debug(`...validated the '${statementString}' statement.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${statementString}' statement.`);
     }
 
     return statement;

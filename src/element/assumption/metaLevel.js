@@ -105,13 +105,15 @@ export default define(class MetaLevelAssumption extends Element {
           this.commit(context);
         }
       }, context);
+
+      if (validates) {
+        metaLevelAssumption = this;  ///
+
+        context.addMetaLevelAssumption(metaLevelAssumption);
+      }
     }
 
     if (validates) {
-      metaLevelAssumption = this;  ///
-
-      context.addMetaLevelAssumption(metaLevelAssumption);
-
       context.debug(`...validated the '${metaLevelAssumptionString}' meta-level assumption.`);
     }
 

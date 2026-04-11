@@ -107,15 +107,17 @@ export default define(class TermSubstitution extends Substitution {
           this.commit(generalContext, specificContext);
         }
       }, generalContext, specificContext);
+
+      if (validates) {
+        const substitution = this;  ///
+
+        termSubstitution = substitution;  ///
+
+        context.addSubstitution(substitution);
+      }
     }
 
     if (validates) {
-      const substitution = this;  ///
-
-      termSubstitution = substitution;  ///
-
-      context.addSubstitution(substitution);
-
       context.debug(`...validated the '${termSubstitutionString}' term substitution.`);
     }
 

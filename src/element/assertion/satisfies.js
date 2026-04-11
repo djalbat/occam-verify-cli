@@ -41,15 +41,17 @@ export default define(class SatisfiesAssertion extends Assertion {
 
     context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertion...`);
 
+    let validates = true;
+
     const validAssertion = this.findValidAssertion(context);
 
     if (validAssertion) {
+      validates = true;
+
       satisfiesAssertion = validAssertion; ///
 
       context.debug(`...the '${satisfiesAssertionString}' satisfies satisfiesAssertion is already valid.`);
     } else {
-      let validates = true;
-
       const signatureVerifies = this.validateSignature(context);
 
       if (signatureVerifies) {
@@ -68,9 +70,11 @@ export default define(class SatisfiesAssertion extends Assertion {
         satisfiesAssertion = assertion; ///
 
         context.addAssertion(satisfiesAssertion);
-
-        context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertion.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertion.`);
     }
 
     return satisfiesAssertion;
@@ -97,21 +101,25 @@ export default define(class SatisfiesAssertion extends Assertion {
   }
 
   validateReference(context) {
-    let referenceVerifies = false;
+    let referenceVerifies;
 
     const satisfiesAssertionString = this.getString();  ///
 
     context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertino's reference...`);
 
-    const axiom = context.findAxiomByReference(this.reference);
+    const reference = this.reference.validate(context);
 
-    if (axiom !== null) {
-      const axiomSatisfiable = axiom.isSatisfiable();
+    if (reference !== null) {}
 
-      if (axiomSatisfiable) {
-        referenceVerifies = true;
-      }
-    }
+    // const axiom = context.findAxiomByReference(this.reference);
+    //
+    // if (axiom !== null) {
+    //   const axiomSatisfiable = axiom.isSatisfiable();
+    //
+    //   if (axiomSatisfiable) {
+    //     referenceVerifies = true;
+    //   }
+    // }
 
     if (referenceVerifies) {
       context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertino's reference.`);

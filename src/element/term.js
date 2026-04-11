@@ -172,21 +172,24 @@ export default define(class Term extends Element {
 
     context.trace(`Validating the '${termString}' term...`);
 
-    const validTerm = this.findValidTerm(context),
-          valid = (validTerm !== null);
+    let validates = false;
 
-    if (valid) {
+    const validTerm = this.findValidTerm(context);
+
+    if (validTerm !== null) {
       term = validTerm; ///
-
-      context.debug(`...the '${termString}' term is already valid.`);
 
       const validatesForward = validateForwards(term);
 
-      if (!validatesForward) {
+      if (validatesForward) {
+        validates = true;
+
+        context.debug(`...the '${termString}' term is already valid.`);
+      } else {
         term = null;
       }
     } else {
-      const validates = validateTerms.some((validateTerm) => {  ///
+      validates = validateTerms.some((validateTerm) => {  ///
         const term = this,  ///
               termValidates = validateTerm(term, context, validateForwards);
 
@@ -199,9 +202,11 @@ export default define(class Term extends Element {
         term = this;  ///
 
         context.addTerm(term);
-
-        context.debug(`...validated the '${termString}' term.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${termString}' term.`);
     }
 
     return term;

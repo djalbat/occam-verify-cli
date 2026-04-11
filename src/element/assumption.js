@@ -64,15 +64,17 @@ export default define(class Assumption extends Element {
 
     context.trace(`Validating the '${assumptionString}' assumption...`);
 
+    let validates = false;
+
     const validAssumption = this.findValidAssumption(context);
 
     if (validAssumption) {
+      validates = true;
+
       assumption = validAssumption; ///
 
       context.debug(`...the '${assumptionString}' assumption is already valid.`);
     } else {
-      let validates = false;
-
       const statementValidates = this.validateStatement(context);
 
       if (statementValidates) {
@@ -100,9 +102,11 @@ export default define(class Assumption extends Element {
         assumption = this;  ///
 
         context.addAssumption(assumption);
-
-        context.debug(`...validated the '${assumptionString}' assumption.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${assumptionString}' assumption.`);
     }
 
     return assumption;

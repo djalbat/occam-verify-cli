@@ -81,15 +81,17 @@ export default define(class Judgement extends Element {
 
     context.trace(`Validating the '${judgementString}' judgement...`);
 
+    let validates = false;
+
     const validJudgement = this.findValidJudgement(context);
 
     if (validJudgement !== null) {
+      validates = true;
+
       judgement = validJudgement; ///
 
       context.debug(`...the '${judgementString}' judgement is already valid.`);
     } else {
-      let validates = false;
-
       const frameValidates = this.validateFrame(context);
 
       if (frameValidates) {
@@ -119,9 +121,11 @@ export default define(class Judgement extends Element {
         this.assign(context);
 
         context.addJudgement(judgement);
-
-        context.debug(`...validated the '${judgementString}' judgement.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${judgementString}' judgement.`);
     }
 
     return judgement;

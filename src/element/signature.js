@@ -30,30 +30,60 @@ export default define(class Signature extends Element {
     return signatureNode;
   }
 
-  verify(context) {
-    let verifies = false;
+  findValidSignature(context) {
+    const signatureNode = this.getSignatureNode(),
+          signature = context.findSignatureBySignatureNode(signatureNode),
+          validSignature = signature;  ///
+
+    return validSignature;
+  }
+
+  validate(context) {
+    let signature = null;
 
     const signatureString = this.getString();  ///
 
-    context.trace(`Verifying the '${signatureString}' signature...`);
+    context.trace(`Validating the '${signatureString}' signature...`);
 
-    attempt((context) => {
-      const termsValidate = this.validateTerms(context);
+    let validates = false;
 
-      if (termsValidate !== null) {
-        verifies = true;
+    const validSignature = this.findValidSignature(context);
+
+    if (validSignature) {
+      signature = validSignature;  ///
+
+      context.debug(`...the '${signatureString}' signature is already valid.`);
+    } else {
+      const specificContext = context;  ///
+
+      context = this.getContext();
+
+      attempt((context) => {
+        const termsValidate = this.validateTerms(context);
+
+        if (termsValidate !== null) {
+          validates = true;
+        }
+
+        if (validates) {
+          this.commit(context);
+        }
+      }, context);
+
+      context = specificContext;  ///
+
+      if (validates) {
+        signature = this; ///
+
+        context.addSignature(context);
       }
-
-      if (verifies) {
-        this.commit(context);
-      }
-    }, context);
-
-    if (verifies) {
-      context.debug(`...verified the '${signatureString}' signature.`);
     }
 
-    return verifies;
+    if (validates) {
+      context.debug(`...validated the '${signatureString}' signature.`);
+    }
+
+    return signature;
   }
 
   validateTerms(context) {

@@ -44,15 +44,17 @@ export default define(class DefinedAssertion extends Assertion {
 
     context.trace(`Validating the '${definedAssertionString}' defined assertion...`);
 
+    let validates = false;
+
     const validAssertion = this.findValidAssertion(context);
 
     if (validAssertion !== null) {
+      validates = true;
+
       definedAssertion = validAssertion;  ///
 
       context.debug(`...the '${definedAssertionString}' defined definedAssertion is already valid.`);
     } else {
-      let validates = false;
-
       const termValidates = this.validateTerm(context),
             frameValidates = this.validateFrame(context);
 
@@ -79,9 +81,11 @@ export default define(class DefinedAssertion extends Assertion {
         definedAssertion = assertion; ///
 
         context.addAssertion(assertion);
-
-        context.debug(`...validated the '${definedAssertionString}' defined assertion.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${definedAssertionString}' defined assertion.`);
     }
 
     return definedAssertion;

@@ -39,15 +39,17 @@ export default define(class TypeAssertion extends Assertion {
 
     context.trace(`Validating the '${typeAssertionString}' type assertion...`);
 
+    let validates = false;
+
     const validAssertion = this.findValidAssertion(context);
 
     if (validAssertion) {
+      validates = true;
+
       typeAssertion = validAssertion; ///
 
       context.debug(`...the '${typeAssertionString}' type assertion is already valid.`);
     } else {
-      let validates = false;
-
       const typeValidates = this.validateType(context);
 
       if (typeValidates) {
@@ -75,9 +77,11 @@ export default define(class TypeAssertion extends Assertion {
         this.assign(context);
 
         context.addAssertion(assertion);
-
-        context.debug(`...verified the '${typeAssertionString}' type assertion.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...verified the '${typeAssertionString}' type assertion.`);
     }
 
     return typeAssertion;

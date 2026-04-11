@@ -52,15 +52,17 @@ export default define(class ContainedAssertion extends Assertion {
 
     context.trace(`Validating the '${containedAssertionString}' contained assertion...`);
 
+    let validates = false;
+
     const validAssertion = this.findValidAssertion(context);
 
     if (validAssertion !== null) {
+      validates = true;
+
       containedAssertion = validAssertion;  ///
 
       context.debug(`...the '${containedAssertionString}' contained assertion is already valid.`);
     } else {
-      let validates = false;
-
       const termValidates = this.validateTerm(context),
             frameValidates = this.validateFrame(context),
             statementValidates = this.validateStatement(context)
@@ -88,9 +90,11 @@ export default define(class ContainedAssertion extends Assertion {
         containedAssertion = assertion;  ///
 
         context.addAssertion(assertion);
-
-        context.debug(`...validated the '${containedAssertionString}' contained assertion.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${containedAssertionString}' contained assertion.`);
     }
 
     return containedAssertion;

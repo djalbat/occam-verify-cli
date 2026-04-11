@@ -99,6 +99,8 @@ export default define(class ReferenceSubstitution extends Substitution {
     const validSubstitution = this.findValidSubstitution(context);
 
     if (validSubstitution) {
+      validates = true;
+
       referenceSubstitution = validSubstitution;  ///
 
       context.debug(`...the '${referenceSubstitutionString}' reference substitution is already valid.`);
@@ -121,15 +123,17 @@ export default define(class ReferenceSubstitution extends Substitution {
           this.commit(generalContext, specificContext);
         }
       }, generalContext, specificContext);
+
+      if (validates) {
+        const substitution = this;  ///
+
+        referenceSubstitution = substitution;  ///
+
+        context.addSubstitution(substitution);
+      }
     }
 
     if (validates) {
-      const substitution = this;  ///
-
-      referenceSubstitution = substitution;  ///
-
-      context.addSubstitution(substitution);
-
       context.debug(`...validated the '${referenceSubstitutionString}' reference substitution.`);
     }
 

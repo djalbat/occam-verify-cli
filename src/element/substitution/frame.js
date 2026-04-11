@@ -82,6 +82,8 @@ export default define(class FrameSubstitution extends Substitution {
     const validSubstitution = this.findValidSubstitution(context);
 
     if (validSubstitution) {
+      validates = true;
+
       frameSubstitution = validSubstitution;  ///
 
       context.debug(`...the '${frameSubstitutionString}' frame substitution is already valid.`);
@@ -104,15 +106,17 @@ export default define(class FrameSubstitution extends Substitution {
           this.commit(generalContext, specificContext);
         }
       }, generalContext, specificContext);
+
+      if (validates) {
+        const substitution = this;  ///
+
+        frameSubstitution = substitution; ///
+
+        context.addSubstitution(substitution);
+      }
     }
 
     if (validates) {
-      const substitution = this;  ///
-
-      frameSubstitution = substitution; ///
-
-      context.addSubstitution(substitution);
-
       context.debug(`...validated the '${frameSubstitutionString}' frame substitution.`);
     }
 

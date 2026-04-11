@@ -63,15 +63,17 @@ export default define(class PropertyRelation extends Element {
 
     context.trace(`Validating the '${propertyRelationString}' property relation...`);
 
+    let validates = false;
+
     const validPropertyRelation = this.findValidPropertyRelation(context);
 
     if (validPropertyRelation) {
+      validates = true;
+
       propertyRelation = validPropertyRelation; ///
 
       context.debug(`...the '${propertyRelationString}' property relation is already valid.`);
     } else {
-      let validates = false;
-
       const termValidates = this.validateTerm(context);
 
       if (termValidates) {
@@ -84,9 +86,11 @@ export default define(class PropertyRelation extends Element {
         propertyRelation = this; ///
 
         context.addPropertyRelation(propertyRelation);
-
-        context.debug(`...validated the '${propertyRelationString}' property relation.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${propertyRelationString}' property relation.`);
     }
 
     return propertyRelation;

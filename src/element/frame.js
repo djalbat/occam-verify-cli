@@ -120,16 +120,17 @@ export default define(class Frame extends Element {
 
     context.trace(`Validating the '${frameString}' frame...`);
 
-    const validFrame = this.findValidFrame(context),
-          valid = (validFrame !== null);
+    let validates = false;
 
-    if (valid) {
+    const validFrame = this.findValidFrame(context);
+
+    if (validFrame !== null) {
+      validates = true;
+
       frame = validFrame; ///
 
       context.debug(`...the '${frameString}' frame is already valid.`);
     } else {
-      let validates = false;
-
       const metavariableValidates = this.validatMetavariable(context);
 
       if (metavariableValidates) {
@@ -157,9 +158,11 @@ export default define(class Frame extends Element {
         frame = this; ///
 
         context.addFrame(frame);
-
-        context.debug(`...validated the '${frameString}' frame.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${frameString}' frame.`);
     }
 
     return frame;

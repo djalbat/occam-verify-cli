@@ -95,6 +95,8 @@ export default define(class StatementSubstitution extends Substitution {
     const validSubstitution = this.findValidSubstitution(context);
 
     if (validSubstitution) {
+      validates = true;
+
       statementSubstitution = validSubstitution;  ///
 
       context.debug(`...the '${statementSubstitutionString}' statement substitution is already valid.`);
@@ -121,15 +123,17 @@ export default define(class StatementSubstitution extends Substitution {
           this.commit(generalContext, specificContext);
         }
       }, generalContext, specificContext);
+
+      if (validates) {
+        const substitution = this;  ///
+
+        statementSubstitution = substitution; ///
+
+        context.addSubstitution(substitution);
+      }
     }
 
     if (validates) {
-      const substitution = this;  ///
-
-      statementSubstitution = substitution; ///
-
-      context.addSubstitution(substitution);
-
       context.debug(`...validated the '${statementSubstitutionString}' statement substitution.`);
     }
 

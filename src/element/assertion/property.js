@@ -66,15 +66,17 @@ export default define(class PropertyAssertion extends Assertion {
 
     context.trace(`Validating the '${propertyAssertionString}' property assertion...`);
 
+    let validates = false;
+
     const validAssertion = this.findValidAssertion(context);
 
     if (validAssertion) {
+      validates = true;
+
       propertyAssertion = validAssertion; ///
 
       context.debug(`...the '${propertyAssertionString}' property assertion is already valid.`);
     } else {
-      let validates = false;
-
       const propertyRelationVerifies = this.validatePropertyRelation(context);
 
       if (propertyRelationVerifies) {
@@ -106,9 +108,11 @@ export default define(class PropertyAssertion extends Assertion {
         this.assign(context);
 
         context.addAssertion(assertion);
-
-        context.debug(`...validated the '${propertyAssertionString}' property assertion.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${propertyAssertionString}' property assertion.`);
     }
 
     return propertyAssertion;

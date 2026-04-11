@@ -123,7 +123,9 @@ export default define(class Reference extends Element {
 
       context.debug(`...the '${referenceString}' reference is already valid.`);
     } else {
-      const context = this.getContext();
+      const specificContext = context;  ///
+
+      context = this.getContext();
 
       attempt((context) => {
         const metavariableValidates = this.validateMetavariable(context);
@@ -161,13 +163,17 @@ export default define(class Reference extends Element {
           this.commit(context);
         }
       }, context);
+
+      context = specificContext;  ///
+
+      if (validates) {
+        reference = this;  ///
+
+        context.addReference(reference);
+      }
     }
 
     if (validates) {
-      reference = this;  ///
-
-      context.addReference(reference);
-
       context.debug(`...validated the '${referenceString}' reference.`);
     }
 

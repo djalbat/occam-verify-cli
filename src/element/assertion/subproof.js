@@ -57,6 +57,8 @@ export default define(class SubproofAssertion extends Assertion {
 
     context.trace(`Validating the '${subproofAssertionString}' subproof assertion...`);
 
+    let validates = false;
+
     const validAssertion = this.findValidAssertion(context);
 
     if (validAssertion) {
@@ -64,8 +66,6 @@ export default define(class SubproofAssertion extends Assertion {
 
       context.debug(`...the '${subproofAssertionString}' subproof assertion is already valid.`);
     } else {
-      let validates = false;
-
       const statementsValidate = this.validateStatements(context);
 
       if (statementsValidate) {
@@ -78,9 +78,11 @@ export default define(class SubproofAssertion extends Assertion {
         subproofAssertion = assertion;  ///
 
         context.addAssertion(assertion);
-
-        context.debug(`...validated the '${subproofAssertionString}' subproof assertion.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${subproofAssertionString}' subproof assertion.`);
     }
 
     return subproofAssertion;

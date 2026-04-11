@@ -129,27 +129,31 @@ export default define(class Property extends Element {
 
     context.trace(`Validating the '${propertyString}' property...`);
 
+    let validates = false;
+
     const validProperty = this.findValidProperty(context);
 
-    if (validProperty) {
+    if (validProperty !== null) {
       property = validProperty; ///
-
-      context.debug(`...the '${propertyString}' property is already valid.`);
 
       const validatesForward = validateForwards(property);
 
-      if (!validatesForward) {
+      if (validatesForward) {
+        validates = true;
+
+        context.debug(`...the '${propertyString}' property is already valid.`);
+      } else {
         property = null;
       }
     } else {
-      let validates = false;
-
       property = this;  ///
 
       const validatesForward = validateForwards(property);
 
       if (validatesForward) {
         validates = true;
+      } else {
+        property = null;
       }
 
       if (validates) {
@@ -157,6 +161,10 @@ export default define(class Property extends Element {
 
         context.debug(`...validated the '${propertyString}' property.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${propertyString}' property.`);
     }
 
     return property;

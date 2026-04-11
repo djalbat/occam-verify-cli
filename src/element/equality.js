@@ -123,15 +123,17 @@ export default define(class Equality extends Element {
 
     context.trace(`Validating the '${equalityString}' equality...`);
 
+    let validates = false;
+
     const validEquality = this.findValidEquality(context);
 
     if (validEquality !== null) {
+      validates = true;
+
       equality = validEquality; ///
 
       context.debug(`...the '${equalityString}' equality is already valid.`);
     } else {
-      let validates = false;
-
       const termsValidate = this.validateTerms(context);
 
       if (termsValidate) {
@@ -157,9 +159,11 @@ export default define(class Equality extends Element {
         this.assign(context);
 
         context.addEquality(equality);
-
-        context.debug(`...validated the '${equalityString}' equality.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${equalityString}' equality.`);
     }
 
     return equality;

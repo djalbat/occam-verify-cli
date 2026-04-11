@@ -182,16 +182,17 @@ export default define(class Metavariable extends Element {
 
     context.trace(`Validating the '${metavariableString}' metavariable...`);
 
-    const validMetavariable = this.findValidMetavariable(context),
-          valid = (validMetavariable !== null);
+    let validates = false;
 
-    if (valid) {
+    const validMetavariable = this.findValidMetavariable(context);
+
+    if (validMetavariable !== null) {
+      validates = true;
+
       metavariable = validMetavariable; ///
 
       context.debug(`...the '${metavariableString}' metavariable is already valid.`);
     } else {
-      let validates = false;
-
       const nameValidates = this.validateName(strict, context);
 
       if (nameValidates) {
@@ -214,9 +215,11 @@ export default define(class Metavariable extends Element {
         if (declared) {
           context.addMetavariable(metavariable);
         }
-
-        context.debug(`...validated the '${metavariableString}' metavariable.`);
       }
+    }
+
+    if (validates) {
+      context.debug(`...validated the '${metavariableString}' metavariable.`);
     }
 
     return metavariable;

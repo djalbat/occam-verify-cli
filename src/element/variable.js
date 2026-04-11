@@ -89,14 +89,14 @@ export default define(class Variable extends Element {
 
       this.type = type;
 
+      variable = this;
+
       validates = true;
     } else {
       context.debug(`The '${variableString}' variable is not present.`);
     }
 
     if (validates) {
-      variable = this;  ///
-
       context.debug(`...validated the '${variableString}' variable.`);
     }
 
