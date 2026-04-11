@@ -77,9 +77,15 @@ export default define(class ComplexTypeDeclaration extends Declaration {
           const propertyDeclarationsVerify = await this.verifyPropertyDeclaratisons(context);
 
           if (propertyDeclarationsVerify) {
-            const properties = this.getProperties();
+            const properties = this.getProperties(),
+                  typePrefix = context.getTypePrefix(),
+                  prefixName = typePrefix.getPrefixName();
+
+            this.type.setProvisional(this.provisional);
 
             this.type.setProperties(properties);
+
+            this.type.setPrefixName(prefixName);
 
             context.addType(this.type);
 
@@ -231,7 +237,7 @@ export default define(class ComplexTypeDeclaration extends Declaration {
     const properties = this.getProperties();
 
     propertyDeclarationsVerify = await asyncEvery(this.propertyDeclarations, async (propertyDeclaration) => {
-      const propertyVerifes = await propertyDeclaration.verify(properties, context);
+      const propertyVerifes = await propertyDeclaration.verify(properties, this.type, context);
 
       if (propertyVerifes) {
         return true;

@@ -20,7 +20,7 @@ export default define(class PropertyDeclaration extends Declaration {
     return this.type;
   }
 
-  async verify(properties, context) {
+  async verify(properties, type, context) {
     let verifies = false;
 
     await this.break(context);
@@ -30,7 +30,7 @@ export default define(class PropertyDeclaration extends Declaration {
     context.trace(`Verifying the '${propertyDeclarationString}' property declaration...`);
 
     if (this.property !== null) {
-      const typeVerifies = this.verifyType(context);
+      const typeVerifies = this.verifyType(type, context);
 
       if (typeVerifies) {
         const propertyVerifies = this.verifyProperty(properties, context);
@@ -52,27 +52,36 @@ export default define(class PropertyDeclaration extends Declaration {
     return verifies;
   }
 
-  verifyType(context) {
+  verifyType(type, context) {
     let typeVerifies = false;
 
-    const typeString = this.type.getString(),
-          propertyDeclarationString = this.getString(); ///
+    const propertyDeclarationString = this.getString(); ///
 
-    context.trace(`Verifying the '${propertyDeclarationString}' property declaration's '${typeString}' type...`);
+    context.trace(`Verifying the '${propertyDeclarationString}' property declaration's type...`);
 
-    const typeName = this.type.getName(),
-          type = context.findTypeByTypeName(typeName);
+    const nominalTypeName = this.type.getNominalTypeName(),
+          comparesToNominalTypeName = type.compareNominalTypeName(nominalTypeName);
 
-    if (type !== null) {
+    if (comparesToNominalTypeName) {
       this.type = type;
 
       typeVerifies = true;
     } else {
-      context.debug(`The '${typeString}' type is not present.`);
+      const type = context.findTypeByTypeName(nominalTypeName);
+
+      if (type !== null) {
+        this.type = type;
+
+        typeVerifies = true;
+      } else {
+        const typeString = this.type.getString();
+
+        context.debug(`The '${typeString}' type is not present.`);
+      }
     }
 
     if (typeVerifies) {
-      context.debug(`...verified the '${propertyDeclarationString}' property declaration's '${typeString}' type`);
+      context.debug(`...verified the '${propertyDeclarationString}' property declaration's type`);
     }
 
     return typeVerifies;

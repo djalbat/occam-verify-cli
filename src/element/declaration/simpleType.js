@@ -33,6 +33,12 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     return simpleTypeDeclarationNode;
   }
 
+  getProperties() {
+    const properties = [];
+
+    return properties;
+  }
+
   async verify(context) {
     let verifies = false;
 
@@ -51,20 +57,19 @@ export default define(class SimpleTypeDeclaration extends Declaration {
         const typePrefixVerifies = this.verifyTypePrefix(context);
 
         if (typePrefixVerifies) {
-          const propertiesVerifies = this.verifyProperties(context);
+          const properties = this.getProperties(),
+                typePrefix = context.getTypePrefix(),
+                prefixName = typePrefix.getPrefixName();
 
-          if (propertiesVerifies) {
-            const typePrefix = context.getTypePrefix(),
-                  prefixName = typePrefix.getPrefixName();
+          this.type.setProvisional(this.provisional);
 
-            this.type.setProvisional(this.provisional);
+          this.type.setProperties(properties);
 
-            this.type.setPrefixName(prefixName);
+          this.type.setPrefixName(prefixName);
 
-            context.addType(this.type);
+          context.addType(this.type);
 
-            verifies = true;
-          }
+          verifies = true;
         }
       }
     }
@@ -195,25 +200,6 @@ export default define(class SimpleTypeDeclaration extends Declaration {
     }
 
     return typePrefixVerifies;
-  }
-
-  verifyProperties(context) {
-    let propertiesVerify = true;  ///
-
-    const typeString = this.type.getString(),
-          simpleTypeDeclarationString = this.getString(); ///
-
-    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type's properties...`);
-
-    const properties = [];
-
-    this.type.setProperties(properties);
-
-    if (propertiesVerify) {
-      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration's '${typeString}' type's properties.`);
-    }
-
-    return propertiesVerify;
   }
 
   static name = "SimpleTypeDeclaration";
