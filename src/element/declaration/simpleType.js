@@ -59,7 +59,9 @@ export default define(class SimpleTypeDeclaration extends Declaration {
         if (typePrefixVerifies) {
           const properties = this.getProperties(),
                 typePrefix = context.getTypePrefix(),
-                prefixName = typePrefix.getPrefixName();
+                prefixName = (typePrefix !== null) ?
+                               typePrefix.getPrefixName() :
+                                 null;
 
           this.type.setProvisional(this.provisional);
 

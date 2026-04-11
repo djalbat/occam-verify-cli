@@ -79,7 +79,9 @@ export default define(class ComplexTypeDeclaration extends Declaration {
           if (propertyDeclarationsVerify) {
             const properties = this.getProperties(),
                   typePrefix = context.getTypePrefix(),
-                  prefixName = typePrefix.getPrefixName();
+                  prefixName = (typePrefix !== null) ?
+                                 typePrefix.getPrefixName() :
+                                   null;
 
             this.type.setProvisional(this.provisional);
 

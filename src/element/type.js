@@ -259,21 +259,20 @@ export default define(class Type extends Element {
   compareNominalTypeName(nominalTypeName) {
     let comparesToNominalTypeName = false;
 
-    const prefixed = this.isPrefixed();
+    const nameNominalTypeName = (this.name === nominalTypeName);
 
-    if (!prefixed) {
-      const name = this.getName(),
-            nameNominalTypeName = (name === nominalTypeName);
-
-      if (nameNominalTypeName) {
-        comparesToNominalTypeName = true;
-      }
+    if (nameNominalTypeName) {
+      comparesToNominalTypeName = true;
     } else {
-      const prefixedName = this.getPrefixedName(),
-            prefixedNameNominalTypeName = (prefixedName === nominalTypeName);
+      const prefixed = this.isPrefixed();
 
-      if (prefixedNameNominalTypeName) {
-        comparesToNominalTypeName = true;
+      if (prefixed) {
+        const prefixedName = this.getPrefixedName(),
+              prefixedNameNominalTypeName = (prefixedName === nominalTypeName);
+
+        if (prefixedNameNominalTypeName) {
+          comparesToNominalTypeName = true;
+        }
       }
     }
 
