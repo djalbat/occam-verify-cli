@@ -1166,7 +1166,7 @@ export function frameFromJudgementNode(judgementNode, context) {
 }
 
 export function termsFromSignatureNode(signatureNode, context) {
-  const termNodes = signatureNode.getAssumptionNodes(),
+  const termNodes = signatureNode.getTermNodes(),
         terms = termsFromTermNodes(termNodes, context);
 
   return terms;

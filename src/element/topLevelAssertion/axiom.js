@@ -58,7 +58,7 @@ export default define(class Axiom extends TopLevelAssertion {
 
     context.trace(`Verifying the '${axiomString}' axiom...`);
 
-    const signatureVerifies = this.verifySignature();
+    const signatureVerifies = this.verifySignature(context);
 
     if (signatureVerifies) {
       verifies = await super.verify(context);
@@ -75,16 +75,23 @@ export default define(class Axiom extends TopLevelAssertion {
     return verifies;
   }
 
-  verifySignature() {
+  verifySignature(context) {
     let signatureVerifies;
 
     const satisfiable = this.isSatisfiable();
 
     if (satisfiable) {
-      const context = this.getContext(),
-            signature = this.getSignature();
+      const axiomString = this.getString(); ///
+
+      context.trace(`Verifying the '${axiomString}' axiom's signature...`);
+
+      const signature = this.getSignature();
 
       signatureVerifies = signature.verify(context);
+
+      if (signatureVerifies) {
+        context.trace(`...verified the '${axiomString}' axiom's signature.`);
+      }
     } else {
       signatureVerifies = true
     }

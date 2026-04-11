@@ -6,9 +6,9 @@ import { arrayUtilities } from "necessary";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { instantiate } from "../utilities/context";
 import { instantiateSignature } from "../process/instantiate";
 import { termsFromSignatureNode } from "../utilities/element";
+import {serialise, unserialise, instantiate, attempt} from "../utilities/context";
 
 const { match, compare, correlate } = arrayUtilities;
 
@@ -37,11 +37,17 @@ export default define(class Signature extends Element {
 
     context.trace(`Verifying the '${signatureString}' signature...`);
 
-    const signature = this.validate(context);
+    attempt((context) => {
+      const termsValidate = this.validateTerms(context);
 
-    if (signature !== null) {
-      verifies = true;
-    }
+      if (termsValidate !== null) {
+        verifies = true;
+      }
+
+      if (verifies) {
+        this.commit(context);
+      }
+    }, context);
 
     if (verifies) {
       context.debug(`...verified the '${signatureString}' signature.`);
@@ -50,70 +56,32 @@ export default define(class Signature extends Element {
     return verifies;
   }
 
-  validate(context) {
-    let signature = null;
-
-    const signatureString = this.getString();  ///
-
-    context.trace(`Validating the '${signatureString}' signature...`);
-
-    const terms = [],
-          termsValidate = this.validateTerms(terms, context);
-
-    if (termsValidate) {
-      this.terms = terms;
-
-      signature = this; ///
-    }
-
-    if (signature) {
-      context.debug(`...validated the '${signatureString}' signature.`);
-    }
-
-    return signature
-  }
-
-  validateTerm(term, terms, context) {
-    let termValidates = false;
-
-    const termString = term.getString(),
-          signatureString = this.getString();  ///
-
-    context.trace(`Validating the '${signatureString}' signature's '${termString}' term...`);
-
-    term = term.validate(context, (term) => { ///
-      const validatesForwards = true;
-
-      return validatesForwards;
-    });
-
-    if (term !== null) {
-      terms.push(term);
-
-      termValidates = true;
-    }
-
-    if (termValidates) {
-      context.debug(`...validated the '${signatureString}' signature's '${termString}' term.`);
-    }
-
-    return termValidates
-  }
-
-  validateTerms(terms, context) {
+  validateTerms(context) {
     let termsValidate;
 
     const signatureString = this.getString();  ///
 
     context.trace(`Validating the '${signatureString}' signature's terms...`);
 
-    termsValidate = terms.every((term) => {
-      const termValidates = this.validateTerm(term, terms, context);
+    const terms = [];
 
-      if (termValidates) {
+    termsValidate = this.terms.every((term) => {
+      term = term.validate(context, (term) => { ///
+        const validatesForwards = true;
+
+        return validatesForwards;
+      });
+
+      if (term !== null) {
+        terms.push(term);
+
         return true;
       }
-    })
+    });
+
+    if (termsValidate) {
+      this.terms = terms;
+    }
 
     if (termsValidate){
       context.debug(`...validated the '${signatureString}' signature's terms.`);
@@ -219,25 +187,35 @@ export default define(class Signature extends Element {
   static name = "Signature";
 
   toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
+    const context = this.getContext();
 
-    return json;
+    return serialise((context) => {
+      const string = this.getString(),
+            lineIndex = this.getLineIndex(),
+            json = {
+              context,
+              string,
+              lineIndex
+            };
+
+      return json;
+    }, context);
   }
 
   static fromJSON(json, context) {
-    return instantiate((context) => {
-      const { string, lineIndex } = json,
-            signatureNode = instantiateSignature(string, context),
-            node = signatureNode,  ///
-            terms = termsFromSignatureNode(signatureNode, context),
-            signature = new Signature(context, string, node, lineIndex, terms);
+    let signature;
 
-      return signature;
-    }, context);
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string, lineIndex } = json,
+              signatureNode = instantiateSignature(string, context),
+              node = signatureNode,  ///
+              terms = termsFromSignatureNode(signatureNode, context);
+
+        signature = new Signature(context, string, node, lineIndex, terms);
+      }, context);
+    }, json, context);
+
+    return signature;
   }
 });
