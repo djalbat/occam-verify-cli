@@ -210,15 +210,6 @@ export default define(class Type extends Element {
     return superTypeOf;
   }
 
-  isComparableTo(type) {
-    const equalTo = this.isEqualTo(type),
-          subTypeOf = this.isSubTypeOf(type),
-          superTypeOf = this.isSuperTypeOf(type),
-          comparableTo = (equalTo || subTypeOf || superTypeOf);
-
-    return comparableTo;
-  }
-
   isEqualToOrSubTypeOf(type) {
     const equalTo = this.isEqualTo(type),
           subTypeOf = this.isSubTypeOf(type),
@@ -233,6 +224,15 @@ export default define(class Type extends Element {
           equalToOrSuperTypeOf = (equalTo || superTypeOf);
 
     return equalToOrSuperTypeOf;
+  }
+
+  isEqualToSubTypeOrSuperTypeOf(type) {
+    const equalTo = this.isEqualTo(type),
+          subTypeOf = this.isSubTypeOf(type),
+          superTypeOf = this.isSuperTypeOf(type),
+          equalToSubTypeOrSuperTypeOf = (equalTo || subTypeOf || superTypeOf);
+
+    return equalToSubTypeOrSuperTypeOf;
   }
 
   compareTypeName(typeName) {

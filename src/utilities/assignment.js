@@ -11,9 +11,9 @@ export function variableAssignmentFromTermAndType(term, type, context) {
 
   if (termSingular) {
     const termType = term.getType(),
-          termTypeEqualToType = termType.isEqualTo(type);
+          termTypeSuperTypeOfType = termType.isSuperTypeOf(type);
 
-    if (!termTypeEqualToType) {
+    if (termTypeSuperTypeOfType) {
       const variableNode = term.getVariableNode(),
             variable = variableFromVariableNode(variableNode, context);
 

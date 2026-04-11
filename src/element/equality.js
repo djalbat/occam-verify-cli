@@ -183,9 +183,9 @@ export default define(class Equality extends Element {
 
           const leftTermType = leftTerm.getType(),
                 rightTermType = rightTerm.getType(),
-                leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
+                leftTermTypeEqualToSubTypeOrSuperTypeOfRightTermType = leftTermType.isEqualToSubTypeOrSuperTypeOf(rightTermType);
 
-          if (leftTermTypeComparableToRightTermType) {
+          if (leftTermTypeEqualToSubTypeOrSuperTypeOfRightTermType) {
             validatesForwards = true;
           }
 

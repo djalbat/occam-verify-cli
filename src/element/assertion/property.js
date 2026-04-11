@@ -75,12 +75,12 @@ export default define(class PropertyAssertion extends Assertion {
     } else {
       let validates = false;
 
-      const termValidates = this.validateTerm(context);
+      const propertyRelationVerifies = this.validatePropertyRelation(context);
 
-      if (termValidates) {
-        const propertyRelationVerifies = this.validatePropertyRelation(context);
+      if (propertyRelationVerifies) {
+        const termValidates = this.validateTerm(context);
 
-        if (propertyRelationVerifies) {
+        if (termValidates) {
           const stated = context.isStated();
 
           let validatesWhenStated = false,
@@ -121,11 +121,19 @@ export default define(class PropertyAssertion extends Assertion {
 
     context.trace(`Validating the '${propertyAssertionString}' property assertion's term...`);
 
-    const term = this.term.validate(context, (term) => {
-      const validatesForwards = true;
+    const type = this.getType(),
+          term = this.term.validate(context, (term) => {
+            let validatesForwards = false;
 
-      return validatesForwards;
-    });
+            const termType = term.getType(),
+                  termTypeEqualToSubTypeOrSuperTypeOfType = termType.isEqualToSubTypeOrSuperTypeOf(type);
+
+            if (termTypeEqualToSubTypeOrSuperTypeOfType) {
+              validatesForwards = true;
+            }
+
+            return validatesForwards;
+          });
 
     if (term !== null) {
       this.term = term;
@@ -134,36 +142,10 @@ export default define(class PropertyAssertion extends Assertion {
     }
 
     if (termValidates) {
-      context.debug(`...validated the '${propertyAssertionString}' property assertion's term.`);
+      context.debug(`...validated the '${propertyAssertionString}' property assertion's term...`);
     }
 
     return termValidates;
-  }
-
-  validatePropertyRelation(context) {
-    let propertyRelationValidates = false;
-
-    const propertyAssertionString = this.getString(); ///
-
-    context.trace(`Validating the '${propertyAssertionString}' property assertion's property relation...`);
-
-    const propertyRelation = this.propertyRelation.validate(context);
-
-    if (propertyRelation !== null) {
-      const type = this.getType(),
-            termType = this.term.getType(),
-            termTypeEqualToOrSuperTypeOfType = termType.isEqualToOrSuperTypeOf(type);
-
-      if (termTypeEqualToOrSuperTypeOfType) {
-        propertyRelationValidates = true;
-      }
-    }
-
-    if (propertyRelationValidates) {
-      context.debug(`...validated the '${propertyAssertionString}' property assertion's property relation.`);
-    }
-
-    return propertyRelationValidates;
   }
 
   validateWhenStated(context) {
@@ -176,7 +158,7 @@ export default define(class PropertyAssertion extends Assertion {
     validatesWhenStated = true;
 
     if (validatesWhenStated) {
-      context.debug(`...validated the '${propertyAssertionString}' stated property assertion.`);
+      context.debug(`...verified the '${propertyAssertionString}' stated property assertion.`);
     }
 
     return validatesWhenStated;
@@ -196,6 +178,26 @@ export default define(class PropertyAssertion extends Assertion {
     }
 
     return validatesWhenDerived;
+  }
+
+  validatePropertyRelation(context) {
+    let propertyRelationValidates = false;
+
+    const propertyAssertionString = this.getString(); ///
+
+    context.trace(`Validating the '${propertyAssertionString}' property assertion's property relation...`);
+
+    const propertyRelation = this.propertyRelation.validate(context);
+
+    if (propertyRelation !== null) {
+      propertyRelationValidates = true;
+    }
+
+    if (propertyRelationValidates) {
+      context.debug(`...validated the '${propertyAssertionString}' property assertion's property relation.`);
+    }
+
+    return propertyRelationValidates;
   }
 
   assign(context) {

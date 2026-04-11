@@ -121,9 +121,9 @@ export default define(class TypeAssertion extends Assertion {
       let validatesForwards = false;
 
       const termType = term.getType(),
-            typeEqualToOrSubTypeOfTermType = this.type.isEqualToOrSubTypeOf(termType);
+            termTypeEqualToOrSuperTypeOfType = termType.isEqualToOrSuperTypeOf(this.type);
 
-      if (typeEqualToOrSubTypeOfTermType) {
+      if (termTypeEqualToOrSuperTypeOfType) {
         validatesForwards = true;
       }
 
@@ -137,7 +137,7 @@ export default define(class TypeAssertion extends Assertion {
     }
 
     if (validatesWhenStated) {
-      context.debug(`...verified the '${typeAssertionString}' stated type assertion.`);
+      context.debug(`...validated the '${typeAssertionString}' stated type assertion.`);
     }
 
     return validatesWhenStated;
@@ -157,9 +157,9 @@ export default define(class TypeAssertion extends Assertion {
             termTypeProvisional = termType.isProvisional();
 
       if (!termTypeProvisional) {
-        const typeEqualToOrSuperTypeOfTermType = this.type.isEqualToOrSuperTypeOf(termType);
+        const termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(this.type);
 
-        if (typeEqualToOrSuperTypeOfTermType) {
+        if (termTypeEqualToOrSubTypeOfType) {
           validatesForwards = true;
         }
       }
@@ -174,7 +174,7 @@ export default define(class TypeAssertion extends Assertion {
     }
 
     if (validatesWhenDerived) {
-      context.debug(`...verified the '${typeAssertionString}' derived type assertion.`);
+      context.debug(`...validated the '${typeAssertionString}' derived type assertion.`);
     }
 
     return validatesWhenDerived;

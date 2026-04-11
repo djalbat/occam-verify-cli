@@ -8,7 +8,7 @@ import elements from "../elements";
 import { define } from "../elements";
 import { instantiateSignature } from "../process/instantiate";
 import { termsFromSignatureNode } from "../utilities/element";
-import {serialise, unserialise, instantiate, attempt} from "../utilities/context";
+import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 const { match, compare, correlate } = arrayUtilities;
 
