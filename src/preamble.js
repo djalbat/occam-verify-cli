@@ -48,7 +48,7 @@ import SubproofAssertion from "./element/assertion/subproof";
 import PropertyAssertion from "./element/assertion/property";
 import ProcedureReference from "./element/procedureReference";
 import ContainedAssertion from "./element/assertion/contained";
-import SatisfiesAssertion from "./element/assertion/satisfies";
+import signatureAssertion from "./element/assertion/signature";
 import MetaLevelAssumption from "./element/assumption/metaLevel";
 import PropertyDeclaration from "./element/declaration/property";
 import VariableDeclaration from "./element/declaration/variable";

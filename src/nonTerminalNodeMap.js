@@ -71,7 +71,7 @@ import FrameSubstitutionNode from "./node/substitution/frame";
 import ParenthesisedLabelNode from "./node/parenthesisedLabel";
 import ProcedureReferenceNode from "./node/procedureReference";
 import ContainedAssertionNode from "./node/assertion/contained";
-import SatisfiesAssertionNode from "./node/assertion/satisfies";
+import SignatureAssertionNode from "./node/assertion/signature";
 import ParenthesisedLabelsNode from "./node/parenthesisedLabels"
 import PropertyDeclarationNode from "./node/declaration/property";
 import VariableDeclarationNode from "./node/declaration/variable";
@@ -156,7 +156,7 @@ import {
   FRAME_SUBSTITUTION_RULE_NAME,
   PROCEDURE_REFERENCE_RULE_NAME,
   CONTAINED_ASSERTION_RULE_NAME,
-  SATISFIES_ASSERTION_RULE_NAME,
+  SIGNATURE_ASSERTION_RULE_NAME,
   PARENTHESISED_LABEL_RULE_NAME,
   PARENTHESISED_LABELS_RULE_NAME,
   PROPERTY_DECLARATION_RULE_NAME,
@@ -242,7 +242,7 @@ const NonTerminalNodeMap = {
   [FRAME_SUBSTITUTION_RULE_NAME]: FrameSubstitutionNode,
   [PROCEDURE_REFERENCE_RULE_NAME]: ProcedureReferenceNode,
   [PARENTHESISED_LABEL_RULE_NAME]: ParenthesisedLabelNode,
-  [SATISFIES_ASSERTION_RULE_NAME]: SatisfiesAssertionNode,
+  [SIGNATURE_ASSERTION_RULE_NAME]: SignatureAssertionNode,
   [CONTAINED_ASSERTION_RULE_NAME]: ContainedAssertionNode,
   [PARENTHESISED_LABELS_RULE_NAME]: ParenthesisedLabelsNode,
   [VARIABLE_DECLARATION_RULE_NAME]: VariableDeclarationNode,

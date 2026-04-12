@@ -496,7 +496,7 @@ export function statementsFromJSON(json, context) {
 export function assertionsFromJSON(json, context) {
   let { assertions } = json;
 
-  const { TypeAssertion, DefinedAssertion, PropertyAssertion, SubproofAssertion, SatisfiesAssertion, ContainedAssertion } = elements,
+  const { TypeAssertion, DefinedAssertion, PropertyAssertion, SubproofAssertion, SignatureAssertion, ContainedAssertion } = elements,
         assertionsJSON = assertions; ///
 
   assertions = assertionsJSON.map((assertionJSON) => {
@@ -505,7 +505,7 @@ export function assertionsFromJSON(json, context) {
                        DefinedAssertion.fromJSON(json, context) ||
                        PropertyAssertion.fromJSON(json, context) ||
                        SubproofAssertion.fromJSON(json, context) ||
-                       SatisfiesAssertion.fromJSON(json, context) ||
+                       SignatureAssertion.fromJSON(json, context) ||
                        ContainedAssertion.fromJSON(json, context);
 
     return assertion;

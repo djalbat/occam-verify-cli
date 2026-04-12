@@ -14,19 +14,19 @@ const { asyncSome } = asynchronousUtilities,
       { backwardsSome } = arrayUtilities;
 
 export default define(class Step extends ProofAssertion {
-  constructor(context, string, node, lineIndex, statement, reference, satisfiesAssertion) {
+  constructor(context, string, node, lineIndex, statement, reference, signatureAssertion) {
     super(context, string, node, lineIndex, statement);
 
     this.reference = reference;
-    this.satisfiesAssertion = satisfiesAssertion;
+    this.signatureAssertion = signatureAssertion;
   }
 
   getReference() {
     return this.reference;
   }
 
-  getSatisfiesAssertion() {
-    return this.satisfiesAssertion;
+  getSignatureAssertion() {
+    return this.signatureAssertion;
   }
 
   getStepNode() {
@@ -44,7 +44,7 @@ export default define(class Step extends ProofAssertion {
   }
 
   isSatisfied() {
-    const satisfied = (this.satisfiesAssertion !== null);
+    const satisfied = (this.signatureAssertion !== null);
 
     return satisfied;
   }
@@ -143,9 +143,9 @@ export default define(class Step extends ProofAssertion {
           const referenceValidates = this.validateReference(context);
 
           if (referenceValidates) {
-            const satisfiesAssertionValidates = this.validateSatisfiesAssertion(context);
+            const signatureAssertionValidates = this.validateSignatureAssertion(context);
 
-            if (satisfiesAssertionValidates) {
+            if (signatureAssertionValidates) {
               validates = true;
             }
           }
@@ -211,27 +211,27 @@ export default define(class Step extends ProofAssertion {
     return statementValidates;
   }
 
-  validateSatisfiesAssertion(context) {
-    let satisfiesAssertionValidates = true;  ///
+  validateSignatureAssertion(context) {
+    let signatureAssertionValidates = true;  ///
 
-    if (this.satisfiesAssertion !== null) {
+    if (this.signatureAssertion !== null) {
       const stepString = this.getString(),  ///
-            satisfiesAssertionString = this.satisfiesAssertion.getString();
+            signatureAssertionString = this.signatureAssertion.getString();
 
-      context.trace(`Validating the '${stepString}' step's '${satisfiesAssertionString}' satisfies assertion... `);
+      context.trace(`Validating the '${stepString}' step's '${signatureAssertionString}' signature assertion... `);
 
-      const satisfiesAssertion = this.satisfiesAssertion.validate(context);
+      const signatureAssertion = this.signatureAssertion.validate(context);
 
-      if (satisfiesAssertion === null) {
-        satisfiesAssertionValidates = false;
+      if (signatureAssertion === null) {
+        signatureAssertionValidates = false;
       }
 
-      if (satisfiesAssertionValidates) {
-        context.debug(`...validating the '${stepString}' step's '${satisfiesAssertionString}' satisfies assertion. `);
+      if (signatureAssertionValidates) {
+        context.debug(`...validating the '${stepString}' step's '${signatureAssertionString}' signature assertion. `);
       }
     }
 
-    return satisfiesAssertionValidates;
+    return signatureAssertionValidates;
   }
 
   async unify(context) {
@@ -264,15 +264,15 @@ export default define(class Step extends ProofAssertion {
     return unifies;
   }
 
-  unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
-    let unifiesWithSatisfiesAssertion = false;
+  unifyWithSignatureAssertion(signatureAssertion, context) {
+    let unifiesWithSignatureAssertion = false;
 
     const stepString = this.getString(), ///
-          satisfiesAssertionString = satisfiesAssertion.getString();
+          signatureAssertionString = signatureAssertion.getString();
 
-    context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`);
+    context.trace(`Unifying the '${stepString}' step with the '${signatureAssertionString}' signature assertion...`);
 
-    const reference = satisfiesAssertion.getReference(),
+    const reference = signatureAssertion.getReference(),
           axiom = context.findAxiomByReference(reference);
 
     if (axiom !== null) {
@@ -280,19 +280,19 @@ export default define(class Step extends ProofAssertion {
             stepUnifies = axiom.unifyStep(step, context);
 
       if (stepUnifies) {
-        const substitutionsCompare = satisfiesAssertion.compareSubstitutions(context);
+        const substitutionsCompare = signatureAssertion.compareSubstitutions(context);
 
         if (substitutionsCompare) {
-          unifiesWithSatisfiesAssertion = true;
+          unifiesWithSignatureAssertion = true;
         }
       }
     }
 
-    if (unifiesWithSatisfiesAssertion) {
-      context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`);
+    if (unifiesWithSignatureAssertion) {
+      context.debug(`...unified the '${stepString}' step with the '${signatureAssertionString}' signature assertion.`);
     }
 
-    return unifiesWithSatisfiesAssertion;
+    return unifiesWithSignatureAssertion;
   }
 
   static name = "Step";

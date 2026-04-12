@@ -112,15 +112,15 @@ export default define(class Subproof extends Element {
     return subDerivationVerifies;
   }
 
-  unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
-    let unifiesWithSatisfiesAssertion = false;
+  unifyWithSignatureAssertion(signatureAssertion, context) {
+    let unifiesWithSignatureAssertion = false;
 
     const subproofString = this.getString(), ///
-          satisfiesAssertionString = satisfiesAssertion.getString();
+          signatureAssertionString = signatureAssertion.getString();
 
-    context.trace(`Unifying the '${subproofString}' subproof with the '${satisfiesAssertionString}' satisfies assertion...`)
+    context.trace(`Unifying the '${subproofString}' subproof with the '${signatureAssertionString}' signature assertion...`)
 
-    const reference = satisfiesAssertion.getReference(),
+    const reference = signatureAssertion.getReference(),
           axiom = context.findAxiomByReference(reference);
 
     if (axiom !== null) {
@@ -131,20 +131,20 @@ export default define(class Subproof extends Element {
               statementUnifies = axiom.unifySubproof(subproof, context);
 
         if (statementUnifies) {
-          const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
+          const substitutionsCompare = signatureAssertion.compareSubstitutions(substitutions, context);
 
           if (substitutionsCompare) {
-            unifiesWithSatisfiesAssertion = true;
+            unifiesWithSignatureAssertion = true;
           }
         }
       }
     }
 
-    if (unifiesWithSatisfiesAssertion) {
-      context.debug(`...unified the '${subproofString}' subproof with the '${satisfiesAssertionString}' satisfies assertion.`)
+    if (unifiesWithSignatureAssertion) {
+      context.debug(`...unified the '${subproofString}' subproof with the '${signatureAssertionString}' signature assertion.`)
     }
 
-    return unifiesWithSatisfiesAssertion;
+    return unifiesWithSignatureAssertion;
   }
 
   static name = "Subproof";

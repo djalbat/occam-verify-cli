@@ -356,32 +356,32 @@ function validateStatementAsContainedAssertion(statement, context) {
   return validatesStatementAsContainedAssertion;
 }
 
-function validateStatementAsSatisfiesAssertion(statement, context) {
-  let validatesAStatementsSatisfiesAssertion = false;
+function validateStatementAsSignatureAssertion(statement, context) {
+  let validatesAStatementsSignatureAssertion = false;
 
-  const { SatisfiesAssertion } = elements;
+  const { SignatureAssertion } = elements;
 
-  let satisfiesAssertion;
+  let signatureAssertion;
 
-  satisfiesAssertion = SatisfiesAssertion.fromStatement(statement, context);
+  signatureAssertion = SignatureAssertion.fromStatement(statement, context);
 
-  if (satisfiesAssertion !== null) {
+  if (signatureAssertion !== null) {
     const statementString = statement.getString();
 
-    context.trace(`Validating the '${statementString}' statement as a satisfies assertion...`);
+    context.trace(`Validating the '${statementString}' statement as a signature assertion...`);
 
-    satisfiesAssertion = satisfiesAssertion.validate(context);  ///
+    signatureAssertion = signatureAssertion.validate(context);  ///
 
-    if (satisfiesAssertion !== null) {
-      validatesAStatementsSatisfiesAssertion = true;
+    if (signatureAssertion !== null) {
+      validatesAStatementsSignatureAssertion = true;
     }
 
-    if (validatesAStatementsSatisfiesAssertion) {
-      context.debug(`...validated the '${statementString}' statement as a satisfies assertion.`);
+    if (validatesAStatementsSignatureAssertion) {
+      context.debug(`...validated the '${statementString}' statement as a signature assertion.`);
     }
   }
 
-  return validatesAStatementsSatisfiesAssertion;
+  return validatesAStatementsSignatureAssertion;
 }
 
 export const validateTerms = [
@@ -401,5 +401,5 @@ export const validateStatements = [
   validateStatementAsPropertyAssertion,
   validateStatementAsSubproofAssertion,
   validateStatementAsContainedAssertion,
-  validateStatementAsSatisfiesAssertion
+  validateStatementAsSignatureAssertion
 ];

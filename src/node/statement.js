@@ -14,7 +14,7 @@ import { TERM_RULE_NAME,
          PROPERTY_ASSERTION_RULE_NAME,
          SUBPROOF_ASSERTION_RULE_NAME,
          FRAME_SUBSTITUTION_RULE_NAME,
-         SATISFIES_ASSERTION_RULE_NAME,
+         SIGNATURE_ASSERTION_RULE_NAME,
          CONTAINED_ASSERTION_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
@@ -136,7 +136,7 @@ export default class StatementNode extends NonTerminalNode {
   }
 
   getSatisfiedAssertionNode() {
-    const ruleName = SATISFIES_ASSERTION_RULE_NAME,
+    const ruleName = SIGNATURE_ASSERTION_RULE_NAME,
           satisfiedAssertionNode = this.getNodeByRuleName(ruleName);
 
     return satisfiedAssertionNode;

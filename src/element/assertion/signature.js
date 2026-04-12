@@ -4,10 +4,10 @@ import Assertion from "../assertion";
 
 import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
-import { instantiateSatisfiesAssertion } from "../../process/instantiate";
-import { signatureFromJSatisfiesAssertionNode, referenceFromJSatisfiesAssertionNode, satisfiesAssertionFromStatementNode } from "../../utilities/element";
+import { instantiateSignatureAssertion } from "../../process/instantiate";
+import { signatureFromJSignatureAssertionNode, referenceFromJSignatureAssertionNode, signatureAssertionFromStatementNode } from "../../utilities/element";
 
-export default define(class SatisfiesAssertion extends Assertion {
+export default define(class SignatureAssertion extends Assertion {
   constructor(context, string, node, lineIndex, signature, reference) {
     super(context, string, node, lineIndex);
 
@@ -23,11 +23,11 @@ export default define(class SatisfiesAssertion extends Assertion {
     return this.reference;
   }
 
-  getSatisfiesAssertionNode() {
+  getSignatureAssertionNode() {
     const node = this.getNode(),
-          satisfiesAssertionNode = node;  ///
+          signatureAssertionNode = node;  ///
 
-    return satisfiesAssertionNode;
+    return signatureAssertionNode;
   }
 
   compareSubstitutions(substitutions, context) { return this.signature.compareSubstitutions(substitutions, context); }
@@ -35,11 +35,11 @@ export default define(class SatisfiesAssertion extends Assertion {
   correlateSubstitutions(substitutions, context) { return this.signature.correlateSubstitutions(substitutions, context); }
 
   validate(context) {
-    let satisfiesAssertion = null;
+    let signatureAssertion = null;
 
-    const satisfiesAssertionString = this.getString(); ///
+    const signatureAssertionString = this.getString(); ///
 
-    context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertion...`);
+    context.trace(`Validating the '${signatureAssertionString}' signature assertion...`);
 
     let validates = true;
 
@@ -48,9 +48,9 @@ export default define(class SatisfiesAssertion extends Assertion {
     if (validAssertion) {
       validates = true;
 
-      satisfiesAssertion = validAssertion; ///
+      signatureAssertion = validAssertion; ///
 
-      context.debug(`...the '${satisfiesAssertionString}' satisfies satisfiesAssertion is already valid.`);
+      context.debug(`...the '${signatureAssertionString}' signature assertion is already valid.`);
     } else {
       const signatureVerifies = this.validateSignature(context);
 
@@ -67,25 +67,25 @@ export default define(class SatisfiesAssertion extends Assertion {
       if (validates) {
         const assertion = this; ///
 
-        satisfiesAssertion = assertion; ///
+        signatureAssertion = assertion; ///
 
-        context.addAssertion(satisfiesAssertion);
+        context.addAssertion(signatureAssertion);
       }
     }
 
     if (validates) {
-      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertion.`);
+      context.debug(`...validated the '${signatureAssertionString}' signature assertion.`);
     }
 
-    return satisfiesAssertion;
+    return signatureAssertion;
   }
 
   validateSignature(context) {
     let signatureValidates = false;
 
-    const satisfiesAssertionString = this.getString(); ///
+    const signatureAssertionString = this.getString(); ///
 
-    context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertion's signature...`);
+    context.trace(`Validating the '${signatureAssertionString}' signature assertion's signature...`);
 
     const signature = this.signature.validate(context);
 
@@ -96,7 +96,7 @@ export default define(class SatisfiesAssertion extends Assertion {
     }
 
     if (signatureValidates) {
-      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertion's signature.`);
+      context.debug(`...validated the '${signatureAssertionString}' signature assertion's signature.`);
     }
 
     return signatureValidates;
@@ -105,9 +105,9 @@ export default define(class SatisfiesAssertion extends Assertion {
   validateReference(context) {
     let referenceVerifies = false;
 
-    const satisfiesAssertionString = this.getString();  ///
+    const signatureAssertionString = this.getString();  ///
 
-    context.trace(`Validating the '${satisfiesAssertionString}' satisfies assertino's reference...`);
+    context.trace(`Validating the '${signatureAssertionString}' signature assertion's reference...`);
 
     const reference = this.reference.validate(context);
 
@@ -139,7 +139,7 @@ export default define(class SatisfiesAssertion extends Assertion {
     }
 
     if (referenceVerifies) {
-      context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertino's reference.`);
+      context.debug(`...validated the '${signatureAssertionString}' signature assertion's reference.`);
     }
 
     return referenceVerifies;
@@ -149,9 +149,9 @@ export default define(class SatisfiesAssertion extends Assertion {
     let stepAndSubproofOrProofAssertionsUnify = false;
 
     const steptString = step.getString(),
-          satisfiesAssertionString = this.getString(); ///
+          signatureAssertionString = this.getString(); ///
 
-    context.trace(`Unifying the '${steptString}' step with the '${satisfiesAssertionString}' satisfies assertion...`);
+    context.trace(`Unifying the '${steptString}' step with the '${signatureAssertionString}' signature assertion...`);
 
     this.signature.validate(context);
 
@@ -183,47 +183,47 @@ export default define(class SatisfiesAssertion extends Assertion {
     }
 
     if (stepAndSubproofOrProofAssertionsUnify) {
-      context.debug(`...unified the '${steptString}' step with the '${satisfiesAssertionString}' satisfies assertion.`);
+      context.debug(`...unified the '${steptString}' step with the '${signatureAssertionString}' signature assertion.`);
     }
 
     return stepAndSubproofOrProofAssertionsUnify;
   }
 
-  static name = "SatisfiesAssertion";
+  static name = "SignatureAssertion";
 
   static fromJSON(json, context) {
-    let satisfiesAssertion = null;
+    let signatureAssertion = null;
 
     const { name } = json;
 
     if (this.name === name) {
       instantiate((context) => {
         const { string, lineIndex } = json,
-              definedAssertionNode = instantiateSatisfiesAssertion(string, context),
+              definedAssertionNode = instantiateSignatureAssertion(string, context),
               node = definedAssertionNode,  ///
-              signature = signatureFromJSatisfiesAssertionNode(definedAssertionNode, context),
-              reference = referenceFromJSatisfiesAssertionNode(definedAssertionNode, context);
+              signature = signatureFromJSignatureAssertionNode(definedAssertionNode, context),
+              reference = referenceFromJSignatureAssertionNode(definedAssertionNode, context);
 
         context = null;
 
-        satisfiesAssertion = new SatisfiesAssertion(context, string, node, lineIndex, signature, reference);
+        signatureAssertion = new SignatureAssertion(context, string, node, lineIndex, signature, reference);
       }, context);
     }
 
-    return satisfiesAssertion;
+    return signatureAssertion;
   }
 
   static fromStep(step, context) {
     const statementNode = step.getStatementNode(),
-      satisfiesAssertion = satisfiesAssertionFromStatementNode(statementNode, context);
+          signatureAssertion = signatureAssertionFromStatementNode(statementNode, context);
 
-    return satisfiesAssertion;
+    return signatureAssertion;
   }
 
   static fromStatement(statement, context) {
     const statementNode = statement.getNode(),
-          satisfiesAssertion = satisfiesAssertionFromStatementNode(statementNode, context);
+          signatureAssertion = signatureAssertionFromStatementNode(statementNode, context);
 
-    return satisfiesAssertion;
+    return signatureAssertion;
   }
 });

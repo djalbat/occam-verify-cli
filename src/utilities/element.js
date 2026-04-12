@@ -62,11 +62,11 @@ export function stepFromStepNode(stepNode, context) {
         lineIndex = null,
         statement = statementFromStepNode(stepNode, context),
         reference = referenceFromStepNode(stepNode, context),
-        satisfiesAssertion = satisfiesAssertionFromStepNode(stepNode, context);
+        signatureAssertion = signatureAssertionFromStepNode(stepNode, context);
 
   context = null;
 
-  const step = new Step(context, string, node, lineIndex, statement, reference, satisfiesAssertion);
+  const step = new Step(context, string, node, lineIndex, statement, reference, signatureAssertion);
 
   return step;
 }
@@ -743,19 +743,19 @@ export function containedAssertionFromContainedAssertionNode(containedAssertionN
   return containedAssertion;
 }
 
-export function satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
-  const { SatisfiesAssertion } = elements,
-        node = satisfiesAssertionNode,  ///
+export function signatureAssertionFromSignatureAssertionNode(signatureAssertionNode, context) {
+  const { SignatureAssertion } = elements,
+        node = signatureAssertionNode,  ///
         string = context.nodeAsString(node),
         lineIndex = null,
-        signature = signatureFromSatisfiesAssertionNode(satisfiesAssertionNode, context),
-        reference = referenceFromSatisfiesAssertionNode(satisfiesAssertionNode, context);
+        signature = signatureFromSignatureAssertionNode(signatureAssertionNode, context),
+        reference = referenceFromSignatureAssertionNode(signatureAssertionNode, context);
 
   context = null;
 
-  const satisfiesAssertion = new SatisfiesAssertion(context, string, node, lineIndex, signature, reference);
+  const signatureAssertion = new SignatureAssertion(context, string, node, lineIndex, signature, reference);
 
-  return satisfiesAssertion;
+  return signatureAssertion;
 }
 
 export function procedureReferenceFromProcedureReferenceNode(procedureReferenceNode, context) {
@@ -1553,16 +1553,16 @@ export function termFromPropertyAssertionNode(propertyAssertionNode, context) {
   return term;
 }
 
-export function satisfiesAssertionFromStepNode(stepNode, context) {
-  let satisfiesAssertion = null;
+export function signatureAssertionFromStepNode(stepNode, context) {
+  let signatureAssertion = null;
 
-  const satisfiesAssertionNode = stepNode.getSatisfiedAssertionNode();
+  const signatureAssertionNode = stepNode.getSatisfiedAssertionNode();
 
-  if (satisfiesAssertionNode !== null) {
-    satisfiesAssertion = satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionNode, context);
+  if (signatureAssertionNode !== null) {
+    signatureAssertion = signatureAssertionFromSignatureAssertionNode(signatureAssertionNode, context);
   }
 
-  return satisfiesAssertion;
+  return signatureAssertion;
 }
 
 export function typeAssertionFromStatementNode(statementNode, context) {
@@ -1835,16 +1835,16 @@ export function containedAssertionFromStatementNode(statementNode, context) {0
   return containedAssertion;
 }
 
-export function satisfiesAssertionFromStatementNode(statementNode, context) {
-  let satisfiesAssertion = null;
+export function signatureAssertionFromStatementNode(statementNode, context) {
+  let signatureAssertion = null;
 
-  const satisfiesAssertionNode = statementNode.getSatisfiedAssertionNode();
+  const signatureAssertionNode = statementNode.getSatisfiedAssertionNode();
 
-  if (satisfiesAssertionNode !== null) {
-    satisfiesAssertion = satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionNode, context);
+  if (signatureAssertionNode !== null) {
+    signatureAssertion = signatureAssertionFromSignatureAssertionNode(signatureAssertionNode, context);
   }
 
-  return satisfiesAssertion;
+  return signatureAssertion;
 }
 
 export function statementsFromSubproofAssertionNode(subproofAssertionNode, context) {
@@ -1861,15 +1861,15 @@ export function statementFromContainedAssertionNode(containedAssertionNode, cont
   return statement;
 }
 
-export function signatureFromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
-  const signatureNode = satisfiesAssertionNode.getSignatureNode(),
+export function signatureFromSignatureAssertionNode(signatureAssertionNode, context) {
+  const signatureNode = signatureAssertionNode.getSignatureNode(),
         signature = signatureFromSignatureNode(signatureNode, context);
 
   return signature;
 }
 
-export function referenceFromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
-  const metavariableNode = satisfiesAssertionNode.getMetavariableNode(),
+export function referenceFromSignatureAssertionNode(signatureAssertionNode, context) {
+  const metavariableNode = signatureAssertionNode.getMetavariableNode(),
         reference = referenceFromMetavariableNode(metavariableNode, context);
 
   return reference;
@@ -1902,14 +1902,14 @@ export function statementFromBracketedCombinatorNode(bracketedCombinatorNode, co
   return statement;
 }
 
-export function signatureFromJSatisfiesAssertionNode(sasisfiesAssertionNode, context) {
+export function signatureFromJSignatureAssertionNode(sasisfiesAssertionNode, context) {
   const signatureNode = sasisfiesAssertionNode.getSignatureNode(),
         signature = signatureFromSignatureNode(signatureNode, context);
 
   return signature;
 }
 
-export function referenceFromJSatisfiesAssertionNode(sasisfiesAssertionNode, context) {
+export function referenceFromJSignatureAssertionNode(sasisfiesAssertionNode, context) {
   const { Reference } = elements,
         referenceNode = sasisfiesAssertionNode.getReferenceNode(),
         referenceString = context.nodeAsString(referenceNode),

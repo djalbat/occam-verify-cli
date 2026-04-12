@@ -2,7 +2,7 @@
 
 import { NonTerminalNode } from "occam-languages";
 
-import { REFERENCE_RULE_NAME, SATISFIES_ASSERTION_RULE_NAME } from "../ruleNames";
+import { REFERENCE_RULE_NAME, SIGNATURE_ASSERTION_RULE_NAME } from "../ruleNames";
 
 export default class QualificationNode extends NonTerminalNode {
   getReferenceNode() {
@@ -13,7 +13,7 @@ export default class QualificationNode extends NonTerminalNode {
   }
 
   getSatisfiedAssertionNode() {
-    const ruleName = SATISFIES_ASSERTION_RULE_NAME,
+    const ruleName = SIGNATURE_ASSERTION_RULE_NAME,
           satisfiedAssertionNode = this.getNodeByRuleName(ruleName);
 
     return satisfiedAssertionNode;
