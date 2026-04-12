@@ -147,38 +147,6 @@ class StatementPass extends ZipPassBase {
   ];
 }
 
-class IntrinsicPass extends ZipPass {
-  static maps = [
-    {
-      generalNodeQuery: termVariableNodeQuery,
-      specificNodeQuery: termNodeQuery,
-      run: (generalTermVariableNode, specificTermNode, generalContext, specificContext) => {
-        let success = false;
-
-        const termNode = specificTermNode, ///
-              variableNode = generalTermVariableNode; ///
-
-        let context;
-
-        context = generalContext; ///
-
-        const variable = context.findVariableByVariableNode(variableNode);
-
-        context = specificContext;  ///
-
-        const term = context.findTermByTermNode(termNode),
-              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
-
-        if (termUnifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    }
-  ];
-}
-
 class CombinatorPass extends ZipPass {
   static maps = [
     {
@@ -402,12 +370,77 @@ class SubstitutionPass extends ZipPass {
   ];
 }
 
+class IntrinsicTermPass extends ZipPassBase {
+  static maps = [
+    {
+      generalNodeQuery: termVariableNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      run: (generalTermVariableNode, specificTermNode, generalContext, specificContext) => {
+        let success = false;
+
+        const termNode = specificTermNode, ///
+              variableNode = generalTermVariableNode; ///
+
+        let context;
+
+        context = generalContext; ///
+
+        const variable = context.findVariableByVariableNode(variableNode);
+
+        context = specificContext;  ///
+
+        const term = context.findTermByTermNode(termNode),
+              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
+
+        if (termUnifies) {
+          success = true;
+        }
+
+        return success;
+      }
+    }
+  ];
+}
+
+class IntrinsicMetavariablePass extends ZipPass {
+  static maps = [
+    {
+      generalNodeQuery: termVariableNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      run: (generalTermVariableNode, specificTermNode, generalContext, specificContext) => {
+        let success = false;
+
+        const termNode = specificTermNode, ///
+              variableNode = generalTermVariableNode; ///
+
+        let context;
+
+        context = generalContext; ///
+
+        const variable = context.findVariableByVariableNode(variableNode);
+
+        context = specificContext;  ///
+
+        const term = context.findTermByTermNode(termNode),
+              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
+
+        if (termUnifies) {
+          success = true;
+        }
+
+        return success;
+      }
+    }
+  ];
+}
+
 const statementPass = new StatementPass(),
-      intrinsicPass = new IntrinsicPass(),
       combinatorPass = new CombinatorPass(),
       constructorPass = new ConstructorPass(),
       metavariablePass = new MetavariablePass(),
-      substitutionPass = new SubstitutionPass();
+      substitutionPass = new SubstitutionPass(),
+      intrinsicTermPass = new IntrinsicTermPass(),
+      intrinsicMetavariablePass = new IntrinsicMetavariablePass();
 
 export function unifyStatement(generalStatement, specificStatement, generalContext, specificContext) {
   let statementUnifies = false;
@@ -485,6 +518,22 @@ export function unifyStatementWithCombinator(statement, combinator, generalConte
   return statementUnifiesWithCombinator;
 }
 
+export function unifyTermIntrinsically(generalTerm, specificTerm, generalContext, specificContext) {
+  let termUnifiesIntrinsically = false;
+
+  const generalTermNode = generalTerm.getNode(),
+        specificTermNode = specificTerm.getNode(),
+        generalNode = generalTermNode, ///
+        specificNode = specificTermNode, ///
+        success = intrinsicTermPass.run(generalNode, specificNode, generalContext, specificContext);
+
+  if (success) {
+    termUnifiesIntrinsically = true;
+  }
+
+  return termUnifiesIntrinsically;
+}
+
 export function unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, generalContext, specificContext) {
   let metavariableUnifiesIntrinsically = false;
 
@@ -492,7 +541,7 @@ export function unifyMetavariableIntrinsically(generalMetavariable, specificMeta
         specificMetavariableNode = specificMetavariable.getNode(),
         generalNode = generalMetavariableNode, ///
         specificNode = specificMetavariableNode, ///
-        success = intrinsicPass.run(generalNode, specificNode, generalContext, specificContext);
+        success = intrinsicMetavariablePass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     metavariableUnifiesIntrinsically = true;

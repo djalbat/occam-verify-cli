@@ -23,32 +23,6 @@ export default define(class Axiom extends TopLevelAssertion {
     return satisfiable;
   }
 
-  compareSignature(signature, context) {
-    let comparesToSignature = false;
-
-    const satisfiable = this.isSatisfiable();
-
-    if (satisfiable) {
-      const signatureA = signature; ///
-
-      signature = this.getSignature()
-
-      const signatureB = signature, ///
-            specificContext = context;  ///
-
-      context = this.getContext();
-
-      const generalContext = context,  ///
-            signatureAComparesToSignatureB = signatureA.compareSignature(signatureB, generalContext, specificContext);
-
-      if (signatureAComparesToSignatureB) {
-        comparesToSignature = true;
-      }
-    }
-
-    return comparesToSignature;
-  }
-
   async verify(context) {
     let verifies;
 
@@ -240,6 +214,29 @@ export default define(class Axiom extends TopLevelAssertion {
     }
 
     return lastStepUnifies;
+  }
+
+  unifySignature(signature, context) {
+    let signatureUnifies;
+
+    const axiomString = this.getString(), ///
+          signatureString = signature.getString();
+
+    context.trace(`Unifying the '${signatureString}' signature with the '${axiomString}' axiom...`);
+
+    const specificSignature = signature;  ///
+
+    signature = this.getSignature();
+
+    const generalSignature = signature; ///
+
+    signatureUnifies = generalSignature.unifySignature(specificSignature, context);
+
+    if (signatureUnifies) {
+      context.debug(`...unified the '${signatureString}' signature with the '${axiomString}' axiom.`);
+    }
+
+    return signatureUnifies;
   }
 
   unifyTopLevelAssertion(topLevelAssertion, context) {

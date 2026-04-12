@@ -206,6 +206,13 @@ export default class Context extends ContextBase {
     return rule;
   }
 
+  findAxiomByReference(reference) {
+    const context = this.getContext(),
+          axiom = context.findAxiomByReference(reference);
+
+    return axiom;
+  }
+
   findTopLevelAssertionByReference(reference) {
     const context = this.getContext(),
           topLevelAssertion = context.findTopLevelAssertionByReference(reference);

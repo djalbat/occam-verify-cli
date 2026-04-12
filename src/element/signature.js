@@ -3,12 +3,10 @@
 import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
-import elements from "../elements";
-
 import { define } from "../elements";
 import { instantiateSignature } from "../process/instantiate";
 import { termsFromSignatureNode } from "../utilities/element";
-import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
+import { attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
 
 const { match, compare, correlate } = arrayUtilities;
 
@@ -28,6 +26,19 @@ export default define(class Signature extends Element {
           signatureNode = node; ///
 
     return signatureNode;
+  }
+
+  getLength() {
+    const termsLength = this.terms.length,
+          length = termsLength; ///
+
+    return length;
+  }
+
+  getTerm(index) {
+    const term = this.terms[index];
+
+    return term;
   }
 
   findValidSignature(context) {
@@ -101,7 +112,7 @@ export default define(class Signature extends Element {
       if (validates) {
         signature = this; ///
 
-        context.addSignature(context);
+        context.addSignature(signature);
       }
     }
 
@@ -146,40 +157,54 @@ export default define(class Signature extends Element {
     return termsValidate
   }
 
-  compareSignature(signature, substitutions, generalContext, specificContext) {
-    const terms = signature.getTerms(),
-          termsA = this.terms,  ///
-          termsB = terms, ///
-          matches = match(termsA, termsB, (termA, termB) => {
-            const { Variable } = elements,
-                  term = termB, ///
-                  context = generalContext, ///
-                  variable = Variable.fromTerm(term, context);
+  unifySignature(signature, context) {
+    let signatureUnifies = false;
 
-            if (variable !== null) {
-              const term = termA, ///
-                    termType = term.getType(),
-                    variableType = variable.getType(),
-                    termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
+    const generalSignature = this,
+          specificSignature = signature,  ///
+          generalSignatureString = generalSignature.getString(),
+          specificSignatureString = specificSignature.getString();
 
-              if (termTypeEqualToOrSubTypeOfVariableType) {
-                debugger
+    context.trace(`Unifying the '${specificSignatureString}' signature with the '${generalSignatureString}' signature...`);
 
-                // synthetically((context) => {
-                //   const { TermSubstitution } = elements;
-                //
-                //   TermSubstitution.fromTermAndVariable(term, variable, context);
+    context = specificSignature.getContext();
 
-                //  validates...
-                // });
+    const specificContext = context;  ///
 
-                return true;
-              }
-            }
-          }),
-          comparesToSignature = matches; ///
+    context = this.getContext();
 
-    return comparesToSignature;
+    const generalContext = context; ///
+
+    context = specificContext;  ///
+
+    reconcile((specificContext) => {
+      const generalSignatureTerms = generalSignature.getTerms(),
+            specificSignatureTerms = specificSignature.getTerms(),
+            generalTerms = generalSignatureTerms,  ///
+            specificTerms = specificSignatureTerms; ///
+
+      signatureUnifies = match(generalTerms, specificTerms, (generalTerm, specificTerm) => {
+        let termUnifies;
+
+        reconcile((specificContext) => {
+          termUnifies = generalTerm.unifyTerm(specificTerm, generalContext, specificContext);
+
+          if (termUnifies) {
+            specificContext.commit();
+          }
+        }, specificContext);
+
+        if (termUnifies) {
+          return true;
+        }
+      });
+    }, specificContext);
+
+    if (signatureUnifies) {
+      context.debug(`...unified the '${specificSignatureString}' signature with the '${generalSignatureString}' signature.`);
+    }
+
+    return signatureUnifies;
   }
 
   compareSubstitutions(substitutions, context) {

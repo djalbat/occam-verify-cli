@@ -8,6 +8,7 @@ import { instantiate } from "../utilities/context";
 import { validateTerms } from "../utilities/validation";
 import { instantiateTerm } from "../process/instantiate";
 import { variablesFromTerm } from "../utilities/equivalence";
+import { unifyTermIntrinsically } from "../process/unify";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { filter } = arrayUtilities;
@@ -244,6 +245,30 @@ export default define(class Term extends Element {
     }
 
     return term;
+  }
+
+  unifyTerm(term, generalContext, specificContext) {
+    let termUnifies = false;
+
+    const context = specificContext,  ///
+          generalTerm = this,
+          specificTerm = term,
+          generalTermString = generalTerm.getString(),
+          specifixTermString = specificTerm.getString();
+
+    context.trace(`Unifying the '${specifixTermString}' term with the '${generalTermString}' term...`);
+
+    const termUnifiesIntrinsically = unifyTermIntrinsically(generalTerm, specificTerm, generalContext, specificContext);
+
+    if (termUnifiesIntrinsically) {
+      termUnifies = true;
+    }
+
+    if (termUnifies) {
+      context.debug(`...unified the '${specifixTermString}' term with the '${generalTermString}' term.`);
+    }
+
+    return termUnifies;
   }
 
   toJSON() {

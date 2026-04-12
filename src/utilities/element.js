@@ -331,11 +331,8 @@ export function signatureFromSignatureNode(signatureNode, context) {
         node = signatureNode, ///
         string = context.nodeAsString(node),
         lineIndex = null,
-        terms = termsFromSignatureNode(signatureNode, context);
-
-  context = null;
-
-  const signature = new Signature(context, string, node, lineIndex, terms);
+        terms = termsFromSignatureNode(signatureNode, context),
+        signature = new Signature(context, string, node, lineIndex, terms);
 
   return signature;
 }
@@ -400,20 +397,6 @@ export function parameterFromParameterNode(parameterNode, context) {
   const parameter = new Parameter(context, string, node, lineIndex, name, identifier);
 
   return parameter;
-}
-
-export function signatureFromJSignatureNode(signatureNode, context) {
-  const { Signature } = elements,
-        node = signatureNode,
-        string = context.nodeAsString(node),
-        lineIndex = null,
-        terms = termsFromSignatureNode(signatureNode, context);
-
-  context = null;
-
-  const signature = new Signature(context, string, node, lineIndex, terms);
-
-  return signature;
 }
 
 export function hypothesisFromHypothesisNode(hypotheseNode, context) {
@@ -1921,7 +1904,7 @@ export function statementFromBracketedCombinatorNode(bracketedCombinatorNode, co
 
 export function signatureFromJSatisfiesAssertionNode(sasisfiesAssertionNode, context) {
   const signatureNode = sasisfiesAssertionNode.getSignatureNode(),
-        signature = signatureFromJSignatureNode(signatureNode, context);
+        signature = signatureFromSignatureNode(signatureNode, context);
 
   return signature;
 }

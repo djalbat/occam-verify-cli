@@ -90,6 +90,8 @@ export default define(class SatisfiesAssertion extends Assertion {
     const signature = this.signature.validate(context);
 
     if (signature !== null) {
+      this.signature = signature;
+
       signatureValidates = true;
     }
 
@@ -101,7 +103,7 @@ export default define(class SatisfiesAssertion extends Assertion {
   }
 
   validateReference(context) {
-    let referenceVerifies;
+    let referenceVerifies = false;
 
     const satisfiesAssertionString = this.getString();  ///
 
@@ -109,17 +111,32 @@ export default define(class SatisfiesAssertion extends Assertion {
 
     const reference = this.reference.validate(context);
 
-    if (reference !== null) {}
+    if (reference !== null) {
+      const axiom = context.findAxiomByReference(reference);
 
-    // const axiom = context.findAxiomByReference(this.reference);
-    //
-    // if (axiom !== null) {
-    //   const axiomSatisfiable = axiom.isSatisfiable();
-    //
-    //   if (axiomSatisfiable) {
-    //     referenceVerifies = true;
-    //   }
-    // }
+      if (axiom !== null) {
+        const satisfiable = axiom.isSatisfiable();
+
+        if (satisfiable) {
+          const signatureUnifies = axiom.unifySignature(this.signature, context);
+
+          if (signatureUnifies) {
+            this.reference = reference;
+
+            referenceVerifies = true;
+          }
+        } else {
+          const axiomString = axiom.getString();
+
+          context.debug(`The '${axiomString}' axiom is not satisfiable.`);
+        }
+
+      } else {
+        const referencdString = reference.getString();
+
+        context.debug(`There is no axiom for the '${referencdString}' reference.`);
+      }
+    }
 
     if (referenceVerifies) {
       context.debug(`...validated the '${satisfiesAssertionString}' satisfies assertino's reference.`);
