@@ -5,7 +5,7 @@ import Assertion from "../assertion";
 import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
 import { instantiateSignatureAssertion } from "../../process/instantiate";
-import { signatureFromJSignatureAssertionNode, referenceFromJSignatureAssertionNode, signatureAssertionFromStatementNode } from "../../utilities/element";
+import { signatureFromSignatureAssertionNode, referenceFromSignatureAssertionNode, signatureAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class SignatureAssertion extends Assertion {
   constructor(context, string, node, lineIndex, signature, reference) {
@@ -201,8 +201,8 @@ export default define(class SignatureAssertion extends Assertion {
         const { string, lineIndex } = json,
               definedAssertionNode = instantiateSignatureAssertion(string, context),
               node = definedAssertionNode,  ///
-              signature = signatureFromJSignatureAssertionNode(definedAssertionNode, context),
-              reference = referenceFromJSignatureAssertionNode(definedAssertionNode, context);
+              signature = signatureFromSignatureAssertionNode(definedAssertionNode, context),
+              reference = referenceFromSignatureAssertionNode(definedAssertionNode, context);
 
         context = null;
 

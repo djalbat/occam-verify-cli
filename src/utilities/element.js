@@ -1763,7 +1763,10 @@ export function signatureFromTopLevelAssertionNode(topLevelAsssertionNode, conte
   const signatureNode = topLevelAsssertionNode.getSignatureNode();
 
   if (signatureNode !== null) {
-    signature = signatureFromSignatureNode(signatureNode, context);
+    const { Signaure } = elements,
+          signatureString = context.nodeAsString(signatureNode);
+
+    signature = Signaure.fromSignatureString(signatureString, context);
   }
 
   return signature;
@@ -1862,8 +1865,10 @@ export function statementFromContainedAssertionNode(containedAssertionNode, cont
 }
 
 export function signatureFromSignatureAssertionNode(signatureAssertionNode, context) {
-  const signatureNode = signatureAssertionNode.getSignatureNode(),
-        signature = signatureFromSignatureNode(signatureNode, context);
+  const { Signature } = elements,
+        signatureNode = signatureAssertionNode.getSignatureNode(),
+        signatureString = context.nodeAsString(signatureNode),
+        signature = Signature.fromSignatureString(signatureString, context);
 
   return signature;
 }
@@ -1900,22 +1905,6 @@ export function statementFromBracketedCombinatorNode(bracketedCombinatorNode, co
         statement = statementFromStatementNode(statementNode, context);
 
   return statement;
-}
-
-export function signatureFromJSignatureAssertionNode(sasisfiesAssertionNode, context) {
-  const signatureNode = sasisfiesAssertionNode.getSignatureNode(),
-        signature = signatureFromSignatureNode(signatureNode, context);
-
-  return signature;
-}
-
-export function referenceFromJSignatureAssertionNode(sasisfiesAssertionNode, context) {
-  const { Reference } = elements,
-        referenceNode = sasisfiesAssertionNode.getReferenceNode(),
-        referenceString = context.nodeAsString(referenceNode),
-        reference = Reference.fromReferenceString(referenceString, context);
-
-  return reference;
 }
 
 export function targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context) {

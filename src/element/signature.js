@@ -5,8 +5,8 @@ import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
 import { instantiateSignature } from "../process/instantiate";
-import { termsFromSignatureNode } from "../utilities/element";
-import { attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
+import { signatureFromSignatureNode } from "../utilities/element";
+import { attempt, reconcile, serialise, unserialise, instantiate, ablate } from "../utilities/context";
 
 const { match, compare, correlate } = arrayUtilities;
 
@@ -299,4 +299,30 @@ export default define(class Signature extends Element {
 
     return signature;
   }
+
+  static fromSignatureString(signatureString, context) {
+    let signature;
+
+    ablate((context) => {
+      instantiate((context) => {
+        const string = signatureString,  ///
+              signatureNode = instantiateSignature(string, context);
+
+        signature = signatureFromSignatureNode(signatureNode, context);
+      }, context);
+    }, context);
+
+    return signature;
+  }
 });
+
+function termsFromSignatureNode(signatureNode, context) {
+  const termNodes = signatureNode.getTermNodes(),
+        terms = termNodes.map((termNode) => {
+          const term = context.findTermByTermNode(termNode);
+
+          return term;
+        });
+
+  return terms;
+}

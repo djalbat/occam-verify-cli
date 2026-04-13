@@ -14,6 +14,7 @@ import { TERM_RULE_NAME,
          PARAMETER_RULE_NAME,
          STATEMENT_RULE_NAME,
          REFERENCE_RULE_NAME,
+         SIGNATURE_RULE_NAME,
          COMBINATOR_RULE_NAME,
          CONCLUSION_RULE_NAME,
          HYPOTHESIS_RULE_NAME,
@@ -51,6 +52,7 @@ const termPlaceholderRule = ruleFromRuleName(TERM_RULE_NAME),
       parameterPlaceholderRule = ruleFromRuleName(PARAMETER_RULE_NAME),
       statementPlaceholderRule = ruleFromRuleName(STATEMENT_RULE_NAME),
       referencePlaceholderRule = ruleFromRuleName(REFERENCE_RULE_NAME),
+      signaturePlaceholderRule = ruleFromRuleName(SIGNATURE_RULE_NAME),
       combinatorPlaceholderRule = ruleFromRuleName(COMBINATOR_RULE_NAME),
       conclusionPlaceholderRule = ruleFromRuleName(CONCLUSION_RULE_NAME),
       hypothesisPlaceholderRule = ruleFromRuleName(HYPOTHESIS_RULE_NAME),
@@ -124,6 +126,8 @@ export function instantiateParameter(string, context) { return instantiate(param
 export function instantiateStatement(string, context) { return instantiate(statementPlaceholderRule, string, context); }
 
 export function instantiateReference(string, context) { return instantiate(referencePlaceholderRule, string, context); }
+
+export function instantiateSignature(string, context) { return instantiate(signaturePlaceholderRule, string, context); }
 
 export function instantiateCombinator(string, context) { return instantiate(combinatorPlaceholderRule, string, context); }
 
