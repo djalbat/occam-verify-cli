@@ -50,7 +50,7 @@ export default define(class Step extends ProofAssertion {
   }
 
   isQualified() {
-    const qualified = (this.reference !== null);
+    const qualified = ((this.reference !== null) || (this.signatureAssertion !== null));
 
     return qualified;
   }
@@ -164,29 +164,6 @@ export default define(class Step extends ProofAssertion {
     return validates;
   }
 
-  validateReference(context) {
-    let referenceValidates = true;  ///
-
-    if (this.reference !== null) {
-      const stepString = this.getString(),  ///
-            referenceString = this.reference.getString();
-
-      context.trace(`Validating the '${stepString}' step's '${referenceString}' reference... `);
-
-      const reference = this.reference.validate(context);
-
-      if (reference === null) {
-        referenceValidates = false;
-      }
-
-      if (referenceValidates) {
-        context.debug(`...validated the '${stepString}' step's '${referenceString}' reference. `);
-      }
-    }
-
-    return referenceValidates;
-  }
-
   validateStatement(context) {
     let statementValidates = false;
 
@@ -211,8 +188,35 @@ export default define(class Step extends ProofAssertion {
     return statementValidates;
   }
 
+  validateReference(context) {
+    let referenceValidates = false;
+
+    if (this.reference !== null) {
+      const stepString = this.getString(),  ///
+            referenceString = this.reference.getString();
+
+      context.trace(`Validating the '${stepString}' step's '${referenceString}' reference... `);
+
+      const reference = this.reference.validate(context);
+
+      if (reference !== null) {
+        this.reference = reference;
+
+        referenceValidates = true;
+      }
+
+      if (referenceValidates) {
+        context.debug(`...validated the '${stepString}' step's '${referenceString}' reference. `);
+      }
+    } else {
+      referenceValidates = true;
+    }
+
+    return referenceValidates;
+  }
+
   validateSignatureAssertion(context) {
-    let signatureAssertionValidates = true;  ///
+    let signatureAssertionValidates = false;
 
     if (this.signatureAssertion !== null) {
       const stepString = this.getString(),  ///
@@ -222,13 +226,17 @@ export default define(class Step extends ProofAssertion {
 
       const signatureAssertion = this.signatureAssertion.validate(context);
 
-      if (signatureAssertion === null) {
-        signatureAssertionValidates = false;
+      if (signatureAssertion !== null) {
+        this.signatureAssertion = signatureAssertion;
+
+        signatureAssertionValidates = true;
       }
 
       if (signatureAssertionValidates) {
-        context.debug(`...validating the '${stepString}' step's '${signatureAssertionString}' signature assertion. `);
+        context.debug(`...validated the '${stepString}' step's '${signatureAssertionString}' signature assertion. `);
       }
+    } else {
+      signatureAssertionValidates = true;
     }
 
     return signatureAssertionValidates;

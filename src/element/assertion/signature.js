@@ -153,8 +153,6 @@ export default define(class SignatureAssertion extends Assertion {
 
     context.trace(`Unifying the '${steptString}' step with the '${signatureAssertionString}' signature assertion...`);
 
-    this.signature.validate(context);
-
     const axiom = context.findAxiomByReference(this.reference),
           satisfiable = axiom.isSatisfiable();
 

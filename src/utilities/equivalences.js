@@ -20,18 +20,6 @@ export function mergeEquivalences(equivalencesA, equivalencesB, context) {
   return equivalencesA;
 }
 
-export function findEquivalenceByTerm(equivalences, term) {
-  const equivalence = equivalences.find((equivalence) => {
-    const equivalenceEqualToTerm = equivalence.isEqualTo(term);
-
-    if (equivalenceEqualToTerm) {
-      return true;
-    }
-  }) || null;
-
-  return equivalence;
-}
-
 export function equivalencesFromEquality(equality, context) {
   const { Equivalence } = elements,
         eaulivalence = Equivalence.fromEquality(equality, context),

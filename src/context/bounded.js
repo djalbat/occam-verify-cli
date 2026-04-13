@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import Context from "../context";
 
-import { mergeEquivalences, findEquivalenceByTerm, equivalencesFromEquality, separateGroundedTermsAndDefinedVariables } from "../utilities/equivalences";
+import { mergeEquivalences, equivalencesFromEquality, separateGroundedTermsAndDefinedVariables } from "../utilities/equivalences";
 
 const { last, filter } = arrayUtilities;
 
@@ -239,8 +239,6 @@ class BoundedContext extends Context {
 
     return comparesToTermAndPropertyRelation;
   }
-
-  findEquivalenceByTerm(term) { return findEquivalenceByTerm(this.equivalences, term); }
 
   findDeclaredJudgementByMetavariableNode(metavariableNode) {
     const declaredJudgements = this.getDeclaredJudgements(),
