@@ -290,7 +290,7 @@ export default class TopLevelAssertion extends Element {
 
     context.trace(`Unifying the '${stepString}' step with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction...`);
 
-    const stepUnifies = await this.deduction.unifyStep(step, context);
+    const stepUnifies = this.deduction.unifyStep(step, context);
 
     if (stepUnifies) {
       stepUnifiesWithDeduction = true;

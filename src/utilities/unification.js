@@ -248,15 +248,10 @@ async function unifyStepWithSignatureAssertion(step, context) {
 
     context.trace(`Unifying the '${stepString}' step with the '${signatureAssertionString}' signature assertion...`);
 
-    const reference = signatureAssertion.getReference(),
-          axiom = context.findAxiomByReference(reference),
-          subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
-          stepAndSubproofOrProofAssertionsUnify = await axiom.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
+    const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
+          stepAndSubproofOrProofAssertionsUnify = await signatureAssertion.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
 
     if (stepAndSubproofOrProofAssertionsUnify) {
-
-      debugger
-
       stepUnifiesWithSignatureAssertion = true;
     }
 

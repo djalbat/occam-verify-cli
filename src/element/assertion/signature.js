@@ -127,9 +127,9 @@ export default define(class SignatureAssertion extends Assertion {
           context.debug(`The '${axiomString}' axiom is not satisfiable.`);
         }
       } else {
-        const referenceString = reference.getString();
+        const referencdString = reference.getString();
 
-        context.debug(`There is no axiom for the '${referenceString}' reference.`);
+        context.debug(`There is no axiom for the '${referencdString}' reference.`);
       }
     }
 
@@ -147,26 +147,35 @@ export default define(class SignatureAssertion extends Assertion {
 
     context.trace(`Unifying the '${signatureAssertionString}' signature assertion's signature...`);
 
-    const axiom = context.findAxiomByReference(this.reference),
-          signature = axiom.getSignature();
+    const axiom = context.findAxiomByReference(this.reference);
 
     context = this.signature.getContext();
 
-    const specificContext = context;  ///
-
-    context = signature.getContext();
-
-    const generalContext = context; ///
-
-    reconcile((specificContext) => {
-      signatureUnifies = axiom.unifySignature(this.signature, generalContext, specificContext);
-    }, specificContext);
+    reconcile((context) => {
+      signatureUnifies = axiom.unifySignature(this.signature, context);
+    }, context);
 
     if (signatureUnifies) {
       context.debug(`...unified the '${signatureAssertionString}' signature assertion's signature.`);
     }
 
     return signatureUnifies;
+  }
+
+  async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
+    let stepAndSubproofOrProofAssertionsUnify;
+
+    const axiom = context.findAxiomByReference(this.reference);
+
+    context = this.signature.getContext();
+
+    await reconcile(async (context) => {
+      axiom.unifySignature(this.signature, context);
+
+      stepAndSubproofOrProofAssertionsUnify = await axiom.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
+    }, context);
+
+    return stepAndSubproofOrProofAssertionsUnify;
   }
 
   static name = "SignatureAssertion";

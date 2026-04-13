@@ -216,20 +216,23 @@ export default define(class Axiom extends TopLevelAssertion {
     return lastStepUnifies;
   }
 
-  unifySignature(signature, generalContext, specificContext) {
+  unifySignature(signature, context) {
     let signatureUnifies;
 
-    const context = specificContext,  ///
-          axiomString = this.getString(), ///
+    const axiomString = this.getString(), ///
           signatureString = signature.getString();
 
     context.trace(`Unifying the '${signatureString}' signature with the '${axiomString}' axiom...`);
 
-    const specificSignature = signature;  ///
+    const specificSignature = signature,  ///
+          specificContext = context;  ///
 
     signature = this.getSignature();
 
-    const generalSignature = signature; ///
+    context = signature.getContext();
+
+    const generalSignature = signature, ///
+          generalContext = context; ///
 
     signatureUnifies = generalSignature.unifySignature(specificSignature, generalContext, specificContext);
 
