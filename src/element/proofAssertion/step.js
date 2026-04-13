@@ -272,36 +272,5 @@ export default define(class Step extends ProofAssertion {
     return unifies;
   }
 
-  unifyWithSignatureAssertion(signatureAssertion, context) {
-    let unifiesWithSignatureAssertion = false;
-
-    const stepString = this.getString(), ///
-          signatureAssertionString = signatureAssertion.getString();
-
-    context.trace(`Unifying the '${stepString}' step with the '${signatureAssertionString}' signature assertion...`);
-
-    const reference = signatureAssertion.getReference(),
-          axiom = context.findAxiomByReference(reference);
-
-    if (axiom !== null) {
-      const step = this,  ///
-            stepUnifies = axiom.unifyStep(step, context);
-
-      if (stepUnifies) {
-        const substitutionsCompare = signatureAssertion.compareSubstitutions(context);
-
-        if (substitutionsCompare) {
-          unifiesWithSignatureAssertion = true;
-        }
-      }
-    }
-
-    if (unifiesWithSignatureAssertion) {
-      context.debug(`...unified the '${stepString}' step with the '${signatureAssertionString}' signature assertion.`);
-    }
-
-    return unifiesWithSignatureAssertion;
-  }
-
   static name = "Step";
 });

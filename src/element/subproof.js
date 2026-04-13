@@ -112,40 +112,5 @@ export default define(class Subproof extends Element {
     return subDerivationVerifies;
   }
 
-  unifyWithSignatureAssertion(signatureAssertion, context) {
-    let unifiesWithSignatureAssertion = false;
-
-    const subproofString = this.getString(), ///
-          signatureAssertionString = signatureAssertion.getString();
-
-    context.trace(`Unifying the '${subproofString}' subproof with the '${signatureAssertionString}' signature assertion...`)
-
-    const reference = signatureAssertion.getReference(),
-          axiom = context.findAxiomByReference(reference);
-
-    if (axiom !== null) {
-      const axiomSatisfiable = axiom.isSatisfiable();
-
-      if (axiomSatisfiable) {
-        const subproof = this,  ///
-              statementUnifies = axiom.unifySubproof(subproof, context);
-
-        if (statementUnifies) {
-          const substitutionsCompare = signatureAssertion.compareSubstitutions(substitutions, context);
-
-          if (substitutionsCompare) {
-            unifiesWithSignatureAssertion = true;
-          }
-        }
-      }
-    }
-
-    if (unifiesWithSignatureAssertion) {
-      context.debug(`...unified the '${subproofString}' subproof with the '${signatureAssertionString}' signature assertion.`)
-    }
-
-    return unifiesWithSignatureAssertion;
-  }
-
   static name = "Subproof";
 });

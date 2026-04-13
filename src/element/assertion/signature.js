@@ -3,7 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { instantiate } from "../../utilities/context";
+import { reconcile, instantiate } from "../../utilities/context";
 import { instantiateSignatureAssertion } from "../../process/instantiate";
 import { signatureFromSignatureAssertionNode, referenceFromSignatureAssertionNode, signatureAssertionFromStatementNode } from "../../utilities/element";
 
@@ -29,10 +29,6 @@ export default define(class SignatureAssertion extends Assertion {
 
     return signatureAssertionNode;
   }
-
-  compareSubstitutions(substitutions, context) { return this.signature.compareSubstitutions(substitutions, context); }
-
-  correlateSubstitutions(substitutions, context) { return this.signature.correlateSubstitutions(substitutions, context); }
 
   validate(context) {
     let signatureAssertion = null;
@@ -118,7 +114,7 @@ export default define(class SignatureAssertion extends Assertion {
         const satisfiable = axiom.isSatisfiable();
 
         if (satisfiable) {
-          const signatureUnifies = axiom.unifySignature(this.signature, context);
+          const signatureUnifies = this.unifySignature(context);
 
           if (signatureUnifies) {
             this.reference = reference;
@@ -130,11 +126,10 @@ export default define(class SignatureAssertion extends Assertion {
 
           context.debug(`The '${axiomString}' axiom is not satisfiable.`);
         }
-
       } else {
-        const referencdString = reference.getString();
+        const referenceString = reference.getString();
 
-        context.debug(`There is no axiom for the '${referencdString}' reference.`);
+        context.debug(`There is no axiom for the '${referenceString}' reference.`);
       }
     }
 
@@ -145,46 +140,33 @@ export default define(class SignatureAssertion extends Assertion {
     return referenceVerifies;
   }
 
-  unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
-    let stepAndSubproofOrProofAssertionsUnify = false;
+  unifySignature(context) {
+    let signatureUnifies;
 
-    const steptString = step.getString(),
-          signatureAssertionString = this.getString(); ///
+    const signatureAssertionString = this.getString();  ///
 
-    context.trace(`Unifying the '${steptString}' step with the '${signatureAssertionString}' signature assertion...`);
+    context.trace(`Unifying the '${signatureAssertionString}' signature assertion's signature...`);
 
     const axiom = context.findAxiomByReference(this.reference),
-          satisfiable = axiom.isSatisfiable();
+          signature = axiom.getSignature();
 
-    if (satisfiable) {
-      const axiomComparesToSignature = axiom.compareSignature(this.signature, context);
+    context = this.signature.getContext();
 
-      if (axiomComparesToSignature) {
-        const substitutionsB = substitutions; ///
+    const specificContext = context;  ///
 
-        stepAndSubproofOrProofAssertionsUnify = unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
+    context = signature.getContext();
 
-        if (stepAndSubproofOrProofAssertionsUnify) {
-          const substitutionsA = substitutions, ///
-                substitutionsCorrelate = substitutionsA.correlateSubstitutions(substitutionsB);
+    const generalContext = context; ///
 
-          if (!substitutionsCorrelate) {
-            const substitutionsAString = substitutionsA.asString(),
-                  substitutionsBString = substitutionsB.asString();
+    reconcile((specificContext) => {
+      signatureUnifies = axiom.unifySignature(this.signature, generalContext, specificContext);
+    }, specificContext);
 
-            context.trace(`THe signature's ${substitutionsBString} substitutions do not correlate with the unification's ${substitutionsAString} substitutions.`);
-
-            stepAndSubproofOrProofAssertionsUnify = false;
-          }
-        }
-      }
+    if (signatureUnifies) {
+      context.debug(`...unified the '${signatureAssertionString}' signature assertion's signature.`);
     }
 
-    if (stepAndSubproofOrProofAssertionsUnify) {
-      context.debug(`...unified the '${steptString}' step with the '${signatureAssertionString}' signature assertion.`);
-    }
-
-    return stepAndSubproofOrProofAssertionsUnify;
+    return signatureUnifies;
   }
 
   static name = "SignatureAssertion";

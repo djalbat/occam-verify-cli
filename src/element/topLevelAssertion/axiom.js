@@ -216,10 +216,11 @@ export default define(class Axiom extends TopLevelAssertion {
     return lastStepUnifies;
   }
 
-  unifySignature(signature, context) {
+  unifySignature(signature, generalContext, specificContext) {
     let signatureUnifies;
 
-    const axiomString = this.getString(), ///
+    const context = specificContext,  ///
+          axiomString = this.getString(), ///
           signatureString = signature.getString();
 
     context.trace(`Unifying the '${signatureString}' signature with the '${axiomString}' axiom...`);
@@ -230,50 +231,13 @@ export default define(class Axiom extends TopLevelAssertion {
 
     const generalSignature = signature; ///
 
-    signatureUnifies = generalSignature.unifySignature(specificSignature, context);
+    signatureUnifies = generalSignature.unifySignature(specificSignature, generalContext, specificContext);
 
     if (signatureUnifies) {
       context.debug(`...unified the '${signatureString}' signature with the '${axiomString}' axiom.`);
     }
 
     return signatureUnifies;
-  }
-
-  unifyTopLevelAssertion(topLevelAssertion, context) {
-    let topLevelAssertionUnifies = false;
-
-    const axiomString = this.getString(), ///
-          topLevelAssertionString = topLevelAssertion.getString();
-
-    context.trace(`Unifying the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom...`);
-
-    const hypothesesCorrelate = topLevelAssertion.correlateHypotheses(context);
-
-    if (hypothesesCorrelate) {
-      const specificContext = context;  ///
-
-      context = this.getContext();
-
-      const generalContext = context; ///
-
-      context = specificContext;  ///
-
-      const deduction = topLevelAssertion.getDeduction(),
-            deductionUnifies = this.unifyDeduction(deduction, generalContext, specificContext);
-
-      if (deductionUnifies) {
-        const suppositions = topLevelAssertion.getSuppositions(),
-              suppositionsUnify = this.unifySuppositions(suppositions, generalContext, specificContext);
-
-        topLevelAssertionUnifies = suppositionsUnify; ///
-      }
-    }
-
-    if (topLevelAssertionUnifies) {
-      context.debug(`...unified the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom.`);
-    }
-
-    return topLevelAssertionUnifies;
   }
 
   static name = "Axiom";

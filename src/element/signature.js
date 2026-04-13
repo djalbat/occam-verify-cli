@@ -8,7 +8,7 @@ import { instantiateSignature } from "../process/instantiate";
 import { signatureFromSignatureNode } from "../utilities/element";
 import { attempt, reconcile, serialise, unserialise, instantiate, ablate } from "../utilities/context";
 
-const { match, compare, correlate } = arrayUtilities;
+const { match } = arrayUtilities;
 
 export default define(class Signature extends Element {
   constructor(context, string, node, lineIndex, terms) {
@@ -173,112 +173,43 @@ export default define(class Signature extends Element {
     return termsValidate
   }
 
-  unifySignature(signature, context) {
+  unifySignature(signature, generalContext, specificContext) {
     let signatureUnifies = false;
 
-    const generalSignature = this,
+    const context = specificContext,  ///
+          generalSignature = this,
           specificSignature = signature,  ///
           generalSignatureString = generalSignature.getString(),
           specificSignatureString = specificSignature.getString();
 
     context.trace(`Unifying the '${specificSignatureString}' signature with the '${generalSignatureString}' signature...`);
 
-    context = specificSignature.getContext();
+    const generalSignatureTerms = generalSignature.getTerms(),
+          specificSignatureTerms = specificSignature.getTerms(),
+          generalTerms = generalSignatureTerms,  ///
+          specificTerms = specificSignatureTerms; ///
 
-    const specificContext = context;  ///
+    signatureUnifies = match(generalTerms, specificTerms, (generalTerm, specificTerm) => {
+      let termUnifies;
 
-    context = this.getContext();
-
-    const generalContext = context; ///
-
-    context = specificContext;  ///
-
-    reconcile((specificContext) => {
-      const generalSignatureTerms = generalSignature.getTerms(),
-            specificSignatureTerms = specificSignature.getTerms(),
-            generalTerms = generalSignatureTerms,  ///
-            specificTerms = specificSignatureTerms; ///
-
-      signatureUnifies = match(generalTerms, specificTerms, (generalTerm, specificTerm) => {
-        let termUnifies;
-
-        reconcile((specificContext) => {
-          termUnifies = generalTerm.unifyTerm(specificTerm, generalContext, specificContext);
-
-          if (termUnifies) {
-            specificContext.commit();
-          }
-        }, specificContext);
+      reconcile((specificContext) => {
+        termUnifies = generalTerm.unifyTerm(specificTerm, generalContext, specificContext);
 
         if (termUnifies) {
-          return true;
+          specificContext.commit();
         }
-      });
-    }, specificContext);
+      }, specificContext);
+
+      if (termUnifies) {
+        return true;
+      }
+    });
 
     if (signatureUnifies) {
       context.debug(`...unified the '${specificSignatureString}' signature with the '${generalSignatureString}' signature.`);
     }
 
     return signatureUnifies;
-  }
-
-  compareSubstitutions(substitutions, context) {
-    let substitutionsCompares = false;
-
-    const signatureString = this.getString(),  ///
-          substitutionsString = substitutions.asString();
-
-    context.trace(`Comparing the '${substitutionsString}' substitutions against the '${signatureString}' signature...`);
-
-    const array = substitutions.getArray(),
-          compares = compare(this.terms, array, (term, substitution) => {
-            const substitutionTerm = substitution.getTerm(),
-                  substitutionTermEqualToTerm = substitutionTerm.isEqualTo(term);
-
-            if (substitutionTermEqualToTerm) {
-              return true;
-            }
-          });
-
-    if (compares) {
-      substitutionsCompares = true;
-    }
-
-    if (substitutionsCompares) {
-      context.debug(`...compared the '${substitutionsString}' substitutions against the '${signatureString}' signature.`);
-    }
-
-    return substitutionsCompares;
-  }
-
-  correlateSubstitutions(substitutions, context) {
-    let substitutionsCorrelates = false;
-
-    const signatureString = this.getString(),  ///
-          substitutionsString = substitutions.asString();
-
-    context.trace(`Correlating the '${substitutionsString}' substitutions against the '${signatureString}' signature...`);
-
-    const array = substitutions.getArray(),
-          correlates = correlate(this.terms, array, (term, substitution) => {
-            const substitutionTerm = substitution.getTerm(),
-                  substitutionTermEqualToTerm = substitutionTerm.isEqualTo(term);
-
-            if (substitutionTermEqualToTerm) {
-              return true;
-            }
-          });
-
-    if (correlates) {
-      substitutionsCorrelates = true;
-    }
-
-    if (substitutionsCorrelates) {
-      context.debug(`...correlated the '${substitutionsString}' substitutions against the '${signatureString}' signature.`);
-    }
-
-    return substitutionsCorrelates;
   }
 
   static name = "Signature";
