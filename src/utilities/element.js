@@ -1763,10 +1763,10 @@ export function signatureFromTopLevelAssertionNode(topLevelAsssertionNode, conte
   const signatureNode = topLevelAsssertionNode.getSignatureNode();
 
   if (signatureNode !== null) {
-    const { Signaure } = elements,
+    const { Signature } = elements,
           signatureString = context.nodeAsString(signatureNode);
 
-    signature = Signaure.fromSignatureString(signatureString, context);
+    signature = Signature.fromSignatureString(signatureString, context);
   }
 
   return signature;

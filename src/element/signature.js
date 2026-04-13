@@ -41,6 +41,22 @@ export default define(class Signature extends Element {
     return term;
   }
 
+  isEqualTo(signature) {
+    const signatureNode = signature.getNode(),
+          signatureNodeMatches = this.matchSignatureNode(signatureNode),
+          equalTo = signatureNodeMatches;  ///
+
+    return equalTo;
+  }
+
+  matchSignatureNode(signatureNode) {
+    const node = signatureNode, ///
+          nodeMatches = this.matchNode(node),
+          signatureNodeMatches = nodeMatches; ///
+
+    return signatureNodeMatches;
+  }
+
   findValidSignature(context) {
     const signatureNode = this.getSignatureNode(),
           signature = context.findSignatureBySignatureNode(signatureNode),
