@@ -3,6 +3,7 @@
 import TopLevelAssertion from "../topLevelAssertion";
 
 import { define } from "../../elements";
+import supposition from "../proofAssertion/supposition";
 
 export default define(class Axiom extends TopLevelAssertion {
   getAxiomNode() {
@@ -92,6 +93,43 @@ export default define(class Axiom extends TopLevelAssertion {
     }
 
     return signatureUnifies;
+  }
+
+  async unifyDeduction(deduction, context) {
+    let deductionUnifies;
+
+    await this.break(context);
+
+    const asiomString = this.getString(), ///,
+          deductionString = deduction.getString();
+
+    context.trace(`Unifying the '${deductionString}' deduction with the '${asiomString}' axiom's deduction...`);
+
+    deductionUnifies = this.deduction.unifyDeduction(deduction, context);
+
+    if (deductionUnifies) {
+      context.debug(`...unified the '${deductionString}' deduction with the '${asiomString}' axiom's deduction.`);
+    }
+
+    return deductionUnifies;
+  }
+
+  async unifyTopLevelAssertion(topLevelAssertion, context) {
+    let topLevelAssertionUnifies = false;
+
+    const deduction = topLevelAssertion.getDeduction(),
+          deductionUnifies = await this.unifyDeduction(deduction, context);
+
+    if (deductionUnifies) {
+      const suppositions = topLevelAssertion.getSuppositions(),
+            suppositionsUnify = await this.unifySuppositions(suppositions, context);
+
+      if (suppositionsUnify) {
+        topLevelAssertionUnifies = true;
+      }
+    }
+
+    return topLevelAssertionUnifies;
   }
 
   static name = "Axiom";

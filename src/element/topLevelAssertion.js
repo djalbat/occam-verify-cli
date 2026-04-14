@@ -16,7 +16,7 @@ import { labelsFromJSON,
          hypothesesToHypothesesJSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
 
-const { reverse, correlate } = arrayUtilities,
+const { reverse } = arrayUtilities,
       { asyncExtract, asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
 
 export default class TopLevelAssertion extends Element {
@@ -89,35 +89,6 @@ export default class TopLevelAssertion extends Element {
     });
 
     return metavariableNodeMatches;
-  }
-
-  correlateHypotheses(context) {
-    let correlatesToHypotheses;
-
-    const hypothetical = this.isHypothetical();
-
-    if (hypothetical) {
-      const proofAssertions = context.getProofAssertions(),
-            topLevelAssertionString = this.getString();  ///
-
-      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' top level assertion...`);
-
-      correlatesToHypotheses = correlate(this.hypotheses, proofAssertions, (hypothesis, proofAssertion) => {
-        const hypothesesComparesToStep = hypothesis.compareProofAssertion(proofAssertion, context);
-
-        if (hypothesesComparesToStep) {
-          return true;
-        }
-      });
-
-      if (correlatesToHypotheses) {
-        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' top level assertion.`);
-      }
-    } else {
-      correlatesToHypotheses = true
-    }
-
-    return correlatesToHypotheses;
   }
 
   async verify(context) {
@@ -285,10 +256,9 @@ export default class TopLevelAssertion extends Element {
     await this.break(context);
 
     const stepString = step.getString(),
-          deductionString = this.deduction.getString(),
           topLevelAssertionString = this.getString(); ///
 
-    context.trace(`Unifying the '${stepString}' step with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction...`);
+    context.trace(`Unifying the '${stepString}' step with the '${topLevelAssertionString}' top level assertion's deduction...`);
 
     const stepUnifies = this.deduction.unifyStep(step, context);
 
@@ -297,7 +267,7 @@ export default class TopLevelAssertion extends Element {
     }
 
     if (stepUnifiesWithDeduction) {
-      context.debug(`...unified the '${stepString}' step with the '${topLevelAssertionString}' top level assertion's '${deductionString}' deduction.`);
+      context.debug(`...unified the '${stepString}' step with the '${topLevelAssertionString}' top level assertion's deduction.`);
     }
 
     return stepUnifiesWithDeduction;
@@ -306,20 +276,16 @@ export default class TopLevelAssertion extends Element {
   async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
     let stepAndSubproofOrProofAssertionsUnify = false;
 
-    const correlatesToHypotheses = this.correlateHypotheses(context);
+    const stepUnifiesWithDeduction = await this.unifyStepWithDeduction(step, context);
 
-    if (correlatesToHypotheses) {
-      const stepUnifiesWithDeduction = await this.unifyStepWithDeduction(step, context);
+    if (stepUnifiesWithDeduction) {
+      const subproofOrProofAssertionsUnifiesWithSuppositions = await this.unifySubproofOrProofAssertionsWithSuppositions(subproofOrProofAssertions, context);
 
-      if (stepUnifiesWithDeduction) {
-        const subproofOrProofAssertionsUnifiesWithSuppositions = await this.unifySubproofOrProofAssertionsWithSuppositions(subproofOrProofAssertions, context);
+      if (subproofOrProofAssertionsUnifiesWithSuppositions) {
+        const derivedSubstitutionsResolved = context.areDerivedSubstitutionsResolved();
 
-        if (subproofOrProofAssertionsUnifiesWithSuppositions) {
-          const derivedSubstitutionsResolved = context.areDerivedSubstitutionsResolved();
-
-          if (derivedSubstitutionsResolved) {
-            stepAndSubproofOrProofAssertionsUnify = true;
-          }
+        if (derivedSubstitutionsResolved) {
+          stepAndSubproofOrProofAssertionsUnify = true;
         }
       }
     }

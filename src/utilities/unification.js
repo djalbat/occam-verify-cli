@@ -282,9 +282,9 @@ async function unifyStepAsSignatureAssertionWithReference(step, context) {
 
         context.trace(`Unifying the '${stepString}' step as a signature assertion with the '${referenceString}' reference...`);
 
-        const stepAndTopLevelAssertionUnify = await signatureAssertion.unifyStepAndTopLevelAssertion(step, topLevelAssertion, context);
+        const unifyTopLevelAssertion = await signatureAssertion.unifyTopLevelAssertion(topLevelAssertion, context);
 
-        if (stepAndTopLevelAssertionUnify) {
+        if (unifyTopLevelAssertion) {
           stepUnifiesAsSignatureAssertionWithReference = true;
         }
 
