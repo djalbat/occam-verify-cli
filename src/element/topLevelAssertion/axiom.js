@@ -1,9 +1,13 @@
 "use strict";
 
+import { asynchronousUtilities } from "occam-languages";
+
 import TopLevelAssertion from "../topLevelAssertion";
 
 import { define } from "../../elements";
-import supposition from "../proofAssertion/supposition";
+import { join, reconcile } from "../../utilities/context";
+
+const { asyncMatch } = asynchronousUtilities;
 
 export default define(class Axiom extends TopLevelAssertion {
   getAxiomNode() {
@@ -100,22 +104,122 @@ export default define(class Axiom extends TopLevelAssertion {
 
     await this.break(context);
 
-    const asiomString = this.getString(), ///,
-          deductionString = deduction.getString();
+    const axiomString = this.getString(), ///
+          generalDeduction = this.deduction,  ///
+          specificDeduction = deduction,  ///
+          generalDeductionString = generalDeduction.getString(),
+          specificDeductionString = specificDeduction.getString();
 
-    context.trace(`Unifying the '${deductionString}' deduction with the '${asiomString}' axiom's deduction...`);
+    context.trace(`Unifying the '${specificDeductionString}' deduction with the '${axiomString}' axiom's '${generalDeductionString}' deduction...`);
 
-    deductionUnifies = this.deduction.unifyDeduction(deduction, context);
+    const specificDeductionContext = specificDeduction.getContext(),
+          generalDeductionContext = generalDeduction.getContext(),
+          specificContext = specificDeductionContext,  ///
+          generalContext = generalDeductionContext; ///
+
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        let statement;
+
+        statement = specificDeduction.getStatement();
+
+        const specificStatement = statement;  ///
+
+        statement = generalDeduction.getStatement();
+
+        const generalStatement = statement, ///
+              statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
+
+        if (statementUnifies) {
+          specificContext.commit();
+
+          deductionUnifies = true;
+        }
+      }, specificContext);
+    }, specificContext, context);
 
     if (deductionUnifies) {
-      context.debug(`...unified the '${deductionString}' deduction with the '${asiomString}' axiom's deduction.`);
+      context.debug(`...unified the '${specificDeductionString}' deduction with the '${axiomString}' axiom's '${generalDeductionString}' deduction.`);
     }
 
     return deductionUnifies;
   }
 
+  async unifySupposition(supposition, index, context) {
+    let suppositionUnifies = false;
+
+    const specificSupposition = supposition;  ///
+
+    supposition = this.getSupposition(index);
+
+    const axiomString = this.getString(), ///
+          generalSupposition = supposition,  ///
+          generalSuppositionString = generalSupposition.getString(),
+          specificSuppositionString = specificSupposition.getString();
+
+    context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${axiomString}' axiom's '${generalSuppositionString}' supposition...`);
+
+    const specificSuppositionContext = specificSupposition.getContext(),
+          generalSuppositionContext = generalSupposition.getContext(),
+          specificContext = specificSuppositionContext,  ///
+          generalContext = generalSuppositionContext; ///
+
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        let statement;
+
+        statement = specificSupposition.getStatement();
+
+        const specificStatement = statement;  ///
+
+        statement = generalSupposition.getStatement();
+
+        const generalStatement = statement, ///
+              statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
+
+        if (statementUnifies) {
+          specificContext.commit();
+
+          suppositionUnifies = true;
+        }
+      }, specificContext);
+    }, specificContext, context);
+
+    if (suppositionUnifies) {
+      context.debug(`...unified the '${specificSuppositionString}' supposition with the '${axiomString}' axiom's '${generalSuppositionString}' supposition...`);
+    }
+
+    return suppositionUnifies;
+  }
+
+  async unifySuppositions(suppositions, context) {
+    let suppositionsUnify;
+
+    const specificSuppositions = suppositions;  ///
+
+    suppositions = this.getSuppositions();
+
+    const generalSuppositions = suppositions; ///
+
+    suppositionsUnify = await asyncMatch(generalSuppositions, specificSuppositions, async (generalSupposition, specificSupposition, index) => {
+      const supposition = specificSupposition,  ///
+            suppositionUnifies = await this.unifySupposition(supposition, index, context);
+
+      if (suppositionUnifies) {
+        return true;
+      }
+    });
+
+    return suppositionsUnify;
+  }
+
   async unifyTopLevelAssertion(topLevelAssertion, context) {
     let topLevelAssertionUnifies = false;
+
+    const axiomString = this.getString(), ///
+          topLevelAssertionString = topLevelAssertion.getString();
+
+    context.trace(`Unifying the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom...`);
 
     const deduction = topLevelAssertion.getDeduction(),
           deductionUnifies = await this.unifyDeduction(deduction, context);
@@ -127,6 +231,10 @@ export default define(class Axiom extends TopLevelAssertion {
       if (suppositionsUnify) {
         topLevelAssertionUnifies = true;
       }
+    }
+
+    if (topLevelAssertionUnifies) {
+      context.debug(`...unified the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom.`);
     }
 
     return topLevelAssertionUnifies;

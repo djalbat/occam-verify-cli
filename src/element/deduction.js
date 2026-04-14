@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateDeduction } from "../process/instantiate";
-import { join, declare, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
+import { declare, attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Deduction extends Element {
   constructor(context, string, node, lineIndex, statement) {
@@ -128,41 +128,6 @@ export default define(class Deduction extends Element {
     }
 
     return stepUnifies;
-  }
-
-  unifyDeduction(deduction, context) {
-    let deductionUnifies = false;
-
-    const generalDeduction = this,  ///
-          specificDeduction = deduction,  ///
-          generalDeductionString = generalDeduction.getString(),
-          specificDeductionString = specificDeduction.getString();
-
-    context.trace(`Unifying the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction...`);
-
-    const specificDeductionContext = specificDeduction.getContext(),
-          generalDeductionContext = generalDeduction.getContext(),
-          specificContext = specificDeductionContext,  ///
-          generalContext = generalDeductionContext; ///
-
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const statement = specificDeduction.getStatement(),
-              statementUnifies = this.statement.unifyStatement(statement, generalContext, specificContext);
-
-        if (statementUnifies) {
-          specificContext.commit();
-
-          deductionUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
-
-    if (deductionUnifies) {
-      context.debug(`...unified the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction.`);
-    }
-
-    return deductionUnifies;
   }
 
   toJSON() {
