@@ -13,13 +13,14 @@ const typeNodeQuery = nodeQuery("/type"),
       termNodeQuery = nodeQuery("/term"),
       frameNodeQuery = nodeQuery("/frame"),
       metaTypeNodeQuery = nodeQuery("/metaType"),
+      signatureNodeQuery = nodeQuery("/signature"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       assumptionMetavariableNodeQuery = nodeQuery("/assumption/metavariable!");
 
-class StatementPass extends ZipPassBase {
+class MetaLevelPass extends ZipPassBase {
   static maps = [
     {
       generalNodeQuery: assumptionMetavariableNodeQuery,
@@ -138,6 +139,30 @@ class StatementPass extends ZipPassBase {
               termUnifies = variable.unifyTerm(term, generalContext, specificContext);
 
         if (termUnifies) {
+          success = true;
+        }
+
+        return success;
+      }
+    },
+    {
+      generalNodeQuery: signatureNodeQuery,
+      specificNodeQuery: signatureNodeQuery,
+      run: (generalSignatureNode, specificSignatureNode, generalContext, specificContext) => {
+        let success = false;
+
+         let context;
+
+        context = generalContext; ///
+
+        const generalSignature = context.findSignatureBySignatureNode(generalSignatureNode);
+
+        context = specificContext;  ///
+
+        const specificSignature = context.findSignatureBySignatureNode(specificSignatureNode),
+              signatureUnifies = generalSignature.unifySignature(specificSignature, generalContext, specificContext);
+
+        if (signatureUnifies) {
           success = true;
         }
 
@@ -434,7 +459,7 @@ class IntrinsicMetavariablePass extends ZipPass {
   ];
 }
 
-const statementPass = new StatementPass(),
+const metaLevelPass = new MetaLevelPass(),
       combinatorPass = new CombinatorPass(),
       constructorPass = new ConstructorPass(),
       metavariablePass = new MetavariablePass(),
@@ -449,7 +474,7 @@ export function unifyStatement(generalStatement, specificStatement, generalConte
         specificStatementNode = specificStatement.getNode(),
         generalNode = generalStatementNode, ///
         specificNode = specificStatementNode,  ///
-        success = statementPass.run(generalNode, specificNode, generalContext, specificContext);
+        success = metaLevelPass.run(generalNode, specificNode, generalContext, specificContext);
 
   if (success) {
     statementUnifies = true;

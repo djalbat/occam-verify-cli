@@ -6,7 +6,7 @@ import { arrayUtilities } from "necessary";
 import { define } from "../elements";
 import { instantiateSignature } from "../process/instantiate";
 import { signatureFromSignatureNode } from "../utilities/element";
-import { attempt, reconcile, serialise, unserialise, instantiate, ablate } from "../utilities/context";
+import { join, ablate, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
 
 const { match } = arrayUtilities;
 
@@ -174,7 +174,7 @@ export default define(class Signature extends Element {
   }
 
   unifySignature(signature, generalContext, specificContext) {
-    let signatureUnifies = false;
+    let signatureUnifies;
 
     const context = specificContext,  ///
           generalSignature = this,
@@ -186,24 +186,39 @@ export default define(class Signature extends Element {
 
     const generalSignatureTerms = generalSignature.getTerms(),
           specificSignatureTerms = specificSignature.getTerms(),
+          generalSignatureContext = generalSignature.getContext(),
+          specificSignatureContext = specificSignature.getContext(),
           generalTerms = generalSignatureTerms,  ///
-          specificTerms = specificSignatureTerms; ///
+          specificTerms = specificSignatureTerms, ///
+          generalContexts = [
+            generalSignatureContext,
+            generalContext
+          ],
+          specificContexts = [
+            specificSignatureContext,
+            specificContext
+          ];
 
-    signatureUnifies = match(generalTerms, specificTerms, (generalTerm, specificTerm) => {
-      let termUnifies;
+    join((generalContext) => {
+      join((specificContext) => {
+        signatureUnifies = match(generalTerms, specificTerms, (generalTerm, specificTerm) => {
+          let termUnifies;
 
-      reconcile((specificContext) => {
-        termUnifies = generalTerm.unifyTerm(specificTerm, generalContext, specificContext);
+          reconcile((specificContext) => {
+            termUnifies = generalTerm.unifyTerm(specificTerm, generalContext, specificContext);
 
-        if (termUnifies) {
-          specificContext.commit();
-        }
-      }, specificContext);
+            if (termUnifies) {
+              specificContext.commit();
+            }
+          }, specificContext);
 
-      if (termUnifies) {
-        return true;
-      }
-    });
+          if (termUnifies) {
+            return true;
+          }
+        });
+      }, ...specificContexts);
+    }, ...generalContexts);
+
 
     if (signatureUnifies) {
       context.debug(`...unified the '${specificSignatureString}' signature with the '${generalSignatureString}' signature.`);

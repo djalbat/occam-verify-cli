@@ -16,6 +16,12 @@ import NominalFileContext from "../context/file/nominal";
 import { mnemicContextFromJSON, mnemicContextsFromJSON, mnemicContextToMnemicContextJSON, mnemicContextsToMnemicContextsJSON } from "../utilities/json";
 
 export function join(innerFunction, ...contexts) {
+  contexts = contexts.filter((context) => {
+    if (context !== null) {
+      return true;
+    }
+  });
+
   const synopticContext = SynopticContext.fromContexts(contexts),
         context = synopticContext;  ///
 

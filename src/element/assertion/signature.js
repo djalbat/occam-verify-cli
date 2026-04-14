@@ -3,7 +3,7 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { reconcile, instantiate } from "../../utilities/context";
+import { join, reconcile, instantiate } from "../../utilities/context";
 import { instantiateSignatureAssertion } from "../../process/instantiate";
 import { signatureFromSignatureAssertionNode, referenceFromSignatureAssertionNode, signatureAssertionFromStatementNode } from "../../utilities/element";
 
@@ -165,15 +165,19 @@ export default define(class SignatureAssertion extends Assertion {
   async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
     let stepAndSubproofOrProofAssertionsUnify;
 
-    const axiom = context.findAxiomByReference(this.reference);
+    const axiom = context.findAxiomByReference(this.reference),
+          signatureContext = this.signature.getContext(),
+          specificContext = signatureContext; ///
 
-    context = this.signature.getContext();
+    await join(async (specificContext) => {
+      const context = specificContext;  ///
 
-    await reconcile(async (context) => {
-      axiom.unifySignature(this.signature, context);
+      await reconcile(async (context) => {
+        axiom.unifySignature(this.signature, context);
 
-      stepAndSubproofOrProofAssertionsUnify = await axiom.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
-    }, context);
+        stepAndSubproofOrProofAssertionsUnify = await axiom.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
+      }, context);
+    }, specificContext, context);
 
     return stepAndSubproofOrProofAssertionsUnify;
   }
