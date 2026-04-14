@@ -12,11 +12,11 @@ export default class QualificationNode extends NonTerminalNode {
     return referenceNode;
   }
 
-  getSatisfiedAssertionNode() {
+  getSignatureAssertionNode() {
     const ruleName = SIGNATURE_ASSERTION_RULE_NAME,
-          satisfiedAssertionNode = this.getNodeByRuleName(ruleName);
+          signatureAssertionNode = this.getNodeByRuleName(ruleName);
 
-    return satisfiedAssertionNode;
+    return signatureAssertionNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(QualificationNode, ruleName, childNodes, opacity, precedence); }

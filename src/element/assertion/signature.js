@@ -162,6 +162,26 @@ export default define(class SignatureAssertion extends Assertion {
     return signatureUnifies;
   }
 
+  async unifyStepAndTopLevelAssertion(step, topLevelAssertion, context) {
+    let stepAndTopLevelAssertionUnify;
+
+    const axiom = context.findAxiomByReference(this.reference),
+          signatureContext = this.signature.getContext(),
+          specificContext = signatureContext; ///
+
+    await join(async (specificContext) => {
+      const context = specificContext;  ///
+
+      await reconcile(async (context) => {
+        axiom.unifySignature(this.signature, context);
+
+        stepAndTopLevelAssertionUnify = await axiom.unifyStepAndTopLevelAssertion(step, topLevelAssertion, context);
+      }, context);
+    }, specificContext, context);
+
+    return stepAndTopLevelAssertionUnify;
+  }
+
   async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
     let stepAndSubproofOrProofAssertionsUnify;
 

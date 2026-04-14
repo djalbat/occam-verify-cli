@@ -135,11 +135,11 @@ export default class StatementNode extends NonTerminalNode {
     return containedAssertionNode;
   }
 
-  getSatisfiedAssertionNode() {
+  getSignatureAssertionNode() {
     const ruleName = SIGNATURE_ASSERTION_RULE_NAME,
-          satisfiedAssertionNode = this.getNodeByRuleName(ruleName);
+          signatureAssertionNode = this.getNodeByRuleName(ruleName);
 
-    return satisfiedAssertionNode;
+    return signatureAssertionNode;
   }
 
   getSingularMetavariableNode() {

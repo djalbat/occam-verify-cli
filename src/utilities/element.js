@@ -1556,7 +1556,7 @@ export function termFromPropertyAssertionNode(propertyAssertionNode, context) {
 export function signatureAssertionFromStepNode(stepNode, context) {
   let signatureAssertion = null;
 
-  const signatureAssertionNode = stepNode.getSatisfiedAssertionNode();
+  const signatureAssertionNode = stepNode.getSignatureAssertionNode();
 
   if (signatureAssertionNode !== null) {
     signatureAssertion = signatureAssertionFromSignatureAssertionNode(signatureAssertionNode, context);
@@ -1841,7 +1841,7 @@ export function containedAssertionFromStatementNode(statementNode, context) {0
 export function signatureAssertionFromStatementNode(statementNode, context) {
   let signatureAssertion = null;
 
-  const signatureAssertionNode = statementNode.getSatisfiedAssertionNode();
+  const signatureAssertionNode = statementNode.getSignatureAssertionNode();
 
   if (signatureAssertionNode !== null) {
     signatureAssertion = signatureAssertionFromSignatureAssertionNode(signatureAssertionNode, context);

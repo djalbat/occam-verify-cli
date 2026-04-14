@@ -29,16 +29,16 @@ export default class StepNode extends ProofAssertionNode {
     return referenceNode;
   }
 
-  getSatisfiedAssertionNode() {
-    let satisfiedAssertionNode =  null;
+  getSignatureAssertionNode() {
+    let signatureAssertionNode =  null;
 
     const qualificationNode = this.getQualificationNode();
 
     if (qualificationNode !== null) {
-      satisfiedAssertionNode = qualificationNode.getSatisfiedAssertionNode();
+      signatureAssertionNode = qualificationNode.getSignatureAssertionNode();
     }
 
-    return satisfiedAssertionNode;
+    return signatureAssertionNode;
   }
 
   getQualificationNode() {
