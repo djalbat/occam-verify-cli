@@ -5,9 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
-import { referenceFromReferenceNode } from "../utilities/element";
-import { metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 import { join, ablate, attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
+import { referenceFromReferenceNode, metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 
 export default define(class Reference extends Element {
   constructor(context, string, node, lineIndex, metavariable, topLevelMetaAssertion) {

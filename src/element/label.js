@@ -4,8 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateLabel } from "../process/instantiate";
-import { labelFromLabelNode } from "../utilities/element";
-import { metavariableFromLabelNode } from "../utilities/element";
+import { labelFromLabelNode, metavariableFromLabelNode } from "../utilities/element";
 import { ablate, attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Label extends Element {
