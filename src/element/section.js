@@ -43,11 +43,13 @@ export default define(class Section extends Element {
       const hypothesesVerify = await this.verifyHypotheses(context);
 
       if (hypothesesVerify) {
-        this.topLevelAssertion.setHypotheses(this.hypotheses);
+        context.assignAssignments();
 
         const topLevelAssertionVerifies = await this.topLevelAssertion.verify(context);
 
         if (topLevelAssertionVerifies) {
+          this.topLevelAssertion.setHypotheses(this.hypotheses);
+
           verifies = true;
         }
       }

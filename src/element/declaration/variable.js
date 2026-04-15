@@ -89,6 +89,8 @@ export default define(class VariableDeclaration extends Declaration {
       } else {
         this.variable.setType(type);
 
+        this.variable.setProvisional(this.provisional);
+
         typeVerifies = true;
       }
     }

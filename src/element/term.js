@@ -9,23 +9,32 @@ import { validateTerms } from "../utilities/validation";
 import { instantiateTerm } from "../process/instantiate";
 import { variablesFromTerm } from "../utilities/equivalence";
 import { unifyTermIntrinsically } from "../process/unify";
-import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { typeFromJSON, typeToTypeJSON, provisionalFromJSON, provisionalToProvisionalJSON } from "../utilities/json";
 
 const { filter } = arrayUtilities;
 
 export default define(class Term extends Element {
-  constructor(context, string, node, lineIndex, type) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, lineIndex, type, provisional) {
+    super(context, string, node, lineIndex, provisional);
 
     this.type = type;
+    this.provisional = provisional;
   }
 
   getType() {
     return this.type;
   }
 
+  isProvisional() {
+    return this.provisional;
+  }
+
   setType(type) {
     this.type = type;
+  }
+
+  setProvisional(provisional) {
+    this.provisional = provisional;
   }
 
   getTermNode() {
@@ -83,8 +92,6 @@ export default define(class Term extends Element {
     return singular;
   }
 
-  isProvisional() { return this.type.isProvisional(); }
-
   isInitiallyGrounded(context) {
     const term  = this, ///
           variables = variablesFromTerm(term, context),
@@ -110,7 +117,7 @@ export default define(class Term extends Element {
   }
 
   matchVariableNode(variableNode) {
-    let varialbeNodeMatches = false;
+    let variableNodeMatches = false;
 
     const singular = this.isSingular();
 
@@ -123,11 +130,11 @@ export default define(class Term extends Element {
             variableNodeAMatchesVariableNodeB = variableNodeA.match(variableNodeB);
 
       if (variableNodeAMatchesVariableNodeB) {
-        varialbeNodeMatches = true; ///
+        variableNodeMatches = true; ///
       }
     }
 
-    return varialbeNodeMatches;
+    return variableNodeMatches;
   }
 
   compareTerm(term) {
@@ -273,13 +280,16 @@ export default define(class Term extends Element {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
+          provisionalJSON = provisionalToProvisionalJSON(this.provisional),
           string = this.getString(), ///
           lineIndex = this.getLineIndex(),
           type = typeJSON,  ///
+          provisional = provisionalJSON,  ///
           json = {
             string,
             lineIndex,
-            type
+            type,
+            provisional
           };
 
     return json;
@@ -292,11 +302,12 @@ export default define(class Term extends Element {
       const { string, lineIndex } = json,
             termNode = instantiateTerm(string, context),
             node = termNode,  ///
-            type = typeFromJSON(json, context);
+            type = typeFromJSON(json, context),
+            provisional = provisionalFromJSON(json, context);
 
       context = null;
 
-      const term = new Term(context, string, node, lineIndex, type);
+      const term = new Term(context, string, node, lineIndex, type, provisional);
 
       return term;
     }, context);

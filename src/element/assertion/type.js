@@ -158,14 +158,10 @@ export default define(class TypeAssertion extends Assertion {
       let validatesForwards = false;
 
       const termType = term.getType(),
-            termTypeProvisional = termType.isProvisional();
+            termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(this.type);
 
-      if (!termTypeProvisional) {
-        const termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(this.type);
-
-        if (termTypeEqualToOrSubTypeOfType) {
-          validatesForwards = true;
-        }
+      if (termTypeEqualToOrSubTypeOfType) {
+        validatesForwards = true;
       }
 
       return validatesForwards;

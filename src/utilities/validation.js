@@ -3,6 +3,7 @@
 import elements from "../elements";
 
 import { choose, descend } from "./context";
+import { provisionallyStringFromProvisional } from "./string";
 import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
 
 function validateTermAsVariable(term, context, validateForwards) {
@@ -23,11 +24,15 @@ function validateTermAsVariable(term, context, validateForwards) {
 
     if (variable !== null) {
       const type = variable.getType(),
-            typeString = type.getString();
+            typeString = type.getString(),
+            provisional = variable.isProvisional(),
+            provisionallyString = provisionallyStringFromProvisional(provisional);
 
-      context.trace(`Setting the '${termString}' term's type to the '${typeString}' type.`);
+      context.trace(`Setting the '${termString}' term's type to the '${typeString}' type${provisionallyString}.`);
 
       term.setType(type);
+
+      term.setProvisional(provisional);
 
       const validatesForwards = validateForwards(term);
 

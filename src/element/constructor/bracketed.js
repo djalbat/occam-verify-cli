@@ -37,9 +37,12 @@ export default define(class BracketedConstructor extends Constructor {
         bracketlessTerm = bracketlessTerm.validate(context, (bracketlessTerm) => {  ///
           let validatesForwards;
 
-          const type = bracketlessTerm.getType();
+          const type = bracketlessTerm.getType(),
+                provisional = bracketlessTerm.isProvisional();
 
           bracketedTerm.setType(type);
+
+          bracketedTerm.setProvisional(provisional);
 
           validatesForwards = validateForwards(bracketedTerm);
 

@@ -46,11 +46,12 @@ export function termFromTermNode(termNode, context) {
         node = termNode,  ///
         string = context.nodeAsString(node),
         lineIndex = null,
-        type = typeFromTermNode(termNode, context);
+        type = typeFromTermNode(termNode, context),
+        provisional = provisionalFromTermNode(termNode, context);
 
   context = null;
 
-  const term = new Term(context, string, node, lineIndex, type);
+  const term = new Term(context, string, node, lineIndex, type, provisional);
 
   return term;
 }
@@ -259,12 +260,12 @@ export function variableFromVariableNode(variableNode, context) {
         string = context.nodeAsString(node),
         lineIndex = null,
         type = typeFromVariableNode(variableNode, context),
-        identifier = identifierFromVarialbeNode(variableNode, context),
-        propertyRelations = propertyRelationsFromVariableNode(variableNode, context);
+        identifier = identifierFromVariableNode(variableNode, context),
+        provisional = provisionalFromVariableNode(variableNode, context);
 
   context = null;
 
-  const variable = new Variable(context, string, node, lineIndex, type, identifier, propertyRelations);
+  const variable = new Variable(context, string, node, lineIndex, type, identifier, provisional);
 
   return variable;
 }
@@ -1166,6 +1167,12 @@ export function provisionalFromTypeNode(typeNode, context) {
   return provisional;
 }
 
+export function provisionalFromTermNode(termNode, context) {
+  const provisional = null;
+
+  return provisional;
+}
+
 export function derivationFromProofNode(proofNode, context) {
   const derivationNode = proofNode.getDerivationNode(),
         derivation = derivationFromDerivationNode(derivationNode, context);
@@ -1320,9 +1327,9 @@ export function typeFromTypeAssertionNode(typeAssertionNode, context) {
   return type;
 }
 
-export function identifierFromVarialbeNode(variableNode, context) {
+export function identifierFromVariableNode(variableNode, context) {
   const variableIdentifier = variableNode.getVariableIdentifier(),
-        identifier = variableIdentifier;  ///
+    identifier = variableIdentifier;  ///
 
   return identifier;
 }
@@ -1375,6 +1382,12 @@ export function nominalTypeNameFromTypeNode(typeNode, context) {
   const nominalTypeName = typeNode.getNominalTypeName();
 
   return nominalTypeName;
+}
+
+export function provisionalFromVariableNode(variableNode, context) {
+  const provisional = null;
+
+  return provisional;
 }
 
 export function assumptionFromJudgementNode(judgementNode, context) {
@@ -1718,12 +1731,6 @@ export function typeFromBracketedConstructorNode(bracketedCcnstructorNode, conte
         type = baseType;  ///
 
   return type;
-}
-
-export function propertyRelationsFromVariableNode(variableNode, context) {
-  const propertyRelations = [];
-
-  return propertyRelations;
 }
 
 export function definedAssertionFromStatementNode(statementNode, context) {

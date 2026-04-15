@@ -8,6 +8,7 @@ import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
 import { validateTermAsConstructor } from "../process/validate";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { provisionallyStringFromProvisional } from "../utilities/string";
 import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Constructor extends Element {
@@ -123,11 +124,15 @@ export default define(class Constructor extends Element {
     if (termUnifiesWithConstructor) {
       let validatesForwards;
 
-      const typeString = this.type.getString();
+      const typeString = this.type.getString(),
+            provisional = this.type.isProvisional(),
+            provisionallyString = provisionallyStringFromProvisional(provisional)
 
-      context.trace(`Setting the '${termString}' term's type to the '${constructorString}' constructor's '${typeString}' type.`);
+      context.trace(`Setting the '${termString}' term's type to the '${constructorString}' constructor's '${typeString}' type${provisionallyString}.`);
 
       term.setType(this.type);
+
+      term.setProvisional(provisional);
 
       validatesForwards = validateForwards(term);
 

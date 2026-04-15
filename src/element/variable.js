@@ -7,27 +7,37 @@ import elements from "../elements";
 import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiateVariable } from "../process/instantiate";
-import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
-import { variableFromTermNode, identifierFromVarialbeNode } from "../utilities/element";
+import { provisionallyStringFromProvisional } from "../utilities/string";
+import { variableFromTermNode, identifierFromVariableNode } from "../utilities/element";
+import { typeFromJSON, typeToTypeJSON, provisionalFromJSON, provisionalToProvisionalJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {
-  constructor(context, string, node, lineIndex, type, identifier) {
+  constructor(context, string, node, lineIndex, type, identifier, provisional) {
     super(context, string, node, lineIndex);
 
     this.type = type;
     this.identifier = identifier;
-  }
-
-  getIdentifier() {
-    return this.identifier;
+    this.provisional = provisional;
   }
 
   getType() {
     return this.type;
   }
 
+  getIdentifier() {
+    return this.identifier;
+  }
+
+  isProvisional() {
+    return this.provisional;
+  }
+
   setType(type) {
     this.type = type;
+  }
+
+  setProvisional(provisional) {
+    this.provisional = provisional;
   }
 
   getVariableNode() {
@@ -83,11 +93,15 @@ export default define(class Variable extends Element {
     if (declaredVariable !== null) {
       const type = declaredVariable.getType(),
             typeString = type.getString(),
-            variableString = this.getString();  ///
+            provisional = declaredVariable.isProvisional(),
+            variableString = this.getString(),  ///
+            provisinallyString = provisionallyStringFromProvisional(provisional);
 
-      context.trace(`Setting the '${variableString}' variable's type to the '${typeString}' type.`);
+      context.trace(`Setting the '${variableString}' variable's type to the '${typeString}' type${provisinallyString}.`);
 
       this.type = type;
+
+      this.provisional = provisional;
 
       variable = this;
 
@@ -173,13 +187,16 @@ export default define(class Variable extends Element {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          type = typeJSON,  ///
+          provisionalJSON = provisionalToProvisionalJSON(this.provisional),
           string = this.getString(), ///
           lineIndex = this.getLineIndex(),
+          type = typeJSON,  ///
+          provisional = provisionalJSON,  ///
           json = {
             string,
             lineIndex,
-            type
+            type,
+            provisional
           };
 
     return json;
@@ -193,11 +210,12 @@ export default define(class Variable extends Element {
             variableNode = instantiateVariable(string, context),
             node = variableNode,  ///
             type = typeFromJSON(json, context),
-            identifier = identifierFromVarialbeNode(variableNode, context);
+            identifier = identifierFromVariableNode(variableNode, context),
+            provisional = provisionalFromJSON(json, context);
 
       context = null;
 
-      const variable = new Variable(context, string, node, lineIndex, type, identifier);
+      const variable = new Variable(context, string, node, lineIndex, type, identifier, provisional);
 
       return variable;
     }, context);

@@ -1,7 +1,7 @@
 "use strict";
 
 import { baseTypeFromNothing } from "../utilities/type";
-import { EMPTY_STRING, PROVISIONALLY } from "../constants";
+import { EMPTY_STRING, PROVISIONAL, PROVISIONALLY } from "../constants";
 
 export function termsStringFromTerms(terms) {
   const termsString = terms.reduce((termsString, term) => {
@@ -98,11 +98,19 @@ export function parametersStringFromParameters(parameters) {
 }
 
 export function provisinalStringFromProvisional(provisional) {
-  const provisionString = provisional ?
-                            PROVISIONALLY :
+  const provisinalString = provisional ?
+                            `${PROVISIONAL} ` :
                               EMPTY_STRING;
 
-  return provisionString;
+  return provisinalString;
+}
+
+export function provisionallyStringFromProvisional(provisional) {
+  const provisinallyString = provisional ?
+                              ` ${PROVISIONALLY}` :
+                                 EMPTY_STRING;
+
+  return provisinallyString;
 }
 
 export function suppositionsStringFromSuppositions(suppositions) {
