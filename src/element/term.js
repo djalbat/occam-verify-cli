@@ -58,6 +58,13 @@ export default define(class Term extends Element {
     return variableIdentifier;
   }
 
+  isEstablished() {
+    const provisional = this.isProvisional(),
+          established = !provisional;
+
+    return established;
+  }
+
   isEqualTo(term) {
     const termNode = term.getNode(),
           termNodeMatches = this.matchTermNode(termNode),

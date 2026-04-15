@@ -11,19 +11,42 @@ export function variableAssignmentFromTermAndType(term, type, context) {
 
   if (termSingular) {
     const termType = term.getType(),
+          termTypeEqualToType = termType.isEqualTo(type),
           termTypeSuperTypeOfType = termType.isSuperTypeOf(type);
 
-    if (termTypeSuperTypeOfType) {
-      const variableNode = term.getVariableNode(),
-            variable = variableFromVariableNode(variableNode, context);
+    if (false) {
+      ///
+    } else if (termTypeEqualToType) {
+      const termProvisional = term.isProvisional();
 
-      variable.setType(type);
+      if (termProvisional) {
+        const variableNode = term.getVariableNode(),
+              variable = variableFromVariableNode(variableNode, context),
+              provisional = false;
 
-      variableAssignment = (context) => {
-        const declaredVariable = variable;  ///
+        variable.setProvisional(provisional);
 
-        context.addDeclaredVariable(declaredVariable);
-      };
+        variableAssignment = (context) => {
+          const declaredVariable = variable;  ///
+
+          context.addDeclaredVariable(declaredVariable);
+        };
+      }
+    } else if (termTypeSuperTypeOfType) {
+      const termEstablished = term.isEstablished();
+
+      if (termEstablished) {
+        const variableNode = term.getVariableNode(),
+              variable = variableFromVariableNode(variableNode, context);
+
+        variable.setType(type);
+
+        variableAssignment = (context) => {
+          const declaredVariable = variable;  ///
+
+          context.addDeclaredVariable(declaredVariable);
+        };
+      }
     }
   }
 

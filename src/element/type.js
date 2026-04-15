@@ -103,11 +103,11 @@ export default define(class Type extends Element {
     this.provisional = provisional;
   }
 
-  replaceSuperType(superType, index) {
-    const start = index,
-          deleteCount = 1;
+  isEstablished(includeSuperTypes = true) {
+    const provisional = this.isProvisional(includeSuperTypes),
+          established = !provisional;
 
-    this.superTypes.splice(start, deleteCount, superType);
+    return established;
   }
 
   isPrefixed() {

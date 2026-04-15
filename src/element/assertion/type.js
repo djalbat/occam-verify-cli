@@ -7,7 +7,11 @@ import { instantiate } from "../../utilities/context";
 import { instantiateTypeAssertion } from "../../process/instantiate";
 import { typeFromJSON, typeToTypeJSON } from "../../utilities/json";
 import { variableAssignmentFromTypeAssertion } from "../../process/assign";
-import { termFromTypeAssertionNode, typeAssertionFromStatementNode } from "../../utilities/element";
+import {
+  termFromTypeAssertionNode,
+  typeAssertionFromStatementNode,
+  variableFromVariableNode
+} from "../../utilities/element";
 
 export default define(class TypeAssertion extends Assertion {
   constructor(context, string, node, lineIndex, term, type) {
@@ -125,10 +129,19 @@ export default define(class TypeAssertion extends Assertion {
       let validatesForwards = false;
 
       const termType = term.getType(),
-            termTypeEqualToOrSuperTypeOfType = termType.isEqualToOrSuperTypeOf(this.type);
+            termTypeEqualToType = termType.isEqualTo(this.type),
+            termTypeSuperTypeOfType = termType.isSuperTypeOf(this.type);
 
-      if (termTypeEqualToOrSuperTypeOfType) {
+      if (false) {
+        ///
+      } else if (termTypeEqualToType) {
         validatesForwards = true;
+      } else if (termTypeSuperTypeOfType) {
+        const termEstablished = term.isEstablished();
+
+        if (termEstablished) {
+          validatesForwards = true;
+        }
       }
 
       return validatesForwards;
@@ -161,7 +174,11 @@ export default define(class TypeAssertion extends Assertion {
             termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(this.type);
 
       if (termTypeEqualToOrSubTypeOfType) {
-        validatesForwards = true;
+        const termEstablished = term.isEstablished();
+
+        if (termEstablished) {
+          validatesForwards = true;
+        }
       }
 
       return validatesForwards;

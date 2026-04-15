@@ -49,6 +49,13 @@ export default define(class Variable extends Element {
 
   getTypeString() { return this.type.getString(); }
 
+  isEstablished() {
+    const provisional = this.isProvisional(),
+          established = !provisional;
+
+    return established;
+  }
+
   isIdentifierEqualTo(identifier) {
     const identifierEqualTo = (this.identifier === identifier);
 
