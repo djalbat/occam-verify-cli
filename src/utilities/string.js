@@ -166,17 +166,6 @@ export function rulsStringFromLabelsPremisesAndConclusion(labels, premises, conc
   return ruleString;
 }
 
-export function sectionStringFromHypothesesTopLevelAssertion(hypotheses, axiom, lemma, theorem, conjecture) {
-  const topLevelAssertion = (axiom || lemma || theorem || conjecture),
-        topLevelAssertionString = topLevelAssertion.getString(),
-        hypothesesString = hypothesesStringFromHypotheses(hypotheses),
-        sectionString = (topLevelAssertionString !== null) ?
-                          `[${hypothesesString}]::: ${topLevelAssertionString}` :
-                            `[${hypothesesString}]::: `;
-
-  return sectionString;
-}
-
 export function subproofStringFromSuppositionsAndSubDerivation(suppositions, subDerivation) {
   const lastStep = subDerivation.getLastStep(),
         suppositionsString = suppositionsStringFromSuppositions(suppositions),
@@ -192,6 +181,14 @@ export function frameSubstitutionStringFromFrameAndMetavariable(frame, metavaria
         string = `[${frameString} for [${metavariableString}]]`;
 
   return string;
+}
+
+export function sectionStringFromHypothesesAndTopLevelAssertion(hypotheses, topLevelAssertion) {
+  const topLevelAssertionString = topLevelAssertion.getString(),
+        hypothesesString = hypothesesStringFromHypotheses(hypotheses),
+        sectionString = `[${hypothesesString}]::: ${topLevelAssertionString}`;
+
+  return sectionString;
 }
 
 export function metaLevelAssumptionStringFromReferenceAndStatement(reference, statement) {

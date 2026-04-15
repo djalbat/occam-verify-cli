@@ -65,6 +65,12 @@ export default class TopLevelAssertion extends Element {
     return supposition;
   }
 
+  isSatisfiable() {
+    const satisfiable = false;
+
+    return satisfiable;
+  }
+
   isHypothetical() {
     const hypothesesLength = this.hypotheses.length,
           hypothetical = (hypothesesLength > 0);

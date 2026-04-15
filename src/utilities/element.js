@@ -6,8 +6,8 @@ import { baseTypeFromNothing } from "../utilities/type";
 import { equivalenceStringFromTerms,
          typeStringFromNominalTypeName,
          rulsStringFromLabelsPremisesAndConclusion,
-         sectionStringFromHypothesesTopLevelAssertion,
          subproofStringFromSuppositionsAndSubDerivation,
+         sectionStringFromHypothesesAndTopLevelAssertion,
          procedureCallStringFromProcedureReferenceAndParameters,
          topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
          topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction,
@@ -185,20 +185,18 @@ export function axiomFromAxiomNode(axiomNode, context) {
 }
 
 export function sectionFromSectionNode(sectionNode, context) {
-  const hypothesisNodes = sectionNode.getHypothesisNodes(),
+  const { Section } = elements,
+        hypothesisNodes = sectionNode.getHypothesisNodes(),
         hypotheses = hypothesesFromHypothesisNodes(hypothesisNodes, context),
-        axiom = axiomFromSectionNode(sectionNode, context),
-        lemma = lemmaFromSectionNode(sectionNode, context),
-        theorem = theoremFromSectionNode(sectionNode, context),
-        conjecture = conjectureFromSectionNode(sectionNode, context),
-        sectionString = sectionStringFromHypothesesTopLevelAssertion(hypotheses, axiom, lemma, theorem, conjecture),
+        topLevelAssertion = topLevelAssertionFromSectionNode(sectionNode, context),
+        sectionString = sectionStringFromHypothesesAndTopLevelAssertion(hypotheses, topLevelAssertion),
         node = sectionNode, ///
         string = sectionString, ///
         lineIndex = null;
 
   context = null;
 
-  const section = new Section(context, string, node, lineIndex, hypotheses, axiom, lemma, theorem, conjecture);
+  const section = new Section(context, string, node, lineIndex, hypotheses, topLevelAssertion);
 
   return section;
 }
@@ -400,7 +398,7 @@ export function parameterFromParameterNode(parameterNode, context) {
 }
 
 export function hypothesisFromHypothesisNode(hypotheseNode, context) {
-  const { Hypothsis } = elements,
+  const { Hypothesis } = elements,
         node = hypotheseNode, ///
         string = context.nodeAsString(node),
         lineIndex = null,
@@ -408,7 +406,7 @@ export function hypothesisFromHypothesisNode(hypotheseNode, context) {
 
   context = null;
 
-  const hypohtesis = new Hypothsis(context, string, node, lineIndex, statement);
+  const hypohtesis = new Hypothesis(context, string, node, lineIndex, statement);
 
   return hypohtesis;
 }
@@ -1671,6 +1669,16 @@ export function typeFromVariableDeclarationNode(variableDeclarationNode, context
         type = typeFromTypeNode(typeNode, context);
 
   return type;
+}
+
+export function topLevelAssertionFromSectionNode(sectionNode, context) {
+  const axiom = axiomFromSectionNode(sectionNode, context),
+        lemma = lemmaFromSectionNode(sectionNode, context),
+        theorem = theoremFromSectionNode(sectionNode, context),
+        conjecture = conjectureFromSectionNode(sectionNode, context),
+        topLevelAssertion = (axiom || lemma || theorem || conjecture);
+
+  return topLevelAssertion;
 }
 
 export function procedureCallFromSuppositionNode(suppositionNode, context) {

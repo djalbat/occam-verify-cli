@@ -86,20 +86,24 @@ async function unifyStepWithTopLevelAssertion(step, context) {
     const topLevelAssertion = context.findTopLevelAssertionByReference(reference);
 
     if (topLevelAssertion !== null) {
-      const stepString = step.getString(),
-            topLevelAssertionString = reference.getString();
+      const satisfiable = topLevelAssertion.isSatisfiable();
 
-      context.trace(`Unifying the '${stepString}' step with the '${topLevelAssertionString}' top level assertion...`);
+      if (!satisfiable) {
+        const stepString = step.getString(),
+              topLevelAssertionString = reference.getString();
 
-      const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
-            stepAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
+        context.trace(`Unifying the '${stepString}' step with the '${topLevelAssertionString}' top level assertion...`);
 
-      if (stepAndSubproofOrProofAssertionsUnify) {
-        stepUnifiesWithTopLevelAssertion = true;
-      }
+        const subproofOrProofAssertions = context.getSubproofOrProofAssertions(),
+              stepAndSubproofOrProofAssertionsUnify = await topLevelAssertion.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
 
-      if (stepUnifiesWithTopLevelAssertion) {
-        context.debug(`...unified the '${stepString}' step with the '${topLevelAssertionString}' top level assertion.`);
+        if (stepAndSubproofOrProofAssertionsUnify) {
+          stepUnifiesWithTopLevelAssertion = true;
+        }
+
+        if (stepUnifiesWithTopLevelAssertion) {
+          context.debug(`...unified the '${stepString}' step with the '${topLevelAssertionString}' top level assertion.`);
+        }
       }
     }
   }

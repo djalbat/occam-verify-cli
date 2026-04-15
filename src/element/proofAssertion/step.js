@@ -43,12 +43,6 @@ export default define(class Step extends ProofAssertion {
     return statementNode;
   }
 
-  isSatisfied() {
-    const satisfied = (this.signatureAssertion !== null);
-
-    return satisfied;
-  }
-
   isQualified() {
     const qualified = ((this.reference !== null) || (this.signatureAssertion !== null));
 

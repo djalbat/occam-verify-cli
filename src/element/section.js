@@ -1,38 +1,26 @@
 "use strict";
 
-import { Element } from "occam-languages";
+import { Element, asynchronousUtilities } from "occam-languages";
 
 import { define } from "../elements";
+import {enclose} from "../utilities/context";
+
+const { asyncEvery } = asynchronousUtilities;
 
 export default define(class Section extends Element {
-  constructor(context, string, node, lineIndex, hypotheses, axiom, lemma, theorem, conjecture) {
+  constructor(context, string, node, lineIndex, hypotheses, topLevelAssertion) {
     super(context, string, node, lineIndex);
 
     this.hypotheses = hypotheses;
-    this.axiom = axiom;
-    this.lemma = lemma;
-    this.theorem = theorem;
-    this.conjecture = conjecture;
+    this.topLevelAssertion = topLevelAssertion;
   }
 
   getHypotheses() {
     return this.hypotheses;
   }
 
-  getAxiom() {
-    return this.axiom;
-  }
-
-  getLemma() {
-    return this.lemma;
-  }
-
-  getTheorem() {
-    return this.theorem;
-  }
-
-  getConjecture() {
-    return this.conjecture;
+  getTopLevelAssertion() {
+    return this.topLevelAssertion;
   }
 
   getSectionNode() {
@@ -45,22 +33,25 @@ export default define(class Section extends Element {
   async verify(context) {
     let verifies = false;
 
+    await this.break(context);
+
     const sectionString = this.getString();  ///
 
     context.trace(`Verifying the '${sectionString}' section...`);
 
-    const hypothesesVerify = this.verifyHypotheses();
+    await enclose(async (context) => {
+      const hypothesesVerify = await this.verifyHypotheses(context);
 
-    if (hypothesesVerify) {
-      const topLevelAssertion = (this.axiom || this.lemma || this.theorem || this.conjecture),
-            topLevelAssertionVerifies = await topLevelAssertion.verify(context);
+      if (hypothesesVerify) {
+        this.topLevelAssertion.setHypotheses(this.hypotheses);
 
-      if (topLevelAssertionVerifies) {
-        topLevelAssertion.setHypotheses(this.hypotheses);
+        const topLevelAssertionVerifies = await this.topLevelAssertion.verify(context);
 
-        verifies = true;
+        if (topLevelAssertionVerifies) {
+          verifies = true;
+        }
       }
-    }
+    }, context);
 
     if (verifies) {
       context.debug(`...verified the '${sectionString}' section.`);
@@ -69,9 +60,9 @@ export default define(class Section extends Element {
     return verifies;
   }
 
-  verifyHypotheses() {
-    const hypothesesVerify = this.hypotheses.every((hypothesis) => {
-      const hypothesisVerifies = hypothesis.verify(this.context);
+  async verifyHypotheses(context) {
+    const hypothesesVerify = await asyncEvery(this.hypotheses, async (hypothesis) => {
+      const hypothesisVerifies = await hypothesis.verify(context);
 
       if (hypothesisVerifies) {
         return true;

@@ -3,9 +3,9 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import { descend, instantiate } from "../utilities/context";
 import { instantiateHypothesis } from "../process/instantiate";
 import { statementFromHypothesisNode } from "../utilities/element";
+import { declare, attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Hypothesis extends Element {
   constructor(context, string, node, lineIndex, statement) {
@@ -25,28 +25,6 @@ export default define(class Hypothesis extends Element {
     return hypothesisNode;
   }
 
-  compareProofAssertion(proofAssertion, context) {
-    let comparesToProofAssertion = false;
-
-    const hypothesisString = this.getString(), ///
-          proofAssertionString = proofAssertion.getString();
-
-    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${proofAssertionString}' proof assertion...`);
-
-    const proofAssertionStatement = proofAssertion.getStatement(),
-          statementEqualToStepStatement = this.statement.isEqualTo(proofAssertionStatement);
-
-    if (statementEqualToStepStatement) {
-      comparesToProofAssertion = true;
-    }
-
-    if (comparesToProofAssertion) {
-      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${proofAssertionString}' proof assertion.`);
-    }
-
-    return comparesToProofAssertion;
-  }
-
   async verify(context) {
     let verifies = false;
 
@@ -56,26 +34,10 @@ export default define(class Hypothesis extends Element {
 
     context.trace(`Verifying the '${hypothesisString}' hypothesis...`);
 
-    if (false) {
-      ///
-    } else if (this.statement !== null) {
-      let statementValidates = false;
+    if (this.statement !== null) {
+      const validates = this.validate(context);
 
-      descend((context) => {
-        const statement = this.statement.validate(context);
-
-        if (statement !== null) {
-          statementValidates = true;
-        }
-      }, context);
-
-      if (statementValidates) {
-        const subproofOrProofAssertion = this;  ///
-
-        context.assignAssignments();
-
-        context.addSubproofOrProofAssertion(subproofOrProofAssertion);
-
+      if (validates) {
         verifies = true;
       }
     } else {
@@ -89,31 +51,86 @@ export default define(class Hypothesis extends Element {
     return verifies;
   }
 
+  validate(context) {
+    let validates = false;
+
+    const hypothesisString = this.getString(); ///
+
+    context.trace(`Validating the '${hypothesisString}' hypothesis...`);
+
+    declare((context) => {
+      attempt((context) => {
+        const statementValidates = this.validateStatement(context);
+
+        if (statementValidates) {
+          validates = true;
+        }
+
+        if (validates) {
+          this.commit(context);
+        }
+      }, context);
+    }, context)
+
+    if (validates) {
+      context.debug(`...validated the '${hypothesisString}' hypothesis.`);
+    }
+
+    return validates;
+  }
+
+  validateStatement(context) {
+    let statementValidates = false;
+
+    const hypothesisString = this.getString();
+
+    context.trace(`Validating the '${hypothesisString}' hypothesis's statement... `);
+
+    const statement = this.statement.validate(context);  ///
+
+    if (statement !== null) {
+      statementValidates = true;
+    }
+
+    if (statementValidates) {
+      context.debug(`...validated the '${hypothesisString}' hypothesis's statement. `);
+    }
+
+    return statementValidates;
+  }
+
   static name = "Hypothesis";
 
   toJSON() {
-    const string = this.getString(),
-          lineIndex = this.getLineIndex(),
-          json = {
-            string,
-            lineIndex
-          };
+    const context = this.getContext();
 
-    return json;
+    return serialise((context) => {
+      const string = this.getString(),
+            lineIndex = this.getLineIndex(),
+            json = {
+              context,
+              string,
+              lineIndex
+            };
+
+      return json;
+    }, context);
   }
 
   static fromJSON(json, context) {
-    return instantiate((context) => {
-      const { string, lineIndex } = json,
-            hypothesisNode = instantiateHypothesis(string, context),
-            node = hypothesisNode,  ///
-            statement = statementFromHypothesisNode(hypothesisNode, context);
+    let hypothesis;
 
-      context = null;
+    unserialise((json, context) => {
+      instantiate((context) => {
+        const { string, lineIndex } = json,
+              hypothesisNode = instantiateHypothesis(string, context),
+              node = hypothesisNode,  ///
+              statement = statementFromHypothesisNode(hypothesisNode, context);
 
-      const hypothesis = new Hypothesis(context, string, node, lineIndex, statement);
+        hypothesis = new Hypothesis(context, string, node, lineIndex, statement);
+      }, context);
+    }, json, context);
 
-      return hypothesis;
-    }, context);
+    return hypothesis;
   }
 });
