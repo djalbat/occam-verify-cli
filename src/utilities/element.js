@@ -9,9 +9,9 @@ import { equivalenceStringFromTerms,
          subproofStringFromSuppositionsAndSubDerivation,
          sectionStringFromHypothesesAndTopLevelAssertion,
          procedureCallStringFromProcedureReferenceAndParameters,
-         topLevelAssertionStringFromLabelsSuppositionsAndDeduction,
          topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction,
-         complexTypeDeclarationStringFromTypeSuperTypesAndProvisional } from "../utilities/string";
+         complexTypeDeclarationStringFromTypeSuperTypesAndProvisional,
+         topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeduction } from "../utilities/string";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -123,7 +123,7 @@ export function lemmaFromLemmaNode(lemmaNode, context) {
         suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         hypotheses = hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, context),
-        topLevelAsssertionString = topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        topLevelAsssertionString = topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeduction(labels, signature, suppositions, deduction),
         node = lemmaNode, ///
         string = topLevelAsssertionString, ///
         lineIndex = null;
@@ -173,7 +173,7 @@ export function axiomFromAxiomNode(axiomNode, context) {
         suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         hypotheses = hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, context),
-        topLevelAsssertionString = topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        topLevelAsssertionString = topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeduction(labels, signature, suppositions, deduction),
         node = axiomNode, ///
         string = topLevelAsssertionString, ///
         lineIndex = null;
@@ -223,7 +223,7 @@ export function theoremFromTheoremNode(theoremNode, context) {
         suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         hypotheses = hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, context),
-        topLevelAsssertionString = topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        topLevelAsssertionString = topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeduction(labels, signature, suppositions, deduction),
         node = theoremNode, ///
         string = topLevelAsssertionString, ///
         lineIndex = null;
@@ -421,7 +421,7 @@ export function conjectureFromConjectureNode(conjectureNode, context) {
         suppositions = suppositionsFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         signature = signatureFromTopLevelAssertionNode(topLevelAsssertionNode, context),
         hypotheses = hypothesesFromTopLevelAssertionNode(topLevelAsssertionNode, context),
-        topLevelAsssertionString = topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+        topLevelAsssertionString = topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeduction(labels, signature, suppositions, deduction),
         node = conjectureNode, ///
         string = topLevelAsssertionString, ///
         lineIndex = null;

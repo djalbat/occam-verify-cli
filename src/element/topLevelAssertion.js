@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 import { Element, asynchronousUtilities } from "occam-languages";
 
 import { enclose } from "../utilities/context";
-import { topLevelAssertionStringFromLabelsSuppositionsAndDeduction } from "../utilities/string";
+import { topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeduction } from "../utilities/string";
 import { labelsFromJSON,
          deductionFromJSON,
          signatureFromJSON,
@@ -380,7 +380,7 @@ export default class TopLevelAssertion extends Element {
           suppositions = suppositionsFromJSON(json, context),
           signature = signatureFromJSON(json, context),
           hypotheses = hypothesesFromJSON(json, context),
-          topLevelAssertionString = topLevelAssertionStringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
+          topLevelAssertionString = topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeduction(labels, signature, suppositions, deduction),
           node = null,
           proof = null,
           string = topLevelAssertionString, ///
