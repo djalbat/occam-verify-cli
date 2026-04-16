@@ -6,12 +6,9 @@ import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
 import { instantiateTypeAssertion } from "../../process/instantiate";
 import { typeFromJSON, typeToTypeJSON } from "../../utilities/json";
+import { termFromTermAndSubstitutions } from "../../utilities/substitutions";
 import { variableAssignmentFromTypeAssertion } from "../../process/assign";
-import {
-  termFromTypeAssertionNode,
-  typeAssertionFromStatementNode,
-  variableFromVariableNode
-} from "../../utilities/element";
+import { termFromTypeAssertionNode, typeAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class TypeAssertion extends Assertion {
   constructor(context, string, node, lineIndex, term, type) {
@@ -167,22 +164,7 @@ export default define(class TypeAssertion extends Assertion {
 
     context.trace(`Validating the '${typeAssertionString}' derived type assertion...`);
 
-    const term = this.term.validate(context, (term) => {
-      let validatesForwards = false;
-
-      const termType = term.getType(),
-            termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(this.type);
-
-      if (termTypeEqualToOrSubTypeOfType) {
-        const termEstablished = term.isEstablished();
-
-        if (termEstablished) {
-          validatesForwards = true;
-        }
-      }
-
-      return validatesForwards;
-    });
+    const term = validateWhenDerived(this.term, this.type, context);
 
     if (term !== null) {
       this.term = term;
@@ -195,6 +177,31 @@ export default define(class TypeAssertion extends Assertion {
     }
 
     return validatesWhenDerived;
+  }
+
+  unifyIndependently(generalContext, specificContext) {
+    let unifiesIndependently = false;
+
+    const context = specificContext, ///
+          typeAssertionString = this.getString(); ///
+
+    context.trace(`Unifying the '${typeAssertionString}' type assertion independently...`);
+
+    let term;
+
+    term = termFromTermAndSubstitutions(this.term, generalContext, specificContext);
+
+    term = validateWhenDerived(term, this.type, context); //
+
+    if (term !== null) {
+      unifiesIndependently = true;
+    }
+
+    if (unifiesIndependently) {
+      context.debug(`...unified the '${typeAssertionString}' type assertion independently.`);
+    }
+
+    return unifiesIndependently;
   }
 
   assign(context) {
@@ -257,3 +264,26 @@ export default define(class TypeAssertion extends Assertion {
     return typeAssertion;
   }
 });
+
+function validateWhenDerived(term, type, context) {
+  if (term !== null) {
+    term = term.validate(context, (term) => {
+      let validatesForwards = false;
+
+      const termType = term.getType(),
+            termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
+
+      if (termTypeEqualToOrSubTypeOfType) {
+        const termEstablished = term.isEstablished();
+
+        if (termEstablished) {
+          validatesForwards = true;
+        }
+      }
+
+      return validatesForwards;
+    });
+  }
+
+  return term;
+}

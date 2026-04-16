@@ -307,8 +307,19 @@ export default define(class Statement extends Element {
     context.trace(`Unifying the '${statementString}' statement independently...`);
 
     const statementNode = this.getStatementNode(),
+          typeAssertionNode = statementNode.getTypeAssertionNode(),
           definedAssertionNode = statementNode.getDefinedAssertionNode(),
           containedAssertionNode = statementNode.getContainedAssertionNode();
+
+    if (typeAssertionNode !== null) {
+      const context = generalContext, ///
+            typeAssertion = context.findAssertionByAssertionNode(typeAssertionNode),
+            typeAssertionUnifiesIndependently = typeAssertion.unifyIndependently(generalContext, specificContext);
+
+      if (typeAssertionUnifiesIndependently) {
+        unifiesIndependently = true;
+      }
+    }
 
     if (definedAssertionNode !== null) {
       const context = generalContext, ///

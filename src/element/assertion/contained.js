@@ -211,10 +211,7 @@ export default define(class ContainedAssertion extends Assertion {
 
     context.trace(`Validating the '${containedAssertionString}' derived contained assertion...`);
 
-    const generalCotnext = null,
-          specificContext = context;  ///
-
-    validatesWhenDerived = validateWhenDerived(this.term, this.frame, this.statement, this.negated, generalCotnext, specificContext);
+    validatesWhenDerived = validateWhenDerived(this.term, this.frame, this.statement, this.negated, context);
 
     if (validatesWhenDerived) {
       context.debug(`...validated the '${containedAssertionString}' derived contained assertion.`);
@@ -234,7 +231,7 @@ export default define(class ContainedAssertion extends Assertion {
     const term = termFromTermAndSubstitutions(this.term, generalContext, specificContext),
           frame = frameFromFrameAndSubstitutions(this.frame, generalContext, specificContext),
           statement = statementFromStatementAndSubstitutions(this.statement, generalContext, specificContext),
-          validatesWhenDerived = validateWhenDerived(term, frame, statement, this.negated, generalContext, specificContext);
+          validatesWhenDerived = validateWhenDerived(term, frame, statement, this.negated, context);
 
     if (validatesWhenDerived) {
       unifiesIndependently = true;
@@ -281,10 +278,8 @@ export default define(class ContainedAssertion extends Assertion {
   }
 });
 
-function validateWhenDerived(term, frame, statement, negated, generalContext, specificContext) {
+function validateWhenDerived(term, frame, statement, negated, context) {
   let validatesWhenDerived = false;
-
-  const context = specificContext;  ///
 
   if (statement !== null) {
     if (term !== null) {

@@ -611,6 +611,30 @@ export default class Context extends ContextBase {
     context.addDerivedSubstitutions(derivedSubstitutions);
   }
 
+  addAxiom(axiom) {
+    const context = this.getContext();
+
+    context.addAxiom(axiom);
+  }
+
+  addLemma(lemma) {
+    const context = this.getContext();
+
+    context.addLemma(lemma);
+  }
+
+  addTheorem(theorem) {
+    const context = this.getContext();
+
+    context.addTheorem(theorem);
+  }
+
+  addConjecture(conjecture) {
+    const context = this.getContext();
+
+    context.addConjecture(conjecture);
+  }
+
   addTerm(term) {
     const context = this.getContext();
 

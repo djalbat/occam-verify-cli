@@ -20,9 +20,12 @@ export function variableAssignmentFromTermAndType(term, type, context) {
       const termProvisional = term.isProvisional();
 
       if (termProvisional) {
-        const variableNode = term.getVariableNode(),
+        const type = term.getType(),
+              variableNode = term.getVariableNode(),
               variable = variableFromVariableNode(variableNode, context),
               provisional = false;
+
+        variable.setType(type);
 
         variable.setProvisional(provisional);
 

@@ -487,6 +487,19 @@ export default class MnemicContext extends Context {
     return reference;
   }
 
+  findSubstitutionByVariableNode(variableNode) {
+    const substitutions = this.getSubstitutions(),
+          substitution = substitutions.find((substitution) => {
+            const variableNodeMatches = substitution.matchVariableNode(variableNode);
+
+            if (variableNodeMatches) {
+              return true;
+            }
+          }) || null;
+
+    return substitution;
+  }
+
   findAssumptionByAssumptionNode(assumptionNode) {
     const assumptions = this.getAssumptions(),
           assumption = assumptions.find((assumption) => {

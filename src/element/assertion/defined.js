@@ -180,10 +180,7 @@ export default define(class DefinedAssertion extends Assertion {
 
     context.trace(`Validating the '${definedAssertionString}' derived defined assertion...`);
 
-    const generalContext = null,
-          specificContext = context;  ///
-
-    validatesWhenDerived = validateWhenDerived(this.term, this.frame, this.negated, generalContext, specificContext);
+    validatesWhenDerived = validateWhenDerived(this.term, this.frame, this.negated, context);
 
     if (validatesWhenDerived) {
       context.debug(`...validates the '${definedAssertionString}' derived defined assertion.`);
@@ -202,7 +199,7 @@ export default define(class DefinedAssertion extends Assertion {
 
     const term = termFromTermAndSubstitutions(this.term, generalContext, specificContext),
           frame = frameFromFrameAndSubstitutions(this.frame, generalContext, specificContext),
-          validatesWhenDerived = validateWhenDerived(term, frame, this.negated, generalContext, specificContext);
+          validatesWhenDerived = validateWhenDerived(term, frame, this.negated, context);
 
     if (validatesWhenDerived) {
       unifiesIndependently = true;
@@ -248,10 +245,35 @@ export default define(class DefinedAssertion extends Assertion {
   }
 });
 
-function validateWhenDerived(term, frame, negated, generalContext, specificContext) {
-  let validatesWhenDerived = false;
+function isVariableDefined(variable, context) {
+  const equivalences = context.getEquivalences(),
+        groundedTerms = [],
+        definedVariables = [];
 
-  const context = specificContext;  ///
+  separateGroundedTermsAndDefinedVariables(equivalences, groundedTerms, definedVariables, context);
+
+  const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
+          const definedVariableComparesToVariable = definedVariable.compareVariable(variable);
+
+          if (definedVariableComparesToVariable === variable) {
+            return true;
+          }
+        }),
+        variableDefined = variableMatchesDefinedVariable; ///
+
+  return variableDefined;
+}
+
+function isMetavariableDefined(metavariable, context) {
+  const metavariableNode = metavariable.getNode(),
+        declaredJudgementPresent = context.isDeclaredJudgementPresentByMetavariableNode(metavariableNode),
+        metavariableDefined = declaredJudgementPresent; ///
+
+  return metavariableDefined
+}
+
+function validateWhenDerived(term, frame, negated, context) {
+  let validatesWhenDerived = false;
 
   if (term !== null) {
     const variableIdentifier = term.getVariableIdentifier(),
@@ -284,29 +306,3 @@ function validateWhenDerived(term, frame, negated, generalContext, specificConte
   return validatesWhenDerived;
 }
 
-function isVariableDefined(variable, context) {
-  const equivalences = context.getEquivalences(),
-        groundedTerms = [],
-        definedVariables = [];
-
-  separateGroundedTermsAndDefinedVariables(equivalences, groundedTerms, definedVariables, context);
-
-  const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
-          const definedVariableComparesToVariable = definedVariable.compareVariable(variable);
-
-          if (definedVariableComparesToVariable === variable) {
-            return true;
-          }
-        }),
-        variableDefined = variableMatchesDefinedVariable; ///
-
-  return variableDefined;
-}
-
-function isMetavariableDefined(metavariable, context) {
-  const metavariableNode = metavariable.getNode(),
-        declaredJudgementPresent = context.isDeclaredJudgementPresentByMetavariableNode(metavariableNode),
-        metavariableDefined = declaredJudgementPresent; ///
-
-  return metavariableDefined
-}

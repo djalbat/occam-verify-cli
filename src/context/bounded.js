@@ -135,7 +135,7 @@ class BoundedContext extends Context {
     const context = this, ///
           equalityString = equality.getString();
 
-    context.trace(`Adding the '${equalityString}' equality to the proof context...`);
+    context.trace(`Adding the '${equalityString}' equality to the bounded context...`);
 
     const equalityRelfexive = equality.isReflexive();
 
@@ -144,9 +144,9 @@ class BoundedContext extends Context {
 
       this.equivalences = mergeEquivalences(this.equivalences, equivalence, context);
 
-      context.debug(`...added the '${equalityString}' equality to the proof context.`);
+      context.debug(`...added the '${equalityString}' equality to the bounded context.`);
     } else {
-      context.debug(`The reflexive '${equalityString}' equality has not been added to the proof context.`);
+      context.debug(`The reflexive '${equalityString}' equality has not been added to the bounded context.`);
     }
   }
 
@@ -166,22 +166,22 @@ class BoundedContext extends Context {
     const context = this, ///
           declaredVariableString = declaredVariable.getString();
 
-    context.trace(`Adding the '${declaredVariableString}' declared variable to the proof context...`);
+    context.trace(`Adding the '${declaredVariableString}' declared variable to the bounded context...`);
 
     this.declaredVariables.push(declaredVariable);
 
-    context.debug(`...added the '${declaredVariableString}' declared variable to the proof context.`);
+    context.debug(`...added the '${declaredVariableString}' declared variable to the bounded context.`);
   }
 
   addDeclaredJudgement(declaredJudgement) {
     const context = this, ///
           declaredJudgementString = declaredJudgement.getString();
 
-    context.trace(`Adding the '${declaredJudgementString}' declared judgement to the proof context...`);
+    context.trace(`Adding the '${declaredJudgementString}' declared judgement to the bounded context...`);
 
     this.declaredJudgements.push(declaredJudgement);
 
-    context.debug(`...added the '${declaredJudgementString}' declared judgement to the proof context.`);
+    context.debug(`...added the '${declaredJudgementString}' declared judgement to the bounded context.`);
   }
 
   addMetaLevelAssumption(metaLevelAssumption) {
@@ -195,7 +195,7 @@ class BoundedContext extends Context {
           metaLevelAssumptionA = metaLevelAssumption, ///
           metaLevelAssumptionString = metaLevelAssumption.getString();
 
-    context.trace(`Adding the '${metaLevelAssumptionString}' meta-level assumption to the proof context...`);
+    context.trace(`Adding the '${metaLevelAssumptionString}' meta-level assumption to the bounded context...`);
 
     const metaLevelAssumptionB = this.metaLevelAssumptions.find((metaLevelAssumption) => {
       const metaLevelAssumptionB = metaLevelAssumption, ///
@@ -207,23 +207,23 @@ class BoundedContext extends Context {
     }) || null;
 
     if (metaLevelAssumptionB !== null) {
-      context.debug(`The '${metaLevelAssumptionString}' metaLevelAssumption has already been added to the proof context.`);
+      context.debug(`The '${metaLevelAssumptionString}' metaLevelAssumption has already been added to the bounded context.`);
     } else {
       this.metaLevelAssumptions.push(metaLevelAssumption);
     }
 
-    context.debug(`...added the '${metaLevelAssumptionString}' meta-level assumption to the proof context.`);
+    context.debug(`...added the '${metaLevelAssumptionString}' meta-level assumption to the bounded context.`);
   }
 
   addSubproofOrProofAssertion(subproofOrProofAssertion) {
     const context = this, ///
           subproofOrProofAssertionString = subproofOrProofAssertion.getString();
 
-    context.trace(`Adding the '${subproofOrProofAssertionString}' subproof or proof assertion to the proof context...`);
+    context.trace(`Adding the '${subproofOrProofAssertionString}' subproof or proof assertion to the bounded context...`);
 
     this.subproofOrProofAssertions.push(subproofOrProofAssertion);
 
-    context.debug(`...added the '${subproofOrProofAssertionString}' subproof or proof assertion to the proof context.`);
+    context.debug(`...added the '${subproofOrProofAssertionString}' subproof or proof assertion to the bounded context.`);
   }
 
   compareTermAndPropertyRelation(term, propertyRelation) {
