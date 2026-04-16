@@ -97,7 +97,7 @@ function mergeEquivalence(equivalencesA, equivalenceB, context) {
     const equivalenceBDisjointFromEquivalenceA = equivalenceB.isDisjointFrom(equivalenceA);
 
     if (equivalenceBDisjointFromEquivalenceA) {
-      const mergedEquivalence = equivalenceB;  ///
+      const mergedEquivalence = equivalenceA;  ///
 
       mergedEquivalences.push(mergedEquivalence);
     } else {

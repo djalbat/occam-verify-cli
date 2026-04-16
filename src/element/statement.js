@@ -7,7 +7,6 @@ import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
 import { instantiateStatement } from "../process/instantiate";
 import { reconcile, instantiate } from "../utilities/context";
-import {getEntryStats} from "necessary/lib/utilities/fileSystem";
 
 export default define(class Statement extends Element {
   getStatementNode() {

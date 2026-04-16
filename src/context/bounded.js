@@ -6,7 +6,7 @@ import Context from "../context";
 
 import { mergeEquivalences, equivalencesFromEquality, separateGroundedTermsAndDefinedVariables } from "../utilities/equivalences";
 
-const { last, filter } = arrayUtilities;
+const { last, clear, filter } = arrayUtilities;
 
 class BoundedContext extends Context {
   constructor(context, assignments, equivalences, declaredVariables, declaredJudgements, metaLevelAssumptions, subproofOrProofAssertions) {
@@ -140,9 +140,9 @@ class BoundedContext extends Context {
     const equalityRelfexive = equality.isReflexive();
 
     if (!equalityRelfexive) {
-      const equivalence = equivalencesFromEquality(equality, context);
+      const equivalences = equivalencesFromEquality(equality, context);
 
-      this.equivalences = mergeEquivalences(this.equivalences, equivalence, context);
+      this.equivalences = mergeEquivalences(this.equivalences, equivalences, context);
 
       context.debug(`...added the '${equalityString}' equality to the bounded context.`);
     } else {
@@ -160,6 +160,8 @@ class BoundedContext extends Context {
     this.assignments.forEach((assignment) => {
       assignment(context);
     });
+
+    clear(this.assignments);
   }
 
   addDeclaredVariable(declaredVariable) {
