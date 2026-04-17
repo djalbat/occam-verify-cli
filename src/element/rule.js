@@ -316,9 +316,17 @@ export default define(class Rule extends Element {
     const labelsJSON = labelsToLabelsJSON(this.labels),
           premisesJSON = premisesToPremisesJSON(this.premises),
           conclusionJSON = conclusionToConclusionJSON(this.conclusion),
-          string = this.getString(),
-          breakPoint = this.getBreakPoint(),
-          labels = labelsJSON,  ///
+          string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPoint.toJSON();
+
+    breakPoint = breakPointJSON;  ///
+
+    const labels = labelsJSON,  ///
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///
           json = {

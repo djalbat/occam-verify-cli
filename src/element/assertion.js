@@ -42,13 +42,21 @@ export default class Assertion extends Element {
 
   toJSON() {
     const name = this.getName(),
-          string = this.getString(),
-          breakPoint = this.getBreakPoint(),
-          json = {
-            name,
-            string,
-            breakPoint
-          };
+          string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPoint.toJSON();
+
+    breakPoint = breakPointJSON;  ///
+
+    const json = {
+      name,
+      string,
+      breakPoint
+    };
 
     return json;
   }

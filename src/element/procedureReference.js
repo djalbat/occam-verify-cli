@@ -34,12 +34,20 @@ export default define(class ProcedureReference extends Element {
   static name = "ProcedureReference";
 
   toJSON() {
-    const string = this.getString(),
-          breakPoint = this.getBreakPoint(),
-          json = {
-            string,
-            breakPoint
-          };
+    const string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPoint.toJSON();
+
+    breakPoint = breakPointJSON;  ///
+
+    const json = {
+      string,
+      breakPoint
+    };
 
     return json;
   }

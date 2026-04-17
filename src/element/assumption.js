@@ -247,12 +247,20 @@ export default define(class Assumption extends Element {
   static name = "Assumption";
 
   toJSON() {
-    const string = this.getString(),
-          breakPoint = this.getBreakPoint(),
-          json = {
-            string,
-            breakPoint
-          };
+    const string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPoint.toJSON();
+
+    breakPoint = breakPointJSON;  ///
+
+    const json = {
+      string,
+      breakPoint
+    };
 
     return json;
   }

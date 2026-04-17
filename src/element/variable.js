@@ -207,9 +207,17 @@ export default define(class Variable extends Element {
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
           provisionalJSON = provisionalToProvisionalJSON(this.provisional),
-          string = this.getString(), ///
-          breakPoint = this.getBreakPoint(),
-          type = typeJSON,  ///
+          string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPoint.toJSON();
+
+    breakPoint = breakPointJSON;  ///
+
+    const type = typeJSON,  ///
           provisional = provisionalJSON,  ///
           json = {
             string,

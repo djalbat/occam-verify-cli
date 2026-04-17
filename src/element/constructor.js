@@ -154,9 +154,17 @@ export default define(class Constructor extends Element {
     return serialise((context) => {
       const includeType = false,
             typeJSON = typeToTypeJSON(this.type),
-            string = this.getString(includeType),
-            breakPoint = this.getBreakPoint(),
-            type = typeJSON,  ///
+            string = this.getString(includeType);
+
+      let breakPoint;
+
+      breakPoint = this.getBreakPoint();
+
+      const breakPointJSON = breakPoint.toJSON();
+
+      breakPoint = breakPointJSON;  ///
+
+      const type = typeJSON,  ///
             json = {
               context,
               string,

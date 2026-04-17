@@ -217,9 +217,17 @@ export default define(class Property extends Element {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          string = this.getString(),
-          breakPoint = this.getBreakPoint(),
-          type = typeJSON,  ///
+          string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPoint.toJSON();
+
+    breakPoint = breakPointJSON;  ///
+
+    const type = typeJSON,  ///
           json = {
             string,
             breakPoint,

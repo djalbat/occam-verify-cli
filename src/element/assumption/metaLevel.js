@@ -285,13 +285,21 @@ export default define(class MetaLevelAssumption extends Element {
     const context = this.getContext();
 
     return serialise((context) => {
-      const string = this.getString(),
-            breakPoint = this.getBreakPoint(),
-            json = {
-              context,
-              string,
-              breakPoint
-            };
+      const string = this.getString();
+
+      let breakPoint;
+
+      breakPoint = this.getBreakPoint();
+
+      const breakPointJSON = breakPoint.toJSON();
+
+      breakPoint = breakPointJSON;  ///
+
+      const json = {
+        context,
+        string,
+        breakPoint
+      };
 
       return json;
     }, context);

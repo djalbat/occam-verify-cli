@@ -220,9 +220,17 @@ export default define(class TypeAssertion extends Assertion {
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
           name = this.getName(),
-          string = this.getString(),
-          breakPoint = this.getBreakPoint(),
-          type = typeJSON,
+          string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPoint.toJSON();
+
+    breakPoint = breakPointJSON;  ///
+
+    const type = typeJSON,
           json = {
             name,
             string,

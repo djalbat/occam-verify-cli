@@ -244,12 +244,20 @@ export default define(class Judgement extends Element {
   static name = "Judgement";
 
   toJSON() {
-    const string = this.getString(),
-          breakPoint = this.getBreakPoint(),
-          json = {
-            string,
-            breakPoint
-          };
+    const string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPoint.toJSON();
+
+    breakPoint = breakPointJSON;  ///
+
+    const json = {
+      string,
+      breakPoint
+    };
 
     return json;
   }

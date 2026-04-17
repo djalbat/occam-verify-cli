@@ -243,14 +243,22 @@ export default class Substitution extends Element {
 
     return serialises((...contexts) => {
       const name = this.getName(),
-            string = this.getString(),
-            breakPoint = this.getBreakPoint(),
-            json = {
-              name,
-              contexts,
-              string,
-              breakPoint
-            };
+            string = this.getString();
+
+      let breakPoint;
+
+      breakPoint = this.getBreakPoint();
+
+      const breakPointJSON = breakPoint.toJSON();
+
+      breakPoint = breakPointJSON;  ///
+
+      const json = {
+        name,
+        contexts,
+        string,
+        breakPoint
+      };
 
       return json;
     }, ...contexts);

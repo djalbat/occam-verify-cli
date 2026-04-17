@@ -353,9 +353,17 @@ export default class TopLevelAssertion extends Element {
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           signatureJSON = signatureToSignatureJSON(this.signature),
           hypothesesJSON = hypothesesToHypothesesJSON(this.hypotheses),
-          string = this.getString(),
-          breakPoint = this.getBreakPoint(),
-          labels = labelsJSON,  ///
+          string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPoint.toJSON();
+
+    breakPoint = breakPointJSON;  ///
+
+    const labels = labelsJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
           signature = signatureJSON,  ///
