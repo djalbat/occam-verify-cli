@@ -3,7 +3,7 @@
 import { Element, asynchronousUtilities } from "occam-languages";
 
 import { enclose } from "../utilities/context";
-import { breakPointToBreakPointJSON } from "../utilities/breakPoint";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
 import { labelFromJSON,
          labelToLabelJSON,
@@ -261,14 +261,14 @@ export default class TopLevelMetaAssertion extends Element {
   }
 
   static fromJSON(Class, json, context) {
-    const { breakPoint } = json,
-          label = labelFromJSON(json, context),
+    const label = labelFromJSON(json, context),
           deduction = deductionFromJSON(json, context),
           suppositions = suppositionsFromJSON(json, context),
           metaLevelAssumptions = metaLevelAssumptionsFromJSON(json, context),
-          node = null,
-          proof = null,
           string = topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction(label, suppositions, deduction),
+          node = null,
+          breakPoint = breakPointFromJSON(json),
+          proof = null,
           topLevelMetaAssertion = new Class(context, string, node, breakPoint, label, suppositions, deduction, proof, metaLevelAssumptions);
 
     return topLevelMetaAssertion;

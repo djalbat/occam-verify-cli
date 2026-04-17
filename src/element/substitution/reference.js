@@ -202,16 +202,16 @@ export default define(class ReferenceSubstitution extends Substitution {
 
         instantiate((context) => {
           const { string } = json,
-                specificContext = context,  ///
-                contexts = [
-                  generalContext,
-                  specificContext
-                ],
                 referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
                 node = referenceSubstitutionNode, ///
                 breakPoint = breakPointFromJSON(json),
                 targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
-                replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
+                replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
+                specificContext = context,  ///
+                contexts = [
+                  generalContext,
+                  specificContext
+                ];
 
           referenceSubstitutionn = new ReferenceSubstitution(contexts, string, node, breakPoint, targetReference, replacementReference);
         }, context);

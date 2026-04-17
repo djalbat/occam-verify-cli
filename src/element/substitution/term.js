@@ -208,16 +208,16 @@ export default define(class TermSubstitution extends Substitution {
 
         instantiate((context) => {
           const { string } = json,
-                specificContext = context,  ///
-                contexts = [
-                  generalContext,
-                  specificContext
-                ],
                 termSubstitutionNode = instantiateTermSubstitution(string, context),
                 node = termSubstitutionNode,  ///
                 breakPoint = breakPointFromJSON(json),
                 targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
-                replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
+                replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context),
+                specificContext = context,  ///
+                contexts = [
+                  generalContext,
+                  specificContext
+                ];
 
           termSubstitutionn = new TermSubstitution(contexts, string, node, breakPoint, targetTerm, replacementTerm);
         }, context);

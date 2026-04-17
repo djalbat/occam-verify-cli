@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 import { Element, asynchronousUtilities } from "occam-languages";
 
 import { enclose } from "../utilities/context";
-import { breakPointToBreakPointJSON } from "../utilities/breakPoint";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeduction } from "../utilities/string";
 import { labelsFromJSON,
          deductionFromJSON,
@@ -383,16 +383,16 @@ export default class TopLevelAssertion extends Element {
   }
 
   static fromJSON(Class, json, context) {
-    const { breakPoint } = json,
-          labels = labelsFromJSON(json, context),
+    const labels = labelsFromJSON(json, context),
           deduction = deductionFromJSON(json, context),
           suppositions = suppositionsFromJSON(json, context),
           signature = signatureFromJSON(json, context),
           hypotheses = hypothesesFromJSON(json, context),
           topLevelAssertionString = topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeduction(labels, signature, suppositions, deduction),
-          node = null,
-          proof = null,
           string = topLevelAssertionString, ///
+          node = null,
+          breakPoint = breakPointFromJSON(json),
+          proof = null,
           topLevelAssertion = new Class(context, string, node, breakPoint, labels, suppositions, deduction, proof, signature, hypotheses);
 
     return topLevelAssertion;

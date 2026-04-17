@@ -253,10 +253,10 @@ export default define(class TypeAssertion extends Assertion {
       instantiate((context) => {
         const { string } = json,
               typeAssertionNode = instantiateTypeAssertion(string, context),
+              node = typeAssertionNode, ///
               breakPoint = breakPointFromJSON(json),
               term = termFromTypeAssertionNode(typeAssertionNode, context),
-              type = typeFromJSON(json, context),
-              node = typeAssertionNode; ///
+              type = typeFromJSON(json, context);
 
         context = null;
 

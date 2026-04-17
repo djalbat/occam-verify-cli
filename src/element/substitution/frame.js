@@ -197,16 +197,16 @@ export default define(class FrameSubstitution extends Substitution {
 
         instantiate((context) => {
           const { string } = json,
-                specificContext = context,  ///
-                contexts = [
-                  generalContext,
-                  specificContext
-                ],
                 frameSubstitutionNode = instantiateFrameSubstitution(string, context),
                 node = frameSubstitutionNode, ///
                 breakPoint = breakPointFromJSON(json),
                 targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
-                replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
+                replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
+                specificContext = context,  ///
+                contexts = [
+                  generalContext,
+                  specificContext
+                ];
 
           frameSubstitutionn = new FrameSubstitution(contexts, string, node, breakPoint, targetFrame, replacementFrame);
         }, context);

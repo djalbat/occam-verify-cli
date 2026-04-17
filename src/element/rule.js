@@ -346,11 +346,11 @@ export default define(class Rule extends Element {
   static fromJSON(json, context) {
     const { string } = json,
           node = null,
-          proof = null,
           breakPoint = breakPointFromJSON(json),
           labels = labelsFromJSON(json, context),
           premises = premisesFromJSON(json, context),
           conclusion = conclusionFromJSON(json, context),
+          proof = null,
           rule = new Rule(context, string, node, breakPoint, proof, labels, premises, conclusion);
 
     return rule;
