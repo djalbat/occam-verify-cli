@@ -63,6 +63,8 @@ export default define(class SubproofAssertion extends Assertion {
     const validAssertion = this.findValidAssertion(context);
 
     if (validAssertion) {
+      validates = true;
+
       subproofAssertion = validAssertion; ///
 
       context.debug(`...the '${subproofAssertionString}' subproof assertion is already valid.`);

@@ -74,6 +74,8 @@ export default define(class MetaLevelAssumption extends Element {
     const validMetaLevelAssumption = this.findValidMetaLevelAssumption(context);
 
     if (validMetaLevelAssumption) {
+      validates = true;
+
       metaLevelAssumption = validMetaLevelAssumption; ///
 
       context.debug(`...the '${metaLevelAssumptionString}' meta-level assumption is already valid.`);

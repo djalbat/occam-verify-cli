@@ -239,14 +239,15 @@ export default define(class Term extends Element {
     let validatesGivenType = false;
 
     term = this.validate(context, (term) => {
-      let validatesForwards = false;
+      let validatesForwards;
 
-      const termType = term.getType(),
-            termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
+      const provisional = type.isProvisional();
 
-      if (termTypeEqualToOrSubTypeOfType) {
-        validatesForwards = true;
-      }
+      term.setType(type);
+
+      term.setProvisional(provisional);
+
+      validatesForwards = true;
 
       return validatesForwards;
     });

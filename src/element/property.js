@@ -8,6 +8,7 @@ import { instantiateProperty } from "../process/instantiate";
 import { nameFromPropertyNode } from "../utilities/element";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
+import {validateTerms} from "../utilities/validation";
 
 export default define(class Property extends Element {
   constructor(context, string, node, breakPoint, name, type) {
@@ -126,7 +127,7 @@ export default define(class Property extends Element {
   validate(context, validateForwards) {
     let property = null;
 
-    const propertyString = this.getString(); ///
+    const propertyString = this.getString();  ///
 
     context.trace(`Validating the '${propertyString}' property...`);
 
@@ -147,20 +148,19 @@ export default define(class Property extends Element {
         property = null;
       }
     } else {
-      property = this;  ///
+      {
+        const property = this,  ///
+              validatesForward = validateForwards(property);
 
-      const validatesForward = validateForwards(property);
-
-      if (validatesForward) {
-        validates = true;
-      } else {
-        property = null;
+        if (validatesForward) {
+          validates = true;
+        }
       }
 
       if (validates) {
-        context.addProperty(property);
+        property = this;  ///
 
-        context.debug(`...validated the '${propertyString}' property.`);
+        context.addProperty(property);
       }
     }
 
@@ -184,7 +184,7 @@ export default define(class Property extends Element {
     property = this.validate(context, (property) => {
       let validatesForwards = false;
 
-      const propertyName = this.name, ///
+      const propertyName = property.getName(),
             typeProperties = type.getProperties(),
             typeProperty = typeProperties.find((typeProperty) => {
               const typePropertyComparesToPropertyName = typeProperty.comparePropertyName(propertyName);

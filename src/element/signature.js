@@ -103,6 +103,8 @@ export default define(class Signature extends Element {
     const validSignature = this.findValidSignature(context);
 
     if (validSignature) {
+      validates = true;
+
       signature = validSignature;  ///
 
       context.debug(`...the '${signatureString}' signature is already valid.`);

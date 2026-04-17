@@ -119,6 +119,8 @@ export default define(class Reference extends Element {
     const validReference = this.findValidReference(context);
 
     if (validReference) {
+      validates = true;
+
       reference = validReference;  ///
 
       context.debug(`...the '${referenceString}' reference is already valid.`);
