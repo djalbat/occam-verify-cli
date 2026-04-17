@@ -21,7 +21,7 @@ export function breakPointFromJSON(json) {
 export function breakPointToBreakPointJSON(breakPoint) {
   let breakPointJSON = null;
 
-  if (breakPointJSON !== null) {
+  if (breakPoint !== null) {
     breakPointJSON = breakPoint.toJSON();
   }
 
