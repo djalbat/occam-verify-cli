@@ -7,8 +7,8 @@ import {instantiate, reconcile} from "../utilities/context";
 import { instantiateAssumption } from "../process/instantiate";
 
 export default define(class Assumption extends Element {
-  constructor(context, string, node, lineIndex, reference, statement) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, reference, statement) {
+    super(context, string, node, breakPoint);
 
     this.reference = reference;
     this.statement = statement;
@@ -248,10 +248,10 @@ export default define(class Assumption extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           json = {
             string,
-            lineIndex
+            breakPoint
           };
 
     return json;
@@ -259,12 +259,12 @@ export default define(class Assumption extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             assumptionNode = instantiateAssumption(string, context),
             node = assumptionNode,  ///
             reference = referenceFromAssumptionNode(assumptionNode, context),
             statement = statementFromAssumptionNode(assumptionNode, context),
-            assumption = new Assumption(context, string, node, lineIndex, reference, statement);
+            assumption = new Assumption(context, string, node, breakPoint, reference, statement);
 
       return assumption;
     }, context);

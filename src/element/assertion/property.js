@@ -9,8 +9,8 @@ import { variableAssignmentFromPrepertyAssertion } from "../../process/assign";
 import { termFromPropertyAssertionNode, propertyAssertionFromStatementNode, propertyRelationFromPropertyAssertionNode } from "../../utilities/element";
 
 export default define(class PropertyAssertion extends Assertion {
-  constructor(context, string, node, lineIndex, term, propertyRelation) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, term, propertyRelation) {
+    super(context, string, node, breakPoint);
 
     this.term = term;
     this.propertyRelation = propertyRelation;
@@ -226,7 +226,7 @@ export default define(class PropertyAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               propertyAssertionNode = instantiatePropertyAssertion(string, context),
               node = propertyAssertionNode,  ///
               term = termFromPropertyAssertionNode(propertyAssertionNode, context),
@@ -234,7 +234,7 @@ export default define(class PropertyAssertion extends Assertion {
 
         context = null;
 
-        propertyAssertion = new PropertyAssertion(context, string, node, lineIndex, term, propertyRelation);
+        propertyAssertion = new PropertyAssertion(context, string, node, breakPoint, term, propertyRelation);
       }, context);
     }
 

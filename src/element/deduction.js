@@ -7,8 +7,8 @@ import { instantiateDeduction } from "../process/instantiate";
 import { declare, attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Deduction extends Element {
-  constructor(context, string, node, lineIndex, statement) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, statement) {
+    super(context, string, node, breakPoint);
 
     this.statement = statement;
   }
@@ -135,11 +135,11 @@ export default define(class Deduction extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             json = {
               context,
               string,
-              lineIndex
+              breakPoint
             };
 
       return json;
@@ -153,12 +153,12 @@ export default define(class Deduction extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               deductionNode = instantiateDeduction(string, context),
               node = deductionNode,  ///
               statement = statementFromDeductionNode(deductionNode, context);
 
-        deduction = new Deduction(context, string, node, lineIndex, statement);
+        deduction = new Deduction(context, string, node, breakPoint, statement);
       }, context);
     }, json, context);
 

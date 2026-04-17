@@ -44,8 +44,8 @@ class Element {
     this.node = node;
   }
 
-  setLineIndex(lineIndex) {
-    this.breakPoint = lineIndex;
+  setLineIndex(breakPoint) {
+    this.breakPoint = breakPoint;
   }
 
   async break(context) {
@@ -244,12 +244,12 @@ export default class Substitution extends Element {
     return serialises((...contexts) => {
       const name = this.getName(),
             string = this.getString(),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             json = {
               name,
               contexts,
               string,
-              lineIndex
+              breakPoint
             };
 
       return json;

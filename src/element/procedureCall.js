@@ -11,8 +11,8 @@ import { parametersFromProcedureCallNode, procedureReferenceFromProcedureCallNod
 const { termsFromPrimitives } = termsUtilities;
 
 export default define(class ProcedureCall extends Element {
-  constructor(context, string, node, lineIndex, parameters, procedureReference) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, parameters, procedureReference) {
+    super(context, string, node, breakPoint);
 
     this.parameters = parameters;
     this.procedureReference = procedureReference;
@@ -122,10 +122,10 @@ export default define(class ProcedureCall extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           json = {
             string,
-            lineIndex
+            breakPoint
           };
 
     return json;
@@ -133,7 +133,7 @@ export default define(class ProcedureCall extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             procedureCallNode = instantiateProcedureCall(string, context),
             node = procedureCallNode,  ///
             parameters = parametersFromProcedureCallNode(json, context),
@@ -141,7 +141,7 @@ export default define(class ProcedureCall extends Element {
 
       context = null;
 
-      const procedureCall = new ProcedureCall(context, string, node, lineIndex, parameters, procedureReference);
+      const procedureCall = new ProcedureCall(context, string, node, breakPoint, parameters, procedureReference);
 
       return procedureCall;
     }, context);

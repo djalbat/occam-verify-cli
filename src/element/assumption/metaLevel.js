@@ -11,8 +11,8 @@ import { metaLevelAssumptionStringFromReferenceAndStatement } from "../../utilit
 import { join, ablate, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class MetaLevelAssumption extends Element {
-  constructor(context, string, node, lineIndex, reference, statement) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, reference, statement) {
+    super(context, string, node, breakPoint);
 
     this.reference = reference;
     this.statement = statement;
@@ -286,11 +286,11 @@ export default define(class MetaLevelAssumption extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             json = {
               context,
               string,
-              lineIndex
+              breakPoint
             };
 
       return json;
@@ -304,13 +304,13 @@ export default define(class MetaLevelAssumption extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context),
               node = metaLevelAssumptionNode,  ///
               reference = referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context),
               statement = statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context);
 
-        metaLevelAssumption = new MetaLevelAssumption(context, string, node, lineIndex, reference, statement);
+        metaLevelAssumption = new MetaLevelAssumption(context, string, node, breakPoint, reference, statement);
       }, context);
     }, json, context);
 

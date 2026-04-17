@@ -5,8 +5,8 @@ import { Element } from "occam-languages";
 import { equateStatements } from "../process/equate";
 
 export default class ProofAssertion extends Element {
-  constructor(context, string, node, lineIndex, statement) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, statement) {
+    super(context, string, node, breakPoint);
 
     this.statement = statement;
   }

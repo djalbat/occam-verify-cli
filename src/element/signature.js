@@ -11,8 +11,8 @@ import { join, ablate, attempt, reconcile, serialise, unserialise, instantiate }
 const { match } = arrayUtilities;
 
 export default define(class Signature extends Element {
-  constructor(context, string, node, lineIndex, terms) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, terms) {
+    super(context, string, node, breakPoint);
 
     this.terms = terms;
   }
@@ -234,11 +234,11 @@ export default define(class Signature extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             json = {
               context,
               string,
-              lineIndex
+              breakPoint
             };
 
       return json;
@@ -250,12 +250,12 @@ export default define(class Signature extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               signatureNode = instantiateSignature(string, context),
               node = signatureNode,  ///
               terms = termsFromSignatureNode(signatureNode, context);
 
-        signature = new Signature(context, string, node, lineIndex, terms);
+        signature = new Signature(context, string, node, breakPoint, terms);
       }, context);
     }, json, context);
 

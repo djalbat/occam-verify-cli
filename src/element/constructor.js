@@ -12,8 +12,8 @@ import { provisionallyStringFromProvisional } from "../utilities/string";
 import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Constructor extends Element {
-  constructor(context, string, node, lineIndex, term, type) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, term, type) {
+    super(context, string, node, breakPoint);
 
     this.term = term;
     this.type = type;
@@ -155,12 +155,12 @@ export default define(class Constructor extends Element {
       const includeType = false,
             typeJSON = typeToTypeJSON(this.type),
             string = this.getString(includeType),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             type = typeJSON,  ///
             json = {
               context,
               string,
-              lineIndex,
+              breakPoint,
               type
             };
 
@@ -175,13 +175,13 @@ export default define(class Constructor extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               constructorNode = instantiateConstructor(string, context),
               node = constructorNode, ///
               term = termFromConstructorNode(constructorNode, context),
               type = typeFromJSON(json, context);
 
-        constructor = new Constructor(context, string, node, lineIndex, term, type);
+        constructor = new Constructor(context, string, node, breakPoint, term, type);
       }, context);
     }, json, context);
 

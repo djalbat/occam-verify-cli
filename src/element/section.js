@@ -8,8 +8,8 @@ import {enclose} from "../utilities/context";
 const { asyncEvery } = asynchronousUtilities;
 
 export default define(class Section extends Element {
-  constructor(context, string, node, lineIndex, hypotheses, topLevelAssertion) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, hypotheses, topLevelAssertion) {
+    super(context, string, node, breakPoint);
 
     this.hypotheses = hypotheses;
     this.topLevelAssertion = topLevelAssertion;

@@ -9,8 +9,8 @@ import { nameFromPropertyNode } from "../utilities/element";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 export default define(class Property extends Element {
-  constructor(context, string, node, lineIndex, name, type) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, name, type) {
+    super(context, string, node, breakPoint);
 
     this.name = name;
     this.type = type;
@@ -218,11 +218,11 @@ export default define(class Property extends Element {
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
           string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           type = typeJSON,  ///
           json = {
             string,
-            lineIndex,
+            breakPoint,
             type
           };
 
@@ -233,7 +233,7 @@ export default define(class Property extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             propertyNode = instantiateProperty(string, context),
             node = propertyNode,  ///
             name = nameFromPropertyNode(propertyNode, context),
@@ -241,7 +241,7 @@ export default define(class Property extends Element {
 
       context = null;
 
-      const property = new Property(context, string, node, lineIndex, name, type);
+      const property = new Property(context, string, node, breakPoint, name, type);
 
       return property;
     }, context);

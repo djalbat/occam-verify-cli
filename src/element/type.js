@@ -20,8 +20,8 @@ import { propertiesFromJSON,
 const { push, first } = arrayUtilities;
 
 export default define(class Type extends Element {
-  constructor(context, string, node, lineIndex, name, prefixName, superTypes, properties, provisional) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, name, prefixName, superTypes, properties, provisional) {
+    super(context, string, node, breakPoint);
 
     this.name = name;
     this.prefixName = prefixName;
@@ -298,10 +298,10 @@ export default define(class Type extends Element {
 
   toJSON(abridged = false) {
     const string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           json = {
             string,
-            lineIndex
+            breakPoint
           };
 
     if (!abridged) {
@@ -329,7 +329,7 @@ export default define(class Type extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             typeNode = instantiateType(string, context),
             node = typeNode, ///
             name = nameFromTypeNode(typeNode, context),
@@ -340,7 +340,7 @@ export default define(class Type extends Element {
 
       context = null; ///
 
-      const type = new Type(context, string, node, lineIndex, name, prefixName, superTypes, properties, provisional);
+      const type = new Type(context, string, node, breakPoint, name, prefixName, superTypes, properties, provisional);
 
       return type;
     }, context);
@@ -349,7 +349,7 @@ export default define(class Type extends Element {
   static fromName(name, context) {
     const string = name,  ///
           node = null,
-          lineIndex = null,
+          breakPoint = null,
           prefixName = null,
           superTypes = [],
           properties = [],
@@ -357,7 +357,7 @@ export default define(class Type extends Element {
 
     context = null;
 
-    const type = new Type(context, string, node, lineIndex, name, prefixName, superTypes, properties, provisional);
+    const type = new Type(context, string, node, breakPoint, name, prefixName, superTypes, properties, provisional);
 
     return type;
   }

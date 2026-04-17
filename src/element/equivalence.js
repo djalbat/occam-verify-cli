@@ -13,8 +13,8 @@ import { equivalenceFromEquivalenceNode } from "../utilities/element";
 const { compress } = arrayUtilities;
 
 export default define(class Equivalence extends Element {
-  constructor(context, string, node, lineIndex, type, terms) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, type, terms) {
+    super(context, string, node, breakPoint);
 
     this.type = type;
     this.terms = terms;

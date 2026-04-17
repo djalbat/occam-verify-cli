@@ -5,8 +5,8 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class ConstructorDeclaration extends Declaration {
-  constructor(context, string, node, lineIndex, type, provisional, constructor) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, type, provisional, constructor) {
+    super(context, string, node, breakPoint);
 
     this.type = type;
     this.provisional = provisional;

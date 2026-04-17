@@ -9,8 +9,8 @@ import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromFrameNode } from "../utilities/element";
 
 export default define(class Frame extends Element {
-  constructor(context, string, node, lineIndex, assumptions, metavariable) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, assumptions, metavariable) {
+    super(context, string, node, breakPoint);
 
     this.assumptions = assumptions;
     this.metavariable = metavariable;
@@ -306,10 +306,10 @@ export default define(class Frame extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           json = {
             string,
-            lineIndex
+            breakPoint
           };
 
     return json;
@@ -319,7 +319,7 @@ export default define(class Frame extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             frameNode = instantiateFrame(string, context),
             node = frameNode, ///
             assumptions = assumptionsFromFrameNode(frameNode, context),
@@ -327,7 +327,7 @@ export default define(class Frame extends Element {
 
       context = null;
 
-      const frame = new Frame(context, string, node, lineIndex, assumptions, metavariable);
+      const frame = new Frame(context, string, node, breakPoint, assumptions, metavariable);
 
       return frame;
     }, context);

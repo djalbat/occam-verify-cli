@@ -5,8 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 
 export default define(class MetaType extends Element {
-  constructor(context, string, node, lineIndex, name) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, name) {
+    super(context, string, node, breakPoint);
 
     this.name = name;
   }
@@ -38,10 +38,10 @@ export default define(class MetaType extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           json = {
             string,
-            lineIndex
+            breakPoint
           };
 
     return json;
@@ -58,8 +58,8 @@ export default define(class MetaType extends Element {
   static fromName(name, context) {
     const string = name,  ///
           node = null,
-          lineIndex = null,
-          metaType = new MetaType(context, string, node, lineIndex, name);
+          breakPoint = null,
+          metaType = new MetaType(context, string, node, breakPoint, name);
 
     return metaType;
   }

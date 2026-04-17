@@ -8,8 +8,8 @@ import { instantiateParameter } from "../process/instantiate";
 import { nameFromParaneterNode, identifierFromParameterNode } from "../utilities/element";
 
 export default define(class Parameter extends Element {
-  constructor(context, string, node, lineIndex, name, identifier) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, name, identifier) {
+    super(context, string, node, breakPoint);
 
     this.name = name;
     this.identifier = identifier;
@@ -53,10 +53,10 @@ export default define(class Parameter extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           json = {
             string,
-            lineIndex
+            breakPoint
           };
 
     return json;
@@ -64,7 +64,7 @@ export default define(class Parameter extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             parameterNode = instantiateParameter(string, context),
             node = parameterNode,  ///
             name = nameFromParaneterNode(parameterNode, context),
@@ -72,7 +72,7 @@ export default define(class Parameter extends Element {
 
       context = null;
 
-      const parameter = new Parameter(context, string, node, lineIndex, name, identifier);
+      const parameter = new Parameter(context, string, node, breakPoint, name, identifier);
 
       return parameter;
     }, context);

@@ -13,8 +13,8 @@ import { termFromContainedAssertionNode,
          containedAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class ContainedAssertion extends Assertion {
-  constructor(context, string, node, lineIndex, term, frame, negated, statement) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, term, frame, negated, statement) {
+    super(context, string, node, breakPoint);
 
     this.term = term;
     this.frame = frame;
@@ -253,7 +253,7 @@ export default define(class ContainedAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               containedAssertionNode = instantiateContainedAssertion(string, context),
               node = containedAssertionNode,  ///
               term = termFromContainedAssertionNode(containedAssertionNode, context),
@@ -263,7 +263,7 @@ export default define(class ContainedAssertion extends Assertion {
 
         context = null;
 
-        containedAssertion = new ContainedAssertion(context, string, node, lineIndex, term, frame, negated, statement);
+        containedAssertion = new ContainedAssertion(context, string, node, breakPoint, term, frame, negated, statement);
       }, context);
     }
 

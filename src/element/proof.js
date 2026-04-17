@@ -6,8 +6,8 @@ import { define } from "../elements";
 import { enclose } from "../utilities/context";
 
 export default define(class Proof extends Element {
-  constructor(context, string, node, lineIndex, derivation) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, derivation) {
+    super(context, string, node, breakPoint);
 
     this.derivation = derivation;
   }

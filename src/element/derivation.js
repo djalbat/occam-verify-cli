@@ -9,8 +9,8 @@ const { last } = arrayUtilities,
       { asyncEvery } = asynchronousUtilities;
 
 export default define(class Derivation extends Element {
-  constructor(context, string, node, lineIndex, subproofOrProofAssertions) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, subproofOrProofAssertions) {
+    super(context, string, node, breakPoint);
 
     this.subproofOrProofAssertions = subproofOrProofAssertions;
   }

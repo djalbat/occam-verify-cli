@@ -8,8 +8,8 @@ import { procedureCallFromSuppositionNode } from "../../utilities/element";
 import { join, declare, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class Supposition extends ProofAssertion {
-  constructor(context, string, node, lineIndex, statement, procedureCall) {
-    super(context, string, node, lineIndex, statement);
+  constructor(context, string, node, breakPoint, statement, procedureCall) {
+    super(context, string, node, breakPoint, statement);
 
     this.procedureCall = procedureCall;
   }
@@ -311,11 +311,11 @@ export default define(class Supposition extends ProofAssertion {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             json = {
               context,
               string,
-              lineIndex
+              breakPoint
             };
 
       return json;
@@ -329,13 +329,13 @@ export default define(class Supposition extends ProofAssertion {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               suppositionNode = instantiateSupposition(string, context),
               node = suppositionNode,  ///
               statement = statementFromSuppositionNode(suppositionNode, context),
               procedureCall = procedureCallFromSuppositionNode(suppositionNode, context);
 
-        supposition = new Supposition(context, string, node, lineIndex, statement, procedureCall);
+        supposition = new Supposition(context, string, node, breakPoint, statement, procedureCall);
       }, context);
     }, json, context);
 

@@ -13,8 +13,8 @@ import { subproofAssertionFromStatementNode } from "../../utilities/element";
 const { last, front, backwardsEvery } = arrayUtilities;
 
 export default define(class SubproofAssertion extends Assertion {
-  constructor(context, string, node, lineIndex, statements) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, statements) {
+    super(context, string, node, breakPoint);
 
     this.statements = statements;
   }
@@ -300,14 +300,14 @@ export default define(class SubproofAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               subproofAssertionNode = instantiateSubproofAssertion(string, context),
               statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),
               node = subproofAssertionNode; ///
 
         context = null;
 
-        subproorAssertion = new SubproofAssertion(context, string, node, lineIndex, statements);
+        subproorAssertion = new SubproofAssertion(context, string, node, breakPoint, statements);
       }, context);
     }
 

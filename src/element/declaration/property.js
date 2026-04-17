@@ -5,8 +5,8 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class PropertyDeclaration extends Declaration {
-  constructor(context, string, node, lineIndex, property, type) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, property, type) {
+    super(context, string, node, breakPoint);
 
     this.property = property;
     this.type = type;

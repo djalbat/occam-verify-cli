@@ -8,8 +8,8 @@ import { statementFromHypothesisNode } from "../utilities/element";
 import { declare, attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Hypothesis extends Element {
-  constructor(context, string, node, lineIndex, statement) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, statement) {
+    super(context, string, node, breakPoint);
 
     this.statement = statement;
   }
@@ -106,11 +106,11 @@ export default define(class Hypothesis extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             json = {
               context,
               string,
-              lineIndex
+              breakPoint
             };
 
       return json;
@@ -122,12 +122,12 @@ export default define(class Hypothesis extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               hypothesisNode = instantiateHypothesis(string, context),
               node = hypothesisNode,  ///
               statement = statementFromHypothesisNode(hypothesisNode, context);
 
-        hypothesis = new Hypothesis(context, string, node, lineIndex, statement);
+        hypothesis = new Hypothesis(context, string, node, breakPoint, statement);
       }, context);
     }, json, context);
 

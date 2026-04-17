@@ -8,8 +8,8 @@ import { enclose } from "../utilities/context";
 const { asyncEvery } = asynchronousUtilities;
 
 export default define(class Subproof extends Element {
-  constructor(context, string, node, lineIndex, suppositions, subDerivation) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, suppositions, subDerivation) {
+    super(context, string, node, breakPoint);
 
     this.suppositions = suppositions;
     this.subDerivation = subDerivation;

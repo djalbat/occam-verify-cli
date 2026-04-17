@@ -10,8 +10,8 @@ import { termSubstitutionStringFromTermAndVariable } from "../../utilities/strin
 import { ablate, ablates, manifest, attempts, descend, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
-  constructor(context, string, node, lineIndex, targetTerm, replacementTerm) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, targetTerm, replacementTerm) {
+    super(context, string, node, breakPoint);
 
     this.targetTerm = targetTerm;
     this.replacementTerm = replacementTerm;
@@ -204,7 +204,7 @@ export default define(class TermSubstitution extends Substitution {
         const context = specificContext;  ///
 
         instantiate((context) => {
-          const { string, lineIndex } = json,
+          const { string, breakPoint } = json,
                 specificContext = context,  ///
                 contexts = [
                   generalContext,
@@ -215,7 +215,7 @@ export default define(class TermSubstitution extends Substitution {
                 targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
                 replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
 
-          termSubstitutionn = new TermSubstitution(contexts, string, node, lineIndex, targetTerm, replacementTerm);
+          termSubstitutionn = new TermSubstitution(contexts, string, node, breakPoint, targetTerm, replacementTerm);
         }, context);
       }, json, context);
     }

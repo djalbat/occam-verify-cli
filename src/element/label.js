@@ -8,8 +8,8 @@ import { labelFromLabelNode, metavariableFromLabelNode } from "../utilities/elem
 import { ablate, attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Label extends Element {
-  constructor(context, string, node, lineIndex, metavariable) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, metavariable) {
+    super(context, string, node, breakPoint);
 
     this.metavariable = metavariable;
   }
@@ -129,11 +129,11 @@ export default define(class Label extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             json = {
               context,
               string,
-              lineIndex
+              breakPoint
             };
 
       return json;
@@ -147,12 +147,12 @@ export default define(class Label extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               labelNode = instantiateLabel(string, context),
               node = labelNode, ///
               metavariable = metavariableFromLabelNode(labelNode, context);
 
-        label = new Label(context, string, node, lineIndex, metavariable);
+        label = new Label(context, string, node, breakPoint, metavariable);
       }, context);
     }, json, context);
 

@@ -10,8 +10,8 @@ import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "..
 import { termFromJDefinedAssertionNode, frameFromJDefinedAssertionNode, negatedFromJDefinedAssertionNode, definedAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class DefinedAssertion extends Assertion {
-  constructor(context, string, node, lineIndex, term, frame, negated) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, term, frame, negated) {
+    super(context, string, node, breakPoint);
 
     this.term = term;
     this.frame= frame;
@@ -221,7 +221,7 @@ export default define(class DefinedAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               definedAssertionNode = instantiateDefinedAssertion(string, context),
               node = definedAssertionNode,  ///
               term = termFromJDefinedAssertionNode(definedAssertionNode, context),
@@ -230,7 +230,7 @@ export default define(class DefinedAssertion extends Assertion {
 
         context = null;
 
-        definedAssertion = new DefinedAssertion(context, string, node, lineIndex, term, frame, negated);
+        definedAssertion = new DefinedAssertion(context, string, node, breakPoint, term, frame, negated);
       }, context);
     }
 

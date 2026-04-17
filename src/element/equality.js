@@ -10,8 +10,8 @@ import { equalityFromStatementNode } from "../utilities/element";
 import { equalityAssignmentFromEquality, leftVariableAssignmentFromEquality, rightVariableAssignmentFromEquality } from "../process/assign";
 
 export default define(class Equality extends Element {
-  constructor(context, string, node, lineIndex, leftTerm, rightTerm) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, leftTerm, rightTerm) {
+    super(context, string, node, breakPoint);
 
     this.leftTerm = leftTerm;
     this.rightTerm = rightTerm;
@@ -265,10 +265,10 @@ export default define(class Equality extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           json = {
             string,
-            lineIndex
+            breakPoint
           };
 
     return json;
@@ -278,7 +278,7 @@ export default define(class Equality extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             equalityNode = instantiateEquality(string, context),
             node = equalityNode,  ///
             leftTerm = leftTermFromEqualityNode(equalityNode, context),
@@ -286,7 +286,7 @@ export default define(class Equality extends Element {
 
       context = null;
 
-      const equality = new Equality(context, string, node, lineIndex, leftTerm, rightTerm);
+      const equality = new Equality(context, string, node, breakPoint, leftTerm, rightTerm);
 
       return equality;
     }, context);

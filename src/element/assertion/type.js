@@ -11,8 +11,8 @@ import { variableAssignmentFromTypeAssertion } from "../../process/assign";
 import { termFromTypeAssertionNode, typeAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class TypeAssertion extends Assertion {
-  constructor(context, string, node, lineIndex, term, type) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, term, type) {
+    super(context, string, node, breakPoint);
 
     this.term = term;
     this.type = type;
@@ -221,12 +221,12 @@ export default define(class TypeAssertion extends Assertion {
     const typeJSON = typeToTypeJSON(this.type),
           name = this.getName(),
           string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           type = typeJSON,
           json = {
             name,
             string,
-            lineIndex,
+            breakPoint,
             type
           };
 
@@ -242,7 +242,7 @@ export default define(class TypeAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               typeAssertionNode = instantiateTypeAssertion(string, context),
               term = termFromTypeAssertionNode(typeAssertionNode, context),
               type = typeFromJSON(json, context),
@@ -250,7 +250,7 @@ export default define(class TypeAssertion extends Assertion {
 
         context = null;
 
-        typeAssertion = new TypeAssertion(context, string, node, lineIndex, term, type);
+        typeAssertion = new TypeAssertion(context, string, node, breakPoint, term, type);
       }, context);
     }
 

@@ -8,8 +8,8 @@ import { instantiateSignatureAssertion } from "../../process/instantiate";
 import { signatureFromSignatureAssertionNode, referenceFromSignatureAssertionNode, signatureAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class SignatureAssertion extends Assertion {
-  constructor(context, string, node, lineIndex, signature, reference) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, signature, reference) {
+    super(context, string, node, breakPoint);
 
     this.signature = signature;
     this.reference = reference;
@@ -211,7 +211,7 @@ export default define(class SignatureAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               definedAssertionNode = instantiateSignatureAssertion(string, context),
               node = definedAssertionNode,  ///
               signature = signatureFromSignatureAssertionNode(definedAssertionNode, context),
@@ -219,7 +219,7 @@ export default define(class SignatureAssertion extends Assertion {
 
         context = null;
 
-        signatureAssertion = new SignatureAssertion(context, string, node, lineIndex, signature, reference);
+        signatureAssertion = new SignatureAssertion(context, string, node, breakPoint, signature, reference);
       }, context);
     }
 

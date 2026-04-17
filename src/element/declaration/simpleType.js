@@ -6,8 +6,8 @@ import { define } from "../../elements";
 import { baseTypeFromNothing } from "../../utilities/type";
 
 export default define(class SimpleTypeDeclaration extends Declaration {
-  constructor(context, string, node, lineIndex, type, superTypes, provisional) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, type, superTypes, provisional) {
+    super(context, string, node, breakPoint);
 
     this.type = type;
     this.superTypes = superTypes;

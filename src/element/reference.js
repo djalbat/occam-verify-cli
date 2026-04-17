@@ -9,8 +9,8 @@ import { join, ablate, attempt, serialise, reconcile, unserialise, instantiate }
 import { referenceFromReferenceNode, metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 
 export default define(class Reference extends Element {
-  constructor(context, string, node, lineIndex, metavariable, topLevelMetaAssertion) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, metavariable, topLevelMetaAssertion) {
+    super(context, string, node, breakPoint);
 
     this.metavariable = metavariable;
     this.topLevelMetaAssertion = topLevelMetaAssertion;
@@ -294,11 +294,11 @@ export default define(class Reference extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             json = {
               context,
               string,
-              lineIndex
+              breakPoint
             };
 
       return json;
@@ -312,13 +312,13 @@ export default define(class Reference extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               referenceNode = instantiateReference(string, context),
               node = referenceNode,  ///
               metavariable = metavariableFromReferenceNode(referenceNode, context),
               topLevelMetaAssertion = topLevelMetaAssertionFromReferenceNode(referenceNode, context);
 
-        reference = new Reference(context, string, node, lineIndex, metavariable, topLevelMetaAssertion);
+        reference = new Reference(context, string, node, breakPoint, metavariable, topLevelMetaAssertion);
       }, context);
     }, json, context);
 

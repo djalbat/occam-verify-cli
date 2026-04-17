@@ -5,8 +5,8 @@ import Declaration from "../declaration";
 import { define } from "../../elements";
 
 export default define(class CombinatorDeclaration extends Declaration {
-  constructor(context, string, node, lineIndex, combinator) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, combinator) {
+    super(context, string, node, breakPoint);
 
     this.combinator = combinator;
   }

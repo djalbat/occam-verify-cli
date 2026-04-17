@@ -10,8 +10,8 @@ import { baseTypeFromNothing } from "../../utilities/type";
 const { asyncEvery } = asynchronousUtilities;
 
 export default define(class ComplexTypeDeclaration extends Declaration {
-  constructor(context, string, node, lineIndex, type, superTypes, provisional, propertyDeclarations) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, type, superTypes, provisional, propertyDeclarations) {
+    super(context, string, node, breakPoint);
 
     this.type = type;
     this.superTypes = superTypes;

@@ -14,8 +14,8 @@ import { typeFromJSON, typeToTypeJSON, provisionalFromJSON, provisionalToProvisi
 const { filter } = arrayUtilities;
 
 export default define(class Term extends Element {
-  constructor(context, string, node, lineIndex, type, provisional) {
-    super(context, string, node, lineIndex, provisional);
+  constructor(context, string, node, breakPoint, type, provisional) {
+    super(context, string, node, breakPoint, provisional);
 
     this.type = type;
     this.provisional = provisional;
@@ -289,12 +289,12 @@ export default define(class Term extends Element {
     const typeJSON = typeToTypeJSON(this.type),
           provisionalJSON = provisionalToProvisionalJSON(this.provisional),
           string = this.getString(), ///
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           type = typeJSON,  ///
           provisional = provisionalJSON,  ///
           json = {
             string,
-            lineIndex,
+            breakPoint,
             type,
             provisional
           };
@@ -306,7 +306,7 @@ export default define(class Term extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             termNode = instantiateTerm(string, context),
             node = termNode,  ///
             type = typeFromJSON(json, context),
@@ -314,7 +314,7 @@ export default define(class Term extends Element {
 
       context = null;
 
-      const term = new Term(context, string, node, lineIndex, type, provisional);
+      const term = new Term(context, string, node, breakPoint, type, provisional);
 
       return term;
     }, context);

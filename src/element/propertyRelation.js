@@ -8,8 +8,8 @@ import { instantiatePropertyRelation } from "../process/instantiate";
 import { propertyFromPropertyRelationNode } from "../utilities/element";
 
 export default define(class PropertyRelation extends Element {
-  constructor(context, string, node, lineIndex, term, property) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, term, property) {
+    super(context, string, node, breakPoint);
 
     this.term = term;
     this.property = property;
@@ -149,10 +149,10 @@ export default define(class PropertyRelation extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           json = {
             string,
-            lineIndex
+            breakPoint
           };
 
     return json;
@@ -160,7 +160,7 @@ export default define(class PropertyRelation extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             propertyRelationNode = instantiatePropertyRelation(string, context),
             node = propertyRelationNode,  ///
             term = termFromPropertyRelationNode(propertyRelationNode, context),
@@ -168,7 +168,7 @@ export default define(class PropertyRelation extends Element {
 
       context = null;
 
-      const propertyRelation = new PropertyRelation(context, string, node, lineIndex, term, property);
+      const propertyRelation = new PropertyRelation(context, string, node, breakPoint, term, property);
 
       return propertyRelation;
     }, context);

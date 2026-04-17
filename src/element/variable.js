@@ -12,8 +12,8 @@ import { variableFromTermNode, identifierFromVariableNode } from "../utilities/e
 import { typeFromJSON, typeToTypeJSON, provisionalFromJSON, provisionalToProvisionalJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {
-  constructor(context, string, node, lineIndex, type, identifier, provisional) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, type, identifier, provisional) {
+    super(context, string, node, breakPoint);
 
     this.type = type;
     this.identifier = identifier;
@@ -208,12 +208,12 @@ export default define(class Variable extends Element {
     const typeJSON = typeToTypeJSON(this.type),
           provisionalJSON = provisionalToProvisionalJSON(this.provisional),
           string = this.getString(), ///
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           type = typeJSON,  ///
           provisional = provisionalJSON,  ///
           json = {
             string,
-            lineIndex,
+            breakPoint,
             type,
             provisional
           };
@@ -225,7 +225,7 @@ export default define(class Variable extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, lineIndex } = json,
+      const { string, breakPoint } = json,
             variableNode = instantiateVariable(string, context),
             node = variableNode,  ///
             type = typeFromJSON(json, context),
@@ -234,7 +234,7 @@ export default define(class Variable extends Element {
 
       context = null;
 
-      const variable = new Variable(context, string, node, lineIndex, type, identifier, provisional);
+      const variable = new Variable(context, string, node, breakPoint, type, identifier, provisional);
 
       return variable;
     }, context);

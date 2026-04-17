@@ -20,8 +20,8 @@ const { reverse } = arrayUtilities,
       { asyncExtract, asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
 
 export default class TopLevelAssertion extends Element {
-  constructor(context, string, node, lineIndex, labels, suppositions, deduction, proof, signature, hypotheses) {
-    super(context, string, node, lineIndex);
+  constructor(context, string, node, breakPoint, labels, suppositions, deduction, proof, signature, hypotheses) {
+    super(context, string, node, breakPoint);
 
     this.labels = labels;
     this.suppositions = suppositions;
@@ -354,7 +354,7 @@ export default class TopLevelAssertion extends Element {
           signatureJSON = signatureToSignatureJSON(this.signature),
           hypothesesJSON = hypothesesToHypothesesJSON(this.hypotheses),
           string = this.getString(),
-          lineIndex = this.getBreakPoint(),
+          breakPoint = this.getBreakPoint(),
           labels = labelsJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
@@ -362,7 +362,7 @@ export default class TopLevelAssertion extends Element {
           hypotheses = hypothesesJSON,  ///
           json = {
             string,
-            lineIndex,
+            breakPoint,
             labels,
             deduction,
             suppositions,
@@ -374,7 +374,7 @@ export default class TopLevelAssertion extends Element {
   }
 
   static fromJSON(Class, json, context) {
-    const { lineIndex } = json,
+    const { breakPoint } = json,
           labels = labelsFromJSON(json, context),
           deduction = deductionFromJSON(json, context),
           suppositions = suppositionsFromJSON(json, context),
@@ -384,7 +384,7 @@ export default class TopLevelAssertion extends Element {
           node = null,
           proof = null,
           string = topLevelAssertionString, ///
-          topLevelAssertion = new Class(context, string, node, lineIndex, labels, suppositions, deduction, proof, signature, hypotheses);
+          topLevelAssertion = new Class(context, string, node, breakPoint, labels, suppositions, deduction, proof, signature, hypotheses);
 
     return topLevelAssertion;
   }

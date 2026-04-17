@@ -14,8 +14,8 @@ const { asyncSome } = asynchronousUtilities,
       { backwardsSome } = arrayUtilities;
 
 export default define(class Step extends ProofAssertion {
-  constructor(context, string, node, lineIndex, statement, reference, signatureAssertion) {
-    super(context, string, node, lineIndex, statement);
+  constructor(context, string, node, breakPoint, statement, reference, signatureAssertion) {
+    super(context, string, node, breakPoint, statement);
 
     this.reference = reference;
     this.signatureAssertion = signatureAssertion;

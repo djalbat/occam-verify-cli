@@ -8,8 +8,8 @@ import { procedureCallFromPremiseNode } from "../../utilities/element";
 import { join, declare, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class Premise extends ProofAssertion {
-  constructor(context, string, node, lineIndex, statement, procedureCall) {
-    super(context, string, node, lineIndex, statement);
+  constructor(context, string, node, breakPoint, statement, procedureCall) {
+    super(context, string, node, breakPoint, statement);
 
     this.procedureCall = procedureCall;
   }
@@ -288,11 +288,11 @@ export default define(class Premise extends ProofAssertion {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getBreakPoint(),
+            breakPoint = this.getBreakPoint(),
             json = {
               context,
               string,
-              lineIndex
+              breakPoint
             };
 
       return json;
@@ -306,13 +306,13 @@ export default define(class Premise extends ProofAssertion {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, lineIndex } = json,
+        const { string, breakPoint } = json,
               premiseNode = instantiatePremise(string, context),
               node = premiseNode,  ///
               statement = statementFromPremiseNode(premiseNode, context),
               procedureCall = procedureCallFromPremiseNode(premiseNode, context);
 
-        premise = new Premise(context, string, node, lineIndex, statement, procedureCall);
+        premise = new Premise(context, string, node, breakPoint, statement, procedureCall);
       }, context);
     }, json, context);
 
