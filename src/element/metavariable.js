@@ -353,10 +353,13 @@ export default define(class Metavariable extends Element {
           frameUnifies = true;
         }
       } else {
-        const { FrameSubstitution } = elements,
-              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, generalContext, specificContext);
+        const { FrameSubstitution } = elements;
 
-        frameSubstitution.validate(context);
+        let frameSubstitution;
+
+        frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, generalContext, specificContext);
+
+        frameSubstitution = frameSubstitution.validate(context);  ///
 
         const derivedSubstitution = frameSubstitution;  ///
 
@@ -407,12 +410,15 @@ export default define(class Metavariable extends Element {
           statementUnifies = true;
         }
       } else {
-        const { StatementSubstitution } = elements,
-              statementSubstitution = (substitution !== null) ?
-                                        StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, generalContext, specificContext) :
-                                          StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, generalContext, specificContext);
+        const { StatementSubstitution } = elements;
 
-        statementSubstitution.validate(substitution, context);
+        let statementSubstitution;
+
+        statementSubstitution = (substitution !== null) ?
+                                  StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, generalContext, specificContext) :
+                                    StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, generalContext, specificContext);
+
+        statementSubstitution = statementSubstitution.validate(substitution, context);  ///
 
         const derivedSubstitution = statementSubstitution;  ///
 
@@ -458,10 +464,13 @@ export default define(class Metavariable extends Element {
           referenceUnifies = true;
         }
       } else {
-        const { ReferenceSubstitution } = elements,
-              referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, generalContext, specificContext);
+        const { ReferenceSubstitution } = elements;
 
-        referenceSubstitution.validate(context);
+        let referenceSubstitution;
+
+        referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, generalContext, specificContext);
+
+        referenceSubstitution = referenceSubstitution.validate(context);  ///
 
         const derivedSubstitution = referenceSubstitution;  ///
 

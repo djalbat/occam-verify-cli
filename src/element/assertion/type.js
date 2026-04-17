@@ -189,7 +189,7 @@ export default define(class TypeAssertion extends Assertion {
 
     let term;
 
-    term = termFromTermAndSubstitutions(this.term, generalContext, specificContext);
+    term = termFromTermAndSubstitutions(this.term, context);
 
     term = validateWhenDerived(term, this.type, context); //
 

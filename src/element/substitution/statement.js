@@ -257,29 +257,29 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Unifying the '${complexSubstitutionString}' complex substitution with the '${simpleSubstitutionString}' simple substitution...`);
 
-    context = complexSubstitution.getContext();
-
-    const specificContext = context;  ///
-
-    context = this.getContext();
-
-    const generalContext = context; ///
-
-    context = specificContext;  ///
+    const simpleSubstitution = this,  ///
+          simpleSubstitutionGSpecificContext = simpleSubstitution.getSpecificContext(),
+          complexSubstitutionGSpecificContext = complexSubstitution.getSpecificContext(),
+          generalContext = simpleSubstitutionGSpecificContext,  ///
+          specificContext = complexSubstitutionGSpecificContext;  ///
 
     let simpleSubstitutionUnifies = false;
 
-    reconcile((specificContext) => {
-      const replacementStatement = complexSubstitution.getReplacementStatement(),
-            replacementStatementUnifies = this.unifyReplacementStatement(replacementStatement, generalContext, specificContext);
+    join((context) => {
+      const specificContext = context;  ///
 
-      if (replacementStatementUnifies) {
-        const context = specificContext,  ///
-              soleNonTrivialDerivedSubstitution = context.getSoleNonTrivialDerivedSubstitution();
+      reconcile((specificContext) => {
+        const replacementStatement = complexSubstitution.getReplacementStatement(),
+              replacementStatementUnifies = this.unifyReplacementStatement(replacementStatement, generalContext, specificContext);
 
-        substitution = soleNonTrivialDerivedSubstitution;  ///
-      }
-    }, specificContext);
+        if (replacementStatementUnifies) {
+          const context = specificContext,  ///
+                soleNonTrivialDerivedSubstitution = context.getSoleNonTrivialDerivedSubstitution();
+
+          substitution = soleNonTrivialDerivedSubstitution;  ///
+        }
+      }, specificContext);
+    }, specificContext, context);
 
     if (substitution !== null) {
       substitution = substitution.validate(context);  ///
@@ -320,8 +320,9 @@ export default define(class StatementSubstitution extends Substitution {
     let resolved = false;
 
     const metavariableNode = this.getMetavariableNode(),
-          simpleSubstitution = context.findSimpleSubstitutionByMetavariableNode(metavariableNode),
-          complexSubstitution = this; ///
+          simpleDerivedSubstitution = context.findSimpleDerivedSubstitutionByMetavariableNode(metavariableNode), ///
+          complexSubstitution = this,
+          simpleSubstitution = simpleDerivedSubstitution; ///
 
     if (simpleSubstitution !== null) {
       const substitutionString = this.getString(); ///
@@ -331,7 +332,8 @@ export default define(class StatementSubstitution extends Substitution {
       const substitution = simpleSubstitution.unifyComplexSubstitution(complexSubstitution, context);
 
       if (substitution !== null) {
-        const simpleSubstitutionUnifies = complexSubstitution.unifySimpleSubstitution(substitution, context);
+        const simpleSubstitution = substitution,  ///
+              simpleSubstitutionUnifies = complexSubstitution.unifySimpleSubstitution(simpleSubstitution, context);
 
         if (simpleSubstitutionUnifies) {
           resolved = true;

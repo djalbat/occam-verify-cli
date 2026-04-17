@@ -228,9 +228,9 @@ export default define(class ContainedAssertion extends Assertion {
 
     context.trace(`Unifying the '${containedAssertionString}' contained assertion independently...`);
 
-    const term = termFromTermAndSubstitutions(this.term, generalContext, specificContext),
-          frame = frameFromFrameAndSubstitutions(this.frame, generalContext, specificContext),
-          statement = statementFromStatementAndSubstitutions(this.statement, generalContext, specificContext),
+    const term = termFromTermAndSubstitutions(this.term, context),
+          frame = frameFromFrameAndSubstitutions(this.frame, context),
+          statement = statementFromStatementAndSubstitutions(this.statement, context),
           validatesWhenDerived = validateWhenDerived(term, frame, statement, this.negated, context);
 
     if (validatesWhenDerived) {

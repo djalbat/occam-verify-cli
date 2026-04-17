@@ -487,19 +487,6 @@ export default class MnemicContext extends Context {
     return reference;
   }
 
-  findSubstitutionByVariableNode(variableNode) {
-    const substitutions = this.getSubstitutions(),
-          substitution = substitutions.find((substitution) => {
-            const variableNodeMatches = substitution.matchVariableNode(variableNode);
-
-            if (variableNodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return substitution;
-  }
-
   findAssumptionByAssumptionNode(assumptionNode) {
     const assumptions = this.getAssumptions(),
           assumption = assumptions.find((assumption) => {
@@ -648,13 +635,6 @@ export default class MnemicContext extends Context {
           metavariablenPresent = (metavariablen !== null);
 
     return metavariablenPresent;
-  }
-
-  isSubstitutionPresentBySubstitutionNode(substitutionNode) {
-    const substitution = this.findSubstitutionBySubstitutionNode(substitutionNode),
-          substitutionPresent = (substitution !== null);
-
-    return substitutionPresent;
   }
 
   isPropertyRelationresentByPropertyRelationNode(propertyRelationNode) {

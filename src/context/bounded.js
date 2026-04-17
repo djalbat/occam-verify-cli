@@ -118,9 +118,9 @@ class BoundedContext extends Context {
   }
 
   isMetaLevel() {
-    let metaLevel = false;
+    let metaLevel;
 
-    if (this.metaLevelAssumptiona !== null) {
+    if (this.metaLevelAssumptions !== null) {
       metaLevel = true;
     } else {
       const context = this.getContext();

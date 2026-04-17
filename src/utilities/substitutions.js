@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 const { compress } = arrayUtilities;
 
-export function termFromTermAndSubstitutions(term, generalContext, specificContext) {
+export function termFromTermAndSubstitutions(term, context) {
   if (term !== null) {
     const termNode = term.getNode(),
           termSingular = term.isSingular();
@@ -13,11 +13,10 @@ export function termFromTermAndSubstitutions(term, generalContext, specificConte
 
     if (termSingular) {
       const variableNode = termNode.getVariableNode(),
-            substitution = specificContext.findSubstitutionByVariableNode(variableNode);
+            derivedSubstitution = context.findDerivedSubstitutionByVariableNode(variableNode);
 
-      if (substitution !== null) {
-        const termSubstitution = substitution,  ///
-              replacementTerm = termSubstitution.getReplacementTerm();
+      if (derivedSubstitution !== null) {
+        const replacementTerm = derivedSubstitution.getReplacementTerm();
 
         term = replacementTerm; ///
       }
@@ -27,7 +26,7 @@ export function termFromTermAndSubstitutions(term, generalContext, specificConte
   return term;
 }
 
-export function frameFromFrameAndSubstitutions(frame, generalContext, specificContext) {
+export function frameFromFrameAndSubstitutions(frame, context) {
   if (frame !== null) {
     const frameNode = frame.getNode(),
           frameSingular = frame.isSingular();
@@ -36,11 +35,10 @@ export function frameFromFrameAndSubstitutions(frame, generalContext, specificCo
 
     if (frameSingular) {
       const metavariableNode = frameNode.getMetavariableNode(),
-            substitution = specificContext.findSubstitutionByMetavariableNode(metavariableNode);
+            derivedSubstitution = context.findDerivedSubstitutionByMetavariableNode(metavariableNode);
 
-      if (substitution !== null) {
-        const frameSubstitution = substitution, ///
-              replacementFrame = frameSubstitution.getReplacementFrame();
+      if (derivedSubstitution !== null) {
+        const replacementFrame = derivedSubstitution.getReplacementFrame();
 
         frame = replacementFrame; ///
       }
@@ -50,43 +48,19 @@ export function frameFromFrameAndSubstitutions(frame, generalContext, specificCo
   return frame;
 }
 
-export function statementFromStatementAndSubstitutions(statement, generalContext, specificContext) {
+export function statementFromStatementAndSubstitutions(statement, context) {
   if (statement !== null) {
     const statementNode = statement.getNode(),
           statementSingular = statement.isSingular();
 
-    statement = null;
+    statement = null;  ///
 
     if (statementSingular) {
-      let substitution = null;
+      const metavariableNode = statementNode.getMetavariableNode(),
+            derivedSubstitution = context.findDerivedSubstitutionByMetavariableNode(metavariableNode);
 
-      const substitutionNode = statementNode.getSubstitutionNode();
-
-      if (substitutionNode !== null) {
-        let context = generalContext; ///
-
-        generalContext = specificContext; ///
-
-        specificContext = context;  ///
-
-        substitution = specificContext.findSubstitutionBySubstitutionNode(substitutionNode);
-
-        context = generalContext; ///
-
-        generalContext = specificContext; ///
-
-        specificContext = context;  ///
-      }
-
-      const metavariableNode = statementNode.getMetavariableNode();
-
-      substitution = (substitution !== null) ?
-                       specificContext.findSubstitutionByMetavariableNodeAndSubstitution(metavariableNode, substitution) :
-                         specificContext.findSubstitutionByMetavariableNode(metavariableNode);
-
-      if (substitution !== null) {
-        const statementSubstitution = substitution, ///
-              replacementStatement = statementSubstitution.getReplacementStatement();
+      if (derivedSubstitution !== null) {
+        const replacementStatement = derivedSubstitution.getReplacementStatement();
 
         statement = replacementStatement; ///
       }

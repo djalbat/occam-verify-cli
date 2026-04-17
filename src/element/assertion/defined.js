@@ -197,8 +197,8 @@ export default define(class DefinedAssertion extends Assertion {
 
     context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);
 
-    const term = termFromTermAndSubstitutions(this.term, generalContext, specificContext),
-          frame = frameFromFrameAndSubstitutions(this.frame, generalContext, specificContext),
+    const term = termFromTermAndSubstitutions(this.term, context),
+          frame = frameFromFrameAndSubstitutions(this.frame, context),
           validatesWhenDerived = validateWhenDerived(term, frame, this.negated, context);
 
     if (validatesWhenDerived) {

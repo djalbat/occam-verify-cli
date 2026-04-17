@@ -172,10 +172,13 @@ export default define(class Variable extends Element {
             termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
 
       if (termTypeEqualToOrSubTypeOfVariableType) {
-        const { TermSubstitution } = elements,
-              termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, generalContext, specificContext);
+        const { TermSubstitution } = elements;
 
-        termSubstitution.validate(context);
+        let termSubstitution;
+
+        termSubstitution = TermSubstitution.fromTermAndVariable(term, variable, generalContext, specificContext);
+
+        termSubstitution = termSubstitution.validate(context);  ///
 
         const derivedSubstitution = termSubstitution; ///
 

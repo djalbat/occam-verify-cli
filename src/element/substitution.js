@@ -165,6 +165,30 @@ export default class Substitution extends Element {
     return metavariableNode;
   }
 
+  getReplacementTerm() {
+    const replacementTerm = null;
+
+    return replacementTerm;
+  }
+
+  getReplacementFrame() {
+    const replacementFrame = null;
+
+    return replacementFrame;
+  }
+
+  getReplacementStatement() {
+    const replacementStatement = null;
+
+    return replacementStatement;
+  }
+
+  getReplacementReference() {
+    const replacementReference = null;
+
+    return replacementReference;
+  }
+
   isSimple() {
     const simple = true;
 
