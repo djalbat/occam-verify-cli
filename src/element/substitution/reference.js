@@ -3,6 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
+import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
@@ -200,7 +201,7 @@ export default define(class ReferenceSubstitution extends Substitution {
         const context = specificContext;  ///
 
         instantiate((context) => {
-          const { string, breakPoint } = json,
+          const { string } = json,
                 specificContext = context,  ///
                 contexts = [
                   generalContext,
@@ -208,6 +209,7 @@ export default define(class ReferenceSubstitution extends Substitution {
                 ],
                 referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
                 node = referenceSubstitutionNode, ///
+                breakPoint = breakPointFromJSON(json),
                 targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
                 replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context);
 

@@ -5,6 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { join, ablate, attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
 import { referenceFromReferenceNode, metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 
@@ -299,7 +300,7 @@ export default define(class Reference extends Element {
 
       breakPoint = this.getBreakPoint();
 
-      const breakPointJSON = breakPoint.toJSON();
+      const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
       breakPoint = breakPointJSON;  ///
 
@@ -320,9 +321,10 @@ export default define(class Reference extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               referenceNode = instantiateReference(string, context),
               node = referenceNode,  ///
+              breakPoint = breakPointFromJSON(json),
               metavariable = metavariableFromReferenceNode(referenceNode, context),
               topLevelMetaAssertion = topLevelMetaAssertionFromReferenceNode(referenceNode, context);
 

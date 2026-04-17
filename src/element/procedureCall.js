@@ -6,6 +6,7 @@ import { termsUtilities } from "occam-furtle";
 import { define } from "../elements";
 import { instantiate, evaluate } from "../utilities/context";
 import { instantiateProcedureCall } from "../process/instantiate";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { parametersFromProcedureCallNode, procedureReferenceFromProcedureCallNode } from "../utilities/element";
 
 const { termsFromPrimitives } = termsUtilities;
@@ -127,7 +128,7 @@ export default define(class ProcedureCall extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -141,9 +142,10 @@ export default define(class ProcedureCall extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             procedureCallNode = instantiateProcedureCall(string, context),
             node = procedureCallNode,  ///
+            breakPoint = breakPointFromJSON(json),
             parameters = parametersFromProcedureCallNode(json, context),
             procedureReference = procedureReferenceFromProcedureCallNode(json, context);
 

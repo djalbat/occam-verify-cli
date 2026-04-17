@@ -4,6 +4,7 @@ import Assertion from "../assertion";
 
 import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
+import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateContainedAssertion } from "../../process/instantiate";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
 import { termFromContainedAssertionNode,
@@ -253,9 +254,10 @@ export default define(class ContainedAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               containedAssertionNode = instantiateContainedAssertion(string, context),
               node = containedAssertionNode,  ///
+              breakPoint = breakPointFromJSON(json),
               term = termFromContainedAssertionNode(containedAssertionNode, context),
               frame = frameFromContainedAssertionNode(containedAssertionNode, context),
               negated = negatedFromContainedAssertionNode(containedAssertionNode, context),

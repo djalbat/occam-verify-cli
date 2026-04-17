@@ -7,6 +7,7 @@ import { instantiate } from "../utilities/context";
 import { instantiateFrame } from "../process/instantiate";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { metavariableFromFrameNode } from "../utilities/element";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Frame extends Element {
   constructor(context, string, node, breakPoint, assumptions, metavariable) {
@@ -311,7 +312,7 @@ export default define(class Frame extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -327,9 +328,10 @@ export default define(class Frame extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             frameNode = instantiateFrame(string, context),
             node = frameNode, ///
+            breakPoint = breakPointFromJSON(json),
             assumptions = assumptionsFromFrameNode(frameNode, context),
             metavariable = metavariableFromFrameNode(frameNode, context);
 

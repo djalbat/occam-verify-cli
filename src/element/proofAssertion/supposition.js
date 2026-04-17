@@ -5,6 +5,7 @@ import ProofAssertion from "../proofAssertion";
 import { define } from "../../elements";
 import { instantiateSupposition} from "../../process/instantiate";
 import { procedureCallFromSuppositionNode } from "../../utilities/element";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../../utilities/breakPoint";
 import { join, declare, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class Supposition extends ProofAssertion {
@@ -316,7 +317,7 @@ export default define(class Supposition extends ProofAssertion {
 
       breakPoint = this.getBreakPoint();
 
-      const breakPointJSON = breakPoint.toJSON();
+      const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
       breakPoint = breakPointJSON;  ///
 
@@ -337,9 +338,10 @@ export default define(class Supposition extends ProofAssertion {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               suppositionNode = instantiateSupposition(string, context),
               node = suppositionNode,  ///
+              breakPoint = breakPointFromJSON(json),
               statement = statementFromSuppositionNode(suppositionNode, context),
               procedureCall = procedureCallFromSuppositionNode(suppositionNode, context);
 

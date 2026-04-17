@@ -6,6 +6,7 @@ import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiateParameter } from "../process/instantiate";
 import { nameFromParaneterNode, identifierFromParameterNode } from "../utilities/element";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Parameter extends Element {
   constructor(context, string, node, breakPoint, name, identifier) {
@@ -58,7 +59,7 @@ export default define(class Parameter extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -72,9 +73,10 @@ export default define(class Parameter extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             parameterNode = instantiateParameter(string, context),
             node = parameterNode,  ///
+            breakPoint = breakPointFromJSON(json),
             name = nameFromParaneterNode(parameterNode, context),
             identifier = identifierFromParameterNode(parameterNode, context);
 

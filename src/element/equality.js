@@ -7,6 +7,7 @@ import { equateTerms } from "../process/equate";
 import { instantiate } from "../utilities/context";
 import { instantiateEquality } from "../process/instantiate";
 import { equalityFromStatementNode } from "../utilities/element";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { equalityAssignmentFromEquality, leftVariableAssignmentFromEquality, rightVariableAssignmentFromEquality } from "../process/assign";
 
 export default define(class Equality extends Element {
@@ -270,7 +271,7 @@ export default define(class Equality extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -286,9 +287,10 @@ export default define(class Equality extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             equalityNode = instantiateEquality(string, context),
             node = equalityNode,  ///
+            breakPoint = breakPointFromJSON(json),
             leftTerm = leftTermFromEqualityNode(equalityNode, context),
             rightTerm = rightTermFromEqualityNode(equalityNode, context);
 

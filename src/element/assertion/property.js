@@ -4,6 +4,7 @@ import Assertion from "../assertion";
 
 import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
+import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiatePropertyAssertion } from "../../process/instantiate";
 import { variableAssignmentFromPrepertyAssertion } from "../../process/assign";
 import { termFromPropertyAssertionNode, propertyAssertionFromStatementNode, propertyRelationFromPropertyAssertionNode } from "../../utilities/element";
@@ -226,9 +227,10 @@ export default define(class PropertyAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               propertyAssertionNode = instantiatePropertyAssertion(string, context),
               node = propertyAssertionNode,  ///
+              breakPoint = breakPointFromJSON(json),
               term = termFromPropertyAssertionNode(propertyAssertionNode, context),
               propertyRelation = propertyRelationFromPropertyAssertionNode(propertyAssertionNode, context);
 

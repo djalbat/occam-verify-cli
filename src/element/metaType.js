@@ -3,6 +3,7 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class MetaType extends Element {
   constructor(context, string, node, breakPoint, name) {
@@ -43,7 +44,7 @@ export default define(class MetaType extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 

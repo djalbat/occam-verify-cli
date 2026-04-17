@@ -8,6 +8,7 @@ import { instantiate } from "../utilities/context";
 import { instantiateType } from "../process/instantiate";
 import { nameFromTypeNode } from "../utilities/element";
 import { baseTypeFromNothing } from "../utilities/type";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { propertiesFromJSON,
          prefixNameFromJSON,
          superTypesFromJSON,
@@ -297,12 +298,20 @@ export default define(class Type extends Element {
   }
 
   toJSON(abridged = false) {
-    const string = this.getString(),
-          breakPoint = this.getBreakPoint(),
-          json = {
-            string,
-            breakPoint
-          };
+    const string = this.getString();
+
+    let breakPoint;
+
+    breakPoint = this.getBreakPoint();
+
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
+
+    breakPoint = breakPointJSON;  ///
+
+    const json = {
+      string,
+      breakPoint
+    };
 
     if (!abridged) {
       const prefixNameJSON = prefixnameToPrevixNameJSON(this.prefixName),
@@ -329,9 +338,10 @@ export default define(class Type extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             typeNode = instantiateType(string, context),
             node = typeNode, ///
+            breakPoint = breakPointFromJSON(json),
             name = nameFromTypeNode(typeNode, context),
             prefixName = prefixNameFromJSON(json, context),
             superTypes = superTypesFromJSON(json, context),

@@ -3,6 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
+import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
@@ -195,7 +196,7 @@ export default define(class FrameSubstitution extends Substitution {
         const context = specificContext;  ///
 
         instantiate((context) => {
-          const { string, breakPoint } = json,
+          const { string } = json,
                 specificContext = context,  ///
                 contexts = [
                   generalContext,
@@ -203,6 +204,7 @@ export default define(class FrameSubstitution extends Substitution {
                 ],
                 frameSubstitutionNode = instantiateFrameSubstitution(string, context),
                 node = frameSubstitutionNode, ///
+                breakPoint = breakPointFromJSON(json),
                 targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
                 replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context);
 

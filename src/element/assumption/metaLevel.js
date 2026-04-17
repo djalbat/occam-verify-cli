@@ -6,6 +6,7 @@ import { define } from "../../elements";
 import { unifyStatement } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateMetaLevelAssumption } from "../../process/instantiate";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../../utilities/breakPoint";
 import { metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
 import { metaLevelAssumptionStringFromReferenceAndStatement } from "../../utilities/string";
 import { join, ablate, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
@@ -291,7 +292,7 @@ export default define(class MetaLevelAssumption extends Element {
 
       breakPoint = this.getBreakPoint();
 
-      const breakPointJSON = breakPoint.toJSON();
+      const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
       breakPoint = breakPointJSON;  ///
 
@@ -312,9 +313,10 @@ export default define(class MetaLevelAssumption extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context),
               node = metaLevelAssumptionNode,  ///
+              breakPoint = breakPointFromJSON(json),
               reference = referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context),
               statement = statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context);
 

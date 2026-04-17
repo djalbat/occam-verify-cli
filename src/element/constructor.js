@@ -3,13 +3,14 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
+import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { instantiateConstructor } from "../process/instantiate";
 import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
 import { validateTermAsConstructor } from "../process/validate";
-import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { provisionallyStringFromProvisional } from "../utilities/string";
 import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Constructor extends Element {
   constructor(context, string, node, breakPoint, term, type) {
@@ -160,7 +161,7 @@ export default define(class Constructor extends Element {
 
       breakPoint = this.getBreakPoint();
 
-      const breakPointJSON = breakPoint.toJSON();
+      const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
       breakPoint = breakPointJSON;  ///
 
@@ -183,9 +184,10 @@ export default define(class Constructor extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               constructorNode = instantiateConstructor(string, context),
               node = constructorNode, ///
+              breakPoint = breakPointFromJSON(json),
               term = termFromConstructorNode(constructorNode, context),
               type = typeFromJSON(json, context);
 

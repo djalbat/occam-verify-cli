@@ -9,6 +9,7 @@ import { instantiate } from "../utilities/context";
 import { instantiateVariable } from "../process/instantiate";
 import { provisionallyStringFromProvisional } from "../utilities/string";
 import { variableFromTermNode, identifierFromVariableNode } from "../utilities/element";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { typeFromJSON, typeToTypeJSON, provisionalFromJSON, provisionalToProvisionalJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {
@@ -213,7 +214,7 @@ export default define(class Variable extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -233,9 +234,10 @@ export default define(class Variable extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             variableNode = instantiateVariable(string, context),
             node = variableNode,  ///
+            breakPoint = breakPointFromJSON(json),
             type = typeFromJSON(json, context),
             identifier = identifierFromVariableNode(variableNode, context),
             provisional = provisionalFromJSON(json, context);

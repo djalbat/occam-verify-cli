@@ -6,6 +6,7 @@ import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiateTypePrefix } from "../process/instantiate";
 import { nameFromTypePrefixNode } from "../utilities/element";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class TypePrefix extends Element {
   constructor(context, string, node, breakPoint, name) {
@@ -82,7 +83,7 @@ export default define(class TypePrefix extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -96,9 +97,10 @@ export default define(class TypePrefix extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             typePrefixNode = instantiateTypePrefix(string, context),
             node = typePrefixNode, ///
+            breakPoint = breakPointFromJSON(json),
             name = nameFromTypePrefixNode(typePrefixNode, context);
 
       context = null; ///

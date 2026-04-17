@@ -9,6 +9,7 @@ import { validateTerms } from "../utilities/validation";
 import { instantiateTerm } from "../process/instantiate";
 import { variablesFromTerm } from "../utilities/equivalence";
 import { unifyTermIntrinsically } from "../process/unify";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { typeFromJSON, typeToTypeJSON, provisionalFromJSON, provisionalToProvisionalJSON } from "../utilities/json";
 
 const { filter } = arrayUtilities;
@@ -294,7 +295,7 @@ export default define(class Term extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -314,9 +315,10 @@ export default define(class Term extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             termNode = instantiateTerm(string, context),
             node = termNode,  ///
+            breakPoint = breakPointFromJSON(json),
             type = typeFromJSON(json, context),
             provisional = provisionalFromJSON(json, context);
 

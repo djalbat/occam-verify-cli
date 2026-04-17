@@ -7,6 +7,7 @@ import { instantiateJudgement } from "../process/instantiate";
 import { reconcile, instantiate } from "../utilities/context";
 import { judgementFromStatementNode } from "../utilities/element";
 import { judgementAssignmentFromJudgement } from "../process/assign";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Judgement extends Element {
   constructor(context, string, node, breakPoint, frame, assumption) {
@@ -250,7 +251,7 @@ export default define(class Judgement extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -264,9 +265,10 @@ export default define(class Judgement extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             judgementNode = instantiateJudgement(string, context),
             node = judgementNode,  ///
+            breakPoint = breakPointFromJSON(json),
             frame = frameFromJudgementNode(judgementNode, context),
             assumption = assumptionFromJudgementNode(judgementNode, context);
 

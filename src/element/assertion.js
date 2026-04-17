@@ -2,6 +2,8 @@
 
 import { Element } from "occam-languages";
 
+import { breakPointToBreakPointJSON } from "../utilities/breakPoint";
+
 export default class Assertion extends Element {
   getName() {
     const { name } = this.constructor;
@@ -48,7 +50,7 @@ export default class Assertion extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 

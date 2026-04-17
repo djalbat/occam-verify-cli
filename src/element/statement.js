@@ -5,8 +5,9 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
-import { instantiateStatement } from "../process/instantiate";
 import { reconcile, instantiate } from "../utilities/context";
+import { instantiateStatement } from "../process/instantiate";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Statement extends Element {
   getStatementNode() {
@@ -399,7 +400,7 @@ export default define(class Statement extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -413,9 +414,10 @@ export default define(class Statement extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             statementNode = instantiateStatement(string, context),
-            node = statementNode; ///
+            node = statementNode, ///
+            breakPoint = breakPointFromJSON(json);
 
       context = null;
 

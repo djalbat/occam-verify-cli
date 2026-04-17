@@ -6,6 +6,7 @@ import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiatePropertyRelation } from "../process/instantiate";
 import { propertyFromPropertyRelationNode } from "../utilities/element";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class PropertyRelation extends Element {
   constructor(context, string, node, breakPoint, term, property) {
@@ -154,7 +155,7 @@ export default define(class PropertyRelation extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -168,9 +169,10 @@ export default define(class PropertyRelation extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             propertyRelationNode = instantiatePropertyRelation(string, context),
             node = propertyRelationNode,  ///
+            breakPoint = breakPointFromJSON(json),
             term = termFromPropertyRelationNode(propertyRelationNode, context),
             property = propertyFromPropertyRelationNode(propertyRelationNode, context);
 

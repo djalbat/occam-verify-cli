@@ -8,6 +8,7 @@ import { instantiateTypeAssertion } from "../../process/instantiate";
 import { typeFromJSON, typeToTypeJSON } from "../../utilities/json";
 import { termFromTermAndSubstitutions } from "../../utilities/substitutions";
 import { variableAssignmentFromTypeAssertion } from "../../process/assign";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../../utilities/breakPoint";
 import { termFromTypeAssertionNode, typeAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class TypeAssertion extends Assertion {
@@ -226,7 +227,7 @@ export default define(class TypeAssertion extends Assertion {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -250,8 +251,9 @@ export default define(class TypeAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               typeAssertionNode = instantiateTypeAssertion(string, context),
+              breakPoint = breakPointFromJSON(json),
               term = termFromTypeAssertionNode(typeAssertionNode, context),
               type = typeFromJSON(json, context),
               node = typeAssertionNode; ///

@@ -4,6 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateConclusion } from "../process/instantiate";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { declare, attempt, descend, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Conclusion extends Element {
@@ -140,7 +141,7 @@ export default define(class Conclusion extends Element {
 
       breakPoint = this.getBreakPoint();
 
-      const breakPointJSON = breakPoint.toJSON();
+      const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
       breakPoint = breakPointJSON;  ///
 
@@ -161,9 +162,10 @@ export default define(class Conclusion extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               conclusionNode = instantiateConclusion(string, context),
               node = conclusionNode,  ///
+              breakPoint = breakPointFromJSON(json),
               statement = statementFromConclusionNode(conclusionNode, context);
 
         conclusion = new Conclusion(context, string, node, breakPoint, statement);

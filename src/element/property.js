@@ -7,6 +7,7 @@ import { instantiate } from "../utilities/context";
 import { instantiateProperty } from "../process/instantiate";
 import { nameFromPropertyNode } from "../utilities/element";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Property extends Element {
   constructor(context, string, node, breakPoint, name, type) {
@@ -223,7 +224,7 @@ export default define(class Property extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -241,9 +242,10 @@ export default define(class Property extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             propertyNode = instantiateProperty(string, context),
             node = propertyNode,  ///
+            breakPoint = breakPointFromJSON(json),
             name = nameFromPropertyNode(propertyNode, context),
             type = typeFromJSON(json, context);
 

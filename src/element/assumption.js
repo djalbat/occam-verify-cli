@@ -3,8 +3,9 @@
 import { Element } from "occam-languages";
 
 import { define } from "../elements";
-import {instantiate, reconcile} from "../utilities/context";
 import { instantiateAssumption } from "../process/instantiate";
+import { reconcile, instantiate } from "../utilities/context";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Assumption extends Element {
   constructor(context, string, node, breakPoint, reference, statement) {
@@ -253,7 +254,7 @@ export default define(class Assumption extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -267,9 +268,10 @@ export default define(class Assumption extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             assumptionNode = instantiateAssumption(string, context),
             node = assumptionNode,  ///
+            breakPoint = breakPointFromJSON(json),
             reference = referenceFromAssumptionNode(assumptionNode, context),
             statement = statementFromAssumptionNode(assumptionNode, context),
             assumption = new Assumption(context, string, node, breakPoint, reference, statement);

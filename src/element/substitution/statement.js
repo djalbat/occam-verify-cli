@@ -5,6 +5,7 @@ import Substitution from "../substitution";
 import { define } from "../../elements";
 import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
+import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
 import { join, ablates, manifest, attempts, descend, reconcile, instantiate, unserialises } from "../../utilities/context";
@@ -360,7 +361,7 @@ export default define(class StatementSubstitution extends Substitution {
         const context = specificContext;  ///
 
         instantiate((context) => {
-          const { string, breakPoint } = json,
+          const { string } = json,
                 specificContext = context,  ///
                 contexts = [
                   generalContext,
@@ -368,6 +369,7 @@ export default define(class StatementSubstitution extends Substitution {
                 ],
                 statementSubstitutionNode = instantiateStatementSubstitution(string, context),
                 node = statementSubstitutionNode, ///
+                breakPoint = breakPointFromJSON(json),
                 resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
                 substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext),
                 targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),

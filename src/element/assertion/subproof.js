@@ -7,6 +7,7 @@ import Assertion from "../assertion";
 import { define } from "../../elements";
 import { reconcile } from "../../utilities/context";
 import { join, descend, instantiate } from "../../utilities/context";
+import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateSubproofAssertion } from "../../process/instantiate";
 import { subproofAssertionFromStatementNode } from "../../utilities/element";
 
@@ -300,10 +301,11 @@ export default define(class SubproofAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               subproofAssertionNode = instantiateSubproofAssertion(string, context),
-              statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),
-              node = subproofAssertionNode; ///
+              node = subproofAssertionNode,  ///
+              breakPoint = breakPointFromJSON(json),
+              statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context);
 
         context = null;
 

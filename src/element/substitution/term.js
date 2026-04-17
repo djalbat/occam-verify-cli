@@ -4,6 +4,7 @@ import Substitution from "../substitution";
 
 import { define } from "../../elements";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
+import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
@@ -204,7 +205,7 @@ export default define(class TermSubstitution extends Substitution {
         const context = specificContext;  ///
 
         instantiate((context) => {
-          const { string, breakPoint } = json,
+          const { string } = json,
                 specificContext = context,  ///
                 contexts = [
                   generalContext,
@@ -212,6 +213,7 @@ export default define(class TermSubstitution extends Substitution {
                 ],
                 termSubstitutionNode = instantiateTermSubstitution(string, context),
                 node = termSubstitutionNode,  ///
+                breakPoint = breakPointFromJSON(json),
                 targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
                 replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context);
 

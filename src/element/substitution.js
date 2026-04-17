@@ -4,6 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import { serialises } from "../utilities/context";
 import { primitiveUtilities } from "occam-furtle";
+import { breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 const { first, second } = arrayUtilities,
       { primitiveFromNode } =primitiveUtilities;
@@ -249,7 +250,7 @@ export default class Substitution extends Element {
 
       breakPoint = this.getBreakPoint();
 
-      const breakPointJSON = breakPoint.toJSON();
+      const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
       breakPoint = breakPointJSON;  ///
 

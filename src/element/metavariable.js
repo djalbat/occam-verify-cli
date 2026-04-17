@@ -5,11 +5,12 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { instantiate } from "../utilities/context";
 import { EMPTY_STRING } from "../constants";
+import { instantiate } from "../utilities/context";
 import { instantiateMetavariable } from "../process/instantiate";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { nameFromMetavariableNode, termFromMetavariableNode, typeFromMetavariableNode, metavariableFromStatementNode } from "../utilities/element";
 
 export default define(class Metavariable extends Element {
@@ -621,7 +622,7 @@ export default define(class Metavariable extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -638,9 +639,10 @@ export default define(class Metavariable extends Element {
 
   static fromJSON(json, context) {
     return instantiate((context) => {
-      const { string, breakPoint } = json,
+      const { string } = json,
             metavariableNode = instantiateMetavariable(string, context),
             node = metavariableNode,  ///
+            breakPoint = breakPointFromJSON(json),
             name = nameFromMetavariableNode(metavariableNode, context),
             term = termFromMetavariableNode(metavariableNode, context),
             type = typeFromMetavariableNode(metavariableNode, context),

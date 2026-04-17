@@ -4,8 +4,8 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
-import { instantiateSignature } from "../process/instantiate";
 import { signatureFromSignatureNode } from "../utilities/element";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { join, ablate, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
 
 const { match } = arrayUtilities;
@@ -239,7 +239,7 @@ export default define(class Signature extends Element {
 
       breakPoint = this.getBreakPoint();
 
-      const breakPointJSON = breakPoint.toJSON();
+      const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
       breakPoint = breakPointJSON;  ///
 
@@ -258,9 +258,10 @@ export default define(class Signature extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               signatureNode = instantiateSignature(string, context),
               node = signatureNode,  ///
+              breakPoint = breakPointFromJSON(json),
               terms = termsFromSignatureNode(signatureNode, context);
 
         signature = new Signature(context, string, node, breakPoint, terms);

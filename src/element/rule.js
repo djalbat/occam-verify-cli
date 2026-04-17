@@ -5,6 +5,7 @@ import { Element, asynchronousUtilities } from "occam-languages";
 
 import { define } from "../elements";
 import { enclose } from "../utilities/context";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { labelsFromJSON, premisesFromJSON, conclusionFromJSON, labelsToLabelsJSON, premisesToPremisesJSON, conclusionToConclusionJSON } from "../utilities/json";
 
 const { reverse } = arrayUtilities,
@@ -322,7 +323,7 @@ export default define(class Rule extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
@@ -343,9 +344,10 @@ export default define(class Rule extends Element {
   static name = "Rule";
 
   static fromJSON(json, context) {
-    const { string, breakPoint } = json,
+    const { string } = json,
           node = null,
           proof = null,
+          breakPoint = breakPointFromJSON(json),
           labels = labelsFromJSON(json, context),
           premises = premisesFromJSON(json, context),
           conclusion = conclusionFromJSON(json, context),

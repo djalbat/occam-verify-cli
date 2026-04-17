@@ -4,6 +4,7 @@ import Assertion from "../assertion";
 
 import { define } from "../../elements";
 import { instantiate } from "../../utilities/context";
+import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateDefinedAssertion } from "../../process/instantiate";
 import { separateGroundedTermsAndDefinedVariables } from "../../utilities/equivalences";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
@@ -221,9 +222,10 @@ export default define(class DefinedAssertion extends Assertion {
 
     if (this.name === name) {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               definedAssertionNode = instantiateDefinedAssertion(string, context),
               node = definedAssertionNode,  ///
+              breakPoint = breakPointFromJSON(json),
               term = termFromJDefinedAssertionNode(definedAssertionNode, context),
               frame = frameFromJDefinedAssertionNode(definedAssertionNode, context),
               negated = negatedFromJDefinedAssertionNode(definedAssertionNode, context);

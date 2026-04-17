@@ -8,6 +8,7 @@ import { statementFromCombinatorNode } from "../utilities/element";
 import { unifyStatementWithCombinator } from "../process/unify";
 import { validateStatementAsCombinator } from "../process/validate";
 import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Combinator extends Element {
   constructor(context, string, node, breakPoint, statement) {
@@ -111,7 +112,7 @@ export default define(class Combinator extends Element {
 
       breakPoint = this.getBreakPoint();
 
-      const breakPointJSON = breakPoint.toJSON();
+      const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
       breakPoint = breakPointJSON;  ///
 
@@ -132,9 +133,10 @@ export default define(class Combinator extends Element {
 
     unserialise((json, context) => {
       instantiate((context) => {
-        const { string, breakPoint } = json,
+        const { string } = json,
               combinatorNode = instantiateCombinator(string, context),
               node = combinatorNode,  ///
+              breakPoint = breakPointFromJSON(json),
               statement = statementFromCombinatorNode(combinatorNode, context);
 
         combinator = new Combinator(context, string, node, breakPoint, statement);

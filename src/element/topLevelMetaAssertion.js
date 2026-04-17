@@ -3,6 +3,7 @@
 import { Element, asynchronousUtilities } from "occam-languages";
 
 import { enclose } from "../utilities/context";
+import { breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { topLevelMetaAssertionStringFromLabelSuppositionsAndDeduction } from "../utilities/string";
 import { labelFromJSON,
          labelToLabelJSON,
@@ -239,7 +240,7 @@ export default class TopLevelMetaAssertion extends Element {
 
     breakPoint = this.getBreakPoint();
 
-    const breakPointJSON = breakPoint.toJSON();
+    const breakPointJSON = breakPointToBreakPointJSON(breakPoint);
 
     breakPoint = breakPointJSON;  ///
 
