@@ -133,45 +133,26 @@ export default define(class Variable extends Element {
 
     context.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
-    let variable,
-        derivedSubstitution;
+    const variable = this,  ///
+          termVariableUnifies = this.unifyTermVariable(term, generalContext, specificContext);
 
-    variable = this; ///
-
-    const variableNode = variable.getNode();
-
-    derivedSubstitution = context.findDerivedSubstitutionByVariableNode(variableNode);
-
-    if (derivedSubstitution !== null) {
-      const derivedSubstitutionComparesToTerm = derivedSubstitution.compareTerm(term, context);
-
-      if (derivedSubstitutionComparesToTerm) {
-        const derivedSubstitutionString = derivedSubstitution.getString();
-
-        context.trace(`The '${derivedSubstitutionString}' derived substitution is already present.`);
-
-        termUnifies = true;
-      }
+    if (termVariableUnifies) {
+      termUnifies = true;
     } else {
-      let context;
+      const variableNode = variable.getNode(),
+            derivedSubstitution = context.findDerivedSubstitutionByVariableNode(variableNode);
 
-      context = generalContext;  ///
+      if (derivedSubstitution !== null) {
+        const derivedSubstitutionTermComparesToTerm = derivedSubstitution.compareTerm(term, context);
 
-      const variableNode = variable.getNode();
+        if (derivedSubstitutionTermComparesToTerm) {
+          const derivedSubstitutionString = derivedSubstitution.getString();
 
-      variable = context.findVariableByVariableNode(variableNode);
+          context.trace(`The '${derivedSubstitutionString}' derived substitution is already present.`);
 
-      context = specificContext;  ///
-
-      const termNode = term.getNode();
-
-      term = context.findTermByTermNode(termNode);
-
-      const termType = term.getType(),
-            variableType = variable.getType(),
-            termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
-
-      if (termTypeEqualToOrSubTypeOfVariableType) {
+          termUnifies = true;
+        }
+      } else {
         const { TermSubstitution } = elements;
 
         let termSubstitution;
@@ -180,7 +161,7 @@ export default define(class Variable extends Element {
 
         termSubstitution = termSubstitution.validate(context);  ///
 
-        const derivedSubstitution = termSubstitution; ///
+        const derivedSubstitution = termSubstitution;  ///
 
         context.addDerivedSubstitution(derivedSubstitution);
 
@@ -193,6 +174,34 @@ export default define(class Variable extends Element {
     }
 
     return termUnifies;
+  }
+
+  unifyTermVariable(term, generalContext, specificContext) {
+    let termVariableUnifies = false;
+
+    const context = specificContext,  ///
+          termString = term.getString(),
+          variableString = this.getString();  ///
+
+    context.trace(`Unifying the '${termString}' term's variable with the '${variableString}' variable...`);
+
+    const generalContextFilePath = generalContext.getFilePath(),
+          specificContextFilePath = specificContext.getFilePath();
+
+    if (generalContextFilePath === specificContextFilePath) {
+      const variableNode = this.getVariableNode(),  ///
+            variableNodeMatches = term.matchVariableNode(variableNode);
+
+      if (variableNodeMatches) {
+        termVariableUnifies = true;
+      }
+    }
+
+    if (termVariableUnifies) {
+      context.debug(`...unified the '${termString}' term's variable with the '${variableString}' variable.`);
+    }
+
+    return termVariableUnifies;
   }
 
   toJSON() {
