@@ -13,7 +13,7 @@ const { last } = arrayUtilities,
       { createReleaseContexts, verifyReleaseContexts, initialiseReleaseContexts } = verificationUtilities;
 
 export default async function verifyAction(name, log) {
-  const callback = async (context, filePath, lineIndex) => {
+  const callback = async (context, breakPoint) => {
           ///
         },
         releaseContexts = [],

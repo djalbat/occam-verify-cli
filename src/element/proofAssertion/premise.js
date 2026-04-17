@@ -288,7 +288,7 @@ export default define(class Premise extends ProofAssertion {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getLineIndex(),
+            lineIndex = this.getBreakPoint(),
             json = {
               context,
               string,

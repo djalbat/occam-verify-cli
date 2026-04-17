@@ -317,7 +317,7 @@ export default define(class Rule extends Element {
           premisesJSON = premisesToPremisesJSON(this.premises),
           conclusionJSON = conclusionToConclusionJSON(this.conclusion),
           string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           labels = labelsJSON,  ///
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///

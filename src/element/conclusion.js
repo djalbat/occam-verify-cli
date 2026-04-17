@@ -135,7 +135,7 @@ export default define(class Conclusion extends Element {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getLineIndex(),
+            lineIndex = this.getBreakPoint(),
             json = {
               context,
               string,

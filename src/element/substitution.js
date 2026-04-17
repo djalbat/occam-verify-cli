@@ -9,11 +9,11 @@ const { first, second } = arrayUtilities,
       { primitiveFromNode } =primitiveUtilities;
 
 class Element {
-  constructor(contexts, string, node, lineIndex) {
+  constructor(contexts, string, node, breakPoint) {
     this.contexts = contexts;
     this.string = string;
     this.node = node;
-    this.lineIndex = lineIndex;
+    this.breakPoint = breakPoint;
   }
 
   getContexts() {
@@ -28,8 +28,8 @@ class Element {
     return this.node;
   }
 
-  getLineIndex() {
-    return this.lineIndex;
+  getBreakPoint() {
+    return this.breakPoint;
   }
 
   setContexts(contexts) {
@@ -45,11 +45,11 @@ class Element {
   }
 
   setLineIndex(lineIndex) {
-    this.lineIndex = lineIndex;
+    this.breakPoint = lineIndex;
   }
 
   async break(context) {
-    this.lineIndex = await context.break(this.node, this.lineIndex);
+    this.breakPoint = await context.break(this.node, this.breakPoint);
   }
 
   matchNode(node) { return this.node.match(node); }
@@ -244,7 +244,7 @@ export default class Substitution extends Element {
     return serialises((...contexts) => {
       const name = this.getName(),
             string = this.getString(),
-            lineIndex = this.getLineIndex(),
+            lineIndex = this.getBreakPoint(),
             json = {
               name,
               contexts,

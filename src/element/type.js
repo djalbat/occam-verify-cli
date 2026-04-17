@@ -298,7 +298,7 @@ export default define(class Type extends Element {
 
   toJSON(abridged = false) {
     const string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           json = {
             string,
             lineIndex

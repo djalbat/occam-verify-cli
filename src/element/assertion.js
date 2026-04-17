@@ -43,7 +43,7 @@ export default class Assertion extends Element {
   toJSON() {
     const name = this.getName(),
           string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           json = {
             name,
             string,

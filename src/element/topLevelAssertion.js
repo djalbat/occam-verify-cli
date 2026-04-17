@@ -354,7 +354,7 @@ export default class TopLevelAssertion extends Element {
           signatureJSON = signatureToSignatureJSON(this.signature),
           hypothesesJSON = hypothesesToHypothesesJSON(this.hypotheses),
           string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           labels = labelsJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///

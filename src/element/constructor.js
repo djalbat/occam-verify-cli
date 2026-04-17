@@ -155,7 +155,7 @@ export default define(class Constructor extends Element {
       const includeType = false,
             typeJSON = typeToTypeJSON(this.type),
             string = this.getString(includeType),
-            lineIndex = this.getLineIndex(),
+            lineIndex = this.getBreakPoint(),
             type = typeJSON,  ///
             json = {
               context,

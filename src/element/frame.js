@@ -306,7 +306,7 @@ export default define(class Frame extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           json = {
             string,
             lineIndex

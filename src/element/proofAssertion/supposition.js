@@ -311,7 +311,7 @@ export default define(class Supposition extends ProofAssertion {
 
     return serialise((context) => {
       const string = this.getString(),
-            lineIndex = this.getLineIndex(),
+            lineIndex = this.getBreakPoint(),
             json = {
               context,
               string,

@@ -234,7 +234,7 @@ export default class TopLevelMetaAssertion extends Element {
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           metaLevelAssumptionsJSON = metaLevelAssumptionsToMetaLevelAssumptionsJSON(this.metaLevelAssumptions),
           string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           label = labelJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///

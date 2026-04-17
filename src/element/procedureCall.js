@@ -122,7 +122,7 @@ export default define(class ProcedureCall extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           json = {
             string,
             lineIndex

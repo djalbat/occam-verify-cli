@@ -77,7 +77,7 @@ export default define(class TypePrefix extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           json = {
             string,
             lineIndex

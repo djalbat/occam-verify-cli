@@ -53,7 +53,7 @@ export default define(class Parameter extends Element {
 
   toJSON() {
     const string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           json = {
             string,
             lineIndex

@@ -221,7 +221,7 @@ export default define(class TypeAssertion extends Assertion {
     const typeJSON = typeToTypeJSON(this.type),
           name = this.getName(),
           string = this.getString(),
-          lineIndex = this.getLineIndex(),
+          lineIndex = this.getBreakPoint(),
           type = typeJSON,
           json = {
             name,
