@@ -180,10 +180,10 @@ export default define(class Equality extends Element {
     let leftTerm,
         rightTerm;
 
-    leftTerm = this.leftTerm.validate(context, (leftTerm) => {
+    leftTerm = this.leftTerm.validate(context, (leftTerm, context) => {
         let validatesForwards = false;
 
-        rightTerm = this.rightTerm.validate(context, (rightTerm) => {
+        rightTerm = this.rightTerm.validate(context, (rightTerm, context) => {
           let validatesForwards = false;
 
           const leftTermType = leftTerm.getType(),

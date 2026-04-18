@@ -138,7 +138,7 @@ export default define(class Property extends Element {
     if (validProperty !== null) {
       property = validProperty; ///
 
-      const validatesForward = validateForwards(property);
+      const validatesForward = validateForwards(property, context);
 
       if (validatesForward) {
         validates = true;
@@ -150,7 +150,7 @@ export default define(class Property extends Element {
     } else {
       {
         const property = this,  ///
-              validatesForward = validateForwards(property);
+              validatesForward = validateForwards(property, context);
 
         if (validatesForward) {
           validates = true;
@@ -181,7 +181,7 @@ export default define(class Property extends Element {
 
     let validatesGivenType = false;
 
-    property = this.validate(context, (property) => {
+    property = this.validate(context, (property, context) => {
       let validatesForwards = false;
 
       const propertyName = property.getName(),

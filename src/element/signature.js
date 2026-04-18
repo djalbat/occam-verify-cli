@@ -151,7 +151,7 @@ export default define(class Signature extends Element {
     const terms = [];
 
     termsValidate = this.terms.every((term) => {
-      term = term.validate(context, (term) => { ///
+      term = term.validate(context, (term, context) => { ///
         const validatesForwards = true;
 
         return validatesForwards;

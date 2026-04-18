@@ -104,7 +104,7 @@ export default define(class DefinedAssertion extends Assertion {
       const termSingular = this.term.isSingular();
 
       if (termSingular) {
-        const term = this.term.validate(context, (term) => {
+        const term = this.term.validate(context, (term, context) => {
           const validatesForwards = true;
 
           return validatesForwards;

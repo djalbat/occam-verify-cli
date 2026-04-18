@@ -57,7 +57,7 @@ class CombinatorPass extends SimplePass {
 
         term = termFromTermNode(termNode, context);
 
-        term = term.validate(context, (term) => { ///
+        term = term.validate(context, (term, context) => { ///
           const validatesForwards = true;
 
           return validatesForwards;
@@ -113,7 +113,7 @@ class ConstructorPass extends SimplePass {
 
         term = termFromTermNode(termNode, context);
 
-        term = term.validate(context, (term) => { ///
+        term = term.validate(context, (term, context) => { ///
           const validatesForwards = true;
 
           return validatesForwards;

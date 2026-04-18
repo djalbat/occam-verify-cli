@@ -140,7 +140,7 @@ export default define(class TermSubstitution extends Substitution {
     if (targetTermSingular) {
       manifest((context) => {
         descend((context) => {
-          const targetTerm = this.targetTerm.validate(context, (targetTerm) => {
+          const targetTerm = this.targetTerm.validate(context, (targetTerm, context) => {
             const validatesForwards = true;
 
             return validatesForwards;
@@ -175,7 +175,7 @@ export default define(class TermSubstitution extends Substitution {
     context.trace(`Validating the '${termSubstitutionString}' term substitution's replacement term...`);
 
     descend((context) => {
-      const replacementTerm = this.replacementTerm.validate(context, (replacementTerm) => {
+      const replacementTerm = this.replacementTerm.validate(context, (replacementTerm, context) => {
         const validatesForwards = true;
 
         return validatesForwards;

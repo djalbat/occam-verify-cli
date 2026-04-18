@@ -279,7 +279,7 @@ export default define(class Metavariable extends Element {
         }
       } else {
         if (!strict) {
-          term = this.term.validate(context, (term) => {
+          term = this.term.validate(context, (term, context) => {
             const validatesForwards = true;
 
             return validatesForwards;

@@ -8,7 +8,6 @@ import { instantiateConstructor } from "../process/instantiate";
 import { termFromConstructorNode } from "../utilities/element";
 import { unifyTermWithConstructor } from "../process/unify";
 import { validateTermAsConstructor } from "../process/validate";
-import { provisionallyStringFromProvisional } from "../utilities/string";
 import { attempt, serialise, unserialise, instantiate } from "../utilities/context";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
@@ -123,19 +122,13 @@ export default define(class Constructor extends Element {
           termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, generalContext, specifiContext);
 
     if (termUnifiesWithConstructor) {
-      let validatesForwards;
-
-      const typeString = this.type.getString(),
-            provisional = this.type.isProvisional(),
-            provisionallyString = provisionallyStringFromProvisional(provisional)
-
-      context.trace(`Setting the '${termString}' term's type to the '${constructorString}' constructor's '${typeString}' type${provisionallyString}.`);
+      const provisional = this.type.isProvisional();
 
       term.setType(this.type);
 
       term.setProvisional(provisional);
 
-      validatesForwards = validateForwards(term);
+      const validatesForwards = validateForwards(term, context);
 
       if (validatesForwards) {
         termUnifies = true;

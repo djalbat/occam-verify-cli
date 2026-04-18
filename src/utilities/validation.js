@@ -34,7 +34,7 @@ function validateTermAsVariable(term, context, validateForwards) {
 
       term.setProvisional(provisional);
 
-      const validatesForwards = validateForwards(term);
+      const validatesForwards = validateForwards(term, context);
 
       if (validatesForwards) {
         termValidatesAsVariable = true;
@@ -50,24 +50,24 @@ function validateTermAsVariable(term, context, validateForwards) {
 }
 
 function unifyTermWithConstructors(term, context, validateForwards) {
-  let termUnifiesWithConstructors = false;
+  let termUnifiesWithConstructors;
 
   const constructors = context.getConstructors();
 
-  constructors.some((constructor) => {
-    let termUnifies;
+  termUnifiesWithConstructors = constructors.some((constructor) => {
+    let termUnifiesWithConstructor = false;
 
     choose((context) => {
-      termUnifies = constructor.unifyTerm(term, context, validateForwards);
+      const termUnifies = constructor.unifyTerm(term, context, validateForwards);
 
       if (termUnifies) {
+        termUnifiesWithConstructor = true;
+
         context.commit();
       }
     }, context);
 
-    if (termUnifies) {
-      termUnifiesWithConstructors = true;
-
+    if (termUnifiesWithConstructor) {
       return true;
     }
   });

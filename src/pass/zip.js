@@ -6,8 +6,8 @@ export default class ZipPass extends ZipPassBase {
   run(generalNonTerminalNode, specificNonTerminalNode, ...remainingArguments) {
     let success = false;
 
-    const specificChildNodes = specificNonTerminalNode.getChildNodes(), ///
-          generalChildNodes = generalNonTerminalNode.getChildNodes(), ///
+    const generalChildNodes = generalNonTerminalNode.getChildNodes(), ///
+          specificChildNodes = specificNonTerminalNode.getChildNodes(), ///
           descended = this.descend(generalChildNodes, specificChildNodes, ...remainingArguments);
 
     if (descended) {
