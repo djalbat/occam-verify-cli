@@ -3,8 +3,8 @@
 import { SimplePass } from "occam-languages";
 import { queryUtilities } from "occam-languages";
 
+import { descend } from "../utilities/context";
 import { termFromTermNode, statementFromStatementNode } from "../utilities/element";
-import {descend} from "../utilities/context";
 
 const { nodeQuery } = queryUtilities;
 
