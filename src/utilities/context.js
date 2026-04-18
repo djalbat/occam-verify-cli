@@ -46,12 +46,12 @@ export function ablate(innerFunction, context) {
   const released = context.isReleased();
 
   if (!released) {
-    let contextNominalFileContext = (context instanceof NominalFileContext);
+    let contextExtraneousContext = isContextExtraneousContext(context);
 
-    while (!contextNominalFileContext) {
+    while (contextExtraneousContext) {
       context = context.getContext();
 
-      contextNominalFileContext = (context instanceof NominalFileContext);
+      contextExtraneousContext = isContextExtraneousContext(context);
     }
   }
 
@@ -162,12 +162,12 @@ export function ablates(innerFunction, ...contexts) {
     const released = context.isReleased();
 
     if (!released) {
-      let contextNominalFileContext = (context instanceof NominalFileContext);
+      let contextExtraneousContext = isContextExtraneousContext(context);
 
-      while (!contextNominalFileContext) {
+      while (contextExtraneousContext) {
         context = context.getContext();
 
-        contextNominalFileContext = (context instanceof NominalFileContext);
+        contextExtraneousContext = isContextExtraneousContext(context);
       }
     }
 
@@ -214,4 +214,12 @@ export function evaluate(procedure, terms) {
   const context = procedure.getContext();
 
   return procedure.call(terms, context);
+}
+
+function isContextExtraneousContext(context) {
+  const contextBoundedContext = (context instanceof BoundedContext),
+        contextNominalFileContext = (context instanceof NominalFileContext),
+        contextExtraneousContext = (!contextBoundedContext && !contextNominalFileContext);
+
+  return contextExtraneousContext;
 }
