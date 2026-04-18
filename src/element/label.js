@@ -4,9 +4,9 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateLabel } from "../process/instantiate";
-import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { labelFromLabelNode, metavariableFromLabelNode } from "../utilities/element";
-import { ablate, attempt, serialise, unserialise, instantiate } from "../utilities/context";
+import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
+import { declare, ablate, attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Label extends Element {
   constructor(context, string, node, breakPoint, metavariable) {
@@ -172,12 +172,14 @@ export default define(class Label extends Element {
   static fromLabelString(labelString, context) {
     let label;
 
-    ablate((context) => {
-      instantiate((context) => {
-        const string = labelString,  ///
-              labelNode = instantiateLabel(string, context);
+    declare((context) => {
+      ablate((context) => {
+        instantiate((context) => {
+          const string = labelString,  ///
+                labelNode = instantiateLabel(string, context);
 
-        label = labelFromLabelNode(labelNode, context);
+          label = labelFromLabelNode(labelNode, context);
+        }, context);
       }, context);
     }, context);
 

@@ -6,7 +6,7 @@ import { arrayUtilities } from "necessary";
 import { define } from "../elements";
 import { signatureFromSignatureNode } from "../utilities/element";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import { join, ablate, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
+import { join, declare, ablate, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
 
 const { match } = arrayUtilities;
 
@@ -276,12 +276,14 @@ export default define(class Signature extends Element {
   static fromSignatureString(signatureString, context) {
     let signature;
 
-    ablate((context) => {
-      instantiate((context) => {
-        const string = signatureString,  ///
-              signatureNode = instantiateSignature(string, context);
+    declare((context) => {
+      ablate((context) => {
+        instantiate((context) => {
+          const string = signatureString,  ///
+                signatureNode = instantiateSignature(string, context);
 
-        signature = signatureFromSignatureNode(signatureNode, context);
+          signature = signatureFromSignatureNode(signatureNode, context);
+        }, context);
       }, context);
     }, context);
 

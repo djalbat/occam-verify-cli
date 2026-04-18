@@ -18,7 +18,7 @@ import { compressTerms,
          compressSubstitutions,
          compressPropertyRelations,} from "../utilities/synoptic";
 
-const { last } = arrayUtilities;
+const { first, last } = arrayUtilities;
 
 export default class SynopticContext extends Context {
   constructor(context, contexts) {
@@ -29,6 +29,14 @@ export default class SynopticContext extends Context {
 
   getContexts() {
     return this.contexts;
+  }
+
+  isStated() {
+    const firstContext = first(this.contexts),
+          context = firstContext, ///
+          stated = context.isStated();
+
+    return stated;
   }
 
   getTerms(terms = []) {

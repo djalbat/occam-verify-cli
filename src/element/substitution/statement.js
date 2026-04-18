@@ -8,7 +8,7 @@ import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, ablates, manifest, attempts, descend, reconcile, instantiate, unserialises } from "../../utilities/context";
+import { join, ablates, manifest, attempts, sequester, reconcile, instantiate, unserialises } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -174,7 +174,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     if (targetStatementSingular) {
       manifest((context) => {
-        descend((context) => {
+        sequester((context) => {
           const targetStatement = this.targetStatement.validate(context);
 
           if (targetStatement !== null) {
@@ -203,7 +203,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Validating the '${statementSubstitutionString}' statement substitution's replacement statement...`);
 
-    descend((context) => {
+    sequester((context) => {
       const replacementStatement = this.replacementStatement.validate(context);
 
       if (replacementStatement !== null) {
@@ -253,10 +253,10 @@ export default define(class StatementSubstitution extends Substitution {
   unifyComplexSubstitution(complexSubstitution, context) {
     let substitution = null;
 
-    const simpleSubstitutionString = this.getString(),  ///
+    const substitutionString = this.getString(),  ///
           complexSubstitutionString = complexSubstitution.getString();  ///
 
-    context.trace(`Unifying the '${complexSubstitutionString}' complex substitution with the '${simpleSubstitutionString}' simple substitution...`);
+    context.trace(`Unifying the '${complexSubstitutionString}' complex substitution with the '${substitutionString}' substitution...`);
 
     const simpleSubstitution = this,  ///
           simpleSubstitutionGSpecificContext = simpleSubstitution.getSpecificContext(),
@@ -266,9 +266,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     let simpleSubstitutionUnifies = false;
 
-    join((context) => {
-      const specificContext = context;  ///
-
+    join((specificContext) => {
       reconcile((specificContext) => {
         const replacementStatement = complexSubstitution.getReplacementStatement(),
               replacementStatementUnifies = this.unifyReplacementStatement(replacementStatement, generalContext, specificContext);
@@ -289,7 +287,7 @@ export default define(class StatementSubstitution extends Substitution {
     }
 
     if (simpleSubstitutionUnifies) {
-      context.debug(`...unified the '${complexSubstitutionString}' complex substitution with the '${simpleSubstitutionString}' simple substitution.`);
+      context.debug(`...unified the '${complexSubstitutionString}' complex substitution with the '${substitutionString}' substitution.`);
     }
 
     return substitution;

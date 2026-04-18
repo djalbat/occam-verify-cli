@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
-import { ablates, manifest, attempts, descend, instantiate, unserialises } from "../../utilities/context";
+import { ablates, manifest, attempts, sequester, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class ReferenceSubstitution extends Substitution {
   constructor(context, string, node, breakPoint, targetReference, replacementReference) {
@@ -150,7 +150,7 @@ export default define(class ReferenceSubstitution extends Substitution {
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's target reference...`);
 
     manifest((context) => {
-      descend((context) => {
+      sequester((context) => {
         const targetReference = this.targetReference.validate(context);
 
         if (targetReference !== null) {
@@ -174,7 +174,7 @@ export default define(class ReferenceSubstitution extends Substitution {
 
     context.trace(`Validating the '${referenceSubstitutionString}' reference substitution's replacement reference...`);
 
-    descend((context) => {
+    sequester((context) => {
       const replacementReference = this.replacementReference.validate(context);
 
       if (replacementReference !== null) {

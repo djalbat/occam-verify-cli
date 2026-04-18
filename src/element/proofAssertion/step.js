@@ -127,9 +127,10 @@ export default define(class Step extends ProofAssertion {
 
     context.trace(`Validating the '${stepString}' step...`);
 
-    const qualified = this.isQualified();
+    const qualified = this.isQualified(),
+          stated = qualified; ///
 
-    (qualified ? declare : derive)((context) => {
+    (stated ? declare : derive)((context) => {
       attempt((context) => {
         const statementValidates = this.validateStatement(context);
 

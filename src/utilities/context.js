@@ -3,6 +3,7 @@
 import MenmicContext from "../context/mnemic";
 import NestedContext from "../context/nested";
 import TheticContext from "../context/thetic";
+import AphasicContext from "../context/aphasic";
 import BoundedContext from "../context/bounded";
 import NominalContext from "../context/nominal";
 import LiteralContext from "../context/literal";
@@ -46,13 +47,7 @@ export function ablate(innerFunction, context) {
   const released = context.isReleased();
 
   if (!released) {
-    let contextExtraneousContext = isContextExtraneousContext(context);
-
-    while (contextExtraneousContext) {
-      context = context.getContext();
-
-      contextExtraneousContext = isContextExtraneousContext(context);
-    }
+    context = ablateContext(context);
   }
 
   return innerFunction(context);
@@ -131,6 +126,14 @@ export function reconcile(innerFunction, context) {
   return innerFunction(context);
 }
 
+export function sequester(innerFunction, context) {
+  const aphasicContext = AphasicContext.fromNothing(context);
+
+  context = aphasicContext;  ///
+
+  return innerFunction(context);
+}
+
 export function serialise(innerFunction, context) {
   const mnemicContext = context, ///
         mnemicContextJSON = mnemicContextToMnemicContextJSON(mnemicContext),
@@ -162,13 +165,7 @@ export function ablates(innerFunction, ...contexts) {
     const released = context.isReleased();
 
     if (!released) {
-      let contextExtraneousContext = isContextExtraneousContext(context);
-
-      while (contextExtraneousContext) {
-        context = context.getContext();
-
-        contextExtraneousContext = isContextExtraneousContext(context);
-      }
+      context = ablateContext(context);
     }
 
     return context;
@@ -217,9 +214,36 @@ export function evaluate(procedure, terms) {
 }
 
 function isContextExtraneousContext(context) {
-  const contextBoundedContext = (context instanceof BoundedContext),
+  const contextTheticContext = (context instanceof TheticContext),
+        contextIllativeContext = (context instanceof IllativeContext),
+        contextBoundedContext = (context instanceof BoundedContext),
         contextNominalFileContext = (context instanceof NominalFileContext),
-        contextExtraneousContext = (!contextBoundedContext && !contextNominalFileContext);
+        contextSubstantiveContext = (contextTheticContext || contextIllativeContext || contextBoundedContext || contextNominalFileContext),
+        contextExtraneousContext = !contextSubstantiveContext;
 
   return contextExtraneousContext;
+}
+
+function ablateContext(context) {
+  const stated = context.isStated();
+
+  let contextExtraneousContext = isContextExtraneousContext(context);
+
+  while (contextExtraneousContext) {
+    context = context.getContext();
+
+    contextExtraneousContext = isContextExtraneousContext(context);
+  }
+
+  if (stated) {
+    const theticContext = TheticContext.fromNothing(context);
+
+    context = theticContext;  ///
+  } else {
+    const illativeContext = IllativeContext.fromNothing(context);
+
+    context = illativeContext;  ///
+  }
+
+  return context;
 }
