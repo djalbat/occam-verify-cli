@@ -11,6 +11,7 @@ import LiminalContext from "../context/liminal";
 import PhanericContext from "../context/phaneric";
 import SynopticContext from "../context/synoptic";
 import IllativeContext from "../context/illative";
+import EphemeralContext from "../context/ephemeral";
 import BranchingContext from "../context/branching";
 import NominalFileContext from "../context/file/nominal";
 
@@ -25,6 +26,14 @@ export function join(innerFunction, ...contexts) {
 
   const synopticContext = SynopticContext.fromContexts(contexts),
         context = synopticContext;  ///
+
+  return innerFunction(context);
+}
+
+export function posit(innerFunction, context) {
+  const ephemeralContext = EphemeralContext.fromNothing(context);
+
+  context = ephemeralContext;  ///
 
   return innerFunction(context);
 }
@@ -213,17 +222,6 @@ export function evaluate(procedure, terms) {
   return procedure.call(terms, context);
 }
 
-function isContextExtraneousContext(context) {
-  const contextTheticContext = (context instanceof TheticContext),
-        contextIllativeContext = (context instanceof IllativeContext),
-        contextBoundedContext = (context instanceof BoundedContext),
-        contextNominalFileContext = (context instanceof NominalFileContext),
-        contextSubstantiveContext = (contextTheticContext || contextIllativeContext || contextBoundedContext || contextNominalFileContext),
-        contextExtraneousContext = !contextSubstantiveContext;
-
-  return contextExtraneousContext;
-}
-
 function ablateContext(context) {
   const stated = context.isStated();
 
@@ -246,4 +244,21 @@ function ablateContext(context) {
   }
 
   return context;
+}
+
+function isContextExtraneousContext(context) {
+  const contextSubstantiveContext = isContextSubstantiveContext(context),
+        contextExtraneousContext = !contextSubstantiveContext;
+
+  return contextExtraneousContext;
+}
+
+function isContextSubstantiveContext(context) {
+  const contextTheticContext = (context instanceof TheticContext),
+        contextIllativeContext = (context instanceof IllativeContext),
+        contextBoundedContext = (context instanceof BoundedContext),
+        contextNominalFileContext = (context instanceof NominalFileContext),
+        contextSubstantiveContext = (contextTheticContext || contextIllativeContext || contextBoundedContext || contextNominalFileContext);
+
+  return contextSubstantiveContext;
 }

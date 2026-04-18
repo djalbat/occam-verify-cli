@@ -6,7 +6,7 @@ import { define } from "../elements";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import { join, declare, ablate, attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
+import { join, posit, ablate, attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
 import { referenceFromReferenceNode, metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 
 export default define(class Reference extends Element {
@@ -340,7 +340,7 @@ export default define(class Reference extends Element {
   static fromReferenceString(referenceString, context) {
     let reference;
 
-    declare((context) => {
+    posit((context) => {
       ablate((context) => {
         instantiate((context) => {
           const string = referenceString,  ///
