@@ -224,12 +224,6 @@ export default class Substitution extends Element {
     return validSubstitution;
   }
 
-  resolve(substitutions, generalContext, specificContext) {
-    const resolved = true;
-
-    return resolved;
-  }
-
   commit(generalContext, specificContext) {
     const contexts = [
       generalContext,

@@ -3,6 +3,7 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
+import { join, reconcile } from "../../utilities/context";
 import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
@@ -184,6 +185,127 @@ export default define(class FrameSubstitution extends Substitution {
     return replacementFrameValidates;
   }
 
+  unifySubstitution(substitution, context) {
+    let substitutionUnifies = false;
+
+    const generalSubstitution = this, ///
+          specificSubstitution = substitution,
+          generalSubstitutionString = generalSubstitution.getString(),
+          specificSubstitutionString = specificSubstitution.getString();
+
+    context.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
+
+    reconcile((context) => {
+      const replacementFrameUnifies = this.unifyReplacementFrame(substitution, context);
+
+      if (replacementFrameUnifies) {
+        const targetFrameUnifies = this.unifyTargetFrame(substitution, context);
+
+        if (targetFrameUnifies) {
+          context.commit();
+
+          substitutionUnifies = true;
+        }
+      }
+    }, context);
+
+    if (substitutionUnifies) {
+      context.debug(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
+    }
+
+    return substitutionUnifies;
+  }
+
+  unifyTargetFrame(substitution, context) {
+    let targetFrameUnifies = false;
+
+    const generalSubstitution = this, ///
+          specificSubstitution = substitution,
+          generalSubstitutionString = generalSubstitution.getString(),
+          specificSubstitutionString = specificSubstitution.getString();
+
+    context.trace(`Unifying the '${specificSubstitutionString}' substitution's target frame with the '${generalSubstitutionString}' substitution's target frame...`);
+
+    const generalSubstitutionGeneralContext = generalSubstitution.getGeneralContext(),
+          specificSubstitutionGeneralContext = specificSubstitution.getGeneralContext(),
+          generalSubstitutionTargetFrame = generalSubstitution.getTargetFrame(),
+          specificSubstitutionTargetFrame = specificSubstitution.getTargetFrame(),
+          generalContext = generalSubstitutionGeneralContext,  ///
+          specificContext = specificSubstitutionGeneralContext,  ///
+          generalFrame = generalSubstitutionTargetFrame, ///
+          specificFrame = specificSubstitutionTargetFrame; ///
+
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        const generalFrameNode = generalFrame.getNode(),
+              generalMetavariable = metavariableFromFrameNode(generalFrameNode, generalContext);
+
+        if (generalMetavariable !== null) {
+          const frame = specificFrame,  ///
+                metavariable = generalMetavariable, ///
+                frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
+
+          if (frameUnifies) {
+            specificContext.commit(context);
+
+            targetFrameUnifies = true;
+          }
+        }
+      }, specificContext);
+    }, specificContext, context);
+
+    if (targetFrameUnifies) {
+      context.trace(`...unified the '${specificSubstitutionString}' substitution's target frame with the '${generalSubstitutionString}' substitution's target frame.`);
+    }
+
+    return targetFrameUnifies;
+  }
+
+  unifyReplacementFrame(substitution, context) {
+    let replacementFrameUnifies = false;
+
+    const generalSubstitution = this, ///
+          specificSubstitution = substitution,
+          generalSubstitutionString = generalSubstitution.getString(),
+          specificSubstitutionString = specificSubstitution.getString();
+
+    context.trace(`Unifying the '${specificSubstitutionString}' substitution's replacement frame with the '${generalSubstitutionString}' substitution's replacement frame...`);
+
+    const generalSubstitutionSpecificContext = generalSubstitution.getSpecificContext(),
+          specificSubstitutionSpecificContext = specificSubstitution.getSpecificContext(),
+          generalSubstitutionReplacementFrame = generalSubstitution.getReplacementFrame(),
+          specificSubstitutionReplacementFrame = specificSubstitution.getReplacementFrame(),
+          generalContext = generalSubstitutionSpecificContext,  ///
+          specificContext = specificSubstitutionSpecificContext,  ///
+          generalFrame = generalSubstitutionReplacementFrame, ///
+          specificFrame = specificSubstitutionReplacementFrame; ///
+
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        const generalFrameNode = generalFrame.getNode(),
+              generalMetavariable = metavariableFromFrameNode(generalFrameNode, generalContext);
+
+        if (generalMetavariable !== null) {
+          const frame = specificFrame,  ///
+                metavariable = generalMetavariable, ///
+                frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
+
+          if (frameUnifies) {
+            specificContext.commit(context);
+
+            replacementFrameUnifies = true;
+          }
+        }
+      }, specificContext);
+    }, specificContext, context);
+
+    if (replacementFrameUnifies) {
+      context.trace(`...unified the '${specificSubstitutionString}' substitution's replacement frame with the '${generalSubstitutionString}' substitution's replacement frame.`);
+    }
+
+    return replacementFrameUnifies;
+  }
+
   static name = "FrameSubstitution";
 
   static fromJSON(json, context) {
@@ -252,6 +374,18 @@ export default define(class FrameSubstitution extends Substitution {
     return frameSubstitution;
   }
 });
+
+function metavariableFromFrameNode(frameNode, context) {
+  let metavariable = null;
+
+  const metavariableNode = frameNode.getMetavariableNode();
+
+  if (metavariableNode !== null) {
+    metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
+  }
+
+  return metavariable;
+}
 
 function targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context) {
   const targetFrameNode = frameSubstitutionNode.getTargetFrameNode(),

@@ -163,7 +163,7 @@ export default class LiminalContext extends Context {
       context = this.getContext();
     }
 
-    context.debug(`Committing the limiinal context`);
+    context.debug(`Committing the liminal context`);
 
     context.addDerivedSubstitutions(this.derivedSubstitutions);
   }

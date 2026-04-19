@@ -233,14 +233,18 @@ function ablateContext(context) {
     contextExtraneousContext = isContextExtraneousContext(context);
   }
 
-  if (stated) {
-    const theticContext = TheticContext.fromNothing(context);
+  const Context = stated ? TheticContext : IllativeContext;
 
-    context = theticContext;  ///
-  } else {
-    const illativeContext = IllativeContext.fromNothing(context);
+  context = augmentContext(context, Context);
 
-    context = illativeContext;  ///
+  return context;
+}
+
+function augmentContext(context, Context) {
+  const contextContext = (context instanceof Context);
+
+  if (!contextContext) {
+    context = Context.fromNothing(context);
   }
 
   return context;

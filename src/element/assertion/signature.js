@@ -3,8 +3,8 @@
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { join, reconcile, instantiate } from "../../utilities/context";
 import { breakPointFromJSON } from "../../utilities/breakPoint";
+import { join, reconcile, instantiate } from "../../utilities/context";
 import { instantiateSignatureAssertion } from "../../process/instantiate";
 import { signatureFromSignatureAssertionNode, referenceFromSignatureAssertionNode, signatureAssertionFromStatementNode } from "../../utilities/element";
 

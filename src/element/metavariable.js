@@ -5,12 +5,12 @@ import { Element } from "occam-languages";
 import elements from "../elements";
 
 import { define } from "../elements";
-import { EMPTY_STRING } from "../constants";
 import { instantiate } from "../utilities/context";
+import { EMPTY_STRING } from "../constants";
 import { instantiateMetavariable } from "../process/instantiate";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
-import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
+import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
 import { nameFromMetavariableNode, termFromMetavariableNode, typeFromMetavariableNode, metavariableFromStatementNode } from "../utilities/element";
 
 export default define(class Metavariable extends Element {

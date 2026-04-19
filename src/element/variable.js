@@ -8,8 +8,8 @@ import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiateVariable } from "../process/instantiate";
 import { provisionallyStringFromProvisional } from "../utilities/string";
-import { variableFromTermNode, identifierFromVariableNode } from "../utilities/element";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
+import { variableFromTermNode, identifierFromVariableNode } from "../utilities/element";
 import { typeFromJSON, typeToTypeJSON, provisionalFromJSON, provisionalToProvisionalJSON } from "../utilities/json";
 
 export default define(class Variable extends Element {

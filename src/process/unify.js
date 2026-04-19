@@ -336,65 +336,6 @@ class MetavariablePass extends ZipPass {
   ];
 }
 
-class SubstitutionPass extends ZipPass {
-  static maps = [
-    {
-      generalNodeQuery: frameMetavariableNodeQuery,
-      specificNodeQuery: frameNodeQuery,
-      run: (generalFrameMetavariableNode, specificFrameNode, generalContext, specificContext) => {
-        let success = false;
-
-        const frameNode = specificFrameNode, ///
-              metavariableNode = generalFrameMetavariableNode;  ///
-
-        let context;
-
-        context = generalContext; ///
-
-        const metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
-
-        context = specificContext;  ///
-
-        const frame = context.findFrameByFrameNode(frameNode),
-              frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
-
-        if (frameUnifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    },
-    {
-      generalNodeQuery: termVariableNodeQuery,
-      specificNodeQuery: termNodeQuery,
-      run: (generalTermVariableNode, specificTermNode, generalContext, specificContext) => {
-        let success = false;
-
-        const termNode = specificTermNode, ///
-              variableNode = generalTermVariableNode; ///
-
-        let context;
-
-        context = generalContext; ///
-
-        const variable = context.findVariableByVariableNode(variableNode);
-
-        context = specificContext;  ///
-
-        const term = context.findTermByTermNode(termNode),
-              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
-
-        if (termUnifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    }
-  ];
-}
-
 class IntrinsicTermPass extends ZipPassBase {
   static maps = [
     {
@@ -463,7 +404,6 @@ const metaLevelPass = new MetaLevelPass(),
       combinatorPass = new CombinatorPass(),
       constructorPass = new ConstructorPass(),
       metavariablePass = new MetavariablePass(),
-      substitutionPass = new SubstitutionPass(),
       intrinsicTermPass = new IntrinsicTermPass(),
       intrinsicMetavariablePass = new IntrinsicMetavariablePass();
 
@@ -495,22 +435,6 @@ export function unifyMetavariable(generalMetavariable, specificMetavariable, gen
   }
 
   return metavariableUnifies;
-}
-
-export function unifySubstitution(generalSubstitution, specificSubstitution, generalContext, specificContext) {
-  let substitutionUnifies = false;
-
-  const generalSubstitutionNode = generalSubstitution.getNode(),
-        specificSubstitutionNode = specificSubstitution.getNode(),
-        generalNode = generalSubstitutionNode, ///
-        specificNode = specificSubstitutionNode,  ///
-        success = substitutionPass.run(generalNode, specificNode, generalContext, specificContext);
-
-  if (success) {
-    substitutionUnifies = true;
-  }
-
-  return substitutionUnifies;
 }
 
 export function unifyTermWithConstructor(term, constructor, generalContext, specificContext) {

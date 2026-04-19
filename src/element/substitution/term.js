@@ -3,12 +3,12 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { breakPointFromJSON } from "../../utilities/breakPoint";
+import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { ablate, ablates, manifest, attempts, sequester, instantiate, unserialises } from "../../utilities/context";
+import { join, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, breakPoint, targetTerm, replacementTerm) {
@@ -195,6 +195,127 @@ export default define(class TermSubstitution extends Substitution {
     return replacementTermValidates;
   }
 
+  unifySubstitution(substitution, context) {
+    let substitutionUnifies = false;
+
+    const generalSubstitution = this, ///
+          specificSubstitution = substitution,
+          generalSubstitutionString = generalSubstitution.getString(),
+          specificSubstitutionString = specificSubstitution.getString();
+
+    context.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
+
+    reconcile((context) => {
+      const replacementTermUnifies = this.unifyReplacementTerm(substitution, context);
+
+      if (replacementTermUnifies) {
+        const targetTermUnifies = this.unifyTargetTerm(substitution, context);
+
+        if (targetTermUnifies) {
+          context.commit();
+
+          substitutionUnifies = true;
+        }
+      }
+    }, context);
+
+    if (substitutionUnifies) {
+      context.debug(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
+    }
+
+    return substitutionUnifies;
+  }
+
+  unifyTargetTerm(substitution, context) {
+    let targetTermUnifies = false;
+
+    const generalSubstitution = this, ///
+          specificSubstitution = substitution,
+          generalSubstitutionString = generalSubstitution.getString(),
+          specificSubstitutionString = specificSubstitution.getString();
+
+    context.trace(`Unifying the '${specificSubstitutionString}' substitution's target term with the '${generalSubstitutionString}' substitution's target term...`);
+
+    const generalSubstitutionGeneralContext = generalSubstitution.getGeneralContext(),
+          specificSubstitutionGeneralContext = specificSubstitution.getGeneralContext(),
+          generalSubstitutionTargetTerm = generalSubstitution.getTargetTerm(),
+          specificSubstitutionTargetTerm = specificSubstitution.getTargetTerm(),
+          generalContext = generalSubstitutionGeneralContext,  ///
+          specificContext = specificSubstitutionGeneralContext,  ///
+          generalTerm = generalSubstitutionTargetTerm, ///
+          specificTerm = specificSubstitutionTargetTerm; ///
+
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        const generalTermNode = generalTerm.getNode(),
+              generalVariable = variableFromTermNode(generalTermNode, generalContext);
+
+        if (generalVariable !== null) {
+          const term = specificTerm,  ///
+                variable = generalVariable, ///
+                termUnifies = variable.unifyTerm(term, generalContext, specificContext);
+
+          if (termUnifies) {
+            specificContext.commit(context);
+
+            targetTermUnifies = true;
+          }
+        }
+      }, specificContext);
+    }, specificContext, context);
+
+    if (targetTermUnifies) {
+      context.trace(`...unified the '${specificSubstitutionString}' substitution's target term with the '${generalSubstitutionString}' substitution's target term.`);
+    }
+
+    return targetTermUnifies;
+  }
+
+  unifyReplacementTerm(substitution, context) {
+    let replacementTermUnifies = false;
+
+    const generalSubstitution = this, ///
+          specificSubstitution = substitution,
+          generalSubstitutionString = generalSubstitution.getString(),
+          specificSubstitutionString = specificSubstitution.getString();
+
+    context.trace(`Unifying the '${specificSubstitutionString}' substitution's replacement term with the '${generalSubstitutionString}' substitution's replacement term...`);
+
+    const generalSubstitutionSpecificContext = generalSubstitution.getSpecificContext(),
+          specificSubstitutionSpecificContext = specificSubstitution.getSpecificContext(),
+          generalSubstitutionReplacementTerm = generalSubstitution.getReplacementTerm(),
+          specificSubstitutionReplacementTerm = specificSubstitution.getReplacementTerm(),
+          generalContext = generalSubstitutionSpecificContext,  ///
+          specificContext = specificSubstitutionSpecificContext,  ///
+          generalTerm = generalSubstitutionReplacementTerm, ///
+          specificTerm = specificSubstitutionReplacementTerm; ///
+
+    join((specificContext) => {
+      reconcile((specificContext) => {
+        const generalTermNode = generalTerm.getNode(),
+              generalVariable = variableFromTermNode(generalTermNode, generalContext);
+
+        if (generalVariable !== null) {
+          const term = specificTerm,  ///
+                variable = generalVariable, ///
+                termUnifies = variable.unifyTerm(term, generalContext, specificContext);
+
+          if (termUnifies) {
+            specificContext.commit(context);
+
+            replacementTermUnifies = true;
+          }
+        }
+      }, specificContext);
+    }, specificContext, context);
+
+    if (replacementTermUnifies) {
+      context.trace(`...unified the '${specificSubstitutionString}' substitution's replacement term with the '${generalSubstitutionString}' substitution's replacement term.`);
+    }
+
+    return replacementTermUnifies;
+  }
+
   static name = "TermSubstitution";
 
   static fromJSON(json, context) {
@@ -267,6 +388,18 @@ export default define(class TermSubstitution extends Substitution {
     return termSubstitution;
   }
 });
+
+function variableFromTermNode(termNode, context) {
+  let variable = null;
+
+  const variableNode = termNode.getVariableNode();
+
+  if (variableNode !== null) {
+    variable = context.findVariableByVariableNode(variableNode);
+  }
+
+  return variable;
+}
 
 function targetTermFromTermSubstitutionNode(termSubstitutionNode, context) {
   const targetTermNode = termSubstitutionNode.getTargetTermNode(),
