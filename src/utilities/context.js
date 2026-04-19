@@ -52,10 +52,16 @@ export function ground(innerFunction) {
   return innerFunction(context);
 }
 
-export function ablate(innerFunction, context) {
+export function ablate(innerFunction, forced, context) {
+  if (context === undefined) {
+    context = forced; ///
+
+    forced = false;
+  }
+
   const released = context.isReleased();
 
-  if (!released) {
+  if (forced || !released) {
     context = ablateContext(context);
   }
 

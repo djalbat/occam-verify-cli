@@ -3,7 +3,7 @@
 import { Element, asynchronousUtilities } from "occam-languages";
 
 import { define } from "../elements";
-import {enclose} from "../utilities/context";
+import { enclose } from "../utilities/context";
 
 const { asyncEvery } = asynchronousUtilities;
 

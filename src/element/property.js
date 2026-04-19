@@ -8,7 +8,6 @@ import { instantiateProperty } from "../process/instantiate";
 import { nameFromPropertyNode } from "../utilities/element";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import {validateTerms} from "../utilities/validation";
 
 export default define(class Property extends Element {
   constructor(context, string, node, breakPoint, name, type) {

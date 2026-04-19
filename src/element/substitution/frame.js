@@ -3,12 +3,11 @@
 import Substitution from "../substitution";
 
 import { define } from "../../elements";
-import { join, reconcile } from "../../utilities/context";
 import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { ablate, ablates, manifest, attempts, sequester, instantiate, unserialises } from "../../utilities/context";
+import { join, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(contexts, string, node, breakPoint, targetFrame, replacementFrame) {
@@ -314,25 +313,29 @@ export default define(class FrameSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialises((json, generalContext, specificContext) => {
-        const context = specificContext;  ///
+      const forced = true;
 
-        instantiate((context) => {
-          const { string } = json,
-                frameSubstitutionNode = instantiateFrameSubstitution(string, context),
-                node = frameSubstitutionNode, ///
-                breakPoint = breakPointFromJSON(json),
-                targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
-                replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
-                specificContext = context,  ///
-                contexts = [
-                  generalContext,
-                  specificContext
-                ];
+      ablate((context) => {
+        unserialises((json, generalContext, specificContext) => {
+          const context = specificContext;  ///
 
-          frameSubstitutionn = new FrameSubstitution(contexts, string, node, breakPoint, targetFrame, replacementFrame);
-        }, context);
-      }, json, context);
+          instantiate((context) => {
+            const { string } = json,
+                  frameSubstitutionNode = instantiateFrameSubstitution(string, context),
+                  node = frameSubstitutionNode, ///
+                  breakPoint = breakPointFromJSON(json),
+                  targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
+                  replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
+                  specificContext = context,  ///
+                  contexts = [
+                    generalContext,
+                    specificContext
+                  ];
+
+            frameSubstitutionn = new FrameSubstitution(contexts, string, node, breakPoint, targetFrame, replacementFrame);
+          }, context);
+        }, json, context);
+      }, forced, context);
     }
 
     return frameSubstitutionn;

@@ -5,8 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../utilities/validation";
-import { reconcile, instantiate } from "../utilities/context";
 import { instantiateStatement } from "../process/instantiate";
+import { reconcile, instantiate } from "../utilities/context";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Statement extends Element {

@@ -5,8 +5,8 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { instantiateParameter } from "../process/instantiate";
-import { nameFromParaneterNode, identifierFromParameterNode } from "../utilities/element";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
+import { nameFromParaneterNode, identifierFromParameterNode } from "../utilities/element";
 
 export default define(class Parameter extends Element {
   constructor(context, string, node, breakPoint, name, identifier) {

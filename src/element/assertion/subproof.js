@@ -5,11 +5,10 @@ import { arrayUtilities } from "necessary";
 import Assertion from "../assertion";
 
 import { define } from "../../elements";
-import { reconcile } from "../../utilities/context";
 import { breakPointFromJSON } from "../../utilities/breakPoint";
-import { join, descend, instantiate } from "../../utilities/context";
 import { instantiateSubproofAssertion } from "../../process/instantiate";
 import { subproofAssertionFromStatementNode } from "../../utilities/element";
+import { join, descend, reconcile, instantiate } from "../../utilities/context";
 
 const { last, front, backwardsEvery } = arrayUtilities;
 
