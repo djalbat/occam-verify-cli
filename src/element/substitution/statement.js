@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, ablates, manifest, attempts, sequester, reconcile, instantiate, unserialises } from "../../utilities/context";
+import { join, posit, ablate, ablates, manifest, attempts, sequester, reconcile, instantiate, unserialises } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -358,27 +358,33 @@ export default define(class StatementSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialises((json, generalContext, specificContext) => {
-        const context = specificContext;  ///
+      const forced = true;
 
-        instantiate((context) => {
-          const { string } = json,
-                statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-                node = statementSubstitutionNode, ///
-                breakPoint = breakPointFromJSON(json),
-                resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
-                substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext),
-                targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
-                replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context),
-                specificContext = context,  ///
-                contexts = [
-                  generalContext,
-                  specificContext
-                ];
+      posit((context) => {
+        ablate((context) => {
+          unserialises((json, generalContext, specificContext) => {
+            const context = specificContext;  ///
 
-          statementSubstitutionn = new StatementSubstitution(contexts, string, node, breakPoint, resolved, substitution, targetStatement, replacementStatement);
-        }, context);
-      }, json, context);
+            instantiate((context) => {
+              const { string } = json,
+                    specificContext = context,  ///
+                    statementSubstitutionNode = instantiateStatementSubstitution(string, context),
+                    node = statementSubstitutionNode, ///
+                    breakPoint = breakPointFromJSON(json),
+                    resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
+                    substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext),
+                    targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, generalContext),
+                    replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, specificContext),
+                    contexts = [
+                      generalContext,
+                      specificContext
+                    ];
+
+              statementSubstitutionn = new StatementSubstitution(contexts, string, node, breakPoint, resolved, substitution, targetStatement, replacementStatement);
+            }, context);
+          }, json, context);
+        }, forced, context);
+      }, context);
     }
 
     return statementSubstitutionn;
@@ -444,16 +450,16 @@ function substitutionFromStatementSubstitutionNode(statementSubstitutionNode, co
   return substitution;
 }
 
-function targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+function targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, generalContext) {
   const targetStatementNode = statementSubstitutionNode.getTargetStatementNode(),
-        targetStatement = context.findStatementByStatementNode(targetStatementNode);
+        targetStatement = generalContext.findStatementByStatementNode(targetStatementNode);
 
   return targetStatement;
 }
 
-function replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, context) {
+function replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, specificContext) {
   const replacementStatementNode = statementSubstitutionNode.getReplacementStatementNode(),
-        replacementStatement = context.findStatementByStatementNode(replacementStatementNode);
+        replacementStatement = specificContext.findStatementByStatementNode(replacementStatementNode);
 
   return replacementStatement;
 }

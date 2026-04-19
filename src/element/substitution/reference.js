@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
-import { ablates, manifest, attempts, sequester, instantiate, unserialises } from "../../utilities/context";
+import { posit, ablate, ablates, manifest, attempts, sequester, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class ReferenceSubstitution extends Substitution {
   constructor(context, string, node, breakPoint, targetReference, replacementReference) {
@@ -197,25 +197,31 @@ export default define(class ReferenceSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialises((json, generalContext, specificContext) => {
-        const context = specificContext;  ///
+      const forced = true;
 
-        instantiate((context) => {
-          const { string } = json,
-                referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
-                node = referenceSubstitutionNode, ///
-                breakPoint = breakPointFromJSON(json),
-                targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
-                replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context),
-                specificContext = context,  ///
-                contexts = [
-                  generalContext,
-                  specificContext
-                ];
+      posit((context) => {
+        ablate((context) => {
+          unserialises((json, generalContext, specificContext) => {
+            const context = specificContext;  ///
 
-          referenceSubstitutionn = new ReferenceSubstitution(contexts, string, node, breakPoint, targetReference, replacementReference);
-        }, context);
-      }, json, context);
+            instantiate((context) => {
+              const { string } = json,
+                    specificContext = context,  ///
+                    referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
+                    node = referenceSubstitutionNode, ///
+                    breakPoint = breakPointFromJSON(json),
+                    targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, generalContext),
+                    replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, specificContext),
+                    contexts = [
+                      generalContext,
+                      specificContext
+                    ];
+
+              referenceSubstitutionn = new ReferenceSubstitution(contexts, string, node, breakPoint, targetReference, replacementReference);
+            }, context);
+          }, json, context);
+        }, forced, context);
+      }, context);
     }
 
     return referenceSubstitutionn;
@@ -262,16 +268,16 @@ export default define(class ReferenceSubstitution extends Substitution {
   }
 });
 
-function targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+function targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, generalContext) {
   const targetReferenceNode = referenceSubstitutionNode.getTargetReferenceNode(),
-        targetReference = context.findReferenceByReferenceNode(targetReferenceNode);
+        targetReference = generalContext.findReferenceByReferenceNode(targetReferenceNode);
 
   return targetReference;
 }
 
-function replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, context) {
+function replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, specificContext) {
   const replacementReferenceNode = referenceSubstitutionNode.getReplacementReferenceNode(),
-        replacementReference = context.findReferenceByReferenceNode(replacementReferenceNode);
+        replacementReference = specificContext.findReferenceByReferenceNode(replacementReferenceNode);
 
   return replacementReference;
 }

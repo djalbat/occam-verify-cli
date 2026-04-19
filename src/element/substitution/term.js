@@ -8,7 +8,7 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { join, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
+import { join, posit, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, breakPoint, targetTerm, replacementTerm) {
@@ -247,12 +247,11 @@ export default define(class TermSubstitution extends Substitution {
 
     join((specificContext) => {
       reconcile((specificContext) => {
-        const generalTermNode = generalTerm.getNode(),
-              generalVariable = variableFromTermNode(generalTermNode, generalContext);
+        const termNode = generalTerm.getNode(),
+              variable = variableFromTermNode(termNode, generalContext);
 
-        if (generalVariable !== null) {
+        if (variable !== null) {
           const term = specificTerm,  ///
-                variable = generalVariable, ///
                 termUnifies = variable.unifyTerm(term, generalContext, specificContext);
 
           if (termUnifies) {
@@ -292,12 +291,11 @@ export default define(class TermSubstitution extends Substitution {
 
     join((specificContext) => {
       reconcile((specificContext) => {
-        const generalTermNode = generalTerm.getNode(),
-              generalVariable = variableFromTermNode(generalTermNode, generalContext);
+        const termNode = generalTerm.getNode(),
+              variable = variableFromTermNode(termNode, generalContext);
 
-        if (generalVariable !== null) {
+        if (variable !== null) {
           const term = specificTerm,  ///
-                variable = generalVariable, ///
                 termUnifies = variable.unifyTerm(term, generalContext, specificContext);
 
           if (termUnifies) {
@@ -324,25 +322,31 @@ export default define(class TermSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      unserialises((json, generalContext, specificContext) => {
-        const context = specificContext;  ///
+      const forced = true;
 
-        instantiate((context) => {
-          const { string } = json,
-                termSubstitutionNode = instantiateTermSubstitution(string, context),
-                node = termSubstitutionNode,  ///
-                breakPoint = breakPointFromJSON(json),
-                targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, context),
-                replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, context),
-                specificContext = context,  ///
-                contexts = [
-                  generalContext,
-                  specificContext
-                ];
+      posit((context) => {
+        ablate((context) => {
+          unserialises((json, generalContext, specificContext) => {
+            const context = specificContext;  ///
 
-          termSubstitutionn = new TermSubstitution(contexts, string, node, breakPoint, targetTerm, replacementTerm);
-        }, context);
-      }, json, context);
+            instantiate((context) => {
+              const { string } = json,
+                    specificContext = context,  ///
+                    termSubstitutionNode = instantiateTermSubstitution(string, context),
+                    node = termSubstitutionNode,  ///
+                    breakPoint = breakPointFromJSON(json),
+                    targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, generalContext),
+                    replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, specificContext),
+                    contexts = [
+                      generalContext,
+                      specificContext
+                    ];
+
+              termSubstitutionn = new TermSubstitution(contexts, string, node, breakPoint, targetTerm, replacementTerm);
+            }, context);
+          }, json, context);
+        }, forced, context);
+      }, context);
     }
 
     return termSubstitutionn;
@@ -389,28 +393,28 @@ export default define(class TermSubstitution extends Substitution {
   }
 });
 
-function variableFromTermNode(termNode, context) {
+function variableFromTermNode(termNode, generalContext) {
   let variable = null;
 
   const variableNode = termNode.getVariableNode();
 
   if (variableNode !== null) {
-    variable = context.findVariableByVariableNode(variableNode);
+    variable = generalContext.findVariableByVariableNode(variableNode);
   }
 
   return variable;
 }
 
-function targetTermFromTermSubstitutionNode(termSubstitutionNode, context) {
+function targetTermFromTermSubstitutionNode(termSubstitutionNode, generalContext) {
   const targetTermNode = termSubstitutionNode.getTargetTermNode(),
-        targetTerm = context.findTermByTermNode(targetTermNode);
+        targetTerm = generalContext.findTermByTermNode(targetTermNode);
 
   return targetTerm;
 }
 
-function replacementTermFromTermSubstitutionNode(termSubstitutionNode, context) {
+function replacementTermFromTermSubstitutionNode(termSubstitutionNode, specificContext) {
   const replacementTermNode = termSubstitutionNode.getReplacementTermNode(),
-        replacementTerm = context.findTermByTermNode(replacementTermNode);
+        replacementTerm = specificContext.findTermByTermNode(replacementTermNode);
 
   return replacementTerm;
 }

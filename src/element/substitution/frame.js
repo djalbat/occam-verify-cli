@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { join, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
+import { join, posit, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(contexts, string, node, breakPoint, targetFrame, replacementFrame) {
@@ -236,12 +236,11 @@ export default define(class FrameSubstitution extends Substitution {
 
     join((specificContext) => {
       reconcile((specificContext) => {
-        const generalFrameNode = generalFrame.getNode(),
-              generalMetavariable = metavariableFromFrameNode(generalFrameNode, generalContext);
+        const frameNode = generalFrame.getFrameNode(),
+              metavariable = metavariableFromFrameNode(frameNode, generalContext);
 
-        if (generalMetavariable !== null) {
+        if (metavariable !== null) {
           const frame = specificFrame,  ///
-                metavariable = generalMetavariable, ///
                 frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
 
           if (frameUnifies) {
@@ -281,12 +280,11 @@ export default define(class FrameSubstitution extends Substitution {
 
     join((specificContext) => {
       reconcile((specificContext) => {
-        const generalFrameNode = generalFrame.getNode(),
-              generalMetavariable = metavariableFromFrameNode(generalFrameNode, generalContext);
+        const frameNode = generalFrame.getNode(),
+              metavariable = metavariableFromFrameNode(frameNode, generalContext);
 
-        if (generalMetavariable !== null) {
+        if (metavariable !== null) {
           const frame = specificFrame,  ///
-                metavariable = generalMetavariable, ///
                 frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
 
           if (frameUnifies) {
@@ -315,27 +313,29 @@ export default define(class FrameSubstitution extends Substitution {
     if (this.name === name) {
       const forced = true;
 
-      ablate((context) => {
-        unserialises((json, generalContext, specificContext) => {
-          const context = specificContext;  ///
+      posit((context) => {
+        ablate((context) => {
+          unserialises((json, generalContext, specificContext) => {
+            const context = specificContext;  ///
 
-          instantiate((context) => {
-            const { string } = json,
-                  frameSubstitutionNode = instantiateFrameSubstitution(string, context),
-                  node = frameSubstitutionNode, ///
-                  breakPoint = breakPointFromJSON(json),
-                  targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
-                  replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context),
-                  specificContext = context,  ///
-                  contexts = [
-                    generalContext,
-                    specificContext
-                  ];
+            instantiate((context) => {
+              const { string } = json,
+                    specificContext = context,  ///
+                    frameSubstitutionNode = instantiateFrameSubstitution(string, context),
+                    node = frameSubstitutionNode, ///
+                    breakPoint = breakPointFromJSON(json),
+                    targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, generalContext),
+                    replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, specificContext),
+                    contexts = [
+                      generalContext,
+                      specificContext
+                    ];
 
-            frameSubstitutionn = new FrameSubstitution(contexts, string, node, breakPoint, targetFrame, replacementFrame);
-          }, context);
-        }, json, context);
-      }, forced, context);
+              frameSubstitutionn = new FrameSubstitution(contexts, string, node, breakPoint, targetFrame, replacementFrame);
+            }, context);
+          }, json, context);
+        }, forced, context);
+      }, context);
     }
 
     return frameSubstitutionn;
@@ -378,28 +378,28 @@ export default define(class FrameSubstitution extends Substitution {
   }
 });
 
-function metavariableFromFrameNode(frameNode, context) {
+function metavariableFromFrameNode(frameNode, generalContext) {
   let metavariable = null;
 
   const metavariableNode = frameNode.getMetavariableNode();
 
   if (metavariableNode !== null) {
-    metavariable = context.findMetavariableByMetavariableNode(metavariableNode);
+    metavariable = generalContext.findMetavariableByMetavariableNode(metavariableNode);
   }
 
   return metavariable;
 }
 
-function targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+function targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, generalContext) {
   const targetFrameNode = frameSubstitutionNode.getTargetFrameNode(),
-        targetFrame = context.findFrameByFrameNode(targetFrameNode);
+        targetFrame = generalContext.findFrameByFrameNode(targetFrameNode);
 
   return targetFrame;
 }
 
-function replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, context) {
+function replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, specificContext) {
   const replacementFrameNode = frameSubstitutionNode.getReplacementFrameNode(),
-        replacementFrame = context.findFrameByFrameNode(replacementFrameNode);
+        replacementFrame = specificContext.findFrameByFrameNode(replacementFrameNode);
 
   return replacementFrame;
 }

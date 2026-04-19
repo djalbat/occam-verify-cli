@@ -59,9 +59,9 @@ export function ablate(innerFunction, forced, context) {
     forced = false;
   }
 
-  const released = context.isReleased();
+  const unreleased = context.isUnreleased();
 
-  if (forced || !released) {
+  if (forced || unreleased) {
     context = ablateContext(context);
   }
 
@@ -101,9 +101,9 @@ export function descend(innerFunction, context) {
 }
 
 export function attempt(innerFunction, context) {
-  const released = context.isReleased();
+  const unreleased = context.isUnreleased();
 
-  if (!released) {
+  if (unreleased) {
     const mnemicContext = MenmicContext.fromNothing(context);
 
     context = mnemicContext;  ///
@@ -177,9 +177,9 @@ export function unserialise(innerFunction, json, context) {
 
 export function ablates(innerFunction, ...contexts) {
   contexts = contexts.map((context) => {  ///
-    const released = context.isReleased();
+    const unreleased = context.isUnreleased();
 
-    if (!released) {
+    if (unreleased) {
       context = ablateContext(context);
     }
 
@@ -191,9 +191,9 @@ export function ablates(innerFunction, ...contexts) {
 
 export function attempts(innerFunction, ...contexts) {
   contexts = contexts.map((context) => {  ///
-    const released = context.isReleased();
+    const unreleased = context.isUnreleased();
 
-    if (!released) {
+    if (unreleased) {
       const mnemicContext = MenmicContext.fromNothing(context);
 
       context = mnemicContext;  ///
