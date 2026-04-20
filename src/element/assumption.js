@@ -30,6 +30,8 @@ export default define(class Assumption extends Element {
     return assumptionNode;
   }
 
+  getStatementNode() { return this.statement.getStatementNode(); }
+
   getMetavariable() { return this.reference.getMetavariable(); }
 
   getTopLevelMetaAssertion() { return this.reference.getTopLevelMetaAssertion(); }
@@ -48,6 +50,19 @@ export default define(class Assumption extends Element {
           assumptionNodeMatches = nodeMatches; ///
 
     return assumptionNodeMatches;
+  }
+
+  findSubproofAssertion(context) {
+    let subproofAssertion = null;
+
+    const statementNode = this.getStatementNode(),
+          subproofAssertionNode = statementNode.getSubproofAssertionNode();
+
+    if (subproofAssertionNode !== null) {
+      subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
+    }
+
+    return subproofAssertion;
   }
 
   findValidAssumption(context) {
@@ -206,8 +221,56 @@ export default define(class Assumption extends Element {
     return validatesWhenDerived;
   }
 
+  unifyStatement(statement, generalContext, specificContext) {
+    let statementUnifies;
+
+    const context = specificContext, ///
+          statementString = statement.getString(),
+          proofAssertionString = this.getString();  ///
+
+    context.trace(`Unifying the '${statementString}' statement with the '${proofAssertionString}' assumption's statement...`);
+
+    statementUnifies = this.statement.unifyStatement(statement, generalContext, specificContext);
+
+    if (statementUnifies) {
+      context.debug(`...unified the '${statementString}' statement with the '${proofAssertionString}' assumption's statement.`);
+    }
+
+    return statementUnifies;
+  }
+
+  unifyDeduction(deduction, context) {
+    let deductionUnifies = false;
+
+    const deductionString = deduction.getString(),
+          assumptionString = this.getString();  ///
+
+    context.trace(`Unifying the '${deductionString}' deduction with the '${assumptionString}' assumption's statement...`);
+
+    const deductionContext = deduction.getContext(),
+          generalContext = context, ///
+          specificContext = deductionContext; ///
+
+    reconcile((specificContext) => {
+      const statement = deduction.getStatement(),
+            statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
+
+      if (statementUnifies) {
+        specificContext.commit(context);
+
+        deductionUnifies = true;
+      }
+    }, specificContext);
+
+    if (deductionUnifies) {
+      context.debug(`...unified the '${deductionString}' deduction with the '${assumptionString}' assumption's statement.`);
+    }
+
+    return deductionUnifies;
+  }
+
   unifyTopLevelMetaAssertion(topLevelMetaAssertion, context) {
-    let topLevelMetaAssertionUnifies;
+    let topLevelMetaAssertionUnifies = false;
 
     const assumptionString = this.getString(),  ///
           topLevelMetaAssertionString = topLevelMetaAssertion.getString();
@@ -218,7 +281,22 @@ export default define(class Assumption extends Element {
       topLevelMetaAssertionUnifies = this.reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
       if (topLevelMetaAssertionUnifies) {
-        topLevelMetaAssertionUnifies = this.statement.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+        const subproofAssertion = this.findSubproofAssertion(context);
+
+        if (subproofAssertion !== null) {
+          topLevelMetaAssertionUnifies = subproofAssertion.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
+        } else {
+          const unconditional = topLevelMetaAssertion.isUnconditional();
+
+          if (unconditional) {
+            const deduction = topLevelMetaAssertion.getDeduction(),
+                  deductionUnifies = this.unifyDeduction(deduction, context);
+
+            if (deductionUnifies) {
+              topLevelMetaAssertionUnifies = true;
+            }
+          }
+        }
       }
     }, context);
 

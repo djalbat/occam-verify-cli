@@ -110,10 +110,10 @@ export default define(class Axiom extends TopLevelAssertion {
 
     context.trace(`Unifying the '${specificDeductionString}' deduction with the '${axiomString}' axiom's '${generalDeductionString}' deduction...`);
 
-    const specificDeductionContext = specificDeduction.getContext(),
-          generalDeductionContext = generalDeduction.getContext(),
-          specificContext = specificDeductionContext,  ///
-          generalContext = generalDeductionContext; ///
+    const generalDeductionContext = generalDeduction.getContext(),
+          specificDeductionContext = specificDeduction.getContext(),
+          generalContext = generalDeductionContext, ///
+          specificContext = specificDeductionContext; ///
 
     reconcile((specificContext) => {
       let statement;
@@ -155,10 +155,10 @@ export default define(class Axiom extends TopLevelAssertion {
 
     context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${axiomString}' axiom's '${generalSuppositionString}' supposition...`);
 
-    const specificSuppositionContext = specificSupposition.getContext(),
-          generalSuppositionContext = generalSupposition.getContext(),
-          specificContext = specificSuppositionContext,  ///
-          generalContext = generalSuppositionContext; ///
+    const generalSuppositionContext = generalSupposition.getContext(),
+          specificSuppositionContext = specificSupposition.getContext(),
+          generalContext = generalSuppositionContext, ///
+          specificContext = specificSuppositionContext; ///
 
     reconcile((specificContext) => {
       let statement;

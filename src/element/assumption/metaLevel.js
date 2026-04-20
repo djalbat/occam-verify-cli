@@ -9,7 +9,7 @@ import { instantiateMetaLevelAssumption } from "../../process/instantiate";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../../utilities/breakPoint";
 import { metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
 import { metaLevelAssumptionStringFromReferenceAndStatement } from "../../utilities/string";
-import { join, ablate, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
+import { ablate, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class MetaLevelAssumption extends Element {
   constructor(context, string, node, breakPoint, reference, statement) {
@@ -214,27 +214,25 @@ export default define(class MetaLevelAssumption extends Element {
     context.trace(`Unifying the '${assumptionString}' assumption with the '${metaLevelAssumptionString}' meta-level assumption...`);
 
     const metaLevelAssumptionContext = this.getContext(), ///
-          assumptionContext = assumption.getContext(),
-          specificContext = assumptionContext, ///
-          generalContext = metaLevelAssumptionContext;  ///
+          assumptionContext = assumption.getContext(), ///
+          generalContext = metaLevelAssumptionContext,
+          specificContext = assumptionContext;  ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const reference = assumption.getReference(),
-              referneceUnifies = this.unifyReference(reference, generalContext, specificContext);
+    reconcile((specificContext) => {
+      const reference = assumption.getReference(),
+            referneceUnifies = this.unifyReference(reference, generalContext, specificContext);
 
-        if (referneceUnifies) {
-          const statement = assumption.getStatement(),
-                statementUnifieds = this.unifyStatement(statement, generalContext, specificContext);
+      if (referneceUnifies) {
+        const statement = assumption.getStatement(),
+              statementUnifieds = this.unifyStatement(statement, generalContext, specificContext);
 
-          if (statementUnifieds) {
-            specificContext.commit(context);
+        if (statementUnifieds) {
+          specificContext.commit(context);
 
-            assumptionUnifies = true;
-          }
+          assumptionUnifies = true;
         }
-      }, specificContext);
-    }, specificContext, context);
+      }
+    }, specificContext);
 
     if (assumptionUnifies) {
       context.debug(`...unified the '${assumptionString}' assumption with the '${metaLevelAssumptionString}' meta-level assumption...`);

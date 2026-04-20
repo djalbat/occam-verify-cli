@@ -26,6 +26,31 @@ export default define(class Supposition extends ProofAssertion {
     return suppositionNode;
   }
 
+  getStatementNode() {
+    const suppositionNode = this.getSuppositionNode(),
+          statementNode = suppositionNode.getStatementNode();
+
+    return statementNode;
+  }
+
+  findSubproofAssertion() {
+    let subproofAssertion = null;
+
+    const statementNode = this.getStatementNode();
+
+    if (statementNode !== null) {
+      const subproofAssertionNode = statementNode.getSubproofAssertionNode();
+
+      if (subproofAssertionNode !== null) {
+        const context = this.getContext();
+
+        subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
+      }
+    }
+
+    return subproofAssertion;
+  }
+
   async verify(context) {
     let verifies = false;
 
@@ -208,8 +233,8 @@ export default define(class Supposition extends ProofAssertion {
     const subproofAssertion = this.findSubproofAssertion();
 
     if (subproofAssertion !== null) {
-      const supposition = this.getContext(),
-            generalContext = supposition, ///
+      const suppositionContext = this.getContext(),
+            generalContext = suppositionContext, ///
             spsecfiicContext = context; ///
 
       subproofUnifies = subproofAssertion.unifySubproof(subproof, generalContext, spsecfiicContext);

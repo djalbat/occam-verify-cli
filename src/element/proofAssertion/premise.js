@@ -36,13 +36,16 @@ export default define(class Premise extends ProofAssertion {
   findSubproofAssertion() {
     let subproofAssertion = null;
 
-    const statementNode = this.getStatementNode(),
-          subproofAssertionNode = statementNode.getSubproofAssertionNode();
+    const statementNode = this.getStatementNode();
 
-    if (subproofAssertionNode !== null) {
-      const context = this.getContext();
+    if (statementNode !== null) {
+      const subproofAssertionNode = statementNode.getSubproofAssertionNode();
 
-      subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
+      if (subproofAssertionNode !== null) {
+        const context = this.getContext();
+
+        subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
+      }
     }
 
     return subproofAssertion;

@@ -6,7 +6,7 @@ import { define } from "../elements";
 import { instantiateReference } from "../process/instantiate";
 import { REFERENCE_META_TYPE_NAME } from "../metaTypeNames";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import { join, posit, ablate, attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
+import { posit, ablate, attempt, serialise, reconcile, unserialise, instantiate } from "../utilities/context";
 import { referenceFromReferenceNode, metavariableFromReferenceNode, topLevelMetaAssertionFromReferenceNode } from "../utilities/element";
 
 export default define(class Reference extends Element {
@@ -262,33 +262,31 @@ export default define(class Reference extends Element {
     let topLevelMetaAssertionUUnifies = false;
 
     const label = topLevelMetaAssertion.getLabel(),
-          labelContext = label.getContext(),
           referenceString = this.getString(), ///
-          referenceContext = this.getContext(), ///
           topLevelMetaAssertionString = topLevelMetaAssertion.getString();
 
-    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference...`);
+    context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion's label with the '${referenceString}' reference...`);
 
-    const generalContext = referenceContext, ///
+    const labelContext = label.getContext(),
+          referenceContext = this.getContext(), ///
+          generalContext = referenceContext, ///
           specificContext = labelContext; ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const metavariable = label.getMetavariable(),
-              metavariableUnifies = this.unifyMetavariable(metavariable, generalContext, specificContext);
+    reconcile((specificContext) => {
+      const metavariable = label.getMetavariable(),
+            metavariableUnifies = this.unifyMetavariable(metavariable, generalContext, specificContext);
 
-        if (metavariableUnifies) {
-          this.topLevelMetaAssertion = topLevelMetaAssertion;
+      if (metavariableUnifies) {
+        this.topLevelMetaAssertion = topLevelMetaAssertion;
 
-          specificContext.commit(context);
+        specificContext.commit(context);
 
-          topLevelMetaAssertionUUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
+        topLevelMetaAssertionUUnifies = true;
+      }
+    }, specificContext);
 
     if (topLevelMetaAssertionUUnifies) {
-      context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion with the '${referenceString}' reference.`);
+      context.debug(`...unified the '${topLevelMetaAssertionString}' top level meta-assertion's label with the '${referenceString}' reference.`);
     }
 
     return topLevelMetaAssertionUUnifies;

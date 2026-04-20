@@ -60,12 +60,12 @@ export default class ProofAssertion extends Element {
             statementString = statement.getString(),
             proofAssertionString = this.getString();  ///
 
-      context.trace(`Unifying the '${statementString}' statement with the '${proofAssertionString}' proof assertion...`);
+      context.trace(`Unifying the '${statementString}' statement with the '${proofAssertionString}' proof assertion's statement...`);
 
       statementUnifies = this.statement.unifyStatement(statement, generalContext, specificContext);
 
       if (statementUnifies) {
-        context.debug(`...unified the '${statementString}' statement with the '${proofAssertionString}' proof assertion.`);
+        context.debug(`...unified the '${statementString}' statement with the '${proofAssertionString}' proof assertion's statement.`);
       }
     }
 
