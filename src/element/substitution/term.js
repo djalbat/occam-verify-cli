@@ -8,7 +8,7 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { join, posit, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
+import { posit, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, breakPoint, targetTerm, replacementTerm) {
@@ -245,23 +245,21 @@ export default define(class TermSubstitution extends Substitution {
           generalTerm = generalSubstitutionTargetTerm, ///
           specificTerm = specificSubstitutionTargetTerm; ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const termNode = generalTerm.getNode(),
-              variable = variableFromTermNode(termNode, generalContext);
+    reconcile((specificContext) => {
+      const termNode = generalTerm.getNode(),
+            variable = variableFromTermNode(termNode, generalContext);
 
-        if (variable !== null) {
-          const term = specificTerm,  ///
-                termUnifies = variable.unifyTerm(term, generalContext, specificContext);
+      if (variable !== null) {
+        const term = specificTerm,  ///
+              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
 
-          if (termUnifies) {
-            specificContext.commit(context);
+        if (termUnifies) {
+          specificContext.commit(context);
 
-            targetTermUnifies = true;
-          }
+          targetTermUnifies = true;
         }
-      }, specificContext);
-    }, specificContext, context);
+      }
+    }, specificContext);
 
     if (targetTermUnifies) {
       context.trace(`...unified the '${specificSubstitutionString}' substitution's target term with the '${generalSubstitutionString}' substitution's target term.`);
@@ -289,23 +287,21 @@ export default define(class TermSubstitution extends Substitution {
           generalTerm = generalSubstitutionReplacementTerm, ///
           specificTerm = specificSubstitutionReplacementTerm; ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const termNode = generalTerm.getNode(),
-              variable = variableFromTermNode(termNode, generalContext);
+    reconcile((specificContext) => {
+      const termNode = generalTerm.getNode(),
+            variable = variableFromTermNode(termNode, generalContext);
 
-        if (variable !== null) {
-          const term = specificTerm,  ///
-                termUnifies = variable.unifyTerm(term, generalContext, specificContext);
+      if (variable !== null) {
+        const term = specificTerm,  ///
+              termUnifies = variable.unifyTerm(term, generalContext, specificContext);
 
-          if (termUnifies) {
-            specificContext.commit(context);
+        if (termUnifies) {
+          specificContext.commit(context);
 
-            replacementTermUnifies = true;
-          }
+          replacementTermUnifies = true;
         }
-      }, specificContext);
-    }, specificContext, context);
+      }
+    }, specificContext);
 
     if (replacementTermUnifies) {
       context.trace(`...unified the '${specificSubstitutionString}' substitution's replacement term with the '${generalSubstitutionString}' substitution's replacement term.`);

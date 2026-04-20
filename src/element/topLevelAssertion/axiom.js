@@ -5,7 +5,7 @@ import { asynchronousUtilities } from "occam-languages";
 import TopLevelAssertion from "../topLevelAssertion";
 
 import { define } from "../../elements";
-import { join, reconcile } from "../../utilities/context";
+import { reconcile } from "../../utilities/context";
 
 const { asyncMatch } = asynchronousUtilities;
 
@@ -86,11 +86,9 @@ export default define(class Axiom extends TopLevelAssertion {
 
     signature = this.getSignature();
 
-    const generalSignature = signature, ///
-          specificContext = context,  ///
-          generalContext = null;
+    const generalSignature = signature; ///
 
-    signatureUnifies = generalSignature.unifySignature(specificSignature, generalContext, specificContext);
+    signatureUnifies = generalSignature.unifySignature(specificSignature, context);
 
     if (signatureUnifies) {
       context.debug(`...unified the '${signatureString}' signature with the '${axiomString}' axiom.`);
@@ -117,26 +115,24 @@ export default define(class Axiom extends TopLevelAssertion {
           specificContext = specificDeductionContext,  ///
           generalContext = generalDeductionContext; ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        let statement;
+    reconcile((specificContext) => {
+      let statement;
 
-        statement = specificDeduction.getStatement();
+      statement = specificDeduction.getStatement();
 
-        const specificStatement = statement;  ///
+      const specificStatement = statement;  ///
 
-        statement = generalDeduction.getStatement();
+      statement = generalDeduction.getStatement();
 
-        const generalStatement = statement, ///
-              statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
+      const generalStatement = statement, ///
+            statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
 
-        if (statementUnifies) {
-          specificContext.commit();
+      if (statementUnifies) {
+        specificContext.commit(context);
 
-          deductionUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
+        deductionUnifies = true;
+      }
+    }, specificContext);
 
     if (deductionUnifies) {
       context.debug(`...unified the '${specificDeductionString}' deduction with the '${axiomString}' axiom's '${generalDeductionString}' deduction.`);
@@ -164,26 +160,24 @@ export default define(class Axiom extends TopLevelAssertion {
           specificContext = specificSuppositionContext,  ///
           generalContext = generalSuppositionContext; ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        let statement;
+    reconcile((specificContext) => {
+      let statement;
 
-        statement = specificSupposition.getStatement();
+      statement = specificSupposition.getStatement();
 
-        const specificStatement = statement;  ///
+      const specificStatement = statement;  ///
 
-        statement = generalSupposition.getStatement();
+      statement = generalSupposition.getStatement();
 
-        const generalStatement = statement, ///
-              statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
+      const generalStatement = statement, ///
+            statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
 
-        if (statementUnifies) {
-          specificContext.commit();
+      if (statementUnifies) {
+        specificContext.commit(context);
 
-          suppositionUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
+        suppositionUnifies = true;
+      }
+    }, specificContext);
 
     if (suppositionUnifies) {
       context.debug(`...unified the '${specificSuppositionString}' supposition with the '${axiomString}' axiom's '${generalSuppositionString}' supposition...`);

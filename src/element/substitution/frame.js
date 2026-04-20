@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { join, posit, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
+import { posit, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(contexts, string, node, breakPoint, targetFrame, replacementFrame) {
@@ -234,23 +234,21 @@ export default define(class FrameSubstitution extends Substitution {
           generalFrame = generalSubstitutionTargetFrame, ///
           specificFrame = specificSubstitutionTargetFrame; ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const frameNode = generalFrame.getFrameNode(),
-              metavariable = metavariableFromFrameNode(frameNode, generalContext);
+    reconcile((specificContext) => {
+      const frameNode = generalFrame.getFrameNode(),
+            metavariable = metavariableFromFrameNode(frameNode, generalContext);
 
-        if (metavariable !== null) {
-          const frame = specificFrame,  ///
-                frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
+      if (metavariable !== null) {
+        const frame = specificFrame,  ///
+              frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
 
-          if (frameUnifies) {
-            specificContext.commit(context);
+        if (frameUnifies) {
+          specificContext.commit(context);
 
-            targetFrameUnifies = true;
-          }
+          targetFrameUnifies = true;
         }
-      }, specificContext);
-    }, specificContext, context);
+      }
+    }, specificContext);
 
     if (targetFrameUnifies) {
       context.trace(`...unified the '${specificSubstitutionString}' substitution's target frame with the '${generalSubstitutionString}' substitution's target frame.`);
@@ -278,23 +276,21 @@ export default define(class FrameSubstitution extends Substitution {
           generalFrame = generalSubstitutionReplacementFrame, ///
           specificFrame = specificSubstitutionReplacementFrame; ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const frameNode = generalFrame.getNode(),
-              metavariable = metavariableFromFrameNode(frameNode, generalContext);
+    reconcile((specificContext) => {
+      const frameNode = generalFrame.getNode(),
+            metavariable = metavariableFromFrameNode(frameNode, generalContext);
 
-        if (metavariable !== null) {
-          const frame = specificFrame,  ///
-                frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
+      if (metavariable !== null) {
+        const frame = specificFrame,  ///
+              frameUnifies = metavariable.unifyFrame(frame, generalContext, specificContext);
 
-          if (frameUnifies) {
-            specificContext.commit(context);
+        if (frameUnifies) {
+          specificContext.commit(context);
 
-            replacementFrameUnifies = true;
-          }
+          replacementFrameUnifies = true;
         }
-      }, specificContext);
-    }, specificContext, context);
+      }
+    }, specificContext);
 
     if (replacementFrameUnifies) {
       context.trace(`...unified the '${specificSubstitutionString}' substitution's replacement frame with the '${generalSubstitutionString}' substitution's replacement frame.`);

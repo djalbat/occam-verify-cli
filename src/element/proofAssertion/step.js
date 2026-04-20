@@ -247,13 +247,13 @@ export default define(class Step extends ProofAssertion {
     const step = this;  ///
 
     await asyncSome(unifySteps, async (unifyStep) => {
-      let statementUnifies;
+      let stepUnifies;
 
       await reconcile(async (context) => {
-        statementUnifies = await unifyStep(step, context);
+        stepUnifies = await unifyStep(step, context);
       }, context);
 
-      if (statementUnifies) {
+      if (stepUnifies) {
         unifies = true;
 
         return true;

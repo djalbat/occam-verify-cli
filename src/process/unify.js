@@ -4,6 +4,7 @@ import { queryUtilities, ZipPass as ZipPassBase } from "occam-languages";
 
 import ZipPass from "../pass/zip";
 
+import { reconcile } from "../utilities/context";
 import { FRAME_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { termFromTermNode, frameFromFrameNode, statementFromStatementNode } from "../utilities/element";
 
@@ -159,12 +160,15 @@ class MetaLevelPass extends ZipPassBase {
 
         context = specificContext;  ///
 
-        const specificSignature = context.findSignatureBySignatureNode(specificSignatureNode),
-              signatureUnifies = generalSignature.unifySignature(specificSignature, generalContext, specificContext);
+        const specificSignature = context.findSignatureBySignatureNode(specificSignatureNode);
 
-        if (signatureUnifies) {
-          success = true;
-        }
+        reconcile((context) => {
+          const signatureUnifies = generalSignature.unifySignature(specificSignature, context);
+
+          if (signatureUnifies) {
+            success = true;
+          }
+        }, context)
 
         return success;
       }

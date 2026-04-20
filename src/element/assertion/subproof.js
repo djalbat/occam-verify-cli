@@ -7,8 +7,8 @@ import Assertion from "../assertion";
 import { define } from "../../elements";
 import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateSubproofAssertion } from "../../process/instantiate";
+import { descend, reconcile, instantiate } from "../../utilities/context";
 import { subproofAssertionFromStatementNode } from "../../utilities/element";
-import { join, descend, reconcile, instantiate } from "../../utilities/context";
 
 const { last, front, backwardsEvery } = arrayUtilities;
 
@@ -152,22 +152,20 @@ export default define(class SubproofAssertion extends Assertion {
 
     context.trace(`Unifying the '${lastStepString}' last step with the '${lastStatementString}' last statement...`)
 
-    const lastStepContext = lastStep.getContext(),
-          lastStepStatement = lastStep.getStatement();
+    const lastStepContext = lastStep.getContext();
 
     specificContext = lastStepContext;  ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const lastStepStatementUnifies = lastStatement.unifyStatement(lastStepStatement, generalContext, specificContext);
+    reconcile((specificContext) => {
+      const lastStepStatement = lastStep.getStatement(),
+            lastStepStatementUnifies = lastStatement.unifyStatement(lastStepStatement, generalContext, specificContext);
 
-        if (lastStepStatementUnifies) {
-          specificContext.commit(context);
+      if (lastStepStatementUnifies) {
+        specificContext.commit(context);
 
-          lastStepUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
+        lastStepUnifies = true;
+      }
+    }, specificContext);
 
     if (lastStepUnifies) {
       context.debug(`...unified the '${lastStepString}' last step with the '${lastStatementString}' last statement.`)
@@ -186,22 +184,20 @@ export default define(class SubproofAssertion extends Assertion {
 
     context.trace(`Unifying the '${deductionString}' deduction with the '${lastStatementString}' last statement...`)
 
-    const deductionContext = deduction.getContext(),
-          deductionStatement = deduction.getStatement();
+    const deductionContext = deduction.getContext();
 
     specificContext = deductionContext;  ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const deductionStatementUnifies = lastStatement.unifyStatement(deductionStatement, generalContext, specificContext);
+    reconcile((specificContext) => {
+      const deductionStatement = deduction.getStatement(),
+            deductionStatementUnifies = lastStatement.unifyStatement(deductionStatement, generalContext, specificContext);
 
-        if (deductionStatementUnifies) {
-          specificContext.commit(context);
+      if (deductionStatementUnifies) {
+        specificContext.commit(context);
 
-          deductionUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
+        deductionUnifies = true;
+      }
+    }, specificContext);
 
     if (deductionUnifies) {
       context.debug(`...unified the '${deductionString}' deduction with the '${lastStatementString}' last statement.`)
@@ -220,22 +216,20 @@ export default define(class SubproofAssertion extends Assertion {
 
     context.trace(`Unifying the '${suppositionString}' supposition with the '${supposedStatementString}' supposed statement...`)
 
-    const suppositionContext = supposition.getContext(),
-          suppositionStatement = supposition.getStatement();
+    const suppositionContext = supposition.getContext();
 
     specificContext = suppositionContext;  ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const suppositionStatementUnifies = supposedStatement.unifyStatement(suppositionStatement, generalContext, specificContext);
+    reconcile((specificContext) => {
+      const suppositionStatement = supposition.getStatement(),
+            suppositionStatementUnifies = supposedStatement.unifyStatement(suppositionStatement, generalContext, specificContext);
 
-        if (suppositionStatementUnifies) {
-          specificContext.commit(context);
+      if (suppositionStatementUnifies) {
+        specificContext.commit(context);
 
-          suppositionUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
+        suppositionUnifies = true;
+      }
+    }, specificContext);
 
     if (suppositionUnifies) {
       context.debug(`...unified the '${suppositionString}' supposition with the '${supposedStatementString}' supposed statement.`)

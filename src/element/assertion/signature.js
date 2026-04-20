@@ -166,6 +166,11 @@ export default define(class SignatureAssertion extends Assertion {
   async unifyTopLevelAssertion(topLevelAssertion, context) {
     let topLevelAssertionUnifies;
 
+    const topLevelAssertionString = topLevelAssertion.getString(),
+          signatureAssertionString = this.getString();
+
+    context.trace(`Unifying the '${topLevelAssertionString}' top-level assertion with the '${signatureAssertionString}' signature assertion...`);
+
     const axiom = context.findAxiomByReference(this.reference),
           signatureContext = this.signature.getContext(),
           specificContext = signatureContext; ///
@@ -179,6 +184,10 @@ export default define(class SignatureAssertion extends Assertion {
         topLevelAssertionUnifies = await axiom.unifyTopLevelAssertion(topLevelAssertion, context);
       }, context);
     }, specificContext, context);
+
+    if (topLevelAssertionUnifies) {
+      context.trace(`Unifying the '${topLevelAssertionString}' top-level assertion with the '${signatureAssertionString}' signature assertion...`);
+    }
 
     return topLevelAssertionUnifies;
   }

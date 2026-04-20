@@ -258,16 +258,16 @@ export function topLevelAssertionStringFromLabelsSignatureSuppositionsAndDeducti
         suppositionsString = suppositionsStringFromSuppositions(suppositions);
 
   topLevelAssertionString = (labelsString !== null) ?
-                              `${topLevelAssertionString}${labelsString} :: ` :
-                                `${topLevelAssertionString}`;
-
+                             `${topLevelAssertionString}${labelsString}` :
+                               `${topLevelAssertionString}`;
   topLevelAssertionString = (signatureString !== null) ?
-                             `${topLevelAssertionString} ${signatureString}` :
+                             `${topLevelAssertionString}${signatureString}` :
                                `${topLevelAssertionString}`;
 
+
   topLevelAssertionString = (suppositionsString !== null) ?
-                             `${topLevelAssertionString}[${suppositionsString}]...${deductionString}` :
-                               `${topLevelAssertionString}${deductionString}`;
+                             `${topLevelAssertionString} :: [${suppositionsString}]...${deductionString}` :
+                               `${topLevelAssertionString} :: ${deductionString}`;
 
   return topLevelAssertionString;
 }

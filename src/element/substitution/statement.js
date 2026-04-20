@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { join, posit, ablate, ablates, manifest, attempts, sequester, reconcile, instantiate, unserialises } from "../../utilities/context";
+import { posit, ablate, ablates, manifest, attempts, sequester, reconcile, instantiate, unserialises } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -236,17 +236,15 @@ export default define(class StatementSubstitution extends Substitution {
           generalStatement = generalSubstitutionTargetStatement, ///
           specificStatement = specificSubstitutionTargetStatement; ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
+    reconcile((specificContext) => {
+      const statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
 
-        if (statementUnifies) {
-          specificContext.commit(context);
+      if (statementUnifies) {
+        specificContext.commit(context);
 
-          targetStatemnentUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
+        targetStatemnentUnifies = true;
+      }
+    }, specificContext);
 
     if (targetStatemnentUnifies) {
       context.trace(`...unified the '${specificSubstitutionString}' substitution's target statement with the '${generalSubstitutionString}' substitution's target statement.`);
@@ -274,17 +272,15 @@ export default define(class StatementSubstitution extends Substitution {
           generalStatement = generalSubstitutionReplacementStatement, ///
           specificStatement = specificSubstitutionReplacementStatement; ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
+    reconcile((specificContext) => {
+      const statementUnifies = generalStatement.unifyStatement(specificStatement, generalContext, specificContext);
 
-        if (statementUnifies) {
-          specificContext.commit(context);
+      if (statementUnifies) {
+        specificContext.commit(context);
 
-          replacementStatemnentUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
+        replacementStatemnentUnifies = true;
+      }
+    }, specificContext);
 
     if (replacementStatemnentUnifies) {
       context.trace(`...unified the '${specificSubstitutionString}' substitution's replacement statement with the '${generalSubstitutionString}' substitution's replacement statement.`);

@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiateDeduction } from "../process/instantiate";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import { declare, attempt, sequester, serialise, unserialise, instantiate } from "../utilities/context";
+import {declare, attempt, sequester, serialise, unserialise, instantiate, reconcile} from "../utilities/context";
 
 export default define(class Deduction extends Element {
   constructor(context, string, node, breakPoint, statement) {
@@ -109,20 +109,21 @@ export default define(class Deduction extends Element {
 
     context.trace(`Unifying the '${stepString}' step with the '${deductionString}' deduction...`);
 
-    const specificContext = context;  ///
+    const stepContext = step.getContext(),
+          deductionContext = this.getContext(),
+          generalContext = deductionContext, ///
+          specificContext = stepContext;  ///
 
-    context = this.getContext();
+    reconcile((specificContext) => {
+      const statement = step.getStatement(),
+            statementUnifies = this.statement.unifyStatement(statement, generalContext, specificContext);
 
-    const generalContext = context;  ///
+      if (statementUnifies) {
+        specificContext.commit(context);
 
-    context = specificContext;  ///
-
-    const statement = step.getStatement(),
-          statementUnifies = this.statement.unifyStatement(statement, generalContext, specificContext);
-
-    if (statementUnifies) {
-      stepUnifies = true;
-    }
+        stepUnifies = true;
+      }
+    }, specificContext);
 
     if (stepUnifies) {
       context.debug(`...unified the '${stepString}' step with the '${deductionString}' deduction.`);

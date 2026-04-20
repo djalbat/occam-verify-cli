@@ -6,7 +6,7 @@ import { define } from "../../elements";
 import { instantiateSupposition} from "../../process/instantiate";
 import { procedureCallFromSuppositionNode } from "../../utilities/element";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../../utilities/breakPoint";
-import { join, declare, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
+import { declare, attempt, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class Supposition extends ProofAssertion {
   constructor(context, string, node, breakPoint, statement, procedureCall) {
@@ -166,38 +166,91 @@ export default define(class Supposition extends ProofAssertion {
 
     context.trace(`Unifying the '${suppositionString}' supposition independently...`);
 
-    const statement = this.getStatement(),
-          procedureCall = this.getProcedureCall();
+    await reconcile(async (context) => {
+      const statement = this.getStatement(),
+            procedureCall = this.getProcedureCall();
 
-    if (statement !== null) {
-      const specificContext = context;  ///
+      if (statement !== null) {
+        const suppositionContext = this.getContext(),
+              generalContext = suppositionContext,  ///
+              specificContext = context,  ///
+              statementUnifiesIndependently = statement.unifyIndependently(generalContext, specificContext);
 
-      context = this.getContext();
-
-      const generalContext = context; ///
-
-      context = specificContext;  ///
-
-      const statementUnifiesIndependently = statement.unifyIndependently(generalContext, specificContext);
-
-      if (statementUnifiesIndependently) {
-        unifiesIndependently = true;
+        if (statementUnifiesIndependently) {
+          unifiesIndependently = true;
+        }
       }
-    }
 
-    if (procedureCall !== null) {
-      const procedureCallResolvedIndependently = await procedureCall.unifyIndependently(context);
+      if (procedureCall !== null) {
+        const procedureCallResolvedIndependently = await procedureCall.unifyIndependently(context);
 
-      if (procedureCallResolvedIndependently) {
-        unifiesIndependently = true;
+        if (procedureCallResolvedIndependently) {
+          unifiesIndependently = true;
+        }
       }
-    }
+    }, context);
 
     if (unifiesIndependently) {
-      context.debug(`...unified the '${suppositionString}' supposition independenly.`);
+      context.debug(`...unified the '${suppositionString}' supposition independently.`);
     }
 
     return unifiesIndependently;
+  }
+
+  unifySubproof(subproof, context) {
+    let subproofUnifies = false;
+
+    const suppositionString = this.getString(), ///
+          subproofString = subproof.getString();
+
+    context.trace(`Unifying the '${subproofString}' subproof with the '${suppositionString}' supposition...`);
+
+    const subproofAssertion = this.findSubproofAssertion();
+
+    if (subproofAssertion !== null) {
+      const supposition = this.getContext(),
+            generalContext = supposition, ///
+            spsecfiicContext = context; ///
+
+      subproofUnifies = subproofAssertion.unifySubproof(subproof, generalContext, spsecfiicContext);
+    }
+
+    if (subproofUnifies) {
+      context.debug(`...unified the '${subproofString}' subproof with the '${suppositionString}' supposition.`);
+    }
+
+    return subproofUnifies;
+  }
+
+  unifyProofAssertion(proofAssertion, context) {
+    let proofAssertionUnifies = false;
+
+    const suppositionString = this.getString(), ///
+          proofAssertionString = proofAssertion.getString();
+
+    context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition...`);
+
+    const proofAssertionContext = proofAssertion.getContext(),
+          suppositionContext = this.getContext(), ///
+          generalContext = suppositionContext, ///
+          specificContext = proofAssertionContext;  ///
+
+    reconcile((specificContext) => {
+      const statement = proofAssertion.getStatement(),
+            statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
+
+      if (statementUnifies) {
+        specificContext.commit(context);
+
+        proofAssertionUnifies = true;
+      }
+    }, specificContext);
+
+    if (proofAssertionUnifies) {
+      context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition.`);
+    }
+
+    return proofAssertionUnifies;
   }
 
   unifySubproofOrProofAssertion(subproofOrProofAssertion, context) {
@@ -213,98 +266,36 @@ export default define(class Supposition extends ProofAssertion {
                                                                       subproofOrProofAssertion :
                                                                         null,
                                                    subproof = subproofOrProofAssertionProofAssertion ?
-                                                                null :
-                                                                  subproofOrProofAssertion;
+                                                               null :
+                                                                 subproofOrProofAssertion;
 
-    if (proofAssertion !== null) {
-      const proofAssertionUnifies = this.unifyProofAssertion(proofAssertion, context);
+    reconcile((context) => {
+      if (proofAssertion !== null) {
+        const proofAssertionUnifies = this.unifyProofAssertion(proofAssertion, context);
 
-      if (proofAssertionUnifies) {
-        subproofOrProofAssertionUnifies = true;
+        if (proofAssertionUnifies) {
+          subproofOrProofAssertionUnifies = true;
+        }
       }
-    }
 
-    if (subproof !== null) {
-      const subproofUnifies = this.unifySubproof(subproof, context);
+      if (subproof !== null) {
+        const subproofUnifies = this.unifySubproof(subproof, context);
 
-      if (subproofUnifies) {
-        subproofOrProofAssertionUnifies = true;
+        if (subproofUnifies) {
+          subproofOrProofAssertionUnifies = true;
+        }
       }
-    }
+
+      if (subproofOrProofAssertionUnifies) {
+        context.commit();
+      }
+    }, context);
 
     if (subproofOrProofAssertionUnifies) {
       context.debug(`...unified the '${subproofOrProofAssertionString}' subproof or proof assertion with the '${suppositionString}' supposition.`);
     }
 
     return subproofOrProofAssertionUnifies;
-  }
-
-  unifyProofAssertion(proofAssertion, context) {
-    let proofAssertionUnifies = false;
-
-    const suppositionString = this.getString(), ///
-          proofAssertionString = proofAssertion.getString();
-
-    context.trace(`Unifying the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition...`);
-
-    const proofAssertionContext = proofAssertion.getContext(),
-          suppositionContext = this.getContext(),
-          generalContext = suppositionContext, ///
-          specificContext = proofAssertionContext;
-
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        const statement = proofAssertion.getStatement(),
-              statementUnifies = this.unifyStatement(statement, generalContext, specificContext);
-
-        if (statementUnifies) {
-          specificContext.commit(context);
-
-          proofAssertionUnifies = true;
-        }
-      }, specificContext);
-    }, specificContext, context);
-
-    if (proofAssertionUnifies) {
-      context.debug(`...unified the '${proofAssertionString}' proof assertion with the '${suppositionString}' supposition.`);
-    }
-
-    return proofAssertionUnifies;
-  }
-
-  unifySubproof(subproof, context) {
-    let subproofUnifies = false;
-
-    const subproofString = subproof.getString(),
-          suppositionString = this.getString();
-
-    context.trace(`Unifying the '${subproofString}' subproof with the '${suppositionString}' supposition...`);
-
-    const statement = this.getStatement();
-
-    if (statement !== null) {
-      const statementNode = statement.getNode(),
-            subproofAssertionNode = statementNode.getSubproofAssertionNode();
-
-      if (subproofAssertionNode !== null) {
-        const specificContext = context;  ///
-
-        context = this.getContext();
-
-        const generalContext = context, ///
-              subproofAssertion = context.findAssertionByAssertionNode(subproofAssertionNode);
-
-        context = specificContext;  ///
-
-        subproofUnifies = subproofAssertion.unifySubproof(subproof, generalContext, specificContext);
-      }
-    }
-
-    if (subproofUnifies) {
-      context.debug(`...unified the '${subproofString}' subproof with the '${suppositionString}' supposition.`);
-    }
-
-    return subproofUnifies;
   }
 
   toJSON() {
