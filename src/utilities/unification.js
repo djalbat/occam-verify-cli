@@ -2,8 +2,6 @@
 
 import elements from "../elements";
 
-import { descend } from "./context";
-
 async function unifyStepWithRule(step, context) {
   let stepUnifiesWithRule = false;
 
@@ -224,8 +222,8 @@ async function unifyStepAsUnqualifiedSignatureAssertion(step, context) {
   return stepUnifiesAsUnqualifiedSignatureAssertion;
 }
 
-async function validateStepAsMetaLevelAssumption(step, context) {
-  let stepValidatesAsMetaLevelAssumption = false;
+async function unifyStepAsQualifiedMetaLevelAssumption(step, context) {
+  let stepUnifiesAsQualifiedMetaLevelAssumption = false;
 
   const metaLevel = context.isMetaLevel();
 
@@ -234,37 +232,33 @@ async function validateStepAsMetaLevelAssumption(step, context) {
 
     if (reference !== null) {
       const stepString = step.getString(),
-            topLevelAssertion = context.findTopLevelAssertionByReference(reference);
+            referenceString = reference.getString();
 
-      if (topLevelAssertion === null) {
-        context.trace(`Validating the '${stepString}' step as a meta-level assumption...`);
+      context.trace(`Unifying the '${stepString}' step as a meta-level assumption with the '${referenceString}' reference...`);
 
-        descend((context) => {
-          let metaLevelAssumption;
+      let metaLevelAssumption;
 
-          const { MetaLevelAssumption } = elements;
+      const { MetaLevelAssumption } = elements;
 
-          metaLevelAssumption = MetaLevelAssumption.fromStep(step, context);
+      metaLevelAssumption = MetaLevelAssumption.fromStep(step, context);
 
-          metaLevelAssumption = metaLevelAssumption.validate(context);  ///
+      metaLevelAssumption = metaLevelAssumption.validate(context);  ///
 
-          if (metaLevelAssumption !== null) {
-            stepValidatesAsMetaLevelAssumption = true;
-          }
-        }, context);
+      if (metaLevelAssumption !== null) {
+        stepUnifiesAsQualifiedMetaLevelAssumption = true;
+      }
 
-        if (stepValidatesAsMetaLevelAssumption) {
-          context.debug(`...validated the '${stepString}' step as a meta-level assumption.`);
-        }
+      if (stepUnifiesAsQualifiedMetaLevelAssumption) {
+        context.debug(`...unified the '${stepString}' step as a meta-level assumption with the '${referenceString}' reference.`);
       }
     }
   }
 
-  return stepValidatesAsMetaLevelAssumption;
+  return stepUnifiesAsQualifiedMetaLevelAssumption;
 }
 
-async function unifyStepAsSignatureAssertion(step, context) {
-  let stepUnifiesAsSignatureAssertion = false;
+async function unifyStepAsQualifiedSignatureAssertion(step, context) {
+  let stepUnifiesAsQualifiedSignatureAssertion = false;
 
   const reference = step.getReference();
 
@@ -285,17 +279,17 @@ async function unifyStepAsSignatureAssertion(step, context) {
         const unifyTopLevelAssertion = await signatureAssertion.unifyTopLevelAssertion(topLevelAssertion, context);
 
         if (unifyTopLevelAssertion) {
-          stepUnifiesAsSignatureAssertion = true;
+          stepUnifiesAsQualifiedSignatureAssertion = true;
         }
 
-        if (stepUnifiesAsSignatureAssertion) {
+        if (stepUnifiesAsQualifiedSignatureAssertion) {
           context.debug(`...unified the '${stepString}' step as a signature assertion with the '${referenceString}' reference.`);
         }
       }
     }
   }
 
-  return stepUnifiesAsSignatureAssertion;
+  return stepUnifiesAsQualifiedSignatureAssertion;
 }
 
 async function compareStepWithSubproofOrProofAssertions(step, context) {
@@ -332,7 +326,7 @@ export const unifySteps = [
   unifyStepAsUnqualifiedTypeAssertion,
   unifyStepAsUnqualifiedPropertyAssertion,
   unifyStepAsUnqualifiedSignatureAssertion,
-  validateStepAsMetaLevelAssumption,
-  unifyStepAsSignatureAssertion,
+  unifyStepAsQualifiedMetaLevelAssumption,
+  unifyStepAsQualifiedSignatureAssertion,
   compareStepWithSubproofOrProofAssertions
 ];

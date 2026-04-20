@@ -38,6 +38,8 @@ export default define(class Reference extends Element {
     return metavariableNode;
   }
 
+  getMetaType() { return this.metavariable.getMetaType(); }
+
   isEqualTo(reference) {
     const referenceNode = reference.getNode(),
           referenceNodeMatches = this.matchReferenceNode(referenceNode),
