@@ -4,6 +4,7 @@ import { Element } from "occam-languages";
 import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
+import { instantiateSignature } from "../process/instantiate";
 import { signatureFromSignatureNode } from "../utilities/element";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 import { join, posit, ablate, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
