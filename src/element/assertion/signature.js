@@ -4,7 +4,7 @@ import Assertion from "../assertion";
 
 import { define } from "../../elements";
 import { breakPointFromJSON } from "../../utilities/breakPoint";
-import { join, reconcile, instantiate } from "../../utilities/context";
+import { reconcile, instantiate } from "../../utilities/context";
 import { instantiateSignatureAssertion } from "../../process/instantiate";
 import { signatureFromSignatureAssertionNode, referenceFromSignatureAssertionNode, signatureAssertionFromStatementNode } from "../../utilities/element";
 
@@ -148,11 +148,9 @@ export default define(class SignatureAssertion extends Assertion {
 
     context.trace(`Unifying the '${signatureAssertionString}' signature assertion's signature...`);
 
-    const axiom = context.findAxiomByReference(this.reference);
-
-    context = this.signature.getContext();
-
     reconcile((context) => {
+      const axiom = context.findAxiomByReference(this.reference);
+
       signatureUnifies = axiom.unifySignature(this.signature, context);
     }, context);
 
@@ -171,19 +169,13 @@ export default define(class SignatureAssertion extends Assertion {
 
     context.trace(`Unifying the '${topLevelAssertionString}' top-level assertion with the '${signatureAssertionString}' signature assertion...`);
 
-    const axiom = context.findAxiomByReference(this.reference),
-          signatureContext = this.signature.getContext(),
-          specificContext = signatureContext; ///
+    await reconcile(async (context) => {
+      const axiom = context.findAxiomByReference(this.reference);
 
-    await join(async (specificContext) => {
-      const context = specificContext;  ///
+      axiom.unifySignature(this.signature, context);
 
-      await reconcile(async (context) => {
-        axiom.unifySignature(this.signature, context);
-
-        topLevelAssertionUnifies = await axiom.unifyTopLevelAssertion(topLevelAssertion, context);
-      }, context);
-    }, specificContext, context);
+      topLevelAssertionUnifies = await axiom.unifyTopLevelAssertion(topLevelAssertion, context);
+    }, context);
 
     if (topLevelAssertionUnifies) {
       context.trace(`Unifying the '${topLevelAssertionString}' top-level assertion with the '${signatureAssertionString}' signature assertion...`);
@@ -195,19 +187,13 @@ export default define(class SignatureAssertion extends Assertion {
   async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
     let stepAndSubproofOrProofAssertionsUnify;
 
-    const axiom = context.findAxiomByReference(this.reference),
-          signatureContext = this.signature.getContext(),
-          specificContext = signatureContext; ///
+    await reconcile(async (context) => {
+      const axiom = context.findAxiomByReference(this.reference);
 
-    await join(async (specificContext) => {
-      const context = specificContext;  ///
+      axiom.unifySignature(this.signature, context);
 
-      await reconcile(async (context) => {
-        axiom.unifySignature(this.signature, context);
-
-        stepAndSubproofOrProofAssertionsUnify = await axiom.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
-      }, context);
-    }, specificContext, context);
+      stepAndSubproofOrProofAssertionsUnify = await axiom.unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context);
+    }, context);
 
     return stepAndSubproofOrProofAssertionsUnify;
   }

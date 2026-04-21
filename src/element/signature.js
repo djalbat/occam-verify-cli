@@ -7,7 +7,7 @@ import { define } from "../elements";
 import { instantiateSignature } from "../process/instantiate";
 import { signatureFromSignatureNode } from "../utilities/element";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import { join, posit, ablate, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
+import { posit, ablate, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
 
 const { match } = arrayUtilities;
 
@@ -199,23 +199,21 @@ export default define(class Signature extends Element {
           generalContext = generalSignatureContext, ///
           specificContext = specificSignatureContext;  ///
 
-    join((specificContext) => {
-      reconcile((specificContext) => {
-        signatureUnifies = match(generalTerms, specificTerms, (generalTerm, specificTerm) => {
-          let termUnifies;
+    reconcile((specificContext) => {
+      signatureUnifies = match(generalTerms, specificTerms, (generalTerm, specificTerm) => {
+        let termUnifies;
 
-          termUnifies = generalTerm.unifyTerm(specificTerm, generalContext, specificContext);
+        termUnifies = generalTerm.unifyTerm(specificTerm, generalContext, specificContext);
 
-          if (termUnifies) {
-            return true;
-          }
-        });
-
-        if (signatureUnifies) {
-          specificContext.commit(context);
+        if (termUnifies) {
+          return true;
         }
-      }, specificContext);
-    }, specificContext, context);
+      });
+
+      if (signatureUnifies) {
+        specificContext.commit(context);
+      }
+    }, specificContext);
 
     if (signatureUnifies) {
       context.debug(`...unified the '${specificSignatureString}' signature with the '${generalSignatureString}' signature.`);
