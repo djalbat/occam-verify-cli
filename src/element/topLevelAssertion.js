@@ -257,38 +257,36 @@ export default class TopLevelAssertion extends Element {
     return suppositionsVerify;
   }
 
-  async validateHypothesis(hypothesis, context) {
-    let hypothesisValid;
+  async dischargeHypothesis(hypothesis, context) {
+    let hypothesisDischarged;
 
     await this.break(context);
 
     const hypothesisString = hypothesis.getString(),
           topLevelAssertionString = this.getString(); ///
 
-    context.trace(`Validating the '${topLevelAssertionString}' top level assertion's '${hypothesisString}' hypothesis... `);
+    context.trace(`Discharding the '${topLevelAssertionString}' top level assertion's '${hypothesisString}' hypothesis... `);
 
-    const stated = false;
+    hypothesisDischarged = hypothesis.discharge(context);
 
-    hypothesisValid = hypothesis.validate(stated, context);
-
-    if (hypothesisValid) {
-      context.trace(`...validated the '${topLevelAssertionString}' top level assertion's '${hypothesisString}' hypothesis. `);
+    if (hypothesisDischarged) {
+      context.trace(`...discharged the '${topLevelAssertionString}' top level assertion's '${hypothesisString}' hypothesis. `);
     }
 
-    return hypothesisValid;
+    return hypothesisDischarged;
   }
 
-  async validateHypotheses(context) {
+  async dischargeHypotheses(context) {
     const hypotheses = this.getHypotheses(),
-          hypothesesValid = await asyncEvery(hypotheses, async (hypothesis) => {
-            const hypothesisValid = await this.validateHypothesis(hypothesis, context);
+          hypothesesDischarged = await asyncEvery(hypotheses, async (hypothesis) => {
+            const hypothesisDischarged = await this.dischargeHypothesis(hypothesis, context);
 
-            if (hypothesisValid) {
+            if (hypothesisDischarged) {
               return true;
             }
           });
 
-    return hypothesesValid;
+    return hypothesesDischarged;
   }
 
   async unifyStepWithDeduction(step, context) {
@@ -317,9 +315,9 @@ export default class TopLevelAssertion extends Element {
   async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
     let stepAndSubproofOrProofAssertionsUnify = false;
 
-    const hypothesesValid = await this.validateHypotheses(context);
+    const hypothesesDischarged = await this.dischargeHypotheses(context);
 
-    if (hypothesesValid) {
+    if (hypothesesDischarged) {
       const stepUnifiesWithDeduction = await this.unifyStepWithDeduction(step, context);
 
       if (stepUnifiesWithDeduction) {

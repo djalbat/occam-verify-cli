@@ -36,13 +36,11 @@ export default define(class Hypothesis extends Element {
     context.trace(`Verifying the '${hypothesisString}' hypothesis...`);
 
     if (this.statement !== null) {
-      declare((context) => {
-        const validates = this.validate(context);
+      const validates = this.validate(context);
 
-        if (validates) {
-          verifies = true;
-        }
-      }, context)
+      if (validates) {
+        verifies = true;
+      }
     } else {
       context.debug(`Unable to verify the '${hypothesisString}' hypothesis because it is nonsense.`);
     }
@@ -54,36 +52,54 @@ export default define(class Hypothesis extends Element {
     return verifies;
   }
 
-  validate(stated, context) {
-    if (context === undefined) {
-      context = stated; ///
-
-      stated = true;
-    }
-
+  validate(context) {
     let validates = false;
 
     const hypothesisString = this.getString(); ///
 
     context.trace(`Validating the '${hypothesisString}' hypothesis...`);
 
-    (stated ? attempt : proffer)((context) => {
-      const statementValidates = this.validateStatement(context);
+    declare((context) => {
+      attempt((context) => {
+        const statementValidates = this.validateStatement(context);
 
-      if (statementValidates) {
-        validates = true;
-      }
+        if (statementValidates) {
+          validates = true;
+        }
 
-      if (validates) {
-        this.commit(context);
-      }
-    }, context);
+        if (validates) {
+          this.commit(context);
+        }
+      }, context);
+    }, context)
 
     if (validates) {
       context.debug(`...validated the '${hypothesisString}' hypothesis.`);
     }
 
     return validates;
+  }
+
+  discharge(context) {
+    let discharges = false;
+
+    const hypothesisString = this.getString(); ///
+
+    context.trace(`Discharging the '${hypothesisString}' hypothesis...`);
+
+    proffer((context) => {
+      const statementDischarges = this.dischargeStatement(context);
+
+      if (statementDischarges) {
+        discharges = true;
+      }
+    }, context);
+
+    if (discharges) {
+      context.debug(`...discharged the '${hypothesisString}' hypothesis.`);
+    }
+
+    return discharges;
   }
 
   validateStatement(context) {
@@ -104,6 +120,26 @@ export default define(class Hypothesis extends Element {
     }
 
     return statementValidates;
+  }
+
+  dischargeStatement(context) {
+    let statementDischarges = false;
+
+    const hypothesisString = this.getString();
+
+    context.trace(`Discharging the '${hypothesisString}' hypothesis's statement... `);
+
+    const discharges = this.statement.discharge(context);  ///
+
+    if (discharges) {
+      statementDischarges = true;
+    }
+
+    if (statementDischarges) {
+      context.debug(`...discharged the '${hypothesisString}' hypothesis' statement. `);
+    }
+
+    return statementDischarges;
   }
 
   static name = "Hypothesis";

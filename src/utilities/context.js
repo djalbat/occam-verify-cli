@@ -16,6 +16,10 @@ import NominalFileContext from "../context/file/nominal";
 
 import { mnemicContextFromJSON, mnemicContextsFromJSON, mnemicContextToMnemicContextJSON, mnemicContextsToMnemicContextsJSON } from "../utilities/json";
 
+export function pass(innerFunction, context) {
+  return innerFunction(context);
+}
+
 export function posit(innerFunction, context) {
   const stated = true,
     ephemeralContext = EphemeralContext.fromStated(stated, context);

@@ -58,7 +58,7 @@ export default define(class TypeAssertion extends Assertion {
         const stated = context.isStated();
 
         let validatesWhenStated = false,
-            validatesWhenDerived = false;
+          validatesWhenDerived = false;
 
         if (stated) {
           validatesWhenStated = this.validateWhenStated(context);
@@ -87,6 +87,26 @@ export default define(class TypeAssertion extends Assertion {
     }
 
     return typeAssertion;
+  }
+
+  discharge(context) {
+    let discharges = false;
+
+    const typeAssertionString = this.getString();  ///
+
+    context.trace(`Discharging the '${typeAssertionString}' type assertion...`);
+
+    const validatesWhenDerived = this.validateWhenDerived(context);
+
+    if (validatesWhenDerived) {
+      discharges = true;
+    }
+
+    if (discharges) {
+      context.debug(`...discharged the '${typeAssertionString}' type assertion.`);
+    }
+
+    return discharges;
   }
 
   validateType(context) {

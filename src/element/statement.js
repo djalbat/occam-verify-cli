@@ -6,6 +6,7 @@ import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { unifyStatement } from "../process/unify";
 import { validateStatements } from "../process/validation";
+import { dischargeStatements } from "../process/discharge";
 import { instantiateStatement } from "../process/instantiate";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
@@ -205,7 +206,7 @@ export default define(class Statement extends Element {
     } else {
       validates = validateStatements.some((validateStatement) => {
         const statement = this, ///
-              statementValidates = validateStatement(statement, context);
+          statementValidates = validateStatement(statement, context);
 
         if (statementValidates) {
           return true;
@@ -224,6 +225,29 @@ export default define(class Statement extends Element {
     }
 
     return statement;
+  }
+
+  discharge(context) {
+    let discharges;
+
+    const statementString = this.getString();  ///
+
+    context.trace(`Dicharging the '${statementString}' statement...`);
+
+    discharges = dischargeStatements.some((dischargeStatement) => {
+      const statement = this, ///
+            statementDischarged = dischargeStatement(statement, context);
+
+      if (statementDischarged) {
+        return true;
+      }
+    });
+
+    if (discharges) {
+      context.debug(`...discharged the '${statementString}' statement.`);
+    }
+
+    return discharges;
   }
 
   unifyStatement(statement, generalContext, specificContext) {
