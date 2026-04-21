@@ -267,9 +267,9 @@ export default define(class SubproofAssertion extends Assertion {
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${subproofAssertionString}' subproof assertion...`);
 
     reconcile((context) => {
-      const generalContext = context, ///
+      const deduction = topLevelMetaAssertion.getDeduction(),
+            generalContext = context, ///
             specificContext = context,  ///
-            deduction = topLevelMetaAssertion.getDeduction(),
             deductionUnifies = this.unifyDeduction(deduction, generalContext, specificContext);
 
       if (deductionUnifies) {

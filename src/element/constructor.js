@@ -106,19 +106,14 @@ export default define(class Constructor extends Element {
 
     const termString = term.getString(),
           includeType = false,
-          constructorString = this.getString(includeType);
+          constructorString = this.getString(includeType);  ///
 
     context.trace(`Unifying the '${termString}' term with the '${constructorString}' constructor...`);
 
-    const specifiContext = context; ///
-
-    context = this.getContext();
-
-    const generalContext = context; ///
-
-    context = specifiContext; ///
-
     const constructor = this, ///
+          constructorContext = constructor.getContext(),
+          generalContext = constructorContext,  ///
+          specifiContext = context, ///
           termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, generalContext, specifiContext);
 
     if (termUnifiesWithConstructor) {

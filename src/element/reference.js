@@ -127,12 +127,12 @@ export default define(class Reference extends Element {
 
       context.debug(`...the '${referenceString}' reference is already valid.`);
     } else {
-      const specificContext = context;  ///
+      const referendeContext = this.getContext(), ///
+            generalContext = referendeContext;  ///
 
-      context = this.getContext();
-
-      attempt((context) => {
-        const metavariableValidates = this.validateMetavariable(context);
+      attempt((generalContext) => {
+        const context = generalContext, ///
+              metavariableValidates = this.validateMetavariable(context);
 
         if (metavariableValidates) {
           const referenceMetaTypeName = REFERENCE_META_TYPE_NAME,
@@ -166,9 +166,7 @@ export default define(class Reference extends Element {
         if (validates) {
           this.commit(context);
         }
-      }, context);
-
-      context = specificContext;  ///
+      }, generalContext);
 
       if (validates) {
         reference = this;  ///
@@ -214,11 +212,9 @@ export default define(class Reference extends Element {
 
     context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
-    const generalContext = context; ///
-
-    context = label.getContext();
-
-    const specificContext = context;  ///
+    const labelContext = label.getContext(),
+          generalContext = context, ///
+          specificContext = labelContext;  ///
 
     reconcile((specificContext) => {
       const metavariable = label.getMetavariable(),

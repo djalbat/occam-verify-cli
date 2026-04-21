@@ -75,25 +75,22 @@ export default define(class Combinator extends Element {
   }
 
   unifyStatement(statement, context) {
-    let statementUnifies;
+    let statementUnifies = false;
 
     const statementString = statement.getString(),
           combinatorString = this.getString();  ///
 
     context.trace(`Unifying the '${statementString}' statement with the '${combinatorString}' combinator...`);
 
-    const specifiContext = context; ///
-
-    context = this.getContext();
-
-    const generalContext = context; ///
-
-    context = specifiContext; ///
-
     const combinator = this, ///
+          combinatorContext = combinator.getContext(),
+          generalContext = combinatorContext, ///
+          specifiContext = context, ///
           statementUnifiesWithCombinator = unifyStatementWithCombinator(statement, combinator, generalContext, specifiContext);
 
-    statementUnifies = statementUnifiesWithCombinator; ///
+    if (statementUnifiesWithCombinator) {
+      statementUnifies = true;
+    }
 
     if (statementUnifies) {
       context.debug(`...unified the '${statementString}' statement with the '${combinatorString}' combinator.`);
