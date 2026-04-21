@@ -6,7 +6,7 @@ import { define } from "../elements";
 import { instantiateHypothesis } from "../process/instantiate";
 import { statementFromHypothesisNode } from "../utilities/element";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import { declare, attempt, serialise, unserialise, instantiate } from "../utilities/context";
+import { declare, attempt, proffer, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Hypothesis extends Element {
   constructor(context, string, node, breakPoint, statement) {
@@ -36,11 +36,13 @@ export default define(class Hypothesis extends Element {
     context.trace(`Verifying the '${hypothesisString}' hypothesis...`);
 
     if (this.statement !== null) {
-      const validates = this.validate(context);
+      declare((context) => {
+        const validates = this.validate(context);
 
-      if (validates) {
-        verifies = true;
-      }
+        if (validates) {
+          verifies = true;
+        }
+      }, context)
     } else {
       context.debug(`Unable to verify the '${hypothesisString}' hypothesis because it is nonsense.`);
     }
@@ -52,26 +54,30 @@ export default define(class Hypothesis extends Element {
     return verifies;
   }
 
-  validate(context) {
+  validate(stated, context) {
+    if (context === undefined) {
+      context = stated; ///
+
+      stated = true;
+    }
+
     let validates = false;
 
     const hypothesisString = this.getString(); ///
 
     context.trace(`Validating the '${hypothesisString}' hypothesis...`);
 
-    declare((context) => {
-      attempt((context) => {
-        const statementValidates = this.validateStatement(context);
+    (stated ? attempt : proffer)((context) => {
+      const statementValidates = this.validateStatement(context);
 
-        if (statementValidates) {
-          validates = true;
-        }
+      if (statementValidates) {
+        validates = true;
+      }
 
-        if (validates) {
-          this.commit(context);
-        }
-      }, context);
-    }, context)
+      if (validates) {
+        this.commit(context);
+      }
+    }, context);
 
     if (validates) {
       context.debug(`...validated the '${hypothesisString}' hypothesis.`);

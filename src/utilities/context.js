@@ -17,7 +17,8 @@ import NominalFileContext from "../context/file/nominal";
 import { mnemicContextFromJSON, mnemicContextsFromJSON, mnemicContextToMnemicContextJSON, mnemicContextsToMnemicContextsJSON } from "../utilities/json";
 
 export function posit(innerFunction, context) {
-  const ephemeralContext = EphemeralContext.fromNothing(context);
+  const stated = true,
+    ephemeralContext = EphemeralContext.fromStated(stated, context);
 
   context = ephemeralContext;  ///
 
@@ -66,6 +67,15 @@ export function derive(innerFunction, context) {
   const illativeContext = IllativeContext.fromNothing(context);
 
   context = illativeContext;  ///
+
+  return innerFunction(context);
+}
+
+export function proffer(innerFunction, context) {
+  const stated = false,
+        ephemeralContext = EphemeralContext.fromStated(stated, context);
+
+  context = ephemeralContext;  ///
 
   return innerFunction(context);
 }

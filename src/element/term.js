@@ -5,7 +5,7 @@ import { arrayUtilities } from "necessary";
 
 import { define } from "../elements";
 import { instantiate } from "../utilities/context";
-import { validateTerms } from "../utilities/validation";
+import { validateTerms } from "../process/validation";
 import { instantiateTerm } from "../process/instantiate";
 import { variablesFromTerm } from "../utilities/equivalence";
 import { unifyTermIntrinsically } from "../process/unify";

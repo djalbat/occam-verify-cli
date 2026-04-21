@@ -18,7 +18,7 @@ import { labelsFromJSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
 
 const { reverse } = arrayUtilities,
-      { asyncExtract, asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
+      { asyncEvery, asyncExtract, asyncForwardsEvery, asyncBackwardsEvery } = asynchronousUtilities;
 
 export default class TopLevelAssertion extends Element {
   constructor(context, string, node, breakPoint, labels, suppositions, deduction, proof, signature, hypotheses) {
@@ -257,6 +257,40 @@ export default class TopLevelAssertion extends Element {
     return suppositionsVerify;
   }
 
+  async validateHypothesis(hypothesis, context) {
+    let hypothesisValid;
+
+    await this.break(context);
+
+    const hypothesisString = hypothesis.getString(),
+          topLevelAssertionString = this.getString(); ///
+
+    context.trace(`Validating the '${topLevelAssertionString}' top level assertion's '${hypothesisString}' hypothesis... `);
+
+    const stated = false;
+
+    hypothesisValid = hypothesis.validate(stated, context);
+
+    if (hypothesisValid) {
+      context.trace(`...validated the '${topLevelAssertionString}' top level assertion's '${hypothesisString}' hypothesis. `);
+    }
+
+    return hypothesisValid;
+  }
+
+  async validateHypotheses(context) {
+    const hypotheses = this.getHypotheses(),
+          hypothesesValid = await asyncEvery(hypotheses, async (hypothesis) => {
+            const hypothesisValid = await this.validateHypothesis(hypothesis, context);
+
+            if (hypothesisValid) {
+              return true;
+            }
+          });
+
+    return hypothesesValid;
+  }
+
   async unifyStepWithDeduction(step, context) {
     let stepUnifiesWithDeduction = false;
 
@@ -283,16 +317,20 @@ export default class TopLevelAssertion extends Element {
   async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
     let stepAndSubproofOrProofAssertionsUnify = false;
 
-    const stepUnifiesWithDeduction = await this.unifyStepWithDeduction(step, context);
+    const hypothesesValid = await this.validateHypotheses(context);
 
-    if (stepUnifiesWithDeduction) {
-      const subproofOrProofAssertionsUnifiesWithSuppositions = await this.unifySubproofOrProofAssertionsWithSuppositions(subproofOrProofAssertions, context);
+    if (hypothesesValid) {
+      const stepUnifiesWithDeduction = await this.unifyStepWithDeduction(step, context);
 
-      if (subproofOrProofAssertionsUnifiesWithSuppositions) {
-        const derivedSubstitutionsResolved = context.areDerivedSubstitutionsResolved();
+      if (stepUnifiesWithDeduction) {
+        const subproofOrProofAssertionsUnifiesWithSuppositions = await this.unifySubproofOrProofAssertionsWithSuppositions(subproofOrProofAssertions, context);
 
-        if (derivedSubstitutionsResolved) {
-          stepAndSubproofOrProofAssertionsUnify = true;
+        if (subproofOrProofAssertionsUnifiesWithSuppositions) {
+          const derivedSubstitutionsResolved = context.areDerivedSubstitutionsResolved();
+
+          if (derivedSubstitutionsResolved) {
+            stepAndSubproofOrProofAssertionsUnify = true;
+          }
         }
       }
     }

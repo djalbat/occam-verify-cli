@@ -7,7 +7,7 @@ import elements from "../../elements";
 import ProofAssertion from "../proofAssertion";
 
 import { define } from "../../elements";
-import { unifySteps } from "../../utilities/unification";
+import { unifySteps } from "../../process/unification";
 import { derive, declare, attempt, reconcile } from "../../utilities/context";
 
 const { asyncSome } = asynchronousUtilities,

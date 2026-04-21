@@ -3,14 +3,18 @@
 import Context from "../context";
 
 export default class EphemeralContext extends Context {
-  isStated() {
-    const stated = true;
+  constructor(context, stated) {
+    super(context);
 
-    return stated;
+    this.stated = stated;
   }
 
-  static fromNothing(context) {
-    const ephemeralContext = new EphemeralContext(context);
+  isStated() {
+    return this.stated;
+  }
+
+  static fromStated(stated, context) {
+    const ephemeralContext = new EphemeralContext(context, stated);
 
     return ephemeralContext;
   }

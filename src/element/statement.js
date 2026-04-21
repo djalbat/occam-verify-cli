@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiate } from "../utilities/context";
 import { unifyStatement } from "../process/unify";
-import { validateStatements } from "../utilities/validation";
+import { validateStatements } from "../process/validation";
 import { instantiateStatement } from "../process/instantiate";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 

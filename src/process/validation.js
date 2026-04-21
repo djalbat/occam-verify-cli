@@ -2,8 +2,8 @@
 
 import elements from "../elements";
 
-import { choose, descend } from "./context";
-import { provisionallyStringFromProvisional } from "./string";
+import { choose, descend } from "../utilities/context";
+import { provisionallyStringFromProvisional } from "../utilities/string";
 import { bracketedConstructorFromNothing, bracketedCombinatorFromNothing } from "../utilities/instance";
 
 function validateTermAsVariable(term, context, validateForwards) {
