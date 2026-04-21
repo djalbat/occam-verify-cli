@@ -161,8 +161,8 @@ export default define(class Deduction extends Element {
   static fromJSON(json, context) {
     let deduction;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               deductionNode = instantiateDeduction(string, context),
               node = deductionNode,  ///
@@ -170,8 +170,8 @@ export default define(class Deduction extends Element {
               statement = statementFromDeductionNode(deductionNode, context);
 
         deduction = new Deduction(context, string, node, breakPoint, statement);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return deduction;
   }

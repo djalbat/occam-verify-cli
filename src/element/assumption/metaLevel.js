@@ -311,8 +311,8 @@ export default define(class MetaLevelAssumption extends Element {
   static fromJSON(json, context) {
     let metaLevelAssumption;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               metaLevelAssumptionNode = instantiateMetaLevelAssumption(string, context),
               node = metaLevelAssumptionNode,  ///
@@ -321,8 +321,8 @@ export default define(class MetaLevelAssumption extends Element {
               statement = statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context);
 
         metaLevelAssumption = new MetaLevelAssumption(context, string, node, breakPoint, reference, statement);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return metaLevelAssumption;
   }

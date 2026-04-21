@@ -154,8 +154,8 @@ export default define(class Label extends Element {
   static fromJSON(json, context) {
     let label;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               labelNode = instantiateLabel(string, context),
               node = labelNode, ///
@@ -163,8 +163,8 @@ export default define(class Label extends Element {
               metavariable = metavariableFromLabelNode(labelNode, context);
 
         label = new Label(context, string, node, breakPoint, metavariable);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return label;
   }

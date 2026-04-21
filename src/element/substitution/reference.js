@@ -201,12 +201,9 @@ export default define(class ReferenceSubstitution extends Substitution {
 
       posit((context) => {
         ablate((context) => {
-          unserialises((json, generalContext, specificContext) => {
-            const context = specificContext;  ///
-
-            instantiate((context) => {
+          instantiate((context) => {
+            unserialises((json, generalContext, specificContext) => {
               const { string } = json,
-                    specificContext = context,  ///
                     referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
                     node = referenceSubstitutionNode, ///
                     breakPoint = breakPointFromJSON(json),
@@ -218,8 +215,8 @@ export default define(class ReferenceSubstitution extends Substitution {
                     ];
 
               referenceSubstitutionn = new ReferenceSubstitution(contexts, string, node, breakPoint, targetReference, replacementReference);
-            }, context);
-          }, json, context);
+            }, json, context);
+          }, context);
         }, forced, context);
       }, context);
     }

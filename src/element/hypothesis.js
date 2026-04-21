@@ -129,8 +129,8 @@ export default define(class Hypothesis extends Element {
   static fromJSON(json, context) {
     let hypothesis;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               hypothesisNode = instantiateHypothesis(string, context),
               node = hypothesisNode,  ///
@@ -138,8 +138,8 @@ export default define(class Hypothesis extends Element {
               statement = statementFromHypothesisNode(hypothesisNode, context);
 
         hypothesis = new Hypothesis(context, string, node, breakPoint, statement);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return hypothesis;
   }

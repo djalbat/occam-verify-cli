@@ -321,8 +321,8 @@ export default define(class Reference extends Element {
   static fromJSON(json, context) {
     let reference;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               referenceNode = instantiateReference(string, context),
               node = referenceNode,  ///
@@ -331,8 +331,8 @@ export default define(class Reference extends Element {
               topLevelMetaAssertion = topLevelMetaAssertionFromReferenceNode(referenceNode, context);
 
         reference = new Reference(context, string, node, breakPoint, metavariable, topLevelMetaAssertion);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return reference;
   }

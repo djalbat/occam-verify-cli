@@ -24,6 +24,19 @@ export default class Context extends ContextBase {
     return filePath;
   }
 
+  getTokens() {
+    const context = this.getContext(),
+          tokens = context.getTokens();
+
+    return tokens;
+  }
+
+  setTokens(tokens) {
+    const context = this.getContext();
+
+    context.setTokens(tokens);
+  }
+
   getTerms(terms = []) {
     const context = this.getContext();
 

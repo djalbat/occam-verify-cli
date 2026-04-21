@@ -352,8 +352,8 @@ export default define(class Supposition extends ProofAssertion {
   static fromJSON(json, context) {
     let supposition;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               suppositionNode = instantiateSupposition(string, context),
               node = suppositionNode,  ///
@@ -362,8 +362,8 @@ export default define(class Supposition extends ProofAssertion {
               procedureCall = procedureCallFromSuppositionNode(suppositionNode, context);
 
         supposition = new Supposition(context, string, node, breakPoint, statement, procedureCall);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return supposition;
   }

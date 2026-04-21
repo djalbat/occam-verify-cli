@@ -322,12 +322,9 @@ export default define(class TermSubstitution extends Substitution {
 
       posit((context) => {
         ablate((context) => {
-          unserialises((json, generalContext, specificContext) => {
-            const context = specificContext;  ///
-
-            instantiate((context) => {
+          instantiate((context) => {
+            unserialises((json, generalContext, specificContext) => {
               const { string } = json,
-                    specificContext = context,  ///
                     termSubstitutionNode = instantiateTermSubstitution(string, context),
                     node = termSubstitutionNode,  ///
                     breakPoint = breakPointFromJSON(json),
@@ -339,8 +336,8 @@ export default define(class TermSubstitution extends Substitution {
                     ];
 
               termSubstitutionn = new TermSubstitution(contexts, string, node, breakPoint, targetTerm, replacementTerm);
-            }, context);
-          }, json, context);
+            }, json, context);
+          }, context);
         }, forced, context);
       }, context);
     }

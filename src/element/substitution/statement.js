@@ -358,12 +358,9 @@ export default define(class StatementSubstitution extends Substitution {
 
       posit((context) => {
         ablate((context) => {
-          unserialises((json, generalContext, specificContext) => {
-            const context = specificContext;  ///
-
-            instantiate((context) => {
+          instantiate((context) => {
+            unserialises((json, generalContext, specificContext) => {
               const { string } = json,
-                    specificContext = context,  ///
                     statementSubstitutionNode = instantiateStatementSubstitution(string, context),
                     node = statementSubstitutionNode, ///
                     breakPoint = breakPointFromJSON(json),
@@ -377,8 +374,8 @@ export default define(class StatementSubstitution extends Substitution {
                     ];
 
               statementSubstitutionn = new StatementSubstitution(contexts, string, node, breakPoint, resolved, substitution, targetStatement, replacementStatement);
-            }, context);
-          }, json, context);
+            }, json, context);
+          }, context);
         }, forced, context);
       }, context);
     }

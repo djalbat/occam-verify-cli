@@ -253,8 +253,8 @@ export default define(class Signature extends Element {
   static fromJSON(json, context) {
     let signature;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               signatureNode = instantiateSignature(string, context),
               node = signatureNode,  ///
@@ -262,8 +262,8 @@ export default define(class Signature extends Element {
               terms = termsFromSignatureNode(signatureNode, context);
 
         signature = new Signature(context, string, node, breakPoint, terms);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return signature;
   }

@@ -311,12 +311,9 @@ export default define(class FrameSubstitution extends Substitution {
 
       posit((context) => {
         ablate((context) => {
-          unserialises((json, generalContext, specificContext) => {
-            const context = specificContext;  ///
-
-            instantiate((context) => {
+          instantiate((context) => {
+            unserialises((json, generalContext, specificContext) => {
               const { string } = json,
-                    specificContext = context,  ///
                     frameSubstitutionNode = instantiateFrameSubstitution(string, context),
                     node = frameSubstitutionNode, ///
                     breakPoint = breakPointFromJSON(json),
@@ -328,8 +325,8 @@ export default define(class FrameSubstitution extends Substitution {
                     ];
 
               frameSubstitutionn = new FrameSubstitution(contexts, string, node, breakPoint, targetFrame, replacementFrame);
-            }, context);
-          }, json, context);
+            }, json, context);
+          }, context);
         }, forced, context);
       }, context);
     }

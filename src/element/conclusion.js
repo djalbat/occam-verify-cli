@@ -161,8 +161,8 @@ export default define(class Conclusion extends Element {
   static fromJSON(json, context) {
     let conclusion;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               conclusionNode = instantiateConclusion(string, context),
               node = conclusionNode,  ///
@@ -170,8 +170,8 @@ export default define(class Conclusion extends Element {
               statement = statementFromConclusionNode(conclusionNode, context);
 
         conclusion = new Conclusion(context, string, node, breakPoint, statement);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return conclusion;
   }

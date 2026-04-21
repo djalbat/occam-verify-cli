@@ -329,8 +329,8 @@ export default define(class Premise extends ProofAssertion {
   static fromJSON(json, context) {
     let premise;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               premiseNode = instantiatePremise(string, context),
               node = premiseNode,  ///
@@ -339,8 +339,8 @@ export default define(class Premise extends ProofAssertion {
               procedureCall = procedureCallFromPremiseNode(premiseNode, context);
 
         premise = new Premise(context, string, node, breakPoint, statement, procedureCall);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return premise;
   }

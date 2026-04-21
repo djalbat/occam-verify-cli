@@ -131,8 +131,8 @@ export default define(class Combinator extends Element {
   static fromJSON(json, context) {
     let combinator;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               combinatorNode = instantiateCombinator(string, context),
               node = combinatorNode,  ///
@@ -140,8 +140,8 @@ export default define(class Combinator extends Element {
               statement = statementFromCombinatorNode(combinatorNode, context);
 
         combinator = new Combinator(context, string, node, breakPoint, statement);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return combinator;
   }

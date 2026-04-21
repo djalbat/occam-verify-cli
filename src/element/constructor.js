@@ -175,8 +175,8 @@ export default define(class Constructor extends Element {
   static fromJSON(json, context) {
     let constructor;
 
-    unserialise((json, context) => {
-      instantiate((context) => {
+    instantiate((context) => {
+      unserialise((json, context) => {
         const { string } = json,
               constructorNode = instantiateConstructor(string, context),
               node = constructorNode, ///
@@ -185,8 +185,8 @@ export default define(class Constructor extends Element {
               type = typeFromJSON(json, context);
 
         constructor = new Constructor(context, string, node, breakPoint, term, type);
-      }, context);
-    }, json, context);
+      }, json, context);
+    }, context);
 
     return constructor;
   }
