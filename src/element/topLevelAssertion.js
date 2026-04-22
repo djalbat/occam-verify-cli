@@ -315,12 +315,12 @@ export default class TopLevelAssertion extends Element {
   async unifyStepAndSubproofOrProofAssertions(step, subproofOrProofAssertions, context) {
     let stepAndSubproofOrProofAssertionsUnify = false;
 
-    const hypothesesDischarged = await this.dischargeHypotheses(context);
+    const stepUnifiesWithDeduction = await this.unifyStepWithDeduction(step, context);
 
-    if (hypothesesDischarged) {
-      const stepUnifiesWithDeduction = await this.unifyStepWithDeduction(step, context);
+    if (stepUnifiesWithDeduction) {
+      const hypothesesDischarged = await this.dischargeHypotheses(context);
 
-      if (stepUnifiesWithDeduction) {
+      if (hypothesesDischarged) {
         const subproofOrProofAssertionsUnifiesWithSuppositions = await this.unifySubproofOrProofAssertionsWithSuppositions(subproofOrProofAssertions, context);
 
         if (subproofOrProofAssertionsUnifiesWithSuppositions) {

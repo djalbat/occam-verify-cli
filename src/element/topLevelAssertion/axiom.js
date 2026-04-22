@@ -215,13 +215,13 @@ export default define(class Axiom extends TopLevelAssertion {
 
     context.trace(`Unifying the '${topLevelAssertionString}' top level assertion with the '${axiomString}' axiom...`);
 
-    const hypothesesDischarged = await topLevelAssertion.dischargeHypotheses(context);
+    const deduction = topLevelAssertion.getDeduction(),
+          deductionUnifies = await this.unifyDeduction(deduction, context);
 
-    if (hypothesesDischarged) {
-      const deduction = topLevelAssertion.getDeduction(),
-            deductionUnifies = await this.unifyDeduction(deduction, context);
+    if (deductionUnifies) {
+      const hypothesesDischarged = await topLevelAssertion.dischargeHypotheses(context);
 
-      if (deductionUnifies) {
+      if (hypothesesDischarged) {
         const suppositions = topLevelAssertion.getSuppositions(),
               suppositionsUnify = await this.unifySuppositions(suppositions, context);
 

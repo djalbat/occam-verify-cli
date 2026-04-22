@@ -352,6 +352,13 @@ export default class Context extends ContextBase {
     return propertyRelation;
   }
 
+  findDerivedSubstitutionByVariableNode(variableNode) {
+    const context = this.getContext(),
+          derivedSubstitution = context.findDerivedSubstitutionByVariableNode(variableNode);
+
+    return derivedSubstitution;
+  }
+
   findDeclaredJudgementsByMetavariableNode(metavariableNode) {
     const context = this.getContext(),
           declaredJudgements = context.findDeclaredJudgementsByMetavariableNode(metavariableNode);

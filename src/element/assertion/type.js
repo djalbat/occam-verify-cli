@@ -96,10 +96,19 @@ export default define(class TypeAssertion extends Assertion {
 
     context.trace(`Discharging the '${typeAssertionString}' type assertion...`);
 
-    const validatesWhenDerived = this.validateWhenDerived(context);
+    const term = termFromTermAndSubstitutions(this.term, context);
 
-    if (validatesWhenDerived) {
-      discharges = true;
+    if (term !== null) {
+      const termType = term.getType(),
+            typeEqualToTermType = this.type.isEqualTo(termType);
+
+      if (typeEqualToTermType) {
+        const termEstablished = term.isEstablished();
+
+        if (termEstablished) {
+          discharges = true;
+        }
+      }
     }
 
     if (discharges) {
