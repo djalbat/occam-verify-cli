@@ -64,11 +64,13 @@ export default define(class Supposition extends ProofAssertion {
           procedureCall = this.getProcedureCall();
 
     if ((statement !== null) || (procedureCall !== null)) {
-      const validates = this.validate(context);
+      declare((context) => {
+        const validates = this.validate(context);
 
-      if (validates) {
-        verifies = true;
-      }
+        if (validates) {
+          verifies = true;
+        }
+      }, context);
     } else {
       context.debug(`Unable to validate the '${suppositionString}' supposition because it is nonsense.`);
     }
@@ -83,31 +85,29 @@ export default define(class Supposition extends ProofAssertion {
 
     context.trace(`Validatting the '${suppositionString}' supposition...`);
 
-    declare((context) => {
-      attempt((context) => {
-        const statement = this.getStatement(),
-              procedureCall = this.getProcedureCall();
+    attempt((context) => {
+      const statement = this.getStatement(),
+            procedureCall = this.getProcedureCall();
 
-        if (statement !== null) {
-          const statementValidates = this.validateStatement(context);
+      if (statement !== null) {
+        const statementValidates = this.validateStatement(context);
 
-          if (statementValidates) {
-            validates = true;
-          }
+        if (statementValidates) {
+          validates = true;
         }
+      }
 
-        if (procedureCall !== null) {
-          const procedureCallValidates = this.validateProcedureCall(context);
+      if (procedureCall !== null) {
+        const procedureCallValidates = this.validateProcedureCall(context);
 
-          if (procedureCallValidates) {
-            validates = true;
-          }
+        if (procedureCallValidates) {
+          validates = true;
         }
+      }
 
-        if (validates) {
-          this.commit(context);
-        }
-      }, context);
+      if (validates) {
+        this.commit(context);
+      }
     }, context);
 
     if (validates) {

@@ -98,17 +98,22 @@ export default define(class Step extends ProofAssertion {
     const statement = this.getStatement();
 
     if (statement !== null) {
-      const validates = this.validate(context);
+      const qualified = this.isQualified(),
+            stated = qualified; ///
 
-      if (validates) {
-        context = this.getContext();
+      await (stated ? declare : derive)(async (context) => {
+        const validates = this.validate(context);
 
-        const unifiies = await this.unify(context);
+        if (validates) {
+          context = this.getContext();
 
-        if (unifiies) {
-          verifies = true;
+          const unifiies = await this.unify(context);
+
+          if (unifiies) {
+            verifies = true;
+          }
         }
-      }
+      }, context)
     } else {
       context.debug(`Unable to verify the '${stepString}' step because it is nonsense.`);
     }
@@ -127,30 +132,25 @@ export default define(class Step extends ProofAssertion {
 
     context.trace(`Validating the '${stepString}' step...`);
 
-    const qualified = this.isQualified(),
-          stated = qualified; ///
+    attempt((context) => {
+      const statementValidates = this.validateStatement(context);
 
-    (stated ? declare : derive)((context) => {
-      attempt((context) => {
-        const statementValidates = this.validateStatement(context);
+      if (statementValidates) {
+        const referenceValidates = this.validateReference(context);
 
-        if (statementValidates) {
-          const referenceValidates = this.validateReference(context);
+        if (referenceValidates) {
+          const signatureAssertionValidates = this.validateSignatureAssertion(context);
 
-          if (referenceValidates) {
-            const signatureAssertionValidates = this.validateSignatureAssertion(context);
-
-            if (signatureAssertionValidates) {
-              validates = true;
-            }
+          if (signatureAssertionValidates) {
+            validates = true;
           }
         }
+      }
 
-        if (validates) {
-          this.commit(context);
-        }
-      }, context);
-    }, context)
+      if (validates) {
+        this.commit(context);
+      }
+    }, context);
 
     if (validates) {
       context.debug(`...validated the '${stepString}' step.`);

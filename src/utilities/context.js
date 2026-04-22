@@ -1,6 +1,6 @@
 "use strict";
 
-import MenmicContext from "../context/mnemic";
+import MnemicContext from "../context/mnemic";
 import NestedContext from "../context/nested";
 import TheticContext from "../context/thetic";
 import AphasicContext from "../context/aphasic";
@@ -104,7 +104,7 @@ export function attempt(innerFunction, context) {
   const unreleased = context.isUnreleased();
 
   if (unreleased) {
-    const mnemicContext = MenmicContext.fromNothing(context);
+    const mnemicContext = MnemicContext.fromNothing(context);
 
     context = mnemicContext;  ///
   }
@@ -194,7 +194,7 @@ export function attempts(innerFunction, ...contexts) {
     const unreleased = context.isUnreleased();
 
     if (unreleased) {
-      const mnemicContext = MenmicContext.fromNothing(context);
+      const mnemicContext = MnemicContext.fromNothing(context);
 
       context = mnemicContext;  ///
     }
