@@ -206,7 +206,7 @@ export default define(class Statement extends Element {
     } else {
       validates = validateStatements.some((validateStatement) => {
         const statement = this, ///
-          statementValidates = validateStatement(statement, context);
+              statementValidates = validateStatement(statement, context);
 
         if (statementValidates) {
           return true;

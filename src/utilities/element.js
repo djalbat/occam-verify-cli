@@ -808,11 +808,8 @@ export function metaLevelAssumptionFromMetaLevelAssumptionNode(metaLevelAssumpti
         string = context.nodeAsString(node),
         breakPoint = null,
         reference = referenceFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context),
-        statement = statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context);
-
-  context = null;
-
-  const metaLevelAssumption = new MetaLevelAssumption(context, string, node, breakPoint, reference, statement);
+        statement = statementFromMetaLevelAssumptionNode(metaLevelAssumptionNode, context),
+        metaLevelAssumption = new MetaLevelAssumption(context, string, node, breakPoint, reference, statement);
 
   return metaLevelAssumption;
 }

@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiateConclusion } from "../process/instantiate";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import { declare, attempt, reconcile, sequester, serialise, unserialise, instantiate } from "../utilities/context";
+import { elide, declare, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Conclusion extends Element {
   constructor(context, string, node, breakPoint, statement) {
@@ -36,11 +36,13 @@ export default define(class Conclusion extends Element {
 
     if (this.statement !== null) {
       declare((context) => {
-        const validates = this.validate(context);
+        elide((context) => {
+          const validates = this.validate(context);
 
-        if (validates) {
-          verifies = true;
-        }
+          if (validates) {
+            verifies = true;
+          }
+        }, context);
       }, context);
     } else {
       context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
@@ -86,13 +88,11 @@ export default define(class Conclusion extends Element {
 
     context.trace(`Validating the '${conclusionString}' conclusion's statement...`);
 
-    sequester((context) => {
-      const statement = this.statement.validate(context);
+    const statement = this.statement.validate(context);
 
-      if (statement !== null) {
-        statementValidates = true;
-      }
-    }, context);
+    if (statement !== null) {
+      statementValidates = true;
+    }
 
     if (statementValidates) {
       context.trace(`...validated the '${conclusionString}' conclusion's statement.`);

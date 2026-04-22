@@ -9,15 +9,15 @@ import { mergeEquivalences, equivalencesFromEquality, separateGroundedTermsAndDe
 const { last, clear, filter } = arrayUtilities;
 
 class BoundedContext extends Context {
-  constructor(context, assignments, equivalences, declaredVariables, declaredJudgements, metaLevelAssumptions, subproofOrProofAssertions) {
+  constructor(context, assignments, equivalences, declaredVariables, declaredJudgements, subproofOrProofAssertions, metaLevelAssumptions) {
     super(context);
 
     this.assignments = assignments;
     this.equivalences = equivalences;
     this.declaredVariables = declaredVariables;
     this.declaredJudgements = declaredJudgements;
-    this.metaLevelAssumptions = metaLevelAssumptions;
     this.subproofOrProofAssertions = subproofOrProofAssertions;
+    this.metaLevelAssumptions = metaLevelAssumptions;
   }
 
   getAssignments() {
@@ -70,10 +70,6 @@ class BoundedContext extends Context {
     return declaredJudgements;
   }
 
-  getMetaLevelAssumptions() {
-    return this.metaLevelAssumptions;
-  }
-
   getSubproofOrProofAssertions() {
     let subproofOrProofAssertions;
 
@@ -87,6 +83,10 @@ class BoundedContext extends Context {
     ];
 
     return subproofOrProofAssertions;
+  }
+
+  getMetaLevelAssumptions() {
+    return this.metaLevelAssumptions;
   }
 
   getProofAssertions() {
@@ -335,13 +335,25 @@ class BoundedContext extends Context {
     return termGrounded;
   }
 
+  static fromNothing(context) {
+    const assignments = [],
+          equivalences = [],
+          declaredVariables = [],
+          declaredJudgements = [],
+          metaLevelAssumptions = null,
+          subproofOrProofAssertions = [],
+          boundedContext = new BoundedContext(context, assignments, equivalences, declaredVariables, declaredJudgements, subproofOrProofAssertions, metaLevelAssumptions);
+
+    return boundedContext;
+  }
+
   static fromMetaLevelAssumptions(metaLevelAssumptions, context) {
     const assignments = [],
           equivalences = [],
           declaredVariables = [],
           declaredJudgements = [],
           subproofOrProofAssertions = [],
-          boundedContext = new BoundedContext(context, assignments, equivalences, declaredVariables, declaredJudgements, metaLevelAssumptions, subproofOrProofAssertions);
+          boundedContext = new BoundedContext(context, assignments, equivalences, declaredVariables, declaredJudgements, subproofOrProofAssertions, metaLevelAssumptions);
 
     return boundedContext;
   }

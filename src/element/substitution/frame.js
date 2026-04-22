@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { posit, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
+import { posit, elide, ablate, ablates, manifest, attempts, reconcile, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(contexts, string, node, breakPoint, targetFrame, replacementFrame) {
@@ -136,7 +136,7 @@ export default define(class FrameSubstitution extends Substitution {
 
     if (targetFrameSingular) {
       manifest((context) => {
-        sequester((context) => {
+        elide((context) => {
           const tragetFrame = this.targetFrame.validate(context);
 
           if (tragetFrame !== null) {
@@ -167,7 +167,7 @@ export default define(class FrameSubstitution extends Substitution {
 
     context.trace(`Validating the '${frameSubstitutionString}' frame substitution's replacement frame...`);
 
-    sequester((context) => {
+    elide((context) => {
       const replacementFrame = this.replacementFrame.validate(context);
 
       if (replacementFrame !== null) {

@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { posit, ablate, ablates, manifest, attempts, sequester, reconcile, instantiate, unserialises } from "../../utilities/context";
+import { posit, elide, ablate, ablates, manifest, attempts, reconcile, instantiate, unserialises } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -173,7 +173,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     if (targetStatementSingular) {
       manifest((context) => {
-        sequester((context) => {
+        elide((context) => {
           const targetStatement = this.targetStatement.validate(context);
 
           if (targetStatement !== null) {
@@ -202,7 +202,7 @@ export default define(class StatementSubstitution extends Substitution {
 
     context.trace(`Validating the '${statementSubstitutionString}' statement substitution's replacement statement...`);
 
-    sequester((context) => {
+    elide((context) => {
       const replacementStatement = this.replacementStatement.validate(context);
 
       if (replacementStatement !== null) {

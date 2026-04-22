@@ -9,7 +9,7 @@ import { instantiateMetaLevelAssumption } from "../../process/instantiate";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../../utilities/breakPoint";
 import { metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
 import { metaLevelAssumptionStringFromReferenceAndStatement } from "../../utilities/string";
-import { ablate, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
+import { newAblate, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class MetaLevelAssumption extends Element {
   constructor(context, string, node, breakPoint, reference, statement) {
@@ -80,6 +80,10 @@ export default define(class MetaLevelAssumption extends Element {
 
       context.debug(`...the '${metaLevelAssumptionString}' meta-level assumption is already valid.`);
     } else {
+      const temporaryContext = context; ///
+
+      context = this.getContext();
+
       attempt((context) => {
         const statementValidates = this.validateStatement(context);
 
@@ -90,7 +94,7 @@ export default define(class MetaLevelAssumption extends Element {
             const stated = context.isStated();
 
             let validatesWhenStated = false,
-                validatesWhenDerived = false;
+              validatesWhenDerived = false;
 
             if (stated) {
               validatesWhenStated = this.validateWhenStated(context);
@@ -108,6 +112,8 @@ export default define(class MetaLevelAssumption extends Element {
           this.commit(context);
         }
       }, context);
+
+      context = temporaryContext; ///
 
       if (validates) {
         metaLevelAssumption = this;  ///
@@ -338,7 +344,7 @@ export default define(class MetaLevelAssumption extends Element {
 
     const reference = step.getReference();
 
-    ablate((context) => {
+    newAblate((context) => {
       instantiate((context) => {
         const metaLevelAssumptionString = metaLevelAssumptionStringFromReferenceAndStatement(reference, statement),
               string = metaLevelAssumptionString,  ///

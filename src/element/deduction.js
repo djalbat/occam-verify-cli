@@ -5,7 +5,7 @@ import { Element } from "occam-languages";
 import { define } from "../elements";
 import { instantiateDeduction } from "../process/instantiate";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import {declare, attempt, sequester, serialise, unserialise, instantiate, reconcile} from "../utilities/context";
+import { elide, declare, attempt, serialise, unserialise, instantiate, reconcile } from "../utilities/context";
 
 export default define(class Deduction extends Element {
   constructor(context, string, node, breakPoint, statement) {
@@ -36,11 +36,13 @@ export default define(class Deduction extends Element {
 
     if (this.statement !== null) {
       declare((context) => {
-        const validates = this.validate(context);
+        elide((context) => {
+          const validates = this.validate(context);
 
-        if (validates) {
-          verifies = true;
-        }
+          if (validates) {
+            verifies = true;
+          }
+        }, context);
       }, context);
     } else {
       context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`);
@@ -86,13 +88,11 @@ export default define(class Deduction extends Element {
 
     context.trace(`Validating the '${deductionnString}' deductionn's statement...`);
 
-    sequester((context) => {
-      const statement = this.statement.validate(context);
+    const statement = this.statement.validate(context);
 
-      if (statement !== null) {
-        statementValidates = true;
-      }
-    }, context);
+    if (statement !== null) {
+      statementValidates = true;
+    }
 
     if (statementValidates) {
       context.trace(`...validated the '${deductionnString}' deductionn's statement.`);

@@ -4,8 +4,8 @@ import Assertion from "../assertion";
 
 import { define } from "../../elements";
 import { breakPointFromJSON } from "../../utilities/breakPoint";
-import { reconcile, instantiate } from "../../utilities/context";
 import { instantiateSignatureAssertion } from "../../process/instantiate";
+import { reconcile, speculate, instantiate } from "../../utilities/context";
 import { signatureFromSignatureAssertionNode, referenceFromSignatureAssertionNode, signatureAssertionFromStatementNode } from "../../utilities/element";
 
 export default define(class SignatureAssertion extends Assertion {
@@ -148,7 +148,7 @@ export default define(class SignatureAssertion extends Assertion {
 
     context.trace(`Unifying the '${signatureAssertionString}' signature assertion's signature...`);
 
-    reconcile((context) => {
+    speculate((context) => {
       const axiom = context.findAxiomByReference(this.reference);
 
       signatureUnifies = axiom.unifySignature(this.signature, context);
@@ -178,7 +178,7 @@ export default define(class SignatureAssertion extends Assertion {
     }, context);
 
     if (topLevelAssertionUnifies) {
-      context.trace(`Unifying the '${topLevelAssertionString}' top-level assertion with the '${signatureAssertionString}' signature assertion...`);
+      context.trace(`...unified the '${topLevelAssertionString}' top-level assertion with the '${signatureAssertionString}' signature assertion...`);
     }
 
     return topLevelAssertionUnifies;

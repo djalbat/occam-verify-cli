@@ -8,7 +8,7 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { posit, ablate, ablates, manifest, attempts, reconcile, sequester, instantiate, unserialises } from "../../utilities/context";
+import { posit, elide, ablate, ablates, manifest, attempts, reconcile, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, breakPoint, targetTerm, replacementTerm) {
@@ -139,7 +139,7 @@ export default define(class TermSubstitution extends Substitution {
 
     if (targetTermSingular) {
       manifest((context) => {
-        sequester((context) => {
+        elide((context) => {
           const targetTerm = this.targetTerm.validate(context, (targetTerm, context) => {
             const validatesForwards = true;
 
@@ -174,7 +174,7 @@ export default define(class TermSubstitution extends Substitution {
 
     context.trace(`Validating the '${termSubstitutionString}' term substitution's replacement term...`);
 
-    sequester((context) => {
+    elide((context) => {
       const replacementTerm = this.replacementTerm.validate(context, (replacementTerm, context) => {
         const validatesForwards = true;
 

@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateAssumption } from "../process/instantiate";
-import { reconcile, instantiate } from "../utilities/context";
+import { reconcile, speculate, instantiate } from "../utilities/context";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
 
 export default define(class Assumption extends Element {
@@ -277,7 +277,7 @@ export default define(class Assumption extends Element {
 
     context.trace(`Unifying the '${topLevelMetaAssertionString}' top level meta-assertion with the '${assumptionString}' assumption...`);
 
-    reconcile((context) => {
+    speculate((context) => {
       topLevelMetaAssertionUnifies = this.reference.unifyTopLevelMetaAssertion(topLevelMetaAssertion, context);
 
       if (topLevelMetaAssertionUnifies) {
