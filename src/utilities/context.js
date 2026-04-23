@@ -15,6 +15,12 @@ import NominalFileContext from "../context/file/nominal";
 
 import { mnemicContextFromJSON, mnemicContextsFromJSON, mnemicContextToMnemicContextJSON, mnemicContextsToMnemicContextsJSON } from "../utilities/json";
 
+export function evaluate(procedure, terms) {
+  const context = procedure.getContext();
+
+  return procedure.call(terms, context);
+}
+
 export function ground(innerFunction) {
   let context;
 
@@ -29,10 +35,12 @@ export function ground(innerFunction) {
   return innerFunction(context);
 }
 
-export function evaluate(procedure, terms) {
-  const context = procedure.getContext();
+export function declare(innerFunction, context) {
+  const theticContext = TheticContext.fromNothing(context);
 
-  return procedure.call(terms, context);
+  context = theticContext;  ///
+
+  return innerFunction(context);
 }
 
 export function derive(innerFunction, context) {
@@ -43,10 +51,10 @@ export function derive(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function declare(innerFunction, context) {
-  const theticContext = TheticContext.fromNothing(context);
+export function elide(innerFunction, context) {
+  const aphasicContext = AphasicContext.fromNothing(context);
 
-  context = theticContext;  ///
+  context = aphasicContext;  ///
 
   return innerFunction(context);
 }
@@ -67,14 +75,6 @@ export function encapsulate(innerFunction, metaLevelAssumptions, context) {
   return innerFunction(context);
 }
 
-export function reconcile(innerFunction, context) {
-  const liminalContext = LiminalContext.fromNothing(context);
-
-  context = liminalContext;  ///
-
-  return innerFunction(context);
-}
-
 export function choose(innerFunction, context) {
   const branchingContext = BranchingContext.fromNothing(context);
 
@@ -91,6 +91,16 @@ export function descend(innerFunction, context) {
   return innerFunction(context);
 }
 
+export function ablate(innerFunction, context) {
+  const unreleased = context.isUnreleased();
+
+  if (unreleased) {
+    context = ablateContext(context); ///
+  }
+
+  return innerFunction(context);
+}
+
 export function attempt(innerFunction, context) {
   const unreleased = context.isUnreleased();
 
@@ -103,20 +113,10 @@ export function attempt(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function ablate(innerFunction, context) {
-  const unreleased = context.isUnreleased();
+export function reconcile(innerFunction, context) {
+  const liminalContext = LiminalContext.fromNothing(context);
 
-  if (unreleased) {
-    context = ablateContext(context); ///
-  }
-
-  return innerFunction(context);
-}
-
-export function elide(innerFunction, context) {
-  const aphasicContext = AphasicContext.fromNothing(context);
-
-  context = aphasicContext;  ///
+  context = liminalContext;  ///
 
   return innerFunction(context);
 }

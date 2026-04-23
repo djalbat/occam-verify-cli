@@ -135,21 +135,14 @@ export default define(class Reference extends Element {
         const metavariableValidates = this.validateMetavariable(context);
 
         if (metavariableValidates) {
-          const referenceMetaTypeName = REFERENCE_META_TYPE_NAME,
-                referenceMetaType = context.findMetaTypeByMetaTypeName(referenceMetaTypeName),
-                metaType = this.metavariable.getMetaType();
+          const metaType = this.metavariable.getMetaType();
 
           if (metaType === null) {
-            const reference = this, ///
-                  labelPresent = context.isLabelPresentByReference(reference, context);
-
-            if (labelPresent) {
-              validates = true;
-            } else {
-              context.debug(`There is no label for the '${referenceString}' reference.`);
-            }
+            validates = true;
           } else {
-            const metavariableMetaTypeEqualToReferenceMetaType = this.metavariable.isMetaTypeEqualTo(referenceMetaType);
+            const referenceMetaTypeName = REFERENCE_META_TYPE_NAME,
+                  referenceMetaType = context.findMetaTypeByMetaTypeName(referenceMetaTypeName),
+                  metavariableMetaTypeEqualToReferenceMetaType = this.metavariable.isMetaTypeEqualTo(referenceMetaType);
 
             if (metavariableMetaTypeEqualToReferenceMetaType) {
               validates = true;
