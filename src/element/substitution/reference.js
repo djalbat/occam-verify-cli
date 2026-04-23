@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateReferenceSubstitution } from "../../process/instantiate";
 import { referenceSubstitutionFromReferenceSubstitutionNode } from "../../utilities/element";
 import { referenceSubstitutionStringFromReferenceAndMetavariable } from "../../utilities/string";
-import { posit, elide, ablate, ablates, manifest, attempts, instantiate, unserialises } from "../../utilities/context";
+import { elide, ablates, manifest, attempts, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class ReferenceSubstitution extends Substitution {
   constructor(context, string, node, breakPoint, targetReference, replacementReference) {
@@ -197,27 +197,21 @@ export default define(class ReferenceSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      const forced = true;
+      instantiate((context) => {
+        unserialises((json, generalContext, specificContext) => {
+          const { string } = json,
+                referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
+                node = referenceSubstitutionNode, ///
+                breakPoint = breakPointFromJSON(json),
+                targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, generalContext),
+                replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, specificContext),
+                contexts = [
+                  generalContext,
+                  specificContext
+                ];
 
-      posit((context) => {
-        ablate((context) => {
-          instantiate((context) => {
-            unserialises((json, generalContext, specificContext) => {
-              const { string } = json,
-                    referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
-                    node = referenceSubstitutionNode, ///
-                    breakPoint = breakPointFromJSON(json),
-                    targetReference = targetReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, generalContext),
-                    replacementReference = replacementReferenceFromReferenceSubstitutionNode(referenceSubstitutionNode, specificContext),
-                    contexts = [
-                      generalContext,
-                      specificContext
-                    ];
-
-              referenceSubstitutionn = new ReferenceSubstitution(contexts, string, node, breakPoint, targetReference, replacementReference);
-            }, json, context);
-          }, context);
-        }, forced, context);
+          referenceSubstitutionn = new ReferenceSubstitution(contexts, string, node, breakPoint, targetReference, replacementReference);
+        }, json, context);
       }, context);
     }
 

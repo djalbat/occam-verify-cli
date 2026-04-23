@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementSubstitutionFromStatementSubstitutionNode } from "../../utilities/element";
-import { posit, elide, ablate, ablates, manifest, attempts, reconcile, instantiate, unserialises } from "../../utilities/context";
+import { elide, ablates, manifest, attempts, reconcile, instantiate, unserialises } from "../../utilities/context";
 import { statementSubstitutionStringFromStatementAndMetavariable, statementSubstitutionStringFromStatementMetavariableAndSubstitution } from "../../utilities/string";
 
 export default define(class StatementSubstitution extends Substitution {
@@ -354,29 +354,23 @@ export default define(class StatementSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      const forced = true;
+      instantiate((context) => {
+        unserialises((json, generalContext, specificContext) => {
+          const { string } = json,
+                statementSubstitutionNode = instantiateStatementSubstitution(string, context),
+                node = statementSubstitutionNode, ///
+                breakPoint = breakPointFromJSON(json),
+                resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
+                substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext),
+                targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, generalContext),
+                replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, specificContext),
+                contexts = [
+                  generalContext,
+                  specificContext
+                ];
 
-      posit((context) => {
-        ablate((context) => {
-          instantiate((context) => {
-            unserialises((json, generalContext, specificContext) => {
-              const { string } = json,
-                    statementSubstitutionNode = instantiateStatementSubstitution(string, context),
-                    node = statementSubstitutionNode, ///
-                    breakPoint = breakPointFromJSON(json),
-                    resolved = resolvedFromStatementSubstitutionNode(statementSubstitutionNode, context),
-                    substitution = substitutionFromStatementSubstitutionNode(statementSubstitutionNode, generalContext, specificContext),
-                    targetStatement = targetStatementFromStatementSubstitutionNode(statementSubstitutionNode, generalContext),
-                    replacementStatement = replacementStatementFromStatementSubstitutionNode(statementSubstitutionNode, specificContext),
-                    contexts = [
-                      generalContext,
-                      specificContext
-                    ];
-
-              statementSubstitutionn = new StatementSubstitution(contexts, string, node, breakPoint, resolved, substitution, targetStatement, replacementStatement);
-            }, json, context);
-          }, context);
-        }, forced, context);
+          statementSubstitutionn = new StatementSubstitution(contexts, string, node, breakPoint, resolved, substitution, targetStatement, replacementStatement);
+        }, json, context);
       }, context);
     }
 

@@ -8,7 +8,7 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { instantiateTermSubstitution } from "../../process/instantiate";
 import { termSubstitutionFromTermSubstitutionNode } from "../../utilities/element";
 import { termSubstitutionStringFromTermAndVariable } from "../../utilities/string";
-import { posit, elide, ablate, ablates, manifest, attempts, reconcile, instantiate, unserialises } from "../../utilities/context";
+import { elide, ablate, manifest, attempts, reconcile, ablates, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, breakPoint, targetTerm, replacementTerm) {
@@ -318,27 +318,21 @@ export default define(class TermSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      const forced = true;
+      instantiate((context) => {
+        unserialises((json, generalContext, specificContext) => {
+          const { string } = json,
+                termSubstitutionNode = instantiateTermSubstitution(string, context),
+                node = termSubstitutionNode,  ///
+                breakPoint = breakPointFromJSON(json),
+                targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, generalContext),
+                replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, specificContext),
+                contexts = [
+                  generalContext,
+                  specificContext
+                ];
 
-      posit((context) => {
-        ablate((context) => {
-          instantiate((context) => {
-            unserialises((json, generalContext, specificContext) => {
-              const { string } = json,
-                    termSubstitutionNode = instantiateTermSubstitution(string, context),
-                    node = termSubstitutionNode,  ///
-                    breakPoint = breakPointFromJSON(json),
-                    targetTerm = targetTermFromTermSubstitutionNode(termSubstitutionNode, generalContext),
-                    replacementTerm = replacementTermFromTermSubstitutionNode(termSubstitutionNode, specificContext),
-                    contexts = [
-                      generalContext,
-                      specificContext
-                    ];
-
-              termSubstitutionn = new TermSubstitution(contexts, string, node, breakPoint, targetTerm, replacementTerm);
-            }, json, context);
-          }, context);
-        }, forced, context);
+          termSubstitutionn = new TermSubstitution(contexts, string, node, breakPoint, targetTerm, replacementTerm);
+        }, json, context);
       }, context);
     }
 

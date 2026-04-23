@@ -7,7 +7,7 @@ import { define } from "../elements";
 import { instantiateSignature } from "../process/instantiate";
 import { signatureFromSignatureNode } from "../utilities/element";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import { posit, ablate, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
+import { ablate, attempt, reconcile, serialise, unserialise, instantiate } from "../utilities/context";
 
 const { match } = arrayUtilities;
 
@@ -73,19 +73,17 @@ export default define(class Signature extends Element {
 
     context.trace(`Verifying the '${signatureString}' signature...`);
 
-    posit((context) => {
-      ablate((context) => {
-        attempt((context) => {
-          const termsValidate = this.validateTerms(context);
+    ablate((context) => {
+      attempt((context) => {
+        const termsValidate = this.validateTerms(context);
 
-          if (termsValidate !== null) {
-            verifies = true;
-          }
+        if (termsValidate !== null) {
+          verifies = true;
+        }
 
-          if (verifies) {
-            this.commit(context);
-          }
-        }, context);
+        if (verifies) {
+          this.commit(context);
+        }
       }, context);
     }, context);
 
@@ -269,14 +267,12 @@ export default define(class Signature extends Element {
   static fromSignatureString(signatureString, context) {
     let signature;
 
-    posit((context) => {
-      ablate((context) => {
-        instantiate((context) => {
-          const string = signatureString,  ///
-                signatureNode = instantiateSignature(string, context);
+    ablate((context) => {
+      instantiate((context) => {
+        const string = signatureString,  ///
+              signatureNode = instantiateSignature(string, context);
 
-          signature = signatureFromSignatureNode(signatureNode, context);
-        }, context);
+        signature = signatureFromSignatureNode(signatureNode, context);
       }, context);
     }, context);
 

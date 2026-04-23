@@ -6,7 +6,7 @@ import { define } from "../elements";
 import { instantiateHypothesis } from "../process/instantiate";
 import { statementFromHypothesisNode } from "../utilities/element";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
-import { declare, attempt, proffer, serialise, unserialise, instantiate } from "../utilities/context";
+import { declare, attempt, serialise, unserialise, instantiate } from "../utilities/context";
 
 export default define(class Hypothesis extends Element {
   constructor(context, string, node, breakPoint, statement) {
@@ -87,13 +87,11 @@ export default define(class Hypothesis extends Element {
 
     context.trace(`Discharging the '${hypothesisString}' hypothesis...`);
 
-    proffer((context) => {
-      const statementDischarges = this.dischargeStatement(context);
+    const statementDischarges = this.dischargeStatement(context);
 
-      if (statementDischarges) {
-        discharges = true;
-      }
-    }, context);
+    if (statementDischarges) {
+      discharges = true;
+    }
 
     if (discharges) {
       context.debug(`...discharged the '${hypothesisString}' hypothesis.`);

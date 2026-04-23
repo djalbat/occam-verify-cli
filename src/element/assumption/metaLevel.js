@@ -9,7 +9,7 @@ import { instantiateMetaLevelAssumption } from "../../process/instantiate";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../../utilities/breakPoint";
 import { metaLevelAssumptionFromMetaLevelAssumptionNode } from "../../utilities/element";
 import { metaLevelAssumptionStringFromReferenceAndStatement } from "../../utilities/string";
-import { newAblate, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
+import { ablate, attempt, descend, reconcile, serialise, unserialise, instantiate } from "../../utilities/context";
 
 export default define(class MetaLevelAssumption extends Element {
   constructor(context, string, node, breakPoint, reference, statement) {
@@ -344,7 +344,7 @@ export default define(class MetaLevelAssumption extends Element {
 
     const reference = step.getReference();
 
-    newAblate((context) => {
+    ablate((context) => {
       instantiate((context) => {
         const metaLevelAssumptionString = metaLevelAssumptionStringFromReferenceAndStatement(reference, statement),
               string = metaLevelAssumptionString,  ///

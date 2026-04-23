@@ -10,17 +10,10 @@ import LiteralContext from "../context/literal";
 import LiminalContext from "../context/liminal";
 import PhanericContext from "../context/phaneric";
 import IllativeContext from "../context/illative";
-import EphemeralContext from "../context/ephemeral";
 import BranchingContext from "../context/branching";
 import NominalFileContext from "../context/file/nominal";
 
 import { mnemicContextFromJSON, mnemicContextsFromJSON, mnemicContextToMnemicContextJSON, mnemicContextsToMnemicContextsJSON } from "../utilities/json";
-
-export function evaluate(procedure, terms) {
-  const context = procedure.getContext();
-
-  return procedure.call(terms, context);
-}
 
 export function ground(innerFunction) {
   let context;
@@ -36,29 +29,13 @@ export function ground(innerFunction) {
   return innerFunction(context);
 }
 
-export function enclose(innerFunction, context) {
-  assert(context, NominalFileContext, BoundedContext)
+export function evaluate(procedure, terms) {
+  const context = procedure.getContext();
 
-  const boundedContext = BoundedContext.fromNothing(context);
-
-  context = boundedContext;  ///
-
-  return innerFunction(context);
-}
-
-export function encapsulate(innerFunction, metaLevelAssumptions, context) {
-  assert(context, NominalFileContext)
-
-  const boundedContext = BoundedContext.fromMetaLevelAssumptions(metaLevelAssumptions, context);
-
-  context = boundedContext;  ///
-
-  return innerFunction(context);
+  return procedure.call(terms, context);
 }
 
 export function derive(innerFunction, context) {
-  assert(context, BoundedContext)
-
   const illativeContext = IllativeContext.fromNothing(context);
 
   context = illativeContext;  ///
@@ -67,8 +44,6 @@ export function derive(innerFunction, context) {
 }
 
 export function declare(innerFunction, context) {
-  assert(context, BoundedContext)
-
   const theticContext = TheticContext.fromNothing(context);
 
   context = theticContext;  ///
@@ -76,19 +51,23 @@ export function declare(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function reconcile(innerFunction, context) {
-  assert(context, LiminalContext, MnemicContext, AphasicContext)
+export function enclose(innerFunction, context) {
+  const boundedContext = BoundedContext.fromNothing(context);
 
-  const liminalContext = LiminalContext.fromNothing(context);
-
-  context = liminalContext;  ///
+  context = boundedContext;  ///
 
   return innerFunction(context);
 }
 
-export function speculate(innerFunction, context) {
-  assert(context, MnemicContext, NestedContext, AphasicContext)
+export function encapsulate(innerFunction, metaLevelAssumptions, context) {
+  const boundedContext = BoundedContext.fromMetaLevelAssumptions(metaLevelAssumptions, context);
 
+  context = boundedContext;  ///
+
+  return innerFunction(context);
+}
+
+export function reconcile(innerFunction, context) {
   const liminalContext = LiminalContext.fromNothing(context);
 
   context = liminalContext;  ///
@@ -97,8 +76,6 @@ export function speculate(innerFunction, context) {
 }
 
 export function choose(innerFunction, context) {
-  assert(context, BranchingContext, MnemicContext, NestedContext, AphasicContext)
-
   const branchingContext = BranchingContext.fromNothing(context);
 
   context = branchingContext;  ///
@@ -107,8 +84,6 @@ export function choose(innerFunction, context) {
 }
 
 export function descend(innerFunction, context) {
-  assert(context, NestedContext, MnemicContext, AphasicContext)
-
   const nestedContext = NestedContext.fromNothing(context);
 
   context = nestedContext;  ///
@@ -120,8 +95,6 @@ export function attempt(innerFunction, context) {
   const unreleased = context.isUnreleased();
 
   if (unreleased) {
-    assert(context, AphasicContext, TheticContext, IllativeContext, LiteralContext, NominalFileContext)
-
     const mnemicContext = MnemicContext.fromNothing(context);
 
     context = mnemicContext;  ///
@@ -130,9 +103,17 @@ export function attempt(innerFunction, context) {
   return innerFunction(context);
 }
 
-export function elide(innerFunction, context) {
-  assert(context, TheticContext, IllativeContext, MnemicContext, PhanericContext)
+export function ablate(innerFunction, context) {
+  const unreleased = context.isUnreleased();
 
+  if (unreleased) {
+    context = ablateContext(context); ///
+  }
+
+  return innerFunction(context);
+}
+
+export function elide(innerFunction, context) {
   const aphasicContext = AphasicContext.fromNothing(context);
 
   context = aphasicContext;  ///
@@ -141,11 +122,9 @@ export function elide(innerFunction, context) {
 }
 
 export function serialise(innerFunction, context) {
-  assert(context, MnemicContext)
-
   const mnemicContext = context, ///
-    mnemicContextJSON = mnemicContextToMnemicContextJSON(mnemicContext),
-    contextJSON = mnemicContextJSON; ///
+        mnemicContextJSON = mnemicContextToMnemicContextJSON(mnemicContext),
+        contextJSON = mnemicContextJSON; ///
 
   context = contextJSON;  ///
 
@@ -153,8 +132,6 @@ export function serialise(innerFunction, context) {
 }
 
 export function unserialise(innerFunction, json, context) {
-  assert(context, LiteralContext)
-
   const mnemicContext = mnemicContextFromJSON(json, context);
 
   context = mnemicContext; ///
@@ -163,8 +140,6 @@ export function unserialise(innerFunction, json, context) {
 }
 
 export function unserialises(innerFunction, json, context) {
-  assert(context, LiteralContext)
-
   const mnemicContexts = mnemicContextsFromJSON(json, context),
         contexts = mnemicContexts; ///
 
@@ -172,8 +147,6 @@ export function unserialises(innerFunction, json, context) {
 }
 
 export function instantiate(innerFunction, context) {
-  assert(context, NominalFileContext)
-
   const literalContext = LiteralContext.fromNothing(context);
 
   context = literalContext;  ///
@@ -181,11 +154,7 @@ export function instantiate(innerFunction, context) {
   return innerFunction(context);
 }
 
-
-
 export function manifest(innerFunction, ...contexts) {
-  asserts(contexts, MnemicContext)
-
   const phanericContext = PhanericContext.fromContexts(contexts),
         context = phanericContext;  ///
 
@@ -197,8 +166,6 @@ export function attempts(innerFunction, ...contexts) {
     const unreleased = context.isUnreleased();
 
     if (unreleased) {
-      assert(context, AphasicContext, TheticContext, IllativeContext, LiteralContext, NominalFileContext)
-
       const mnemicContext = MnemicContext.fromNothing(context);
 
       context = mnemicContext;  ///
@@ -211,8 +178,6 @@ export function attempts(innerFunction, ...contexts) {
 }
 
 export function serialises(innerFunction, ...contexts) {
-  asserts(contexts, MnemicContext)
-
   const mnemicContexts = contexts, ///
         mnemicContextsJSON = mnemicContextsToMnemicContextsJSON(mnemicContexts),
         contextsJSON = mnemicContextsJSON; ///
@@ -222,79 +187,12 @@ export function serialises(innerFunction, ...contexts) {
   return innerFunction(...contexts);
 }
 
-
-
-
-
-
-
-
-
-
-
-export function newAblate(innerFunction, context) {
-  const unreleased = context.isUnreleased();
-
-  if (unreleased) {
-    let contextGroundedContext = isContextGroundedContext(context);
-
-    while (!contextGroundedContext) {
-      context = context.getContext();
-
-      contextGroundedContext = isContextGroundedContext(context);
-    }
-  }
-
-  return innerFunction(context);
-}
-
-
-
-
-
-
-
-
-export function posit(innerFunction, context) {
-  const stated = true,
-    ephemeralContext = EphemeralContext.fromStated(stated, context);
-
-  context = ephemeralContext;  ///
-
-  return innerFunction(context);
-}
-
-export function ablate(innerFunction, forced, context) {
-  if (context === undefined) {
-    context = forced; ///
-
-    forced = false;
-  }
-
-  const unreleased = context.isUnreleased();
-
-  if (forced || unreleased) {
-    context = ablateContext(context);
-  }
-
-  return innerFunction(context);
-}
-
-export function proffer(innerFunction, context) {
-  const stated = false,
-        ephemeralContext = EphemeralContext.fromStated(stated, context);
-
-  context = ephemeralContext;  ///
-
-  return innerFunction(context);
-}
-
 export function ablates(innerFunction, ...contexts) {
   contexts = contexts.map((context) => {  ///
     const unreleased = context.isUnreleased();
 
     if (unreleased) {
-      context = ablateContext(context);
+      context = ablateContext(context); ///
     }
 
     return context;
@@ -304,74 +202,22 @@ export function ablates(innerFunction, ...contexts) {
 }
 
 function ablateContext(context) {
-  const stated = context.isStated();
+    let contextGroundedContext = isContextGroundedContext(context);
 
-  let contextExtraneousContext = isContextExtraneousContext(context);
+    while (!contextGroundedContext) {
+      context = context.getContext();
 
-  while (contextExtraneousContext) {
-    context = context.getContext();
-
-    contextExtraneousContext = isContextExtraneousContext(context);
-  }
-
-  const Context = stated ? TheticContext : IllativeContext;
-
-  context = augmentContext(context, Context);
+      contextGroundedContext = isContextGroundedContext(context);
+    }
 
   return context;
-}
-
-function augmentContext(context, Context) {
-  const contextContext = (context instanceof Context);
-
-  if (!contextContext) {
-    context = Context.fromNothing(context);
-  }
-
-  return context;
-}
-
-function isContextExtraneousContext(context) {
-  const contextSubstantiveContext = isContextSubstantiveContext(context),
-        contextExtraneousContext = !contextSubstantiveContext;
-
-  return contextExtraneousContext;
 }
 
 function isContextGroundedContext(context) {
   const contextTheticContext = (context instanceof TheticContext),
         contextIllativeContext = (context instanceof IllativeContext),
-        contextGroundedContext = (contextTheticContext || contextIllativeContext);
+        contextNominalFileContext = (context instanceof NominalFileContext),
+        contextGroundedContext = (contextTheticContext || contextIllativeContext || contextNominalFileContext);
 
   return contextGroundedContext;
-}
-
-function isContextSubstantiveContext(context) {
-  const contextTheticContext = (context instanceof TheticContext),
-        contextIllativeContext = (context instanceof IllativeContext),
-        contextBoundedContext = (context instanceof BoundedContext),
-        contextNominalFileContext = (context instanceof NominalFileContext),
-        contextSubstantiveContext = (contextTheticContext || contextIllativeContext || contextBoundedContext || contextNominalFileContext);
-
-  return contextSubstantiveContext;
-}
-
-function assert(context, ...Contexts) {
-  const passed = Contexts.some((Context) => {
-    if (context instanceof Context) {
-      return true;
-    }
-  });
-
-  if (!passed) {
-    debugger
-
-    process.exit(1);
-  }
-}
-
-function asserts(contexts, ...Contexts) {
-  contexts.forEach((context) => {
-    assert(context, ...Contexts);
-  });
 }

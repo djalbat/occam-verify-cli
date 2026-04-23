@@ -4,7 +4,7 @@ import { Element } from "occam-languages";
 
 import { define } from "../elements";
 import { instantiateJudgement } from "../process/instantiate";
-import {  speculate, instantiate,} from "../utilities/context";
+import { reconcile, instantiate,} from "../utilities/context";
 import { judgementFromStatementNode } from "../utilities/element";
 import { judgementAssignmentFromJudgement } from "../process/assign";
 import { breakPointFromJSON, breakPointToBreakPointJSON } from "../utilities/breakPoint";
@@ -199,7 +199,7 @@ export default define(class Judgement extends Element {
 
     context.trace(`Validating the '${judgementString}' derived judgement...`);
 
-    speculate((context) => {
+    reconcile((context) => {
       const assumptions = this.getAssumptions(),
             topLevelMetaAssertion = this.getTopLevelMetaAssertion(),
             metaLevelAssumptions = topLevelMetaAssertion.getMetaLevelAssumptions(),

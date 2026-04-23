@@ -7,7 +7,7 @@ import { breakPointFromJSON } from "../../utilities/breakPoint";
 import { instantiateFrameSubstitution } from "../../process/instantiate";
 import { frameSubstitutionFromFrameSubstitutionNode } from "../../utilities/element";
 import { frameSubstitutionStringFromFrameAndMetavariable } from "../../utilities/string";
-import { posit, elide, ablate, ablates, manifest, attempts, reconcile, instantiate, unserialises } from "../../utilities/context";
+import { elide, ablate, ablates, manifest, attempts, reconcile, instantiate, unserialises } from "../../utilities/context";
 
 export default define(class FrameSubstitution extends Substitution {
   constructor(contexts, string, node, breakPoint, targetFrame, replacementFrame) {
@@ -307,27 +307,21 @@ export default define(class FrameSubstitution extends Substitution {
     const { name } = json;
 
     if (this.name === name) {
-      const forced = true;
+      instantiate((context) => {
+        unserialises((json, generalContext, specificContext) => {
+          const { string } = json,
+                frameSubstitutionNode = instantiateFrameSubstitution(string, context),
+                node = frameSubstitutionNode, ///
+                breakPoint = breakPointFromJSON(json),
+                targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, generalContext),
+                replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, specificContext),
+                contexts = [
+                  generalContext,
+                  specificContext
+                ];
 
-      posit((context) => {
-        ablate((context) => {
-          instantiate((context) => {
-            unserialises((json, generalContext, specificContext) => {
-              const { string } = json,
-                    frameSubstitutionNode = instantiateFrameSubstitution(string, context),
-                    node = frameSubstitutionNode, ///
-                    breakPoint = breakPointFromJSON(json),
-                    targetFrame = targetFrameFromFrameSubstitutionNode(frameSubstitutionNode, generalContext),
-                    replacementFrame = replacementFrameFromFrameSubstitutionNode(frameSubstitutionNode, specificContext),
-                    contexts = [
-                      generalContext,
-                      specificContext
-                    ];
-
-              frameSubstitutionn = new FrameSubstitution(contexts, string, node, breakPoint, targetFrame, replacementFrame);
-            }, json, context);
-          }, context);
-        }, forced, context);
+          frameSubstitutionn = new FrameSubstitution(contexts, string, node, breakPoint, targetFrame, replacementFrame);
+        }, json, context);
       }, context);
     }
 
