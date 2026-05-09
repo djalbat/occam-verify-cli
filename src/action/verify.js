@@ -1,21 +1,20 @@
 "use strict";
 
-import { Dependency } from "occam-model";
 import { arrayUtilities } from "necessary";
-import { verificationUtilities } from "occam-languages";
+import { verificationUtilities, releaseContextUtilities } from "occam-languages";
 
 import { FileContextFromFilePath } from "../utilities/fileContext";
-import { releaseContextFromDependency } from "../utilities/releaseContext";
 
 const { last } = arrayUtilities,
+      { releaseContextFromDependency } = releaseContextUtilities,
       { createReleaseContexts, verifyReleaseContexts, initialiseReleaseContexts } = verificationUtilities;
 
 export default async function verifyAction(name, log) {
   const callback = async (context, breakPoint) => {
           ///
         },
+        dependencyName = name,  ///
         releaseContexts = [],
-        dependency = Dependency.fromName(name),
         projectsDirectoryPath = process.cwd(),
         context = {
           log,
@@ -27,7 +26,7 @@ export default async function verifyAction(name, log) {
         }
 
   try {
-    const releaseContextCreated = await createReleaseContexts(dependency, context);
+    const releaseContextCreated = await createReleaseContexts(dependencyName, context);
 
     if (!releaseContextCreated) {
       log.warning(`The '${name}' project or package cannot be created.`);
