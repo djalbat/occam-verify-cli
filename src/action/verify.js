@@ -1,10 +1,8 @@
 "use strict";
 
-import "../preamble";
-
 import { Dependency } from "occam-model";
 import { arrayUtilities } from "necessary";
-import { verificationUtilities, ReleaseContext } from "occam-languages";
+import { verificationUtilities } from "occam-languages";
 
 import { FileContextFromFilePath } from "../utilities/fileContext";
 import { releaseContextFromDependency } from "../utilities/releaseContext";
@@ -18,15 +16,17 @@ export default async function verifyAction(name, log) {
         },
         releaseContexts = [],
         dependency = Dependency.fromName(name),
+        projectsDirectoryPath = process.cwd(),
         context = {
           log,
           callback,
           releaseContexts,
+          projectsDirectoryPath,
           FileContextFromFilePath,
           releaseContextFromDependency
         }
 
-  // try {
+  try {
     const releaseContextCreated = await createReleaseContexts(dependency, context);
 
     if (!releaseContextCreated) {
@@ -54,18 +54,8 @@ export default async function verifyAction(name, log) {
 
       return;
     }
-
-    const json = releaseContext.toJSON(),
-          entries = releaseContext.getEntries(),
-          customGrammar = releaseContext.getCustomGrammar();
-
-    releaseContexts.reverse();
-
-    const releaseContxt = ReleaseContext.fromLogNameJSONEntriesCallbackAndCustomGrammar(log, name, json, entries, callback, customGrammar);
-
-    releaseContxt.initialise(releaseContexts, FileContextFromFilePath);
-  // }
-  // catch (error) {
-  //   log.error(error);
-  // }
+  }
+  catch (error) {
+    log.error(error);
+  }
 }

@@ -12,7 +12,7 @@ const { loadProject } = occamFileSystemUtilities,
 export async function releaseContextFromDependency(dependency, context) {
   let releaseContext = null;
 
-  const projectsDirectoryPath = process.cwd(), ///
+  const { projectsDirectoryPath } = context,
         dependencyName = dependency.getName(),
         entryPath = concatenatePaths(projectsDirectoryPath, dependencyName),
         entryExists = checkEntryExists(entryPath);

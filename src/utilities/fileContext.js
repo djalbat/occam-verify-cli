@@ -2,8 +2,7 @@
 
 import { filePathUtilities } from "occam-model";
 import { FurtleFileContext } from "occam-furtle";
-
-import NominalFileContext from "../context/file/nominal";
+import { NominalFileContext } from "occam-nominal";
 
 const { isFilePathFurtleFilePath, isFilePathNominalFilePath } = filePathUtilities;
 
