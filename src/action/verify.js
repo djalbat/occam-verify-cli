@@ -1,12 +1,12 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { verificationUtilities, releaseContextUtilities } from "occam-languages";
+import { verificationUtilities } from "occam-languages";
 
 import { FileContextFromFilePath } from "../utilities/fileContext";
+import { releaseContextFromDependency } from "../utilities/releaseContext";
 
 const { last } = arrayUtilities,
-      { releaseContextFromDependency } = releaseContextUtilities,
       { createReleaseContexts, verifyReleaseContexts, initialiseReleaseContexts } = verificationUtilities;
 
 export default async function verifyAction(name, log) {

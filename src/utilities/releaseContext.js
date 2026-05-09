@@ -37,8 +37,5 @@ export async function releaseContextFromDependency(dependency, context) {
 }
 
 export default {
-  releaseContextFromJSON,
-  releaseContextFromProject,
-  releaseContextFromRelease,
   releaseContextFromDependency
 };
