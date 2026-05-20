@@ -12,11 +12,11 @@ export function FileContextFromFilePath(filePath) {
   const filePathFurtleFilePath = isFilePathFurtleFilePath(filePath),
         filePathNominalFilePath = isFilePathNominalFilePath(filePath);
 
-  if (filePathFurtleFilePath) {
+  if (false) {
+    ///
+  } else if (filePathFurtleFilePath) {
     FileContext = FurtleFileContext;  ///
-  }
-
-  if (filePathNominalFilePath) {
+  } else if (filePathNominalFilePath) {
     FileContext = NominalFileContext; ///
   }
 
