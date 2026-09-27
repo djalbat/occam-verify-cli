@@ -1,7 +1,7 @@
 {
   "name": "occam-verify-cli",
   "author": "James Smith",
-  "version": "1.0.1276",
+  "version": "1.0.1277",
   "license": "MIT, Anti-996",
   "homepage": "https://github.com/djalbat/occam-verify-cli",
   "description": "Occam's Verifier",
@@ -12,11 +12,11 @@
   "dependencies": {
     "argumentative": "^2.0.47",
     "necessary": "^17.7.2",
-    "occam-furtle": "^3.0.583",
-    "occam-languages": "^3.0.118",
-    "occam-model": "^1.0.612",
-    "occam-nominal": "^1.0.673",
-    "occam-server": "^7.0.112"
+    "occam-furtle": "^3.0.585",
+    "occam-languages": "^3.0.119",
+    "occam-model": "^1.0.613",
+    "occam-nominal": "^1.0.675",
+    "occam-server": "^7.0.113"
   },
   "devDependencies": {
     "@swc/core": "1.13.20",
